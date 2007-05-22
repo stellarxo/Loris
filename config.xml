@@ -1,0 +1,306 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+
+<!--
+
+  This is a template of the project/config.xml file. Copy the file into your project directory, fill the blanks et voilla...
+
+  NB: because study and sites elements get merged in a recursive and
+  overwriting manner, any time when multiple elements of the same type
+  (such as <item/> <item/>) occurs in the study or sites tree, the
+  sites tree will overwrite the element entirely instead of simply
+  merging - i.e., if the multiple elements are branches, the sites
+  branch in its entirety will override the study branch.
+
+-->
+
+<config>
+
+    <!-- study variables -->
+    <study>
+        <!-- Descriptive study title, appears on top of the screen-->
+        <title>string</title>
+        <!-- true/false - use EDC in addition to DoB? -->
+        <useEDC>bool</useEDC>
+        <!-- minimum age in years (0+)-->
+        <ageMin>integer</ageMin>
+        <!-- max subject age in years -->
+        <ageMax>integer</ageMax>
+        <!-- true/false - more than one site in the project? -->
+        <multipleSites>bool</multipleSites>
+        <!-- true/false - use family ID? -->
+        <useFamilyID>bool</useFamilyID>
+        <!-- project's start year -->
+        <startYear>integer</startYear>
+        <!-- project's end year -->
+        <endYear>integer</endYear>
+        
+        
+        <PSCID>
+          <!-- PSCID generation method: sequential|random -->
+          <generation>string</generation>
+          <!-- 
+          PSCID structure 
+          types: alpha|alphanumeric|numeric|static|set|siteAbbrev (site abbreviation, sometimes used as part of the PSCID)
+          you may add more type by adding additional seq tags
+          Example:
+            7-character ID - bos1234
+            <seq type="siteAbbrev"/>
+            <seq type="numeric" length="4"/>
+            -->
+          -->
+          <structure>
+            <seq type="see types option" length="integer"/>
+          </structure>
+        </PSCID>
+
+               
+        <!-- max number of timepoints per subject (integer)-->
+        <visits>integer</visits>
+        <!-- number of objectives in the project - corresponds to the list of subpojects below -->
+        <objectives>integer</objectives>
+        <!-- 
+        Define each of the subprojects (same as objectives above).  
+        Example:
+            <subproject>
+                <id>1</id>
+                <title>1</title>
+                <options>
+                    <useEDC>false</useEDC>
+                </options>
+            </subproject>
+            <subproject>
+                <id>2</id>
+                <title>2</title>
+                <options>
+                    <useEDC>true</useEDC>
+                </options>
+            </subproject>
+        -->
+        <subprojects>
+            <subproject>
+                <!-- ID: integer: field session.SubprojectID -->
+                <id>integer</id>
+                <!-- ID: integer: field session.SubprojectID -->
+                <title>integer</title>
+                <options>
+                    <!-- true/false - use EDC in addition to DoB for this Subproject? -->
+                    <useEDC>bool</useEDC>
+                </options>
+            </subproject>
+        </subprojects>
+
+        
+        <!-- 
+        Defines how visit labels are assigned for each SubprojectID 
+        Example:
+            <visitLabel subprojectID="1">
+                <generation>user</generation>
+                <regex>/^[A-Z0-9]{2}$/i</regex>
+                <length>2</length>
+                <suggest>V%value%</suggest>
+            </visitLabel>
+            <visitLabel subprojectID="2">
+                <generation>user</generation>
+                <regex>/^[A-Z0-9]{2}$/i</regex>
+                <length>2</length>
+                <suggest>V%value%</suggest>
+            </visitLabel>
+        -->
+        <visitLabel subprojectID="1">
+            <!-- generation can have either 'user' or 'sequence' to denote user entered or a pre-defined sequence -->
+            <generation>string</generation>
+            <!-- suggested regex-->
+            <regex>/^[A-Z0-9]{2}$/i</regex>
+            <!-- suggested label -->
+            <suggest>V%value%</suggest> <!-- %value% will be substituted for the next unique number -->
+            <!-- label length: usually 2 -->
+            <length>integer</length>
+        </visitLabel>
+
+        
+        <!-- true/false - use Screening stage? -->
+        <useScreening>bool</useScreening>
+        <!-- true/false - screening before visit stage? -->
+        <screeningAfterVisit>bool</screeningAfterVisit>
+        <!-- 0|1 - double data entry enforced?-->
+        <doubleDataEntry>integer</doubleDataEntry>
+    </study>
+
+    
+    
+    <!-- main.tpl menu bar settings -->
+    <!-- 
+    Instructions
+    link : string that to the value of the $test_name variable
+           whe including subtest (eg: test_name=x%26subtest=y) use ASCII code %26 instead of the symbol: &
+    label: text of the tab
+    access: 'all' or 'site' in case only data entry sites can access this tab
+    visible: 1 to enable, 0 to hide the tab
+    permissions: optional - set a set of permissions needed to display the tab. Each permission is set within the child <perm> tag
+    Suggested tab can be found below, to activate them set visible to 1.
+    Structure:
+        <tab>
+            <link>string</link>
+            <label>string</label>
+            <access>string</access>
+            <permissions>
+                <perm>string</perm>
+            </permissions>
+            <visible>bool</visible>
+        </tab>
+    
+    -->
+    <main_menu_tabs>
+        <!-- tab name -->
+        <tab>
+            <link>new_profile</link>
+            <label>New Profile</label>
+            <access>site</access>
+            <permissions>
+                <perm>data_entry</perm>
+            </permissions>
+            <visible>0</visible>
+        </tab>
+        <tab>
+            <link>candidate_list</link>
+            <label>Access Profile</label>
+            <access>all</access>
+            <permissions></permissions>
+            <visible>0</visible>
+        </tab>
+        <tab>
+            <link>timepoint_flag</link>
+            <label>Exclusion</label>
+            <access>all</access>
+            <permissions>
+                <perm>timepoint_flag</perm>
+                <perm>timepoint_flag_evaluate</perm>
+            </permissions>
+            <visible>0</visible>
+        </tab>
+        <tab>
+            <link>mri_safety</link>
+            <label>MRI Safety Form</label>
+            <access>all</access>
+            <permissions>
+                <perm>data_entry</perm>
+                <perm>mri_safety</perm>
+            </permissions>
+            <visible>0</visible>
+        </tab>
+        <tab>
+            <link>user_accounts</link>
+            <label>User Accounts</label>
+            <access>all</access>
+            <permissions>
+                <perm>user_accounts</perm>
+            </permissions>
+            <visible>0</visible>
+        </tab>
+        <tab>
+            <link>tracking_logs</link>
+            <label>Tracking Logs</label>
+            <access>all</access>
+           <permissions>
+                <perm>tracking_logs</perm>
+            </permissions>
+            <visible>0</visible>
+        </tab>
+        <tab>
+            <link>certification</link>
+            <label>Certification</label>
+            <access>all</access>
+            <permissions>
+                <perm>certification</perm>
+                <perm>certification_multisite</perm>
+            </permissions>
+            <visible>0</visible>
+        </tab>
+    </main_menu_tabs>
+    
+    
+    <!-- GUI Links, show on the left side of the screen, below control panel buttons -->
+    <links>
+		<link url='URI [string]'>label [string]</link>
+        <!--
+        suggested links:
+            <link url='mri_browser.php?' args='MRIBrowser'>MRI Browser</link>
+    		<link url='mri_efax.php?mri_efax_screen=assigned'>MRI Parameter Forms</link>
+    		<link url='http://nihpd.bic.mni.mcgill.ca/rss_list.php'>RSS Channels</link>
+    		<link url='http://www.bic.mni.mcgill.ca/nihpd/database/reports/reports.html'>DB Statistics</link>
+    		<link url='http://www.bic.mni.mcgill.ca/nihpd/'>NIHPD Web Site</link>
+    		<link url='https://mantis.bic.mni.mcgill.ca/'>Report a Bug</link>
+    		<link url='query_gui.php'>Query GUI</link>
+        -->
+    </links>
+    
+
+    <!-- 
+    Sites with access to all project sites, corresponds to psc.CenterID field
+    Example:
+        <a>10</a>
+        <b>12</b>
+    -->
+    <multiSiteEnabledCenters>
+        <a>integer</a>
+    </multiSiteEnabledCenters>
+
+    
+    <!-- file paths -->
+    <paths>
+        <base>{PATH TO FILE]</base>
+        <data>{PATH TO FILE]</data>
+    </paths>
+  
+    
+    <!-- database settings -->
+    <database>
+        <!-- default host: ariel.bic.mni.mcgill.ca -->
+        <host>[HOST]</host>
+        <username>[USER]</username>
+        <password>[PASSWORD]</password>
+		<database>[DATABASE]</database>
+        <!-- Short name of the database, eg: Development Database -->
+		<name>string</name>
+    </database>
+
+    
+    <!-- GUI default settings -->
+    <gui>
+        <rowsPerPage>25</rowsPerPage>
+        <showTiming>0</showTiming>
+        <showPearErrors>0</showPearErrors>
+        <showDatabaseQueries>0</showDatabaseQueries>
+    </gui>
+
+    
+    <mri>
+        <!-- ignore this section if not using Efax -->
+        <efax>
+            <backup_dir>[PATH TO BACKUP DIR]</backup_dir>
+            <new_dir>[PATH TO NEW-FILES DIR]</new_dir>
+            <assigned_dir>[PATH TO ASSIGNED DIR]</assigned_dir>
+            <!-- sometimes the same as the new_dir -->
+            <unassigned_dir>[PATH TO UNASSIGNED DIR]</unassigned_dir>
+        </efax>
+    </mri>
+
+    
+    <!-- mail settings -->
+    <mail>
+        <headers>
+            <From>user@example.com</From>
+            <Reply-to>user@example.com</Reply-to>
+            <X-MimeOLE>Produced by MRDB</X-MimeOLE>
+        </headers>
+    </mail>
+
+    
+    <!-- www settings -->
+    <www>
+        <host>[HOST]</host>
+        <url>[URL]</url>
+        <!-- currently mantis @ https://mantis.bic.mni.mcgill.ca-->
+        <mantis_url>[HOST]</mantis_url>
+    </www>
+</config>
