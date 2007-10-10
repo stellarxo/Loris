@@ -1,0 +1,48 @@
+CREATE TABLE `edi` (
+`CommentID` varchar(255) NOT NULL default '',
+
+                          `UserID` varchar(255) default NULL,
+
+                          `Examiner` varchar(255) default NULL,
+
+                          `Testdate` timestamp(14) NOT NULL,
+
+                          `Data_entry_completion_status` enum('Incomplete','Complete') NOT NULL default 'Incomplete',
+`Date_taken` date default NULL,
+`score_0_3_total_symptoms` varchar(255) default NULL,
+`score_0_3_regulatory` varchar(255) default NULL,
+`score_4_6_total_symptoms` varchar(255) default NULL,
+`score_4_6_regulatory` varchar(255) default NULL,
+`score_4_6_social` varchar(255) default NULL,
+`score_7_9_total_symptoms` varchar(255) default NULL,
+`score_7_9_regulatory` varchar(255) default NULL,
+`score_7_9_social` varchar(255) default NULL,
+`score_7_9_communication` varchar(255) default NULL,
+`score_10_12_total_symptoms` varchar(255) default NULL,
+`score_10_12_regulatory` varchar(255) default NULL,
+`score_10_12_social` varchar(255) default NULL,
+`score_10_12_communication` varchar(255) default NULL,
+`score_10_12_repetitive_behaviour` varchar(255) default NULL,
+`score_13_15_total_symptoms` varchar(255) default NULL,
+`score_13_15_regulatory` varchar(255) default NULL,
+`score_13_15_social` varchar(255) default NULL,
+`score_13_15_communication` varchar(255) default NULL,
+`score_13_15_repetitive_behaviour` varchar(255) default NULL,
+`score_16_18_total_symptoms` varchar(255) default NULL,
+`score_16_18_regulatory` varchar(255) default NULL,
+`score_16_18_social` varchar(255) default NULL,
+`score_16_18_communication` varchar(255) default NULL,
+`score_16_18_repetitive_behaviour` varchar(255) default NULL,
+`score_19_21_total_symptoms` varchar(255) default NULL,
+`score_19_21_regulatory` varchar(255) default NULL,
+`score_19_21_social` varchar(255) default NULL,
+`score_19_21_communication` varchar(255) default NULL,
+`score_19_21_repetitive_behaviour` varchar(255) default NULL,
+`score_22_24_total_symptoms` varchar(255) default NULL,
+`score_22_24_regulatory` varchar(255) default NULL,
+`score_22_24_social` varchar(255) default NULL,
+`score_22_24_communication` varchar(255) default NULL,
+`score_22_24_repetitive_behaviour` varchar(255) default NULL,
+PRIMARY KEY  (`CommentID`)
+
+              ) TYPE=MyISAM;
