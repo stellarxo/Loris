@@ -4,15 +4,17 @@ class NDB_BVL_Instrument_tsi extends NDB_BVL_Instrument
 	var $yesNo = array(null=>"", "yes"=>"Yes", "no"=>"No", "not_answered"=>"Not Answered");
 	
 	/*
-	CHANGE THESE FOR ZAPHOD!!!
 	INSERT INTO test_names VALUES ('', 'tsi', 'Telephone Screening Interview', '0', '1');
 
 	INSERT INTO instrument_subtests VALUES('', 'tsi', 'tsi_page1', 'Exclusionary Factors', 1);
 	INSERT INTO instrument_subtests VALUES('', 'tsi', 'tsi_page2', 'Medical History or MRI/Sedation', 2);
 	INSERT INTO instrument_subtests VALUES('', 'tsi', 'tsi_page3', 'Medical Records / Research Staff', 3);
 
-	INSERT INTO test_battery VALUES ('', 'tsi', '1050', '1140', 'Y', 'Visit', '3');
+	INSERT INTO test_battery VALUES ('', 'tsi', '150', '210', 'Y', 'Screening', '1');
+	INSERT INTO test_battery VALUES ('', 'tsi', '300', '420', 'Y', 'Screening', '2');
+	INSERT INTO test_battery VALUES ('', 'tsi', '150', '420', 'Y', 'Screening', '3');
 	*/
+
 	/**
     * sets up basic data, such as the HTML_Quickform object, and so on.
     *
@@ -76,7 +78,8 @@ class NDB_BVL_Instrument_tsi extends NDB_BVL_Instrument
     */
 	function _main(){
 		// display test name
-		$this->form->addElement('header', 'instrument_title', "Autism Diagnostic Observation Schedule");
+		$this->form->addElement('header', 'instrument_title', 
+"Telephone Screening Interview");
 
 		// automatically adds examiner & date of administration
 		$this->_addMetadataFields();
@@ -109,8 +112,8 @@ class NDB_BVL_Instrument_tsi extends NDB_BVL_Instrument
 
 		$this->form->addElement('header', null, "Exclusionary Factors - ASD PROBANDs only");
 
-		$questionArray = array("neurological_problems"=>"Any neurological problems in PROBAND?",
-		"genetic_conditions"=>"Diagnosed/suspected genetic conditions or syndromes?",
+		$questionArray = array("neurological_problems_proband"=>"Any neurological problems in PROBAND?",
+		"genetic_conditions_proband"=>"Diagnosed/suspected genetic conditions or syndromes?",
 		"seizures_disorders"=>"Seizures/other neurological disorder (tuberous sclerosis)?",
 		"relative_with_disorder"=>"1st degree relative w/ MR, schizophrenia, bipolar or psychosis?",
 		"cns"=>"CNS problem/injury?",
@@ -124,8 +127,8 @@ class NDB_BVL_Instrument_tsi extends NDB_BVL_Instrument
 
 		$this->form->addElement("header", null, "Exclusionary Factors - Infant subjects");
 		$questionArray = array("relative_with_asd"=>"1st or 2nd relative with ASD?",
-		"neurological_problems"=>"Any neurological problems in SUBJECT?",
-		"genetic_conditions"=>"Diagnosed/suspected genetic conditions or syndromes?",
+		"neurological_problems_subject"=>"Any neurological problems in SUBJECT?",
+		"genetic_conditions_subject"=>"Diagnosed/suspected genetic conditions or syndromes?",
 		"seizures_or_neuro_disorder"=>"Seizures or other neurological disorder?",
 		"cns_problems"=>"CNS problems?",
 		"congenital_heart_problems"=>"Congenital heart problems?",
