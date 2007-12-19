@@ -32,7 +32,7 @@ class NDB_BVL_Instrument_vineland extends NDB_BVL_Instrument
         $this->_selectMultipleElements = array();
 
         // required fields for data entry completion status
-        $this->_requiredElements = array('Examiner', '<FIRST QUESTION OF EACH PAGE>');
+        $this->_requiredElements = array('Examiner');
 
         // setup the form
         $this->_setupForm();
@@ -55,15 +55,6 @@ class NDB_BVL_Instrument_vineland extends NDB_BVL_Instrument
             $this->_main();
         }
 
-        //        switch($this->page) {
-        //            case "vineland_page1":
-        //            $this->_page1();
-        //            break;
-        //
-        //            default:
-        //            $this->_main();
-        //            break;
-        //        }
         //Defines the call back function for HTML Quickform to use when validating the form.
         $this->form->addFormRule(array(&$this,'XINValidate'));
     }
