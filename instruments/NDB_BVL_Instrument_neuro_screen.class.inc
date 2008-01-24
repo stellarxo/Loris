@@ -1,7 +1,7 @@
 <?php
 
 /*
-INSERT INTO test_names VALUES ('', 'neuro_screen', 'Neuro Screen', '0', '1');
+INSERT INTO test_names VALUES ('', 'neuro_screen', 'Neuro Screener', '0', '1');
 
 INSERT INTO instrument_subtests VALUES('', 'neuro_screen', 'neuro_screen_page1', 'Questions', 1);
 
@@ -85,16 +85,20 @@ class NDB_BVL_Instrument_neuro_screen extends NDB_BVL_Instrument
         $this->_addMetadataFields();
 
         //which time version is being filled out?
-        $this->form->addElement("select", "visit", "Visit", array(null=>"", "6month"=>"6 month", "12month"=>"12 month", "24month"=>"24 month", "not_answered"=>"Not Answered"));
+        $this->form->addElement("select", "visit", "Visit", array(null=>"", "6month"=>"6 month", "12month"=>"12 month", "24month"=>"24 month"));
     }
 
     function _page1(){
 
         //header and some extra info
         $this->form->addElement("header", null, "IBIS Neuro Screener");
+        $this->form->addElement("static", null, "Only fill in the questions appropriate to this time's version.");
+        $this->form->addElement("static", null, "You may leave the rest blank.");
+        $this->form->addElement("static", null, "<BR>");
         $this->form->addElement("static", null, "* If you experience problems with required question rules,");
         $this->form->addElement("static", null, "ensure that the visit is correctly filled in on the `Top` page.");
         $this->form->addElement("static", null, "<BR>");
+        
         
         $this->form->addElement("select", "1_strabismus", "1. Strabismus: Cover-uncover test", array(null=>"", "0_absent"=>"0 absent",
         "1_covert"=>"1 covert (shown by test)",
