@@ -110,6 +110,10 @@ DoB Proband should be somewhere in the candidate table.  For now, we'll just mak
         }
         
         $this->form->addElement("header", null, "Scores");
+        $this->form->addElement("static", null, "This scoring algorithm is currently in the testing phase.");
+        $this->form->addElement("static", null, "Please inform the DCC of any oopsy daisies.");
+        $this->form->addElement("static", null, "<BR>");
+        
 		$scoreLabels = array("Total_A1"=>"Total A1",
 							"Total_A2"=>"Total A2",
 							"Total_A3"=>"Total A3",
@@ -161,10 +165,7 @@ DoB Proband should be somewhere in the candidate table.  For now, we'll just mak
         if (PEAR::isError($record)) {
             return PEAR::raiseError("Could not get scores: ".$record->getMessage());
         }
-        
-        // Get the age
-//        $age = $record["DoB_proband"];  //don't use it quite yet
-    	
+            	
         //convert items codes to algorithm scores
         $conversion = array(0=>0, 1=>1, 2=>2, 3=>2, 7=>0, 8=>0, 9=>0);
         foreach ($record as $field=>$code) {
