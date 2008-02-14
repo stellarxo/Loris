@@ -11,7 +11,7 @@ DoB Proband should be somewhere in the candidate table.  For now, we'll just mak
 	
 	var $yesNoNA = array(''=>NULL, '0_no'=>"0. No", '1_yes'=>"1. Yes", 'not_answered'=>"Not answered");
 	
-	var $probandAgeMonths;
+	var $respondentAgeMonths;
 	
     /**
     * array of scoring fields
@@ -52,20 +52,8 @@ DoB Proband should be somewhere in the candidate table.  For now, we'll just mak
         								"q_60_initiation_of_activities_current_code", "q_67_unusual_preoccupations_current_code",
         								"q_80_gait_current_code", "q_88_visuospatial_ability_current_code");
 
-//         Get the proband DoB for scoring
-//        $query = "SELECT DoB_proband from adir WHERE CommentID = '".$this->getCommentID()."'";
-//        $result = $db->selectOne($query);
-//        if(PEAR::isError($result)){
-//            return PEAR::raiseError("Query has failed to select Starting Age in Months: ".$result->getMessage());
-//        }
-//        $probandDoB=$result;
-//        
-//        Get the Date of administration
-//        $query = "SELECT Date_taken from adir WHERE CommentID = '".$this->getCommentID()."'";
-//        $Date_taken = $db->selectOne($query);
-
 		//For testing purposes only...
-        $this->probandAgeMonths = 121;
+        $this->respondentAgeMonths = 121;
 
         // setup the form
         $this->_setupForm();
@@ -117,8 +105,10 @@ DoB Proband should be somewhere in the candidate table.  For now, we'll just mak
         'emptyOptionValue' => null
         );
 
-        $this->form->addElement('date', 'DoB_proband', 'DoB Proband', $dateOptions);
-
+        if (ereg("proband", $this->testName)) {
+            $this->form->addElement('date', 'DoB_proband', 'DoB Proband', $dateOptions);
+        }
+        
         $this->form->addElement("header", null, "Scores");
 		$scoreLabels = array("Total_A1"=>"Total A1",
 							"Total_A2"=>"Total A2",
@@ -145,9 +135,9 @@ DoB Proband should be somewhere in the candidate table.  For now, we'll just mak
 
     }
 
-    function score() {
+    function _score() {
         // skip scoring if proband DoB was not entered, i.e. data entry is not completed
-        if(empty($this->probandAgeMonths)){
+        if(empty($this->respondentAgeMonths)){
             return;
         }
         
@@ -187,7 +177,7 @@ DoB Proband should be somewhere in the candidate table.  For now, we'll just mak
         }
         
         //perform the score calculations
-        if($this->probandAgeMonths >= 24 && $this->probandAgeMonths <= 47) {
+        if($this->respondentAgeMonths >= 24 && $this->respondentAgeMonths <= 47) {
 	        //Age 2 Years to 3 Years, 11 Months => 24months...47months
 	        $scoreCols["Total_A1"] = $scores["q_50_direct_gaze_current_code"] + $scores["q_51_social_smiling_current_code"] 
 									+ $scores["q_57_range_of_racial_expressions_current_code"];
@@ -220,7 +210,7 @@ DoB Proband should be somewhere in the candidate table.  For now, we'll just mak
 			$scoreCols["Total_C3"] = $scores["q_77_hands_and_finger_mannerisms_current_code"] + $scores["q_78_other_complex_mannerisms_current_code"];
 			$scoreCols["Total_C4"] = $scores["q_69_repetitive_use_of_objects_current_code"] + $scores["q_71_unusual_sensory_interests_current_code"];
 			$scoreCols["C_Total"] = $scoreCols["Total_C1"] + $scoreCols["Total_C2"] + $scoreCols["Total_C3"] + $scoreCols["Total_C4"];
-        } elseif($this->probandAgeMonths >= 48 && $this->probandAgeMonths <= 119) {
+        } elseif($this->respondentAgeMonths >= 48 && $this->respondentAgeMonths <= 119) {
 			//Age 4 years to 9 years, 11 months => 48months...119months
 	        $scoreCols["Total_A1"] = $scores["q_50_direct_gaze_current_code"] + $scores["q_51_social_smiling_current_code"] 
 									+ $scores["q_57_range_of_racial_expressions_current_code"];
@@ -255,7 +245,7 @@ DoB Proband should be somewhere in the candidate table.  For now, we'll just mak
 			$scoreCols["Total_C3"] = $scores["q_77_hands_and_finger_mannerisms_current_code"] + $scores["q_78_other_complex_mannerisms_current_code"];
 			$scoreCols["Total_C4"] = $scores["q_69_repetitive_use_of_objects_current_code"] + $scores["q_71_unusual_sensory_interests_current_code"];
 			$scoreCols["C_Total"] = $scoreCols["Total_C1"] + $scoreCols["Total_C2"] + $scoreCols["Total_C3"] + $scoreCols["Total_C4"];
-        } elseif($this->probandAgeMonths >= 120) {
+        } elseif($this->respondentAgeMonths >= 120) {
 			//Age 10 years and older => 120months...  Only applicable to verbal subjects
 			if(substr($record["q_30_overall_level_of_language"], 0, 1) != 0) { //non-verbal subject
 				$scoreCols["A_Total"] = "Error - cannot score nonverbal subjects";
@@ -355,7 +345,7 @@ DoB Proband should be somewhere in the candidate table.  For now, we'll just mak
 		
 		$answerArray = array(""=>NULL, "0_no_loss"=>"0. No definite loss", "1_probable_loss"=>"1. Probable loss", "2_definite_loss"=>"2. Definite Loss", "8_insufficient"=>"8. Insufficient", "9_not_asked"=>"9. Not asked", "not_answered"=>"Not Answered");
 		$questionArray = array("13_loss_of_spontaneous_use"=>"13. Loss of spontaneous use",
-								"14_loss_of_intent"=>"14. Loss of communicatite intent",
+								"14_loss_of_intent"=>"14. Loss of communicative intent",
 								"15_loss_of_syntactical"=>"15. Loss of syntactical skills",
 								"16_loss_of_articulation"=>"16. Loss of articulation");
 		foreach($questionArray as $field=>$label) {
