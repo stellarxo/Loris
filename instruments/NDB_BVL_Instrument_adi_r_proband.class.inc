@@ -47,10 +47,7 @@ DoB Proband should be somewhere in the candidate table.  For now, we'll just mak
     }
     
     function score() {
-        
-        //turn scoring off until there is sufficient test data to debug
-        return;
-        
+                
         $db =& Database::singleton();
         if(PEAR::isError($db)) {
             return PEAR::raiseError ("Could not connect to database: ".$db->getMessage());
