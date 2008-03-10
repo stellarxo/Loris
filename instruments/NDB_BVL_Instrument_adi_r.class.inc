@@ -291,38 +291,38 @@ DoB Proband should be somewhere in the candidate table.  For now, we'll just mak
     
     function _page1(){
         
-        $this->form->addElement("header", null, "BACKGROUND");
-        $this->addLargeTextAreaElement("background_family_members", "Family Members");
-        $this->addLargeTextAreaElement("background_education", "Subject's Education");
-        $this->addLargeTextAreaElement("background_personalized_timing", "Personalized Timing");
-        $this->addLargeTextAreaElement("background_diagnosis", "Diagnosis");
-        $this->addLargeTextAreaElement("background_medication", "Medication");
-
-        $this->addLargeTextAreaElement("introductory_questions", "Introductory Questions");
-        $this->addLargeTextAreaElement("q_1_current_concerns", "1. Current Concerns");
+//        $this->form->addElement("header", null, "BACKGROUND");
+//        //$this->addLargeTextAreaElement("background_family_members", "Family Members");
+//        //$this->addLargeTextAreaElement("background_education", "Subject's Education");
+//        //$this->addLargeTextAreaElement("background_personalized_timing", "Personalized Timing");
+//        //$this->addLargeTextAreaElement("background_diagnosis", "Diagnosis");
+//        //$this->addLargeTextAreaElement("background_medication", "Medication");
+//
+//        //$this->addLargeTextAreaElement("introductory_questions", "Introductory Questions");
+//        //$this->addLargeTextAreaElement("q_1_current_concerns", "1. Current Concerns");
     }
     
     function _page2() {
     	$this->form->addElement("header", null, "EARLY DEVELOPMENT");
     	$this->addTextElement("q_2_age_first_noticed_code", "2. Age (in months) when parents first noticed that something was not quite right...");
-    	$this->addLargeTextAreaElement("q_2_age_first_noticed_text");
+    	//$this->addLargeTextAreaElement("q_2_age_first_noticed_text");
     
-    	$this->addLargeTextAreaElement("q_3_first_symptoms_text", "3. First symptoms to arouse parental concern");
+    	//$this->addLargeTextAreaElement("q_3_first_symptoms_text", "3. First symptoms to arouse parental concern");
     	
     	$this->addTextElement("q_4_onset_as_perceived_code", "4. Onset as perceived with hindsight");
-    	$this->addLargeTextAreaElement("q_4_onset_as_perceived_text");
+    	//$this->addLargeTextAreaElement("q_4_onset_as_perceived_text");
     	
     	$this->addTextElement("q_5_first_walked_code", "5. First walked unaided");
-		$this->addLargeTextAreaElement("q_5_first_walked_text");
+		//$this->addLargeTextAreaElement("q_5_first_walked_text");
 		
 		$this->addTextElement("q_6_bladder_daytime_code", "6. Acquisition of bladder control: daytime");
-		$this->addLargeTextAreaElement("q_6_bladder_daytime_text");
+		//$this->addLargeTextAreaElement("q_6_bladder_daytime_text");
 		
 		$this->addTextElement("q_7_bladder_nighttime_code", "7. Acquisition of bladder control: nighttime");
-		$this->addLargeTextAreaElement("q_7_bladder_nighttime_text");
+		//$this->addLargeTextAreaElement("q_7_bladder_nighttime_text");
 
 		$this->addTextElement("q_8_bowel_control_code", "8. Acquisition of bowel control");
-		$this->addLargeTextAreaElement("q_8_bowel_control_text");
+		//$this->addLargeTextAreaElement("q_8_bowel_control_text");
 
     }
 		
@@ -332,17 +332,17 @@ DoB Proband should be somewhere in the candidate table.  For now, we'll just mak
 		$this->form->addElement("header", null, "ACQUISITION AND LOSS OF LANGUAGE/OTHER SKILLS");
 	
 		$this->addTextElement("q_9_first_single_words_code", "9. Age of first single words");
-		$this->addLargeTextAreaElement("q_9_first_single_words_text");
+		//$this->addLargeTextAreaElement("q_9_first_single_words_text");
 	
 		$this->addTextElement("q_10_first_phrases_code", "10. Age of first phrases (if ever used)");
-		$this->addLargeTextAreaElement("q_10_first_phrases_text");
+		//$this->addLargeTextAreaElement("q_10_first_phrases_text");
 		
 		$this->form->addElement("select", "q_11_loss_of_language", "11. Loss of language skills after acquisition", $this->yesNoNA);
 		
 		$answerArray = array(""=>NULL, "0_daily"=>"0. Daily", "1_occasional"=>"1. Occasional", "2_upon_request"=>"2. Produced upon request", "3_spontaneous_imitations"=>"3. Spontaneous imitations", "8_no_change"=>"8. No change", "9_not_asked"=>"9. Not asked", "not_answered"=>"Not Answered");
 		$this->form->addElement("select", "q_12_level_before_loss_code", "12. Level of communicative language before loss", $answerArray);
 		$this->XINRegisterRule("q_12_level_before_loss_code", array("q_11_loss_of_language{@}=={@}1_yes"), "This is required if language was lost (answered 'yes' to question 11)");
-		$this->addLargeTextAreaElement("q_12_level_before_loss_text", $this->indent . "Describe:", array("q_11_loss_of_language{@}=={@}1_yes"), "This is required if language was lost (answered 'yes' to question 11)");
+		//$this->addLargeTextAreaElement("q_12_level_before_loss_text", $this->indent . "Describe:", array("q_11_loss_of_language{@}=={@}1_yes"), "This is required if language was lost (answered 'yes' to question 11)");
 		
 		$answerArray = array(""=>NULL, "0_no_loss"=>"0. No definite loss", "1_probable_loss"=>"1. Probable loss", "2_definite_loss"=>"2. Definite Loss", "8_insufficient"=>"8. Insufficient", "9_not_asked"=>"9. Not asked", "not_answered"=>"Not Answered");
 		$questionArray = array("13_loss_of_spontaneous_use"=>"13. Loss of spontaneous use",
@@ -352,20 +352,20 @@ DoB Proband should be somewhere in the candidate table.  For now, we'll just mak
 		foreach($questionArray as $field=>$label) {
 			$this->form->addElement("select", $field . "_code", $label, $answerArray);
 			$this->XINRegisterRule($field . "_code", array("q_11_loss_of_language{@}=={@}1_yes"), "This is required if language was lost (answered 'yes' to question 11)");
-			$this->addTextAreaElement($field . "_text", $this->indent . "Describe:");
+//			$this->addTextAreaElement($field . "_text", $this->indent . "Describe:");
 			$this->XINRegisterRule($field . "_text", array("q_11_loss_of_language{@}=={@}1_yes"), "This is required if language was lost (answered 'yes' to question 11)");
 		}
 		
 		$this->addTextElement("q_17_main_loss_apparent_code", "17. Age when main loss of language skills first apparent", array("q_11_loss_of_language{@}=={@}1_yes"), "This is required if language was lost (answered 'yes' to question 11)");
-		$this->addLargeTextAreaElement("q_17_main_loss_apparent_text", $this->indent . "Describe:", array("q_11_loss_of_language{@}=={@}1_yes"), "This is required if language was lost (answered 'yes' to question 11)");
+		//$this->addLargeTextAreaElement("q_17_main_loss_apparent_text", $this->indent . "Describe:", array("q_11_loss_of_language{@}=={@}1_yes"), "This is required if language was lost (answered 'yes' to question 11)");
 	
 		$answerArray = array(""=>NULL, "0_loss_no_relevance"=>"0. Loss no possible relevance", "1_loss_illness"=>"1. Loss from illness", "2_loss_impaired"=>"2. Loss from impaired consciousness", "8_no_loss"=>"8. No loss", "9_not_asked"=>"9. Not asked", "not_anwered"=>"Not Answered");
 		$this->form->addElement("select", "q_18_loss_due_to_illness", "18. Association of loss of language with physical illness", $answerArray);
 		$this->XINRegisterRule("q_18_loss_due_to_illness_code", array("q_11_loss_of_language{@}=={@}1_yes"), "This is required if language was lost (answered 'yes' to question 11)");
-		$this->addLargeTextAreaElement("q_18_loss_due_to_illness_text", $this->indent . "Describe:", array("q_11_loss_of_language{@}=={@}1_yes"), "This is required if language was lost (answered 'yes' to question 11)");
+		//$this->addLargeTextAreaElement("q_18_loss_due_to_illness_text", $this->indent . "Describe:", array("q_11_loss_of_language{@}=={@}1_yes"), "This is required if language was lost (answered 'yes' to question 11)");
 	
 		$this->addTextElement("q_19_duration_of_loss_code", "19. Duration of loss of language skills", array("q_11_loss_of_language{@}=={@}1_yes"), "This is required if language was lost (answered 'yes' to question 11)");
-		$this->addLargeTextAreaElement("q_19_duration_of_loss_text", $this->indent . "Describe:", array("q_11_loss_of_language{@}=={@}1_yes"), "This is required if language was lost (answered 'yes' to question 11)");
+		//$this->addLargeTextAreaElement("q_19_duration_of_loss_text", $this->indent . "Describe:", array("q_11_loss_of_language{@}=={@}1_yes"), "This is required if language was lost (answered 'yes' to question 11)");
 		
 	}
 	
@@ -374,7 +374,7 @@ DoB Proband should be somewhere in the candidate table.  For now, we'll just mak
 		$this->form->addElement("header", null, "GENERAL LOSS OF SKILLS");
 		$answerArray = array(""=>NULL, "0_no_consistent_loss"=>"0. No consistent loss", "1_probable_loss"=>"1. Probable loss", "2_account_definite_loss"=>"2. Account of definite loss", "9_not_asked"=>"9. Not asked", "not_answered"=>"Not Answered");
 		$this->form->addElement("select", "q_20_loss_of_skills_code", "20. Loss of skills (for at least 3 months)", $answerArray);
-		$this->addLargeTextAreaElement("q_20_loss_of_skills_text");
+		//$this->addLargeTextAreaElement("q_20_loss_of_skills_text");
 		
 		$questionArray = array("q_21_puposive_hand_movements"=>"21. Purposive hand movements",
 		"q_22_motor_skills"=>"22. Motor skills",
@@ -384,18 +384,18 @@ DoB Proband should be somewhere in the candidate table.  For now, we'll just mak
 		$answerArray = array(""=>NULL, "0_none"=>"0. None", "1_possible"=>"1. Possible", "2_definite"=>"2. Definite", "not_answered"=>"Not Answered");
 		foreach ($questionArray as $field=>$label) {
 			$this->form->addElement("select", $field . "_code", $label, $answerArray);
-			$this->addTextAreaElement($field . "_text", $this->indent . "Describe:");
+//			$this->addTextAreaElement($field . "_text", $this->indent . "Describe:");
 		}		
 		
 		$this->addTextElement("q_26_loss_first_apparent_code", "26. Age when main loss of skill first apparent");
-		$this->addTextAreaElement("q_26_loss_first_apparent_text", $this->indent . "Describe:");
+//		$this->addTextAreaElement("q_26_loss_first_apparent_text", $this->indent . "Describe:");
 		
 		$answerArray = array(""=>NULL, "0_no_relevance"=>"0. No possibly relevance", "1_definite_illness"=>"1. Definite illness", "2_impaired_consciousness"=>"2. Impaired consciousness", "8_no_loss"=>"8. No loss", "9_not_asked"=>"9. Not asked", "not_answered"=>"Not Answered");
 		$this->form->addElement("select", "q_27_physical_illness_code", "27. Association of loss of skills with physical illness", $answerArray);
-		$this->addLargeTextAreaElement("q_27_physical_illness_text");
+		//$this->addLargeTextAreaElement("q_27_physical_illness_text");
 		
 		$this->addTextElement("q_28_duration_of_loss_code", "28. Duration of loss of skills");
-		$this->addLargeTextAreaElement("q_28_duration_of_loss_text", $this->indent . "Describe:");
+		//$this->addLargeTextAreaElement("q_28_duration_of_loss_text", $this->indent . "Describe:");
 	}
 
 	function _page5() {
@@ -405,7 +405,7 @@ DoB Proband should be somewhere in the candidate table.  For now, we'll just mak
 		$this->form->addElement("static", null, "29. Comprehension of simple language");
 		$this->form->addElement("select", "q_29_comprehension_of_simple_current",  $this->indent . "Current", $answerArray);
 		$this->form->addElement("select", "q_29_comprehension_of_simple_most_abnormal",  $this->indent . "Most Abnormal (4.0-5.0)", $answerArray);
-		$this->addLargeTextAreaElement("q_29_comprehension_of_simple_text");
+		//$this->addLargeTextAreaElement("q_29_comprehension_of_simple_text");
 		
 		$answerArray = array(""=>NULL, "0_fuctional"=>"0. Functional", "1_no_functional"=>"1. No functional use", "2_fewer_than_5"=>"2. Fewer than five", "not_answered"=>"Not Answered");
 		$this->form->addElement("select", "q_30_overall_level_of_language", "30. Overall level of language", $answerArray);
@@ -414,61 +414,61 @@ DoB Proband should be somewhere in the candidate table.  For now, we'll just mak
 		$this->form->addElement("static", null, "31. Use of other's body to communicate");
 		$this->form->addElement("select", "q_31_use_of_others_body_current_code", $this->indent . "Current:", $answerArray);
 		$this->form->addElement("select", "q_31_use_of_others_body_ever_code", $this->indent . "Ever:", $answerArray);
-		$this->addLargeTextAreaElement("q_31_use_of_others_body_text");
+		//$this->addLargeTextAreaElement("q_31_use_of_others_body_text");
 		
 		$answerArray = array(""=>NULL, "0_anybody"=>"0. Anybody", "1_family"=>"1. Family", "2_difficulties"=>"2. Difficulties", "3_strangers"=>"3. Strangers", "8_NA"=>"8. N/A", "9_not_asked"=>"9. Not asked", "not_answered"=>"Not Answered");
 		$this->form->addElement("static", null, "32. Articulation/pronunciation");
 		$this->form->addElement("select", "q_32_articulation_pronunciation_current_code", $this->indent . "Current:", $answerArray);
 		$this->form->addElement("select", "q_32_articulation_pronunciation_5years_code", $this->indent . "At 5.0 Years:", $answerArray);
-		$this->addLargeTextAreaElement("q_32_articulation_pronunciation_text");
+		//$this->addLargeTextAreaElement("q_32_articulation_pronunciation_text");
 		
 		$answerArray = array(""=>NULL, "0_rarely"=>"0. Rarely", "1_more_repetitive"=>"1. More repetitive", "2_often_stereotyped"=>"2. Often stereotyped utterances", "3_exclusively_stereotyped"=>"3. Exclusively stereotyped utterances", "8_NA"=>"8. N/A", "9_not_asked"=>"9. Not asked", "not_answered"=>"Not Answered");
 		$this->form->addElement("static", null, "33. Stereotyped utterances and delayed echolalia");
 		$this->form->addElement("select", "q_33_stereotyped_utterances_current_code", $this->indent . "Current:", $answerArray);
 		$this->form->addElement("select", "q_33_stereotyped_utterances_ever_code", $this->indent . "Ever:", $answerArray);
-		$this->addLargeTextAreaElement("q_33_stereotyped_utterances_text");
+		//$this->addLargeTextAreaElement("q_33_stereotyped_utterances_text");
 		
 		$answerArray = array(""=>NULL, "0_verbalizes"=>"0. Verbalizes", "1_some_response"=>"1. Some response", "2_some_alert"=>"2. Some alert", "8_NA"=>"8. N/A", "9_not_asked"=>"9. Not asked", "not_answered"=>"Not Answered");
 		$this->form->addElement("static", null, "34. Social verbalization/chat");
 		$this->form->addElement("select", "q_34_social_verbalization_chat_current_code", $this->indent . "Current:", $answerArray);
 		$this->form->addElement("select", "q_34_social_verbalization_chat_ever_code", $this->indent . "Ever:", $answerArray);
-		$this->addLargeTextAreaElement("q_34_social_verbalization_chat_text");
+		//$this->addLargeTextAreaElement("q_34_social_verbalization_chat_text");
 
 		$answerArray = array(""=>NULL, "0_conversational"=>"0. Conversational flows", "1_occasional"=>"1. Occasional", "2_little_or_not"=>"2. Little of no", "3_very_little"=>"3. Very little", "8_NA"=>"8. N/A", "9_not_asked"=>"9. Not asked", "not_answered"=>"Not Answered");
 		$this->form->addElement("static", null, "35. Reciprocal conversation (within subject's level of language)");
 		$this->form->addElement("select", "q_35_reciprocal_conversation_current_code", $this->indent . "Current:", $answerArray);
 		$this->form->addElement("select", "q_35_reciprocal_conversation_ever_code", $this->indent . "Ever:", $answerArray);
-		$this->addLargeTextAreaElement("q_35_reciprocal_conversation_text");
+		//$this->addLargeTextAreaElement("q_35_reciprocal_conversation_text");
 		
 		$answerArray = array(""=>NULL, "0_none_or_rare"=>"0. No or very rare", "1_some_questions"=>"1. Use of some questions", "2_frequent"=>"2. Frequent", "8_NA"=>"8. N/A", "9_not_asked"=>"9. Not asked", "not_answered"=>"Not Answered");
 		$this->form->addElement("static", null, "36. Inappropriate questions or statements");
 		$this->form->addElement("select", "q_36_inappropriate_questions_current_code", $this->indent . "Current:", $answerArray);
 		$this->form->addElement("select", "q_36_inappropriate_questions_ever_code", $this->indent . "Ever:", $answerArray);
-		$this->addLargeTextAreaElement("q_36_inappropriate_questions_text");
+		//$this->addLargeTextAreaElement("q_36_inappropriate_questions_text");
 
 		$answerArray = array(""=>NULL, "0_no_confusion"=>"0. No confusion", "1_refers"=>"1. Refers", "2_you_I_confusion"=>"2. You/I confusion", "3_pronominal"=>"3. Pronominal", "7_other_types"=>"7. Other types of pronominal", "8_NA"=>"8. N/A", "9_not_asked"=>"9. Not asked", "not_answered"=>"Not Answered");
 		$this->form->addElement("static", null, "37. Prenominal reversal");
 		$this->form->addElement("select", "q_37_prenominal_reversal_current_code", $this->indent . "Current:", $answerArray);
 		$this->form->addElement("select", "q_37_prenominal_reversal_ever_code", $this->indent . "Ever:", $answerArray);
-		$this->addLargeTextAreaElement("q_37_prenominal_reversal_text");
+		//$this->addLargeTextAreaElement("q_37_prenominal_reversal_text");
 
 		$answerArray = array(""=>NULL, "0_no_use"=>"0. No use", "1_occasional"=>"1. Occasional", "2_regular"=>"2. Regular", "8_NA"=>"8. N/A", "9_not_asked"=>"9. Not asked", "not_answered"=>"Not Answered");
 		$this->form->addElement("static", null, "38. Neologisms/Idiosyncratic language");
 		$this->form->addElement("select", "q_38_neologisms_current_code", $this->indent . "Current:", $answerArray);
 		$this->form->addElement("select", "q_38_neologisms_ever_code", $this->indent . "Ever:", $answerArray);
-		$this->addLargeTextAreaElement("q_38_neologisms_text");
+		//$this->addLargeTextAreaElement("q_38_neologisms_text");
 
 		$answerArray = array(""=>NULL, "0_no_rituals"=>"0. No rituals", "1_tendency"=>"1. Tendency", "2_special_way"=>"2. Special way", "3_as_for2_with_difficulty"=>"3. As for '2', with difficulty", "8_NA"=>"8. N/A", "9_not_asked"=>"9. Not asked", "not_answered"=>"Not Answered");
 		$this->form->addElement("static", null, "39. Verbal rituals");
 		$this->form->addElement("select", "q_39_verbal_rituals_current_code", $this->indent . "Current:", $answerArray);
 		$this->form->addElement("select", "q_39_verbal_rituals_ever_code", $this->indent . "Ever:", $answerArray);
-		$this->addLargeTextAreaElement("q_39_verbal_rituals_text");
+		//$this->addLargeTextAreaElement("q_39_verbal_rituals_text");
 
 		$answerArray = array(""=>NULL, "0_normal"=>"0. Normal", "1_shows_abnormalities"=>"1. Shows abnormalities", "2_clearly_abnormal"=>"2. Clearly abnormal", "3_frequetly_peculiar"=>"3. Frequently peculiar", "7_stutter"=>"7. Stutter", "8_NA"=>"8. N/A", "9_not_asked"=>"9. Not asked", "not_answered"=>"Not Answered");
 		$this->form->addElement("static", null, "40. Intonation/volume/rhythm/rate");
 		$this->form->addElement("select", "q_40_intonation_volume_rhythm_rate_current_code", $this->indent . "Current:", $answerArray);
 		$this->form->addElement("select", "q_40_intonation_volume_rhythm_rate_ever_code", $this->indent . "Ever:", $answerArray);
-		$this->addLargeTextAreaElement("q_40_intonation_volume_rhythm_rate_text");
+		//$this->addLargeTextAreaElement("q_40_intonation_volume_rhythm_rate_text");
 	
 	}
 	
@@ -479,13 +479,13 @@ DoB Proband should be somewhere in the candidate table.  For now, we'll just mak
 		$this->form->addElement("static", null, "41. Current communicative speech");
 		$this->form->addElement("select", "q_41_current_communicative_speech_current_code", $this->indent . "Current:", $answerArray);
 		$this->form->addElement("select", "q_41_current_communicative_speech_at5_code", $this->indent . "At 5.0 years:", $answerArray);
-		$this->addLargeTextAreaElement("q_41_current_communicative_speech_text");
+		//$this->addLargeTextAreaElement("q_41_current_communicative_speech_text");
 		
 		$answerArray = array(""=>NULL, "0_spontaneously"=>"0. Spontaneously points", "1_limited_attempt"=>"1. Limited attempt", "2_little_or_no"=>"2. Little or no", "8_NA"=>"8. N/A", "9_not_asked"=>"9. Not asked", "not_answered"=>"Not Answered");
 		$this->form->addElement("static", null, "42. Pointing to express interest");
 		$this->form->addElement("select", "q_42_pointing_to_express_interest_current_code", $this->indent . "Current:", $answerArray);
 		$this->form->addElement("select", "q_42_pointing_to_express_interest_most_abnormal_code", $this->indent . "Most abnormal 4.0-5.0 years:", $answerArray);
-		$this->addLargeTextAreaElement("q_42_pointing_to_express_interest_text");
+		//$this->addLargeTextAreaElement("q_42_pointing_to_express_interest_text");
 		
 		$answerArray = array(""=>NULL, "0_consistently"=>"0. Consistently", "1_sometimes"=>"1. Sometimes", "2_never"=>"2. Never", "8_NA"=>"8. N/A", "9_not_asked"=>"9. Not asked", "not_answered"=>"Not Answered");
 		$field = "q_43_nodding";
@@ -571,15 +571,15 @@ DoB Proband should be somewhere in the candidate table.  For now, we'll just mak
 		$this->form->addElement("static", null, "58. Inappropriate facial expressions");
 		$this->form->addElement("select", "q_58_inappropriate_facial_current_code", $this->indent . "Current:", $answerArray);
 		$this->form->addElement("select", "q_58_inappropriate_facial_ever_code", $this->indent . "Ever:", $answerArray);
-		$this->addLargeTextAreaElement("q_58_inappropriate_facial_text");
+		//$this->addLargeTextAreaElement("q_58_inappropriate_facial_text");
 		
 		$answerArray = array(""=>NULL, "0_appropriate"=>"0. Appropriate", "1_some"=>"1. Some", "2_responds"=>"2. Responds", "3_little_or_no"=>"3. Little or no", "8_NA"=>"8. N/A", "9_not_asked"=>"9. Not asked", "not_answered"=>"Not Answered");
 		$field = "q_59_appropriateness_of_responses";
 		$label = "59. Appropriateness of social responses";
 		$this->_addCurrentMostAbnormal($field, $label, $answerArray);
 		
-		$this->addLargeTextAreaElement("q_60_favourite_activities", "Favourite Activities");
-		$this->addLargeTextAreaElement("q_60_favourite_toys_objects", "Favourite Toys / Objects");
+		//$this->addLargeTextAreaElement("q_60_favourite_activities", "Favourite Activities");
+		//$this->addLargeTextAreaElement("q_60_favourite_toys_objects", "Favourite Toys / Objects");
 	}
 	
 	function _page8() {
@@ -724,7 +724,7 @@ DoB Proband should be somewhere in the candidate table.  For now, we'll just mak
 
 		$answerArray = array(""=>NULL, "0"=>"0", "1"=>"1", "2"=>"2", "3"=>"3", "4"=>"4", "8_NA"=>"8. N/A", "9_not_asked"=>"9. Not asked", "not_answered"=>"Not Answered");
 		$this->form->addElement("select", "q_86_age_when_abnormality_first_evident", "86. Age when abnormality first evident", $answerArray);
-		$this->addLargeTextAreaElement("q_86_age_when_abnormality_first_evident_text");
+		//$this->addLargeTextAreaElement("q_86_age_when_abnormality_first_evident_text");
 
 		$this->addTextElement("q_87_interviewers_judgment", "87. Interviewers judgment on age when developmental abnormalities probably first manifest");
 		
@@ -733,7 +733,7 @@ DoB Proband should be somewhere in the candidate table.  For now, we'll just mak
 	function _page11(){
 		$this->form->addElement("header", null, "SPECIAL ISOLATED SKILLS");
 		
-		$this->addLargeTextAreaElement("special_isolated_skills", "Special isolated skills");
+		//$this->addLargeTextAreaElement("special_isolated_skills", "Special isolated skills");
 
 		$answerArray = array(""=>NULL, "0_no"=>"0. No", "1_above_subject"=>"1. Above subject", "2_above_population"=>"2. Above population", "7_meaningful"=>"7. Meaningful", "8_NA"=>"8. N/A", "9_not_asked"=>"9. Not asked", "not_answered"=>"Not Answered");
 		$questionArray = array("q_88_visuospatial_ability"=>"88. Visuospatial ability",
@@ -748,13 +748,13 @@ DoB Proband should be somewhere in the candidate table.  For now, we'll just mak
 			$this->form->addElement("select", $field . "_ever_code", $this->indent . "Ever:", $answerArray);
 		}
 		
-		$this->form->addElement("header", null, "CONCLUDING COMMENTS");
-		$questionArray = array("overall_assessment"=>"Overall assessment",
-								"interviewers_impressions_and_circumstances"=>"Interviewers impressions and circumstances of interview",
-								"summary_of_discrepancies"=>"Summary of discrepancies between informant description and observer information");
-		foreach($questionArray as $field=>$label) {
-			$this->addLargeTextAreaElement($field, $label);
-		}	
+//		$this->form->addElement("header", null, "CONCLUDING COMMENTS");
+//		$questionArray = array("overall_assessment"=>"Overall assessment",
+//								"interviewers_impressions_and_circumstances"=>"Interviewers impressions and circumstances of interview",
+//								"summary_of_discrepancies"=>"Summary of discrepancies between informant description and observer information");
+//		foreach($questionArray as $field=>$label) {
+			//$this->addLargeTextAreaElement($field, $label);
+//		}	
 
 	}
 	
@@ -768,7 +768,7 @@ DoB Proband should be somewhere in the candidate table.  For now, we'll just mak
 		$this->form->addElement("static", null, "");
 		$this->form->addElement("select", );
 		$this->addTextElement("_code", );
-		$this->addLargeTextAreaElement("_text");
+		//$this->addLargeTextAreaElement("_text");
 		$this->XINRegisterRule(, array("q_11_loss_of_language{@}=={@}1_yes"), "This is required if language was lost (answered 'yes' to question 11)");
 */
 
@@ -780,6 +780,7 @@ DoB Proband should be somewhere in the candidate table.  For now, we'll just mak
     * @param    string    $rule_message    rule message to display upon rule violation
     */
     function addLargeTextAreaElement($field, $label = "&nbsp;&nbsp;&nbsp;&nbsp;Describe:", $rules=array(), $rule_message='This field must be completed or marked as not answered.') {
+        return;  //removed all free form comment text boxes.
         $group[]=&$this->form->createElement("textarea", $field, null, array('cols'=>60, 'rows'=>6));
         $group[]=&$this->form->createElement("select", $field."_status", "", array(NULL=>'', 'not_answered'=>'Not Answered'));
         $this->form->addGroup($group, $field.'_group', $label, null, false);
@@ -792,14 +793,14 @@ DoB Proband should be somewhere in the candidate table.  For now, we'll just mak
 		$this->form->addElement("static", null, $label);
 		$this->form->addElement("select", $field . "_current_code", $this->indent . "Current:", $answerArray);
 		$this->form->addElement("select", $field . "_most_abnormal_code", $this->indent . "Most abnormal 4.0-5.0 years:", $answerArray);
-		$this->addLargeTextAreaElement($field . "_text");
+		//$this->addLargeTextAreaElement($field . "_text");
 	}
 
 	function _addCurrentEver($field, $label, $answerArray) { 
 		$this->form->addElement("static", null, $label);
 		$this->form->addElement("select", $field . "_current_code", $this->indent . "Current:", $answerArray);
 		$this->form->addElement("select", $field . "_ever_code", $this->indent . "Ever:", $answerArray);
-		$this->addLargeTextAreaElement($field . "_text");
+		//$this->addLargeTextAreaElement($field . "_text");
 	}
 }
 ?>
