@@ -69,6 +69,9 @@ class NDB_BVL_Instrument_scq extends NDB_BVL_Instrument
 	function _main(){
 		// display test name
 		$this->form->addElement('header', 'instrument_title', "Social Communication Questionnaire - Lifetime");
+		$this->form->addElement('static', null, "Lifetime and Current versions of this questionnaire are effectively identical.");
+		$this->form->addElement('static', null, "Please fill in one as though it were the other.");
+		
 
 		// automatically adds examiner & date of administration
 		$this->_addMetadataFields();
