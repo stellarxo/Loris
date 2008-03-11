@@ -93,44 +93,44 @@ class NDB_BVL_Instrument_mullen extends NDB_BVL_Instrument
         // automatically adds examiner & date of administration
         $this->_addMetadataFields();
 
-        $this->form->addElement("header", null, "Please answer only non-identifying questions");
-        $this->form->addElement("static", null, "Child's Name");
-        $this->form->addElement("static", null, "ID");
-        $this->form->addElement("static", null, "Phone Number");
-        $this->form->addElement("static", null, "Nickname");
-        $this->form->addElement("static", null, "Boy / Girl");
-        $this->form->addElement("static", null, "Address");
-
-        $this->addTextElement("primary_language", "Child's Primary Language");
-
-        $this->form->addElement("static", null, "Mother's Name");
-        $this->form->addElement("static", null, "Father's Name");
-        $this->form->addElement("static", null, "Examiner");
-        $this->form->addElement("static", null, "School");
-
-        $this->addTextElement("weeks_gestation", "No. Weeks Gestation (G.A.)");
-        $this->addTextElement("birth_weight", "Birth Weight");
-
-        $this->addTextElement("apgar_1_min", "Apgars 1 min.");
-        $this->addTextElement("apgar_5_min", "Apgars 5 min.");
-        $this->form->addElement("static", null, "Hospital");
-
-        $this->form->addElement("select", "uncorrected_vision", "Does the child have a known uncorrected vision problem?", $this->yesNo);
-        $this->form->addElement("select", "uncorrected_hearing", "Does the child have a known uncorrected hearing problem?", $this->yesNo);
-
-        $this->addTextElement("characteristic_affecting", "Personal or physical characteristics that may affect the child's test results");
-
-        $this->form->addElement("select", "medication", "Is the child on any medication?", $this->yesNo);
-        $this->addTextElement("medication_specify", $this->indent . "If yes, please specify", array("medication{@}=={@}yes"), "This field is required if the child is on medication");
-
-        $this->form->addElement("static", null, "Referred by");
-        $this->form->addElement("static", null, "Reason for Referral");
-        $this->addTextAreaElement("info_comments", "Additional Information/Comments");
-
-        $this->form->addElement("static", null, "Testing Date");
-        $this->form->addElement("static", null, "Birth Date");
-        $this->form->addElement("static", null, "Chronological Age");
-        $this->form->addElement("static", null, "Adjusted Age");
+//        $this->form->addElement("header", null, "Please answer only non-identifying questions");
+//        $this->form->addElement("static", null, "Child's Name");
+//        $this->form->addElement("static", null, "ID");
+//        $this->form->addElement("static", null, "Phone Number");
+//        $this->form->addElement("static", null, "Nickname");
+//        $this->form->addElement("static", null, "Boy / Girl");
+//        $this->form->addElement("static", null, "Address");
+//
+//        $this->addTextElement("primary_language", "Child's Primary Language");
+//
+//        $this->form->addElement("static", null, "Mother's Name");
+//        $this->form->addElement("static", null, "Father's Name");
+//        $this->form->addElement("static", null, "Examiner");
+//        $this->form->addElement("static", null, "School");
+//
+//        $this->addTextElement("weeks_gestation", "No. Weeks Gestation (G.A.)");
+//        $this->addTextElement("birth_weight", "Birth Weight");
+//
+//        $this->addTextElement("apgar_1_min", "Apgars 1 min.");
+//        $this->addTextElement("apgar_5_min", "Apgars 5 min.");
+//        $this->form->addElement("static", null, "Hospital");
+//
+//        $this->form->addElement("select", "uncorrected_vision", "Does the child have a known uncorrected vision problem?", $this->yesNo);
+//        $this->form->addElement("select", "uncorrected_hearing", "Does the child have a known uncorrected hearing problem?", $this->yesNo);
+//
+//        $this->addTextElement("characteristic_affecting", "Personal or physical characteristics that may affect the child's test results");
+//
+//        $this->form->addElement("select", "medication", "Is the child on any medication?", $this->yesNo);
+//        $this->addTextElement("medication_specify", $this->indent . "If yes, please specify", array("medication{@}=={@}yes"), "This field is required if the child is on medication");
+//
+//        $this->form->addElement("static", null, "Referred by");
+//        $this->form->addElement("static", null, "Reason for Referral");
+//        $this->addTextAreaElement("info_comments", "Additional Information/Comments");
+//
+//        $this->form->addElement("static", null, "Testing Date");
+//        $this->form->addElement("static", null, "Birth Date");
+//        $this->form->addElement("static", null, "Chronological Age");
+//        $this->form->addElement("static", null, "Adjusted Age");
     }
 
     function _page1(){
