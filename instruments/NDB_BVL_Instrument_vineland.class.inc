@@ -70,71 +70,69 @@ class NDB_BVL_Instrument_vineland extends NDB_BVL_Instrument
         // display test name
         $this->form->addElement('header', 'instrument_title', "Vineland II ABS - Survey Interview Form");
 
-        // examiner & date of administration fields added separately, later
-        //        $this->_addMetadataFields();
+        $this->_addMetadataFields();
 
         //About the Individual
-        $prefix = "about_";
-        $this->form->addElement('header', null, "About the Individual");
-        $this->form->addElement('header', null, "Please only complete the non-identifying fields allowed.");
-        $this->form->addElement('static', null, "Name:");
-        $this->form->addElement('static', null, "Sex:");
-        $this->form->addElement('static', null, "ID:");
-        $this->addTextElement("{$prefix}current_grade", "Grade (if applicable):");
-        $this->addTextElement("{$prefix}highest_grade", "Highest Grade Completed (if applicable):");
-        $this->form->addElement('static', null, "School or Other Facility (if applicable):");
-        $this->addTextElement("{$prefix}present_classification", "Present Classification or Diagnosis:");
-        $this->addTextElement("{$prefix}laguage", "Language Spoken at Home:");
+//        $prefix = "about_";
+//        $this->form->addElement('header', null, "About the Individual");
+//        $this->form->addElement('header', null, "Please only complete the non-identifying fields allowed.");
+//        $this->form->addElement('static', null, "Name:");
+//        $this->form->addElement('static', null, "Sex:");
+//        $this->form->addElement('static', null, "ID:");
+//        $this->addTextElement("{$prefix}current_grade", "Grade (if applicable):");
+//        $this->addTextElement("{$prefix}highest_grade", "Highest Grade Completed (if applicable):");
+//        $this->form->addElement('static', null, "School or Other Facility (if applicable):");
+//        $this->addTextElement("{$prefix}present_classification", "Present Classification or Diagnosis:");
+//        $this->addTextElement("{$prefix}laguage", "Language Spoken at Home:");
+//
+//        $this->form->addElement("static", null, "&nbsp;");
+//        $this->form->addElement("static", null, "Age:");
+//        $config =& NDB_Config::singleton();
+//        $dateOptions = array(
+//        'language' => 'en',
+//        'format'   => 'YMd',
+//        'minYear'  => $config->getSetting('startYear'),
+//        'maxYear'  => $config->getSetting('endYear'),
+//        'addEmptyOption' => true,
+//        'emptyOptionValue' => null
+//        );
+//
+//        $this->form->addElement('date', 'Date_taken', $this->indent . 'Interview Date:', $dateOptions);
+//        $this->addTextElement("{$prefix}age_used", $this->indent . "Age Used for Starting Points:");
+//        $answerOptions = array(NULL=>"",
+//        "chronological"=>"Chronological",
+//        "mental"=>"Mental",
+//        "social"=>"Social",
+//        "not_answered"=>"Not Answered");
+//        $this->form->addElement("select", "{$prefix}age_type", $this->indent . "Type (select one):", $answerOptions);
+//
+//        $this->form->addElement("static", null, "&nbsp;");
+//        $this->form->addElement("static", null, "Data from Other Tests:");
+//        $questionArray = array("intelligence"=>"Intelligence", "achievement"=>"Achievement", "adaptive"=>"Adaptive Behavior", "other"=>"Other");
+//        foreach ($questionArray as $field=>$label) {
+//            $this->addTextElement("{$prefix}data_$field", $this->indent . $label);
+//        }
+//
+//        $this->addTextElement("{$prefix}reason", "Reason for the Interview:");
+//
+//        $this->form->addElement("static", null, "&nbsp;");
+//        $this->form->addElement("static", null, "About the Respondent:");
+//        $this->form->addElement("static", null, $this->indent . "Name:");
+        
+        //Keep the sex question
+//        $this->form->addElement("select", "{$prefix}respondent_sex", "Respondent Sex:", array(null=>"", "male"=>"Male", "female"=>"Female", "not_answered"=>"Not Answered"));
 
-        $this->form->addElement("static", null, "&nbsp;");
-        $this->form->addElement("static", null, "Age:");
-        $config =& NDB_Config::singleton();
-        $dateOptions = array(
-        'language' => 'en',
-        'format'   => 'YMd',
-        'minYear'  => $config->getSetting('startYear'),
-        'maxYear'  => $config->getSetting('endYear'),
-        'addEmptyOption' => true,
-        'emptyOptionValue' => null
-        );
-
-        $this->form->addElement('date', 'Date_taken', $this->indent . 'Interview Date:', $dateOptions);
-        $this->addTextElement("{$prefix}age_used", $this->indent . "Age Used for Starting Points:");
-        $answerOptions = array(NULL=>"",
-        "chronological"=>"Chronological",
-        "mental"=>"Mental",
-        "social"=>"Social",
-        "not_answered"=>"Not Answered");
-        $this->form->addElement("select", "{$prefix}age_type", $this->indent . "Type (select one):", $answerOptions);
-
-        $this->form->addElement("static", null, "&nbsp;");
-        $this->form->addElement("static", null, "Data from Other Tests:");
-        $questionArray = array("intelligence"=>"Intelligence", "achievement"=>"Achievement", "adaptive"=>"Adaptive Behavior", "other"=>"Other");
-        foreach ($questionArray as $field=>$label) {
-            $this->addTextElement("{$prefix}data_$field", $this->indent . $label);
-        }
-
-        $this->addTextElement("{$prefix}reason", "Reason for the Interview:");
-
-        $this->form->addElement("static", null, "&nbsp;");
-        $this->form->addElement("static", null, "About the Respondent:");
-        $this->form->addElement("static", null, $this->indent . "Name:");
-        $this->form->addElement("select", "{$prefix}respondent_sex", $this->indent . "Sex:", array(null=>"", "male"=>"Male", "female"=>"Female", "not_answered"=>"Not Answered"));
-
-        $this->form->addElement("static", null, $this->indent . "Telephone:");
-        $this->addTextElement("{$prefix}respondent_relationship", $this->indent . "Relationship to Individual:");
-
-        $this->form->addElement("static", null, "&nbsp;");
-        $this->form->addElement("static", null, "About the Interviewer:");
-        $examiners = $this->_getExaminerNames();
-        $this->form->addElement('select', 'Examiner', $this->indent . 'Name:', $examiners);
-        $this->addTextElement("{$prefix}interviewer_position", $this->indent . "Position:");
-        $this->form->addElement("select", "{$prefix}interviewer_sex", $this->indent . "Sex:", array(null=>"", "male"=>"Male", "female"=>"Female", "not_answered"=>"Not Answered"));
-
-        //        $this->form->addElement("");
-        //        $this->form->addElement("{$prefix}", "");
-        //
-        //        $this->addTextElement("{$prefix}", "");
+//        $this->form->addElement("static", null, $this->indent . "Telephone:");
+//        $this->addTextElement("{$prefix}respondent_relationship", $this->indent . "Relationship to Individual:");
+//
+//        $this->form->addElement("static", null, "&nbsp;");
+//        $this->form->addElement("static", null, "About the Interviewer:");
+//        $examiners = $this->_getExaminerNames();
+//        $this->form->addElement('select', 'Examiner', $this->indent . 'Name:', $examiners);
+//        $this->addTextElement("{$prefix}interviewer_position", $this->indent . "Position:");
+        
+        //Another sex question to keep
+//        $this->form->addElement("select", "{$prefix}interviewer_sex", "Interviewer Sex:", array(null=>"", "male"=>"Male", "female"=>"Female", "not_answered"=>"Not Answered"));
 
     }
 
