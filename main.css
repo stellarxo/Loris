@@ -269,19 +269,9 @@ table.fancytableleft caption {
    font-family:Verdana,sans-serif;
    color:white;
    background-color:#08245b;
-   filter:progid:DXImageTransform.Microsoft.Gradient(GradientType=0,StartColorStr='#ffFFFFFF',EndColorStr='#ffFFEEDD');
-   border-top-style:groove;
-   border-top-color:#08245b;
-   border-top-width:3px;
-   border-bottom-style:groove;
-   border-bottom-color:#08245b;
-   border-bottom-width:3px;
-   border-left-style:solid;
-   border-left-color:#FFEEDD;
-   border-left-width:1px;
-   border-right-style:solid;
-   border-right-color:#FFFFFF;
-   border-right-width:1px;
+   border-style:ridge;
+   border-color:#FFFFFF;
+   border-width:1px;
 }
 
 
@@ -297,6 +287,22 @@ input.text {
   color:FFFFFF;
 }
 
+td.red {
+background: #D29E93;
+color:black;
+padding:3px;
+text-align:left;
+vertical-align:top;
+border-bottom: 1px solid #CCCCCC;
+}
 
+td.green {
+background: #789A99;
+color:black;
+padding:3px;
+text-align:left;
+vertical-align:top;
+border-bottom: 1px solid #CCCCCC;
+}
 
 
