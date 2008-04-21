@@ -152,12 +152,12 @@ class NDB_BVL_Instrument_med_psych_hist extends NDB_BVL_Instrument
 		$this->form->addElement("header", null, "3. The items below ask about the medical history of the child and relatives");
 		$answerArray = array(null=>"", '0_no'=>"0. No", "1_yes"=>"1. Yes", "2_not_sure"=>"2. Not Sure", "not_answered"=>"Not Answered");
 		$questionArray = array(
-		"a_autism_spectrum_disorder"=>"a. Autism Spectrum Disorder",
+		"a_aut_spect_disorder"=>"a. Autism Spectrum Disorder",
 		"b_fragile_x"=>"b. Fragile X",
 		"c_tuberous_sclerosis"=>"c. Tuberous Sclerosis",
 		"d_neurofibromatosis"=>"d. Neurofibromatosis",
 		"e_rett_syndrome"=>"e. Rett Syndrome",
-		"f_childhood_disintegration_disorder"=>"f. Childhood Disintegration Disorder",
+		"f_child_disint_disorder"=>"f. Childhood Disintegration Disorder",
 		"g_prader_willi_syndrome"=>"g. Prader Willi Syndrome",
 		"h_angelman_syndrome"=>"h. Angelman Syndrome",
 		"i_other_chromosomal"=>"i. Other chromosomal abnormality, disorder or syndrome",
@@ -170,11 +170,11 @@ class NDB_BVL_Instrument_med_psych_hist extends NDB_BVL_Instrument
 		"o_seizures"=>"o. Seizures",
 		"p_speech_delay_therapy"=>"p. Speech delay requiring therapy",
 		"q_add"=>"q. Attention Deficit Disorder (ADD)",
-		"r_panic_anxiety_disorder"=>"r. Panic or anxiety disorder",
+		"r_panic_anxiety_dis"=>"r. Panic or anxiety disorder",
 		"s_depression"=>"s. Depression",
-		"t_manic_depression_bipolar"=>"t. Manic depression/Bipolar",
+		"t_manic_depres_bi"=>"t. Manic depression/Bipolar",
 		"u_schizophrenia"=>"u. Schizophrenia",
-		"v_hospitalized_mental_illness"=>"v. Been admitted to a hospital for psychiatric illness",
+		"v_hospital_mental_ill"=>"v. Been admitted to a hospital for psychiatric illness",
 		"w_birth_defects"=>"w. Birth defects (e.g., cleft lip or palate, open spine)",
 		"x_cancer"=>"x. Cancer (please specify type)",
 		//"x_cancer"=>"x. Cancer (please specify type)",
@@ -240,7 +240,7 @@ class NDB_BVL_Instrument_med_psych_hist extends NDB_BVL_Instrument
 		$this->XINRegisterRule("4_pregnancy_ART_type", array("4_pregnancy_ART{@}=={@}1_yes"), "Please indicate which ART were used.");
 		$this->addTextElement("4_pregnancy_ART_type_specify", $this->indent . $this->indent . "If other, (please specify)", array("4_pregnancy_ART_type{@}=={@}h_other"), "If other ART used, please specify or select Not Answered");
 
-		$this->form->addElement("select", "5_pregnancy_health_problems", "5. At any time in this pregnancy, did you have any of the following health problems? (select all used)", array(
+		$this->form->addElement("select", "5_preg_health_probs", "5. At any time in this pregnancy, did you have any of the following health problems? (select all used)", array(
 		"a_fever_over_101_or_infection"=>"a.   Fever over 101 F or infection",
 		"b_seizures"=>"b. Seizures",
 		"c_viral_illness"=>"c. Viral illness",
@@ -253,21 +253,21 @@ class NDB_BVL_Instrument_med_psych_hist extends NDB_BVL_Instrument
 		"j_high_blood_pressure"=>"j. High blood pressure"), "multiple");
 		$this->addTextElement("5_pregnancy_health_problems_specify", $this->indent . "If other, (please specify)", array("5_pregnancy_health_problems{@}=={@}f_other_major_illness_or_injury"), "If other health problems, please specify or select Not Answered");
 
-		$questionArray = array("a_Antibiotics_for_infections"=>"a. Antibiotics for infections",
+		$questionArray = array("a_antibio_infections"=>"a. Antibiotics for infections",
 		"b_acne_meds"=>"b. Medications for acne",
 		"c_birth_control_meds"=>"c. Medications for birth control",
 		"d_antihypertensives"=>"d. Antihypertensives for high blood pressure",
 		"e_heart_cardiac_meds"=>"e. Medications for heart or cardiac problems",
 		"f_ADD_meds"=>"f. Medications for Attention Deficit Disorder",
-		"g_antiepileptics_or_anti_seizure"=>"g. Antiepileptics or anti-seizure medications",
+		"g_antiepilep_anti_seizure"=>"g. Antiepileptics or anti-seizure medications",
 		"h_diabetes_meds"=>"h. Medications to control diabetes",
 		"i_thyroid_meds"=>"i. Medications to regulate thyroid",
 		"j_antidepressants"=>"j. Antidepressants",
-		"k_mood_stabilizers_anti_psychotics"=>"k. Mood stabilizers or anti-psychotics",
+		"k_mood_stabs_anti_psychos"=>"k. Mood stabilizers or anti-psychotics",
 		"l_tranquilizers_nerve_pills"=>"l. Tranquilizers or nerve pills",
 		"m_pain_killers"=>"m. Pain killers",
 		"n_sedatives_sleeping_pills"=>"n. Sedatives or sleeping pills",
-		"o_anti_inflammatory_anti_immune"=>"o. Anti-inflammatory or anti-immune drugs",
+		"o_anti_inflam_immune"=>"o. Anti-inflammatory or anti-immune drugs",
 		"p_treatment_for_HIV"=>"p. Treatment for HIV",
 		"q_thalidomide"=>"q. Thalidomide (please specify why)",
 		"r_misoprostol"=>"r. Misoprostol (please specify why)",
@@ -283,9 +283,9 @@ class NDB_BVL_Instrument_med_psych_hist extends NDB_BVL_Instrument
 		}
 
 		$this->form->addElement("static", null, "Please specify what's and why's");
-		$this->addTextElement("6_pregnancy_meds_q_thalidomide_specify", $this->indent . "If q. Thalidomide, please specify why medication was prescribed", array("6_pregnancy_meds{@}=={@}q_thalidomide"), "If Thalidomide was prescribed, please specify why.");
-		$this->addTextElement("6_pregnancy_meds_r_misoprostol_specify", $this->indent . "If r. Misoprostol, please specify why medication was prescribed", array("6_pregnancy_meds{@}=={@}r_misoprostol"), "If Misoprostol was prescribed, please specify why.");
-		$this->addTextElement("6_pregnancy_meds_s_other_specify", $this->indent . "If s. Other, please specify medication and why it was prescribed", array("6_pregnancy_meds{@}=={@}s_other"), "If Other meds were prescribed, please specify which and why.");
+		$this->addTextElement("6_preg_meds_q_thalid_specify", $this->indent . "If q. Thalidomide, please specify why medication was prescribed", array("6_pregnancy_meds{@}=={@}q_thalidomide"), "If Thalidomide was prescribed, please specify why.");
+		$this->addTextElement("6_preg_meds_r_miso_specify", $this->indent . "If r. Misoprostol, please specify why medication was prescribed", array("6_pregnancy_meds{@}=={@}r_misoprostol"), "If Misoprostol was prescribed, please specify why.");
+		$this->addTextElement("6_preg_meds_s_other_specify", $this->indent . "If s. Other, please specify medication and why it was prescribed", array("6_pregnancy_meds{@}=={@}s_other"), "If Other meds were prescribed, please specify which and why.");
 	}
 
 	function _page4() {
@@ -296,8 +296,8 @@ class NDB_BVL_Instrument_med_psych_hist extends NDB_BVL_Instrument
 		"c_abnormal_amniocentesis_or_CVS"=>"c. Abnormality from an amniocentesis or CVS",// (please specify)
 		"d_other"=>"d. Other (please specify)"), "multiple");
 		$this->addTextElement("7_a_positive_blood_test_specify", $this->indent . "If positive blood tests, please specify", array("7_baby_health_problems{@}=={@}a_positive_blood_test"), "Please specify the results of the positive blood test.");
-		$this->addTextElement("7_b_abnormal_ultrasound_or_sonogram_specify", $this->indent . "If abnormal ultrasound or sonogram, please specify", array("7_baby_health_problems{@}=={@}b_abnormal_ultrasound_or_sonogram"), "Please specify the results of the abnormal ultrasound or sonogram.");
-		$this->addTextElement("7_c_abnormal_amniocentesis_or_CVS_specify", $this->indent . "If abnormal abnormal amniocentesis or CVS, please specify", array("7_baby_health_problems{@}=={@}c_abnormal_amniocentesis_or_CVS"), "Please specify the results of the abnormal amniocentesis or CVS");
+		$this->addTextElement("7_b_abnormal_ultra_sono_specify", $this->indent . "If abnormal ultrasound or sonogram, please specify", array("7_baby_health_problems{@}=={@}b_abnormal_ultrasound_or_sonogram"), "Please specify the results of the abnormal ultrasound or sonogram.");
+		$this->addTextElement("7_c_abnormal_amnio_CVS_specify", $this->indent . "If abnormal abnormal amniocentesis or CVS, please specify", array("7_baby_health_problems{@}=={@}c_abnormal_amniocentesis_or_CVS"), "Please specify the results of the abnormal amniocentesis or CVS");
 		$this->addTextElement("7_d_other_specify", $this->indent . "If other, please specify", array("7_baby_health_problems{@}=={@}d_other"), "Please specify the other results.");
 
 		//8.
@@ -312,7 +312,7 @@ class NDB_BVL_Instrument_med_psych_hist extends NDB_BVL_Instrument
 		"b_cocaine_crack_free_base"=>"b. Use Cocaine, Crack or Free base",
 		"c_heroin"=>"c. Use Heroin (includes speed balling)",
 		"d_methadone"=>"d. Take Methadone",
-		"e_amphetamines_or_stimulants"=>"e. Take Amphetamines or other stimulants",
+		"e_amphet_stims"=>"e. Take Amphetamines or other stimulants",
 		"f_ecstasy"=>"f. Take Ecstasy",
 		"g_hallucinogens"=>"g. Take Hallucinogens",
 		"h_inhalants"=>"h. Take inhalants that you sniff or breathe",
@@ -409,9 +409,9 @@ class NDB_BVL_Instrument_med_psych_hist extends NDB_BVL_Instrument
 		"d_heart_defect"=>"d. Heart defect (please specify",
 		"e_kidney_defect"=>"e. Kidney defect(please specify)",
 		"f_other_defect"=>"f. Other defect(please specify)"), "multiple");
-		$this->addTextElement("17_birth_defects_d_heart_defect_specify", $this->indent . "If heart defect, please specify", array("17_birth_defects{@}=={@}d_heart_defect"), "Please specify the heart defect.");
-		$this->addTextElement("17_birth_defects_e_kidney_defect_specify", $this->indent . "If kidney defect, please specify", array("17_birth_defects{@}=={@}e_kidney_defect"), "Please specify the kidney defect.");
-		$this->addTextElement("17_birth_defects_f_other_defect_specify", $this->indent . "If other defect, please specify", array("17_birth_defects{@}=={@}f_other_defect"), "Please specify the other defect.");
+		$this->addTextElement("17_d_heart_defect_specify", $this->indent . "If heart defect, please specify", array("17_birth_defects{@}=={@}d_heart_defect"), "Please specify the heart defect.");
+		$this->addTextElement("17_e_kidney_defect_specify", $this->indent . "If kidney defect, please specify", array("17_birth_defects{@}=={@}e_kidney_defect"), "Please specify the kidney defect.");
+		$this->addTextElement("17_f_other_defect_specify", $this->indent . "If other defect, please specify", array("17_birth_defects{@}=={@}f_other_defect"), "Please specify the other defect.");
 
 		//18.
 		$this->form->addElement("select", "18_other_chronic", "18. Does the child being evaluated today for autism have any other chronic medical problems?", $this->yesNo);
