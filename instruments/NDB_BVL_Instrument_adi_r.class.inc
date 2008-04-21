@@ -708,7 +708,7 @@ DoB Proband should be somewhere in the candidate table.  For now, we'll just mak
 		$this->_addCurrentEver($field, $label, $answerArray);
 
 		$answerArray = array(""=>NULL, "0_no"=>"0. No", "1_slight"=>"1. Slight", "2_definitely"=>"2. Definitely", "3_serious"=>"3. Serious", "8_NA"=>"8. N/A", "9_not_asked"=>"9. Not asked", "not_answered"=>"Not Answered");
-		$field = "q_83_self-injury";
+		$field = "q_83_self_injury";
 		$label = "83. Self-injury";
 		$this->_addCurrentEver($field, $label, $answerArray);
 
