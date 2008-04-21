@@ -48,8 +48,8 @@ DoB Proband should be somewhere in the candidate table.  For now, we'll just mak
 
         // required fields for data entry completion status
         $this->_requiredElements = array('Examiner', "q_11_loss_of_language", "q_20_loss_of_skills_code", "q_30_overall_level_of_language",
-        								"q_41_current_communicative_speech_current_code", "q_50_direct_gaze_current_code",
-        								"q_60_initiation_of_activities_current_code", "q_67_unusual_preoccupations_current_code",
+        								"q_41_cur_comm_speech_current_code", "q_50_direct_gaze_current_code",
+        								"q_60_init_activities_current_code", "q_67_unusual_preoccupations_current_code",
         								"q_80_gait_current_code", "q_88_visuospatial_ability_current_code");
 
 		//For testing purposes only...
@@ -181,23 +181,23 @@ DoB Proband should be somewhere in the candidate table.  For now, we'll just mak
         if($this->respondentAgeMonths >= 24 && $this->respondentAgeMonths <= 47) {
 	        //Age 2 Years to 3 Years, 11 Months => 24months...47months
 	        $scoreCols["Total_A1"] = $scores["q_50_direct_gaze_current_code"] + $scores["q_51_social_smiling_current_code"] 
-									+ $scores["q_57_range_of_racial_expressions_current_code"];
-			$scoreCols["Total_A2"] = $scores["q_62_interest_in_children_current_code"] + $scores["q_63_response_to_approaches_current_code"];
-			$scoreCols["Total_A3"] = $scores["q_52_showing_and_directing_attention_current_code"] + $scores["q_53_offering_to_share_current_code"]
-									+ $scores["q_54_seeking_to_share_enjoyment_current_code"];
-			$scoreCols["Total_A4"] = $scores["q_31_use_of_others_body_current_code"] + $scores["q_55_offerings_comfort_current_code"]
-									+ $scores["q_56_quality_of_social_overtures_current_code"] + $scores["q_58_inappropriate_facial_current_code"]
-									+ $scores["q_59_appropriateness_of_responses_current_code"];
+									+ $scores["q_57_range_facial_expr_current_code"];
+			$scoreCols["Total_A2"] = $scores["q_62_inter_children_current_code"] + $scores["q_63_resp_approaches_current_code"];
+			$scoreCols["Total_A3"] = $scores["q_52_show_direct_atten_current_code"] + $scores["q_53_offer_share_current_code"]
+									+ $scores["q_54_seek_share_enjoy_current_code"];
+			$scoreCols["Total_A4"] = $scores["q_31_use_of_others_body_current_code"] + $scores["q_55_offer_comf_current_code"]
+									+ $scores["q_56_qual_social_overts_current_code"] + $scores["q_58_inappropriate_facial_current_code"]
+									+ $scores["q_59_appropriat_resp_current_code"];
 			$scoreCols["A_Total"] = $scoreCols["Total_A1"] + $scoreCols["Total_A2"] + $scoreCols["Total_A3"] + $scoreCols["Total_A4"];
 	
-			$scoreCols["Total_B1"] = $scores["q_42_pointing_to_express_interest_current_code"] + $scores["q_43_nodding_current_code"]
-									+ $scores["q_44_head_shaking_current_code"] + $scores["q_45_conventional_instrumental_gestures_current_code"];
-			$scoreCols["Total_B4"] = $scores["q_47_spontaneous_imitation_current_code"] + $scores["q_48_imaginative_play_current_code"]
-									+ $scores["q_61_imitative_social_play_current_code"];
+			$scoreCols["Total_B1"] = $scores["q_42_point_express_interest_current_code"] + $scores["q_43_nodding_current_code"]
+									+ $scores["q_44_head_shaking_current_code"] + $scores["q_45_conventional_instr_gests_current_code"];
+			$scoreCols["Total_B4"] = $scores["q_47_spont_imit_current_code"] + $scores["q_48_imag_play_current_code"]
+									+ $scores["q_61_imit_soc_play_current_code"];
 	
 			if(substr($record["q_30_overall_level_of_language"], 0, 1) == 0) { //verbal subject
-				$scoreCols["Total_B2V"] = $scores["q_34_social_verbalization_chat_current_code"] + $scores["q_35_reciprocal_conversation_current_code"];
-				$scoreCols["Total_B3V"] = $scores["q_33_stereotyped_utterances_current_code"] + $scores["q_36_inappropriate_questions_current_code"]
+				$scoreCols["Total_B2V"] = $scores["q_34_social_verb_chat_current_code"] + $scores["q_35_recipr_convers_current_code"];
+				$scoreCols["Total_B3V"] = $scores["q_33_stereotyped_utterances_current_code"] + $scores["q_36_inappropriate_qs_current_code"]
 										+ $scores["q_37_prenominal_reversal_current_code"] + $scores["q_38_neologisms_current_code"];
 			} else {
 				$scoreCols["Total_B2V"] = "Nonverbal";
@@ -206,31 +206,31 @@ DoB Proband should be somewhere in the candidate table.  For now, we'll just mak
 			$scoreCols["BV_Total"] = $scoreCols["Total_B1"] + $scoreCols["Total_B4"] + $scoreCols["Total_B2V"] + $scoreCols["Total_B3V"]; 
 			$scoreCols["BNV_Total"] = $scoreCols["Total_B1"] + $scoreCols["Total_B4"];
 			
-			$scoreCols["Total_C1"] = $scores["q_67_unusual_preoccupations_current_code"] + $scores["q_68_circumscribed_interests_current_code"];
+			$scoreCols["Total_C1"] = $scores["q_67_unusual_preoccupations_current_code"] + $scores["q_68_circumscr_ints_current_code"];
 			$scoreCols["Total_C2"] = $scores["q_39_verbal_rituals_current_code"] + $scores["q_70_compulsions_rituals_current_code"];
-			$scoreCols["Total_C3"] = $scores["q_77_hands_and_finger_mannerisms_current_code"] + $scores["q_78_other_complex_mannerisms_current_code"];
-			$scoreCols["Total_C4"] = $scores["q_69_repetitive_use_of_objects_current_code"] + $scores["q_71_unusual_sensory_interests_current_code"];
+			$scoreCols["Total_C3"] = $scores["q_77_hands_finger_manners_current_code"] + $scores["q_78_oth_complex_manners_current_code"];
+			$scoreCols["Total_C4"] = $scores["q_69_repet_use_objects_current_code"] + $scores["q_71_unusual_sens_ints_current_code"];
 			$scoreCols["C_Total"] = $scoreCols["Total_C1"] + $scoreCols["Total_C2"] + $scoreCols["Total_C3"] + $scoreCols["Total_C4"];
         } elseif($this->respondentAgeMonths >= 48 && $this->respondentAgeMonths <= 119) {
 			//Age 4 years to 9 years, 11 months => 48months...119months
 	        $scoreCols["Total_A1"] = $scores["q_50_direct_gaze_current_code"] + $scores["q_51_social_smiling_current_code"] 
-									+ $scores["q_57_range_of_racial_expressions_current_code"];
-			$scoreCols["Total_A2"] = $scores["q_49_imaginative_play_with_peers_current_code"] + $scores["q_62_interest_in_children_current_code"] + $scores["q_63_response_to_approaches_current_code"] + $scores["q_64_group_play_peers_current_code"];
-			$scoreCols["Total_A3"] = $scores["q_52_showing_and_directing_attention_current_code"] + $scores["q_53_offering_to_share_current_code"]
-									+ $scores["q_54_seeking_to_share_enjoyment_current_code"];
-			$scoreCols["Total_A4"] = $scores["q_31_use_of_others_body_current_code"] + $scores["q_55_offerings_comfort_current_code"]
-									+ $scores["q_56_quality_of_social_overtures_current_code"] + $scores["q_58_inappropriate_facial_current_code"]
-									+ $scores["q_59_appropriateness_of_responses_current_code"];
+									+ $scores["q_57_range_facial_expr_current_code"];
+			$scoreCols["Total_A2"] = $scores["q_49_imag_play_peers_current_code"] + $scores["q_62_inter_children_current_code"] + $scores["q_63_resp_approaches_current_code"] + $scores["q_64_group_play_peers_current_code"];
+			$scoreCols["Total_A3"] = $scores["q_52_show_direct_atten_current_code"] + $scores["q_53_offer_share_current_code"]
+									+ $scores["q_54_seek_share_enjoy_current_code"];
+			$scoreCols["Total_A4"] = $scores["q_31_use_of_others_body_current_code"] + $scores["q_55_offer_comf_current_code"]
+									+ $scores["q_56_qual_social_overts_current_code"] + $scores["q_58_inappropriate_facial_current_code"]
+									+ $scores["q_59_appropriat_resp_current_code"];
 			$scoreCols["A_Total"] = $scoreCols["Total_A1"] + $scoreCols["Total_A2"] + $scoreCols["Total_A3"] + $scoreCols["Total_A4"];
 	
-			$scoreCols["Total_B1"] = $scores["q_42_pointing_to_express_interest_current_code"] + $scores["q_43_nodding_current_code"]
-									+ $scores["q_44_head_shaking_current_code"] + $scores["q_45_conventional_instrumental_gestures_current_code"];
-			$scoreCols["Total_B4"] = $scores["q_47_spontaneous_imitation_current_code"] + $scores["q_48_imaginative_play_current_code"]
-									+ $scores["q_61_imitative_social_play_current_code"];
+			$scoreCols["Total_B1"] = $scores["q_42_point_express_interest_current_code"] + $scores["q_43_nodding_current_code"]
+									+ $scores["q_44_head_shaking_current_code"] + $scores["q_45_conventional_instr_gests_current_code"];
+			$scoreCols["Total_B4"] = $scores["q_47_spont_imit_current_code"] + $scores["q_48_imag_play_current_code"]
+									+ $scores["q_61_imit_soc_play_current_code"];
 	
 			if(substr($record["q_30_overall_level_of_language"], 0, 1) == 0) { //verbal subject
-				$scoreCols["Total_B2V"] = $scores["q_34_social_verbalization_chat_current_code"] + $scores["q_35_reciprocal_conversation_current_code"];
-				$scoreCols["Total_B3V"] = $scores["q_33_stereotyped_utterances_current_code"] + $scores["q_36_inappropriate_questions_current_code"]
+				$scoreCols["Total_B2V"] = $scores["q_34_social_verb_chat_current_code"] + $scores["q_35_recipr_convers_current_code"];
+				$scoreCols["Total_B3V"] = $scores["q_33_stereotyped_utterances_current_code"] + $scores["q_36_inappropriate_qs_current_code"]
 										+ $scores["q_37_prenominal_reversal_current_code"] + $scores["q_38_neologisms_current_code"];
 			} else {
 				$scoreCols["Total_B2V"] = "Nonverbal";
@@ -241,10 +241,10 @@ DoB Proband should be somewhere in the candidate table.  For now, we'll just mak
 			$scoreCols["BNV_Total"] = $scoreCols["Total_B1"] + $scoreCols["Total_B4"];
 	
 			
-			$scoreCols["Total_C1"] = $scores["q_67_unusual_preoccupations_current_code"] + $scores["q_68_circumscribed_interests_current_code"];
+			$scoreCols["Total_C1"] = $scores["q_67_unusual_preoccupations_current_code"] + $scores["q_68_circumscr_ints_current_code"];
 			$scoreCols["Total_C2"] = $scores["q_39_verbal_rituals_current_code"] + $scores["q_70_compulsions_rituals_current_code"];
-			$scoreCols["Total_C3"] = $scores["q_77_hands_and_finger_mannerisms_current_code"] + $scores["q_78_other_complex_mannerisms_current_code"];
-			$scoreCols["Total_C4"] = $scores["q_69_repetitive_use_of_objects_current_code"] + $scores["q_71_unusual_sensory_interests_current_code"];
+			$scoreCols["Total_C3"] = $scores["q_77_hands_finger_manners_current_code"] + $scores["q_78_oth_complex_manners_current_code"];
+			$scoreCols["Total_C4"] = $scores["q_69_repet_use_objects_current_code"] + $scores["q_71_unusual_sens_ints_current_code"];
 			$scoreCols["C_Total"] = $scoreCols["Total_C1"] + $scoreCols["Total_C2"] + $scoreCols["Total_C3"] + $scoreCols["Total_C4"];
         } elseif($this->respondentAgeMonths >= 120) {
 			//Age 10 years and older => 120months...  Only applicable to verbal subjects
@@ -252,29 +252,29 @@ DoB Proband should be somewhere in the candidate table.  For now, we'll just mak
 				$scoreCols["A_Total"] = "Error - cannot score nonverbal subjects";
 			} else {
 	            $scoreCols["Total_A1"] = $scores["q_51_social_smiling_current_code"] 
-										+ $scores["q_57_range_of_racial_expressions_current_code"];
+										+ $scores["q_57_range_facial_expr_current_code"];
 				$scoreCols["Total_A2"] = $scores["q_65_friendships_current_code"];
-				$scoreCols["Total_A3"] = $scores["q_52_showing_and_directing_attention_current_code"] + $scores["q_53_offering_to_share_current_code"]
-										+ $scores["q_54_seeking_to_share_enjoyment_current_code"];
-				$scoreCols["Total_A4"] = $scores["q_31_use_of_others_body_current_code"] + $scores["q_55_offerings_comfort_current_code"]
-										+ $scores["q_56_quality_of_social_overtures_current_code"] + $scores["q_58_inappropriate_facial_current_code"]
-										+ $scores["q_59_appropriateness_of_responses_current_code"];
+				$scoreCols["Total_A3"] = $scores["q_52_show_direct_atten_current_code"] + $scores["q_53_offer_share_current_code"]
+										+ $scores["q_54_seek_share_enjoy_current_code"];
+				$scoreCols["Total_A4"] = $scores["q_31_use_of_others_body_current_code"] + $scores["q_55_offer_comf_current_code"]
+										+ $scores["q_56_qual_social_overts_current_code"] + $scores["q_58_inappropriate_facial_current_code"]
+										+ $scores["q_59_appropriat_resp_current_code"];
 				$scoreCols["A_Total"] = $scoreCols["Total_A1"] + $scoreCols["Total_A2"] + $scoreCols["Total_A3"] + $scoreCols["Total_A4"];
 		
-				$scoreCols["Total_B1"] = $scores["q_42_pointing_to_express_interest_current_code"] + $scores["q_43_nodding_current_code"]
-										+ $scores["q_44_head_shaking_current_code"] + $scores["q_45_conventional_instrumental_gestures_current_code"];
+				$scoreCols["Total_B1"] = $scores["q_42_point_express_interest_current_code"] + $scores["q_43_nodding_current_code"]
+										+ $scores["q_44_head_shaking_current_code"] + $scores["q_45_conventional_instr_gests_current_code"];
 		
-				$scoreCols["Total_B2V"] = $scores["q_34_social_verbalization_chat_current_code"] + $scores["q_35_reciprocal_conversation_current_code"];
-				$scoreCols["Total_B3V"] = $scores["q_33_stereotyped_utterances_current_code"] + $scores["q_36_inappropriate_questions_current_code"]
+				$scoreCols["Total_B2V"] = $scores["q_34_social_verb_chat_current_code"] + $scores["q_35_recipr_convers_current_code"];
+				$scoreCols["Total_B3V"] = $scores["q_33_stereotyped_utterances_current_code"] + $scores["q_36_inappropriate_qs_current_code"]
 										+ $scores["q_37_prenominal_reversal_current_code"] + $scores["q_38_neologisms_current_code"];
 				$scoreCols["Total_B4"] = "Not Applicable";
 				$scoreCols["BV_Total"] = $scoreCols["Total_B1"] + $scoreCols["Total_B2V"] + $scoreCols["Total_B3V"]; 
 				$scoreCols["BNV_Total"] = "Not Applicable";
 			
-				$scoreCols["Total_C1"] = $scores["q_67_unusual_preoccupations_current_code"] + $scores["q_68_circumscribed_interests_current_code"];
+				$scoreCols["Total_C1"] = $scores["q_67_unusual_preoccupations_current_code"] + $scores["q_68_circumscr_ints_current_code"];
 				$scoreCols["Total_C2"] = $scores["q_39_verbal_rituals_current_code"] + $scores["q_70_compulsions_rituals_current_code"];
-				$scoreCols["Total_C3"] = $scores["q_77_hands_and_finger_mannerisms_current_code"] + $scores["q_78_other_complex_mannerisms_current_code"];
-				$scoreCols["Total_C4"] = $scores["q_69_repetitive_use_of_objects_current_code"] + $scores["q_71_unusual_sensory_interests_current_code"];
+				$scoreCols["Total_C3"] = $scores["q_77_hands_finger_manners_current_code"] + $scores["q_78_oth_complex_manners_current_code"];
+				$scoreCols["Total_C4"] = $scores["q_69_repet_use_objects_current_code"] + $scores["q_71_unusual_sens_ints_current_code"];
 				$scoreCols["C_Total"] = $scoreCols["Total_C1"] + $scoreCols["Total_C2"] + $scoreCols["Total_C3"] + $scoreCols["Total_C4"];
 			}
         } else {
@@ -403,9 +403,9 @@ DoB Proband should be somewhere in the candidate table.  For now, we'll just mak
 		
 		$answerArray = array(""=>NULL, "0_perform_unexpected"=>"0. Perform an unexpected", "1_get_an_object"=>"1. Get an object", "2_understand_many_words"=>"2. Understand many words", "3_understand_fewer_than_50"=>"3. Understand fewer than 50", "4_little_or_no"=>"4. Little or no comprehension of words", "8_NA"=>"8. N/A", "9_not_asked"=>"9. Not asked", "not_answered"=>"Not Answered");
 		$this->form->addElement("static", null, "29. Comprehension of simple language");
-		$this->form->addElement("select", "q_29_comprehension_of_simple_current",  $this->indent . "Current", $answerArray);
-		$this->form->addElement("select", "q_29_comprehension_of_simple_most_abnormal",  $this->indent . "Most Abnormal (4.0-5.0)", $answerArray);
-		//$this->addLargeTextAreaElement("q_29_comprehension_of_simple_text");
+		$this->form->addElement("select", "q_29_compreh_simple_current",  $this->indent . "Current", $answerArray);
+		$this->form->addElement("select", "q_29_compreh_simple_most_abnormal",  $this->indent . "Most Abnormal (4.0-5.0)", $answerArray);
+		//$this->addLargeTextAreaElement("q_29_compreh_simple_text");
 		
 		$answerArray = array(""=>NULL, "0_fuctional"=>"0. Functional", "1_no_functional"=>"1. No functional use", "2_fewer_than_5"=>"2. Fewer than five", "not_answered"=>"Not Answered");
 		$this->form->addElement("select", "q_30_overall_level_of_language", "30. Overall level of language", $answerArray);
@@ -418,9 +418,9 @@ DoB Proband should be somewhere in the candidate table.  For now, we'll just mak
 		
 		$answerArray = array(""=>NULL, "0_anybody"=>"0. Anybody", "1_family"=>"1. Family", "2_difficulties"=>"2. Difficulties", "3_strangers"=>"3. Strangers", "8_NA"=>"8. N/A", "9_not_asked"=>"9. Not asked", "not_answered"=>"Not Answered");
 		$this->form->addElement("static", null, "32. Articulation/pronunciation");
-		$this->form->addElement("select", "q_32_articulation_pronunciation_current_code", $this->indent . "Current:", $answerArray);
-		$this->form->addElement("select", "q_32_articulation_pronunciation_5years_code", $this->indent . "At 5.0 Years:", $answerArray);
-		//$this->addLargeTextAreaElement("q_32_articulation_pronunciation_text");
+		$this->form->addElement("select", "q_32_artic_pronun_current_code", $this->indent . "Current:", $answerArray);
+		$this->form->addElement("select", "q_32_artic_pronun_5years_code", $this->indent . "At 5.0 Years:", $answerArray);
+		//$this->addLargeTextAreaElement("q_32_artic_pronun_text");
 		
 		$answerArray = array(""=>NULL, "0_rarely"=>"0. Rarely", "1_more_repetitive"=>"1. More repetitive", "2_often_stereotyped"=>"2. Often stereotyped utterances", "3_exclusively_stereotyped"=>"3. Exclusively stereotyped utterances", "8_NA"=>"8. N/A", "9_not_asked"=>"9. Not asked", "not_answered"=>"Not Answered");
 		$this->form->addElement("static", null, "33. Stereotyped utterances and delayed echolalia");
@@ -430,21 +430,21 @@ DoB Proband should be somewhere in the candidate table.  For now, we'll just mak
 		
 		$answerArray = array(""=>NULL, "0_verbalizes"=>"0. Verbalizes", "1_some_response"=>"1. Some response", "2_some_alert"=>"2. Some alert", "8_NA"=>"8. N/A", "9_not_asked"=>"9. Not asked", "not_answered"=>"Not Answered");
 		$this->form->addElement("static", null, "34. Social verbalization/chat");
-		$this->form->addElement("select", "q_34_social_verbalization_chat_current_code", $this->indent . "Current:", $answerArray);
-		$this->form->addElement("select", "q_34_social_verbalization_chat_ever_code", $this->indent . "Ever:", $answerArray);
-		//$this->addLargeTextAreaElement("q_34_social_verbalization_chat_text");
+		$this->form->addElement("select", "q_34_social_verb_chat_current_code", $this->indent . "Current:", $answerArray);
+		$this->form->addElement("select", "q_34_social_verb_chat_ever_code", $this->indent . "Ever:", $answerArray);
+		//$this->addLargeTextAreaElement("q_34_social_verb_chat_text");
 
 		$answerArray = array(""=>NULL, "0_conversational"=>"0. Conversational flows", "1_occasional"=>"1. Occasional", "2_little_or_not"=>"2. Little of no", "3_very_little"=>"3. Very little", "8_NA"=>"8. N/A", "9_not_asked"=>"9. Not asked", "not_answered"=>"Not Answered");
 		$this->form->addElement("static", null, "35. Reciprocal conversation (within subject's level of language)");
-		$this->form->addElement("select", "q_35_reciprocal_conversation_current_code", $this->indent . "Current:", $answerArray);
-		$this->form->addElement("select", "q_35_reciprocal_conversation_ever_code", $this->indent . "Ever:", $answerArray);
-		//$this->addLargeTextAreaElement("q_35_reciprocal_conversation_text");
+		$this->form->addElement("select", "q_35_recipr_convers_current_code", $this->indent . "Current:", $answerArray);
+		$this->form->addElement("select", "q_35_recipr_convers_ever_code", $this->indent . "Ever:", $answerArray);
+		//$this->addLargeTextAreaElement("q_35_recipr_convers_text");
 		
 		$answerArray = array(""=>NULL, "0_none_or_rare"=>"0. No or very rare", "1_some_questions"=>"1. Use of some questions", "2_frequent"=>"2. Frequent", "8_NA"=>"8. N/A", "9_not_asked"=>"9. Not asked", "not_answered"=>"Not Answered");
 		$this->form->addElement("static", null, "36. Inappropriate questions or statements");
-		$this->form->addElement("select", "q_36_inappropriate_questions_current_code", $this->indent . "Current:", $answerArray);
-		$this->form->addElement("select", "q_36_inappropriate_questions_ever_code", $this->indent . "Ever:", $answerArray);
-		//$this->addLargeTextAreaElement("q_36_inappropriate_questions_text");
+		$this->form->addElement("select", "q_36_inappropriate_qs_current_code", $this->indent . "Current:", $answerArray);
+		$this->form->addElement("select", "q_36_inappropriate_qs_ever_code", $this->indent . "Ever:", $answerArray);
+		//$this->addLargeTextAreaElement("q_36_inappropriate_qs_text");
 
 		$answerArray = array(""=>NULL, "0_no_confusion"=>"0. No confusion", "1_refers"=>"1. Refers", "2_you_I_confusion"=>"2. You/I confusion", "3_pronominal"=>"3. Pronominal", "7_other_types"=>"7. Other types of pronominal", "8_NA"=>"8. N/A", "9_not_asked"=>"9. Not asked", "not_answered"=>"Not Answered");
 		$this->form->addElement("static", null, "37. Prenominal reversal");
@@ -466,9 +466,9 @@ DoB Proband should be somewhere in the candidate table.  For now, we'll just mak
 
 		$answerArray = array(""=>NULL, "0_normal"=>"0. Normal", "1_shows_abnormalities"=>"1. Shows abnormalities", "2_clearly_abnormal"=>"2. Clearly abnormal", "3_frequetly_peculiar"=>"3. Frequently peculiar", "7_stutter"=>"7. Stutter", "8_NA"=>"8. N/A", "9_not_asked"=>"9. Not asked", "not_answered"=>"Not Answered");
 		$this->form->addElement("static", null, "40. Intonation/volume/rhythm/rate");
-		$this->form->addElement("select", "q_40_intonation_volume_rhythm_rate_current_code", $this->indent . "Current:", $answerArray);
-		$this->form->addElement("select", "q_40_intonation_volume_rhythm_rate_ever_code", $this->indent . "Ever:", $answerArray);
-		//$this->addLargeTextAreaElement("q_40_intonation_volume_rhythm_rate_text");
+		$this->form->addElement("select", "q_40_inton_vol_rhythm_rate_current_code", $this->indent . "Current:", $answerArray);
+		$this->form->addElement("select", "q_40_inton_vol_rhythm_rate_ever_code", $this->indent . "Ever:", $answerArray);
+		//$this->addLargeTextAreaElement("q_40_inton_vol_rhythm_rate_text");
 	
 	}
 	
@@ -477,14 +477,14 @@ DoB Proband should be somewhere in the candidate table.  For now, we'll just mak
 
 		$answerArray = array(""=>NULL, "0_speech_used_frequently"=>"0. Speech used frequently", "1_some_communication"=>"1. Some communication", "2_some_spontaneous"=>"2. Some spontaneous", "3_lillte_or_no"=>"3. Little or no", "8_NA"=>"8. N/A", "9_not_asked"=>"9. Not asked", "not_answered"=>"Not Answered");
 		$this->form->addElement("static", null, "41. Current communicative speech");
-		$this->form->addElement("select", "q_41_current_communicative_speech_current_code", $this->indent . "Current:", $answerArray);
-		$this->form->addElement("select", "q_41_current_communicative_speech_at5_code", $this->indent . "At 5.0 years:", $answerArray);
-		//$this->addLargeTextAreaElement("q_41_current_communicative_speech_text");
+		$this->form->addElement("select", "q_41_cur_comm_speech_current_code", $this->indent . "Current:", $answerArray);
+		$this->form->addElement("select", "q_41_cur_comm_speech_at5_code", $this->indent . "At 5.0 years:", $answerArray);
+		//$this->addLargeTextAreaElement("q_41_cur_comm_speech_text");
 		
 		$answerArray = array(""=>NULL, "0_spontaneously"=>"0. Spontaneously points", "1_limited_attempt"=>"1. Limited attempt", "2_little_or_no"=>"2. Little or no", "8_NA"=>"8. N/A", "9_not_asked"=>"9. Not asked", "not_answered"=>"Not Answered");
 		$this->form->addElement("static", null, "42. Pointing to express interest");
-		$this->form->addElement("select", "q_42_pointing_to_express_interest_current_code", $this->indent . "Current:", $answerArray);
-		$this->form->addElement("select", "q_42_pointing_to_express_interest_most_abnormal_code", $this->indent . "Most abnormal 4.0-5.0 years:", $answerArray);
+		$this->form->addElement("select", "q_42_point_express_interest_current_code", $this->indent . "Current:", $answerArray);
+		$this->form->addElement("select", "q_42_point_express_inter_most_abnormal_code", $this->indent . "Most abnormal 4.0-5.0 years:", $answerArray);
 		//$this->addLargeTextAreaElement("q_42_pointing_to_express_interest_text");
 		
 		$answerArray = array(""=>NULL, "0_consistently"=>"0. Consistently", "1_sometimes"=>"1. Sometimes", "2_never"=>"2. Never", "8_NA"=>"8. N/A", "9_not_asked"=>"9. Not asked", "not_answered"=>"Not Answered");
@@ -498,27 +498,27 @@ DoB Proband should be somewhere in the candidate table.  For now, we'll just mak
 		$this->_addCurrentMostAbnormal($field, $label, $answerArray);
 		
 		$answerArray = array(""=>NULL, "0_appripriate"=>"0. Appropriate", "1_spontaneous"=>"1. Spontaneous", "2_inconsistent"=>"2_inconsistent", "3_no_use"=>"3. No use", "8_NA"=>"8. N/A", "9_not_asked"=>"9. Not asked", "not_answered"=>"Not Answered");
-		$field = "q_45_conventional_instrumental_gestures";
+		$field = "q_45_conventional_instr_gests";
 		$label = "45. Conventional/instrumental gestures";
 		$this->_addCurrentMostAbnormal($field, $label, $answerArray);
 		
 		$answerArray = array(""=>NULL, "0_usually"=>"0. Usually", "1_not_consistently"=>"1. Not consistently", "2_usually_does_not"=>"2. Usually does not", "3_rarely"=>"3. Rarely", "8_NA"=>"8. N/A", "9_not_asked"=>"9. Not asked", "not_answered"=>"Not Answered");
-		$field = "q_46_attention_to_voice";
+		$field = "q_46_attent_voice";
 		$label = "46. Attention to voice";
 		$this->_addCurrentMostAbnormal($field, $label, $answerArray);
 		
 		$answerArray = array(""=>NULL, "0_spontaneous"=>"0. Spontaneous", "1_some"=>"1. Some", "2_limited"=>"2. Limited", "3_very_rare"=>"3. Very rare", "8_NA"=>"8. N/A", "9_not_asked"=>"9. Not asked", "not_answered"=>"Not Answered");
-		$field = "q_47_spontaneous_imitation";
+		$field = "q_47_spont_imit";
 		$label = "47. Spontaneous imitation of actions";
 		$this->_addCurrentMostAbnormal($field, $label, $answerArray);
 		
 		$answerArray = array(""=>NULL, "0_variety"=>"0. Variety", "1_some"=>"1. Some", "2_occasional"=>"2. Occasional", "3_no_pretend"=>"3. No pretend", "8_NA"=>"8. N/A", "9_not_asked"=>"9. Not asked", "not_answered"=>"Not Answered");
-		$field = "q_48_imaginative_play";
+		$field = "q_48_imag_play";
 		$label = "48. Imaginative play";
 		$this->_addCurrentMostAbnormal($field, $label, $answerArray);
 		
 		$answerArray = array(""=>NULL, "0_imaginative"=>"0. Imaginative",  "1_some_participation"=>"1. Some participation",  "2_some_play"=>"2. Some play",  "3_no_play"=>"3. No play", "8_NA"=>"8. N/A", "9_not_asked"=>"9. Not asked", "not_answered"=>"Not Answered");
-		$field = "q_49_imaginative_play_with_peers";
+		$field = "q_49_imag_play_peers";
 		$label = "49. Imaginative play with peers";
 		$this->_addCurrentMostAbnormal($field, $label, $answerArray);
 
@@ -538,33 +538,33 @@ DoB Proband should be somewhere in the candidate table.  For now, we'll just mak
 		$this->_addCurrentMostAbnormal($field, $label, $answerArray);
 
 		$answerArray = array(""=>NULL, "0_regular"=>"0. Regular", "1_possible"=>"1. Possible", "2_some"=>"2. Some", "3_rare"=>"3. Rare", "8_NA"=>"8. N/A", "9_not_asked"=>"9. Not asked", "not_answered"=>"Not Answered");
-		$field = "q_52_showing_and_directing_attention";
+		$field = "q_52_show_direct_atten";
 		$label = "52. Showing and directing attention";
 		$this->_addCurrentMostAbnormal($field, $label, $answerArray);
 		
 		$answerArray = array(""=>NULL, "0_frequent"=>"0. Frequent", "1_some"=>"1. Some", "2_sometimes"=>"2. Sometimes", "3_no_sharing"=>"3. No sharing", "8_NA"=>"8. N/A", "9_not_asked"=>"9. Not asked", "not_answered"=>"Not Answered");
-		$field = "q_53_offering_to_share";
+		$field = "q_53_offer_share";
 		$label = "53. Offering to share";
 		$this->_addCurrentMostAbnormal($field, $label, $answerArray);
 
 		$answerArray = array(""=>NULL, "0_frequent"=>"0. Frequent", "1_some"=>"1. Some", "2_few"=>"2. Few", "8_NA"=>"8. N/A", "9_not_asked"=>"9. Not asked", "not_answered"=>"Not Answered");
-		$field = "q_54_seeking_to_share_enjoyment";
+		$field = "q_54_seek_share_enjoy";
 		$label = "54. Seeking to share her/his enjoyment with others";
 		$this->_addCurrentMostAbnormal($field, $label, $answerArray);
 
 		$answerArray = array(""=>NULL, "0_frequently"=>"0. Frequently", "1_partial"=>"1. Partial", "2_rarely"=>"2. Rarely", "3_never"=>"3. Never", "8_NA"=>"8. N/A", "9_not_asked"=>"9. Not asked", "not_answered"=>"Not Answered");
-		$field = "q_55_offerings_comfort";
+		$field = "q_55_offer_comf";
 		$label = "55. Offerings comfort";
 		$this->_addCurrentMostAbnormal($field, $label, $answerArray);
 
 		$answerArray = array(""=>NULL, "0_consistently"=>"0. Consistently", "1_may"=>"1. May", "2_rarely"=>"2. Rarely", "3_shows_no"=>"3. Shows no", "8_NA"=>"8. N/A", "9_not_asked"=>"9. Not asked", "not_answered"=>"Not Answered");
-		$field = "q_56_quality_of_social_overtures";
+		$field = "q_56_qual_social_overts";
 		$label = "56. Quality of social overtures";
 		$this->_addCurrentMostAbnormal($field, $label, $answerArray);
 
 		$answerArray = array(""=>NULL, "0_full"=>"0. Full", "1_somewhat"=>"1. Somewhat", "2_markedly"=>"2. Markedly", "3_little_or_no"=>"3. Little or no", "8_NA"=>"8. N/A", "9_not_asked"=>"9. Not asked", "not_answered"=>"Not Answered");
-		$field = "q_57_range_of_racial_expressions";
-		$label = "57. Range of racial expressions used to communicate";
+		$field = "q_57_range_facial_expr";
+		$label = "57. Range of facial expressions used to communicate";
 		$this->_addCurrentMostAbnormal($field, $label, $answerArray);
 
 		$answerArray = array(""=>NULL, "0_almost_always"=>"0. Almost always", "1_slightly"=>"1. Slightly", "2_obviously"=>"2. Obviously", "8_NA"=>"8. N/A", "9_not_asked"=>"9. Not asked", "not_answered"=>"Not Answered");
@@ -574,7 +574,7 @@ DoB Proband should be somewhere in the candidate table.  For now, we'll just mak
 		//$this->addLargeTextAreaElement("q_58_inappropriate_facial_text");
 		
 		$answerArray = array(""=>NULL, "0_appropriate"=>"0. Appropriate", "1_some"=>"1. Some", "2_responds"=>"2. Responds", "3_little_or_no"=>"3. Little or no", "8_NA"=>"8. N/A", "9_not_asked"=>"9. Not asked", "not_answered"=>"Not Answered");
-		$field = "q_59_appropriateness_of_responses";
+		$field = "q_59_appropriat_resp";
 		$label = "59. Appropriateness of social responses";
 		$this->_addCurrentMostAbnormal($field, $label, $answerArray);
 		
@@ -584,22 +584,22 @@ DoB Proband should be somewhere in the candidate table.  For now, we'll just mak
 	
 	function _page8() {
 		$answerArray = array(""=>NULL, "0_range"=>"0. Range", "1_initiates"=>"1. Initiates", "2_passive"=>"2. Passive", "3_no_active"=>"3. No active", "8_NA"=>"8. N/A", "9_not_asked"=>"9. Not asked", "not_answered"=>"Not Answered");
-		$field = "q_60_initiation_of_activities";
+		$field = "q_60_init_activities";
 		$label = "60. Initiation of appropriate activities";
 		$this->_addCurrentMostAbnormal($field, $label, $answerArray);
 
 		$answerArray = array(""=>NULL, "0_normal"=>"0. Normal", "1_some"=>"1. Some", "2_little"=>"2. Little", "3_no_evidence"=>"3. No evidence", "8_NA"=>"8. N/A", "9_not_asked"=>"9. Not asked", "not_answered"=>"Not Answered");
-		$field = "q_61_imitative_social_play";
+		$field = "q_61_imit_soc_play";
 		$label = "61. Imitative social play";
 		$this->_addCurrentMostAbnormal($field, $label, $answerArray);
 
 		$answerArray = array(""=>NULL, "0_often"=>"0. Often", "1_usually"=>"1. Usually", "2_occasionaly"=>"2. Occasionaly", "3_shows_no"=>"3. Shows no", "8_NA"=>"8. N/A", "9_not_asked"=>"9. Not asked", "not_answered"=>"Not Answered");
-		$field = "q_62_interest_in_children";
+		$field = "q_62_inter_children";
 		$label = "62. Interest in children";
 		$this->_addCurrentMostAbnormal($field, $label, $answerArray);
 
 		$answerArray = array(""=>NULL, "0_generally"=>"0. Generally", "1_sometimes"=>"1. Sometimes", "2_rarely"=>"2. Rarely", "3_consistently"=>"3. Consistently", "8_NA"=>"8. N/A", "9_not_asked"=>"9. Not asked", "not_answered"=>"Not Answered");
-		$field = "q_63_response_to_approaches";
+		$field = "q_63_resp_approaches";
 		$label = "63. Response to approaches of other children";
 		$this->_addCurrentMostAbnormal($field, $label, $answerArray);
 
@@ -614,7 +614,7 @@ DoB Proband should be somewhere in the candidate table.  For now, we'll just mak
 		$this->_addCurrentMostAbnormal($field, $label, $answerArray);
 
 		$answerArray = array(""=>NULL, "0_normal"=>"0. Normal", "1_occasional"=>"1. Occasional", "2_lack"=>"2. Lack", "3_marked"=>"3. Marked", "8_NA"=>"8. N/A", "9_not_asked"=>"9. Not asked", "not_answered"=>"Not Answered");
-		$field = "q_66_social_disinhibition";
+		$field = "q_66_soc_disinhibit";
 		$label = "66. Social disinhibition";
 		$this->_addCurrentMostAbnormal($field, $label, $answerArray);
 	}
@@ -628,12 +628,12 @@ DoB Proband should be somewhere in the candidate table.  For now, we'll just mak
 		$this->_addCurrentEver($field, $label, $answerArray);
 
 		$answerArray = array(""=>NULL, "0_no"=>"0. No", "1_special"=>"1. Special", "2_definite_no_interfere"=>"2. Definite no interfere", "3_definite_impairment"=>"3. Definite impairment", "8_NA"=>"8. N/A", "9_not_asked"=>"9. Not asked", "not_answered"=>"Not Answered");
-		$field = "q_68_circumscribed_interests";
+		$field = "q_68_circumscr_ints";
 		$label = "68. Circumscribed interests";
 		$this->_addCurrentEver($field, $label, $answerArray);
 
 		$answerArray = array(""=>NULL, "0_little_or_no"=>"0. Little or no", "1_some"=>"1. Some", "2_does_not_constrain"=>"2. Does not constrain", "3_prevents"=>"3. Prevents", "7_infant_toys"=>"7. Infant toys", "8_NA"=>"8. N/A", "9_not_asked"=>"9. Not asked", "not_answered"=>"Not Answered");
-		$field = "q_69_repetitive_use_of_objects";
+		$field = "q_69_repet_use_objects";
 		$label = "69. Repetitive use of objects or interest in parts of objects";
 		$this->_addCurrentEver($field, $label, $answerArray);
 
@@ -643,12 +643,12 @@ DoB Proband should be somewhere in the candidate table.  For now, we'll just mak
 		$this->_addCurrentEver($field, $label, $answerArray);
 
 		$answerArray = array(""=>NULL, "0_no_unusual"=>"0. No unusual", "1_one_or_two"=>"1. One or two", "2_has"=>"2. Has", "8_NA"=>"8. N/A", "9_not_asked"=>"9. Not asked", "not_answered"=>"Not Answered");
-		$field = "q_71_unusual_sensory_interests";
+		$field = "q_71_unusual_sens_ints";
 		$label = "71. Unusual sensory interests";
 		$this->_addCurrentEver($field, $label, $answerArray);
 
 		$answerArray = array(""=>NULL, "0_no_general"=>"0. No general", "1_slight"=>"1. Slight", "2_definite_not_distressing"=>"2. Definite not distressing", "3_definite_interferes"=>"3. Definite interferes", "8_NA"=>"8. N/A", "9_not_asked"=>"9. Not asked", "not_answered"=>"Not Answered");
-		$field = "q_72_undo_general_sensitivity_to_noise";
+		$field = "q_72_undo_gen_sens_noise";
 		$label = "72. Undo general sensitivity to noise";
 		$this->_addCurrentEver($field, $label, $answerArray);
 
@@ -658,32 +658,32 @@ DoB Proband should be somewhere in the candidate table.  For now, we'll just mak
 		$this->_addCurrentEver($field, $label, $answerArray);
 
 		$answerArray = array(""=>NULL, "0_no"=>"0. No", "1_unusually"=>"1. Unusually", "2_resistance"=>"2. Resistance", "3_substantial"=>"3. Substantial", "8_NA"=>"8. N/A", "9_not_asked"=>"9. Not asked", "not_answered"=>"Not Answered");
-		$field = "q_74_difficulties_with_minor_changes";
+		$field = "q_74_diff_minor_changes";
 		$label = "74. Difficulties with minor changes in subjects own routines or personal environment";
 		$this->_addCurrentEver($field, $label, $answerArray);
 
 		$answerArray = array(""=>NULL, "0_none"=>"0. None", "1_unusually"=>"1. Unusually", "2_avoid"=>"2. Avoid", "3_substantial"=>"3. Substantial", "8_NA"=>"8. N/A", "9_not_asked"=>"9. Not asked", "not_answered"=>"Not Answered");
-		$field = "q_75_resistance_to_trivial_changes";
+		$field = "q_75_resist_trivial_chng";
 		$label = "75. Resistance to trivial changes in the environment";
 		$this->_addCurrentEver($field, $label, $answerArray);
 
 		$answerArray = array(""=>NULL, "0_no"=>"0. No", "1_some"=>"1. Some", "2_significant"=>"2. Significant", "3_intrusive"=>"3. Intrusive", "6_beyond_5"=>"6. Beyond age 5", "7_series"=>"7. Series", "8_NA"=>"8. N/A", "9_not_asked"=>"9. Not asked", "not_answered"=>"Not Answered");
-		$field = "q_76_unusual_attachments_to_objects";
+		$field = "q_76_unus_attach_objects";
 		$label = "76. Unusual attachments to objects";
 		$this->_addCurrentEver($field, $label, $answerArray);
 
 		$answerArray = array(""=>NULL, "0_no"=>"0. No", "1_occasional"=>"1. Occasional", "2_definite"=>"2. Definite", "3_marked"=>"3. Marked", "8_NA"=>"8. N/A", "9_not_asked"=>"9. Not asked", "not_answered"=>"Not Answered");
-		$field = "q_77_hands_and_finger_mannerisms";
+		$field = "q_77_hands_finger_manners";
 		$label = "77. Hands and finger mannerisms";
 		$this->_addCurrentEver($field, $label, $answerArray);
 
 		$answerArray = array(""=>NULL, "0_no"=>"0. No", "1_only"=>"1. Only", "2_definite"=>"2. Definite", "3_marked"=>"3. Marked", "8_NA"=>"8. N/A", "9_not_asked"=>"9. Not asked", "not_answered"=>"Not Answered");
-		$field = "q_78_other_complex_mannerisms";
+		$field = "q_78_oth_complex_manners";
 		$label = "78. Other complex mannerisms or stereotyped body movements";
 		$this->_addCurrentEver($field, $label, $answerArray);
 
 		$answerArray = array(""=>NULL, "0_no"=>"0. No", "1_occasional"=>"1. Occasional", "2_definite"=>"2. Definite", "8_NA"=>"8. N/A", "9_not_asked"=>"9. Not asked", "not_answered"=>"Not Answered");
-		$field = "q_79_midline_hand_movements";
+		$field = "q_79_midline_hand_moves";
 		$label = "79. Midline hand movements";
 		$this->_addCurrentEver($field, $label, $answerArray);
 
@@ -698,12 +698,12 @@ DoB Proband should be somewhere in the candidate table.  For now, we'll just mak
 		$this->_addCurrentMostAbnormal($field, $label, $answerArray);
 
 		$answerArray = array(""=>NULL, "0_no"=>"0. No", "1_mild"=>"1. Mild", "2_definite"=>"2. Definite", "3_violence"=>"3. Violence", "8_NA"=>"8. N/A", "9_not_asked"=>"9. Not asked", "not_answered"=>"Not Answered");
-		$field = "q_81_aggression_towards_caregivers";
+		$field = "q_81_aggress_caregivers";
 		$label = "81. Aggression towards caregivers or family members";
 		$this->_addCurrentEver($field, $label, $answerArray);
 
 		$answerArray = array(""=>NULL, "0_rare"=>"0. Rare", "1_mild"=>"1. Mild", "2_definite"=>"2. Definite", "3_violence"=>"3. Violence", "8_NA"=>"8. N/A", "9_not_asked"=>"9. Not asked", "not_answered"=>"Not Answered");
-		$field = "q_82_aggression_toward_noncaregivers";
+		$field = "q_82_aggress_noncaregivers";
 		$label = "82. Aggression toward noncaregivers or nonfamily members";
 		$this->_addCurrentEver($field, $label, $answerArray);
 
