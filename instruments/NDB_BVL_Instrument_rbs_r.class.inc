@@ -8,7 +8,7 @@ INSERT INTO instrument_subtests VALUES('', 'rbs_r', 'rbs_r_page1', 'Subscales', 
 */
 
 	var $scoreCols = array('I_stereotyped'=>"I. Stereotyped Behavior",
-	'II_self-injurious'=>"II. Self-injurious Behavior",
+	'II_self_injurious'=>"II. Self-injurious Behavior",
 	'III_compulsive'=>"III. Compulsive Behavior",
 	'IV_ritualistic'=>"IV. Ritualistic Behavior",
 	'V_sameness'=>"V. Sameness Behavior",
@@ -231,8 +231,8 @@ INSERT INTO instrument_subtests VALUES('', 'rbs_r', 'rbs_r_page1', 'Subscales', 
 				$calculatedScores['I_stereotyped_endorsed']++;
 				$calculatedScores['I_stereotyped_score'] += $value;
 			} elseif ($questionNum >= 7 && $questionNum <= 14) {
-				$calculatedScores['II_self-injurious_endorsed']++;
-				$calculatedScores['II_self-injurious_score'] += $value;
+				$calculatedScores['II_self_injurious_endorsed']++;
+				$calculatedScores['II_self_injurious_score'] += $value;
 			} elseif ($questionNum >= 15 && $questionNum <= 22) {
 				$calculatedScores['III_compulsive_endorsed']++;
 				$calculatedScores['III_compulsive_score'] += $value;
