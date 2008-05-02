@@ -602,7 +602,7 @@ class NDB_BVL_Instrument_mullen extends NDB_BVL_Instrument
     //Add an individual question, for now, nothing is required.
     function _addQuestion($field, $label, $maxPoints) {
 
-        $answerOptions = array(""=>null) + range($maxPoints, 0) + array("not_answered"=>"Not Answered");
+        $answerOptions = array(""=>null) + range(0, $maxPoints) + array("not_answered"=>"Not Answered");
         $this->form->addElement("select", $field, $this->indent . $label, $answerOptions);
         $this->XINRegisterRule($field, array("{$field}{@}=={@}NEVER_REQUIRED"));
     }
