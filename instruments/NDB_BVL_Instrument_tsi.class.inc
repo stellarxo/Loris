@@ -123,6 +123,15 @@ class NDB_BVL_Instrument_tsi extends NDB_BVL_Instrument
 			$this->XINRegisterRule($field, array("typical_or_asd_subject{@}=={@}asd"), "This field is required for an ASD subject");
 		}
 
+		$this->form->addElement('select', "in_utero_exposure_proband", "Exposure in-utero to meds, alcohol, or drugs (Rx or non)?", $this->yesNo);
+
+		$questionArray = array("substance_proband"=>"Name of substance (get spelling):",
+		"substance_amount_proband"=>"Amount of substance at one time:",
+		"time_exposure_proband"=>"Time period of exposure (weeks of pregnancy):");
+		foreach($questionArray as $field=>$label) {
+			$this->addTextElement("in_utero_" . $field, $this->indent . $label, array("in_utero_exposure_proband{@}=={@}yes"), "This field is required if there was in-utero exposure");
+		}
+
 		$this->addTextAreaElement("asd_further_information", "If yes to any of the above, obtain further information.", array("typical_or_asd_subject{@}=={@}asd"));
 
 		$this->form->addElement("header", null, "Exclusionary Factors - Infant subjects");
