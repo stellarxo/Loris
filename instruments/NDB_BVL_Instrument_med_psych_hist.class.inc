@@ -43,7 +43,33 @@ class NDB_BVL_Instrument_med_psych_hist extends NDB_BVL_Instrument
 
         //The array of selects with multiple answers allowed
         //Any HTML_Quickform multiple selects must be listed here
-        $this->_selectMultipleElements = array("4_pregnancy_ART_type", "5_pregnancy_health_problems",
+        $this->_selectMultipleElements = array(
+//        "a_aut_spect_disorder_who",
+//        "b_fragile_x_who",
+//        "c_tuberous_sclerosis_who",
+//        "d_neurofibromatosis_who",
+//        "e_rett_syndrome_who",
+//        "f_child_disint_disorder_who",
+//        "g_prader_willi_syndrome_who",
+//        "h_angelman_syndrome_who",
+//        "i_other_chromosomal_who",
+//        "j_congenital_rubella_who",
+//        "k_pku_who",
+//        "l_hydrocephalus_who",
+//        "m_cerebral_palsy_who",
+//        "n_mental_retardation_who",
+//        "o_seizures_who",
+//        "p_speech_delay_therapy_who",
+//        "q_add_who",
+//        "r_panic_anxiety_dis_who",
+//        "s_depression_who",
+//        "t_manic_depres_bi_who",
+//        "u_schizophrenia_who",
+//        "v_hospital_mental_ill_who",
+//        "w_birth_defects_who",
+//        "x_cancer_who",
+//        "y_norrie_syndrome_who",
+        "4_pregnancy_ART_type", "5_pregnancy_health_problems",
         "6_pregnancy_meds", "7_baby_health_problems", "8_pregnancy_alcohol_tobacco", "9_pregnancy_drugs", "12_birth_interventions", "16_has_child_ever", "17_birth_defects");
 
         // required fields for data entry completion status
@@ -180,6 +206,8 @@ class NDB_BVL_Instrument_med_psych_hist extends NDB_BVL_Instrument
 
     function _page2(){
         $this->form->addElement("header", null, "3. The items below ask about the medical history of the child and relatives");
+        $this->form->addElement("static", null, "***If more than one blood relatives have the disorder, select `Multiple Relatives` in the drop-down");
+        $this->form->addElement("static", null, "and write the relations of all affected relatives in the \"Other Relative\" space.***");
         $answerArray = array(null=>"", '0_no'=>"0. No", "1_yes"=>"1. Yes", "2_not_sure"=>"2. Not Sure", "not_answered"=>"Not Answered");
         $questionArray = array(
         "a_aut_spect_disorder"=>"a. Autism Spectrum Disorder",
@@ -223,6 +251,7 @@ class NDB_BVL_Instrument_med_psych_hist extends NDB_BVL_Instrument
         "aunts_uncles_pat"=>"Aunts & Uncles (Pat)",
         "grandparents_mat"=>"Grandparents (Mat)",
         "grandparents_pat"=>"Grandparents (Pat)",
+        "multiple_relatives"=>"Multiple Relatives (describe)",
         "other"=>"Other (specify relationship)",
         "not_answered"=>"Not Answered");
 
@@ -235,6 +264,7 @@ class NDB_BVL_Instrument_med_psych_hist extends NDB_BVL_Instrument
 
         foreach($questionArray as $field=>$label) {
             $group[] = $this->form->createElement("select", $field, $label, $answerArray);
+//            $group[] = $this->form->createElement("select", "{$field}_who", null, $realtives, "multiple");
             $group[] = $this->form->createElement("select", "{$field}_who", null, $realtives);
             $group[] = $this->form->createElement("text", "{$field}_who_other", null);
             $group[] = $this->form->createElement("select", "{$field}_who_other_status", null, array(null=>"", "not_answered"=>"Not Answered"));
@@ -242,9 +272,9 @@ class NDB_BVL_Instrument_med_psych_hist extends NDB_BVL_Instrument
 
             $this->XINRegisterRule("$field", array("$field{@}=={@}"), "Please indicate the presence of the disorder / problem.", "{$field}_group");
             $this->XINRegisterRule("{$field}_who", array("{$field}{@}=={@}1_yes|2_not_sure"), "Please indicate the effected realtive.", "{$field}_group");
-            $this->XINRegisterRule("{$field}_who_other", array("{$field}_who{@}=={@}other", "{$field}_who_other_status{@}=={@}"), "Please specify the other relative.", "{$field}_group");
+            $this->XINRegisterRule("{$field}_who_other", array("{$field}_who{@}=={@}other|multiple_relatives", "{$field}_who_other_status{@}=={@}"), "Please specify the other relative(s).", "{$field}_group");
             //			$this->XINRegisterRule("{$field}_who_other_status", array("{$field}_who_other{@}=={@}"), "Please specify the other relative, or select Not Answered", "{$field}_group");
-            $this->XINRegisterRule("{$field}_who_other_status", array("{$field}_who{@}=={@}other", "{$field}_who_other{@}=={@}"), "Please specify the relative, or select Not Answered", "{$field}_group");
+            $this->XINRegisterRule("{$field}_who_other_status", array("{$field}_who{@}=={@}other|multiple_relatives", "{$field}_who_other{@}=={@}"), "Please specify the relative, or select Not Answered", "{$field}_group");
             unset($group);
 
             if($field == "i_other_chromosomal") {
