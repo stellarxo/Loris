@@ -302,20 +302,33 @@ INSERT INTO instrument_subtests VALUES('', 'aosi', 'aosi_page2', 'General Observ
             $this->scores["3_orients_to_name_score"] = $score_record["3_orients_to_name_score_override"];
         } else {
         //calculate
-            //8
-            if($score_record["3_orients_to_name_press_1_trial_1"] == "not_applicable" || $score_record["3_orients_to_name_press_1_trial_2"] == "not_applicable" || $score_record["3_orients_to_name_press_2_trial_1"] == "not_applicable" || $score_record["3_orients_to_name_press_2_trial_2"] == "not_applicable") {
-                $this->scores["3_orients_to_name_score"] = 8;
-            }
             //2
-            elseif($score_record["3_orients_to_name_press_1_trial_1"] == "fail_to_orient" && $score_record["3_orients_to_name_press_1_trial_2"] == "fail_to_orient" && $score_record["3_orients_to_name_press_2_trial_1"] == "fail_to_orient" && $score_record["3_orients_to_name_press_2_trial_2"] == "fail_to_orient") {
+            if($score_record["3_orients_to_name_press_1_trial_1"] == "fail_to_orient" && 
+            $score_record["3_orients_to_name_press_1_trial_2"] == "fail_to_orient" && 
+            $score_record["3_orients_to_name_press_2_trial_1"] == "fail_to_orient" && 
+            $score_record["3_orients_to_name_press_2_trial_2"] == "fail_to_orient") {
                 $this->scores["3_orients_to_name_score"] = 2;
             }
             //0
-            elseif(($score_record["3_orients_to_name_press_1_trial_1"] == "orients_with_eye_contact" || $score_record["3_orients_to_name_press_1_trial_2"] == "orients_with_eye_contact") && ($score_record["3_orients_to_name_press_2_trial_1"] == "orients_with_eye_contact" || $score_record["3_orients_to_name_press_2_trial_2"] == "orients_with_eye_contact") && ($score_record["3_orients_to_name_press_1_trial_1"] == "orients_with_eye_contact" || $score_record["3_orients_to_name_press_2_trial_1"] == "orients_with_eye_contact")) {
+            elseif(
+            ($score_record["3_orients_to_name_press_1_trial_1"] == "orients_with_eye_contact" || $score_record["3_orients_to_name_press_1_trial_2"] == "orients_with_eye_contact") && 
+            ($score_record["3_orients_to_name_press_2_trial_1"] == "orients_with_eye_contact" || $score_record["3_orients_to_name_press_2_trial_2"] == "orients_with_eye_contact") && 
+            ($score_record["3_orients_to_name_press_1_trial_1"] == "orients_with_eye_contact" || $score_record["3_orients_to_name_press_2_trial_1"] == "orients_with_eye_contact")) {
                 $this->scores["3_orients_to_name_score"] = 0;
             }
+            //8
+            elseif($score_record["3_orients_to_name_press_1_trial_1"] == "not_applicable" || 
+            $score_record["3_orients_to_name_press_1_trial_1"] == "not_answered" || 
+            $score_record["3_orients_to_name_press_2_trial_1"] == "not_applicable" || 
+            $score_record["3_orients_to_name_press_2_trial_1"] == "not_answered") {
+                $this->scores["3_orients_to_name_score"] = 8;
+            }
             //1
-            elseif($score_record["3_orients_to_name_press_1_trial_1"] == "orients_with_eye_contact" || $score_record["3_orients_to_name_press_1_trial_2"] == "orients_with_eye_contact" || $score_record["3_orients_to_name_press_2_trial_1"] == "orients_with_eye_contact" || $score_record["3_orients_to_name_press_2_trial_2"] == "orients_with_eye_contact") {
+            elseif(
+            $score_record["3_orients_to_name_press_1_trial_1"] == "orients_with_eye_contact" ||
+            $score_record["3_orients_to_name_press_1_trial_2"] == "orients_with_eye_contact" || 
+            $score_record["3_orients_to_name_press_2_trial_1"] == "orients_with_eye_contact" || 
+            $score_record["3_orients_to_name_press_2_trial_2"] == "orients_with_eye_contact") {
                 $this->scores["3_orients_to_name_score"] = 1;
             }
             //wacky
