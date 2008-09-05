@@ -4,12 +4,15 @@ class NDB_BVL_Instrument_edi extends NDB_BVL_Instrument
 	
 /*
 INSERT INTO test_names VALUES ('', 'edi', 'EDI', '0', '1');
-INSERT INTO instrument_subtests VALUES('', 'edi', 'edi_page1', 'Probes', 1);
-INSERT INTO instrument_subtests VALUES('', 'edi', 'edi_page2', 'Other Events', 2);
+
+INSERT INTO instrument_subtests VALUES('', 'edi', 'edi_page1', '6month Probes', 1);
+INSERT INTO instrument_subtests VALUES('', 'edi', 'edi_page2', '12month Probes', 2);
+INSERT INTO instrument_subtests VALUES('', 'edi', 'edi_page3', '24month Probes', 3);
+INSERT INTO instrument_subtests VALUES('', 'edi', 'edi_page4', 'Childhood Events', 4);
+INSERT INTO instrument_subtests VALUES('', 'edi', 'edi_page5', 'Pregnancy Events', 5);
+
 INSERT INTO test_battery VALUES ('', 'edi', '1050', '1140', 'Y', 'Visit', '2');
 */
-	//Commonly used level of indentation;
-	var $indent = "&nbsp;&nbsp;&nbsp;&nbsp;";
 	
 	var $total_symptomAnchors = array("score_0_3_total_symptoms"=>"",
                                 "score_4_6_total_symptoms"=>"",
@@ -51,6 +54,129 @@ INSERT INTO test_battery VALUES ('', 'edi', '1050', '1140', 'Y', 'Visit', '2');
                                 "score_19_21_repetitive_behaviour"=>"",
                                 "score_22_24_repetitive_behaviour"=>"");
                                 
+    //questionnaire sections
+    
+    var $questionArray = array("1. Difficult to hold, cuddle?",
+                                "2. Exceptionally fussy, difficult to soothe?",
+                                "3. Exceptionally easy baby, content doing own thing?",
+                                "4. Overly sensitive/lack of sensitivity to noise, tactile input?",
+                                "5. Sleeping problems?",
+                                "6. Feeding problems?",
+                                "7. Oddities in muscle tone?",
+                                "8. Anything else that gave you concern? (write in)",
+                                "9. Difficult to hold, cuddle?",
+                                "10. Exceptionally fussy, difficult to soothe?",
+                                "11. Exceptionally easy baby?",
+                                "12. Overly sensitive/lack of sensitivity to noise, tactile input?",
+                                "13. Sleeping problems?",
+                                "14. Feeding problems?",
+                                "15. Oddities in muscle tone?",
+                                "16. Lack of smiling at people?",
+                                "17. Exceptionally long attention span for nonsocial things?",
+                                "18. Exceptionally long attention span for social things?",
+                                "19. Anything else that gave you concern? (write in)",
+                                "20. Difficult to hold, cuddle?",
+                                "21. Exceptionally fussy, difficult to soothe?",
+                                "22. Exceptionally easy baby?",
+                                "23. Overly sensitive/lack of sensitivity to noise, tactile input?",
+                                "24. Sleeping problems?",
+                                "25. Feeding problems?",
+                                "26. Oddities in muscle tone?",
+                                "27. Lack of smiling at people?",
+                                "28. Difficult to catch his/her eye?",
+                                "29. Lack of orienting to name?",
+                                "30. Failure to use vocalizations socially?",
+                                "31. Exceptionally long attention span for nonsocial things?",
+                                "32. Exceptionally long attention span for social things?",
+                                "33. Anything else that gave you concern? (write in)",
+                                "34. Overly sensitive/lack of sensitivity to noise...?",
+                                "35. Sleeping problems?",
+                                "36. Oddities in muscle tone?",
+                                "37. Repetitive/stereotyped motor movements?",
+                                "38. Excessive mouthing?",
+                                "39. Lack of smiling at people?",
+                                "40. Lack of orienting to name?",
+                                "41. Poor eye contact, difficult to catch his/her eye?",
+                                "42. Failure to follow point?",
+                                "43. Lack of babbling?",
+                                "44. Failure to use vocalizations socially/lack of imitative babbling?",
+                                "45. Anything else that gave you concern? (write in)",
+                                "46. Overly sensitive/lack of sensitivity to noise...?",
+                                "47. Sleeping problems?",
+                                "48. Oddities in muscle tone?",
+                                "49. Repetitive/stereotyped motor movements?",
+                                "50. Lack of orienting to name?",
+                                "51. Poor eye contact, difficult to catch his/her eye?",
+                                "52. Lack of interest in interactive baby games?",
+                                "53. Failure to initiate simple, ritualized social interaction?",
+                                "54. Failure to follow point?",
+                                "55. Failure to show objects?",
+                                "56. Lack of pointing to express interest?",
+                                "57. Failure to use words meaningfully?",
+                                "58. Anything else that gave you concern? (write in)",
+                                "59. Overly sensitive/lack of sensitivity to noise...?",
+                                "60. Repetitive/stereotyped motor movements?",
+                                "61. Lack of orienting to name?",
+                                "62. Poor eye contact, difficult to catch his/her eye?",
+                                "63. Failure to follow point?",
+                                "64. Lack of pointing to express interest?",
+                                "65. Failure to initiate simple, ritualized social interaction?",
+                                "66. Failure to increase vocabulary/language from previous timepoint?",
+                                "67. Failure to imitate actions on objects?",
+                                "68. Failure to use formal gestures?",
+                                "69. Placed adult?s hand on desired objects/moved adult?s hand?",
+                                "70. Anything else that gave you concern? (write in)",
+                                "71. Overly sensitive/lack of sensitivity to noise...?",
+                                "72. Repetitive/stereotyped motor movements?",
+                                "73. Lack of orienting to name?",
+                                "74. Poor eye contact, difficult to catch his/her eye?",
+                                "75. Failure to follow point/gaze?",
+                                "76. Lack of pointing to express interest?",
+                                "77. Failure to initiate simple, ritualized social interaction?",
+                                "78. Failure to increase vocabulary/language from previous timepoint?",
+                                "79. Failure to use formal gestures?",
+                                "80. Failure to imitate actions on objects?",
+                                "81. Placed adult?s hand on desired objects/moved adult?s hand?",
+                                "82. Anything else that gave you concern? (write in)",
+                                "83. Overly sensitive/lack of sensitivity to noise...?",
+                                "84. Repetitive/stereotyped motor movements?",
+                                "85. Lack of orienting name?",
+                                "86. Poor eye contact, difficult to catch his/her eye?",
+                                "87. Failure to follow point/gaze?",
+                                "88. Lack of pointing to express interest?",
+                                "89. Failure to initiate simple, ritualized social interaction?",
+                                "90. Failure to use increase language/vocabulary from previous timepoint?",
+                                "91. Failure to combine words?",
+                                "92. Failure to use formal gestures?",
+                                "93. Placed adult?s hand on desired objects/moved adult?s hand?",
+                                "94. Had routines/rituals?",
+                                "95. Had unusual attachments to objects?",
+                                "96. Anything else that gave you concern? (write in)");
+
+    var $familyChanges = array("bir"=>"Birth of sibling",
+								"dea"=>"Death of familiar family member",
+								"div"=>"Divorce of parents",
+								"mar"=>"Marriage of a parent",
+								"mov"=>"Move to a new home",
+								"tem"=>"Temporary absence of a family member",
+								"per"=>"Permanent absence of a family member",
+								"chc"=>"Changes in caretakers",
+								"chs"=>"Changes in schedule/work");
+	
+	var $childMedicalEvents = array("sei"=>"Seizure",
+								"hea"=>"Head injury",
+								"othi"=>"Other injuries and minor physical traumas",
+								"hifv"=>"High fever",
+								"hosp"=>"Hospitalization",
+								"mill"=>"Minor illness");
+								
+	var $stressfulEvent = array("inj"=>"Injury/illness to relatives or friends",
+								"dear"=>"Death of relative/friend",
+								"conf"=>"Conflict in relationship with spouse/partner",
+								"legl"=>"Legal matters for self or partner",
+								"emp"=>"Employment/financial problems for self or partner",
+								"crim"=>"Criminal matters for self, partner, or family");
+								
     var $columnHeaders = array("total_symptoms"=>"Total Symptoms", "regulatory"=>"Regulatory", "social"=>"Social",
             "communication"=>"Communication", "repetitive_behaviour"=>"Repetitive Behaviour");
 
@@ -87,7 +213,20 @@ INSERT INTO test_battery VALUES ('', 'edi', '1050', '1140', 'Y', 'Visit', '2');
         $this->_selectMultipleElements = array();
 
         // required fields for data entry completion status
-        $this->_requiredElements = array('Examiner', 'EDI1', 'EDIbir');
+        $this->_requiredElements = array('Examiner');
+
+        // Find the Date_taken
+        $db =& Database::singleton();
+        if(PEAR::isError($db)) {
+            return PEAR::raiseError ("Could not connect to database: ".$db->getMessage());
+        }
+        
+        $query = "SELECT Date_taken from " . $this->testName . " WHERE CommentID = '".$this->getCommentID()."'";
+        $result = $db->selectOne($query);
+        if(PEAR::isError($result)){
+            return PEAR::raiseError("Query has failed to select Date_taken.".$result->getMessage());
+        }
+        $this->Date_taken=$result;
 
         //Scoring column headers
         foreach($this->columnHeaders as $field=>$label) {
@@ -96,14 +235,69 @@ INSERT INTO test_battery VALUES ('', 'edi', '1050', '1140', 'Y', 'Visit', '2');
         $this->localDefaults = array_merge($this->localDefaults, $this->columnHeaders);
         
         //combine all scorable fields into one, savable array
-        $this->scores = $this->total_symptomAnchors;
-        $this->scores = array_merge($this->scores, $this->regulatoryAnchors);
-        $this->scores = array_merge($this->scores, $this->socialAnchors);
-        $this->scores = array_merge($this->scores, $this->communicationAnchors);
-        $this->scores = array_merge($this->scores, $this->repetitive_behaviourAnchors);
+        $this->scores = array_merge($this->total_symptomAnchors, $this->regulatoryAnchors, $this->socialAnchors, $this->communicationAnchors, $this->repetitive_behaviourAnchors);
+
         // setup the form
         $this->_setupForm();
 
+    }
+    
+    function _determineDataEntryCompletionStatus(){
+    
+        // If Date_taken has not yet been set, then don't run any of the following code.
+        if(is_null($this->Date_taken)){
+            return 'Incomplete';
+        }
+        
+        //get DoB
+        $db =& Database::singleton();
+        if(PEAR::isError($db)) {
+            return PEAR::raiseError ("Could not connect to database: ".$db->getMessage());
+        }
+
+        // Get the subject DoB for scoring
+        $timepoint =& TimePoint::singleton($this->getSessionID());
+        $dob = $timepoint->getEffectiveDateOfBirth();
+        
+		$age = Utility::calculateAge($dob, $this->Date_taken);
+        if($this->isError($age)) {
+            return $this->raiseError("Could not compute age");
+        }
+
+        //determine subProjectID
+        $subProjectID = $timepoint->getSubprojectID();
+        //determine required questions
+        $this->_determineRequiredQuestions($age, $subProjectID);
+        
+        //compare
+        return parent::_determineDataEntryCompletionStatus();
+    }
+    
+    function _determineRequiredQuestions($age, $subProjectID){
+        //get age in days, to more easily compare with the test_battery;
+        $ageDays = $age['year'] * 365 + $age['mon'] * 30.5 + $age['day'];
+
+        // V1
+        if($ageDays <= 270 && $subProjectID == 1) {
+            //6m recruit,
+            if($subProjectID == 1) {
+                $this->_requiredElements = array_merge($this->_requiredElements, array("EDI1", "EDI9", "bir", "sei", "inj"));}
+        }
+        
+        // V2
+        elseif($ageDays >= 300 && $ageDays <= 420) {
+            //6m recruit
+            if($subProjectID == 1) {
+                $this->_requiredElements = array_merge($this->_requiredElements, array("EDI20", "EDI34", "bir", "sei")); }
+
+            //12m recruit
+            elseif($subProjectID == 2) {
+                $this->_requiredElements = array_merge($this->_requiredElements, array("EDI1", "EDI9", "EDI20", "EDI34", "bir", "sei", "inj")); }
+        }
+        
+        // V3
+        elseif($ageDays >= 660 && $ageDays <= 780) {
+            $this->_requiredElements = array_merge($this->_requiredElements, array("EDI46", "EDI59", "EDI71", "EDI83", "bir", "sei")); }
     }
     
     /**
@@ -113,19 +307,19 @@ INSERT INTO test_battery VALUES ('', 'edi', '1050', '1140', 'Y', 'Visit', '2');
     * @access private
     */
     function _setupForm(){
-        switch($this->page) {
-            case "edi_page1":
-            $this->_page1();
-            break;
-            
-            case "edi_page2":
-            $this->_page2();
-            break;
-            
-            default:
-            $this->_main();
-            break;
+        //If trying to start anywhere but the _main page...
+        if(!empty($this->page) && empty($this->Date_taken)){
+            $this->form->addElement("header", null, "<p><b style='color:red'>Please return to the Top page and enter the subjects age details.</b>");
+            $this->form->freeze();
+            return;
         }
+
+        if(ereg("(_page[0-9]+)",$this->page,$matches)){
+            call_user_method($matches[1], &$this);
+        } else {
+            $this->_main();
+        }
+
         //Defines the call back function for HTML Quickform to use when validating the form.
         $this->form->addFormRule(array(&$this,'XINValidate'));
     }
@@ -144,8 +338,13 @@ INSERT INTO test_battery VALUES ('', 'edi', '1050', '1140', 'Y', 'Visit', '2');
         // automatically adds examiner & date of administration
         $this->_addMetadataFields();
         
+        $this->form->addElement('static', null, "You need only complete the time-appropriate pages.");
+        $this->form->addElement('static', null, "Any unasked pages may be left completely blank.");
+
+        $this->form->addElement('static', null, null);
+        $this->form->addElement('header', null, "Scores");
+
         //scoring column headers
-        
         $group[] = $this->form->createElement('static', "total_symptoms");
         $group[] = $this->form->createElement('static', "regulatory");
         $group[] = $this->form->createElement('static', "social");
@@ -168,110 +367,63 @@ INSERT INTO test_battery VALUES ('', 'edi', '1050', '1140', 'Y', 'Visit', '2');
     }
     
     function _page1(){
+        $this->generateQuestions(1, 19);
+    }
+    
+    function _page2(){
+        $this->generateQuestions(20, 26);
+    }
+    
+    function _page3() {
+        $this->generateQuestions(46, 1000);
+    }
+    
+    function _page4() {
+		$answerArray = array(""=>NULL, "0_no"=>"0. No", "1_possible"=>"1. Possible", "2_definite"=>"2. Definite", "not_answered"=>"Not Answered");
 
+		$this->form->addElement("header", null, "Family Changes");
+		$questionArray = $this->familyChanges;
+		
+		foreach($questionArray as $field=>$label) {
+			$this->form->addElement("select", $field, $label, $answerArray);
+		}							
+
+		$this->form->addElement("header", null, "Child Medical Events");
+		$questionArray = $this->childMedicalEvents;
+		
+		foreach($questionArray as $field=>$label) {
+			$this->form->addElement("select", $field, $label, $answerArray);
+		}
+    }
+    
+    function _page5(){
+		$answerArray = array(""=>NULL, "0_no"=>"0. No", "1_possible"=>"1. Possible", "2_definite"=>"2. Definite", "not_answered"=>"Not Answered");
+
+		$this->form->addElement("header", null, "Stressful Event");
+		$questionArray = $this->stressfulEvent;
+		
+		foreach($questionArray as $field=>$label) {
+			$this->form->addElement("static", null, $label);
+			$this->form->addElement("select", $field, $this->indent . "Code", $answerArray);
+			$this->addTextElement($field . "_month" , $this->indent . "Month of pregnancy", array("$field{@}=={@}1_possible|2_definite"), "This is required if you answered 1. Possible or 2. Definite");
+		}
+		//`Other` questions
+        for($field = 1; $field <= 2; $field++) {
+    		$this->addTextElement("other_{$field}", "Other:");
+    		$this->form->addElement("select", "other_{$field}_code", $this->indent . "Code", $answerArray);
+    		$this->XINRegisterRule("other_{$field}_code", array("other_{$field}_status{@}=={@}"), "Please indicate a code, or mark the `Other` question as Not Answered");
+    		$this->addTextElement("other_{$field}_month" , $this->indent . "Month of pregnancy", array("$field{@}=={@}1_possible|2_definite"), "This is required if you answered 1. Possible or 2. Definite");
+		}		
+		$this->addTextAreaElement("comnt", "Comments:");
+    }
+
+    function generateQuestions($qNum, $questionCount) {
     	//answers used for all questions
     	$answerArray = array(""=>NULL, "0_no"=>"0. No", "1_possible"=>"1. Possible", "2_definite"=>"2. Definite", "not_answered"=>"Not Answered");
 
-    	$questionArray = array("1. Difficult to hold, cuddle?",
-"2. Exceptionally fussy, difficult to soothe?",
-"3. Exceptionally easy baby, content doing own thing?",
-"4. Overly sensitive/lack of sensitivity to noise, tactile input?",
-"5. Sleeping problems?",
-"6. Feeding problems?",
-"7. Oddities in muscle tone?",
-"8. Anything else that gave you concern? (write in)",
-"9. Difficult to hold, cuddle?",
-"10. Exceptionally fussy, difficult to soothe?",
-"11. Exceptionally easy baby?",
-"12. Overly sensitive/lack of sensitivity to noise, tactile input?",
-"13. Sleeping problems?",
-"14. Feeding problems?",
-"15. Oddities in muscle tone?",
-"16. Lack of smiling at people?",
-"17. Exceptionally long attention span for nonsocial things?",
-"18. Exceptionally long attention span for social things?",
-"19. Anything else that gave you concern? (write in)",
-"20. Difficult to hold, cuddle?",
-"21. Exceptionally fussy, difficult to soothe?",
-"22. Exceptionally easy baby?",
-"23. Overly sensitive/lack of sensitivity to noise, tactile input?",
-"24. Sleeping problems?",
-"25. Feeding problems?",
-"26. Oddities in muscle tone?",
-"27. Lack of smiling at people?",
-"28. Difficult to catch his/her eye?",
-"29. Lack of orienting to name?",
-"30. Failure to use vocalizations socially?",
-"31. Exceptionally long attention span for nonsocial things?",
-"32. Exceptionally long attention span for social things?",
-"33. Anything else that gave you concern? (write in)",
-"34. Overly sensitive/lack of sensitivity to noise...?",
-"35. Sleeping problems?",
-"36. Oddities in muscle tone?",
-"37. Repetitive/stereotyped motor movements?",
-"38. Excessive mouthing?",
-"39. Lack of smiling at people?",
-"40. Lack of orienting to name?",
-"41. Poor eye contact, difficult to catch his/her eye?",
-"42. Failure to follow point?",
-"43. Lack of babbling?",
-"44. Failure to use vocalizations socially/lack of imitative babbling?",
-"45. Anything else that gave you concern? (write in)",
-"46. Overly sensitive/lack of sensitivity to noise...?",
-"47. Sleeping problems?",
-"48. Oddities in muscle tone?",
-"49. Repetitive/stereotyped motor movements?",
-"50. Lack of orienting to name?",
-"51. Poor eye contact, difficult to catch his/her eye?",
-"52. Lack of interest in interactive baby games?",
-"53. Failure to initiate simple, ritualized social interaction?",
-"54. Failure to follow point?",
-"55. Failure to show objects?",
-"56. Lack of pointing to express interest?",
-"57. Failure to use words meaningfully?",
-"58. Anything else that gave you concern? (write in)",
-"59. Overly sensitive/lack of sensitivity to noise...?",
-"60. Repetitive/stereotyped motor movements?",
-"61. Lack of orienting to name?",
-"62. Poor eye contact, difficult to catch his/her eye?",
-"63. Failure to follow point?",
-"64. Lack of pointing to express interest?",
-"65. Failure to initiate simple, ritualized social interaction?",
-"66. Failure to increase vocabulary/language from previous timepoint?",
-"67. Failure to imitate actions on objects?",
-"68. Failure to use formal gestures?",
-"69. Placed adult?s hand on desired objects/moved adult?s hand?",
-"70. Anything else that gave you concern? (write in)",
-"71. Overly sensitive/lack of sensitivity to noise...?",
-"72. Repetitive/stereotyped motor movements?",
-"73. Lack of orienting to name?",
-"74. Poor eye contact, difficult to catch his/her eye?",
-"75. Failure to follow point/gaze?",
-"76. Lack of pointing to express interest?",
-"77. Failure to initiate simple, ritualized social interaction?",
-"78. Failure to increase vocabulary/language from previous timepoint?",
-"79. Failure to use formal gestures?",
-"80. Failure to imitate actions on objects?",
-"81. Placed adult?s hand on desired objects/moved adult?s hand?",
-"82. Anything else that gave you concern? (write in)",
-"83. Overly sensitive/lack of sensitivity to noise...?",
-"84. Repetitive/stereotyped motor movements?",
-"85. Lack of orienting name?",
-"86. Poor eye contact, difficult to catch his/her eye?",
-"87. Failure to follow point/gaze?",
-"88. Lack of pointing to express interest?",
-"89. Failure to initiate simple, ritualized social interaction?",
-"90. Failure to use increase language/vocabulary from previous timepoint?",
-"91. Failure to combine words?",
-"92. Failure to use formal gestures?",
-"93. Placed adult?s hand on desired objects/moved adult?s hand?",
-"94. Had routines/rituals?",
-"95. Had unusual attachments to objects?",
-"96. Anything else that gave you concern? (write in)");
-
-		$qNum = 1; //question number counter
 		$otherQuestions = array(8, 19, 33, 45, 58, 70, 82, 96);
 		$anchorPoints = array(1=>"0-3", 9=>"4-6", 20=>"7-9", 34=>"10-12", 46=>"13-15", 59=>"16-18", 71=>"19-21", 83=>"22-24");
+		$questionArray = array_slice($this->questionArray, $qNum - 1, $questionCount);
 		foreach($questionArray as $label) {
 			if(array_key_exists($qNum, $anchorPoints) == TRUE) {
 				$this->form->addElement("header", null, $anchorPoints[$qNum] . " months");
@@ -284,64 +436,12 @@ INSERT INTO test_battery VALUES ('', 'edi', '1050', '1140', 'Y', 'Visit', '2');
 		}
     }
 
-    function _page2() {
-		$answerArray = array(""=>NULL, "0_no"=>"0. No", "1_possible"=>"1. Possible", "2_definite"=>"2. Definite", "not_answered"=>"Not Answered");
-
-		$this->form->addElement("header", null, "Family Changes");
-		$questionArray = array("bir"=>"Birth of sibling",
-								"dea"=>"Death of familiar family member",
-								"div"=>"Divorce of parents",
-								"mar"=>"Marriage of a parent",
-								"mov"=>"Move to a new home",
-								"tem"=>"Temporary absence of a family member",
-								"per"=>"Permanent absence of a family member",
-								"chc"=>"Changes in caretakers",
-								"chs"=>"Changes in schedule/work");
-	
-		foreach($questionArray as $field=>$label) {
-			$this->form->addElement("select", "EDI" . $field, $label, $answerArray);
-		}							
-
-		$this->form->addElement("header", null, "Child Medical Events");
-		$questionArray = array("sei"=>"Seizure",
-								"hea"=>"Head injury",
-								"othi"=>"Other injuries and minor physical traumas",
-								"hifv"=>"High fever",
-								"hosp"=>"Hospitalization",
-								"mill"=>"Minor illness");
-		foreach($questionArray as $field=>$label) {
-			$this->form->addElement("select", "EDI" . $field, $label, $answerArray);
-		}
-		
-		$this->form->addElement("header", null, "Stressful Event");
-		$questionArray = array("inj"=>"Injury/illness to relatives or friends",
-								"dear"=>"Death of relative/friend",
-								"conf"=>"Conflict in relationship with spouse/partner",
-								"legl"=>"Legal matters for self or partner",
-								"emp"=>"Employment/financial problems for self or partner",
-								"crim"=>"Criminal matters for self, partner, or family");
-		foreach($questionArray as $field=>$label) {
-			$this->form->addElement("static", null, $label);
-			$this->form->addElement("select", $field, $this->indent . "Code", $answerArray);
-			$this->addTextElement($field . "_month" , $this->indent . "Month of pregnancy", array("$field{@}=={@}1_possible|2_definite"), "This is required if you answered 1. Possible or 2. Definite");
-		}
-
-		//`Other` questions
-        for($field = 1; $field <= 2; $field++) {
-    		$this->addTextElement("other_{$field}", "Other:");
-    		$this->form->addElement("select", "other_{$field}", $this->indent . "Code", $answerArray);
-    		$this->XINRegisterRule("other_{$field}", array("other_{$field}_status{@}=={@}"), "Please indicate a code, or mark the `Other` question as Not Answered");
-    		$this->addTextElement("other_{$field}" . "_month" , $this->indent . "Month of pregnancy", array("$field{@}=={@}1_possible|2_definite"), "This is required if you answered 1. Possible or 2. Definite");
-		}		
-		$this->addTextAreaElement("EDIcomnt", "Comments:");
-    }
-
     function score() {
         if($this->_determineDataEntryCompletionStatus() == "Incomplete") {
                 return;
         }
-	
-	// Get the item scores
+
+        // Get the item scores
         $score_record=array();
         
         $db =& Database::singleton();
