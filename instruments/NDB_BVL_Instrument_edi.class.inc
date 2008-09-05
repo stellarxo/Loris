@@ -325,7 +325,14 @@ INSERT INTO test_battery VALUES ('', 'edi', '1050', '1140', 'Y', 'Visit', '2');
 			$this->form->addElement("select", $field, $this->indent . "Code", $answerArray);
 			$this->addTextElement($field . "_month" , $this->indent . "Month of pregnancy", array("$field{@}=={@}1_possible|2_definite"), "This is required if you answered 1. Possible or 2. Definite");
 		}
-		
+
+		//`Other` questions
+        for($field = 1; $field <= 2; $field++) {
+    		$this->addTextElement("other_{$field}", "Other:");
+    		$this->form->addElement("select", "other_{$field}", $this->indent . "Code", $answerArray);
+    		$this->XINRegisterRule("other_{$field}", array("other_{$field}_status{@}=={@}"), "Please indicate a code, or mark the `Other` question as Not Answered");
+    		$this->addTextElement("other_{$field}" . "_month" , $this->indent . "Month of pregnancy", array("$field{@}=={@}1_possible|2_definite"), "This is required if you answered 1. Possible or 2. Definite");
+		}		
 		$this->addTextAreaElement("EDIcomnt", "Comments:");
     }
 
