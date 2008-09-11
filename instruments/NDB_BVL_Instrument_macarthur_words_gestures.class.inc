@@ -48,7 +48,7 @@ class NDB_BVL_Instrument_macarthur_words_gestures extends NDB_BVL_Instrument
         $this->_selectMultipleElements = array();
 
         // required fields for data entry completion status
-        $this->_requiredElements = array('Examiner', 'I_A_1', "II_A_1");
+        $this->_requiredElements = array('Examiner', 'I_A_1', "II_A_1", "II_D_1");
 
         // setup the form
         $this->_setupForm();
@@ -781,7 +781,7 @@ class NDB_BVL_Instrument_macarthur_words_gestures extends NDB_BVL_Instrument
         "13. Try to put diaper on it.");
         $qNum = 1;
         foreach($questionArray as $label) {
-            $this->form->addElement('select', "II_D_" . $qNum, $label, $this->underSays);
+            $this->form->addElement('select', "II_D_" . $qNum, $label, $this->yesNo);
             $qNum++;
         }
 
@@ -803,7 +803,7 @@ class NDB_BVL_Instrument_macarthur_words_gestures extends NDB_BVL_Instrument
         "15. Put on glasses.");
         $qNum = 1;
         foreach($questionArray as $label) {
-            $this->form->addElement('select', "II_E_" . $qNum, $label, $this->underSays);
+            $this->form->addElement('select', "II_E_" . $qNum, $label, $this->yesNo);
             $qNum++;
         }
 
