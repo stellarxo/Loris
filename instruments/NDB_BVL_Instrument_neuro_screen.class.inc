@@ -85,7 +85,7 @@ class NDB_BVL_Instrument_neuro_screen extends NDB_BVL_Instrument
         $this->_addMetadataFields();
 
         //which time version is being filled out?
-        $this->form->addElement("select", "visit", "Visit", array(null=>"", "6month"=>"6 month", "12month"=>"12 month", "24month"=>"24 month"));
+        $this->form->addElement("select", "visit", "Visit", array(null=>"", "6month"=>"6 month", "12month"=>"12 month", "12month_nr"=>"12 month (new recruit)", "24month"=>"24 month"));
     }
 
     function _page1(){
@@ -108,16 +108,16 @@ class NDB_BVL_Instrument_neuro_screen extends NDB_BVL_Instrument
         "9_not_tested"=>"9 Not tested",
         "not_answered"=>"Not Answered"));
 
-        $this->addTextElement("1_strabismus_specify", $this->indent . "Specify type:");
+        $this->addTextElement("1_strabismus_specify", $this->indent . "Specify type:", array("1_strabismus{@}=={@}1_covert|2_overt"));
 
         $this->form->addElement("select", "2_ptosis", "2. Ptosis (droopy upper eyelid)", array(null=>"", "0_absent"=>"0 absent",
         "1_doubtful"=>"1 doubtful",
-        "2 definite"=>"2 definite",
+        "2_definite"=>"2 definite",
         "8_suject_unable"=>"8 subject unable to carry out task",
         "9_failure_to_test"=>"9 failure to test",
         "not_answered"=>"Not Answered"));
 
-        $this->addTextElement("2_specify", $this->indent . "Specify R or L or Bilat.");
+        $this->addTextElement("2_specify", $this->indent . "Specify R or L or Bilat.", array("2_ptosis{@}=={@}1_doubtful|2_definite"));
 
         $this->form->addElement("select", "3_epicanthus", "3. Epicanthus: Where upper and lower lids join the nose, point of union is", array(null=>"",
         "0_normal"=>"0 normal",
@@ -157,7 +157,7 @@ class NDB_BVL_Instrument_neuro_screen extends NDB_BVL_Instrument
         "9_failure_to_test"=>"9 failure to test",
         "not_answered"=>"Not Answered"));
 
-        $this->addTextElement("7_cleft_describe", $this->indent . "Describe:");
+        $this->addTextElement("7_cleft_describe", $this->indent . "Describe:", array("7_cleft_palate{@}=={@}1_uncertain|2_present"));
 
         $this->form->addElement("select", "8_craniofacial_dysmorphic", "8. Other Craniofacial Dysmorphic Features", array(null=>"",
         "0_absent"=>"0 absent",
@@ -167,7 +167,7 @@ class NDB_BVL_Instrument_neuro_screen extends NDB_BVL_Instrument
         "9_failure_to_test"=>"9 failure to test",
         "not_answered"=>"Not Answered"));
 
-        $this->addTextElement("8_craniofacial_dysmorphic_describe", $this->indent . "Describe:");
+        $this->addTextElement("8_craniofacial_dysmorphic_describe", $this->indent . "Describe:", array("8_craniofacial_dysmorphic{@}=={@}1_uncertain|2_present"));
 
         $this->form->addElement("select", "9_curved_fifth_finger", "9. Curved Fifth Finger", array(null=>"",
         "0_normal"=>"0 normal",
@@ -192,7 +192,7 @@ class NDB_BVL_Instrument_neuro_screen extends NDB_BVL_Instrument
         "9_failure_to_test"=>"9 failure to test",
         "not_answered"=>"Not Answered"));
 
-        $this->addTextElement("11_symmetrical_gait_abnormality_specify", $this->indent . "Specify:");
+        $this->addTextElement("11_symmetrical_gait_abnormality_specify", $this->indent . "Specify:", array("11_symmetrical_gait_abnormality{@}=={@}1_uncertain_abnormality|2_definite_symmetrical_abnormality"));
 
         $this->form->addElement("select", "12_asymmetrical_gait_abnormality", "12. Asymmetrical Gait Abnormality", array(null=>"",
         "0_none"=>"0 none",
@@ -202,7 +202,7 @@ class NDB_BVL_Instrument_neuro_screen extends NDB_BVL_Instrument
         "9_failure_to_test"=>"9 failure to test",
         "not_answered"=>"Not Answered"));
 
-        $this->addTextElement("12_asymemtrical_gait_abnormality_specify", $this->indent . "Specify:");
+        $this->addTextElement("12_asymemtrical_gait_abnormality_specify", $this->indent . "Specify:", array("12_asymmetrical_gait_abnormality{@}=={@}1_uncertain_asymmetry|2_definite_asymmetry"));
 
         $this->form->addElement("select", "13_tone_symmetrical_abnormality", "13. Tone: Symmetrical Abnormality", array(null=>"",
         "0_none"=>"0 none",
@@ -225,8 +225,8 @@ class NDB_BVL_Instrument_neuro_screen extends NDB_BVL_Instrument
         "9_failure_to_test"=>"9 failure to test",
         "not_answered"=>"Not Answered"));
 
-        $this->addTextElement("14_tone_asymmetrical_abnormality_specify", $this->indent . "Specify:");
-        $this->XINRegisterRule("14_tone_asymmetrical_abnormality_specify", array("14_tone_asymmetrical_abnormality{@}=={@}2_increased|3_decreased"));
+        $this->addTextElement("14_tone_asymmetrical_abnormality_specify", $this->indent . "Specify:", array("14_tone_asymmetrical_abnormality{@}=={@}2_increased|3_decreased"));
+//        $this->XINRegisterRule("14_tone_asymmetrical_abnormality_specify", array("14_tone_asymmetrical_abnormality{@}=={@}2_increased|3_decreased"));
 
         $this->form->addElement("select", "15_appearance", "15. Appearance: Observe exposed arms...", array(null=>"",
         "0_normal"=>"0 normal",
@@ -236,7 +236,7 @@ class NDB_BVL_Instrument_neuro_screen extends NDB_BVL_Instrument
         "9_failure_to_test"=>"9 failure to test",
         "not_answered"=>"Not Answered"));
 
-        $this->addTextElement("15_appearance_specify", $this->indent . "Specify:");
+        $this->addTextElement("15_appearance_specify", $this->indent . "Specify:", array("14_tone_asymmetrical_abnormality{@}=={@}1_uncertain_abnormality|2_definite_abnormality"));
 
         $this->form->addElement("select", "16_power_upper_limb", "16. Power: Upper Limb: Get child to squeeze 2 fingers...", array(null=>"",
         "0_normal"=>"0 normal",
@@ -246,7 +246,7 @@ class NDB_BVL_Instrument_neuro_screen extends NDB_BVL_Instrument
         "9_failure_to_test"=>"9 failure to test",
         "not_answered"=>"Not Answered"));
 
-        $this->addTextElement("16_power_upper_limb_specify", $this->indent . "Specify:");
+        $this->addTextElement("16_power_upper_limb_specify", $this->indent . "Specify:", array("16_power_upper_limb{@}=={@}1_uncertain_mild_weakness|2_unequivocal_weakness_or_asymmetry"));
 
         $this->form->addElement("select", "17_power_lower_limb", "17. Power: Lower Limb: Observe child walking, kicking, etc.", array(null=>"",
         "0_normal"=>"0 normal",
@@ -256,7 +256,7 @@ class NDB_BVL_Instrument_neuro_screen extends NDB_BVL_Instrument
         "9_failure_to_test"=>"9 failure to test",
         "not_answered"=>"Not Answered"));
 
-        $this->addTextElement("17_power_lower_limb_specify", $this->indent . "Specify:");
+        $this->addTextElement("17_power_lower_limb_specify", $this->indent . "Specify:", array("17_power_lower_limb{@}=={@}1_uncertain_mild_weakness|2_unequivocal_weakness_or_asymmetry"));
 
         $this->form->addElement("select", "18_other_limb_hand_dysmorphic", "18. Other Limb/Hand/Feet Dysmorphic Features", array(null=>"",
         "0_absent"=>"0 absent",
@@ -266,7 +266,7 @@ class NDB_BVL_Instrument_neuro_screen extends NDB_BVL_Instrument
         "9_failure_to_test"=>"9 failure to test",
         "not_answered"=>"Not Answered"));
 
-        $this->addTextElement("18_other_limb_hand_dysmorphic_describe", $this->indent . "Describe:");
+        $this->addTextElement("18_other_limb_hand_dysmorphic_describe", $this->indent . "Describe:", array("18_other_limb_hand_dysmorphic{@}=={@}1_uncertain|2_present"));
 
         $this->addTextElement("19_other_physical_abnormalities", "19. Other Physical Abnormalities Noted");
 
@@ -299,11 +299,21 @@ class NDB_BVL_Instrument_neuro_screen extends NDB_BVL_Instrument
         $this->form->addGroup($group, "21_handedness_totals_group", $this->indent . "TOTAL", $this->_GUIDelimiter, false);
         unset($group);
 
-        $this->form->addElement("static", null, "22. Measurements (in cm)");
+        $this->form->addElement("static", null, "22. Measurements");
         $this->form->addElement("static", null, "(Sometimes this is erroneously called #21)");
-        $this->addTextElement("22_child_hc_cm", $this->indent . "Child HC:");
-        $this->addTextElement("22_mother_hc_cm", $this->indent . "Mother HC:");
-        $this->addTextElement("22_father_hc_cm", $this->indent . "Father HC:");
+        $this->form->addElement("static", null, "Head Circumferences (cm):");
+        $this->addTextElement("22_child_hc_cm", $this->indent . "a) Child:");
+        $this->addTextElement("22_mother_hc_cm", $this->indent . "b) Mother:");
+        $this->addTextElement("22_father_hc_cm", $this->indent . "c) Father:");
+        
+        //Some fields were added later on...
+        $this->form->addElement("static", null, "Parental Height (cm):");
+        $this->addTextElement("22_mother_height_cm", $this->indent . "d) Mother:");
+        $this->addTextElement("22_father_height_cm", $this->indent . "e) Father:");
+        
+        $this->form->addElement("static", null, "Parental Weight (kg):");
+        $this->addTextElement("22_mother_weight_kg", $this->indent . "f) Mother:");
+        $this->addTextElement("22_father_weight_kg", $this->indent . "g) Father:");
 
         $this->form->addElement("select", "23_adenoma_sebaceum", "23. Adenoma Sebaceum", array(null=>"",
         "0_absent"=>"0 absent",
@@ -313,7 +323,7 @@ class NDB_BVL_Instrument_neuro_screen extends NDB_BVL_Instrument
         "9_failure_to_test"=>"9 failure to test",
         "not_answered"=>"Not Answered"));
 
-        $this->addTextElement("23_adenoma_sebaceum_describe", $this->indent . "Describe:");
+        $this->addTextElement("23_adenoma_sebaceum_describe", $this->indent . "Describe:", array("23_adenoma_sebaceum{@}=={@}1_uncertain|2_present"));
 
         $this->form->addElement("select", "24_ash_leaf_macules", "24. Ash Leaf Macules: flat, white, leaf shaped spots", array(null=>"",
         "0_absent"=>"0 absent",
@@ -323,7 +333,7 @@ class NDB_BVL_Instrument_neuro_screen extends NDB_BVL_Instrument
         "9_failure_to_test"=>"9 failure to test",
         "not_answered"=>"Not Answered"));
 
-        $this->addTextElement("24_ash_leaf_macules_describe", $this->indent . "Describe:");
+        $this->addTextElement("24_ash_leaf_macules_describe", $this->indent . "Describe:", array("24_ash_leaf_macules{@}=={@}1_uncertain|2_present"));
 
         $this->form->addElement("select", "25_shagreen_patches", "25. Shagreen Patches: patches of skin that resemble `untanned leather`", array(null=>"",
         "0_absent"=>"0 absent",
@@ -333,17 +343,19 @@ class NDB_BVL_Instrument_neuro_screen extends NDB_BVL_Instrument
         "9_failure_to_test"=>"9 failure to test",
         "not_answered"=>"Not Answered"));
 
-        $this->addTextElement("25_shagreen_patches_describe", $this->indent . "Describe:");
+        $this->addTextElement("25_shagreen_patches_describe", $this->indent . "Describe:", array("25_shagreen_patches{@}=={@}1_uncertain|2_present"));
 
-        $this->form->addElement("select", "26_woods_lamp_examination", "26. Woods Lamp Examination", array(null=>"",
-        "0_normal"=>"0 normal",
-        "1_uncertain"=>"1 uncertain",
-        "2_abnormal"=>"2 abnormal",
-        "8_subject_unable"=>"8 subject unable to carry out task",
-        "9_failure_to_test"=>"9 failure to test",
-        "not_answered"=>"Not Answered"));
-
-        $this->addTextElement("26_woods_lamp_examination_describe", $this->indent . "Describe:");
+        //Question #26 removed.
+//        $this->form->addElement("select", "26_woods_lamp_examination", "26. Woods Lamp Examination", array(null=>"",
+        $this->form->addElement("static", null, "26. Woods Lamp Examination - Question Removed");
+//        "0_normal"=>"0 normal",
+//        "1_uncertain"=>"1 uncertain",
+//        "2_abnormal"=>"2 abnormal",
+//        "8_subject_unable"=>"8 subject unable to carry out task",
+//        "9_failure_to_test"=>"9 failure to test",
+//        "not_answered"=>"Not Answered"));
+//
+//        $this->addTextElement("26_woods_lamp_examination_describe", $this->indent . "Describe:");
 
         $this->form->addElement("select", "27_cafe_au_lait_spots", "27. Cafe au Lait spots: pale yellow/light brown spots", array(null=>"",
         "0_absent"=>"0 absent",
@@ -354,7 +366,7 @@ class NDB_BVL_Instrument_neuro_screen extends NDB_BVL_Instrument
         "9_failure_to_test"=>"9 failure to test",
         "not_answered"=>"Not Answered"));
 
-        $this->addTextElement("27_cafe_au_lait_spots_describe", $this->indent . "Describe:");
+        $this->addTextElement("27_cafe_au_lait_spots_describe", $this->indent . "Describe:", array("27_cafe_au_lait_spots{@}=={@}1_one_three_spots|2_four_or_five_spots|3_six_or_more_spots"));
 
         $this->form->addElement("select", "28_cutaneous_nodules", "28. Cutaneous/subcutaneous nodules: observe limbs and head", array(null=>"",
         "0_absent"=>"0 absent",
@@ -364,7 +376,7 @@ class NDB_BVL_Instrument_neuro_screen extends NDB_BVL_Instrument
         "9_failure_to_test"=>"9 failure to test",
         "not_answered"=>"Not Answered"));
 
-        $this->addTextElement("28_cutaneous_nodules_describe", $this->indent . "Describe:");
+        $this->addTextElement("28_cutaneous_nodules_describe", $this->indent . "Describe:", array("28_cutaneous_nodules{@}=={@}1_uncertain|2_one_or_more"));
 
         $this->form->addElement("select", "29_third_toe_longer", "29. Third toe longer than second", array(null=>"",
         "0_normal"=>"0 normal",
@@ -442,6 +454,10 @@ class NDB_BVL_Instrument_neuro_screen extends NDB_BVL_Instrument
 //        '22_mother_hc_cm_status',
         '22_father_hc_cm',
 //        '22_father_hc_cm_status',
+        "22_mother_height_cm",
+        "22_father_height_cm",        
+        "22_mother_weight_kg",
+        "22_father_weight_kg",
         '23_adenoma_sebaceum',
         '23_adenoma_sebaceum_describe',
 //        '23_adenoma_sebaceum_describe_status',
@@ -451,8 +467,8 @@ class NDB_BVL_Instrument_neuro_screen extends NDB_BVL_Instrument
         '25_shagreen_patches',
         '25_shagreen_patches_describe',
 //        '25_shagreen_patches_describe_status',
-        '26_woods_lamp_examination',
-        '26_woods_lamp_examination_describe',
+//        '26_woods_lamp_examination',
+//        '26_woods_lamp_examination_describe',
 //        '26_woods_lamp_examination_describe_status',
         '27_cafe_au_lait_spots',
         '27_cafe_au_lait_spots_describe',
@@ -469,6 +485,9 @@ class NDB_BVL_Instrument_neuro_screen extends NDB_BVL_Instrument
 
         //12month question numbers
         $_12month = array_merge(array(1, 2), range(11, 17), array(19, 20, 22, 27, 28));
+        
+        //12month new recruit numbers
+        $_12month_nr = array_merge(range(1, 10), range(13, 20));
 
         //24month question numbers
         $_24month = array_merge(array(1, 2), range(11, 17), range(19, 21), array(22, 27, 28));
@@ -486,6 +505,7 @@ class NDB_BVL_Instrument_neuro_screen extends NDB_BVL_Instrument
             return PEAR::raiseError("Query has failed to select Visit: ".$visit->getMessage());
         }
 
+        $requiredQuestions = array(); //moving it outside of the scope of the switch.  Seems to help.
         //which questions must be answered for this particular visit
         switch ($visit) {
             case "6month":
@@ -493,6 +513,9 @@ class NDB_BVL_Instrument_neuro_screen extends NDB_BVL_Instrument
             break;
             case "12month":
             $requiredQuestions = $_12month;
+            break;
+            case "12month_nr":
+            $requiredQuestions = $_12month_nr;
             break;
             case "24month":
             $requiredQuestions = $_24month;
