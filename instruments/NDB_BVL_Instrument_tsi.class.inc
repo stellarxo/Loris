@@ -45,7 +45,7 @@ class NDB_BVL_Instrument_tsi extends NDB_BVL_Instrument
 		$this->_selectMultipleElements = array();
 
 		// required fields for data entry completion status
-		$this->_requiredElements = array('Examiner', "typical_or_asd_subject");
+		$this->_requiredElements = array('Examiner', "ses_income", "typical_or_asd_subject");
 
 		// setup the form
 		$this->_setupForm();
@@ -93,8 +93,13 @@ class NDB_BVL_Instrument_tsi extends NDB_BVL_Instrument
 		"Subject's Gender: $this->indent Subject's Age (in months):",
 		"Ethnicity:",
 		"Race:",
-		"Parent's Information:",
-		"Parent's Telephone:",
+		"Parent's Information:");
+		foreach ($nonAskedQuestions as $field) {
+			$this->form->addElement('static', null, $field);
+		}
+		$this->form->addElement("select", "ses_income", "SES:", array(null=>"", "less_than_25K"=>"less than $24,999", "25K-35K"=>"$25,000 - 34,999", "35K-50K"=>"$35,000 - 49,999", "50K-75K"=>"$50,000 - 74,999", "75K-100K"=>"$75,000 - 99,999", "100K-150K"=>"$100,000 - 149,999", "150K-200K"=>"$150,000 - 199,000", "over_200K"=>"over $200,000", "not_answered"=>"Not Answered"));
+
+        $nonAskedQuestions = array("Parent's Telephone:",
 		"Parent's Address:",
 		"$this->indent a) Older sibling",
 		"$this->indent b) other siblings:",
@@ -145,6 +150,7 @@ class NDB_BVL_Instrument_tsi extends NDB_BVL_Instrument
 		"diabetes"=>"Diabetes or gestational diabetes?",
 		"premature_birth"=>"Premature birth (<37 weeks )?",
 		"low_birth_weight"=>"Birth weight <4lbs. 6oz. (2000 grams)?",
+		"tested_for_fragile_x_subject"=>"Tested for Fragile X syndrome?",
 		"delivery_problems"=>"Problems during delivery?");
 		foreach($questionArray as $field=>$label) {
 			$this->form->addElement("select", $field, $label, $this->yesNo);
