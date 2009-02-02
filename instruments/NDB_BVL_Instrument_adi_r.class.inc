@@ -11,14 +11,17 @@ DoB Proband should be somewhere in the candidate table.  For now, we'll just mak
 	
 	var $yesNoNA = array(''=>NULL, '0_no'=>"0. No", '1_yes'=>"1. Yes", 'not_answered'=>"Not answered");
 	
-	var $respondentAgeMonths;
+	var $respondentAgeYears;
 	
     /**
     * array of scoring fields
     */
     var $scoreCols = array("Total_A1", "Total_A2", "Total_A3", "Total_A4", "A_Total",
     						"Total_B1", "Total_B4", "Total_B2V", "Total_B3V", "BV_Total", "BNV_Total",
-    						"Total_C1", "Total_C2", "Total_C3", "Total_C4", "C_Total");
+    						"Total_C1", "Total_C2", "Total_C3", "Total_C4", "C_Total", "D_Total");
+    						
+    // Holds the algorithm score conversions
+    var $scores = array();
 
 	/**
     * sets up basic data, such as the HTML_Quickform object, and so on.
@@ -52,15 +55,10 @@ DoB Proband should be somewhere in the candidate table.  For now, we'll just mak
         								"q_60_init_activities_current_code", "q_67_unusual_preoccupations_current_code",
         								"q_80_gait_current_code", "q_88_visuospatial_ability_current_code");
 
-		//For testing purposes only...
-        $this->respondentAgeMonths = 121;
-
         // setup the form
         $this->_setupForm();
 
     }
-    
-    //If the instrument is not paged, remove the switch from the _setupForm method and add all the form Elements in this function.
     
     /**
     * method to build the HTML_Quickform object into a paged form
@@ -110,28 +108,29 @@ DoB Proband should be somewhere in the candidate table.  For now, we'll just mak
         }
         
         $this->form->addElement("header", null, "Scores");
-        $this->form->addElement("static", null, "This scoring algorithm is currently in the testing phase.");
-        $this->form->addElement("static", null, "Please inform the DCC of any oopsy daisies.");
+//        $this->form->addElement("static", null, "This scoring algorithm is currently in the testing phase.");
+//        $this->form->addElement("static", null, "Please inform the DCC of any oopsy daisies.");
         $this->form->addElement("static", null, "<BR>");
         
 		$scoreLabels = array("Total_A1"=>"Total A1",
 							"Total_A2"=>"Total A2",
 							"Total_A3"=>"Total A3",
 							"Total_A4"=>"Total A4",
-							"A_Total"=>"A Total",
+							"A_Total"=>"A Total (cutoff = 10)",
 							"Total_B1"=>"Total B1",
 							"Total_B4"=>"Total B4",
 							"Total_B2V"=>"Total B2(V)",
 							"Total_B3V"=>"Total B3V",
-							"BV_Total"=>"B(V) Total",
-							"BNV_Total"=>"B(NV) Total",
+							"BV_Total"=>"B(V) Total (cutoff = 8)",
+							"BNV_Total"=>"B(NV) Total (cutoff = 7)",
 							"Total_C1"=>"Total C1",
 							"Total_C2"=>"Total C2",
 							"Total_C3"=>"Total C3",
 							"Total_C4"=>"Total C4",
-							"C_Total"=>"C Total");
+							"C_Total"=>"C Total (cutoff = 3)",
+							"D_Total"=>"D Total (cutoff = 1)");
 		foreach ($scoreLabels as $field=>$label) {
-			if(in_array($field, array("A_Total", "BV_Total", "BNV_Total", "C_Total")) == TRUE) {
+			if(in_array($field, array("A_Total", "BV_Total", "BNV_Total", "C_Total", "D_Total")) == TRUE) {
 				$label = $this->indent . $this->indent . $label;
 			}
 	        $this->form->addElement("static", $field, $label);
@@ -140,21 +139,17 @@ DoB Proband should be somewhere in the candidate table.  For now, we'll just mak
     }
 
     function _score() {
-        // skip scoring if proband DoB was not entered, i.e. data entry is not completed
-        if(empty($this->respondentAgeMonths)){
-            return;
-        }
-        
-        //skip scoring if all data has not yet been entered.
-        if($this->_determineDataEntryCompletionStatus() == "Incomplete") {
-        	return;
-        }
         
         $db =& Database::singleton();
         if(PEAR::isError($db)) {
             return PEAR::raiseError ("Could not connect to database: ".$db->getMessage());
         }
 
+        // skip scoring if proband DoB was not entered, i.e. data entry is not completed
+        if(empty($this->respondentAgeYears)){
+            return;
+        }
+        
         // null scores
         $this->_nullScores($this->scoreCols);
 
@@ -165,18 +160,132 @@ DoB Proband should be somewhere in the candidate table.  For now, we'll just mak
         if (PEAR::isError($record)) {
             return PEAR::raiseError("Could not get scores: ".$record->getMessage());
         }
-            	
         //convert items codes to algorithm scores
         $conversion = array(0=>0, 1=>1, 2=>2, 3=>2, 7=>0, 8=>0, 9=>0);
         foreach ($record as $field=>$code) {
-        	$scores[$field] = substr($code, 0, 1);
-        	if(is_numeric($scores[$field])) {
-        		$scores[$field] = $conversion[$scores[$field]];
-        	} else {
-        		$scores[$field] = 0;  //for 'not_answered'
-        	}
+            //Exceptions: Retain some values as months, not scores.
+            if(!in_array($field, array("q_2_age_first_noticed_code", "q_9_first_single_words_code", "q_10_first_phrases_code", "q_87_interviewers_judgment",
+                //Exceptions: Does not follow the code to algorithm score conversion
+                "q_86_age_when_abnormality_first_evident"))){
+            	$this->scores[$field] = substr($code, 0, 1);
+            	if(is_numeric($this->scores[$field])) {
+            	    $intval = intval($this->scores[$field]);
+            		$this->scores[$field] = $conversion[$intval];
+            	} else {
+            		$this->scores[$field] = 0;  //for 'not_answered'
+            	}
+            }
         }
+        //Clean up values stored as months (not scores) to ensure only digits remain.
+        $this->scores["q_2_age_first_noticed_code"] = $this->_cleanTo3Digits($this->scores["q_2_age_first_noticed_code"]);
+        $this->scores["q_9_first_single_words_code"] = $this->_cleanTo3Digits($this->scores["q_9_first_single_words_code"]);
+		$this->scores["q_10_first_phrases_code"] = $this->_cleanTo3Digits($this->scores["q_10_first_phrases_code"]);
+		
+		//Age 2 years, 0 months through 3 years, 11 months.
+        if ($this->respondentAgeYears < 2) {
+            $scoreCols["A_Total"] = "Respondent too young to score";
+        //Diagnostic Algorithm, 2y -> 3y11m
+        } elseif ($this->respondentAgeYears >= 2 && $this->respondentAgeYears <= 3) {
+            //Qualitative Abnormalities in Reciprocal Social Interaction
+	        $scoreCols["Total_A1"] = $this->scores["q_50_direct_gaze_current_code"] + $this->scores["q_51_social_smiling_current_code"] 
+									+ $this->scores["q_57_range_facial_expr_current_code"];
+			$scoreCols["Total_A2"] = $this->scores["q_62_inter_children_current_code"] + $this->scores["q_63_resp_approaches_current_code"];
+			$scoreCols["Total_A3"] = $this->scores["q_52_show_direct_atten_current_code"] + $this->scores["q_53_offer_share_current_code"]
+									+ $this->scores["q_54_seek_share_enjoy_current_code"];
+			$scoreCols["Total_A4"] = $this->scores["q_31_use_of_others_body_ever_code"] + $this->scores["q_55_offer_comf_current_code"]
+									+ $this->scores["q_56_qual_social_overts_current_code"] + $this->scores["q_58_inappropriate_facial_ever_code"]
+									+ $this->scores["q_59_appropriat_resp_current_code"];
+			$scoreCols["A_Total"] = $scoreCols["Total_A1"] + $scoreCols["Total_A2"] + $scoreCols["Total_A3"] + $scoreCols["Total_A4"];
         
+			//Qualitative Abnormalities in Communication
+			$scoreCols["Total_B1"] = $this->scores["q_42_point_express_interest_current_code"] + $this->scores["q_43_nodding_current_code"]
+									+ $this->scores["q_44_head_shaking_current_code"] + $this->scores["q_45_conventional_instr_gests_current_code"];
+			$scoreCols["Total_B4"] = $this->scores["q_47_spont_imit_current_code"] + $this->scores["q_48_imag_play_current_code"]
+									+ $this->scores["q_61_imit_soc_play_current_code"];
+//			if(substr($record["q_30_overall_level_of_language"], 0, 1) == 0) { //verbal subject
+			if($this->scores["q_30_overall_level_of_language"] == 0) { //verbal subject
+				$scoreCols["Total_B2V"] = $this->scores["q_34_social_verb_chat_current_code"] + $this->scores["q_35_recipr_convers_current_code"];
+				$scoreCols["Total_B3V"] = $this->scores["q_33_stereotyped_utterances_ever_code"] + $this->scores["q_36_inappropriate_qs_ever_code"]
+										+ $this->scores["q_37_prenominal_reversal_ever_code"] + $this->scores["q_38_neologisms_ever_code"];
+			} else {
+				$scoreCols["Total_B2V"] = "Nonverbal";
+				$scoreCols["Total_B3V"] = "Nonverbal";
+			}
+			if($this->scores["q_30_overall_level_of_language"] == 0 ) { //verbal subject
+    			$scoreCols["BV_Total"] = $scoreCols["Total_B1"] + $scoreCols["Total_B4"] + $scoreCols["Total_B2V"] + $scoreCols["Total_B3V"];
+    			$scoreCols["BNV_Total"] = "Verbal";
+			} else {
+			    $scoreCols["BV_Total"] = "Nonverbal";
+			    $scoreCols["BNV_Total"] = $scoreCols["Total_B1"] + $scoreCols["Total_B4"];
+			}
+				
+			//Restrcited, Repetitive and Stereotyped Patterns of Behaviour
+			$scoreCols["Total_C1"] = $this->scores["q_67_unusual_preoccupations_current_code"] + $this->scores["q_68_circumscr_ints_current_code"];
+			$scoreCols["Total_C2"] = ($this->scores["q_30_overall_level_of_language"] == 0 ? $this->scores["q_39_verbal_rituals_current_code"] : 0) 
+			                         + $this->scores["q_70_compulsions_rituals_current_code"];
+			$scoreCols["Total_C3"] = max($this->scores["q_77_hands_finger_manners_current_code"], $this->scores["q_77_hands_finger_manners_ever_code"])
+			                         + $this->scores["q_78_oth_complex_manners_current_code"];
+			$scoreCols["Total_C4"] = max($this->scores["q_69_repet_use_objects_current_code"], $this->scores["q_69_repet_use_objects_ever_code"])
+			                         + $this->scores["q_71_unusual_sens_ints_current_code"];
+			$scoreCols["C_Total"] = $scoreCols["Total_C1"] + $scoreCols["Total_C2"] + $scoreCols["Total_C3"] + $scoreCols["Total_C4"];
+			
+			//Abnormality of Development Evident at or Before 36 Months
+			$scoreCols["D_Total"] = $this->scores["q_2_age_first_noticed_code"] < 36 ? 1 : 0
+			                        + $this->scores["q_9_first_single_words_code"] > 24 ? 1 : 0
+			                        + $this->scores["q_10_first_phrases_code"] > 33 ? 1 : 0
+			                        + in_array($this->scores["q_86_age_when_abnormality_first_evident"], array(3, 4));
+			                        + $this->scores["q_87_interviewers_judgment"] < 36 ? 1 : 0;
+	    //Diagnostic Algorithm, 4y+
+        } elseif ($this->respondentAgeYears >= 4){
+            //Qualitative Abnormalities in Reciprocal Social Interaction
+	        $scoreCols["Total_A1"] = $this->scores["q_50_direct_gaze_most_abnormal_code"] + $this->scores["q_51_social_smiling_most_abnormal_code"] 
+									+ $this->scores["q_57_range_facial_expr_most_abnormal_code"];
+			$scoreCols["Total_A2"] = $this->scores["q_49_imag_play_peers_most_abnormal_code"] + $this->scores["q_62_inter_children_most_abnormal_code"] + $this->scores["q_63_resp_approaches_most_abnormal_code"];
+			$scoreCols["Total_A2"] += $this->respondentAgeYears < 10 ? $this->scores["q_64_group_play_peers_most_abnormal_code"] : $this->scores["q_65_friendships_most_abnormal_code"];
+			$scoreCols["Total_A3"] = $this->scores["q_52_show_direct_atten_most_abnormal_code"] + $this->scores["q_53_offer_share_most_abnormal_code"]
+									+ $this->scores["q_54_seek_share_enjoy_most_abnormal_code"];
+			$scoreCols["Total_A4"] = $this->scores["q_31_use_of_others_body_ever_code"] + $this->scores["q_55_offer_comf_most_abnormal_code"]
+									+ $this->scores["q_56_qual_social_overts_most_abnormal_code"] + $this->scores["q_58_inappropriate_facial_ever_code"]
+									+ $this->scores["q_59_appropriat_resp_most_abnormal_code"];
+			$scoreCols["A_Total"] = $scoreCols["Total_A1"] + $scoreCols["Total_A2"] + $scoreCols["Total_A3"] + $scoreCols["Total_A4"];
+        
+			//Qualitative Abnormalities in Communication
+			$scoreCols["Total_B1"] = $this->scores["q_42_point_express_interest_most_abnormal_code"] + $this->scores["q_43_nodding_most_abnormal_code"]
+									+ $this->scores["q_44_head_shaking_most_abnormal_code"] + $this->scores["q_45_conventional_instr_gests_most_abnormal_code"];
+			$scoreCols["Total_B4"] = $this->scores["q_47_spont_imit_most_abnormal_code"] + $this->scores["q_48_imag_play_most_abnormal_code"]
+									+ $this->scores["q_61_imit_soc_play_most_abnormal_code"];
+//			if(substr($record["q_30_overall_level_of_language"], 0, 1) == 0) { //verbal subject
+			if($this->scores["q_30_overall_level_of_language"] == 0) { //verbal subject
+				$scoreCols["Total_B2V"] = $this->scores["q_34_social_verb_chat_most_abnormal_code"] + $this->scores["q_35_recipr_convers_most_abnormal_code"];
+				$scoreCols["Total_B3V"] = $this->scores["q_33_stereotyped_utterances_ever_code"] + $this->scores["q_36_inappropriate_qs_ever_code"]
+										+ $this->scores["q_37_prenominal_reversal_ever_code"] + $this->scores["q_38_neologisms_ever_code"];
+			} else {
+				$scoreCols["Total_B2V"] = "Nonverbal";
+				$scoreCols["Total_B3V"] = "Nonverbal";
+			}
+			//Check what happens when integers are added to text...
+			$scoreCols["BV_Total"] = $scoreCols["Total_B1"] + $scoreCols["Total_B4"] + $scoreCols["Total_B2V"] + $scoreCols["Total_B3V"]; 
+			$scoreCols["BNV_Total"] = $scoreCols["Total_B1"] + $scoreCols["Total_B4"];
+						
+			//Restrcited, Repetitive and Stereotyped Patterns of Behaviour
+			$scoreCols["Total_C1"] = $this->scores["q_67_unusual_preoccupations_current_code"] + $this->scores["q_68_circumscr_ints_current_code"];
+			$scoreCols["Total_C2"] = ($this->scores["q_30_overall_level_of_language"] == 0 ? $this->scores["q_39_verbal_rituals_current_code"] : 0) 
+			                         + $this->scores["q_70_compulsions_rituals_current_code"];
+			$scoreCols["Total_C3"] = max($this->scores["q_77_hands_finger_manners_current_code"], $this->scores["q_77_hands_finger_manners_ever_code"])
+			                         + $this->scores["q_78_oth_complex_manners_current_code"];
+			$scoreCols["Total_C4"] = max($this->scores["q_69_repet_use_objects_current_code"], $this->scores["q_69_repet_use_objects_ever_code"])
+			                         + $this->scores["q_71_unusual_sens_ints_current_code"];
+			$scoreCols["C_Total"] = $scoreCols["Total_C1"] + $scoreCols["Total_C2"] + $scoreCols["Total_C3"] + $scoreCols["Total_C4"];
+			
+			//Abnormality of Development Evident at or Before 36 Months
+			$scoreCols["D_Total"] = $this->scores["q_2_age_first_noticed_code"] < 36 ? 1 : 0
+			                        + $this->scores["q_9_first_single_words_code"] > 24 ? 1 : 0
+			                        + $this->scores["q_10_first_phrases_code"] > 33 ? 1 : 0
+			                        + in_array($this->scores["q_86_age_when_abnormality_first_evident"], array(3, 4));
+			                        + $this->scores["q_87_interviewers_judgment"] < 36 ? 1 : 0;        
+        }
+        /*
+        //This is the Current Behaviour Algorithm.  It is not used.
         //perform the score calculations
         if($this->respondentAgeMonths >= 24 && $this->respondentAgeMonths <= 47) {
 	        //Age 2 Years to 3 Years, 11 Months => 24months...47months
@@ -280,7 +389,8 @@ DoB Proband should be somewhere in the candidate table.  For now, we'll just mak
         } else {
         	$scoreCols["A_Total"] = "Error with the Age - cannot score";
         }		
-
+        */
+        
         // save the resultant total
         $result = $db->update($this->table, $scoreCols, array('CommentID'=>$this->getCommentID()));
         if($db->isError($result)) {
@@ -801,6 +911,10 @@ DoB Proband should be somewhere in the candidate table.  For now, we'll just mak
 		$this->form->addElement("select", $field . "_current_code", $this->indent . "Current:", $answerArray);
 		$this->form->addElement("select", $field . "_ever_code", $this->indent . "Ever:", $answerArray);
 		//$this->addLargeTextAreaElement($field . "_text");
+	}
+	
+	function _cleanTo3Digits($string) {
+	   return ereg_replace("[^0-9]", "", substr($string, 0, 3));
 	}
 }
 ?>

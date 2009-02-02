@@ -52,6 +52,11 @@ DoB subject should be somewhere in the candidate table.  For now, we'll just mak
             return PEAR::raiseError ("Could not connect to database: ".$db->getMessage());
         }
 
+        //skip scoring if all data has not yet been entered.
+        if($this->_determineDataEntryCompletionStatus() == "Incomplete") {
+        	return;
+        }
+        
         // Get the subject DoB for scoring
         $timepoint =& TimePoint::singleton($this->getSessionID());
         $dob = $timepoint->getEffectiveDateOfBirth();

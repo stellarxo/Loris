@@ -53,6 +53,11 @@ DoB Proband should be somewhere in the candidate table.  For now, we'll just mak
             return PEAR::raiseError ("Could not connect to database: ".$db->getMessage());
         }
 
+        //skip scoring if all data has not yet been entered.
+        if($this->_determineDataEntryCompletionStatus() == "Incomplete") {
+        	return;
+        }
+        
         // Get the proband DoB from the field in the form for age-dependent scoring
         $query = "SELECT DoB_proband from $this->testName WHERE CommentID = '".$this->getCommentID()."'";
         $DoB_proband = $db->selectOne($query);
@@ -72,10 +77,11 @@ DoB Proband should be somewhere in the candidate table.  For now, we'll just mak
             return $this->raiseError("Could not compute age");
         }
 
-		$this->respondentAgeMonths = $age['year'] * 12 + $age['$mon'];
-
-		//For testing purposes only...
-//		$this->respondentAgeMonths = 121;
+        //Current Behaviour algorithm uses age in months.
+//		$this->respondentAgeMonths = $age['year'] * 12 + $age['$mon'];
+        //Diagnostic algorithm uses age in years.
+        $this->respondentAgeYears = $age['year'];
+        printf("AGE: " . $this->respondentAgeYears . "\n");
         
 		// call the subclass scoring method
         $this->_score();
