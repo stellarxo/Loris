@@ -223,7 +223,7 @@ DoB Proband should be somewhere in the candidate table.  For now, we'll just mak
 			$scoreCols["Total_C1"] = $this->scores["q_67_unusual_preoccupations_ever_code"] + $this->scores["q_68_circumscr_ints_ever_code"];
 			$scoreCols["Total_C2"] = ($this->scores["q_30_overall_level_of_language"] == 0 ? $this->scores["q_39_verbal_rituals_ever_code"] : 0) 
 			                         + $this->scores["q_70_compulsions_rituals_ever_code"];
-			$scoreCols["Total_C3"] = max($this->scores["q_77_hands_finger_manners_ever_code"], $this->scores["q_78_oth_complex_manners_ever_code"];
+			$scoreCols["Total_C3"] = max($this->scores["q_77_hands_finger_manners_ever_code"], $this->scores["q_78_oth_complex_manners_ever_code"]);
 			$scoreCols["Total_C4"] = max($this->scores["q_69_repet_use_objects_ever_code"], $this->scores["q_71_unusual_sens_ints_ever_code"]);
 			$scoreCols["C_Total"] = $scoreCols["Total_C1"] + $scoreCols["Total_C2"] + $scoreCols["Total_C3"] + $scoreCols["Total_C4"];
 			
@@ -266,12 +266,11 @@ DoB Proband should be somewhere in the candidate table.  For now, we'll just mak
 			$scoreCols["BNV_Total"] = $scoreCols["Total_B1"] + $scoreCols["Total_B4"];
 						
 			//Restrcited, Repetitive and Stereotyped Patterns of Behaviour
-			$scoreCols["Total_C1"] = $this->scores["q_67_unusual_preoccupations_current_code"] + $this->scores["q_68_circumscr_ints_current_code"];
-			$scoreCols["Total_C2"] = ($this->scores["q_30_overall_level_of_language"] == 0 ? $this->scores["q_39_verbal_rituals_current_code"] : 0) 
-			                         + $this->scores["q_70_compulsions_rituals_current_code"];
-			$scoreCols["Total_C3"] = max($this->scores["q_77_hands_finger_manners_ever_code", $this->scores["q_78_oth_complex_manners_current_code"];
-			$scoreCols["Total_C4"] = max($this->scores["q_69_repet_use_objects_current_code"], $this->scores["q_69_repet_use_objects_ever_code"])
-			                         + $this->scores["q_71_unusual_sens_ints_current_code"];
+			$scoreCols["Total_C1"] = $this->scores["q_67_unusual_preoccupations_ever_code"] + $this->scores["q_68_circumscr_ints_ever_code"];
+			$scoreCols["Total_C2"] = ($this->scores["q_30_overall_level_of_language"] == 0 ? $this->scores["q_39_verbal_rituals_ever_code"] : 0) 
+			                         + $this->scores["q_70_compulsions_rituals_ever_code"];
+			$scoreCols["Total_C3"] = max($this->scores["q_77_hands_finger_manners_ever_code"], $this->scores["q_78_oth_complex_manners_ever_code"]);
+			$scoreCols["Total_C4"] = max($this->scores["q_69_repet_use_objects_ever_code"], $this->scores["q_71_unusual_sens_ints_ever_code"]);
 			$scoreCols["C_Total"] = $scoreCols["Total_C1"] + $scoreCols["Total_C2"] + $scoreCols["Total_C3"] + $scoreCols["Total_C4"];
 			
 			//Abnormality of Development Evident at or Before 36 Months
