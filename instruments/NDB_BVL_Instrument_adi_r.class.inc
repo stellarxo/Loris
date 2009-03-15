@@ -322,7 +322,7 @@ class NDB_BVL_Instrument_adi_r extends NDB_BVL_Instrument
 									+ $this->scores["q_61_imit_soc_play_most_abnormal_code"];
 //			if(substr($record["q_30_overall_level_of_language"], 0, 1) == 0) { //verbal subject
 			if($this->scores["q_30_overall_level_of_language"] == 0) { //verbal subject
-				$scoreCols["Total_B2V"] = $this->scores["q_34_social_verb_chat_most_abnormal_code"] + $this->scores["q_35_recipr_convers_most_abnormal_code"];
+				$scoreCols["Total_B2V"] = $this->scores["q_34_social_verb_chat_ever_code"] + $this->scores["q_35_recipr_convers_ever_code"];
 				$scoreCols["Total_B3V"] = $this->scores["q_33_stereotyped_utterances_ever_code"] + $this->scores["q_36_inappropriate_qs_ever_code"]
 										+ $this->scores["q_37_prenominal_reversal_ever_code"] + $this->scores["q_38_neologisms_ever_code"];
 			} else {
