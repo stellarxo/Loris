@@ -58,6 +58,19 @@ DoB Proband should be somewhere in the candidate table.  For now, we'll just mak
         	return;
         }
         
+        //Find the respondant's age.
+        $this->_getAge();
+        
+		// call the subclass scoring method
+        $this->_score();
+    }
+    
+    function _getAge() {
+        $db =& Database::singleton();
+        if(PEAR::isError($db)) {
+            return PEAR::raiseError ("Could not connect to database: ".$db->getMessage());
+        }
+        
         // Get the proband DoB from the field in the form for age-dependent scoring
         $query = "SELECT DoB_proband from $this->testName WHERE CommentID = '".$this->getCommentID()."'";
         $DoB_proband = $db->selectOne($query);
@@ -81,10 +94,6 @@ DoB Proband should be somewhere in the candidate table.  For now, we'll just mak
 //		$this->respondentAgeMonths = $age['year'] * 12 + $age['$mon'];
         //Diagnostic algorithm uses age in years.
         $this->respondentAgeYears = $age['year'];
-        printf("AGE: " . $this->respondentAgeYears . "\n");
-        
-		// call the subclass scoring method
-        $this->_score();
     }
 }
 ?>

@@ -1,11 +1,6 @@
 <?php
 class NDB_BVL_Instrument_adi_r extends NDB_BVL_Instrument
 {
-/*
-DoB Proband should be somewhere in the candidate table.  For now, we'll just make it a form entry.  Will need quite a large range of dates as probands may be quite old.
-
-*/
-
 	//Commonly used level of indentation;
 	var $indent = "&nbsp;&nbsp;&nbsp;&nbsp;";
 	
@@ -54,7 +49,6 @@ DoB Proband should be somewhere in the candidate table.  For now, we'll just mak
         								"q_41_cur_comm_speech_current_code", "q_50_direct_gaze_current_code",
         								"q_60_init_activities_current_code", "q_67_unusual_preoccupations_current_code",
         								"q_80_gait_current_code", "q_88_visuospatial_ability_current_code");
-
         // setup the form
         $this->_setupForm();
 
@@ -67,6 +61,80 @@ DoB Proband should be somewhere in the candidate table.  For now, we'll just mak
     * @access private
     */
     function _setupForm(){
+        
+        $this->_getAge();
+        
+        //populate default answers for questions outside of age range.
+        //4-5
+        $underFourDefaults = array("q_29_compreh_simple_most_abnormal"=>"9_not_asked",
+                            "q_32_artic_pronun_current_code"=>"9_not_asked",
+                            "q_42_point_express_inter_most_abnormal_code"=>"9_not_asked",
+                            "q_43_nodding_most_abnormal_code"=>"9_not_asked",
+                            "q_44_head_shaking_most_abnormal_code"=>"9_not_asked",
+                            "q_45_conventional_instr_gests_most_abnormal_code"=>"9_not_asked",
+                            "q_46_attent_voice_most_abnormal_code"=>"9_not_asked",
+                            "q_47_spont_imit_most_abnormal_code"=>"9_not_asked",
+                            "q_48_imag_play_most_abnormal_code"=>"9_not_asked",
+                            "q_49_imag_play_peers_current_code"=>"9_not_asked",
+                            "q_49_imag_play_peers"=>"9_not_asked",
+                            "q_50_direct_gaze_most_abnormal_code"=>"9_not_asked",
+                            "q_51_social_smiling_most_abnormal_code"=>"9_not_asked",
+                            "q_52_show_direct_atten_most_abnormal_code"=>"9_not_asked",
+                            "q_53_offer_share_most_abnormal_code"=>"9_not_asked",
+                            "q_54_seek_share_enjoy_most_abnormal_code"=>"9_not_asked",
+                            "q_55_offer_comf_most_abnormal_code"=>"9_not_asked",
+                            "q_56_qual_social_overts_most_abnormal_code"=>"9_not_asked",
+                            "q_57_range_facial_expr_most_abnormal_code"=>"9_not_asked",
+                            "q_59_appropriat_resp_most_abnormal_code"=>"9_not_asked",
+                            "q_60_init_activities_most_abnormal_code"=>"9_not_asked",
+                            "q_61_imit_soc_play_most_abnormal_code"=>"9_not_asked",
+                            "q_62_inter_children_most_abnormal_code"=>"9_not_asked",
+                            "q_63_resp_approaches_most_abnormal_code"=>"9_not_asked",
+                            "q_64_group_play_peers_most_abnormal_code"=>"9_not_asked",
+                            "q_65_friendships_most_abnormal_code"=>"9_not_asked",
+                            "q_66_soc_disinhibit_current_code"=>"9_not_asked",
+                            "q_66_soc_disinhibit_most_abnormal_code"=>"9_not_asked",
+                            "q_80_gait_most_abnormal_code"=>"9_not_asked");
+
+
+        $atOlderThanFiveDefaults = array(
+                            "q_32_artic_pronun_5years_code"=>"9_not_asked",
+                            "q_41_cur_comm_speech_at5_code"=>"9_not_asked",
+                            "q_65_friendships_current_code"=>"9_not_asked",
+                            );
+        
+        $db =& Database::singleton();
+        if(PEAR::isError($db)) {
+            return PEAR::raiseError ("Could not connect to database: ".$db->getMessage());
+        }
+
+        // Get the item scores
+        $query = "SELECT * FROM $this->table WHERE CommentID='".$this->getCommentID()."'";
+        $record=array();
+        $db->selectRow($query, $record);
+        if (PEAR::isError($record)) {
+            return PEAR::raiseError("Could not get scores: ".$record->getMessage());
+        }
+        
+        //Fill in `Most abnormal 4.0-5.0` defaults for respondents under 4
+        if($this->respondentAgeYears < 4) {
+            foreach($underFourDefaults as $field=>$value) {
+                //Defaults apply only to empty database fields
+                if($record[$field] == null) {
+                    $this->localDefaults[$field] = $value;
+                }
+            }
+        }
+        //Fill in values for repondents under 5
+        if($this->respondentAgeYears < 5) {
+            foreach($atOlderThanFiveDefaults as $field=>$value) {
+                //Defaults apply only to empty database fields
+                if($record[$field] == null) {
+                    $this->localDefaults[$field] = $value;
+                }
+            }
+        }
+        
         if(ereg("(_page[0-9]+)",$this->page,$matches)){
             call_user_method($matches[1], &$this);
         } else {
@@ -410,10 +478,11 @@ DoB Proband should be somewhere in the candidate table.  For now, we'll just mak
     
     function _page2() {
     	$this->form->addElement("header", null, "EARLY DEVELOPMENT");
-    	$this->addTextElement("q_2_age_first_noticed_code", "2. Age (in months) when parents first noticed that something was not quite right...");
-    	//$this->addLargeTextAreaElement("q_2_age_first_noticed_text");
-    
-    	//$this->addLargeTextAreaElement("q_3_first_symptoms_text", "3. First symptoms to arouse parental concern");
+
+        $this->addNumericElement("q_2_age_first_noticed_code", "2. Age (in months) when parents first noticed that something was not quite right...");
+
+        $this->form->addElement('static', "q_3_first_symptoms_text", "3. First symptoms to arouse parental concern");
+        $this->form->addElement('static', NULL); //blank line
     	
     	$this->addTextElement("q_4_onset_as_perceived_code", "4. Onset as perceived with hindsight");
     	//$this->addLargeTextAreaElement("q_4_onset_as_perceived_text");
@@ -437,10 +506,10 @@ DoB Proband should be somewhere in the candidate table.  For now, we'll just mak
 	
 		$this->form->addElement("header", null, "ACQUISITION AND LOSS OF LANGUAGE/OTHER SKILLS");
 	
-		$this->addTextElement("q_9_first_single_words_code", "9. Age of first single words");
+		$this->addNumericElement("q_9_first_single_words_code", "9. Age of first single words");
 		//$this->addLargeTextAreaElement("q_9_first_single_words_text");
 	
-		$this->addTextElement("q_10_first_phrases_code", "10. Age of first phrases (if ever used)");
+		$this->addNumericElement("q_10_first_phrases_code", "10. Age of first phrases (if ever used)");
 		//$this->addLargeTextAreaElement("q_10_first_phrases_text");
 		
 		$this->form->addElement("select", "q_11_loss_of_language", "11. Loss of language skills after acquisition", $this->yesNoNA);
@@ -832,7 +901,7 @@ DoB Proband should be somewhere in the candidate table.  For now, we'll just mak
 		$this->form->addElement("select", "q_86_age_when_abnormality_first_evident", "86. Age when abnormality first evident", $answerArray);
 		//$this->addLargeTextAreaElement("q_86_age_when_abnormality_first_evident_text");
 
-		$this->addTextElement("q_87_interviewers_judgment", "87. Interviewers judgment on age when developmental abnormalities probably first manifest");
+		$this->addNumericElement("q_87_interviewers_judgment", "87. Interviewers judgment on age when developmental abnormalities probably first manifest");
 		
 	}
 	

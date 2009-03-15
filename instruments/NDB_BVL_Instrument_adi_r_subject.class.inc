@@ -57,6 +57,18 @@ DoB subject should be somewhere in the candidate table.  For now, we'll just mak
         	return;
         }
         
+        $this->_getAge();
+        
+		// call the subclass scoring method
+        $this->_score();
+    }
+    
+    function _getAge() {
+        $db =& Database::singleton();
+        if(PEAR::isError($db)) {
+            return PEAR::raiseError ("Could not connect to database: ".$db->getMessage());
+        }
+
         // Get the subject DoB for scoring
         $timepoint =& TimePoint::singleton($this->getSessionID());
         $dob = $timepoint->getEffectiveDateOfBirth();
@@ -70,10 +82,10 @@ DoB subject should be somewhere in the candidate table.  For now, we'll just mak
             return $this->raiseError("Could not compute age");
         }
 
-		$this->respondentAgeMonths = $age['year'] * 12 + $age['$mon'];
-
-		// call the subclass scoring method
-        $this->_score();
+        //Diagnostic algorithm uses age in years.
+//		$this->respondentAgeMonths = $age['year'] * 12 + $age['$mon'];
+        $this->respondentAgeYears = $age['year'];
+        
     }
 }
 ?>
