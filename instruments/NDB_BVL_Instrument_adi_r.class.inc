@@ -316,7 +316,7 @@ class NDB_BVL_Instrument_adi_r extends NDB_BVL_Instrument
 			$scoreCols["A_Total"] = $scoreCols["Total_A1"] + $scoreCols["Total_A2"] + $scoreCols["Total_A3"] + $scoreCols["Total_A4"];
         
 			//Qualitative Abnormalities in Communication
-			$scoreCols["Total_B1"] = $this->scores["q_42_point_express_interest_most_abnormal_code"] + $this->scores["q_43_nodding_most_abnormal_code"]
+			$scoreCols["Total_B1"] = $this->scores["q_42_point_express_inter_most_abnormal_code"] + $this->scores["q_43_nodding_most_abnormal_code"]
 									+ $this->scores["q_44_head_shaking_most_abnormal_code"] + $this->scores["q_45_conventional_instr_gests_most_abnormal_code"];
 			$scoreCols["Total_B4"] = $this->scores["q_47_spont_imit_most_abnormal_code"] + $this->scores["q_48_imag_play_most_abnormal_code"]
 									+ $this->scores["q_61_imit_soc_play_most_abnormal_code"];
