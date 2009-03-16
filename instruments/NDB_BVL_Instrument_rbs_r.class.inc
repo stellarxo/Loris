@@ -64,6 +64,9 @@ INSERT INTO instrument_subtests VALUES('', 'rbs_r', 'rbs_r_page1', 'Subscales', 
 	'42_preoccupation_with_parts'=>'42. Preoccupation with part(s) of object rather than the whole object',
 	'43_fascination_with_movement'=>'43. Fascination, preoccupation with movement / things that move');
 
+	//holder for the score calculations
+    var $calculatedScores = array();
+
 	/**
     * sets up basic data, such as the HTML_Quickform object, and so on.
     *
@@ -198,8 +201,15 @@ INSERT INTO instrument_subtests VALUES('', 'rbs_r', 'rbs_r_page1', 'Subscales', 
 		}
 
 		// null scores ...not currently doing anything...  Don't have an array of scores to nullify.
-		$this->_nullScores($this->scoreCols);
-
+//		$this->_nullScores($this->scoreCols);
+		//Initially reset all values to 0
+		$this->calculatedScores['overall_endorsed'] = 0;
+		$this->calculatedScores['overall_score'] = 0;
+		foreach($this->scoreCols as $field=>$label) {
+    		$this->calculatedScores[$field . "_endorsed"] = 0;
+    		$this->calculatedScores[$field . "_score"] = 0;
+		}
+		
 		// Get the item scores
 		$query = "SELECT * FROM $this->table WHERE CommentID='".$this->getCommentID()."'";
 		$record=array();
@@ -221,34 +231,34 @@ INSERT INTO instrument_subtests VALUES('', 'rbs_r', 'rbs_r_page1', 'Subscales', 
 			if($questionNum == 0) continue;
 			//Only count the non-zero answers in both the number endorsed and the subscale scores
 			if($value == 0) continue;
-
 			//Overall score and number endorsed...
-			$calculatedScores['overall_endorsed']++;
-			$calculatedScores['overall_score'] += $value;
+			$this->calculatedScores['overall_endorsed']++;
+			$this->calculatedScores['overall_score'] += $value;
 
 			//subscale number endorsed and score totals
 			if ($questionNum >= 1 && $questionNum <= 6) {
-				$calculatedScores['I_stereotyped_endorsed']++;
-				$calculatedScores['I_stereotyped_score'] += $value;
+				$this->calculatedScores['I_stereotyped_endorsed']++;
+				$this->calculatedScores['I_stereotyped_score'] += $value;
 			} elseif ($questionNum >= 7 && $questionNum <= 14) {
-				$calculatedScores['II_self_injurious_endorsed']++;
-				$calculatedScores['II_self_injurious_score'] += $value;
+				$this->calculatedScores['II_self_injurious_endorsed']++;
+				$this->calculatedScores['II_self_injurious_score'] += $value;
 			} elseif ($questionNum >= 15 && $questionNum <= 22) {
-				$calculatedScores['III_compulsive_endorsed']++;
-				$calculatedScores['III_compulsive_score'] += $value;
+				$this->calculatedScores['III_compulsive_endorsed']++;
+				$this->calculatedScores['III_compulsive_score'] += $value;
 			} elseif ($questionNum >= 23 && $questionNum <= 28) {
-				$calculatedScores['IV_ritualistic_endorsed']++;
-				$calculatedScores['IV_ritualistic_score'] += $value;
+				$this->calculatedScores['IV_ritualistic_endorsed']++;
+				$this->calculatedScores['IV_ritualistic_score'] += $value;
 			} elseif ($questionNum >= 29 && $questionNum <= 39) {
-				$calculatedScores['V_sameness_endorsed']++;
-				$calculatedScores['V_sameness_score'] += $value;
+				$this->calculatedScores['V_sameness_endorsed']++;
+				$this->calculatedScores['V_sameness_score'] += $value;
 			} elseif ($questionNum >= 40 && $questionNum <= 43) {
-				$calculatedScores['VI_restricted_endorsed']++;
-				$calculatedScores['VI_restricted_score'] += $value;
+				$this->calculatedScores['VI_restricted_endorsed']++;
+				$this->calculatedScores['VI_restricted_score'] += $value;
 			}
 		}
+		
 		// save the resultant total
-		$result = $db->update($this->table, $calculatedScores, array('CommentID'=>$this->getCommentID()));
+		$result = $db->update($this->table, $this->calculatedScores, array('CommentID'=>$this->getCommentID()));
 		if($db->isError($result)) {
 			return PEAR::raiseError("Could not save total score: ".$result->getMessage());
 		}
