@@ -50,8 +50,13 @@ class NDB_BVL_Instrument_radiology_review extends NDB_BVL_Instrument
         $this->form->addElement('header', null, '3D T1 MP-Rage');
         $this->form->addElement('select', 'Scan_done', 'Was an MRI performed?', $yes_no_option);
        	$this->form->addElement('static', null, 'If Yes?'); 
-       	$this->form->addElement('date', 'MRI_date', 'Date of MRI acquisition');       
-	$this->form->addElement('date', 'Review_date', 'Date of local radiology review');
+
+       	//These date fields were first not added to $this->dateTimeFields so they weren't saving.
+//       	$this->form->addElement('date', 'MRI_date', 'Date of MRI acquisition');       
+//	$this->form->addElement('date', 'Review_date', 'Date of local radiology review');
+        $this->addDateElement('MRI', 'Date of MRI acquisition');
+        $this->addDateElement('Review', 'Date of local radiology review');
+        
         $this->form->addElement('select', 'Review_results', 'Results of local radiology review?', $normal_option);
        	$this->form->addElement('static', null, 'If abnormal, describe incidental finding(s)'); 
         $this->form->addElement('textarea', 'Incidental_findings', 'Description of incidental findings:');
