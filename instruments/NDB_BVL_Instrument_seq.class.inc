@@ -213,7 +213,7 @@ INSERT INTO instrument_subtests VALUES('', 'seq', 'seq_page3', 'General and Adde
 
         $this->addTextAreaElement("37_seek_or_crave", "Does your child `seek` or `crave` particular sensory experiences?");
 
-        $yesMaybeNo = array(null=>'', 'yes'=>"Yes", 'maybe'=>"Maybe", 'no'=>"No");
+        $yesMaybeNo = array(null=>'', 'yes'=>"Yes", 'maybe'=>"Maybe", 'no'=>"No", 'not_answered'=>"Not Answered");
         $this->form->addElement('select', "38_pick_eater", "Would you describe your child as being a `picky` eater?", $yesMaybeNo);
         $this->form->addElement('select', "38_selective", "Is your child selective in food preferences?", $answerOptions);
         $this->addTextAreaElement("39_favourite_food_qualities", "Please describe your child?s favorite foods and qualities about these foods");
