@@ -10,7 +10,7 @@ class NDB_BVL_Instrument_radiology_review extends NDB_BVL_Instrument
     * @access public
     */
     function setup($commentID, $page){
-
+        $this->formType="XIN";
         $this->form = new HTML_Quickform('test_form');
         $this->page = $page;            // page label (number or
                                         // string - used by
@@ -38,29 +38,37 @@ class NDB_BVL_Instrument_radiology_review extends NDB_BVL_Instrument
     */
     function _setupForm(){
 
+        //Defines the call back function for HTML Quickform to use when validating the form.
+        $this->form->addFormRule(array(&$this,'XINValidate'));
+
         // display test name
         $this->form->addElement('header', 'instrument_title', "Radiology Review Form");
 
         // automatically adds examiner & date of administration
         $this->_addMetadataFields();
 
-        $yes_no_option= array("No"=>"No", "Yes"=>"Yes");
-	$normal_option= array("Normal"=>"Normal","Abnormal"=>"Abnormal");
+        $yes_no_option= array(NULL=>"", "no"=>"No", "yes"=>"Yes", "not_answered"=>"Not Answered");
+    	$normal_option= array(NULL=>"", "normal"=>"Normal","abnormal"=>"Abnormal", "not_answered"=>"Not Answered");
 
         $this->form->addElement('header', null, '3D T1 MP-Rage');
         $this->form->addElement('select', 'Scan_done', 'Was an MRI performed?', $yes_no_option);
        	$this->form->addElement('static', null, 'If Yes?'); 
 
        	//These date fields were first not added to $this->dateTimeFields so they weren't saving.
-//       	$this->form->addElement('date', 'MRI_date', 'Date of MRI acquisition');       
-//	$this->form->addElement('date', 'Review_date', 'Date of local radiology review');
-        $this->addDateElement('MRI', 'Date of MRI acquisition');
-        $this->addDateElement('Review', 'Date of local radiology review');
-        
-        $this->form->addElement('select', 'Review_results', 'Results of local radiology review?', $normal_option);
-       	$this->form->addElement('static', null, 'If abnormal, describe incidental finding(s)'); 
-        $this->form->addElement('textarea', 'Incidental_findings', 'Description of incidental findings:');
+//      $this->form->addElement('date', 'MRI_date', 'Date of MRI acquisition');
+//	    $this->form->addElement('date', 'Review_date', 'Date of local radiology review');
 
+        $this->addDateElement('MRI', 'Date of MRI acquisition');
+        $this->XINRegisterRule("MRI_date", array("Scan_done{@}=={@}yes"), "Please enter the scan information", "MRI_date_group");
+        $this->addDateElement('Review', 'Date of local radiology review');
+        $this->XINRegisterRule("Review_date", array("Scan_done{@}=={@}yes"), "Please enter the scan information", "Review_date_group");
+
+        $this->form->addElement('select', 'Review_results', 'Results of local radiology review?', $normal_option);
+        $this->XINRegisterRule("Review_results", array("Scan_done{@}=={@}yes"), "Please enter the scan information");
+        
+       	$this->form->addElement('static', null, 'If abnormal, describe incidental finding(s)'); 
+//        $this->form->addElement('textarea', 'Incidental_findings', 'Description of incidental findings:');
+        $this->addTextAreaElement('Incidental_findings', 'Description of incidental findings:', array("Review_results{@}=={@}abnormal"), "Please describe the abnormality");
     } // End Setup form
 
 /**
@@ -73,7 +81,7 @@ class NDB_BVL_Instrument_radiology_review extends NDB_BVL_Instrument
     function _addMetadataFields()
     {
         $config =& NDB_Config::singleton();
-        $dateOptions = array(
+        $this->dateOptions = array(
         'language' => 'en',
         'format'   => 'YMd',
         'minYear'  => $config->getSetting('startYear'),
@@ -82,7 +90,7 @@ class NDB_BVL_Instrument_radiology_review extends NDB_BVL_Instrument
         'emptyOptionValue' => null
         );
 
-        $this->form->addElement('date', 'Date_taken', 'Date of Administration', $dateOptions);
+        $this->form->addElement('date', 'Date_taken', 'Date of Administration', $this->dateOptions);
 
         $examiners = $this->_getExaminerNames();
         $this->form->addElement('select', 'Examiner', 'Radiologist', $examiners);
@@ -94,8 +102,5 @@ class NDB_BVL_Instrument_radiology_review extends NDB_BVL_Instrument
 
         $this->form->addRule('Examiner', 'Examiner is required', 'required');
     }
-
-
-
 }
 ?>
