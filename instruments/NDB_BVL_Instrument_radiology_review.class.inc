@@ -25,7 +25,9 @@ class NDB_BVL_Instrument_radiology_review extends NDB_BVL_Instrument
         $this->commentID = $commentID;
 
         //$this->_requiredElements = array('Date_taken', 'Examiner');
-
+        
+        $this->dateTimeFields=array("Date_taken");
+        
         // setup the form
         $this->_setupForm();
     }
