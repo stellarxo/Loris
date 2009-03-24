@@ -173,34 +173,43 @@ class NDB_BVL_Instrument_med_psych_hist extends NDB_BVL_Instrument
     function _page1(){
         $this->form->addElement('header', null, "1. Pregnancy history:");
 
-        $firstToFifth = array("first"=>"First", "second"=>"Second", "third"=>"Third", "fourth"=>"Fourth", "fifth"=>"Fifth");
-        //		$firstToFifth = array("First");
-        foreach($firstToFifth as $label=>$nth) {
-            $this->form->addElement('static', null, "{$nth} Pregnancy");
-            $this->form->addElement("select", "{$nth}_a_pregnancy_outcome", $this->indent . "a. What was the outcome of this pregnancy?", array(NULL=>"", "live_birth"=>"Live birth",
+        $firstToTwentieth = array("first"=>"First", "second"=>"Second", "third"=>"Third", "fourth"=>"Fourth", "fifth"=>"Fifth", "sixth"=>"Sixth", "seventh"=>"Seventh", "eighth"=>"Eighth", "ninth"=>"Ninth", "tenth"=>"Tenth", "eleventh"=>"Eleventh", "twelfth"=>"Twelfth", "thirteenth"=>"Thirteenth", "fourteenth"=>"Fourteenth", "fifteenth"=>"Fifteenth", "sixteenth"=>"Sixteenth", "seventeenth"=>"Seventeenth", "eighteenth"=>"Eighteenth", "nineteenth"=>"Nineteenth", "twentieth"=>"Twentieth");
+        reset($firstToTwentieth);
+        while(list($field, $label) = each($firstToTwentieth)){
+//        foreach($firstToTwentieth as $label=>$nth) {
+            $this->form->addElement('static', null, "{$label} Pregnancy");
+            $this->form->addElement("select", "{$field}_a_pregnancy_outcome", $this->indent . "a. What was the outcome of this pregnancy?", array(NULL=>"", "live_birth"=>"Live birth",
             "still_birth"=>"Stillbirth",
             "elective_termination"=>"Elective Termination",
             "miscarriage"=>"Miscarriage",
+            "no_more_pregnancies"=>"No More Pregnancies",
             "not_answered"=>"Not Answered"));
-            $this->form->addElement('select', "{$nth}_a_pregnancy_outcome_still_living", $this->indent . "1. If live birth, child still living", array(NULL=>"", "yes"=>"Yes", "no"=>"No", "not_answered"=>"Not Answered"));
-            $this->XINRegisterRule("{$nth}_a_pregnancy_outcome_still_living", array("{$nth}_a_pregnancy_outcome{@}=={@}live_birth"), "This field is required if a. outcome of this pregnancy was a Live birth");
+
+            //Once "No More Pregnancies" is selected once, nothing further is required.
+            $this->XINRegisterRule("{$field}_a_pregnancy_outcome", array("{$prevField}_a_pregnancy_outcome{@}!={@}no_more_pregnancies", "{$prevField}_a_pregnancy_outcome{@}!={@}"), 'This field is required until the prior pregnancy is marked with "No More Pregnancies"');
+            prev($firstToTwentieth);
+            $prevField = key($firstToTwentieth);// {
+            next($firstToTwentieth);
+
+            $this->form->addElement('select', "{$field}_a_pregnancy_outcome_still_living", $this->indent . "1. If live birth, child still living", array(NULL=>"", "yes"=>"Yes", "no"=>"No", "not_answered"=>"Not Answered"));
+            $this->XINRegisterRule("{$field}_a_pregnancy_outcome_still_living", array("{$field}_a_pregnancy_outcome{@}=={@}live_birth"), "This field is required if a. outcome of this pregnancy was a Live birth");
 
             //Test the rule here...
-            $this->addDateElement("{$nth}_b_date_of_birth", $this->indent . "b. Date of birth (if stillbirth or live birth only)");
-            $this->XINRegisterRule("{$nth}_b_date_of_birth_date", array("{$nth}_a_pregnancy_outcome{@}=={@}live_birth|still_birth"), "Date of birth is required for stillbirth or live birth only.", "{$nth}_b_date_of_birth_date_group");
+            $this->addDateElement("{$field}_b_date_of_birth", $this->indent . "b. Date of birth (if stillbirth or live birth only)");
+            $this->XINRegisterRule("{$field}_b_date_of_birth_date", array("{$field}_a_pregnancy_outcome{@}=={@}live_birth|still_birth"), "Date of birth is required for stillbirth or live birth only.", "{$field}_b_date_of_birth_date_group");
 
-            $this->form->addElement("select", "{$nth}_c_delivery_week", $this->indent . "c. At what week did you deliver in this pregnancy? (stillbirth, live birth only)", array(null=>"",
+            $this->form->addElement("select", "{$field}_c_delivery_week", $this->indent . "c. At what week did you deliver in this pregnancy? (if stillbirth or live birth only)", array(null=>"",
             "greater_than_37"=>"Greater than 37 completed weeks",
             "less_than_28"=>"Less than 28 completed weeks",
             "between_28_32"=>"Between 28 and 32 completed weeks",
             "between_32_37"=>"Between 32 and 37 completed weeks",
             "unknown"=>"Fetus age at delivery unknown",
             "not_answered"=>"Not Answered"));
-            $this->XINRegisterRule("{$nth}_c_delivery_week", array("{$nth}_a_pregnancy_outcome{@}=={@}live_birth|still_birth"), "This field is required if a. outcome of this pregnancy was a Live birth.");
+            $this->XINRegisterRule("{$field}_c_delivery_week", array("{$field}_a_pregnancy_outcome{@}=={@}live_birth|still_birth"), "This field is required if a. outcome of this pregnancy was a Live birth.");
         }
 
         $this->form->addElement("static", null, "<BR>"); //line space
-        $this->form->addElement("select", "child_pregnancy_number", "2. What pregnancy number corresponds to the child being evaluated for this study?", array_merge(array(NULL=>""), $firstToFifth, array('not_answered'=>"Not Answered")));
+        $this->form->addElement("select", "child_pregnancy_number", "2. What pregnancy number corresponds to the child being evaluated for this study?", array_merge(array(NULL=>""), $firstToTwentieth, array('not_answered'=>"Not Answered")));
 
     }
 
