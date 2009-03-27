@@ -209,14 +209,14 @@ class NDB_BVL_Instrument_med_psych_hist extends NDB_BVL_Instrument
         }
 
         $this->form->addElement("static", null, "<BR>"); //line space
+        $this->form->addElement("header", null, "Pregnancy Number");
         $this->form->addElement("select", "child_pregnancy_number", "2. What pregnancy number corresponds to the child being evaluated for this study?", array_merge(array(NULL=>""), $firstToTwentieth, array('not_answered'=>"Not Answered")));
 
     }
 
     function _page2(){
         $this->form->addElement("header", null, "3. The items below ask about the medical history of the child and relatives");
-        $this->form->addElement("static", null, "***If more than one blood relatives have the disorder, select `Multiple Relatives` in the drop-down");
-        $this->form->addElement("static", null, "and write the relations of all affected relatives in the \"Other Relative\" space.***");
+        $this->form->addElement("static", null, "***Hold the CTRL key while clicking to select multiple relative");
         $answerArray = array(null=>"", '0_no'=>"0. No", "1_yes"=>"1. Yes", "2_not_sure"=>"2. Not Sure", "not_answered"=>"Not Answered");
         $questionArray = array(
         "a_aut_spect_disorder"=>"a. Autism Spectrum Disorder",
@@ -260,7 +260,7 @@ class NDB_BVL_Instrument_med_psych_hist extends NDB_BVL_Instrument
         "aunts_uncles_pat"=>"Aunts & Uncles (Pat)",
         "grandparents_mat"=>"Grandparents (Mat)",
         "grandparents_pat"=>"Grandparents (Pat)",
-        "multiple_relatives"=>"Multiple Relatives (describe)",
+//        "multiple_relatives"=>"Multiple Relatives (describe)",
         "other"=>"Other (specify relationship)",
         "not_answered"=>"Not Answered");
 
@@ -274,16 +274,19 @@ class NDB_BVL_Instrument_med_psych_hist extends NDB_BVL_Instrument
         foreach($questionArray as $field=>$label) {
             $group[] = $this->form->createElement("select", $field, $label, $answerArray);
 //            $group[] = $this->form->createElement("select", "{$field}_who", null, $realtives, "multiple");
-            $group[] = $this->form->createElement("select", "{$field}_who", null, $realtives);
+            $group[] = $this->form->createElement("select", "{$field}_who", null, $realtives, "multiple size='5'");
             $group[] = $this->form->createElement("text", "{$field}_who_other", null);
             $group[] = $this->form->createElement("select", "{$field}_who_other_status", null, array(null=>"", "not_answered"=>"Not Answered"));
             $this->form->addGroup($group, "{$field}_group", $label, $this->_GUIDelimiter, FALSE);
 
+            //insert into the _selectMultiple array
+            $this->_selectMultipleElements[] = "{$field}_who";
+            
             $this->XINRegisterRule("$field", array("$field{@}=={@}"), "Please indicate the presence of the disorder / problem.", "{$field}_group");
             $this->XINRegisterRule("{$field}_who", array("{$field}{@}=={@}1_yes|2_not_sure"), "Please indicate the effected realtive.", "{$field}_group");
-            $this->XINRegisterRule("{$field}_who_other", array("{$field}_who{@}=={@}other|multiple_relatives", "{$field}_who_other_status{@}=={@}"), "Please specify the other relative(s).", "{$field}_group");
+            $this->XINRegisterRule("{$field}_who_other", array("{$field}_who{@}=={@}other", "{$field}_who_other_status{@}=={@}"), "Please specify the other relative(s).", "{$field}_group");
             //			$this->XINRegisterRule("{$field}_who_other_status", array("{$field}_who_other{@}=={@}"), "Please specify the other relative, or select Not Answered", "{$field}_group");
-            $this->XINRegisterRule("{$field}_who_other_status", array("{$field}_who{@}=={@}other|multiple_relatives", "{$field}_who_other{@}=={@}"), "Please specify the relative, or select Not Answered", "{$field}_group");
+            $this->XINRegisterRule("{$field}_who_other_status", array("{$field}_who{@}=={@}other", "{$field}_who_other{@}=={@}"), "Please specify the relative, or select Not Answered", "{$field}_group");
             unset($group);
 
             if($field == "i_other_chromosomal") {
