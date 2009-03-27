@@ -216,7 +216,7 @@ class NDB_BVL_Instrument_med_psych_hist extends NDB_BVL_Instrument
 
     function _page2(){
         $this->form->addElement("header", null, "3. The items below ask about the medical history of the child and relatives");
-        $this->form->addElement("static", null, "***Hold the CTRL key while clicking to select multiple relative");
+        $this->form->addElement("static", null, "***Hold the CTRL key while clicking to select multiple relatives.");
         $answerArray = array(null=>"", '0_no'=>"0. No", "1_yes"=>"1. Yes", "2_not_sure"=>"2. Not Sure", "not_answered"=>"Not Answered");
         $questionArray = array(
         "a_aut_spect_disorder"=>"a. Autism Spectrum Disorder",
