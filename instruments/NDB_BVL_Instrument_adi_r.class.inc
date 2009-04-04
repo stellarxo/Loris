@@ -245,9 +245,19 @@ class NDB_BVL_Instrument_adi_r extends NDB_BVL_Instrument
             }
         }
         //Clean up values stored as months (not scores) to ensure only digits remain.
-        $this->scores["q_2_age_first_noticed_code"] = $this->_cleanTo3Digits($this->scores["q_2_age_first_noticed_code"]);
-        $this->scores["q_9_first_single_words_code"] = $this->_cleanTo3Digits($this->scores["q_9_first_single_words_code"]);
-		$this->scores["q_10_first_phrases_code"] = $this->_cleanTo3Digits($this->scores["q_10_first_phrases_code"]);
+        $this->scores["q_2_age_first_noticed_code"] = $this->_cleanToDigits($record["q_2_age_first_noticed_code"]);
+        $this->scores["q_9_first_single_words_code"] = $this->_cleanToDigits($record["q_9_first_single_words_code"]);
+		$this->scores["q_10_first_phrases_code"] = $this->_cleanToDigits($record["q_10_first_phrases_code"]);
+        $this->scores["q_87_interviewers_judgment"]	= $this->_cleanToDigits($record["q_87_interviewers_judgment"]);
+        $this->scores["q_86_age_when_abnormality_first_evident"]	= $this->_cleanToDigits($record["q_86_age_when_abnormality_first_evident"]);
+
+        //Testing
+		$dScores = array("q_2_age_first_noticed_code", "q_9_first_single_words_code", "q_10_first_phrases_code", "q_86_age_when_abnormality_first_evident", "q_87_interviewers_judgment");
+		print(substr($record["CommentID"], 6, 7) . "\n");
+		foreach ($dScores as $score) {
+		  print("$score: " . $this->scores[$score] . "\n");
+		}
+		print("\n");
 		
 		//Age 2 years, 0 months through 3 years, 11 months.
         if ($this->respondentAgeYears < 2) {
@@ -296,11 +306,35 @@ class NDB_BVL_Instrument_adi_r extends NDB_BVL_Instrument
 			$scoreCols["C_Total"] = $scoreCols["Total_C1"] + $scoreCols["Total_C2"] + $scoreCols["Total_C3"] + $scoreCols["Total_C4"];
 			
 			//Abnormality of Development Evident at or Before 36 Months
-			$scoreCols["D_Total"] = $this->scores["q_2_age_first_noticed_code"] < 36 ? 1 : 0
-			                        + $this->scores["q_9_first_single_words_code"] > 24 ? 1 : 0
-			                        + $this->scores["q_10_first_phrases_code"] > 33 ? 1 : 0
-			                        + in_array($this->scores["q_86_age_when_abnormality_first_evident"], array(3, 4));
-			                        + $this->scores["q_87_interviewers_judgment"] < 36 ? 1 : 0;
+			//See the "ADI-R Scoring Algorithm - Addendum" document for directions and details regarding this section.
+			//Age Parents First Noticed
+			$scoreCols["D_Total"] = 0; //initialize it.
+			if(in_array($this->scores["q_2_age_first_noticed_code"], array('991', '992', '996'))) {
+        		$scoreCols["D_Total"] += 1;
+			} elseif ($this->scores["q_2_age_first_noticed_code"] < 36 && !is_null($this->scores["q_2_age_first_noticed_code"])) {
+        		$scoreCols["D_Total"] += 1;
+			}
+			//Age of First Single Words
+			if ($this->respondentAgeYears > 24 && in_array($this->scores["q_9_first_single_words_code"], array(993, 994, 997))){
+			    $scoreCols["D_Total"] += 1;
+			} elseif ($this->scores["q_9_first_single_words_code"] > 24 && $this->scores["q_9_first_single_words_code"] < 990) {
+			    $scoreCols["D_Total"] += 1;
+			}
+			//Age of First Phrases
+			if ($this->respondentAgeYears > 33 && in_array($this->scores["q_10_first_phrases_code"], array(993, 994, 997))){
+			    $scoreCols["D_Total"] += 1;
+			} elseif ($this->scores["q_10_first_phrases_code"] > 33 && $this->scores["q_10_first_phrases_code"] < 990) {
+			    $scoreCols["D_Total"] += 1;
+			}
+            //Age When Abnormality First Evident
+			if(in_array($this->scores["q_86_age_when_abnormality_first_evident"], array(3, 4))) {
+			     $scoreCols["D_Total"] += 1;
+			}
+			//Interviewers's Judgement
+			if ($this->scores["q_87_interviewers_judgment"] < 36 && !is_null($this->scores["q_87_interviewers_judgment"])) {
+			     $scoreCols["D_Total"] += 1;
+			}
+			
 	    //Diagnostic Algorithm, 4y+
         } elseif ($this->respondentAgeYears >= 4){
             //Qualitative Abnormalities in Reciprocal Social Interaction
@@ -342,11 +376,34 @@ class NDB_BVL_Instrument_adi_r extends NDB_BVL_Instrument
 			$scoreCols["C_Total"] = $scoreCols["Total_C1"] + $scoreCols["Total_C2"] + $scoreCols["Total_C3"] + $scoreCols["Total_C4"];
 			
 			//Abnormality of Development Evident at or Before 36 Months
-			$scoreCols["D_Total"] = $this->scores["q_2_age_first_noticed_code"] < 36 ? 1 : 0
-			                        + $this->scores["q_9_first_single_words_code"] > 24 ? 1 : 0
-			                        + $this->scores["q_10_first_phrases_code"] > 33 ? 1 : 0
-			                        + in_array($this->scores["q_86_age_when_abnormality_first_evident"], array(3, 4));
-			                        + $this->scores["q_87_interviewers_judgment"] < 36 ? 1 : 0;        
+			//See the "ADI-R Scoring Algorithm - Addendum" document for directions and details regarding this section.
+			//Age Parents First Noticed
+//			$scoreCols["D_Total"] = 0; //initialize it.
+			if(in_array($this->scores["q_2_age_first_noticed_code"], array('991', '992', '996'))) {
+        		$scoreCols["D_Total"] += 1;
+			} elseif ($this->scores["q_2_age_first_noticed_code"] < 36 && !is_null($this->scores["q_2_age_first_noticed_code"])) {
+        		$scoreCols["D_Total"] += 1;
+			}
+			//Age of First Single Words
+			if ($this->respondentAgeYears > 24 && in_array($this->scores["q_9_first_single_words_code"], array(993, 994, 997))){
+			    $scoreCols["D_Total"] += 1;
+			} elseif ($this->scores["q_9_first_single_words_code"] > 24 && $this->scores["q_9_first_single_words_code"] < 990) {
+			    $scoreCols["D_Total"] += 1;
+			}
+			//Age of First Phrases
+			if ($this->respondentAgeYears > 33 && in_array($this->scores["q_10_first_phrases_code"], array(993, 994, 997))){
+			    $scoreCols["D_Total"] += 1;
+			} elseif ($this->scores["q_10_first_phrases_code"] > 33 && $this->scores["q_10_first_phrases_code"] < 990) {
+			    $scoreCols["D_Total"] += 1;
+			}
+            //Age When Abnormality First Evident
+			if(in_array($this->scores["q_86_age_when_abnormality_first_evident"], array(3, 4))) {
+			     $scoreCols["D_Total"] += 1;
+			}
+			//Interviewers's Judgement
+			if ($this->scores["q_87_interviewers_judgment"] < 36 && !is_null($this->scores["q_87_interviewers_judgment"])) {
+			     $scoreCols["D_Total"] += 1;
+			}
         }
         
         // save the resultant total
@@ -872,8 +929,12 @@ class NDB_BVL_Instrument_adi_r extends NDB_BVL_Instrument
 		//$this->addLargeTextAreaElement($field . "_text");
 	}
 	
-	function _cleanTo3Digits($string) {
-	   return ereg_replace("[^0-9]", "", substr($string, 0, 3));
+	function _cleanToDigits($string) {
+	   $string = ereg_replace("[^0-9]", "", $string);
+	   if(is_numeric($string)) {
+            return intval($string);
+	   } else return null;
+	   
 	}
 }
 ?>
