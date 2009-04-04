@@ -300,7 +300,6 @@ class NDB_BVL_Instrument_adi_r extends NDB_BVL_Instrument
 			//Abnormality of Development Evident at or Before 36 Months
 			//See the "ADI-R Scoring Algorithm - Addendum" document for directions and details regarding this section.
 			//Age Parents First Noticed
-			$scoreCols["D_Total"] = 0; //initialize it.
 			if(in_array($this->scores["q_2_age_first_noticed_code"], array('991', '992', '996'))) {
         		$scoreCols["D_Total"] += 1;
 			} elseif ($this->scores["q_2_age_first_noticed_code"] < 36 && !is_null($this->scores["q_2_age_first_noticed_code"])) {
@@ -370,7 +369,6 @@ class NDB_BVL_Instrument_adi_r extends NDB_BVL_Instrument
 			//Abnormality of Development Evident at or Before 36 Months
 			//See the "ADI-R Scoring Algorithm - Addendum" document for directions and details regarding this section.
 			//Age Parents First Noticed
-//			$scoreCols["D_Total"] = 0; //initialize it.
 			if(in_array($this->scores["q_2_age_first_noticed_code"], array('991', '992', '996'))) {
         		$scoreCols["D_Total"] += 1;
 			} elseif ($this->scores["q_2_age_first_noticed_code"] < 36 && !is_null($this->scores["q_2_age_first_noticed_code"])) {
