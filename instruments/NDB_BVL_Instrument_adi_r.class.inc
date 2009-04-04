@@ -250,14 +250,6 @@ class NDB_BVL_Instrument_adi_r extends NDB_BVL_Instrument
 		$this->scores["q_10_first_phrases_code"] = $this->_cleanToDigits($record["q_10_first_phrases_code"]);
         $this->scores["q_87_interviewers_judgment"]	= $this->_cleanToDigits($record["q_87_interviewers_judgment"]);
         $this->scores["q_86_age_when_abnormality_first_evident"]	= $this->_cleanToDigits($record["q_86_age_when_abnormality_first_evident"]);
-
-        //Testing
-		$dScores = array("q_2_age_first_noticed_code", "q_9_first_single_words_code", "q_10_first_phrases_code", "q_86_age_when_abnormality_first_evident", "q_87_interviewers_judgment");
-		print(substr($record["CommentID"], 6, 7) . "\n");
-		foreach ($dScores as $score) {
-		  print("$score: " . $this->scores[$score] . "\n");
-		}
-		print("\n");
 		
 		//Age 2 years, 0 months through 3 years, 11 months.
         if ($this->respondentAgeYears < 2) {
