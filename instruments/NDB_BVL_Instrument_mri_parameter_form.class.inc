@@ -57,6 +57,9 @@ class NDB_BVL_Instrument_mri_parameter_form extends NDB_BVL_Instrument
 
         // automatically adds examiner & date of administration
         $this->_addMetadataFields();
+        
+        $this->addHourMinElement("wait_time", "Wait Time for Scanner (hours:minutes)");
+        $this->addHourMinElement("total_duration", "Total Duration of Session (hours:minutes)");
 
         $yes_no_option= array(""=>NULL, "No"=>"No", "Complete"=>"Yes, Complete Acquisition", "Partial"=>"Yes, Partial Acquisition", "not_answered"=>"Not Answered");
 
@@ -69,27 +72,24 @@ class NDB_BVL_Instrument_mri_parameter_form extends NDB_BVL_Instrument
 
         $this->form->addElement('header', null, '3D T1 MP-Rage');
         $this->form->addElement('static', null, 'SIEMENS: tfl');
-        $this->form->addElement('select', 'T1_Scan_done', 'Was this scan done?', $yes_no_option);
+        $this->form->addElement('select', 'T1_Scan_done', 'Was this sequence acquired?', $yes_no_option);
+        $this->addNumericElement("T1_number_attempts", "Number of scan attempts:");
         $this->addDateElement('T1_Scan_done', 'If so, when?');
-        //        $this->form->addElement('date', 'T1_Scan_done_date', 'If so, when?');
         $this->addTextAreaElement('T1_Comments', 'Comments');
-        //        $this->form->addElement('textarea', 'T1_Comments', 'Comments');
 
         $this->form->addElement('header', null, 'High Resolution 3D T2W');
         $this->form->addElement('static', null, 'SIEMENS: tse_vfl');
-        $this->form->addElement('select', 'T2_Scan_done', 'Was this scan done?', $yes_no_option);
+        $this->form->addElement('select', 'T2_Scan_done', 'Was this sequence acquired?', $yes_no_option);
+        $this->addNumericElement("T2_number_attempts", "Number of scan attempts:");
         $this->addDateElement('T2_Scan_done', 'If so, when?');
-        //        $this->form->addElement('date', 'T2_Scan_done_date', 'If so, when?');
         $this->addTextAreaElement('T2_Comments', 'Comments');
-        //        $this->form->addElement('textarea', 'T2_Comments', 'Comments');
 
         $this->form->addElement('header', null, '25 Direction DTI');
         $this->form->addElement('static', null, 'SIEMENS: epd2_diff');
-        $this->form->addElement('select', 'DTI_Scan_done', 'Was this scan done?', $yes_no_option);
+        $this->form->addElement('select', 'DTI_Scan_done', 'Was this sequence acquired?', $yes_no_option);
+        $this->addNumericElement("DTI_number_attempts", "Number of scan attempts:");
         $this->addDateElement('DTI_Scan_done', 'If so, when?');
-        //        $this->form->addElement('date', 'DTI_Scan_done_date', 'If so, when?');
         $this->addTextAreaElement('DTI_Comments', 'Comments');
-        //        $this->form->addElement('textarea', 'DTI_Comments', 'Comments');
 
     } // End setupForm
 }
