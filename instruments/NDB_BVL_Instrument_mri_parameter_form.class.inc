@@ -26,7 +26,7 @@ class NDB_BVL_Instrument_mri_parameter_form extends NDB_BVL_Instrument
 
         //The array of dates/timestamps to convert to database dates/timestamps
         //Any HTML_Quickform date elements must be listed here
-        $this->dateTimeFields=array("Date_taken");
+        $this->dateTimeFields=array("Date_taken", "wait_time", "total_duration");
 
         //$this->_requiredElements = array('Date_taken', 'Examiner', 'CaregiverReport');
 
