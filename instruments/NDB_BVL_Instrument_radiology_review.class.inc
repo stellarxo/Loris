@@ -50,7 +50,8 @@ class NDB_BVL_Instrument_radiology_review extends NDB_BVL_Instrument
         $this->_addMetadataFields();
 
         $yes_no_option= array(NULL=>"", "no"=>"No", "yes"=>"Yes", "not_answered"=>"Not Answered");
-    	$normal_option= array(NULL=>"", "normal"=>"Normal","abnormal"=>"Abnormal", "not_answered"=>"Not Answered");
+    	$normal_option= array(NULL=>"", "normal"=>"Normal","abnormal"=>"Abnormal", "atypical"=>"Atypical", "not_answered"=>"Not Answered");
+    	$exclusionaryOrNot = array(NULL=>"", "exclusionary"=>"Exclusionary", "non_exclusionary"=>"Non-Exclusionary", "not_answered"=>"Not Answered");
 
         $this->form->addElement('header', null, '3D T1 MP-Rage');
         $this->form->addElement('select', 'Scan_done', 'Was an MRI performed?', $yes_no_option);
@@ -67,10 +68,13 @@ class NDB_BVL_Instrument_radiology_review extends NDB_BVL_Instrument
 
         $this->form->addElement('select', 'Review_results', 'Results of local radiology review?', $normal_option);
         $this->XINRegisterRule("Review_results", array("Scan_done{@}=={@}yes"), "Please enter the scan information");
+
+        $this->form->addElement('select', 'abnormal_atypical_exculsionary', $this->indent . "If the results are ABORMAL or ATYPICAL:", $exclusionaryOrNot);
+        $this->XINRegisterRule('abnormal_atypical_exculsionary', array('Review_results{@}=={@}abnormal|atypical'), "Please indicate if the Abnormal or Atypical review is Exclusionary or Not."); 
         
-       	$this->form->addElement('static', null, 'If abnormal, describe incidental finding(s)'); 
+       	$this->form->addElement('static', null, $this->indent . $this->indent . 'If Abnormal or Atypical, describe incidental finding(s)'); 
 //        $this->form->addElement('textarea', 'Incidental_findings', 'Description of incidental findings:');
-        $this->addTextAreaElement('Incidental_findings', 'Description of incidental findings:', array("Review_results{@}=={@}abnormal"), "Please describe the abnormality");
+        $this->addTextAreaElement('Incidental_findings', $this->indent . $this->indent . 'Description of incidental findings:', array("Review_results{@}=={@}abnormal"), "Please describe the abnormality");
     } // End Setup form
 
 /**
