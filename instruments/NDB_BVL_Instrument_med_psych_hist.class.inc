@@ -172,6 +172,8 @@ class NDB_BVL_Instrument_med_psych_hist extends NDB_BVL_Instrument
 
     function _page1(){
         $this->form->addElement('header', null, "1. Pregnancy history:");
+        $this->form->addElement('static', null, "Nothing need be filled out after 'No More Pregnancies' is indicated.");
+        $this->form->addElement('static', null, null);
 
         $firstToTwentieth = array("first"=>"First", "second"=>"Second", "third"=>"Third", "fourth"=>"Fourth", "fifth"=>"Fifth", "sixth"=>"Sixth", "seventh"=>"Seventh", "eighth"=>"Eighth", "ninth"=>"Ninth", "tenth"=>"Tenth", "eleventh"=>"Eleventh", "twelfth"=>"Twelfth", "thirteenth"=>"Thirteenth", "fourteenth"=>"Fourteenth", "fifteenth"=>"Fifteenth", "sixteenth"=>"Sixteenth", "seventeenth"=>"Seventeenth", "eighteenth"=>"Eighteenth", "nineteenth"=>"Nineteenth", "twentieth"=>"Twentieth");
         reset($firstToTwentieth);
