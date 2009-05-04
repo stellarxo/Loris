@@ -300,6 +300,7 @@ class NDB_BVL_Instrument_adi_r extends NDB_BVL_Instrument
 			//Abnormality of Development Evident at or Before 36 Months
 			//See the "ADI-R Scoring Algorithm - Addendum" document for directions and details regarding this section.
 			//Age Parents First Noticed
+			$scoreCols["D_Total"] = 0; //initialize
 			if(in_array($this->scores["q_2_age_first_noticed_code"], array('991', '992', '996'))) {
         		$scoreCols["D_Total"] += 1;
 			} elseif ($this->scores["q_2_age_first_noticed_code"] < 36 && !is_null($this->scores["q_2_age_first_noticed_code"])) {
@@ -354,10 +355,14 @@ class NDB_BVL_Instrument_adi_r extends NDB_BVL_Instrument
 				$scoreCols["Total_B2V"] = "Nonverbal";
 				$scoreCols["Total_B3V"] = "Nonverbal";
 			}
-			//Check what happens when integers are added to text...
-			$scoreCols["BV_Total"] = $scoreCols["Total_B1"] + $scoreCols["Total_B4"] + $scoreCols["Total_B2V"] + $scoreCols["Total_B3V"]; 
-			$scoreCols["BNV_Total"] = $scoreCols["Total_B1"] + $scoreCols["Total_B4"];
-						
+			if($this->scores["q_30_overall_level_of_language"] == 0 ) { //verbal subject
+			    //Check what happens when integers are added to text...
+    			$scoreCols["BV_Total"] = $scoreCols["Total_B1"] + $scoreCols["Total_B4"] + $scoreCols["Total_B2V"] + $scoreCols["Total_B3V"];
+    			$scoreCols["BVN_Total"] = "Verbal";
+			} else {
+    			$scoreCols["BV_Total"] = "Nonverbal";
+    			$scoreCols["BNV_Total"] = $scoreCols["Total_B1"] + $scoreCols["Total_B4"];
+			}					
 			//Restrcited, Repetitive and Stereotyped Patterns of Behaviour
 			$scoreCols["Total_C1"] = $this->scores["q_67_unusual_preoccupations_ever_code"] + $this->scores["q_68_circumscr_ints_ever_code"];
 			$scoreCols["Total_C2"] = ($this->scores["q_30_overall_level_of_language"] == 0 ? $this->scores["q_39_verbal_rituals_ever_code"] : 0) 
@@ -369,6 +374,7 @@ class NDB_BVL_Instrument_adi_r extends NDB_BVL_Instrument
 			//Abnormality of Development Evident at or Before 36 Months
 			//See the "ADI-R Scoring Algorithm - Addendum" document for directions and details regarding this section.
 			//Age Parents First Noticed
+			$scoreCols["D_Total"] = 0; //initialize
 			if(in_array($this->scores["q_2_age_first_noticed_code"], array('991', '992', '996'))) {
         		$scoreCols["D_Total"] += 1;
 			} elseif ($this->scores["q_2_age_first_noticed_code"] < 36 && !is_null($this->scores["q_2_age_first_noticed_code"])) {
