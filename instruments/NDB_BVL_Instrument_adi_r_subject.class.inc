@@ -70,8 +70,10 @@ DoB subject should be somewhere in the candidate table.  For now, we'll just mak
         }
 
         // Get the subject DoB for scoring
-        $timepoint =& TimePoint::singleton($this->getSessionID());
-        $dob = $timepoint->getEffectiveDateOfBirth();
+        if($this->getSessionID() != NULL) { //quickform_parser doesn't use any specific session
+            $timepoint =& TimePoint::singleton($this->getSessionID());
+            $dob = $timepoint->getEffectiveDateOfBirth();
+        }
         
         // Get the Date of administration
         $query = "SELECT Date_taken from $this->testName WHERE CommentID = '".$this->getCommentID()."'";
