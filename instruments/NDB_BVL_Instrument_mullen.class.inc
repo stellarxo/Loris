@@ -21,6 +21,423 @@ class NDB_BVL_Instrument_mullen extends NDB_BVL_Instrument
     */
 
     var $yesNo = array(""=>null, "no"=>"No", "yes"=>"Yes", "not_answered"=>"Not Answered");
+    
+    var $ageEquivalents = array(
+       'gross_motor' => array(
+          0 => 1,
+          1 => 1,
+          2 => 1,
+          3 => 1,
+          4 => 2,
+          5 => 3,
+          6 => 3,
+          7 => 4,
+          8 => 5,
+          9 => 6,
+          10 => 7,
+          11 => 8,
+          12 => 9,
+          13 => 10,
+          14 => 11,
+          15 => 12,
+          16 => 13,
+          17 => 14,
+          18 => 14,
+          19 => 15,
+          20 => 16,
+          21 => 17,
+          22 => 18,
+          23 => 20,
+          24 => 21,
+          25 => 22,
+          26 => 23,
+          27 => 25,
+          28 => 27,
+          29 => 28,
+          30 => 30,
+          31 => 32,
+          32 => 33,
+          33 => 33,
+          34 => 33,
+          35 => 33,
+          36 => 33       
+          ),
+       'visual_reception' => array(
+           0 => 1,
+           1 => 1,
+           2 => 1,
+           3 => 1,
+           4 => 2,
+           5 => 3,
+           6 => 4,
+           7 => 5,
+           8 => 6,
+           9 => 6,
+           10 => 7,
+           11 => 8,
+           12 => 9,
+           13 => 10,
+           14 => 11,
+           15 => 12,
+           16 => 13,
+           17 => 14,
+           18 => 15,
+           19 => 16,
+           20 => 17,
+           21 => 18,
+           22 => 19,
+           23 => 20,
+           24 => 21,
+           25 => 23,
+           26 => 24,
+           27 => 25,
+           28 => 26,
+           29 => 27,
+           30 => 29,
+           31 => 30,
+           32 => 31,
+           33 => 33,
+           34 => 34,
+           35 => 36,
+           36 => 37,
+           37 => 39,
+           38 => 40,
+           39 => 41,
+           40 => 43,
+           41 => 45,
+           42 => 46,
+           43 => 48,
+           44 => 50,
+           45 => 52,
+           46 => 54,
+           47 => 57,
+           48 => 60,
+           49 => 66, 
+           50 => 69      
+           ),
+      'fine_motor' => array(
+           0 => 1,
+           1 => 1,
+           2 => 1,
+           3 => 1,
+           4 => 2,
+           5 => 3,
+           6 => 4,
+           7 => 5,
+           8 => 6,
+           9 => 7,
+           10 => 8,
+           11 => 9,
+           12 => 10,
+           13 => 11,
+           14 => 12,
+           15 => 13,
+           16 => 14,
+           17 => 15,
+           18 => 16,
+           19 => 17,
+           20 => 18,
+           21 => 20,
+           22 => 21,
+           23 => 22,
+           24 => 23,
+           25 => 24,
+           26 => 26,
+           27 => 27,
+           28 => 28,
+           29 => 30,
+           30 => 31,
+           31 => 33,
+           32 => 34,
+           33 => 36,
+           34 => 37,
+           35 => 39,
+           36 => 40,
+           37 => 42,
+           38 => 44,
+           39 => 45,
+           40 => 47,
+           41 => 49,
+           42 => 51,
+           43 => 53,
+           44 => 55,
+           45 => 57,
+           46 => 59,
+           47 => 62,
+           48 => 65,
+           49 => 68      
+           ),
+       'receptive_language' => array(
+             0 => 1,
+             1 => 1,
+             2 => 1,
+             3 => 1,
+             4 => 2,
+             5 => 3,
+             6 => 4,
+             7 => 5,
+             8 => 6,
+             9 => 7,
+             10 => 8,
+             11 => 9,
+             12 => 10,
+             13 => 11,
+             14 => 13,
+             15 => 14,
+             16 => 15,
+             17 => 16,
+             18 => 17,
+             19 => 18,
+             20 => 19,
+             21 => 20,
+             22 => 22,
+             23 => 23,
+             24 => 24,
+             25 => 25,
+             26 => 27,
+             27 => 28,
+             28 => 30,
+             29 => 31,
+             30 => 33,
+             31 => 34,
+             32 => 36,
+             33 => 37,
+             34 => 39,
+             35 => 41,
+             36 => 42,
+             37 => 44,
+             38 => 46,
+             39 => 47,
+             40 => 49,
+             41 => 51,
+             42 => 53,
+             43 => 55,
+             44 => 57,
+             45 => 59,
+             46 => 62,
+             47 => 65,
+             48 => 69
+             ),
+         'expressive_language' => array(
+                 0 => 1,
+                 1 => 1,
+                 2 => 1,
+                 3 => 2,
+                 4 => 3,
+                 5 => 4,
+                 6 => 5,
+                 7 => 6,
+                 8 => 7,
+                 9 => 8,
+                 10 => 9,
+                 11 => 10,
+                 12 => 12,
+                 13 => 13,
+                 14 => 14,
+                 15 => 15,
+                 16 => 16,
+                 17 => 17,
+                 18 => 18,
+                 19 => 20,
+                 20 => 21,
+                 21 => 22,
+                 22 => 23,
+                 23 => 24,
+                 24 => 26,
+                 25 => 27,
+                 26 => 28,
+                 27 => 29,
+                 28 => 31,
+                 29 => 32,
+                 30 => 33,
+                 31 => 35,
+                 32 => 36,
+                 33 => 37,
+                 34 => 39,
+                 35 => 40,
+                 36 => 42,
+                 37 => 43,
+                 38 => 45,
+                 39 => 46,
+                 40 => 48,
+                 41 => 50,
+                 42 => 51,
+                 43 => 53,
+                 44 => 55,
+                 45 => 58,
+                 46 => 60,
+                 47 => 63,
+                 48 => 67,
+                 49 => 70,
+                 50 => 70
+                 )
+       );
+    
+    var $maxScores = array(
+       1 => array(1=>1,
+         2=>1,
+         3=>1,
+         4=>1,
+         5=>1,
+         6=>1,
+         7=>1,
+         8=>1,
+         9=>1,
+         10=>1,
+         11=>1,
+         12=>1,
+         13=>1,
+         14=>1,
+         15=>1,
+         16=>1,
+         17=>1,
+         18=>1,
+         19=>1,
+         20=>1,
+         21=>1,
+         22=>1,
+         23=>1,
+         24=>1,
+         25=>1,
+         26=>2,
+         27=>1,
+         28=>1,
+         29=>1,
+         30=>1,
+         31=>1,
+         32=>1,
+         33=>1,
+         34=>1,
+         35=>1),    
+       2 => array(1=>2,
+         2=>1,
+         3=>1,
+         4=>1,
+         5=>1,
+         6=>1,
+         7=>1,
+         8=>1,
+         9=>2,
+         10=>1,
+         11=>1,
+         12=>1,
+         13=>1,
+         14=>1,
+         15=>1,
+         16=>4,
+         17=>3,
+         "17A"=>3,
+         "17B"=>3,
+         18=>2,
+         19=>1,
+         20=>1,
+         21=>1,
+         22=>1,
+         23=>1,
+         24=>1,
+         25=>2,
+         26=>1,
+         27=>1,
+         28=>1,
+         29=>4,
+         30=>4,
+         31=>1,
+         32=>2,
+         33=>2),
+         3 => array(1=>1,
+           2=>1,
+           3=>1,
+           4=>1,
+           5=>1,
+           6=>1,
+           7=>1,
+           8=>1,
+           9=>1,
+           10=>2,
+           11=>1,
+           12=>3,
+           13=>1,
+           14=>2,
+           15=>3,
+           16=>2,
+           17=>3,
+           18=>2,
+           19=>1,
+           20=>1,
+           21=>1,
+           22=>2,
+           23=>2,
+           24=>2,
+           25=>1,
+           26=>3,
+           27=>1,
+           28=>1,
+           29=>1,
+           30=>5),
+           
+           4=>array(1=>1,
+             2=>1,
+             3=>1,
+             4=>1,
+             5=>1,
+             6=>1,
+             7=>1,
+             8=>1,
+             9=>1,
+             10=>1,
+             11=>1,
+             12=>1,
+             13=>1,
+             14=>1,
+             15=>1,
+             16=>1,
+             17=>1,
+             18=>3,
+             19=>1,
+             20=>1,
+             21=>1,
+             22=>4,
+             23=>2,
+             24=>1,
+             25=>1,
+             26=>1,
+             27=>1,
+             28=>1,
+             29=>4,
+             30=>5,
+             31=>1,
+             32=>2,
+             33=>2),
+             
+          5=>array(1=>1,
+              2=>1,
+              3=>1,
+              4=>1,
+              5=>1,
+              6=>1,
+              7=>1,
+              8=>1,
+              9=>1,
+              10=>1,
+              11=>3,
+              12=>1,
+              13=>1,
+              14=>1,
+              15=>3,
+              16=>1,
+              17=>1,
+              18=>5,
+              19=>1,
+              20=>3,
+              21=>1,
+              22=>1,
+              23=>2,
+              24=>5,
+              25=>1,
+              26=>4,
+              27=>4,
+              28=>2)
+      );
 
     /**
     * sets up basic data, such as the HTML_Quickform object, and so on.
@@ -54,6 +471,33 @@ class NDB_BVL_Instrument_mullen extends NDB_BVL_Instrument
         // required fields for data entry completion status
         $this->_requiredElements = array('Examiner');
         //MODIFY THIS WHEN THE SCORING IS IMPLEMENTED
+        
+        // Get the subject age in months for scoring
+        
+        $db =& Database::singleton();
+        if(PEAR::isError($db)) {
+            return PEAR::raiseError ("Could not connect to database: ".$db->getMessage());
+        }
+        
+        $record = array();
+        $query = "SELECT * FROM ".$this->table." WHERE CommentID='".$this->getCommentID()."'";
+        $db->selectRow($query, $record);
+        
+        if (PEAR::isError($record)) {
+           return PEAR::raiseError("Could not get scores: ".$record->getMessage());
+        }
+        
+        $timepoint =& TimePoint::singleton($this->getSessionID());
+        $dob = $timepoint->getEffectiveDateOfBirth();
+        $age = Utility::calculateAge($dob, $record["Date_taken"]);
+        $age_months = $age['year'] * 12 + $age['mon'];
+        if($this->isError($age)) {
+          return $this->raiseError("Could not compute age");
+        }
+        
+        $this->localDefaults = array_merge($this->localDefaults, array('age_months' => $age_months));
+        $this->localDefaults = array_merge($this->localDefaults, $this->band_of_error($age_months));
+        $this->localDefaults = array_merge($this->localDefaults, $this->composite_band_of_error($age_months));
         
         // setup the form
         $this->_setupForm();
@@ -131,11 +575,72 @@ class NDB_BVL_Instrument_mullen extends NDB_BVL_Instrument
 //        $this->form->addElement("static", null, "Birth Date");
 //        $this->form->addElement("static", null, "Chronological Age");
 //        $this->form->addElement("static", null, "Adjusted Age");
+
+         $this->form->addElement("header", null, "Composite Scores");
+          $this->form->addElement("static", 'cognitive_t_score_sum', "Cognitive T Score Sum");
+          $this->form->addElement("static", 'composite_standard_score', "Standard Score");
+          $this->form->addElement("static", 'composite_percentile', "Percentile");
+          $this->form->addElement("static", 'composite_description', "Description");
+          $this->form->addElement("static", 'composite_error_90', "90% Band of Error (+/-)");
+          $this->form->addElement("static", 'composite_error_95', "95% Band of Error (+/-)");
+          
+         $this->form->addElement("header", null, "Gross Motor Scores");
+          if($this->localDefaults['age_months'] <= 33){
+             $this->form->addElement("static", 'gross_motor_raw', "Raw Score");
+             $this->form->addElement("static", 'gross_motor_t', "T Score");
+             $this->form->addElement("static", 'gross_motor_percentile', "Percentile");
+             $this->form->addElement("static", 'gross_motor_description', "Description");
+             $this->form->addElement("static", 'gross_motor_age_equivalent', "Age Equivalent");
+             $this->form->addElement("static", 'gross_motor_error_90', "90% Band of Error (+/-)");
+             $this->form->addElement("static", 'gross_motor_error_95', "95% Band of Error (+/-)");   
+          }
+          else{
+             $this->form->addElement("header",null , '<font color="Red">N/A for children over 33 months.</font>');
+          }
+            
+         $this->form->addElement("header", null, "Visual Reception Scores");
+        $this->form->addElement("static", 'visual_reception_raw', "Raw Score");
+        $this->form->addElement("static", 'visual_reception_t', "T Score");
+        $this->form->addElement("static", 'visual_reception_percentile', "Percentile");
+        $this->form->addElement("static", 'visual_reception_description', "Description");
+        $this->form->addElement("static", 'visual_reception_age_equivalent', "Age Equivalent");
+        $this->form->addElement("static", 'visual_reception_error_90', "90% Band of Error (+/-)");
+         $this->form->addElement("static", 'visual_reception_error_95', "95% Band of Error (+/-)");
+
+         $this->form->addElement("header", null, "Fine Motor Scores");
+          $this->form->addElement("static", 'fine_motor_raw', "Raw Score");
+          $this->form->addElement("static", 'fine_motor_t', "T Score");
+          $this->form->addElement("static", 'fine_motor_percentile', "Percentile");
+          $this->form->addElement("static", 'fine_motor_description', "Description");
+          $this->form->addElement("static", 'fine_motor_age_equivalent', "Age Equivalent");
+          $this->form->addElement("static", 'fine_motor_error_90', "90% Band of Error (+/-)");
+          $this->form->addElement("static", 'fine_motor_error_95', "95% Band of Error (+/-)");
+          
+          $this->form->addElement("header", null, "Receptive Language Scores");
+          $this->form->addElement("static", 'receptive_language_raw', "Raw Score");
+          $this->form->addElement("static", 'receptive_language_t', "T Score");
+          $this->form->addElement("static", 'receptive_language_percentile', "Percentile");
+          $this->form->addElement("static", 'receptive_language_description', "Description");
+          $this->form->addElement("static", 'receptive_language_age_equivalent', "Age Equivalent");
+          $this->form->addElement("static", 'receptive_language_error_90', "90% Band of Error (+/-)");
+           $this->form->addElement("static", 'receptive_language_error_95', "95% Band of Error (+/-)");
+          
+          $this->form->addElement("header", null, "Expressive Language Scores");
+          $this->form->addElement("static", 'expressive_language_raw', "Raw Score");
+          $this->form->addElement("static", 'expressive_language_t', "T Score");
+          $this->form->addElement("static", 'expressive_language_percentile', "Percentile");
+          $this->form->addElement("static", 'expressive_language_description', "Description");
+          $this->form->addElement("static", 'expressive_language_age_equivalent', "Age Equivalent");
+          $this->form->addElement("static", 'expressive_language_error_90', "90% Band of Error (+/-)");
+          $this->form->addElement("static", 'expressive_language_error_95', "95% Band of Error (+/-)");
     }
 
     function _page1(){
 
         $this->form->addElement("header", null, "Scale 1. Gross Motor");
+        if($this->localDefaults['age_months'] > 33){
+            $this->form->addElement("header",null , '<font color="Red">N/A for children over 33 months.</font>');
+         }
         $questionArray = array(0=>null,
         "1. Enjoys being held/realigns (Up)",
         "2. Rotates head (P)",
@@ -200,10 +705,20 @@ class NDB_BVL_Instrument_mullen extends NDB_BVL_Instrument
             $this->_addQuestion("gross_motor_" . $field, $label, 1);
         }
 
-        $this->form->addElement("header", null, "Score");
-        $this->form->addElement("static", null, "Gross Motor Raw Score");
-
-    }
+        $this->form->addElement("header", null, "Gross Motor Scores");
+        if($this->localDefaults['age_months'] <= 33){
+            $this->form->addElement("static", 'gross_motor_raw', "Raw Score");
+            $this->form->addElement("static", 'gross_motor_t', "T Score");
+            $this->form->addElement("static", 'gross_motor_percentile', "Percentile");
+            $this->form->addElement("static", 'gross_motor_description', "Description");
+            $this->form->addElement("static", 'gross_motor_age_equivalent', "Age Equivalent");
+            $this->form->addElement("static", 'gross_motor_error_90', "90% Band of Error (+/-)");
+            $this->form->addElement("static", 'gross_motor_error_95', "95% Band of Error (+/-)");   
+         }
+         else{
+            $this->form->addElement("header",null , '<font color="Red">N/A for children over 33 months.</font>');
+         }
+      }
 
     function _page2() {
         $this->form->addElement("header", null, "Scale 2. Visual Reception");
@@ -227,66 +742,31 @@ class NDB_BVL_Instrument_mullen extends NDB_BVL_Instrument
         "14. Attends to picture (A/V)",
         "15. Looks for toy covered, then displaced",
 
-        "16. Discriminates forms on formboard");
-        $questionArray += array("17A"=>"17A. Matches objects with naming (A/V) (19 months or younger)",
-        //OR"
-        "17B"=>"17B. Matches objects without naming (20 months or older)");  //3",
+        "16. Discriminates forms on formboard",
+        "17A. Matches objects with naming (A/V) (19 months or younger)<br><strong>Or</strong> 17B. Matches objects without naming (20 months or older)",
+        
 
-        $questionArray += array("18"=>"18. Nests nesting cups",
-
-        "19"=>"19. Sorts spoons and blocks by category",
-        "20"=>"20. Matches by shape",
-        "21"=>"21. Matches pictures",
-        "22"=>"22. Matches by size, color",
-        "23"=>"23. Memory for one picture",
-        "24"=>"24. Spatial details I",
-
-        "25"=>"25. Spatial details II",
-        "26"=>"26. Memory for objects",
-        "27"=>"27. Discriminates spatial position",
-        "28"=>"28. Matches letters",
-        "29"=>"29. Discriminates left/right",
-        "30"=>"30. Matches letters, words",
-        "31"=>"31. Memory for three pictures",
-        "32"=>"32. Spatial details III",
-        "33"=>"33. Memory for form");
+        "18. Nests nesting cups",
+        "19. Sorts spoons and blocks by category",
+        "20. Matches by shape",
+        "21. Matches pictures",
+        "22. Matches by size, color",
+        "23. Memory for one picture",
+        "24. Spatial details I",
+        
+        "25. Spatial details II",
+        "26. Memory for objects",
+        "27. Discriminates spatial position",
+        "28. Matches letters",
+        "29. Discriminates left/right",
+        "30. Matches letters, words",
+        "31. Memory for three pictures",
+        "32. Spatial details III",
+        "33. Memory for form");
         unset($questionArray[0]); //get rid of the zero in the 0 based array
 
         //Potential point value of each question
-        $maxPoints = array(1=>2,
-        2=>1,
-        3=>1,
-        4=>1,
-        5=>1,
-        6=>1,
-        7=>1,
-        8=>1,
-        9=>2,
-        10=>1,
-        11=>1,
-        12=>1,
-        13=>1,
-        14=>1,
-        15=>1,
-        16=>4,
-        "17A"=>3,
-        "17B"=>3,
-        18=>2,
-        19=>1,
-        20=>1,
-        21=>1,
-        22=>1,
-        23=>1,
-        24=>1,
-        25=>2,
-        26=>1,
-        27=>1,
-        28=>1,
-        29=>4,
-        30=>4,
-        31=>1,
-        32=>2,
-        33=>2);
+        $maxPoints = $this->maxScores[2];
 
         $sectionDividers = array(1=>"1-4 mo.",
         3=>"5-8 mo.",
@@ -305,8 +785,14 @@ class NDB_BVL_Instrument_mullen extends NDB_BVL_Instrument
             $this->_addQuestion("visual_recept_" . $field, $label, $maxPoints[$field]);
         }
 
-        $this->form->addElement("header", null, "Score");
-        $this->form->addElement("static", null, "Visual Reception Raw Score");
+        $this->form->addElement("header", null, "Visual Reception Scores");
+        $this->form->addElement("static", 'visual_reception_raw', "Raw Score");
+        $this->form->addElement("static", 'visual_reception_t', "T Score");
+        $this->form->addElement("static", 'visual_reception_percentile', "Percentile");
+        $this->form->addElement("static", 'visual_reception_description', "Description");
+        $this->form->addElement("static", 'visual_reception_age_equivalent', "Age Equivalent");
+         $this->form->addElement("static", 'visual_reception_error_90', "90% Band of Error (+/-)");
+         $this->form->addElement("static", 'visual_reception_error_95', "95% Band of Error (+/-)");
 
     }
 
@@ -352,36 +838,7 @@ class NDB_BVL_Instrument_mullen extends NDB_BVL_Instrument
         unset($questionArray[0]); //get rid of the zero in the 0 based array
 
         //Potential point value of each question
-        $maxPoints = array(1=>1,
-        2=>1,
-        3=>1,
-        4=>1,
-        5=>1,
-        6=>1,
-        7=>1,
-        8=>1,
-        9=>1,
-        10=>2,
-        11=>1,
-        12=>3,
-        13=>1,
-        14=>2,
-        15=>3,
-        16=>2,
-        17=>3,
-        18=>2,
-        19=>1,
-        20=>1,
-        21=>1,
-        22=>2,
-        23=>2,
-        24=>2,
-        25=>1,
-        26=>3,
-        27=>1,
-        28=>1,
-        29=>1,
-        30=>5);
+        $maxPoints = $this->maxScores[3];
 
         $sectionDividers = array(1=>"1-4 mo.",
         4=>"5-8 mo.",
@@ -400,9 +857,14 @@ class NDB_BVL_Instrument_mullen extends NDB_BVL_Instrument
             $this->_addQuestion("fine_motor_" . $field, $label, $maxPoints[$field]);
         }
 
-        $this->form->addElement("header", null, "Score");
-        $this->form->addElement("static", null, "Fine Motor Raw Score");
-
+        $this->form->addElement("header", null, "Fine Motor Scores");
+       $this->form->addElement("static", 'fine_motor_raw', "Raw Score");
+       $this->form->addElement("static", 'fine_motor_t', "T Score");
+       $this->form->addElement("static", 'fine_motor_percentile', "Percentile");
+       $this->form->addElement("static", 'fine_motor_description', "Description");
+       $this->form->addElement("static", 'fine_motor_age_equivalent', "Age Equivalent");
+       $this->form->addElement("static", 'fine_motor_error_90', "90% Band of Error (+/-)");
+        $this->form->addElement("static", 'fine_motor_error_95', "95% Band of Error (+/-)");
 
     }
 
@@ -452,39 +914,7 @@ class NDB_BVL_Instrument_mullen extends NDB_BVL_Instrument
         unset($questionArray[0]); //get rid of the zero in the 0 based array
 
         //Potential point value of each question
-        $maxPoints = array(1=>1,
-        2=>1,
-        3=>1,
-        4=>1,
-        5=>1,
-        6=>1,
-        7=>1,
-        8=>1,
-        9=>1,
-        10=>1,
-        11=>1,
-        12=>1,
-        13=>1,
-        14=>1,
-        15=>1,
-        16=>1,
-        17=>1,
-        18=>3,
-        19=>1,
-        20=>1,
-        21=>1,
-        22=>4,
-        23=>2,
-        24=>1,
-        25=>1,
-        26=>1,
-        27=>1,
-        28=>1,
-        29=>4,
-        30=>5,
-        31=>1,
-        32=>2,
-        33=>2);
+        $maxPoints = $this->maxScores[4];
 
         $sectionDividers = array(1=>"1-4 mo.",
         4=>"5-10 mo.",
@@ -503,8 +933,15 @@ class NDB_BVL_Instrument_mullen extends NDB_BVL_Instrument
             $this->_addQuestion("receptive_lang_" . $field, $label, $maxPoints[$field]);
         }
 
-        $this->form->addElement("header", null, "Score");
-        $this->form->addElement("static", null, "Receptive Language Raw Score");
+         $this->form->addElement("header", null, "Receptive Language Scores");
+         $this->form->addElement("static", 'receptive_language_raw', "Raw Score");
+         $this->form->addElement("static", 'receptive_language_t', "T Score");
+         $this->form->addElement("static", 'receptive_language_percentile', "Percentile");
+         $this->form->addElement("static", 'receptive_language_description', "Description");
+         $this->form->addElement("static", 'receptive_language_age_equivalent', "Age Equivalent");
+         $this->form->addElement("static", 'receptive_language_error_90', "90% Band of Error (+/-)");
+         $this->form->addElement("static", 'receptive_language_error_95', "95% Band of Error (+/-)");
+          
     }
 
     function _page5() {
@@ -548,34 +985,7 @@ class NDB_BVL_Instrument_mullen extends NDB_BVL_Instrument
         unset($questionArray[0]); //get rid of the zero in the 0 based array
 
         //Potential point value of each question
-        $maxPoints = array(1=>1,
-        2=>1,
-        3=>1,
-        4=>1,
-        5=>1,
-        6=>1,
-        7=>1,
-        8=>1,
-        9=>1,
-        10=>1,
-        11=>3,
-        12=>1,
-        13=>1,
-        14=>1,
-        15=>3,
-        16=>1,
-        17=>1,
-        18=>5,
-        19=>1,
-        20=>3,
-        21=>1,
-        22=>1,
-        23=>2,
-        24=>5,
-        25=>1,
-        26=>4,
-        27=>4,
-        28=>2);
+        $maxPoints = $this->maxScores[5];
         
         $sectionDividers = array(1=>"1-4 mo.",
         4=>"5-8 mo.",
@@ -594,9 +1004,14 @@ class NDB_BVL_Instrument_mullen extends NDB_BVL_Instrument
             $this->_addQuestion("expressive_lang_" . $field, $label, $maxPoints[$field]);
         }
 
-        $this->form->addElement("header", null, "Score");
-        $this->form->addElement("static", null, "Expressive Language Raw Score");
-
+        $this->form->addElement("header", null, "Expressive Language Scores");
+        $this->form->addElement("static", 'expressive_language_raw', "Raw Score");
+        $this->form->addElement("static", 'expressive_language_t', "T Score");
+        $this->form->addElement("static", 'expressive_language_percentile', "Percentile");
+        $this->form->addElement("static", 'expressive_language_description', "Description");
+        $this->form->addElement("static", 'expressive_language_age_equivalent', "Age Equivalent");
+        $this->form->addElement("static", 'expressive_language_error_90', "90% Band of Error (+/-)");
+        $this->form->addElement("static", 'expressive_language_error_95', "95% Band of Error (+/-)");
     }
 
     //Add an individual question, for now, nothing is required.
@@ -606,6 +1021,444 @@ class NDB_BVL_Instrument_mullen extends NDB_BVL_Instrument
         $this->form->addElement("select", $field, $this->indent . $label, $answerOptions);
         $this->XINRegisterRule($field, array("{$field}{@}=={@}NEVER_REQUIRED"));
     }
+    
+    
+    function score() {
+         if($this->_determineDataEntryCompletionStatus() == "Incomplete") {
+            return;
+         }
+
+         // Get the item scores
+         $score_record=array();
+
+         $db =& Database::singleton();
+         if(PEAR::isError($db)) {
+             return PEAR::raiseError ("Could not connect to database: ".$db->getMessage());
+         }
+
+
+   		
+   		$query = "SELECT * FROM ".$this->table." WHERE CommentID='".$this->getCommentID()."'";
+         $db->selectRow($query, $score_record);
+         
+         if (PEAR::isError($score_record)) {
+            return PEAR::raiseError("Could not get scores: ".$score_record->getMessage());
+         }
+         
+         // Get the subject age in months for scoring
+         $age_months = $this->localDefaults['age_months'];
+         
+         $calculatedScores = array();
+         
+         $calculatedScores['gross_motor_raw'] = $this->get_raw_score($score_record, $age_months, 1, 35);
+         $calculatedScores['visual_reception_raw'] = $this->get_raw_score($score_record, $age_months, 2, 33);
+         $calculatedScores['fine_motor_raw'] = $this->get_raw_score($score_record, $age_months, 3, 30);
+         $calculatedScores['receptive_language_raw'] = $this->get_raw_score($score_record, $age_months, 4, 33);
+         $calculatedScores['expressive_language_raw'] = $this->get_raw_score($score_record, $age_months, 5, 28);
+         
+         $scale_list = array('gross_motor', 'visual_reception', 'fine_motor', 'receptive_language', 'expressive_language');
+         
+         foreach($scale_list as $scale_name){
+            $query = "SELECT * FROM mullen_lookup WHERE age_months=".$age_months. " AND raw_score=".$calculatedScores[$scale_name . '_raw'];
+            $record = array();
+         	$db->selectRow($query, $record);
+             	if (PEAR::isError($record)) {
+             		return PEAR::raiseError("Could not retrieve scores: " . $record->getMessage());
+             	}
+         	$calculatedScores[$scale_name . '_t'] = ($record[$scale_name . '_t']);
+         	$percentile = $this->percentile($calculatedScores[$scale_name . '_t']);
+         	$calculatedScores[$scale_name . '_percentile'] = $percentile['percentile'];
+         	$calculatedScores[$scale_name . '_description'] = $percentile['description'];
+         	$calculatedScores[$scale_name . '_age_equivalent'] = $this->ageEquivalents[$scale_name][$calculatedScores[$scale_name . '_raw']];
+         }
+         
+         $calculatedScores['cognitive_t_score_sum'] = $calculatedScores['visual_reception_t'] + $calculatedScores['fine_motor_t'] +         $calculatedScores['receptive_language_t'] + $calculatedScores['expressive_language_t'];
+         
+         $query = "SELECT * FROM mullen_composite_lookup WHERE cognitive_t_sum=".$calculatedScores['cognitive_t_score_sum'];
+         $record = array();
+      	$db->selectRow($query, $record);
+          	if (PEAR::isError($record)) {
+          		return PEAR::raiseError("Could not retrieve scores: " . $record->getMessage());
+          	}
+         
+         $calculatedScores["composite_standard_score"] = $record['composite_standard_score'];
+         $calculatedScores["composite_percentile"] = $record['percentile'];
+         $calculatedScores["composite_description"] = $this->composite_descriptor($calculatedScores['cognitive_t_score_sum']);
+                  
+         $this->_nullScores($calculatedScores);          
+         
+         // save the resultant total
+         $result = $db->update($this->table, $calculatedScores, array('CommentID'=>$this->getCommentID()));
+         if($db->isError($result)) {
+            return PEAR::raiseError("Could not save total score: ".$result->getMessage());
+         }
+     }
+     
+     function get_raw_score($score_record, $age, $scale, $num_questions){
+        $scale_name_list = array(nil, 'gross_motor', 'visual_recept', 'fine_motor', 'receptive_lang', 'expressive_lang');
+        
+        $scale_name = $scale_name_list[$scale];
+                
+        $base_found = false;
+        $ceiling_found = false;
+        $failures = 0;
+        $start_question = 1;
+        $end_question = $num_questions;
+        while(!($base_found && $ceiling_found)){
+           $start_question = $this->get_starting_point($age, $scale, $failures);            
+           if($start_question > 1 && ($score_record[$scale_name . '_' . $start_question] == 0 
+              || $score_record[$scale_name . '_' . ($start_question + 1)] == 0 
+              || $score_record[$scale_name . '_' . ($start_question + 2)] == 0)){
+                 $failures++;
+                 continue;
+              }
+           $base_found = true;
+           for($question = $start_question; $question <= $num_questions; $question++){
+              if($score_record[$scale_name . '_' . $question] == 0 
+                 && $score_record[$scale_name . '_' . ($question + 1)] == 0 
+                 && $score_record[$scale_name . '_' . ($question + 2)] == 0){
+                   $end_question = $question;
+                   break;
+                 }
+           }
+           $ceiling_found = true;    
+        }
+
+        $raw_score = 0;
+        for ($question=1; $question <= $num_questions; $question++) { 
+           if($question < $start_question){
+              $raw_score += $this->maxScores[$scale][$question];
+           }
+           else if($question <= $end_question){
+              $raw_score += $score_record[$scale_name . '_' . $question];               
+           }
+           else{
+              break;
+           }
+        }
+        
+        return $raw_score;
+     }
+     
+     function get_starting_point($age, $scale, $offset){
+        $starting_points = array(
+         1 => array(1, 5, 8, 11, 15, 18, 22),
+         2 => array(1, 3, 7, 9, 16, 19, 25),
+         3 => array(1, 4, 7, 11, 13, 16, 21),
+         4 => array(1, 4, 8, 12, 18, 22, 25),
+         5 => array(1, 4, 7, 11, 15, 19, 22)
+         );
+         
+         $start_point = 0;
+         
+         if($scale == 1){
+            if($age <= 4){
+               $start_point = 0;
+            }
+            else if ($age <= 8){
+               $start_point = 1;
+            }
+            else if ($age <= 12){
+               $start_point = 2;
+            }
+            else if ($age <= 17){
+               $start_point = 3;
+            }
+            else if ($age <= 20){
+               $start_point = 4;
+            }
+            else if ($age <= 26){
+               $start_point = 5;
+            }
+            else {
+               $start_point = 6;
+            }
+         }
+         else if($scale == 2){
+            if($age <= 4){
+               $start_point = 0;
+            }
+            else if ($age <= 8){
+               $start_point = 1;
+            }
+            else if ($age <= 12){
+               $start_point = 2;
+            }
+            else if ($age <= 20){
+               $start_point = 3;
+            }
+            else if ($age <= 32){
+               $start_point = 4;
+            }
+            else if ($age <= 44){
+               $start_point = 5;
+            }
+            else {
+               $start_point = 6;
+            }
+         }
+         else if($scale == 3){
+            if($age <= 4){
+               $start_point = 0;
+            }
+            else if ($age <= 8){
+               $start_point = 1;
+            }
+            else if ($age <= 12){
+               $start_point = 2;
+            }
+            else if ($age <= 17){
+               $start_point = 3;
+            }
+            else if ($age <= 29){
+               $start_point = 4;
+            }
+            else if ($age <= 44){
+               $start_point = 5;
+            }
+            else {
+               $start_point = 6;
+            }
+         }
+         else if($scale == 4){
+            if($age <= 4){
+               $start_point = 0;
+            }
+            else if ($age <= 10){
+               $start_point = 1;
+            }
+            else if ($age <= 14){
+               $start_point = 2;
+            }
+            else if ($age <= 22){
+               $start_point = 3;
+            }
+            else if ($age <= 32){
+               $start_point = 4;
+            }
+            else if ($age <= 44){
+               $start_point = 5;
+            }
+            else {
+               $start_point = 6;
+            }
+         }
+         else if($scale == 5){
+            if($age <= 4){
+               $start_point = 0;
+            }
+            else if ($age <= 8){
+               $start_point = 1;
+            }
+            else if ($age <= 14){
+               $start_point = 2;
+            }
+            else if ($age <= 23){
+               $start_point = 3;
+            }
+            else if ($age <= 32){
+               $start_point = 4;
+            }
+            else if ($age <= 44){
+               $start_point = 5;
+            }
+            else {
+               $start_point = 6;
+            }
+         }
+         
+         if($start_point - $offset < 0){
+            return 1;
+         }
+         else {
+            return $starting_points[$scale][$start_point - $offset];
+         }
+     }
+     
+     function band_of_error($age){
+        if($age <= 4){
+           return array('gross_motor_error_90' => 9, 
+                        'gross_motor_error_95' => 11,
+                        'visual_reception_error_90' => 8, 
+                        'visual_reception_error_95' => 10,
+                        'fine_motor_error_90' => 9, 
+                        'fine_motor_error_95' => 10,
+                        'receptive_language_error_90' => 10, 
+                        'receptive_language_error_95' => 12,
+                        'expressive_language_error_90' => 8, 
+                        'expressive_language_error_95' => 10   
+                     );
+        }
+        else if ($age <= 12){
+           return array('gross_motor_error_90' => 7, 
+                          'gross_motor_error_95' => 8,
+                          'visual_reception_error_90' => 7, 
+                          'visual_reception_error_95' => 9,
+                          'fine_motor_error_90' => 9, 
+                          'fine_motor_error_95' => 10,
+                          'receptive_language_error_90' => 8, 
+                          'receptive_language_error_95' => 10,
+                          'expressive_language_error_90' => 7, 
+                          'expressive_language_error_95' => 8   
+                       );
+        }
+        else if ($age <= 33){
+           return array('gross_motor_error_90' => 6, 
+                            'gross_motor_error_95' => 7,
+                            'visual_reception_error_90' => 8, 
+                            'visual_reception_error_95' => 10,
+                            'fine_motor_error_90' => 9, 
+                            'fine_motor_error_95' => 10,
+                            'receptive_language_error_90' => 7, 
+                            'receptive_language_error_95' => 8,
+                            'expressive_language_error_90' => 6, 
+                            'expressive_language_error_95' => 7   
+                         );
+        }
+        else if ($age <= 51){
+             return array(    'visual_reception_error_90' => 7, 
+                              'visual_reception_error_95' => 9,
+                              'fine_motor_error_90' => 8, 
+                              'fine_motor_error_95' => 9,
+                              'receptive_language_error_90' => 8, 
+                              'receptive_language_error_95' => 9,
+                              'expressive_language_error_90' => 7, 
+                              'expressive_language_error_95' => 8   
+                           );
+       }
+       else {
+              return array(    'visual_reception_error_90' => 12, 
+                               'visual_reception_error_95' => 14,
+                               'fine_motor_error_90' => 9, 
+                               'fine_motor_error_95' => 9,
+                               'receptive_language_error_90' => 9, 
+                               'receptive_language_error_95' => 11,
+                               'expressive_language_error_90' => 9, 
+                               'expressive_language_error_95' => 10   
+                            );
+           }
+          
+     }
+     
+     function composite_band_of_error($age){
+          if($age <= 4){
+             return array('composite_error_90' => 9, 'composite_error_95' => 11);
+          }
+          else if ($age <= 50){
+             return array('composite_error_90' => 7, 'composite_error_95' => 8);
+          }
+          else{
+             return array('composite_error_90' => 9, 'composite_error_95' => 11);
+          }
+       }
+       
+     function composite_descriptor($cognitive_t_score){
+          if ($cognitive_t_score >= 260) {
+            return "Very High";
+          } else if ($cognitive_t_score >= 231) {
+            return "Above Average";
+          } else if ($cognitive_t_score >= 169) {
+            return "Average";
+          } else if ($cognitive_t_score >= 138) {
+            return "Below Average";
+          } else {
+             return "Very Low";
+          }
+     }
+     
+     function percentile($t_score){
+        $percentile_for_t_score = array(
+           69 => 97,
+           68 => 96,
+           67 => 96,
+           66 => 95,
+           65 => 93,
+           64 => 92,
+           63 => 90,
+           62 => 88,
+           61 => 86,
+           60 => 84,
+           59 => 82,
+           58 => 79,
+           57 => 76,
+           56 => 73,
+           55 => 69,
+           54 => 66,
+           53 => 62,
+           52 => 58,
+           51 => 54,
+           50 => 50,
+           49 => 46,
+           48 => 42,
+           47 => 38,
+           46 => 34,
+           45 => 31,
+           44 => 27,
+           43 => 24,
+           42 => 21,
+           41 => 18,
+           40 => 16,
+           39 => 14,
+           38 => 12,
+           37 => 10,
+           36 => 8,
+           35 => 7,
+           34 => 5,
+           33 => 4,
+           32 => 4,
+           31 => 3       
+           );
+        
+        $percentile = 0;
+        $description = '';
+        if($t_score >= 70){
+           $description = 'Very High';
+           if($t_score >= 72){
+              $percentile = 99;
+           }else{
+              $percentile = 98;
+           }
+        }
+        else if($t_score >= 31){
+           $percentile = $percentile_for_t_score[$t_score];
+           if ($t_score >= 61) {
+              $description = 'Above Average';
+           }
+           else if ($t_score >= 40) {
+               $description = 'Average';
+           }
+           else{
+              $description = 'Below Average';
+           }
+        }
+        else{
+           $description = 'Very Low';
+           if ($t_score >= 29) {
+               $percentile = 2;
+           }
+           else{
+              $percentile = 1;
+           }
+        }
+        
+        return array('percentile' => $percentile, 'description' => $description);
+     }
+     
+     function max($x, $y){
+        if($x == nil){
+           return $y;
+        }
+        if($y == nil){
+           return $x;
+        }
+        
+        if($x > $y){
+           return $x;
+        }
+        else{
+           return $y;
+        }
+     }
 
 }
 ?>
