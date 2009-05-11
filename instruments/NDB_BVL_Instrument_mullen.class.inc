@@ -490,14 +490,12 @@ class NDB_BVL_Instrument_mullen extends NDB_BVL_Instrument
         $timepoint =& TimePoint::singleton($this->getSessionID());
         $dob = $timepoint->getEffectiveDateOfBirth();
         $age = Utility::calculateAge($dob, $record["Date_taken"]);
-        $age_months = $age['year'] * 12 + $age['mon'];
-        if($this->isError($age)) {
-          return $this->raiseError("Could not compute age");
+        if(!$this->isError($age)) {
+          $age_months = $age['year'] * 12 + $age['mon'];
+          $this->localDefaults = array_merge($this->localDefaults, array('age_months' => $age_months));
+          $this->localDefaults = array_merge($this->localDefaults, $this->band_of_error($age_months));
+          $this->localDefaults = array_merge($this->localDefaults, $this->composite_band_of_error($age_months));
         }
-        
-        $this->localDefaults = array_merge($this->localDefaults, array('age_months' => $age_months));
-        $this->localDefaults = array_merge($this->localDefaults, $this->band_of_error($age_months));
-        $this->localDefaults = array_merge($this->localDefaults, $this->composite_band_of_error($age_months));
         
         // setup the form
         $this->_setupForm();
@@ -703,6 +701,9 @@ class NDB_BVL_Instrument_mullen extends NDB_BVL_Instrument
                 $this->_addQuestion("gross_motor_" . $field, $label, 2);
             } else
             $this->_addQuestion("gross_motor_" . $field, $label, 1);
+            if($this->localDefaults['age_months'] <= 33){
+               $this->form->addRule("gross_motor_" . $field,"Please fill in all fields.","required",null);
+            }
         }
 
         $this->form->addElement("header", null, "Gross Motor Scores");
@@ -783,6 +784,7 @@ class NDB_BVL_Instrument_mullen extends NDB_BVL_Instrument
             }
             //Output the question...
             $this->_addQuestion("visual_recept_" . $field, $label, $maxPoints[$field]);
+            $this->form->addRule("visual_recept_" . $field,"Please fill in all fields.","required",null);
         }
 
         $this->form->addElement("header", null, "Visual Reception Scores");
@@ -855,6 +857,8 @@ class NDB_BVL_Instrument_mullen extends NDB_BVL_Instrument
             }
             //Output the question...
             $this->_addQuestion("fine_motor_" . $field, $label, $maxPoints[$field]);
+            $this->form->addRule("fine_motor_" . $field,"Please fill in all fields.","required",null);
+            
         }
 
         $this->form->addElement("header", null, "Fine Motor Scores");
@@ -931,6 +935,7 @@ class NDB_BVL_Instrument_mullen extends NDB_BVL_Instrument
             }
             //Output the question...
             $this->_addQuestion("receptive_lang_" . $field, $label, $maxPoints[$field]);
+            $this->form->addRule("receptive_lang_" . $field,"Please fill in all fields.","required",null);
         }
 
          $this->form->addElement("header", null, "Receptive Language Scores");
@@ -1002,6 +1007,8 @@ class NDB_BVL_Instrument_mullen extends NDB_BVL_Instrument
             }
             //Output the question...
             $this->_addQuestion("expressive_lang_" . $field, $label, $maxPoints[$field]);
+            $this->form->addRule("expressive_lang_" . $field,"Please fill in all fields.","required",null);
+            
         }
 
         $this->form->addElement("header", null, "Expressive Language Scores");
@@ -1047,6 +1054,9 @@ class NDB_BVL_Instrument_mullen extends NDB_BVL_Instrument
          
          // Get the subject age in months for scoring
          $age_months = $this->localDefaults['age_months'];
+         if($age_months == null){
+            return PEAR::raiseError("Cannot score if age not set.");
+         }
          
          $calculatedScores = array();
          
@@ -1130,6 +1140,12 @@ class NDB_BVL_Instrument_mullen extends NDB_BVL_Instrument
               $raw_score += $this->maxScores[$scale][$question];
            }
            else if($question <= $end_question){
+              if($score_record[$scale_name . '_' . $question] == 'not_answered'){
+                 echo('<center><strong><font color="Red"> "Not Answered" response appears incorrect for question ' . $question . '</font></strong></center>');
+              }
+              if($score_record[$scale_name . '_' . $question] == null){
+                   echo('<center><strong><font color="Red"> Missing response appears incorrect for question ' . $question . '</font></strong></center>');
+                }
               $raw_score += $score_record[$scale_name . '_' . $question];               
            }
            else{
