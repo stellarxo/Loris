@@ -7,9 +7,6 @@ INSERT INTO instrument_subtests VALUES('', 'prefrontal_task', 'prefrontal_task_p
 INSERT INTO test_battery VALUES ('', 'prefrontal_task', '300', '780', 'Y', 'Visit', '3');
 */
 
-/*
-This was a kinda wacky form.  Its sections may warrant some rearranging.  Not quite clear if there is scoring or not...
-*/
     /**
     * sets up basic data, such as the HTML_Quickform object, and so on.
     *
@@ -40,16 +37,14 @@ This was a kinda wacky form.  Its sections may warrant some rearranging.  Not qu
         $this->_selectMultipleElements = array();
 
         // required fields for data entry completion status
-        $this->_requiredElements = array('Examiner', '<FIRST QUESTION OF EACH PAGE>');
+        $this->_requiredElements = array('Examiner', 'start_side');
         
-        $this->localDefaults = array_merge($this->localDefaults, array("left"=>"Left", "right"=>"Right", "correct"=>"# Correct", "trials"=>"# Trials"));
+        $this->localDefaults = array_merge($this->localDefaults, array("trial"=>"Trial", "outcome"=>"Outcome", "correct"=>"# Correct", "trials"=>"# Trials"));
 
         // setup the form
         $this->_setupForm();
 
     }
-    
-    //If the instrument is not paged, remove the switch from the _setupForm method and add all the form Elements in this function.
     
     /**
     * method to build the HTML_Quickform object into a paged form
@@ -99,37 +94,48 @@ This was a kinda wacky form.  Its sections may warrant some rearranging.  Not qu
 		}
 		
     }
-   
+
     function _page1(){
     	
     	$this->form->addElement('header', null, "Responses");
     	$this->form->addElement('select', "start_side", "Start Side", array(null=>"", "left"=>"Left", "right"=>"Right", "not_answered"=>"Not Answered"));
         
-    	$group[]=&$this->form->createElement('static', "left");
-    	$group[]=&$this->form->createElement('static', "right");
-    	$this->form->addGroup($group, "testers_group", "Tester's", $this->_GUIDelimiter, false);
-    	unset($group);
+    	//For both left and right answer columns
+//    	$group[]=&$this->form->createElement('static', "left");
+//    	$group[]=&$this->form->createElement('static', "right");
+//    	$this->form->addGroup($group, "testers_group", "Tester's", $this->_GUIDelimiter, false);
+//    	unset($group);
+//    	foreach(range(1, 24) as $th) {
+//			$group[] = &$this->form->createElement('select', "trial_{$th}_left", $th, array(null=>"", "correct"=>"&#10003;", "incorrect"=>"&#10008;", "no_reach_response"=>"No Reach/Response", "not_answered"=>"Not Answered"));
+//			$group[] = &$this->form->createElement('select', "trial_{$th}_right", $th, array(null=>"", "correct"=>"&#10003;", "incorrect"=>"&#10008;", "no_reach_response"=>"No Reach/Response", "not_answered"=>"Not Answered"));
+//			$this->form->addGroup($group, "trial_{$th}_group", $th, $this->_GUIDelimiter, false);
+//			unset($group);
+//        }
+
+        //Column labels
+        $this->form->addElement("static", "outcome", "Trial");
+        
     	foreach(range(1, 24) as $th) {
-			$group[] = &$this->form->createElement('select', "trial_{$th}_left", $th, array(null=>"", "correct"=>"&#10003;", "incorrect"=>"&#10008;", "no_reach_response"=>"No Reach/Response", "not_answered"=>"Not Answered"));
-			$group[] = &$this->form->createElement('select', "trial_{$th}_right", $th, array(null=>"", "correct"=>"&#10003;", "incorrect"=>"&#10008;", "no_reach_response"=>"No Reach/Response", "not_answered"=>"Not Answered"));
-			$this->form->addGroup($group, "trial_{$th}_group", $th, $this->_GUIDelimiter, false);
-			unset($group);
-        }
+            $this->form->addElement('select', "trial_{$th}", $th, array(null=>"", "0_incorrect"=>"0 = Incorrect", "1_correct"=>"1 = Correct", "9_missing_no_trial"=>"9 = Missing / No Trial"));
+    	}
     	
 		$this->form->addElement('header', null, "Reversals");
 		$oneToFour = array("first"=>"First", "second"=>"Second", "third"=>"Third", "fourth"=>"Fourth");
 		foreach($oneToFour as $thItem=>$thItemLabel) {
-			$this->addTextElement($thItem, $thItemLabel . " Reversal Item #");
+            $this->form->addElement("select", "{$thItem}_reversal", $thItemLabel . " Reversal Item #", array_merge(array(null=>""), range(1, 24), array('not_answered'=>"Not Answered"))); 
 		}
 		
 		$this->form->addElement('header', null, "Validity");
 		$answerArray = array(null=>"", "1_valid"=>"1 = Data is valid", "2_question_validity"=>"2 = Question validity", "3_invalid_data"=>"3 = Invalid data", "not_answered"=>"Not Answered");
-		$this->form->addElement("select", 'validity_of_data', "Validity of data", $answerArray);
-		$this->form->addElement("advcheckbox", "validity_not_motivated", null, "a. Not motivated by reinforcers", null, array("FALSE", "TRUE"));
-		$this->form->addElement("advcheckbox", "validity_noncompliant", null, "b. Noncompliant", null, array("FALSE", "TRUE"));
-		$this->form->addElement("advcheckbox", "validity_intention_errors", null, "c. Intentionally making errors", null, array("FALSE", "TRUE"));
-		$this->addTextAreaElement("validity_comment", $this->indent . "Comments:");
+		$this->form->addElement("select", "validity_of_data", "Validity of data", $answerArray);
 		
+		$answerArray = array(null=>"", "a_infant_not_attending"=>"a. Infant not able to attend/participate", "b_examiner_error"=>"b. Examiner Error", "c_parent_error"=>"c. Parent Error");
+
+		$this->form->addElement("select", "invalidity_reason", "Select one invalidity reason", $answerArray);
+
+		$this->XINRegisterRule("invalidity_reason", array("validity_of_data{@}=={@}2_question_validity|3_invalid_data"), "Please select one reason for invalidity");
+		$this->addTextAreaElement("invalidity_comment", $this->indent . "Comments:", array("validity_of_data{@}=={@}2_question_validity|3_invalid_data"), "Please describe the reason below");
+
 		$this->form->addElement('header', null, "Overall");
 		$group[] = $this->form->createElement('static', "correct", null);
 		$group[] = $this->form->createElement('static', "trials", null);
@@ -147,8 +153,6 @@ This was a kinda wacky form.  Its sections may warrant some rearranging.  Not qu
     		$this->form->addGroup($group, "{$field}_group", $label, $this->_GUIDelimiter, false);
     		unset($group);
 		}
-		
     }
-   
 }
 ?>
