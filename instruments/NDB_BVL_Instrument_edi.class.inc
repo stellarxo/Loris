@@ -303,7 +303,7 @@ INSERT INTO test_battery VALUES ('', 'edi', '1050', '1140', 'Y', 'Visit', '2');
 
             //12m recruit
             elseif($subProjectID == 2) {
-                $this->_requiredElements = array_merge($this->_requiredElements, array("EDI1", "EDI9", "EDI20", "EDI34", "bir_0_6months", "sei_0_6months", "inj", "bir_7-12months", "sei_7-12months"));
+                $this->_requiredElements = array_merge($this->_requiredElements, array("EDI1", "EDI9", "EDI20", "EDI34", "bir_0_6months", "sei_0_6months", "inj", "bir_7_12months", "sei_7_12months"));
             }
         }
         
