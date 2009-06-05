@@ -271,6 +271,14 @@ INSERT INTO test_battery VALUES ('', 'edi', '1050', '1140', 'Y', 'Visit', '2');
         //determine required questions
         $this->_determineRequiredQuestions($age, $subProjectID);
         
+        if(empty($this->_requiredElements)) return 'Complete';
+
+        $db =& Database::singleton();
+        if(PEAR::isError($db)) return PEAR::raiseError("Could not connect to database: ".$db->getMessage()."<br>\n");
+        $query = "SELECT ".join(',', $this->_requiredElements)." FROM $this->table WHERE CommentID='".$this->getCommentID()."'";
+        $success = $db->selectRow($query, $dataFields);
+        if(PEAR::isError($success)) return PEAR::raiseError("Could not select required elements from database: ".$success->getMessage()."<br>\n");
+
         //compare
         return parent::_determineDataEntryCompletionStatus();
     }
@@ -279,27 +287,30 @@ INSERT INTO test_battery VALUES ('', 'edi', '1050', '1140', 'Y', 'Visit', '2');
         //get age in days, to more easily compare with the test_battery;
         $ageDays = $age['year'] * 365 + $age['mon'] * 30.5 + $age['day'];
 
-        // V1
+        // 6month visit
         if($ageDays <= 270 && $subProjectID == 1) {
             //6m recruit,
             if($subProjectID == 1) {
-                $this->_requiredElements = array_merge($this->_requiredElements, array("EDI1", "EDI9", "bir_0-6months", "sei_0-6months", "inj"));}
+                $this->_requiredElements = array_merge($this->_requiredElements, array("EDI1", "EDI9", "bir_0_6months", "sei_0_6months", "inj"));}
         }
         
-        // V2
+        // 12month visit
         elseif($ageDays >= 300 && $ageDays <= 420) {
             //6m recruit
             if($subProjectID == 1) {
-                $this->_requiredElements = array_merge($this->_requiredElements, array("EDI20", "EDI34", "bir_7-12months", "sei_7-12months")); }
+                $this->_requiredElements = array_merge($this->_requiredElements, array("EDI20", "EDI34", "bir_7_12months", "sei_7_12months"));
+            }
 
             //12m recruit
             elseif($subProjectID == 2) {
-                $this->_requiredElements = array_merge($this->_requiredElements, array("EDI1", "EDI9", "EDI20", "EDI34", "bir_0-6months", "sei_0-6months", "inj", "bir_7-12months", "sei_7-12months")); }
+                $this->_requiredElements = array_merge($this->_requiredElements, array("EDI1", "EDI9", "EDI20", "EDI34", "bir_0_6months", "sei_0_6months", "inj", "bir_7-12months", "sei_7-12months"));
+            }
         }
         
-        // V3
+        // 24month visit
         elseif($ageDays >= 660 && $ageDays <= 780) {
-            $this->_requiredElements = array_merge($this->_requiredElements, array("EDI46", "EDI59", "EDI71", "EDI83", "bir_13-24months", "sei_13-24months")); }
+            $this->_requiredElements = array_merge($this->_requiredElements, array("EDI46", "EDI59", "EDI71", "EDI83", "bir_13_24months", "sei_13_24months"));
+        }            
     }
     
     /**
@@ -387,14 +398,14 @@ INSERT INTO test_battery VALUES ('', 'edi', '1050', '1140', 'Y', 'Visit', '2');
 		$questionArray = $this->familyChanges;
 		
 		foreach($questionArray as $field=>$label) {
-			$this->form->addElement("select", $field . "_0-6months", $label, $answerArray);
+			$this->form->addElement("select", $field . "_0_6months", $label, $answerArray);
 		}							
 
 		$this->form->addElement("header", null, "Child Medical Events, 0-6 months");
 		$questionArray = $this->childMedicalEvents;
 		
 		foreach($questionArray as $field=>$label) {
-			$this->form->addElement("select", $field . "_0-6months", $label, $answerArray);
+			$this->form->addElement("select", $field . "_0_6months", $label, $answerArray);
 		}
     }
     
@@ -426,14 +437,14 @@ INSERT INTO test_battery VALUES ('', 'edi', '1050', '1140', 'Y', 'Visit', '2');
 		$questionArray = $this->familyChanges;
 		
 		foreach($questionArray as $field=>$label) {
-			$this->form->addElement("select", $field . "_7-12months", $label, $answerArray);
+			$this->form->addElement("select", $field . "_7_12months", $label, $answerArray);
 		}							
 
 		$this->form->addElement("header", null, "Child Medical Events, 7-12 months");
 		$questionArray = $this->childMedicalEvents;
 		
 		foreach($questionArray as $field=>$label) {
-			$this->form->addElement("select", $field . "_7-12months", $label, $answerArray);
+			$this->form->addElement("select", $field . "_7_12months", $label, $answerArray);
 		}
     }
     
@@ -444,14 +455,14 @@ INSERT INTO test_battery VALUES ('', 'edi', '1050', '1140', 'Y', 'Visit', '2');
 		$questionArray = $this->familyChanges;
 		
 		foreach($questionArray as $field=>$label) {
-			$this->form->addElement("select", $field . "_13-24months", $label, $answerArray);
+			$this->form->addElement("select", $field . "_13_24months", $label, $answerArray);
 		}							
 
 		$this->form->addElement("header", null, "Child Medical Events, 13-24 months");
 		$questionArray = $this->childMedicalEvents;
 		
 		foreach($questionArray as $field=>$label) {
-			$this->form->addElement("select", $field . "_13-24months", $label, $answerArray);
+			$this->form->addElement("select", $field . "_13_24months", $label, $answerArray);
 		}
     }
     
