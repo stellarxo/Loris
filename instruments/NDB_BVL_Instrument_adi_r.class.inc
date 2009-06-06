@@ -358,7 +358,7 @@ class NDB_BVL_Instrument_adi_r extends NDB_BVL_Instrument
 			if($this->scores["q_30_overall_level_of_language"] == 0 ) { //verbal subject
 			    //Check what happens when integers are added to text...
     			$scoreCols["BV_Total"] = $scoreCols["Total_B1"] + $scoreCols["Total_B4"] + $scoreCols["Total_B2V"] + $scoreCols["Total_B3V"];
-    			$scoreCols["BVN_Total"] = "Verbal";
+    			$scoreCols["BNV_Total"] = "Verbal";
 			} else {
     			$scoreCols["BV_Total"] = "Nonverbal";
     			$scoreCols["BNV_Total"] = $scoreCols["Total_B1"] + $scoreCols["Total_B4"];
