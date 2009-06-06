@@ -84,7 +84,8 @@ DoB Proband should be somewhere in the candidate table.  For now, we'll just mak
         if(PEAR::isError($Date_taken)){
             return PEAR::raiseError("Query has failed to select the Date of Administration: ".$result->getMessage());
         }
-
+        
+        //Call to calculateAge generates an error in the quickFormParser.  I don't know why.  Everything works despite.
 		$age = Utility::calculateAge($DoB_proband, $Date_taken);
         if($this->isError($age)) {
             return $this->raiseError("Could not compute age");
