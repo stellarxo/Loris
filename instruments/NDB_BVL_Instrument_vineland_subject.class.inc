@@ -36,7 +36,7 @@ INSERT INTO instrument_subtests VALUES('', 'vineland_subject', 'vineland_subject
     function setup($commentID, $page){
         // set the object properties
         $this->testName = "vineland_subject";           // test_names.Test_name
-        $this->table = 'vineland_subject';              // name of database table corresponding to instrument
+        $this->table = 'vineland_subject_uploader';              // name of database table corresponding to instrument
     
         $this->_setup($commentID, $page);
     }
