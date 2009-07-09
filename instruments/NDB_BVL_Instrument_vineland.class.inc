@@ -110,6 +110,7 @@ class NDB_BVL_Instrument_vineland extends NDB_BVL_Instrument
           $this->form->addElement('header', null, "Adaptive Behaviour");
          
          
+         //scoring column headers
            $group[] = $this->form->createElement('static', "RAW");
            $group[] = $this->form->createElement('static', "VSCALE");
            $group[] = $this->form->createElement('static', "STD_SCORE");
@@ -512,7 +513,7 @@ class NDB_BVL_Instrument_vineland extends NDB_BVL_Instrument
             $no_entries = true;
             for($i = 1; $i <= $numQuestions[$key]; $i++){
                $item = $values[$key . '_ITEM_' . $i];
-               if(!empty($item) && $item != ' ' && $item != '-'  && $item != '_'){
+               if($item != null && $item != "" && $item != ' ' && $item != '-'  && $item != '_'){
                   $no_entries = false;
                }
             }
@@ -531,7 +532,7 @@ class NDB_BVL_Instrument_vineland extends NDB_BVL_Instrument
          foreach($subdomains as $key=>$value){
             for($i = 1; $i <= $numQuestions[$key]; $i++){
                $item = $values[$key . '_ITEM_' . $i];
-               if(empty($item) || $item == ' ' || $item == '-' || $item == '_'){
+               if($item == null || $item == "" || $item == ' ' || $item == '-' || $item == '_'){
                   $errors[]="Individual items for subdomain '{$subdomains[$key]}' have not been completed in full." ;
                   return $errors;
                }
@@ -540,7 +541,7 @@ class NDB_BVL_Instrument_vineland extends NDB_BVL_Instrument
          
          for($i = 1; $i <= 14; $i++){
             $item = $values['CRIT_SEVERITY_ITEM_' . $i];
-            if(empty($item) || $item == ' ' || $item == '-' || $item == '_'){
+            if($item == null || $item == ""  || $item == ' ' || $item == '-' || $item == '_'){
                $errors[]="Severity items for 'Maladaptive Critical Items' have not been completed in full." ;
                return $errors;
             }
