@@ -49,7 +49,7 @@ class NDB_BVL_Instrument_ados_module1 extends NDB_BVL_Instrument
         $this->_selectMultipleElements = array();
 
         // required fields for data entry completion status
-        $this->_requiredElements = array('Examiner');
+        $this->_requiredElements = array('Examiner', "a1", "c1");
 
        // setup the form
         $this->_setupForm();
@@ -228,7 +228,7 @@ class NDB_BVL_Instrument_ados_module1 extends NDB_BVL_Instrument
         $this->form->addElement("static", null, "<BR>"); //line space
         $this->form->addElement('select', 'a4', '4. Immediate Echolalia', $this->option01238);
         $this->form->addElement("static", null, "<BR>"); //line space
-        $this->form->addElement('select', 'a5', '5. Stereotyped/Idosyncratic Use of Words or Phrases', $this->option01238);
+        $this->form->addElement('select', 'a5', '5. Stereotyped/Idiosyncratic Use of Words or Phrases', $this->option01238);
         $this->form->addElement("static", null, "<BR>"); //line space
         $this->form->addElement('select', 'a6', '6. Use of Others Body to Communicate', $this->option0128);
         $this->form->addElement("static", null, "<BR>"); //line space
@@ -294,7 +294,7 @@ class NDB_BVL_Instrument_ados_module1 extends NDB_BVL_Instrument
         $this->form->addElement("static", null, "<BR>"); //line space
      	$this->addTextAreaElement('d1_specify', $this->indent . "Please specify:");
         $this->form->addElement("static", null, "<BR>"); //line space
-        $this->form->addElement('select', 'd2', '2. Imagination/Creativity', $this->option012);
+        $this->form->addElement('select', 'd2', '2. Hand and Finger and Other Complex Mannerisms', $this->option012);
         $this->form->addElement("static", null, "<BR>"); //line space
     	$this->addTextAreaElement('d2_specify', $this->indent . "Please specify:");
         $this->form->addElement("static", null, "<BR>"); //line space
