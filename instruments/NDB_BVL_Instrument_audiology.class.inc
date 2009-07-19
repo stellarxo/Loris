@@ -74,6 +74,10 @@ INSERT INTO test_battery VALUES ('', 'audiology', '660', '780', 'Y', 'Visit', '2
         // automatically adds examiner & date of administration
         $this->_addMetadataFields();
         
+        $this->form->addElement("select", "not_completed", "An audiology evaluation was not completed because...", array(null=>"", "non-asd"=>"Non-ASD", "other"=>"Other (please specify)"));
+        $this->XINRegisterRule("not_completed", array("not_completed{@}=={@}NEVER_REQUIRED"));
+        $this->addTextElement("not_completed_other_specify", $this->indent . "If other, please specify", array("not_completed{@}=={@}other"), "Please specify.");
+        
         $this->form->addElement("static", null);
         $this->form->addElement("header", null, "Methods used: (check all that apply)");
         $this->form->addElement("advcheckbox", "vra", "Visual Reinforcement Audiometry", null, null, array("unused", "used"));
