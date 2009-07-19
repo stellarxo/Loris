@@ -58,6 +58,7 @@ class NDB_BVL_Instrument_mri_parameter_form extends NDB_BVL_Instrument
         // automatically adds examiner & date of administration
         $this->_addMetadataFields();
         
+        $this->addTextElement("session_attempts", "Number of Session Attempts:");
         $this->addHourMinElement("wait_time", "Wait Time for Scanner (hours:minutes)");
         $this->addHourMinElement("total_duration", "Total Duration of Session (hours:minutes)");
 
