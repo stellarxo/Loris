@@ -68,16 +68,28 @@ INSERT INTO test_battery VALUES ('', 'audiology', '660', '780', 'Y', 'Visit', '2
     *
     */
     function _main(){
-        // display test name
-        $this->form->addElement('header', 'instrument_title', "Audiology Evaluation Results");
+        $this->form->addElement('header', null, 'Audiology');
         
         // automatically adds examiner & date of administration
         $this->_addMetadataFields();
+        
+        $this->form->addElement('header', 'instrument_title', "Audiology Evaluation Results");
         
         $this->form->addElement("select", "not_completed", "An audiology evaluation was not completed because...", array(null=>"", "non-asd"=>"Non-ASD", "other"=>"Other (please specify)"));
         $this->XINRegisterRule("not_completed", array("not_completed{@}=={@}NEVER_REQUIRED"));
         $this->addTextElement("not_completed_other_specify", $this->indent . "If other, please specify", array("not_completed{@}=={@}other"), "Please specify.");
         
+        $config =& NDB_Config::singleton();
+        $this->dateOptions = array(
+        'language' => 'en',
+        'format'   => 'YMd',
+        'minYear'  => $config->getSetting('startYear'),
+        'maxYear'  => $config->getSetting('endYear'),
+        'addEmptyOption' => true,
+        'emptyOptionValue' => null
+        );
+        $this->addDateElement('hearing_screening', "Date of hearing screening:");
+
         $this->form->addElement("static", null);
         $this->form->addElement("header", null, "Methods used: (check all that apply)");
         $this->form->addElement("advcheckbox", "vra", "Visual Reinforcement Audiometry", null, null, array("unused", "used"));
@@ -88,7 +100,7 @@ INSERT INTO test_battery VALUES ('', 'audiology', '660', '780', 'Y', 'Visit', '2
         
         $this->form->addElement("static", null);
         $this->form->addElement("header", null, "Test Results:");
-        $this->form->addElement("select", "test_results", "Result", array(null=>"", "normal_hearing"=>"Normal earing", "temporary_hearing_difficulty"=>"Temporary hearing difficulty", "equivocal_evaluation_results"=>"Equivocal evaluation results", "permanent_abnormal_hearing"=>"Permanent abnormal hearing", "not_answered"=>"Not Answered"));
+        $this->form->addElement("select", "test_results", "Result", array(null=>"", "normal_hearing"=>"Normal hearing", "temporary_hearing_difficulty"=>"Temporary hearing difficulty", "equivocal_evaluation_results"=>"Equivocal evaluation results", "permanent_abnormal_hearing"=>"Permanent abnormal hearing", "not_answered"=>"Not Answered"));
         $this->form->addElement("select", "test_results_ear", $this->indent . "Ear", array(null=>"", "left_ear"=>"Left Ear", "right_ear"=>"Right Ear", "bilateral"=>"Bilateral", "not_answered"=>"Not answered"));
         $this->XINRegisterRule("test_results_ear", array("test_results{@}!={@}normal_hearing"), "Please specify and ear");
         $this->form->addElement("select", "test_results_severity", $this->indent . "Severity", array(null=>"", "partial"=>"Partial", "total"=>"Total", "not_answered"=>"Not Answered"));
