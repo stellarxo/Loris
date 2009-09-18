@@ -1,4 +1,7 @@
 <?php
+
+require_once('RequiredIf.inc');
+
 class NDB_BVL_Instrument_tsi extends NDB_BVL_Instrument
 {
 	var $yesNo = array(null=>"", "yes"=>"Yes", "no"=>"No", "not_answered"=>"Not Answered");
@@ -42,7 +45,7 @@ class NDB_BVL_Instrument_tsi extends NDB_BVL_Instrument
 
 		//The array of selects with multiple answers allowed
 		//Any HTML_Quickform multiple selects must be listed here
-		$this->_selectMultipleElements = array();
+		$this->_selectMultipleElements = array('candidate_race', 'mother_race', 'father_race');
 
 		// required fields for data entry completion status
 		$this->_requiredElements = array('Examiner', "ses_income", "typical_or_asd_subject");
@@ -94,8 +97,21 @@ class NDB_BVL_Instrument_tsi extends NDB_BVL_Instrument
 		foreach ($nonAskedQuestions as $field) {
 			$this->form->addElement('static', null, $field);
 		}
+		//Ethnicity
 		$this->form->addElement("select", "child_ethnicity", "Ethnicity:", array(null=>"", "hispanic"=>"Hispanic", "non_hispanic"=>"Non-Hispanic", "not_answered"=>"Not Answered"));
-		$this->form->addElement("select", "child_race", "Race:", array(null=>"", "white"=>"White", "black_african_american"=>"Black or African American", "asian"=>"Asian", "unknown_not_reported"=>"Unknown or not Reported", "more_than_one_race"=>"More than one race", "american_indian_alaska_native"=>"American Indian / Alaska Native", "native_hawaiian_pacific_islander"=>"Native Hawaiian / Other Pacific Islander"));
+		
+		$this->form->addElement("static", "child_race", "Child Race (Deprecated):", array(null=>"", "white"=>"White", "black_african_american"=>"Black or African American", "asian"=>"Asian", "unknown_not_reported"=>"Unknown or not Reported", "more_than_one_race"=>"More than one race", "american_indian_alaska_native"=>"American Indian / Alaska Native", "native_hawaiian_pacific_islander"=>"Native Hawaiian / Other Pacific Islander"));
+
+		//RACES
+		$this->form->addElement("select", "candidate_race", "Candidate Race:", array("white"=>"White", "black_african_american"=>"Black or African American", "asian"=>"Asian", "unknown_not_reported"=>"Unknown or not Reported", "american_indian_alaska_native"=>"American Indian / Alaska Native", "native_hawaiian_pacific_islander"=>"Native Hawaiian / Other Pacific Islander", "more_than_one_race"=>"More than one race (select all applicable)"), "multiple");
+        $this->form->addRule("candidate_race", "Must answer this race question", 'required');
+		
+		$this->form->addElement("select", "mother_race", "Mother Race:", array("white"=>"White", "black_african_american"=>"Black or African American", "asian"=>"Asian", "unknown_not_reported"=>"Unknown or not Reported", "american_indian_alaska_native"=>"American Indian / Alaska Native", "native_hawaiian_pacific_islander"=>"Native Hawaiian / Other Pacific Islander", "more_than_one_race"=>"More than one race (select all applicable)"), "multiple");
+        $this->form->addRule("mother_race", "Must answer this race question", 'required');
+
+        $this->form->addElement("select", "father_race", "Father Race:", array("white"=>"White", "black_african_american"=>"Black or African American", "asian"=>"Asian", "unknown_not_reported"=>"Unknown or not Reported", "american_indian_alaska_native"=>"American Indian / Alaska Native", "native_hawaiian_pacific_islander"=>"Native Hawaiian / Other Pacific Islander", "more_than_one_race"=>"More than one race (select all applicable)"), "multiple");
+        $this->form->addRule("father_race", "Must answer this race question", 'required');
+		
 		$this->form->addElement("static", null, "Parent's Information:");
 		$this->form->addElement("select", "ses_income", "SES:", array(null=>"", "less_than_25K"=>"less than $24,999", "25K-35K"=>"$25,000 - 34,999", "35K-50K"=>"$35,000 - 49,999", "50K-75K"=>"$50,000 - 74,999", "75K-100K"=>"$75,000 - 99,999", "100K-150K"=>"$100,000 - 149,999", "150K-200K"=>"$150,000 - 199,000", "over_200K"=>"over $200,000", "not_answered"=>"Not Answered"));
 
@@ -154,6 +170,9 @@ class NDB_BVL_Instrument_tsi extends NDB_BVL_Instrument
 		"delivery_problems"=>"Problems during delivery?");
 		foreach($questionArray as $field=>$label) {
 			$this->form->addElement("select", $field, $label, $this->yesNo);
+			if ($field == 'premature_birth') {
+			    $this->addTextElement('weeks_gestation', $this->indent . "Number of weeks gestation", array("premature_birth{@}=={@}yes"), "If premature, how many gestational weeks?");
+			}
 		}
 
 		$this->form->addElement('select', "in_utero_exposure", "Exposure in-utero to meds, alcohol, or drugs (Rx or non)?", $this->yesNo);
