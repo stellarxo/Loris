@@ -160,7 +160,7 @@ class NDB_BVL_Instrument_adi_r extends NDB_BVL_Instrument
         $this->_addMetadataFields();
         
 //        $this->form->addElement("text", "informant_relation", "Informant relation to subject:");
-        $this->form->addElement("select", "informant_relation_select", "Informant relation to subject:", array(null=>"", "0_mom"=>"0 Mom", "1_dad"=>"1 Dad", "2_other_caregiver"=>"2 Other Caregiver", "3_combination"=>"3 Combination", "4_sibling"=>"4 Sibling", "5_other"=>"5 Other", "9_missing_value"=>"9 Missing Value", "not_answered"=>"Not Answered"));
+        $this->form->addElement("select", "informant_relation", "Informant relation to subject:", array(null=>"", "0_mom"=>"0 Mom", "1_dad"=>"1 Dad", "2_other_caregiver"=>"2 Other Caregiver", "3_combination"=>"3 Combination", "4_sibling"=>"4 Sibling", "5_other"=>"5 Other", "9_missing_value"=>"9 Missing Value", "not_answered"=>"Not Answered"));
         
         $config =& NDB_Config::singleton();
         $dateOptions = array(
