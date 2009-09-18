@@ -467,10 +467,10 @@ class NDB_BVL_Instrument_adi_r extends NDB_BVL_Instrument
 		//$this->addLargeTextAreaElement("q_12_level_before_loss_text", $this->indent . "Describe:", array("q_11_loss_of_language{@}=={@}1_yes"), "This is required if language was lost (answered 'yes' to question 11)");
 		
 		$answerArray = array(""=>NULL, "0_no_loss"=>"0. No definite loss", "1_probable_loss"=>"1. Probable loss", "2_definite_loss"=>"2. Definite Loss", "8_insufficient"=>"8. Insufficient", "9_not_asked"=>"9. Not asked", "not_answered"=>"Not Answered");
-		$questionArray = array("13_loss_of_spontaneous_use"=>"13. Loss of spontaneous use",
-								"14_loss_of_intent"=>"14. Loss of communicative intent",
-								"15_loss_of_syntactical"=>"15. Loss of syntactical skills",
-								"16_loss_of_articulation"=>"16. Loss of articulation");
+		$questionArray = array("q_13_loss_of_spontaneous_use"=>"13. Loss of spontaneous use",
+								"q_14_loss_of_intent"=>"14. Loss of communicative intent",
+								"q_15_loss_of_syntactical"=>"15. Loss of syntactical skills",
+								"q_16_loss_of_articulation"=>"16. Loss of articulation");
 		foreach($questionArray as $field=>$label) {
 			$this->form->addElement("select", $field . "_code", $label, $answerArray);
 			$this->XINRegisterRule($field . "_code", array("q_11_loss_of_language{@}=={@}1_yes"), "This is required if language was lost (answered 'yes' to question 11)");
