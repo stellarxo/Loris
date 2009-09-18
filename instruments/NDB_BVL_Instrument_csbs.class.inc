@@ -231,29 +231,9 @@ INSERT INTO instrument_subtests VALUES('', 'csbs', 'csbs_page2', 'Symbolic Behav
     }    
 
     function _page1(){
-        
-        // Setting up the scoring grid
-        for($int = 1; $int <= 6; $int++) {
-            $group[]= &$this->form->createElement("static", "h_" . $int, null);
-        }
-        $group[]= &$this->form->createElement("static", "raw_score", null);
-        $this->form->addGroup($group, "number_headers", "Sampling Opportunity", $this->_GUIDelimiter, false);
-        unset($group);
-
-        $group[]= &$this->form->createElement("static", "wind_up_toy", null);
-        $group[]= &$this->form->createElement("static", "balloon", null);
-        $group[]= &$this->form->createElement("static", "bubbles", null);
-        $group[]= &$this->form->createElement("static", "jar", null);
-        $group[]= &$this->form->createElement("static", "books", null);
-        $group[]= &$this->form->createElement("static", "play", null);
-        $this->form->addGroup($group, null, "Toy", $this->_GUIDelimiter, false);
-        unset($group);
-        
-        //line break
-        $this->form->addElement("static", null, $this->indent);
-        
         //Emotion and Eye Gaze
         $this->form->addElement("header", null, "Emotion and Eye Gaze");
+        $this->_printHeaderCols();
         for($int = 1; $int <= 6; $int++) {
             $group[] = &$this->form->createElement("advcheckbox", "q_1_gaze_shifts_" . $int, null, null, null, array("unchecked", "checked"));
         }
@@ -283,6 +263,7 @@ INSERT INTO instrument_subtests VALUES('', 'csbs', 'csbs_page2', 'Symbolic Behav
         
         //Communication
         $this->form->addElement("header", null, "Communication");
+        $this->_printHeaderCols();
         for($int = 1; $int <=6; $int++) {
             $group[] = &$this->form->createElement("select", "q_4_rate_of_communicating_" . $int, "", array(null=>"", "not_answered"=>"N/A", "0"=>"0", "1"=>"1", "2"=>"2", "3"=>"3+"));
             $this->XINRegisterRule("q_4_rate_of_communicating_" . $int, array("q_4_rate_of_communicating_" . $int . "{@}=={@}"), "Responses are required for each sampling opportunity.", "q_4_rate_of_communicating_group");
@@ -316,9 +297,12 @@ INSERT INTO instrument_subtests VALUES('', 'csbs', 'csbs_page2', 'Symbolic Behav
 
         //Gestures
         $this->form->addElement("header", null, "Gestures");
+        $this->_printHeaderCols();
+
         $group[] = &$this->form->createElement("advcheckbox", "q_8_conventional_gestures_gives", null, "gives", null, array("unchecked", "checked"));
         $group[] = &$this->form->createElement("advcheckbox", "q_8_conventional_gestures_shows", null, "shows", null, array("unchecked", "checked"));
         $group[] = &$this->form->createElement("advcheckbox", "q_8_conventional_gestures_pushes_pulls", null, "pushes/pulls", null, array("unchecked", "checked"));
+        $group[] = &$this->form->addElement('static', null);
         $group[] = &$this->form->createElement("advcheckbox", "q_8_conventional_gestures_reaches", null, "reaches", null, array("unchecked", "checked"));
         $group[] = &$this->form->createElement("static", null, null);
         $group[] = &$this->form->createElement("static", null, null);
@@ -328,6 +312,7 @@ INSERT INTO instrument_subtests VALUES('', 'csbs', 'csbs_page2', 'Symbolic Behav
         $group[] = &$this->form->createElement("advcheckbox", "q_8_conventional_gestures_points", null, "points", null, array("unchecked", "checked"));
         $group[] = &$this->form->createElement("advcheckbox", "q_8_conventional_gestures_waves", null, "waves", null, array("unchecked", "checked"));
         $group[] = &$this->form->createElement("advcheckbox", "q_8_conventional_gestures_nods_head", null, "nods head", null, array("unchecked", "checked"));
+        $group[] = &$this->form->addElement('static', null);
         $group[] = &$this->form->createElement("advcheckbox", "q_8_conventional_gestures_shakes_head", null, "shakes head", null, array("unchecked", "checked"));
         $this->form->addGroup($group, null, null, $this->_GUIDelimiter, false);
         unset($group);
@@ -343,6 +328,8 @@ INSERT INTO instrument_subtests VALUES('', 'csbs', 'csbs_page2', 'Symbolic Behav
 
         //Sounds
         $this->form->addElement("header", null, "Sounds");
+        $this->_printHeaderCols();
+
         for($int = 1; $int <=6; $int++) {
             $group[] = &$this->form->createElement("advcheckbox", "q_10_syllables_consonants_" . $int, null, null, null, array("unchecked", "checked"));
         }
@@ -372,6 +359,8 @@ INSERT INTO instrument_subtests VALUES('', 'csbs', 'csbs_page2', 'Symbolic Behav
 
         //Words
         $this->form->addElement("header", null, "Words");
+        $this->_printHeaderCols();
+
         for($int = 1; $int <=6; $int++) {
             $group[] = &$this->form->createElement("advcheckbox", "q_12_words_" . $int, null, null, null, array("unchecked", "checked"));
         }
@@ -553,5 +542,25 @@ INSERT INTO instrument_subtests VALUES('', 'csbs', 'csbs_page2', 'Symbolic Behav
         }
         return $score;
     }
+    
+    function _printHeaderCols() {
+        // Setting up the scoring grid
+        for($int = 1; $int <= 6; $int++) {
+            $group[]= &$this->form->createElement("static", "h_" . $int, null);
+        }
+        $group[]= &$this->form->createElement("static", "raw_score", null);
+        $this->form->addGroup($group, "number_headers", "Sampling Opportunity", $this->_GUIDelimiter, false);
+        unset($group);
+
+        $group[]= &$this->form->createElement("static", "wind_up_toy", null);
+        $group[]= &$this->form->createElement("static", "balloon", null);
+        $group[]= &$this->form->createElement("static", "bubbles", null);
+        $group[]= &$this->form->createElement("static", "jar", null);
+        $group[]= &$this->form->createElement("static", "books", null);
+        $group[]= &$this->form->createElement("static", "play", null);
+        $this->form->addGroup($group, null, "Toy", $this->_GUIDelimiter, false);
+        unset($group);
+    }
+
 }
 ?>
