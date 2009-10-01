@@ -102,7 +102,7 @@ class NDB_Menu_reliability_phase_one extends NDB_Menu
                          
                                 $data[] = array('site' => $row['site'], 'rater' => $row['rater'], 'reliable' => $row['reliable'],
                                                'type' => $row['type'], 'reliability_established_date' => $row['reliability_established_date'],
-                                               'reliability_percentage' => $row['reliability_percentage']);
+                                               'reliability_percentage' => $row['reliability_percentage'], 'examiner_coder_status' => $row['examiner_coder_status']);
                              }
                              $this->tpl_data["{$instrument}_data_tk"] = $data;
                              
