@@ -126,7 +126,7 @@ class NDB_Reliability_ados_module1_reliability extends NDB_Reliability
   
         $db->selectRow($query, $score_record);
         if (PEAR::isError($score_record)) {
-	    echo("Could not get scores: ".$score_record->getMessage());
+	    
             return PEAR::raiseError("Could not get scores: ".$score_record->getMessage());
         }
               
@@ -151,7 +151,7 @@ class NDB_Reliability_ados_module1_reliability extends NDB_Reliability
 
         // If the reliability is to be compared to the gold standard
         if ($score_record['Gold_standard']=='Gold_standard_SEA0010'){
-            echo("This is the Gold standard check for SEA0010<br>");
+            
             
             $reliability_count_raw=0;            
             $reliability_count_scored=0;            
@@ -518,7 +518,7 @@ class NDB_Reliability_ados_module1_reliability extends NDB_Reliability
             
             // If the reliability is to be compared to the gold standard
         }  elseif ($score_record['Gold_standard']=='Gold_standard_SEA0015'){
-            echo("This is the Gold standard check for SEA0015<br>");
+            
             
             $reliability_count_raw=0;            
             $reliability_count_scored=0;            
@@ -934,7 +934,7 @@ class NDB_Reliability_ados_module1_reliability extends NDB_Reliability
             } // endif 0, 1, 2 check
 
         }  elseif ($score_record['Gold_standard']=='Gold_standard_SEA0017'){
-            echo("This is the Gold standard check for SEA0017<br>");
+            
             
             $reliability_count_raw=0;            
             $reliability_count_scored=0;            
@@ -1433,7 +1433,7 @@ class NDB_Reliability_ados_module1_reliability extends NDB_Reliability
         }
         // If the reliability is to be compared to the initial data entry
         elseif ($score_record['Gold_standard']=='Initial_entry') {
-            echo("This is the initial check.");
+            
             
              $reliability_count_raw=0;            
               $reliability_count_scored=0;            
@@ -1803,7 +1803,7 @@ class NDB_Reliability_ados_module1_reliability extends NDB_Reliability
               
         // end elseif
         else {
-            echo("what the heck is going on?<br>");
+            echo("<font color='red'>Warning: no comparison selected. Contact Samir at the DCC.</font><BR>");
         } // end else
         
         // print_r($this->identifier);

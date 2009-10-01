@@ -140,7 +140,7 @@ class NDB_Reliability_ados_module2_reliability extends NDB_Reliability
        
         // If the reliability is to be compared to the gold standard
         if ($score_record['Gold_standard']=='Gold_standard_SEA0012'){
-            echo("This is the Gold standard check for SEA0012<br>");
+            
             
             $reliability_count_raw=0;            
             $reliability_count_scored=0;            
@@ -303,7 +303,7 @@ class NDB_Reliability_ados_module2_reliability extends NDB_Reliability
         }
         // If the reliability is to be compared to the initial data entry
         elseif ($score_record['Gold_standard']=='Initial_entry') {
-            echo("This is the initial check.");
+            
             
                $reliability_count_raw=0;            
                 $reliability_count_scored=0;            
@@ -467,7 +467,7 @@ class NDB_Reliability_ados_module2_reliability extends NDB_Reliability
               
         // end elseif
         else {
-            echo("what the heck is going on?<br>");
+            echo("<font color='red'>Warning: no comparison selected. Contact Samir at the DCC.</font><BR>");
         } // end else
         
         // print_r($this->identifier);

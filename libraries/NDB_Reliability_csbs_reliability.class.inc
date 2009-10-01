@@ -355,57 +355,56 @@ class NDB_Reliability_csbs_reliability extends NDB_Reliability
        
         // If the reliability is to be compared to the wetherby gold standard
          if ($score_record['Gold_standard']=='Gold_standard'){
-              echo("This is the Gold standard check<br>");
+              
 
              $reliability_count=0;            
 
             // Checking the relevant fields
-            if ($score_record2['q_1_gaze_shifts_raw_score']!=$reliability['q_1_gaze_shifts_raw_score']) { 
-		//echo("Score q_1_gaze_shifts_raw_score does not match. <br>"); 
+            if ($score_record2['q_1_gaze_shifts_raw_score']!=$reliability['q_1_gaze_shifts_raw_score']) {  
 		$reliability["q_1_gaze_shifts_raw_score_match"]='N'; 
 		$reliability_count++;}
             
-	    if ($score_record2['q_2_shared_positive_affect_raw_score']!=$reliability['q_2_shared_positive_affect_raw_score']) { echo("Score q_2_shared_positive_affect_raw_score does not match. <br>"); $reliability['q_2_shared_positive_affect_raw_score_match']='N';$reliability_count++;}
-            if ($score_record2['q_3_gaze_point_following_raw_score']!=$reliability['q_3_gaze_point_following_raw_score']) { echo("Score q_3_gaze_point_raw_score does not match.<br>"); $reliability['q_3_gaze_point_following_raw_score_match']='N';$reliability_count++;}
-            if ($score_record2['emotion_eye_gaze_weighted']!=$reliability['emotion_eye_gaze_weighted']) { echo("Score emotion_eye_gaze_weighted does not match. <br>"); $reliability['emotion_eye_gaze_weighted_match']='N';}
-            if ($score_record2['q_4_rate_of_communicating_raw_score']!=$reliability['q_4_rate_of_communicating_raw_score']) { echo("Score q_4_rate_of_communicating_raw_score does not match. <br>"); $reliability['q_4_rate_of_communicating_raw_score_match']='N';$reliability_count++;}
-           if ($score_record2['q_5_behaviour_regulation_raw_score']!=$reliability['q_5_behaviour_regulation_raw_score']) { echo("Score q_5_behaviour_regulation_raw_score does not match. <br>"); $reliability['q_5_behaviour_regulation_raw_score_match']='N';$reliability_count++;}
-            if ($score_record2['q_6_social_interaction_raw_score']!=$reliability['q_6_social_interaction_raw_score']) { echo("Score q_6_social_interaction_raw_score does not match. <br>"); $reliability['q_6_social_interaction_raw_score_match']='N';$reliability_count++;}
-            if ($score_record2['q_7_joint_attention_raw_score']!=$reliability['q_7_joint_attention_raw_score']) { echo("Score q_7_joint_attention_raw_score does not match. <br>"); $reliability['q_7_joint_attention_raw_score_match']='N';$reliability_count++;}
-            if ($score_record2['communication_weighted']!=$reliability['communication_weighted']) { echo("Score communication_weighted does not match. <br>"); $reliability['communication_weighted_match']='N';}
-            if ($score_record2['q_8_conventional_gestures_raw_score']!=$reliability['q_8_conventional_gestures_raw_score']) { echo("Score q_8_conventional_gestures_raw_scores  does not match. <br>"); $reliability['q_8_conventional_gestures_raw_score_match']='N';$reliability_count++;}
-            if ($score_record2['q_9_distal_gestures_raw_score']!=$reliability['q_9_distal_gestures_raw_score']) { echo("Score q_9_distal_gestures_raw_scores does not match. <br>"); $reliability['q_9_distal_gestures_raw_score_match']='N';$reliability_count++;}
-           if ($score_record2['gestures_weighted']!=$reliability['gestures_weighted']) { echo("Score gestures_weighted does not match. <br>"); $reliability['gestures_weighted_match']='N';}
-            if ($score_record2['q_10_syllables_consonants_raw_score']!=$reliability['q_10_syllables_consonants_raw_score']) { echo("Score q_10_syllables_consonants_raw_score does not match. <br>"); $reliability['q_10_syllables_consonants_raw_score_match']='N';$reliability_count++;}
-           if ($score_record2['q_11_inventory_of_consonants_raw_score']!=$reliability['q_11_inventory_of_consonants_raw_score']) { echo("Score q_11_inventory_of_consonants_raw_score does not match. <br>"); $reliability['q_11_inventory_of_consonants_raw_score_match']='N';$reliability_count++;}
-            if ($score_record2['q_12_words_raw_score']!=$reliability['q_12_words_raw_score']) { echo("Score q_12_words_raw_score does not match. <br>"); $reliability['q_12_words_raw_score_match']='N';$reliability_count++;}
-            if ($score_record2['q_13_words_raw_score']!=$reliability['q_13_words_raw_score']) { echo("Score q_13_words_raw_score does not match. <br>"); $reliability['q_13_words_raw_score_match']='N';$reliability_count++;}
-            if ($score_record2['q_14_word_combos_raw_score']!=$reliability['q_14_word_combos_raw_score']) { echo("Score q_14_word_combos_raw_score does not match. <br>"); $reliability['q_14_word_combos_raw_score_match']='N';$reliability_count++;}
-            if ($score_record2['q_15_word_combos_raw_score']!=$reliability['q_15_word_combos_raw_score']) { echo("Score q_15_word_combos_raw_score does not match. <br>"); $reliability['q_15_word_combos_raw_score_match']='N';$reliability_count++;}
-            if ($score_record2['words_weighted']!=$reliability['words_weighted']) { echo("Score words_weighted does not match. <br>"); $reliability['words_weighted_match']='N';}
+	    if ($score_record2['q_2_shared_positive_affect_raw_score']!=$reliability['q_2_shared_positive_affect_raw_score']) {  $reliability['q_2_shared_positive_affect_raw_score_match']='N';$reliability_count++;}
+            if ($score_record2['q_3_gaze_point_following_raw_score']!=$reliability['q_3_gaze_point_following_raw_score']) {  $reliability['q_3_gaze_point_following_raw_score_match']='N';$reliability_count++;}
+            if ($score_record2['emotion_eye_gaze_weighted']!=$reliability['emotion_eye_gaze_weighted']) {  $reliability['emotion_eye_gaze_weighted_match']='N';}
+            if ($score_record2['q_4_rate_of_communicating_raw_score']!=$reliability['q_4_rate_of_communicating_raw_score']) {  $reliability['q_4_rate_of_communicating_raw_score_match']='N';$reliability_count++;}
+           if ($score_record2['q_5_behaviour_regulation_raw_score']!=$reliability['q_5_behaviour_regulation_raw_score']) {  $reliability['q_5_behaviour_regulation_raw_score_match']='N';$reliability_count++;}
+            if ($score_record2['q_6_social_interaction_raw_score']!=$reliability['q_6_social_interaction_raw_score']) {  $reliability['q_6_social_interaction_raw_score_match']='N';$reliability_count++;}
+            if ($score_record2['q_7_joint_attention_raw_score']!=$reliability['q_7_joint_attention_raw_score']) {  $reliability['q_7_joint_attention_raw_score_match']='N';$reliability_count++;}
+            if ($score_record2['communication_weighted']!=$reliability['communication_weighted']) {  $reliability['communication_weighted_match']='N';}
+            if ($score_record2['q_8_conventional_gestures_raw_score']!=$reliability['q_8_conventional_gestures_raw_score']) {  $reliability['q_8_conventional_gestures_raw_score_match']='N';$reliability_count++;}
+            if ($score_record2['q_9_distal_gestures_raw_score']!=$reliability['q_9_distal_gestures_raw_score']) {  $reliability['q_9_distal_gestures_raw_score_match']='N';$reliability_count++;}
+           if ($score_record2['gestures_weighted']!=$reliability['gestures_weighted']) {  $reliability['gestures_weighted_match']='N';}
+            if ($score_record2['q_10_syllables_consonants_raw_score']!=$reliability['q_10_syllables_consonants_raw_score']) {  $reliability['q_10_syllables_consonants_raw_score_match']='N';$reliability_count++;}
+           if ($score_record2['q_11_inventory_of_consonants_raw_score']!=$reliability['q_11_inventory_of_consonants_raw_score']) {  $reliability['q_11_inventory_of_consonants_raw_score_match']='N';$reliability_count++;}
+            if ($score_record2['q_12_words_raw_score']!=$reliability['q_12_words_raw_score']) {  $reliability['q_12_words_raw_score_match']='N';$reliability_count++;}
+            if ($score_record2['q_13_words_raw_score']!=$reliability['q_13_words_raw_score']) {  $reliability['q_13_words_raw_score_match']='N';$reliability_count++;}
+            if ($score_record2['q_14_word_combos_raw_score']!=$reliability['q_14_word_combos_raw_score']) {  $reliability['q_14_word_combos_raw_score_match']='N';$reliability_count++;}
+            if ($score_record2['q_15_word_combos_raw_score']!=$reliability['q_15_word_combos_raw_score']) {  $reliability['q_15_word_combos_raw_score_match']='N';$reliability_count++;}
+            if ($score_record2['words_weighted']!=$reliability['words_weighted']) {  $reliability['words_weighted_match']='N';}
             
             // object names, person names, 
-            if ($score_record2['q_16_language_comp_objects']!=$q_16_language_comp_objects) { echo("Score q_16_language_comp_objects does not match. <br>"); 
+            if ($score_record2['q_16_language_comp_objects']!=$q_16_language_comp_objects) {  
             //$reliability['q_16_language_comp_objects']='N';
             $reliability_count++;}
             
-            if ($score_record2['q_16_language_comp_person']!=$q_16_language_comp_person) { echo("Score q_16_language_comp_person does not match. <br>"); 
+            if ($score_record2['q_16_language_comp_person']!=$q_16_language_comp_person) {  
             // $reliability['q_16_language_comp_person']='N';
             $reliability_count++;}
             
-            if ($score_record2['q_16_language_comp_body_parts']!=$q_16_language_comp_body_parts) { echo("Score q_16_language_comp_body_parts does not match. <br>"); 
+            if ($score_record2['q_16_language_comp_body_parts']!=$q_16_language_comp_body_parts) {  
             //$reliability['q_16_language_comp_body_parts']='N';
             $reliability_count++;}
             
-            //if ($score_record2['q_16_language_comp_raw_score']!=$reliability['q_16_language_comp_raw_score']) { echo("Score q_16_language_comp_objects_raw_score does not match. <br>"); $reliability['q_16_language_comp_raw_score_match']='N';$reliability_count++;}
-            //if ($score_record2['q_16_language_comp_body_parts_raw_score']!=$reliability['q_16_language_comp_body_parts_raw_score']) { echo("Score q_16_language_comp_body_parts_raw_score does not match. <br>"); $reliability['q_16_language_comp_body_parts_raw_score_match']='N';$reliability_count++;}
+            //if ($score_record2['q_16_language_comp_raw_score']!=$reliability['q_16_language_comp_raw_score']) {  $reliability['q_16_language_comp_raw_score_match']='N';$reliability_count++;}
+            //if ($score_record2['q_16_language_comp_body_parts_raw_score']!=$reliability['q_16_language_comp_body_parts_raw_score']) {  $reliability['q_16_language_comp_body_parts_raw_score_match']='N';$reliability_count++;}
             
-            if ($score_record2['understanding_weighted']!=$reliability['understanding_weighted']) { echo("Score understanding_weighted does not match. <br>"); $reliability['understanding_weighted_match']='N';}
-            if ($score_record2['q_17_action_schemes_raw_score']!=$reliability['q_17_action_schemes_raw_score']) { echo("Score q_17_action_schemes_raw_scores does not match. <br>"); $reliability['q_17_action_schemes_raw_score_match']='N';$reliability_count++;}
-            if ($score_record2['q_18_actions_towards_other_raw_score']!=$reliability['q_18_actions_towards_other_raw_score']) { echo("Score q_18_actions_towards_other_raw_score does not match. <br>"); $reliability['q_18_actions_towards_other_raw_score_match']='N';$reliability_count++;}
-            if ($score_record2['q_19_sequence_action_schemes_raw_score']!=$reliability['q_19_sequence_action_schemes_raw_score']) { echo("Score q_19_sequence_action_schemes_raw_score does not match. <br>"); $reliability['q_19_sequence_action_schemes_raw_score_match']='N';$reliability_count++;}
-            if ($score_record2['q_20_stacks_tower_raw_score']!=$reliability['q_20_stacks_tower_raw_score']) { echo("Score q_20_stacks_tower does not match. <br>"); $reliability['q_20_stacks_tower_raw_score_match']='N';$reliability_count++;}
-            if ($score_record2['object_use_weighted']!=$reliability['object_use_weighted']) { echo("object_use_weighted does not match. <br>"  ); $reliability['object_use_weighted_match']='N';}
+            if ($score_record2['understanding_weighted']!=$reliability['understanding_weighted']) {  $reliability['understanding_weighted_match']='N';}
+            if ($score_record2['q_17_action_schemes_raw_score']!=$reliability['q_17_action_schemes_raw_score']) {  $reliability['q_17_action_schemes_raw_score_match']='N';$reliability_count++;}
+            if ($score_record2['q_18_actions_towards_other_raw_score']!=$reliability['q_18_actions_towards_other_raw_score']) {  $reliability['q_18_actions_towards_other_raw_score_match']='N';$reliability_count++;}
+            if ($score_record2['q_19_sequence_action_schemes_raw_score']!=$reliability['q_19_sequence_action_schemes_raw_score']) {  $reliability['q_19_sequence_action_schemes_raw_score_match']='N';$reliability_count++;}
+            if ($score_record2['q_20_stacks_tower_raw_score']!=$reliability['q_20_stacks_tower_raw_score']) {  $reliability['q_20_stacks_tower_raw_score_match']='N';$reliability_count++;}
+            if ($score_record2['object_use_weighted']!=$reliability['object_use_weighted']) {  $reliability['object_use_weighted_match']='N';}
             
             // Score the reliability
             $reliability['reliability_score']= ((22-$reliability_count)/22*100);
@@ -414,53 +413,53 @@ class NDB_Reliability_csbs_reliability extends NDB_Reliability
          
          // If the reliability is to be compared to the initial data entry
          elseif ($score_record['Gold_standard']=='Initial_entry') {
-             echo("This is the initial check.");
+             
              
              $reliability_count=0;            
 
             // Checking the relevant fields
-            if ($score_record1['q_1_gaze_shifts_raw_score']!=$reliability['q_1_gaze_shifts_raw_score']) { echo("Score q_1_gaze_shifts_raw_score does not match. <br>"); $reliability['q_1_gaze_shifts_raw_score_match']='N'; $reliability_count++;}
-            if ($score_record1['q_2_shared_positive_affect_raw_score']!=$reliability['q_2_shared_positive_affect_raw_score']) { echo("Score q_2_shared_positive_affect_raw_score does not match. <br>"); $reliability['q_2_shared_positive_affect_raw_score_match']='N';$reliability_count++;}
-            if ($score_record1['q_3_gaze_point_following_raw_score']!=$reliability['q_3_gaze_point_following_raw_score']) { echo("Score q_3_gaze_point_raw_score does not match.<br>"); $reliability['q_3_gaze_point_following_raw_score_match']='N';$reliability_count++;}
-            if ($score_record1['emotion_eye_gaze_weighted']!=$reliability['emotion_eye_gaze_weighted']) { echo("Score emotion_eye_gaze_weighted does not match. <br>"); $reliability['emotion_eye_gaze_weighted_match']='N';}
-            if ($score_record1['q_4_rate_of_communicating_raw_score']!=$reliability['q_4_rate_of_communicating_raw_score']) { echo("Score q_4_rate_of_communicating_raw_score does not match. <br>"); $reliability['q_4_rate_of_communicating_raw_score_match']='N';$reliability_count++;}
-           if ($score_record1['q_5_behaviour_regulation_raw_score']!=$reliability['q_5_behaviour_regulation_raw_score']) { echo("Score q_5_behaviour_regulation_raw_score does not match. <br>"); $reliability['q_5_behaviour_regulation_raw_score_match']='N';$reliability_count++;}
-            if ($score_record1['q_6_social_interaction_raw_score']!=$reliability['q_6_social_interaction_raw_score']) { echo("Score q_6_social_interaction_raw_score does not match. <br>"); $reliability['q_6_social_interaction_raw_score_match']='N';$reliability_count++;}
-            if ($score_record1['q_7_joint_attention_raw_score']!=$reliability['q_7_joint_attention_raw_score']) { echo("Score q_7_joint_attention_raw_score does not match. <br>"); $reliability['q_7_joint_attention_raw_score_match']='N';$reliability_count++;}
-            if ($score_record1['communication_weighted']!=$reliability['communication_weighted']) { echo("Score communication_weighted does not match. <br>"); $reliability['communication_weighted_match']='N';}
-            if ($score_record1['q_8_conventional_gestures_raw_score']!=$reliability['q_8_conventional_gestures_raw_score']) { echo("Score q_8_conventional_gestures_raw_scores  does not match. <br>"); $reliability['q_8_conventional_gestures_raw_score_match']='N';$reliability_count++;}
-            if ($score_record1['q_9_distal_gestures_raw_score']!=$reliability['q_9_distal_gestures_raw_score']) { echo("Score q_9_distal_gestures_raw_scores does not match. <br>"); $reliability['q_9_distal_gestures_raw_score_match']='N';$reliability_count++;}
-           if ($score_record1['gestures_weighted']!=$reliability['gestures_weighted']) { echo("Score gestures_weighted does not match. <br>"); $reliability['gestures_weighted_match']='N';}
-            if ($score_record1['q_10_syllables_consonants_raw_score']!=$reliability['q_10_syllables_consonants_raw_score']) { echo("Score q_10_syllables_consonants_raw_score does not match. <br>"); $reliability['q_10_syllables_consonants_raw_score_match']='N';$reliability_count++;}
-           if ($score_record1['q_11_inventory_of_consonants_raw_score']!=$reliability['q_11_inventory_of_consonants_raw_score']) { echo("Score q_11_inventory_of_consonants_raw_score does not match. <br>"); $reliability['q_11_inventory_of_consonants_raw_score_match']='N';$reliability_count++;}
-            if ($score_record1['q_12_words_raw_score']!=$reliability['q_12_words_raw_score']) { echo("Score q_12_words_raw_score does not match. <br>"); $reliability['q_12_words_raw_score_match']='N';$reliability_count++;}
-            if ($score_record1['q_13_words_raw_score']!=$reliability['q_13_words_raw_score']) { echo("Score q_13_words_raw_score does not match. <br>"); $reliability['q_13_words_raw_score_match']='N';$reliability_count++;}
-            if ($score_record1['q_14_word_combos_raw_score']!=$reliability['q_14_word_combos_raw_score']) { echo("Score q_14_word_combos_raw_score does not match. <br>"); $reliability['q_14_word_combos_raw_score_match']='N';$reliability_count++;}
-            if ($score_record1['q_15_word_combos_raw_score']!=$reliability['q_15_word_combos_raw_score']) { echo("Score q_15_word_combos_raw_score does not match. <br>"); $reliability['q_15_word_combos_raw_score_match']='N';$reliability_count++;}
-            if ($score_record1['words_weighted']!=$reliability['words_weighted']) { echo("Score words_weighted does not match. <br>"); $reliability['words_weighted_match']='N';}
+            if ($score_record1['q_1_gaze_shifts_raw_score']!=$reliability['q_1_gaze_shifts_raw_score']) {  $reliability['q_1_gaze_shifts_raw_score_match']='N'; $reliability_count++;}
+            if ($score_record1['q_2_shared_positive_affect_raw_score']!=$reliability['q_2_shared_positive_affect_raw_score']) {  $reliability['q_2_shared_positive_affect_raw_score_match']='N';$reliability_count++;}
+            if ($score_record1['q_3_gaze_point_following_raw_score']!=$reliability['q_3_gaze_point_following_raw_score']) {  $reliability['q_3_gaze_point_following_raw_score_match']='N';$reliability_count++;}
+            if ($score_record1['emotion_eye_gaze_weighted']!=$reliability['emotion_eye_gaze_weighted']) {  $reliability['emotion_eye_gaze_weighted_match']='N';}
+            if ($score_record1['q_4_rate_of_communicating_raw_score']!=$reliability['q_4_rate_of_communicating_raw_score']) {  $reliability['q_4_rate_of_communicating_raw_score_match']='N';$reliability_count++;}
+           if ($score_record1['q_5_behaviour_regulation_raw_score']!=$reliability['q_5_behaviour_regulation_raw_score']) {  $reliability['q_5_behaviour_regulation_raw_score_match']='N';$reliability_count++;}
+            if ($score_record1['q_6_social_interaction_raw_score']!=$reliability['q_6_social_interaction_raw_score']) {  $reliability['q_6_social_interaction_raw_score_match']='N';$reliability_count++;}
+            if ($score_record1['q_7_joint_attention_raw_score']!=$reliability['q_7_joint_attention_raw_score']) {  $reliability['q_7_joint_attention_raw_score_match']='N';$reliability_count++;}
+            if ($score_record1['communication_weighted']!=$reliability['communication_weighted']) {  $reliability['communication_weighted_match']='N';}
+            if ($score_record1['q_8_conventional_gestures_raw_score']!=$reliability['q_8_conventional_gestures_raw_score']) {  $reliability['q_8_conventional_gestures_raw_score_match']='N';$reliability_count++;}
+            if ($score_record1['q_9_distal_gestures_raw_score']!=$reliability['q_9_distal_gestures_raw_score']) {  $reliability['q_9_distal_gestures_raw_score_match']='N';$reliability_count++;}
+           if ($score_record1['gestures_weighted']!=$reliability['gestures_weighted']) {  $reliability['gestures_weighted_match']='N';}
+            if ($score_record1['q_10_syllables_consonants_raw_score']!=$reliability['q_10_syllables_consonants_raw_score']) {  $reliability['q_10_syllables_consonants_raw_score_match']='N';$reliability_count++;}
+           if ($score_record1['q_11_inventory_of_consonants_raw_score']!=$reliability['q_11_inventory_of_consonants_raw_score']) {  $reliability['q_11_inventory_of_consonants_raw_score_match']='N';$reliability_count++;}
+            if ($score_record1['q_12_words_raw_score']!=$reliability['q_12_words_raw_score']) {  $reliability['q_12_words_raw_score_match']='N';$reliability_count++;}
+            if ($score_record1['q_13_words_raw_score']!=$reliability['q_13_words_raw_score']) {  $reliability['q_13_words_raw_score_match']='N';$reliability_count++;}
+            if ($score_record1['q_14_word_combos_raw_score']!=$reliability['q_14_word_combos_raw_score']) {  $reliability['q_14_word_combos_raw_score_match']='N';$reliability_count++;}
+            if ($score_record1['q_15_word_combos_raw_score']!=$reliability['q_15_word_combos_raw_score']) {  $reliability['q_15_word_combos_raw_score_match']='N';$reliability_count++;}
+            if ($score_record1['words_weighted']!=$reliability['words_weighted']) {  $reliability['words_weighted_match']='N';}
             
             // object names, person names, 
-            if ($score_record1['q_16_language_comp_objects']!=$q_16_language_comp_objects) { echo("Score q_16_language_comp_objects does not match. <br>"); 
+            if ($score_record1['q_16_language_comp_objects']!=$q_16_language_comp_objects) {  
             //$reliability['q_16_language_comp_objects']='N';
             $reliability_count++;}
             
-            if ($score_record1['q_16_language_comp_person']!=$q_16_language_comp_person) { echo("Score q_16_language_comp_person does not match. <br>"); 
+            if ($score_record1['q_16_language_comp_person']!=$q_16_language_comp_person) {  
             // $reliability['q_16_language_comp_person']='N';
             $reliability_count++;}
             
-            if ($score_record1['q_16_language_comp_body_parts']!=$q_16_language_comp_body_parts) { echo("Score q_16_language_comp_body_parts does not match. <br>"); 
+            if ($score_record1['q_16_language_comp_body_parts']!=$q_16_language_comp_body_parts) {  
             //$reliability['q_16_language_comp_body_parts']='N';
             $reliability_count++;}
             
-            //if ($score_record1['q_16_language_comp_raw_score']!=$reliability['q_16_language_comp_raw_score']) { echo("Score q_16_language_comp_objects_raw_score does not match. <br>"); $reliability['q_16_language_comp_raw_score_match']='N';$reliability_count++;}
-            //if ($score_record1['q_16_language_comp_body_parts_raw_score']!=$reliability['q_16_language_comp_body_parts_raw_score']) { echo("Score q_16_language_comp_body_parts_raw_score does not match. <br>"); $reliability['q_16_language_comp_body_parts_raw_score_match']='N';$reliability_count++;}
+            //if ($score_record1['q_16_language_comp_raw_score']!=$reliability['q_16_language_comp_raw_score']) {  $reliability['q_16_language_comp_raw_score_match']='N';$reliability_count++;}
+            //if ($score_record1['q_16_language_comp_body_parts_raw_score']!=$reliability['q_16_language_comp_body_parts_raw_score']) {  $reliability['q_16_language_comp_body_parts_raw_score_match']='N';$reliability_count++;}
             
-            if ($score_record1['understanding_weighted']!=$reliability['understanding_weighted']) { echo("Score understanding_weighted does not match. <br>"); $reliability['understanding_weighted_match']='N';}
-            if ($score_record1['q_17_action_schemes_raw_score']!=$reliability['q_17_action_schemes_raw_score']) { echo("Score q_17_action_schemes_raw_scores does not match. <br>"); $reliability['q_17_action_schemes_raw_score_match']='N';$reliability_count++;}
-            if ($score_record1['q_18_actions_towards_other_raw_score']!=$reliability['q_18_actions_towards_other_raw_score']) { echo("Score q_18_actions_towards_other_raw_score does not match. <br>"); $reliability['q_18_actions_towards_other_raw_score_match']='N';$reliability_count++;}
-            if ($score_record1['q_19_sequence_action_schemes_raw_score']!=$reliability['q_19_sequence_action_schemes_raw_score']) { echo("Score q_19_sequence_action_schemes_raw_score does not match. <br>"); $reliability['q_19_sequence_action_schemes_raw_score_match']='N';$reliability_count++;}
-            if ($score_record1['q_20_stacks_tower_raw_score']!=$reliability['q_20_stacks_tower_raw_score']) { echo("Score q_20_stacks_tower does not match. <br>"); $reliability['q_20_stacks_tower_raw_score_match']='N';$reliability_count++;}
-            if ($score_record1['object_use_weighted']!=$reliability['object_use_weighted']) { echo("object_use_weighted does not match. <br>"  ); $reliability['object_use_weighted_match']='N';}
+            if ($score_record1['understanding_weighted']!=$reliability['understanding_weighted']) {  $reliability['understanding_weighted_match']='N';}
+            if ($score_record1['q_17_action_schemes_raw_score']!=$reliability['q_17_action_schemes_raw_score']) {  $reliability['q_17_action_schemes_raw_score_match']='N';$reliability_count++;}
+            if ($score_record1['q_18_actions_towards_other_raw_score']!=$reliability['q_18_actions_towards_other_raw_score']) {  $reliability['q_18_actions_towards_other_raw_score_match']='N';$reliability_count++;}
+            if ($score_record1['q_19_sequence_action_schemes_raw_score']!=$reliability['q_19_sequence_action_schemes_raw_score']) {  $reliability['q_19_sequence_action_schemes_raw_score_match']='N';$reliability_count++;}
+            if ($score_record1['q_20_stacks_tower_raw_score']!=$reliability['q_20_stacks_tower_raw_score']) {  $reliability['q_20_stacks_tower_raw_score_match']='N';$reliability_count++;}
+            if ($score_record1['object_use_weighted']!=$reliability['object_use_weighted']) {  $reliability['object_use_weighted_match']='N';}
             
             // Score the reliability
             $reliability['reliability_score']= ((22-$reliability_count)/22*100);
@@ -471,7 +470,7 @@ class NDB_Reliability_csbs_reliability extends NDB_Reliability
               
         // end elseif
         else {
-            echo("what the heck is going on?<br>");
+            echo("<font color='red'>Warning: no comparison selected. Contact Samir at the DCC.</font><BR>");
         } // end else
         
         // Calculate the scoring reliability

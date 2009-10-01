@@ -122,11 +122,6 @@ class NDB_Reliability_aosi_reliability extends NDB_Reliability
               }
            }
                
-            echo('<br>');
-            print_r($denominator);
-            echo('<br>');
-            print_r($reliability_count_raw);
-            echo('<br>');
 
             // Score the reliability
             $reliability['Reliability_score']= (($denominator-$reliability_count_raw)/$denominator*100);
@@ -522,8 +517,6 @@ class NDB_Reliability_aosi_reliability extends NDB_Reliability
         $scoreResult = $this->score();
         
             if($this->isError($scoreResult)) {
-                echo($scoreResult->getMessage());
-
                 return PEAR::raiseError($scoreResult->getMessage());
              }
         

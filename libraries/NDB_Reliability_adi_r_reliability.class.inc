@@ -51,8 +51,6 @@ class NDB_Reliability_adi_r_reliability extends NDB_Reliability
                
         //print_r($this->identifier);
         if (!empty($this->identifier)) { 
-
-            echo($this->name);
             // set the adi_r_reliability values 
             $DB->selectRow("SELECT * FROM {$this->name} WHERE CommentID = '$this->identifier' AND reliability_center_id='$this->reliability_center_id'", $row);
             if (PEAR::isError($row)) {
@@ -63,8 +61,7 @@ class NDB_Reliability_adi_r_reliability extends NDB_Reliability
             // print_r($row['CommentID']);
             
             $sites = array(1 => 'DCC', 2 => 'SEA', 3 => 'PHI', 4 => 'STL', 5 => 'UNC');
-            echo($sites[1]);
-            
+                        
             $defaults['Examiner'] = $row['Examiner'];
             $defaults['Date_taken'] = $row['Date_taken'];
             $defaults['CommentID'] = $row['CommentID'];
@@ -319,7 +316,6 @@ class NDB_Reliability_adi_r_reliability extends NDB_Reliability
      
         // If the reliability is to be compared to the gold standard
         if ($score_record['Gold_standard']=='Gold_standard_SEA0012'){
-            echo("This is the Gold standard check for SEA0012<br>");
                 
             $reliability_count_raw=0;            
             $reliability_count_scored=0;            
@@ -330,93 +326,93 @@ class NDB_Reliability_adi_r_reliability extends NDB_Reliability
             if($score_record['q_2_age_first_noticed_code']=='8' AND $score_record2['q_2_age_first_noticed_code']=='8'){}
             elseif ($score_record['q_2_age_first_noticed_code']=='998' && $score_record2['q_2_age_first_noticed_code']=='998'){}
             else {
-                $denominator++; $denominator_scored++; echo('q2 is neither 8 or 998 for both entries<br>');
+                $denominator++; $denominator_scored++;
                 if(abs($score_record2['q_2_age_first_noticed_code'] - $score_record['q_2_age_first_noticed_code']) >3){$reliability_count_raw++; $reliability_count_scored++;}}
             
             if($score_record['q_4_onset_as_perceived_code']=='8' AND $score_record2['q_4_onset_as_perceived_code']=='8'){}
             elseif($score_record['q_4_onset_as_perceived_code']=='998' AND $score_record2['q_4_onset_as_perceived_code']=='998'){}
             else {
-                $denominator++; echo('q4 is neither 8 or 998 for both entries<br>');
+                $denominator++; 
                 if ($score_record['q_4_onset_as_perceived_code'] != $score_record2['q_4_onset_as_perceived_code']) { $reliability_count_raw++;}}
             
             if($score_record['q_5_first_walked_code']=='8' AND $score_record2['q_5_first_walked_code']=='8'){}
             elseif($score_record['q_5_first_walked_code']=='998' && $score_record2['q_5_first_walked_code']=='998'){}
             else {
-                $denominator++;echo('q5 is neither 8 or 998 for both entries<br>');
+                $denominator++;
                 if (abs($score_record['q_5_first_walked_code'] - $score_record2['q_5_first_walked_code']) >3) { $reliability_count_raw++;}} 
             
             if($score_record['q_6_bladder_daytime_code'] =='8' AND $score_record2['q_6_bladder_daytime_code']=='8'){}
             elseif($score_record['q_6_bladder_daytime_code']=='998' && $score_record2['q_6_bladder_daytime_code']=='998'){}
             else {
-                $denominator++;echo('q6 is neither 8 or 998 for both entries<br>');
+                $denominator++;
                 if (abs($score_record['q_6_bladder_daytime_code'] - $score_record2['q_6_bladder_daytime_code']) >3){ $reliability_count_raw++;}}
             
             if($score_record['q_7_bladder_nighttime_code'] =='8' AND $score_record2['q_7_bladder_nighttime_code']=='8'){}
             elseif($score_record['q_7_bladder_nighttime_code'] =='998' && $score_record2['q_7_bladder_nighttime_code']=='998'){}
             else {
-                $denominator++;echo('q7 is neither 8 or 998 for both entries<br>');
+                $denominator++;
                 if (abs($score_record['q_7_bladder_nighttime_code'] - $score_record2['q_7_bladder_nighttime_code']) >3){ $reliability_count_raw++;}} 
             if($score_record['q_8_bowel_control_code'] =='8' AND $score_record2['control']=='8'){}
             elseif($score_record['q_8_bowel_control_code'] =='998' && $score_record2['control']=='998'){}
             else {
-                $denominator++;echo('q8 is neither 8 or 998 for both entries<br>');
+                $denominator++;
                 if (abs($score_record['q_8_bowel_control_code'] - $score_record2['q_8_bowel_control_code']) >3){ $reliability_count_raw++;}} 
             if($score_record['q_9_first_single_words_code'] =='8' AND $score_record2['q_9_first_single_words_code']=='8'){}
             elseif($score_record['q_9_first_single_words_code']=='998' && $score_record2['q_9_first_single_words_code']=='998'){}
             else {
-                $denominator++; $denominator_scored++; echo('q9 is neither 8 or 998 for both entries<br>');
+                $denominator++; $denominator_scored++; 
                 if (abs($score_record['q_9_first_single_words_code'] - $score_record2['q_9_first_single_words_code']) >3){ $reliability_count_raw++; $reliability_count_scored++;}} 
             if($score_record['q_10_first_phrases_code'] =='8' AND $score_record2['q_10_first_phrases_code']=='8'){}
             elseif($score_record['q_10_first_phrases_code']=='998' && $score_record2['q_10_first_phrases_code']=='998'){}
             else {
-                $denominator++; $denominator_scored++; echo('q10 is neither 8 or 998 for both entries<br>');
+                $denominator++; $denominator_scored++; 
                 if (abs($score_record['q_10_first_phrases_code'] - $score_record2['q_10_first_phrases_code']) >3){ $reliability_count_raw++; $reliability_count_scored++;}} 
             if ($score_record['q_11_loss_of_language'] =='8_NA' AND $score_record2['q_11_loss_of_language']=='8_NA'){}
             elseif($score_record['q_10_first_phrases_code']=='998' && $score_record2['q_11_loss_of_language']=='998'){}
             else {                    
-                $denominator++;echo('q11 is neither 8 or 998 for both entries<br>');
+                $denominator++;
                 if($score_record['q_11_loss_of_language']  != $score_record2['q_11_loss_of_language']){ $reliability_count_raw++;}} 
            
             if($score_record['q_12_level_before_loss_code'] =='8_insufficient' AND $score_record2['q_12_level_before_loss_code']=='8_insufficient'){}
             elseif($score_record['q_12_level_before_loss_code'] =='998' && $score_record2['q_12_level_before_loss_code']=='998'){}
             else {
-                $denominator++;echo('q12 is neither 8 or 998 for both entries<br>');
+                $denominator++;
                 if ($score_record['q_12_level_before_loss_code'] != $score_record2['q_12_level_before_loss_code']){ $reliability_count_raw++;}} 
             if($score_record['13_loss_of_spontaneous_use_code'] =='8_insufficient' AND $score_record2['13_loss_of_spontaneous_use_code']=='8_insufficient'){}
             elseif($score_record['13_loss_of_spontaneous_use_code']=='998' && $score_record2['13_loss_of_spontaneous_use_code']=='998'){}
             else {
-                $denominator++;echo('q13 is neither 8 or 998 for both entries<br>');
+                $denominator++;
                 if ($score_record['13_loss_of_spontaneous_use_code'] != $score_record2['13_loss_of_spontaneous_use_code']){ $reliability_count_raw++;}} 
             if($score_record['14_loss_of_intent_code'] =='8_insufficient' AND $score_record2['14_loss_of_intent_code']=='8_insufficient'){}
             elseif($score_record['14_loss_of_intent_code'] =='998' && $score_record2['14_loss_of_intent_code']=='998'){}
             else {
-                $denominator++;echo('q14 is neither 8 or 998 for both entries<br>');
+                $denominator++;
                 if ($score_record['14_loss_of_intent_code'] != $score_record2['14_loss_of_intent_code']){ $reliability_count_raw++;}} 
             if($score_record['15_loss_of_syntactical_code'] =='8_insufficient' AND $score_record2['15_loss_of_syntactical_code']=='8_insufficient'){}
             elseif($score_record['15_loss_of_syntactical_code'] =='998' && $score_record2['15_loss_of_syntactical_code']=='998'){}
             else {
-                $denominator++;echo('q15 is neither 8 or 998 for both entries<br>');
+                $denominator++;
                 if ($score_record['15_loss_of_syntactical_code'] != $score_record2['15_loss_of_syntactical_code']){ $reliability_count_raw++;}} 
             if($score_record['16_loss_of_articulation_code'] =='8_insufficient' AND $score_record2['16_loss_of_articulation_code']=='8_insufficient'){}
             elseif($score_record['16_loss_of_articulation_code'] =='998' && $score_record2['16_loss_of_articulation_code']=='998'){}
             else {
-                $denominator++;echo('q16 is neither 8 or 998 for both entries<br>');
+                $denominator++;
                 if ($score_record['16_loss_of_articulation_code'] != $score_record2['16_loss_of_articulation_code']){ $reliability_count_raw++;}} 
             if($score_record['q_17_main_loss_apparent_code'] =='8' AND $score_record2['q_17_main_loss_apparent_code']=='8'){}
             elseif($score_record['q_17_main_loss_apparent_code'] =='998' && $score_record2['q_17_main_loss_apparent_code']=='998'){}
             else {
-                $denominator++;echo('q17 is neither 8 or 998 for both entries<br>');
+                $denominator++;
                 if (abs($score_record['q_17_main_loss_apparent_code'] - $score_record2['q_17_main_loss_apparent_code']) >3){ $reliability_count_raw++;}} 
             if($score_record['q_18_loss_due_to_illness'] =='8_no_loss' AND $score_record2['q_18_loss_due_to_illness']=='8_no_loss'){}
             elseif($score_record['q_18_loss_due_to_illness'] =='998' && $score_record2['q_18_loss_due_to_illness']=='998'){}
             else {
-                $denominator++;echo('q18 is neither 8 or 998 for both entries<br>');
+                $denominator++;
                 if ($score_record['q_18_loss_due_to_illness'] != $score_record2['q_18_loss_due_to_illness']){ $reliability_count_raw++;}} 
             
             if($score_record['q_19_duration_of_loss_code'] =='8' AND $score_record2['q_19_duration_of_loss_code']=='8'){}
             elseif($score_record['q_19_duration_of_loss_code'] =='998' && $score_record2['q_19_duration_of_loss_code']=='998'){}
             else {
-                $denominator++;echo('q19 is neither 8 or 998 for both entries<br>');
+                $denominator++;
                 if (abs($score_record['q_19_duration_of_loss_code'] - $score_record2['q_19_duration_of_loss_code']) >3){ $reliability_count_raw++;}} 
                         
             if($score_record['q_20_loss_of_skills_code'] =='8_NA' AND $score_record2['q_20_loss_of_skills_code']=='8_NA'){}
@@ -593,7 +589,7 @@ class NDB_Reliability_adi_r_reliability extends NDB_Reliability
             if($score_record['q_42_point_express_interest_current_code'] =='8_NA' AND $score_record2['q_42_point_express_interest_current_code']=='8_NA'){}
             elseif($score_record['q_42_point_express_interest_current_code'] =='998' && $score_record2['q_42_point_express_interest_current_code']=='998'){}
             else {
-                $denominator++;$denominator_scored++;echo('q42 is neither 8 or 998 for both entries<br>');
+                $denominator++;$denominator_scored++;
                 if ($score_record['q_42_point_express_interest_current_code'] != $score_record2['q_42_point_express_interest_current_code']){ $reliability_count_raw++; $reliability_count_scored++;}} 
             if($score_record['q_42_point_express_inter_most_abnormal_code'] =='8_NA' AND $score_record2['q_42_point_express_inter_most_abnormal_code']=='8_NA'){}
             elseif($score_record['q_42_point_express_inter_most_abnormal_code'] =='998' && $score_record2['q_42_point_express_inter_most_abnormal_code']=='998'){}
@@ -655,27 +651,27 @@ class NDB_Reliability_adi_r_reliability extends NDB_Reliability
             if($score_record['q_48_imag_play_current_code'] =='8_NA' AND $score_record2['q_48_imag_play_current_code']=='8_NA'){}
             elseif($score_record['q_48_imag_play_current_code'] =='998' && $score_record2['q_48_imag_play_current_code']=='998'){}
             else {
-                $denominator++;$denominator_scored++;echo('q48cur is neither 8 or 998 for both entries<br>');
+                $denominator++;$denominator_scored++;
                 if ($score_record['q_48_imag_play_current_code'] != $score_record2['q_48_imag_play_current_code']){ $reliability_count_raw++; $reliability_count_scored++;}} 
            
             
             if($score_record['q_48_imag_play_most_abnormal_code'] =='8_NA' AND $score_record2['q_48_imag_play_most_abnormal_code']=='8_NA'){}
             elseif($score_record['q_48_imag_play_most_abnormal_code'] =='998' && $score_record2['q_48_imag_play_most_abnormal_code']=='998'){}
             else {
-                $denominator++;echo('q48abn is neither 8 or 998 for both entries<br>');
+                $denominator++;
             if ($score_record['q_48_imag_play_most_abnormal_code'] != $score_record2['q_48_imag_play_most_abnormal_code']){ $reliability_count_raw++;}} 
             
             
             if($score_record['q_49_imag_play_peers_current_code'] =='8_NA' AND $score_record2['q_49_imag_play_peers_current_code']=='8_NA'){}
             elseif($score_record['q_49_imag_play_peers_current_code'] =='998' && $score_record2['q_49_imag_play_peers_current_code']=='998'){}
             else {
-                $denominator++;echo('q49curr is neither 8 or 998 for both entries<br>');
+                $denominator++;
                 if ($score_record['q_49_imag_play_peers_current_code'] != $score_record2['q_49_imag_play_peers_current_code']){ $reliability_count_raw++;}} 
             
             if($score_record['q_49_imag_play_peers_most_abnormal_code'] =='8_NA' AND $score_record2['q_49_imag_play_peers_most_abnormal_code']=='8_NA'){}
             elseif($score_record['q_49_imag_play_peers_most_abnormal_code'] =='998' && $score_record2['q_49_imag_play_peers_most_abnormal_code']=='998'){}
             else {
-                $denominator++;echo('q49abn is neither 8 or 998 for both entries<br>');
+                $denominator++;
                 if ($score_record['q_49_imag_play_peers_most_abnormal_code'] != $score_record2['q_49_imag_play_peers_most_abnormal_code']){ $reliability_count_raw++;}} 
 
             if($score_record['q_50_direct_gaze_current_code'] =='8_NA' AND $score_record2['q_50_direct_gaze_current_code']=='8_NA'){}
@@ -1111,16 +1107,16 @@ class NDB_Reliability_adi_r_reliability extends NDB_Reliability
          
 
                
-            echo('<br>');
-            print_r($denominator);
-            echo('<br>');
-            print_r($reliability_count_raw);
-            echo('<br>');
-            echo('<br>');
-            print_r($denominator_scored);
-            echo('<br>');
-            print_r($reliability_count_scored);
-            echo('<br>');
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
 
             // Score the reliability
             $reliability['Reliability_score_all_items']= (($denominator-$reliability_count_raw)/$denominator*100);
@@ -1130,7 +1126,7 @@ class NDB_Reliability_adi_r_reliability extends NDB_Reliability
         }
         // If the reliability is to be compared to the gold standard
         elseif ($score_record['Gold_standard']=='Gold_standard_SEA0070'){
-            echo("This is the Gold standard check for SEA0070<br>");
+            
             
 
             $reliability_count_raw=0;            
@@ -1144,13 +1140,13 @@ class NDB_Reliability_adi_r_reliability extends NDB_Reliability
 if($score_record['q_2_age_first_noticed_code']=='8' AND $score_record2['q_2_age_first_noticed_code']=='8'){}
             elseif ($score_record['q_2_age_first_noticed_code']=='998' && $score_record2['q_2_age_first_noticed_code']=='998'){}
             else {
-                $denominator++; $denominator_scored++; echo('q2 is neither 8 or 998 for both entries<br>');
+                $denominator++; $denominator_scored++; 
                 if(abs($score_record2['q_2_age_first_noticed_code'] - $score_record['q_2_age_first_noticed_code']) >3){$reliability_count_raw++; $reliability_count_scored++;}}
 
             if($score_record['q_4_onset_as_perceived_code']=='8' AND $score_record2['q_4_onset_as_perceived_code']=='8'){}
             elseif($score_record['q_4_onset_as_perceived_code']=='998' AND $score_record2['q_4_onset_as_perceived_code']=='998'){}
             else {
-                $denominator++; echo('q4 is neither 8 or 998 for both entries<br>');
+                $denominator++; 
                 if ($score_record['q_4_onset_as_perceived_code'] != $score_record2['q_4_onset_as_perceived_code']) { $reliability_count_raw++;}}
 
 
@@ -1160,11 +1156,11 @@ if($score_record['q_2_age_first_noticed_code']=='8' AND $score_record2['q_2_age_
                 $denominator++;
                 if (abs($score_record['q_5_first_walked_code'] - $score_record2['q_5_first_walked_code']) >3) { $reliability_count_raw++;}} 
    
-print_r($score_record['q_5_first_walked_code']);
-print_r($denominator);
-print_r($reliability_count_raw);
-print_r($denominator_scored);
-print_r($reliability_count_scored);
+
+
+
+
+
 
 
          
@@ -2110,7 +2106,7 @@ print_r($reliability_count_scored);
          }
          // If the reliability is to be compared to the initial data entry
          elseif ($score_record['Gold_standard']=='Initial_entry') {
-             echo("This is the initial check.");
+             
              
               $reliability_count_raw=0;            
                $reliability_count_scored=0;            
@@ -2120,93 +2116,93 @@ print_r($reliability_count_scored);
              if($score_record['q_2_age_first_noticed_code']=='8' AND $score_record1['q_2_age_first_noticed_code']=='8'){}
              elseif ($score_record['q_2_age_first_noticed_code']=='998' && $score_record1['q_2_age_first_noticed_code']=='998'){}
              else {
-                 $denominator++; $denominator_scored++; echo('q2 is neither 8 or 998 for both entries<br>');
+                 $denominator++; $denominator_scored++; 
                  if(abs($score_record1['q_2_age_first_noticed_code'] - $score_record['q_2_age_first_noticed_code']) >3){$reliability_count_raw++; $reliability_count_scored++;}}
 
              if($score_record['q_4_onset_as_perceived_code']=='8' AND $score_record1['q_4_onset_as_perceived_code']=='8'){}
              elseif($score_record['q_4_onset_as_perceived_code']=='998' AND $score_record1['q_4_onset_as_perceived_code']=='998'){}
              else {
-                 $denominator++; echo('q4 is neither 8 or 998 for both entries<br>');
+                 $denominator++; 
                  if ($score_record['q_4_onset_as_perceived_code'] != $score_record1['q_4_onset_as_perceived_code']) { $reliability_count_raw++;}}
 
              if($score_record['q_5_first_walked_code']=='8' AND $score_record1['q_5_first_walked_code']=='8'){}
              elseif($score_record['q_5_first_walked_code']=='998' && $score_record1['q_5_first_walked_code']=='998'){}
              else {
-                 $denominator++;echo('q5 is neither 8 or 998 for both entries<br>');
+                 $denominator++;
                  if (abs($score_record['q_5_first_walked_code'] - $score_record1['q_5_first_walked_code']) >3) { $reliability_count_raw++;}} 
 
              if($score_record['q_6_bladder_daytime_code'] =='8' AND $score_record1['q_6_bladder_daytime_code']=='8'){}
              elseif($score_record['q_6_bladder_daytime_code']=='998' && $score_record1['q_6_bladder_daytime_code']=='998'){}
              else {
-                 $denominator++;echo('q6 is neither 8 or 998 for both entries<br>');
+                 $denominator++;
                  if (abs($score_record['q_6_bladder_daytime_code'] - $score_record1['q_6_bladder_daytime_code']) >3){ $reliability_count_raw++;}}
 
              if($score_record['q_7_bladder_nighttime_code'] =='8' AND $score_record1['q_7_bladder_nighttime_code']=='8'){}
              elseif($score_record['q_7_bladder_nighttime_code'] =='998' && $score_record1['q_7_bladder_nighttime_code']=='998'){}
              else {
-                 $denominator++;echo('q7 is neither 8 or 998 for both entries<br>');
+                 $denominator++;
                  if (abs($score_record['q_7_bladder_nighttime_code'] - $score_record1['q_7_bladder_nighttime_code']) >3){ $reliability_count_raw++;}} 
              if($score_record['q_8_bowel_control_code'] =='8' AND $score_record1['control']=='8'){}
              elseif($score_record['q_8_bowel_control_code'] =='998' && $score_record1['control']=='998'){}
              else {
-                 $denominator++;echo('q8 is neither 8 or 998 for both entries<br>');
+                 $denominator++;
                  if (abs($score_record['q_8_bowel_control_code'] - $score_record1['q_8_bowel_control_code']) >3){ $reliability_count_raw++;}} 
              if($score_record['q_9_first_single_words_code'] =='8' AND $score_record1['q_9_first_single_words_code']=='8'){}
              elseif($score_record['q_9_first_single_words_code']=='998' && $score_record1['q_9_first_single_words_code']=='998'){}
              else {
-                 $denominator++; $denominator_scored++; echo('q9 is neither 8 or 998 for both entries<br>');
+                 $denominator++; $denominator_scored++; 
                  if (abs($score_record['q_9_first_single_words_code'] - $score_record1['q_9_first_single_words_code']) >3){ $reliability_count_raw++; $reliability_count_scored++;}} 
              if($score_record['q_10_first_phrases_code'] =='8' AND $score_record1['q_10_first_phrases_code']=='8'){}
              elseif($score_record['q_10_first_phrases_code']=='998' && $score_record1['q_10_first_phrases_code']=='998'){}
              else {
-                 $denominator++; $denominator_scored++; echo('q10 is neither 8 or 998 for both entries<br>');
+                 $denominator++; $denominator_scored++; 
                  if (abs($score_record['q_10_first_phrases_code'] - $score_record1['q_10_first_phrases_code']) >3){ $reliability_count_raw++; $reliability_count_scored++;}} 
              if ($score_record['q_11_loss_of_language'] =='8_NA' AND $score_record1['q_11_loss_of_language']=='8_NA'){}
              elseif($score_record['q_10_first_phrases_code']=='998' && $score_record1['q_11_loss_of_language']=='998'){}
              else {                    
-                 $denominator++;echo('q11 is neither 8 or 998 for both entries<br>');
+                 $denominator++;
                  if($score_record['q_11_loss_of_language']  != $score_record1['q_11_loss_of_language']){ $reliability_count_raw++;}} 
 
              if($score_record['q_12_level_before_loss_code'] =='8_insufficient' AND $score_record1['q_12_level_before_loss_code']=='8_insufficient'){}
              elseif($score_record['q_12_level_before_loss_code'] =='998' && $score_record1['q_12_level_before_loss_code']=='998'){}
              else {
-                 $denominator++;echo('q12 is neither 8 or 998 for both entries<br>');
+                 $denominator++;
                  if ($score_record['q_12_level_before_loss_code'] != $score_record1['q_12_level_before_loss_code']){ $reliability_count_raw++;}} 
              if($score_record['13_loss_of_spontaneous_use_code'] =='8_insufficient' AND $score_record1['13_loss_of_spontaneous_use_code']=='8_insufficient'){}
              elseif($score_record['13_loss_of_spontaneous_use_code']=='998' && $score_record1['13_loss_of_spontaneous_use_code']=='998'){}
              else {
-                 $denominator++;echo('q13 is neither 8 or 998 for both entries<br>');
+                 $denominator++;
                  if ($score_record['13_loss_of_spontaneous_use_code'] != $score_record1['13_loss_of_spontaneous_use_code']){ $reliability_count_raw++;}} 
              if($score_record['14_loss_of_intent_code'] =='8_insufficient' AND $score_record1['14_loss_of_intent_code']=='8_insufficient'){}
              elseif($score_record['14_loss_of_intent_code'] =='998' && $score_record1['14_loss_of_intent_code']=='998'){}
              else {
-                 $denominator++;echo('q14 is neither 8 or 998 for both entries<br>');
+                 $denominator++;
                  if ($score_record['14_loss_of_intent_code'] != $score_record1['14_loss_of_intent_code']){ $reliability_count_raw++;}} 
              if($score_record['15_loss_of_syntactical_code'] =='8_insufficient' AND $score_record1['15_loss_of_syntactical_code']=='8_insufficient'){}
              elseif($score_record['15_loss_of_syntactical_code'] =='998' && $score_record1['15_loss_of_syntactical_code']=='998'){}
              else {
-                 $denominator++;echo('q15 is neither 8 or 998 for both entries<br>');
+                 $denominator++;
                  if ($score_record['15_loss_of_syntactical_code'] != $score_record1['15_loss_of_syntactical_code']){ $reliability_count_raw++;}} 
              if($score_record['16_loss_of_articulation_code'] =='8_insufficient' AND $score_record1['16_loss_of_articulation_code']=='8_insufficient'){}
              elseif($score_record['16_loss_of_articulation_code'] =='998' && $score_record1['16_loss_of_articulation_code']=='998'){}
              else {
-                 $denominator++;echo('q16 is neither 8 or 998 for both entries<br>');
+                 $denominator++;
                  if ($score_record['16_loss_of_articulation_code'] != $score_record1['16_loss_of_articulation_code']){ $reliability_count_raw++;}} 
              if($score_record['q_17_main_loss_apparent_code'] =='8' AND $score_record1['q_17_main_loss_apparent_code']=='8'){}
              elseif($score_record['q_17_main_loss_apparent_code'] =='998' && $score_record1['q_17_main_loss_apparent_code']=='998'){}
              else {
-                 $denominator++;echo('q17 is neither 8 or 998 for both entries<br>');
+                 $denominator++;
                  if (abs($score_record['q_17_main_loss_apparent_code'] - $score_record1['q_17_main_loss_apparent_code']) >3){ $reliability_count_raw++;}} 
              if($score_record['q_18_loss_due_to_illness'] =='8_no_loss' AND $score_record1['q_18_loss_due_to_illness']=='8_no_loss'){}
              elseif($score_record['q_18_loss_due_to_illness'] =='998' && $score_record1['q_18_loss_due_to_illness']=='998'){}
              else {
-                 $denominator++;echo('q18 is neither 8 or 998 for both entries<br>');
+                 $denominator++;
                  if ($score_record['q_18_loss_due_to_illness'] != $score_record1['q_18_loss_due_to_illness']){ $reliability_count_raw++;}} 
 
              if($score_record['q_19_duration_of_loss_code'] =='8' AND $score_record1['q_19_duration_of_loss_code']=='8'){}
              elseif($score_record['q_19_duration_of_loss_code'] =='998' && $score_record1['q_19_duration_of_loss_code']=='998'){}
              else {
-                 $denominator++;echo('q19 is neither 8 or 998 for both entries<br>');
+                 $denominator++;
                  if (abs($score_record['q_19_duration_of_loss_code'] - $score_record1['q_19_duration_of_loss_code']) >3){ $reliability_count_raw++;}} 
 
              if($score_record['q_20_loss_of_skills_code'] =='8_NA' AND $score_record1['q_20_loss_of_skills_code']=='8_NA'){}
@@ -2383,7 +2379,7 @@ print_r($reliability_count_scored);
              if($score_record['q_42_point_express_interest_current_code'] =='8_NA' AND $score_record1['q_42_point_express_interest_current_code']=='8_NA'){}
              elseif($score_record['q_42_point_express_interest_current_code'] =='998' && $score_record1['q_42_point_express_interest_current_code']=='998'){}
              else {
-                 $denominator++;$denominator_scored++;echo('q42 is neither 8 or 998 for both entries<br>');
+                 $denominator++;$denominator_scored++;
                  if ($score_record['q_42_point_express_interest_current_code'] != $score_record1['q_42_point_express_interest_current_code']){ $reliability_count_raw++; $reliability_count_scored++;}} 
              if($score_record['q_42_point_express_inter_most_abnormal_code'] =='8_NA' AND $score_record1['q_42_point_express_inter_most_abnormal_code']=='8_NA'){}
              elseif($score_record['q_42_point_express_inter_most_abnormal_code'] =='998' && $score_record1['q_42_point_express_inter_most_abnormal_code']=='998'){}
@@ -2445,27 +2441,27 @@ print_r($reliability_count_scored);
              if($score_record['q_48_imag_play_current_code'] =='8_NA' AND $score_record1['q_48_imag_play_current_code']=='8_NA'){}
              elseif($score_record['q_48_imag_play_current_code'] =='998' && $score_record1['q_48_imag_play_current_code']=='998'){}
              else {
-                 $denominator++;$denominator_scored++;echo('q48cur is neither 8 or 998 for both entries<br>');
+                 $denominator++;$denominator_scored++;
                  if ($score_record['q_48_imag_play_current_code'] != $score_record1['q_48_imag_play_current_code']){ $reliability_count_raw++; $reliability_count_scored++;}} 
 
 
              if($score_record['q_48_imag_play_most_abnormal_code'] =='8_NA' AND $score_record1['q_48_imag_play_most_abnormal_code']=='8_NA'){}
              elseif($score_record['q_48_imag_play_most_abnormal_code'] =='998' && $score_record1['q_48_imag_play_most_abnormal_code']=='998'){}
              else {
-                 $denominator++;echo('q48abn is neither 8 or 998 for both entries<br>');
+                 $denominator++;
              if ($score_record['q_48_imag_play_most_abnormal_code'] != $score_record1['q_48_imag_play_most_abnormal_code']){ $reliability_count_raw++;}} 
 
 
              if($score_record['q_49_imag_play_peers_current_code'] =='8_NA' AND $score_record1['q_49_imag_play_peers_current_code']=='8_NA'){}
              elseif($score_record['q_49_imag_play_peers_current_code'] =='998' && $score_record1['q_49_imag_play_peers_current_code']=='998'){}
              else {
-                 $denominator++;echo('q49curr is neither 8 or 998 for both entries<br>');
+                 $denominator++;
                  if ($score_record['q_49_imag_play_peers_current_code'] != $score_record1['q_49_imag_play_peers_current_code']){ $reliability_count_raw++;}} 
 
              if($score_record['q_49_imag_play_peers_most_abnormal_code'] =='8_NA' AND $score_record1['q_49_imag_play_peers_most_abnormal_code']=='8_NA'){}
              elseif($score_record['q_49_imag_play_peers_most_abnormal_code'] =='998' && $score_record1['q_49_imag_play_peers_most_abnormal_code']=='998'){}
              else {
-                 $denominator++;echo('q49abn is neither 8 or 998 for both entries<br>');
+                 $denominator++;
                  if ($score_record['q_49_imag_play_peers_most_abnormal_code'] != $score_record1['q_49_imag_play_peers_most_abnormal_code']){ $reliability_count_raw++;}} 
 
              if($score_record['q_50_direct_gaze_current_code'] =='8_NA' AND $score_record1['q_50_direct_gaze_current_code']=='8_NA'){}
@@ -2901,16 +2897,16 @@ print_r($reliability_count_scored);
 
 
 
-             echo('<br>');
-             print_r($denominator);
-             echo('<br>');
-             print_r($reliability_count_raw);
-             echo('<br>');
-             echo('<br>');
-             print_r($denominator_scored);
-             echo('<br>');
-             print_r($reliability_count_scored);
-             echo('<br>');
+             
+             
+             
+             
+             
+             
+             
+             
+             
+             
 
              // Score the reliability
              $reliability['Reliability_score_all_items']= (($denominator-$reliability_count_raw)/$denominator*100);
@@ -2922,7 +2918,7 @@ print_r($reliability_count_scored);
               
         // end elseif
         else {
-            echo("what the heck is going on?<br>");
+            echo("<font color='red'>Warning: no comparison selected. Contact Samir at the DCC.</font><BR>");
             $reliability['reliability_score_all_items']= 0;
         } // end else
         
@@ -3859,7 +3855,7 @@ print_r($reliability_count_scored);
         $scoreResult = $this->score();
         
         if($this->isError($scoreResult)) {
-             echo($scoreResult->getMessage());
+             
 
              return PEAR::raiseError($scoreResult->getMessage());
           }
