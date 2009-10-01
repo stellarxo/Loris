@@ -6,10 +6,33 @@ require_once 'NDB_Menu_Filter.class.inc';
  * @package mri
  * @subpackage NIHPD
  */
+
+function map_cIDs($array){
+    $new_array;
+    for($i = 0; $i < count($array); $i++){
+      $element = $array[$i];
+      $new_array[$element['CommentID']] = $element['reliability_center_id'];
+    }
+    return $new_array;
+}
+
+function find_cID($cID, $reliability_center_id, $array){
+  foreach($array as $key=>$value){
+    if($key == $cID && $value == $reliability_center_id){
+      return true;
+    }
+  }
+  return false;
+}
+ 
 class NDB_Menu_Filter_reliability extends NDB_Menu_Filter
 {
 
     var $centerIDMap;
+    
+    var $site_id = array('SEA' => 2, 'PHI' => 3, 'STL' => 4, 'UNC' => 5);
+    
+    var $reliability_table;
 
     function _setupVariables()
     {
@@ -25,6 +48,8 @@ class NDB_Menu_Filter_reliability extends NDB_Menu_Filter
         foreach($pscRows AS $row) {
             $this->centerIDMap[$row['CenterID']] = $row['Name'];
         }
+        
+//        $this->_populate_reliability_table();
 
         // the base query
         $query = " FROM candidate, session, flag, reliability WHERE reliability.CommentID=flag.CommentID AND candidate.CandID=session.CandID AND session.ID=flag.SessionID";
@@ -35,12 +60,12 @@ class NDB_Menu_Filter_reliability extends NDB_Menu_Filter
         }
 
         // set the class variables
-        $this->columns = array('reliability.CommentID', 'session.SubprojectID as Cohort', 'IF(session.ID is null, candidate.CenterID, session.CenterID) AS Site', 'session.CandID AS DCCID', 'candidate.PSCID', 'candidate.Gender', 'session.Visit_label', 'reliability.Instrument', 'reliability.Reliability_score');
+        $this->columns = array('reliability.CommentID', 'candidate.PSCID', 'reliability.reliability_center_id AS Site', 'session.SubprojectID as Cohort', 'session.CandID AS DCCID', 'candidate.Gender', 'session.Visit_label', 'reliability.Instrument', 'reliability.Reliability_score');
 
         $this->query = $query;
         $this->group_by = '';
-        $this->order_by = 'session.CandID, session.Visit_label';
-        $this->headers = array('CommentID','Cohort', 'Site', 'DCCID', 'PSCID', 'Gender', 'Visit_label', 'Instrument', 'reliability_score');
+        $this->order_by = 'reliability.Instrument, session.CandID, session.Visit_label';
+        $this->headers = array('PSCID', 'Site of Reliability Test','Cohort', 'DCCID', 'Gender', 'Visit_label', 'Instrument', 'reliability_score', 'Reliable');
         $this->validFilters = array('reliability.CommentID','session.SubprojectID', 'candidate.CenterID', 'session.CandID', 'candidate.PSCID', 'candidate.Gender', 'session.Visit_label', 'reliability.Instrument', 'reliability.Reliability_score');
 
         $this->formToFilter = array(
@@ -112,6 +137,7 @@ class NDB_Menu_Filter_reliability extends NDB_Menu_Filter
     function _setDataTableRows($count)
     {
 
+        $threshold = array("adi_r_proband" => 90, "adi_r_subject" => 90, "adi_r" => 90, 'aosi' => 79, 'csbs' => 80, 'ados_module1' => 80, 'ados_module2' => 80);
         // print out
         $x = 0;
         foreach ($this->list as $item) {
@@ -121,25 +147,78 @@ class NDB_Menu_Filter_reliability extends NDB_Menu_Filter
             //print out data rows
             $i = 1;
             // $identifier = $item['Tracking_log_ID'];
+            $comment_id = $item['CommentID'];
+            $site_id = $item['Site'];
             foreach ($item as $key => $val) {
 
                 // Confused about this line
                 if ($key =='Tracking_log_ID') continue;
-                if ($key == 'CommentID') {
-                    $this->tpl_data['items'][$x][$i]['CommentID'] = $item['CommentID'];
-	            $this->tpl_data['items'][$x][$i]['Instrument'] = $item['Instrument'];
-	                }
+                if ($key == 'CommentID') continue;
+                // {
+                //                    $this->tpl_data['items'][$x][$i]['CommentID'] = $item['CommentID'];
+                //               $this->tpl_data['items'][$x][$i]['Instrument'] = $item['Instrument'];
+                //                   }
                 $this->tpl_data['items'][$x][$i]['name'] = $key;
                 $this->tpl_data['items'][$x][$i]['value'] = $val;
-                if ($key == 'Site') {
-                    $this->tpl_data['items'][$x][$i]['value'] = $this->centerIDMap[$item['Site']];
+                if ($key == 'PSCID'){
+                   $this->tpl_data['items'][$x][$i]['CommentID'] = $comment_id;
+                   $this->tpl_data['items'][$x][$i]['SiteID'] = $item['Site'];
+                   $this->tpl_data['items'][$x][$i]['Instrument'] = $item['Instrument'];
                 }
-                $i++;
+                if ($key == 'Site')
+                {
+                   $this->tpl_data['items'][$x][$i]['value'] = $this->centerIDMap[$item['Site']];
+                }
+                if($key == 'Reliability_score'){
+                  $this->tpl_data['items'][$x][$i+1]['name'] = 'Reliability';
+                  if($val >= $threshold[$item['Instrument']])
+                    $reliable = 'Yes';
+                  else
+                    $reliable = 'No';
+                  $this->tpl_data['items'][$x][$i+1]['value'] = $reliable;
+                }
+                
+               $i++;
             }
             $x++;
         }
 
         return true;
+    }
+    
+    function _populate_reliability_table()
+    { 
+       $db =& Database::singleton();
+       $db->select("SELECT CommentID, reliability_center_id FROM reliability", $this->reliability_table);
+       
+       
+       $this->reliability_table = map_cIDs($this->reliability_table);
+       
+       // WITHIN SITE
+       $site_list = array('SEA', 'PHI', 'STL', 'UNC');
+        
+        foreach($site_list as $site){
+          $this->within_site_flagging("adi_r_subject", 10, $site, $db);
+          $this->within_site_flagging("adi_r_proband", 7, $site, $db);
+          $this->within_site_flagging("aosi", 10, $site, $db);
+          $this->within_site_flagging("ados_module1", 10, $site, $db);
+          $this->within_site_flagging("ados_module2", 10, $site, $db);
+          $this->within_site_flagging("csbs", 10, $site, $db);
+        }            
+       
+    }
+    
+    function within_site_flagging($instrument, $jump_step, $current_site, $db){
+        $db->select("SELECT CommentID FROM {$instrument} WHERE CommentID LIKE '%{$current_site}%'", $instrument_records);
+       for($i = 9; $i < count($instrument_records); $i += $jump_step){
+          $commentID = $instrument_records[$i]["CommentID"];
+          if(!find_cID($commentID, $this->site_id[$current_site], $this->reliability_table)){
+            $db->insert('reliability', array('CommentID' => $instrument_records[$i]["CommentID"],
+                                              'reliability_center_id' => $this->site_id[$current_site],
+                                              'Instrument' => $instrument
+                                              ));
+          }                  
+       }
     }
 }
 ?>
