@@ -1,0 +1,2219 @@
+<?php
+require_once "NDB_Reliability.class.inc";
+//require_once "NDB_BVL_Instrument.class.inc";
+
+/**
+ * The forms for the tracking log menu
+ * @package mri
+ * @subpackage NIHPD
+ */
+class NDB_Reliability_ados_module1_reliability extends NDB_Reliability
+
+{
+// function _hasAccess()
+//     {
+//         // create user object
+//         $user =& User::singleton();
+//         if (PEAR::isError($user)) {
+//             return PEAR::raiseError("User Error: ".$user->getMessage());
+//         }
+
+//         $DB =& Database::singleton();
+//         if (PEAR::isError($DB)) {
+//             return PEAR::raiseError("Could not connect to database: ".$DB->getMessage());
+//         }
+       
+//         if(!empty($this->identifier)) {
+//             $query = "SELECT psc.CenterID FROM tracking_logs, candidate, psc WHERE tracking_logs.CandID=candidate.CandID AND candidate.CenterID=psc.CenterID AND tracking_logs.Tracking_log_ID='$this->identifier'";
+//             $recordCenterID = $DB->selectOne($query);
+            
+//             return ($user->hasPermission('tracking_logs')
+//                     && ($user->hasPermission('tracking_logs_edit_all')
+//                         || ($user->getData('CenterID') == $recordCenterID)));
+
+//         } else {
+//             return ($user->hasPermission('tracking_logs'));
+//         }
+//     }
+
+    function _getDefaults()
+    {
+        $DB =& Database::singleton();
+        if(PEAR::isError($DB)) {
+            return PEAR::raiseError("Could not connect to database: ".$DB->getMessage());
+        }
+
+        $DB->select("SELECT * FROM ados_module1_reliability", $result);
+        if (PEAR::isError($result)) {
+            return PEAR::raiseError("DB Error: ".$result->getMessage());
+        }
+               
+        //print_r($this->identifier);
+        if (!empty($this->identifier)) { 
+            
+            // set the ados_module1_reliability values 
+            $DB->selectRow("SELECT * FROM ados_module1_reliability WHERE CommentID = '$this->identifier' AND reliability_center_id = $this->reliability_center_id", $row);
+            if (PEAR::isError($row)) {
+                return PEAR::raiseError("DB Error: ".$row->getMessage());
+            }
+     
+            // Set the defaults
+            // print_r($row['CommentID']);
+            $defaults['Examiner'] = $row['Examiner'];
+            $defaults['Date_taken'] = $row['Date_taken'];
+            $defaults['CommentID'] = $row['CommentID'];
+            $defaults['Reliability_score_all_items'] = $row['Reliability_score_all_items'];
+            $defaults['Reliability_score_scored_items'] = $row['Reliability_score_scored_items'];
+            $defaults['a1'] = $row['a1'];
+            $defaults['a2'] = $row['a2'];
+            $defaults['a3'] = $row['a3'];
+            $defaults['a4'] = $row['a4'];
+            $defaults['a5'] = $row['a5'];
+            $defaults['a6'] = $row['a6'];
+            $defaults['a7'] = $row['a7'];
+            $defaults['a8'] = $row['a8'];
+            $defaults['b1'] = $row['b1'];
+            $defaults['b2'] = $row['b2'];
+            $defaults['b3'] = $row['b3'];
+            $defaults['b4'] = $row['b4'];
+            $defaults['b5'] = $row['b5'];
+            $defaults['b6'] = $row['b6'];
+            $defaults['b7'] = $row['b7'];
+            $defaults['b8'] = $row['b8'];
+            $defaults['b9'] = $row['b9'];
+            $defaults['b10'] = $row['b10'];
+            $defaults['b11'] = $row['b11'];
+            $defaults['b12'] = $row['b12'];
+            $defaults['c1'] = $row['c1'];
+            $defaults['c2'] = $row['c2'];
+            $defaults['d1'] = $row['d1'];
+            $defaults['d2'] = $row['d2'];
+            $defaults['d3'] = $row['d3'];
+            $defaults['d4'] = $row['d4'];
+            $defaults['e1'] = $row['e1'];
+            $defaults['e2'] = $row['e2'];
+            $defaults['e3'] = $row['e3'];
+            
+        } else {
+            echo("Identifer empty! No ID has been chosen. Please contact Samir at the DCC.<br>");
+        }
+        
+        $sites = array(1 => 'DCC', 2 => 'SEA', 3 => 'PHI', 4 => 'STL', 5 => 'UNC');
+        $defaults['reliability_center'] = $sites[$this->reliability_center_id];
+
+        return $defaults;
+    }
+   
+    function score(){
+        //holds raw question values
+        $score_record = array();
+       
+        //holds calculated
+        $db =& Database::singleton();
+        if(PEAR::isError($db)) {
+            return PEAR::raiseError ("Could not connect to database: ".$db->getMessage());
+        }
+
+        // null scores
+        //$this->_nullScores();
+       
+        //Get values from both tables of adi_r (reliability and original)
+        $query = "SELECT * FROM ados_module1_reliability WHERE CommentID='$this->identifier' AND reliability_center_id = $this->reliability_center_id";
+        $query1 = "SELECT * FROM ados_module1 WHERE CommentID='".$this->identifier."'";
+        $query2 = "SELECT * FROM ados_module1_reliability_lookup WHERE CommentID='standard_ados_module1_SEA0010'";
+        $query3 = "SELECT * FROM ados_module1_reliability_lookup WHERE CommentID='standard_ados_module1_SEA0015'";
+        $query4 = "SELECT * FROM ados_module1_reliability_lookup WHERE CommentID='standard_ados_module1_SEA0017'";
+  
+        $db->selectRow($query, $score_record);
+        if (PEAR::isError($score_record)) {
+	    echo("Could not get scores: ".$score_record->getMessage());
+            return PEAR::raiseError("Could not get scores: ".$score_record->getMessage());
+        }
+              
+        $db->selectRow($query1, $score_record1);
+        if (PEAR::isError($score_record1)) {
+            return PEAR::raiseError("Could not get scores: ".$score_record1->getMessage());
+        }
+        
+        $db->selectRow($query2, $score_record2);
+        if (PEAR::isError($score_record2)) {
+            return PEAR::raiseError("Could not get scores: ".$score_record2->getMessage());
+        }
+        
+        $db->selectRow($query3, $score_record3);
+        if (PEAR::isError($score_record3)) {
+            return PEAR::raiseError("Could not get scores: ".$score_record3->getMessage());
+        }
+         $db->selectRow($query4, $score_record4);
+        if (PEAR::isError($score_record4)) {
+            return PEAR::raiseError("Could not get scores: ".$score_record4->getMessage());
+        }
+
+        // If the reliability is to be compared to the gold standard
+        if ($score_record['Gold_standard']=='Gold_standard_SEA0010'){
+            echo("This is the Gold standard check for SEA0010<br>");
+            
+            $reliability_count_raw=0;            
+            $reliability_count_scored=0;            
+            $denominator=0;
+            $denominator_scored=0;
+
+            // if the score for a1 = 3 or 8, then scored items are different
+            if($score_record['a1'] =='3' OR $score_record['a1'] =='8') {
+                
+                // individual items
+                if($score_record['a1']=='8' AND $score_record2['a1']=='8'){}    
+				elseif ($score_record['a1'] =='9' && $score_record2['a1'] =='9'){}
+                else {
+                    $denominator++; 
+                    if($score_record2['a1'] != $score_record['a1']) {$reliability_count_raw++;}}
+                
+                if($score_record['a2']=='8' AND $score_record2['a2']=='8'){}	 
+                elseif ($score_record['a2'] =='9' && $score_record2['a2'] =='9'){}
+                else {
+                    $denominator++;$denominator_scored++;
+                    if($score_record2['a2'] != $score_record['a2']) {$reliability_count_raw++;$reliability_count_scored++;}}
+                
+                if($score_record['a3']=='8' AND $score_record2['a3']=='8'){}	 
+                elseif ($score_record['a3'] =='9' && $score_record2['a3'] =='9'){}
+                else {
+                    $denominator++;$denominator_scored++;
+                    if($score_record2['a3'] != $score_record['a3'] ) {$reliability_count_raw++;$reliability_count_scored++;}}
+                
+                if($score_record['a4']=='8' AND $score_record2['a4']=='8'){}	 
+				elseif ($score_record['a4'] =='9' && $score_record2['a4'] =='9'){}
+                else {
+                    $denominator++;
+                    if($score_record2['a4']  != $score_record['a4'] ) {$reliability_count_raw++;}}
+
+                if($score_record['a5']=='8' AND $score_record2['a5']=='8'){}	 
+				elseif ($score_record['a5'] =='9' && $score_record2['a5'] =='9'){}
+                else {
+                    $denominator++;
+                    if($score_record2['a5']  != $score_record['a5'] ) {$reliability_count_raw++;}}
+                
+				if($score_record['a6']=='8' AND $score_record2['a6']=='8'){}	 
+				elseif ($score_record['a6'] =='9' && $score_record2['a6'] =='9'){}
+                else {
+                    $denominator++;
+                    if($score_record2['a6'] != $score_record['a6'] ) {$reliability_count_raw++;}}
+
+                if($score_record['a7']=='8' AND $score_record2['a7']=='8'){}	 
+				elseif ($score_record['a7'] =='9' && $score_record2['a7'] =='9'){}
+                else {
+                    $denominator++;
+                    if($score_record2['a7'] != $score_record['a7'] ) {$reliability_count_raw++;}}
+
+                if($score_record['a8']=='8' AND $score_record2['a8']=='8'){}	 
+				elseif ($score_record['a8'] =='9' && $score_record2['a8'] =='9'){}
+                else {
+                    $denominator++;$denominator_scored++;
+                    if($score_record2['a8'] != $score_record['a8'] ) {$reliability_count_raw++;$reliability_count_scored++;}}
+                if($score_record['b1']=='8' AND $score_record2['b1']=='8'){}	 
+				elseif ($score_record['b1'] =='9' && $score_record2['b1'] =='9'){}
+                else {
+                    $denominator++;$denominator_scored++;
+                    if (($score_record['b1'] =='2' AND $score_record2['b1']=='3') ||
+                           ($score_record['b1'] =='3' AND $score_record2['b1']=='2'))
+                          {
+                             #Don't count this
+                          }
+                          else if($score_record2['b1'] != $score_record['b1'] ) {$reliability_count_raw++;$reliability_count_scored++;}}
+                if($score_record['b2']=='8' AND $score_record2['b2']=='8'){}	 
+				elseif ($score_record['b2'] =='9' && $score_record2['b2'] =='9'){}
+                else {
+                    $denominator++;
+                    if (($score_record['b2'] =='2' AND $score_record2['b2']=='3') ||
+                             ($score_record['b2'] =='3' AND $score_record2['b2']=='2'))
+                            {
+                               #Don't count this
+                            }
+                            else if($score_record2['b2']  != $score_record['b2'] ) {$reliability_count_raw++;}}
+                if($score_record['b3']=='8' AND $score_record2['b3']=='8'){}	 
+				elseif ($score_record['b3'] =='9' && $score_record2['b3'] =='9'){}
+                else {
+                    $denominator++;$denominator_scored++;
+                    if($score_record2['b3'] != $score_record['b3'] ) {$reliability_count_raw++;$reliability_count_scored++;}}
+                if($score_record['b4']=='8' AND $score_record2['b4']=='8'){}	 
+				elseif ($score_record['b4'] =='9' && $score_record2['b4'] =='9'){}
+                else {
+                    $denominator++;$denominator_scored++;
+                    if($score_record2['b4']  != $score_record['b4'] ) {$reliability_count_raw++;$reliability_count_scored++;}}
+                if($score_record['b5']=='8' AND $score_record2['b5']=='8'){}	 
+				elseif ($score_record['b5'] =='9' && $score_record2['b5'] =='9'){}
+                else {
+                    $denominator++;$denominator_scored++;
+                    if($score_record2['b5']  != $score_record['b5'] ) {$reliability_count_raw++;$reliability_count_scored++;}}
+                if($score_record['b6']=='8' AND $score_record2['b6']=='8'){}	 
+				elseif ($score_record['b6'] =='9' && $score_record2['b6'] =='9'){}
+                else {
+                    $denominator++;
+                    if($score_record2['b6'] != $score_record['b6'] ) {$reliability_count_raw++;}}
+                if($score_record['b7']=='8' AND $score_record2['b7']=='8'){}	 
+				elseif ($score_record['b7'] =='9' && $score_record2['b7'] =='9'){}
+                else {
+                    $denominator++;
+                    if($score_record2['b7']  != $score_record['b7'] ) {$reliability_count_raw++;}}
+                if($score_record['b8']=='8' AND $score_record2['b8']=='8'){}	 
+				elseif ($score_record['b8'] =='9' && $score_record2['b8'] =='9'){}
+                else {
+                    $denominator++;
+                    if($score_record2['b8'] != $score_record['b8'] ) {$reliability_count_raw++;}}
+                if($score_record['b9']=='8' AND $score_record2['b9']=='8'){}	 
+				elseif ($score_record['b9'] =='9' && $score_record2['b9'] =='9'){}
+                else {
+                    $denominator++;$denominator_scored++;
+                    if($score_record2['b9']  != $score_record['b9'] ) {$reliability_count_raw++;$reliability_count_scored++;}}
+                if($score_record['b10']=='8' AND $score_record2['b10']=='8'){}  
+				elseif ($score_record['b10'] =='9' && $score_record2['b10'] =='9'){}
+                else {
+                    $denominator++;$denominator_scored++;
+                    if($score_record2['b10']  != $score_record['b10'] ) {$reliability_count_raw++;$reliability_count_scored++;}}
+                if($score_record['b11']=='8' AND $score_record2['b11']=='8'){}  
+				elseif ($score_record['b11'] =='9' && $score_record2['b11'] =='9'){}
+                else {
+                    $denominator++;$denominator_scored++;
+                    if($score_record2['b11']  != $score_record['b11'] ) {$reliability_count_raw++;$reliability_count_scored++;}}
+                if($score_record['b12']=='8' AND $score_record2['b12']=='8'){}  
+				elseif ($score_record['b12'] =='9' && $score_record2['b12'] =='9'){}
+                else {
+                    $denominator++;$denominator_scored++;
+                    if($score_record2['b12'] != $score_record['b12'] ) {$reliability_count_raw++;$reliability_count_scored++;}}
+                if($score_record['c1']=='8' AND $score_record2['c1']=='8'){}	 
+				elseif ($score_record['c1'] =='9' && $score_record2['c1'] =='9'){}
+                else {
+                    $denominator++;
+                    if($score_record2['c1'] != $score_record['c1'] ) {$reliability_count_raw++;}}
+                if($score_record['c2']=='8' AND $score_record2['c2']=='8'){}	 
+				elseif ($score_record['c2'] =='9' && $score_record2['c2'] =='9'){}
+                else {
+                    $denominator++;
+                    if($score_record2['c2']  != $score_record['c2'] ) {$reliability_count_raw++;}}
+                if($score_record['d1']=='8' AND $score_record2['d1']=='8'){}	 
+				elseif ($score_record['d1'] =='9' && $score_record2['d1'] =='9'){}
+                else {
+                    $denominator++;$denominator_scored++;
+                    if($score_record2['d1']  != $score_record['d1'] ) {$reliability_count_raw++;$reliability_count_scored++;}}
+                if($score_record['d2']=='8' AND $score_record2['d2']=='8'){}	 
+				elseif ($score_record['d2'] =='9' && $score_record2['d2'] =='9'){}
+                else {
+                    $denominator++;$denominator_scored++;
+                    if (($score_record['d2'] =='2' AND $score_record2['d2']=='3') ||
+                               ($score_record['d2'] =='3' AND $score_record2['d2']=='2'))
+                              {
+                                 #Don't count this
+                              }
+                              else if($score_record2['d2']  != $score_record['d2'] ) {$reliability_count_raw++;$reliability_count_scored++;}}
+                if($score_record['d3']=='8' AND $score_record2['d3']=='8'){}	 
+				elseif ($score_record['d3'] =='9' && $score_record2b['d3']	=='9'){}
+                else {
+                    $denominator++;
+                    if($score_record2['d3'] != $score_record['d3'] ) {$reliability_count_raw++;}}
+                if($score_record['d4']=='8' AND $score_record2['d4']=='8'){}	 
+				elseif ($score_record['d4'] =='9' && $score_record2['d4'] =='9'){}
+                else {
+                    $denominator++;$denominator_scored++;
+                    if (($score_record['d4'] =='2' AND $score_record2['d4']=='3') ||
+                                 ($score_record['d4'] =='3' AND $score_record2['d4']=='2'))
+                                {
+                                   #Don't count this
+                                }
+                                else if($score_record2['d4']  != $score_record['d4'] ) {$reliability_count_raw++;$reliability_count_scored++;}}
+                if($score_record['e1']=='8' AND $score_record2['e1']=='8'){}	 
+				elseif ($score_record['e1'] =='9' && $score_record2['e1'] =='9'){}
+                else {
+                    $denominator++;
+                    if($score_record2['e1'] != $score_record['e1'] ) {$reliability_count_raw++;}}
+                if($score_record['e2']=='8' AND $score_record2['e2']=='8'){}	 
+				elseif ($score_record['e2'] =='9' && $score_record2['e2'] =='9'){}
+                else {
+                    $denominator++;
+                    if($score_record2['e2']  != $score_record['e2'] ) {$reliability_count_raw++;}}
+                if($score_record['e3']=='8' AND $score_record2['e3']=='8'){}	 
+				elseif ($score_record['e3'] =='9' && $score_record2['e3'] =='9'){}
+                else {
+                    $denominator++;
+                if($score_record2['e3'] != $score_record['e3']) {$reliability_count_raw++;}}
+                               
+            } // endif 3 or 8 check
+            
+            // if the score for a1 = 0, 1 or 2, then scored items are different
+            if($score_record['a1'] =='0' || $score_record['a1'] =='1' || $score_record['a1'] =='2' ) {
+                
+                // individual items
+                if($score_record['a1']=='8' AND $score_record2['a1']=='8'){}    
+				elseif ($score_record['a1'] =='9' && $score_record2['a1'] =='9'){}
+                else {
+                    $denominator++; 
+                    if($score_record2['a1'] != $score_record['a1']) {$reliability_count_raw++;}}
+                
+                if($score_record['a2']=='8' AND $score_record2['a2']=='8'){}	 
+                elseif ($score_record['a2'] =='9' && $score_record2['a2'] =='9'){}
+                else {
+                    $denominator++;$denominator_scored++;
+                    if($score_record2['a2'] != $score_record['a2']) {$reliability_count_raw++;$reliability_count_scored++;}}
+                
+                if($score_record['a3']=='8' AND $score_record2['a3']=='8'){}	 
+                elseif ($score_record['a3'] =='9' && $score_record2['a3'] =='9'){}
+                else {
+                    $denominator++;
+                    if($score_record2['a3'] != $score_record['a3'] ) {$reliability_count_raw++;}}
+                
+                if($score_record['a4']=='8' AND $score_record2['a4']=='8'){}	 
+				elseif ($score_record['a4'] =='9' && $score_record2['a4'] =='9'){}
+                else {
+                    $denominator++;
+                    if($score_record2['a4']  != $score_record['a4'] ) {$reliability_count_raw++;}}
+
+                if($score_record['a5']=='8' AND $score_record2['a5']=='8'){}	 
+				elseif ($score_record['a5'] =='9' && $score_record2['a5'] =='9'){}
+                else {
+                    $denominator++;$denominator_scored++;
+                    if($score_record2['a5']  != $score_record['a5'] ) {$reliability_count_raw++;$reliability_count_scored++;}}
+                
+				if($score_record['a6']=='8' AND $score_record2['a6']=='8'){}	 
+				elseif ($score_record['a6'] =='9' && $score_record2['a6'] =='9'){}
+                else {
+                    $denominator++;
+                    if($score_record2['a6'] != $score_record['a6'] ) {$reliability_count_raw++;}}
+
+                if($score_record['a7']=='8' AND $score_record2['a7']=='8'){}	 
+				elseif ($score_record['a7'] =='9' && $score_record2['a7'] =='9'){}
+                else {
+                    $denominator++;$denominator_scored++;
+                    if($score_record2['a7'] != $score_record['a7'] ) {$reliability_count_raw++;$reliability_count_scored++;}}
+
+                if($score_record['a8']=='8' AND $score_record2['a8']=='8'){}	 
+				elseif ($score_record['a8'] =='9' && $score_record2['a8'] =='9'){}
+                else {
+                    $denominator++;$denominator_scored++;
+                    if($score_record2['a8'] != $score_record['a8'] ) {$reliability_count_raw++;$reliability_count_scored++;}}
+                if($score_record['b1']=='8' AND $score_record2['b1']=='8'){}	 
+				elseif ($score_record['b1'] =='9' && $score_record2['b1'] =='9'){}
+                else {
+                    $denominator++;$denominator_scored++;
+                     if (($score_record['b1'] =='2' AND $score_record2['b1']=='3') ||
+                      ($score_record['b1'] =='3' AND $score_record2['b1']=='2'))
+                     {
+                        #Don't count this
+                     }
+                     else if($score_record2['b1'] != $score_record['b1'] ) {$reliability_count_raw++;$reliability_count_scored++;}}
+                if($score_record['b2']=='8' AND $score_record2['b2']=='8'){}	 
+				elseif ($score_record['b2'] =='9' && $score_record2['b2'] =='9'){}
+                else {
+                    $denominator++;
+                    if (($score_record['b2'] =='2' AND $score_record2['b2']=='3') ||
+                     ($score_record['b2'] =='3' AND $score_record2['b2']=='2'))
+                    {
+                       #Don't count this
+                    }
+                    else if($score_record2['b2']  != $score_record['b2'] ) {$reliability_count_raw++;}}
+                if($score_record['b3']=='8' AND $score_record2['b3']=='8'){}	 
+				elseif ($score_record['b3'] =='9' && $score_record2['b3'] =='9'){}
+                else {
+                    $denominator++;$denominator_scored++;
+                    if($score_record2['b3'] != $score_record['b3'] ) {$reliability_count_raw++;$reliability_count_scored++;}}
+                if($score_record['b4']=='8' AND $score_record2['b4']=='8'){}	 
+				elseif ($score_record['b4'] =='9' && $score_record2['b4'] =='9'){}
+                else {
+                    $denominator++;$denominator_scored++;
+                    if($score_record2['b4']  != $score_record['b4'] ) {$reliability_count_raw++;$reliability_count_scored++;}}
+                if($score_record['b5']=='8' AND $score_record2['b5']=='8'){}	 
+				elseif ($score_record['b5'] =='9' && $score_record2['b5'] =='9'){}
+                else {
+                    $denominator++;$denominator_scored++;
+                    if($score_record2['b5']  != $score_record['b5'] ) {$reliability_count_raw++;$reliability_count_scored++;}}
+                if($score_record['b6']=='8' AND $score_record2['b6']=='8'){}	 
+				elseif ($score_record['b6'] =='9' && $score_record2['b6'] =='9'){}
+                else {
+                    $denominator++;
+                    if($score_record2['b6'] != $score_record['b6'] ) {$reliability_count_raw++;}}
+                if($score_record['b7']=='8' AND $score_record2['b7']=='8'){}	 
+				elseif ($score_record['b7'] =='9' && $score_record2['b7'] =='9'){}
+                else {
+                    $denominator++;
+                    if($score_record2['b7']  != $score_record['b7'] ) {$reliability_count_raw++;}}
+                if($score_record['b8']=='8' AND $score_record2['b8']=='8'){}	 
+				elseif ($score_record['b8'] =='9' && $score_record2['b8'] =='9'){}
+                else {
+                    $denominator++;
+                    if($score_record2['b8'] != $score_record['b8'] ) {$reliability_count_raw++;}}
+                if($score_record['b9']=='8' AND $score_record2['b9']=='8'){}	 
+				elseif ($score_record['b9'] =='9' && $score_record2['b9'] =='9'){}
+                else {
+                    $denominator++;$denominator_scored++;
+                    if($score_record2['b9']  != $score_record['b9'] ) {$reliability_count_raw++;$reliability_count_scored++;}}
+                if($score_record['b10']=='8' AND $score_record2['b10']=='8'){}  
+				elseif ($score_record['b10'] =='9' && $score_record2['b10'] =='9'){}
+                else {
+                    $denominator++;$denominator_scored++;
+                    if($score_record2['b10']  != $score_record['b10'] ) {$reliability_count_raw++;$reliability_count_scored++;}}
+                if($score_record['b11']=='8' AND $score_record2['b11']=='8'){}  
+				elseif ($score_record['b11'] =='9' && $score_record2['b11'] =='9'){}
+                else {
+                    $denominator++;
+                    if($score_record2['b11']  != $score_record['b11'] ) {$reliability_count_raw++;}}
+                if($score_record['b12']=='8' AND $score_record2['b12']=='8'){}  
+				elseif ($score_record['b12'] =='9' && $score_record2['b12'] =='9'){}
+                else {
+                    $denominator++;$denominator_scored++;
+                    if($score_record2['b12'] != $score_record['b12'] ) {$reliability_count_raw++;$reliability_count_scored++;}}
+                if($score_record['c1']=='8' AND $score_record2['c1']=='8'){}	 
+				elseif ($score_record['c1'] =='9' && $score_record2['c1'] =='9'){}
+                else {
+                    $denominator++;
+                    if($score_record2['c1'] != $score_record['c1'] ) {$reliability_count_raw++;}}
+                if($score_record['c2']=='8' AND $score_record2['c2']=='8'){}	 
+				elseif ($score_record['c2'] =='9' && $score_record2['c2'] =='9'){}
+                else {
+                    $denominator++;
+                    if($score_record2['c2']  != $score_record['c2'] ) {$reliability_count_raw++;}}
+                if($score_record['d1']=='8' AND $score_record2['d1']=='8'){}	 
+				elseif ($score_record['d1'] =='9' && $score_record2['d1'] =='9'){}
+                else {
+                    $denominator++;$denominator_scored++;
+                    if($score_record2['d1']  != $score_record['d1'] ) {$reliability_count_raw++;$reliability_count_scored++;}}
+                if($score_record['d2']=='8' AND $score_record2['d2']=='8'){}	 
+				elseif ($score_record['d2'] =='9' && $score_record2['d2'] =='9'){}
+                else {
+                    $denominator++;$denominator_scored++;
+                    if (($score_record['d2'] =='2' AND $score_record2['d2']=='3') ||
+                       ($score_record['d2'] =='3' AND $score_record2['d2']=='2'))
+                      {
+                         #Don't count this
+                      }
+                      else if($score_record2['d2']  != $score_record['d2'] ) {$reliability_count_raw++;$reliability_count_scored++;}}
+                if($score_record['d3']=='8' AND $score_record2['d3']=='8'){}	 
+				elseif ($score_record['d3'] =='9' && $score_record2b['d3']	=='9'){}
+                else {
+                    $denominator++;
+                    if($score_record2['d3'] != $score_record['d3'] ) {$reliability_count_raw++;}}
+                if($score_record['d4']=='8' AND $score_record2['d4']=='8'){}	 
+				elseif ($score_record['d4'] =='9' && $score_record2['d4'] =='9'){}
+                else {
+                    $denominator++;$denominator_scored++;
+                    if (($score_record['d4'] =='2' AND $score_record2['d4']=='3') ||
+                         ($score_record['d4'] =='3' AND $score_record2['d4']=='2'))
+                        {
+                           #Don't count this
+                        }
+                        else if($score_record2['d4']  != $score_record['d4'] ) {$reliability_count_raw++;$reliability_count_scored++;}}
+                if($score_record['e1']=='8' AND $score_record2['e1']=='8'){}	 
+				elseif ($score_record['e1'] =='9' && $score_record2['e1'] =='9'){}
+                else {
+                    $denominator++;
+                    if($score_record2['e1'] != $score_record['e1'] ) {$reliability_count_raw++;}}
+                if($score_record['e2']=='8' AND $score_record2['e2']=='8'){}	 
+				elseif ($score_record['e2'] =='9' && $score_record2['e2'] =='9'){}
+                else {
+                    $denominator++;
+                    if($score_record2['e2']  != $score_record['e2'] ) {$reliability_count_raw++;}}
+                if($score_record['e3']=='8' AND $score_record2['e3']=='8'){}	 
+				elseif ($score_record['e3'] =='9' && $score_record2['e3'] =='9'){}
+                else {
+                    $denominator++;
+                if($score_record2['e3'] != $score_record['e3']) {$reliability_count_raw++;}}
+                
+            } // endif 0, 1, 2 check
+            
+            // If the reliability is to be compared to the gold standard
+        }  elseif ($score_record['Gold_standard']=='Gold_standard_SEA0015'){
+            echo("This is the Gold standard check for SEA0015<br>");
+            
+            $reliability_count_raw=0;            
+            $reliability_count_scored=0;            
+            $denominator=0;
+            $denominator_scored=0;
+            
+            // if the score for a1 = 3 or 8, then scored items are different
+            if($score_record['a1'] =='3' || $score_record['a1'] =='8') {
+                
+                // individual items
+                if($score_record['a1']=='8' AND $score_record3['a1']=='8'){}    
+				elseif ($score_record['a1'] =='9' && $score_record3['a1'] =='9'){}
+                else {
+                    $denominator++; 
+                    if($score_record3['a1'] != $score_record['a1']) {$reliability_count_raw++;}}
+                
+                if($score_record['a2']=='8' AND $score_record3['a2']=='8'){}	 
+                elseif ($score_record['a2'] =='9' && $score_record3['a2'] =='9'){}
+                else {
+                    $denominator++;$denominator_scored++;
+                    if($score_record3['a2'] != $score_record['a2']) {$reliability_count_raw++;$reliability_count_scored++;}}
+                
+                if($score_record['a3']=='8' AND $score_record3['a3']=='8'){}	 
+                elseif ($score_record['a3'] =='9' && $score_record3['a3'] =='9'){}
+                else {
+                    $denominator++;$denominator_scored++;
+                    if (($score_record['a3'] =='2' AND $score_record3['a3']=='3') ||
+                           ($score_record['a3'] =='3' AND $score_record3['a3']=='2'))
+                          {
+                             #Don't count this
+                          }
+                          else if($score_record3['a3'] != $score_record['a3'] ) {$reliability_count_raw++;$reliability_count_scored++;}}
+                
+                if($score_record['a4']=='8' AND $score_record3['a4']=='8'){}	 
+				elseif ($score_record['a4'] =='9' && $score_record3['a4'] =='9'){}
+                else {
+                    $denominator++;
+                    if($score_record3['a4']  != $score_record['a4'] ) {$reliability_count_raw++;}}
+
+                if($score_record['a5']=='8' AND $score_record3['a5']=='8'){}	 
+				elseif ($score_record['a5'] =='9' && $score_record3['a5'] =='9'){}
+                else {
+                    $denominator++;
+                    if (($score_record['a5'] =='2' AND $score_record3['a5']=='3') ||
+                             ($score_record['a5'] =='3' AND $score_record3['a5']=='2'))
+                            {
+                               #Don't count this
+                            }
+                            else if($score_record3['a5']  != $score_record['a5'] ) {$reliability_count_raw++;}}
+                
+				if($score_record['a6']=='8' AND $score_record3['a6']=='8'){}	 
+				elseif ($score_record['a6'] =='9' && $score_record3['a6'] =='9'){}
+                else {
+                    $denominator++;
+                    if($score_record3['a6'] != $score_record['a6'] ) {$reliability_count_raw++;}}
+
+                if($score_record['a7']=='8' AND $score_record3['a7']=='8'){}	 
+				elseif ($score_record['a7'] =='9' && $score_record3['a7'] =='9'){}
+                else {
+                    $denominator++;
+                    if($score_record3['a7'] != $score_record['a7'] ) {$reliability_count_raw++;}}
+
+                if($score_record['a8']=='8' AND $score_record3['a8']=='8'){}	 
+				elseif ($score_record['a8'] =='9' && $score_record3['a8'] =='9'){}
+                else {
+                    $denominator++;$denominator_scored++;
+                    if($score_record3['a8'] != $score_record['a8'] ) {$reliability_count_raw++;$reliability_count_scored++;}}
+                if($score_record['b1']=='8' AND $score_record3['b1']=='8'){}	 
+				elseif ($score_record['b1'] =='9' && $score_record3['b1'] =='9'){}
+                else {
+                    $denominator++;$denominator_scored++;
+                    if (($score_record['b1'] =='2' AND $score_record3['b1']=='3') ||
+                               ($score_record['b1'] =='3' AND $score_record3['b1']=='2'))
+                              {
+                                 #Don't count this
+                              }
+                              else if($score_record3['b1'] != $score_record['b1'] ) {$reliability_count_raw++;$reliability_count_scored++;}}
+                if($score_record['b2']=='8' AND $score_record3['b2']=='8'){}	 
+				elseif ($score_record['b2'] =='9' && $score_record3['b2'] =='9'){}
+                else {
+                    $denominator++;
+                    if (($score_record['b2'] =='2' AND $score_record3['b2']=='3') ||
+                    ($score_record['b2'] =='3' AND $score_record3['b2']=='2'))
+                    {
+                       #Don't count this
+                    }
+                    else if($score_record3['b2']  != $score_record['b2'] ) {$reliability_count_raw++;}}
+                if($score_record['b3']=='8' AND $score_record3['b3']=='8'){}	 
+				elseif ($score_record['b3'] =='9' && $score_record3['b3'] =='9'){}
+                else {
+                    $denominator++;$denominator_scored++;
+                    if($score_record3['b3'] != $score_record['b3'] ) {$reliability_count_raw++;$reliability_count_scored++;}}
+                if($score_record['b4']=='8' AND $score_record3['b4']=='8'){}	 
+				elseif ($score_record['b4'] =='9' && $score_record3['b4'] =='9'){}
+                else {
+                    $denominator++;$denominator_scored++;
+                    if($score_record3['b4']  != $score_record['b4'] ) {$reliability_count_raw++;$reliability_count_scored++;}}
+                if($score_record['b5']=='8' AND $score_record3['b5']=='8'){}	 
+				elseif ($score_record['b5'] =='9' && $score_record3['b5'] =='9'){}
+                else {
+                    $denominator++;$denominator_scored++;
+                    if($score_record3['b5']  != $score_record['b5'] ) {$reliability_count_raw++;$reliability_count_scored++;}}
+                if($score_record['b6']=='8' AND $score_record3['b6']=='8'){}	 
+				elseif ($score_record['b6'] =='9' && $score_record3['b6'] =='9'){}
+                else {
+                    $denominator++;
+                    if($score_record3['b6'] != $score_record['b6'] ) {$reliability_count_raw++;}}
+                if($score_record['b7']=='8' AND $score_record3['b7']=='8'){}	 
+				elseif ($score_record['b7'] =='9' && $score_record3['b7'] =='9'){}
+                else {
+                    $denominator++;
+                    if($score_record3['b7']  != $score_record['b7'] ) {$reliability_count_raw++;}}
+                if($score_record['b8']=='8' AND $score_record3['b8']=='8'){}	 
+				elseif ($score_record['b8'] =='9' && $score_record3['b8'] =='9'){}
+                else {
+                    $denominator++;
+                    if($score_record3['b8'] != $score_record['b8'] ) {$reliability_count_raw++;}}
+                if($score_record['b9']=='8' AND $score_record3['b9']=='8'){}	 
+				elseif ($score_record['b9'] =='9' && $score_record3['b9'] =='9'){}
+                else {
+                    $denominator++;$denominator_scored++;
+                    if($score_record3['b9']  != $score_record['b9'] ) {$reliability_count_raw++;$reliability_count_scored++;}}
+                if($score_record['b10']=='8' AND $score_record3['b10']=='8'){}  
+				elseif ($score_record['b10'] =='9' && $score_record3['b10'] =='9'){}
+                else {
+                    $denominator++;$denominator_scored++;
+                    if($score_record3['b10']  != $score_record['b10'] ) {$reliability_count_raw++;$reliability_count_scored++;}}
+                if($score_record['b11']=='8' AND $score_record3['b11']=='8'){}  
+				elseif ($score_record['b11'] =='9' && $score_record3['b11'] =='9'){}
+                else {
+                    $denominator++;$denominator_scored++;
+                    if($score_record3['b11']  != $score_record['b11'] ) {$reliability_count_raw++;$reliability_count_scored++;}}
+                if($score_record['b12']=='8' AND $score_record3['b12']=='8'){}  
+				elseif ($score_record['b12'] =='9' && $score_record3['b12'] =='9'){}
+                else {
+                    $denominator++;$denominator_scored++;
+                    if (($score_record['b12'] =='2' AND $score_record3['b12']=='3') ||
+                      ($score_record['b12'] =='3' AND $score_record3['b12']=='2'))
+                      {
+                         #Don't count this
+                      }
+                      else if($score_record3['b12'] != $score_record['b12'] ) {$reliability_count_raw++;$reliability_count_scored++;}}
+                if($score_record['c1']=='8' AND $score_record3['c1']=='8'){}	 
+				elseif ($score_record['c1'] =='9' && $score_record3['c1'] =='9'){}
+                else {
+                    $denominator++;
+                    if (($score_record['c1'] =='2' AND $score_record3['c1']=='3') ||
+                        ($score_record['c1'] =='3' AND $score_record3['c1']=='2'))
+                        {
+                           #Don't count this
+                        }
+                        else if($score_record3['c1'] != $score_record['c1'] ) {$reliability_count_raw++;}}
+                if($score_record['c2']=='8' AND $score_record3['c2']=='8'){}	 
+				elseif ($score_record['c2'] =='9' && $score_record3['c2'] =='9'){}
+                else {
+                    $denominator++;
+                    if($score_record3['c2']  != $score_record['c2'] ) {$reliability_count_raw++;}}
+                if($score_record['d1']=='8' AND $score_record3['d1']=='8'){}	 
+				elseif ($score_record['d1'] =='9' && $score_record3['d1'] =='9'){}
+                else {
+                    $denominator++;$denominator_scored++;
+                    if (($score_record['d1'] =='2' AND $score_record3['d1']=='3') ||
+                    ($score_record['d1'] =='3' AND $score_record3['d1']=='2'))
+                    {
+                       #Don't count this
+                    }
+                    else if($score_record3['d1']  != $score_record['d1'] ) {$reliability_count_raw++;$reliability_count_scored++;}}
+                if($score_record['d2']=='8' AND $score_record3['d2']=='8'){}	 
+				elseif ($score_record['d2'] =='9' && $score_record3['d2'] =='9'){}
+                else {
+                    $denominator++;$denominator_scored++;
+                    if (($score_record['d2'] =='2' AND $score_record3['d2']=='3') ||
+                      ($score_record['d2'] =='3' AND $score_record3['d2']=='2'))
+                      {
+                         #Don't count this
+                      }
+                      else if($score_record3['d2']  != $score_record['d2'] ) {$reliability_count_raw++;$reliability_count_scored++;}}
+                if($score_record['d3']=='8' AND $score_record3['d3']=='8'){}	 
+				elseif ($score_record['d3'] =='9' && $score_record3b['d3']	=='9'){}
+                else {
+                    $denominator++;
+                    if($score_record3['d3'] != $score_record['d3'] ) {$reliability_count_raw++;}}
+                if($score_record['d4']=='8' AND $score_record3['d4']=='8'){}	 
+				elseif ($score_record['d4'] =='9' && $score_record3['d4'] =='9'){}
+                else {
+                    $denominator++;$denominator_scored++;
+                    if (($score_record['d4'] =='2' AND $score_record3['d4']=='3') ||
+                        ($score_record['d4'] =='3' AND $score_record3['d4']=='2'))
+                        {
+                           #Don't count this
+                        }
+                        else if($score_record3['d4']  != $score_record['d4'] ) {$reliability_count_raw++;$reliability_count_scored++;}}
+                if($score_record['e1']=='8' AND $score_record3['e1']=='8'){}	 
+				elseif ($score_record['e1'] =='9' && $score_record3['e1'] =='9'){}
+                else {
+                    $denominator++;
+                    if($score_record3['e1'] != $score_record['e1'] ) {$reliability_count_raw++;}}
+                if($score_record['e2']=='8' AND $score_record3['e2']=='8'){}	 
+				elseif ($score_record['e2'] =='9' && $score_record3['e2'] =='9'){}
+                else {
+                    $denominator++;
+                    if($score_record3['e2']  != $score_record['e2'] ) {$reliability_count_raw++;}}
+                if($score_record['e3']=='8' AND $score_record3['e3']=='8'){}	 
+				elseif ($score_record['e3'] =='9' && $score_record3['e3'] =='9'){}
+                else {
+                    $denominator++;
+                if($score_record3['e3'] != $score_record['e3']) {$reliability_count_raw++;}}
+                               
+            } // endif 3 or 8 check
+            
+            // if the score for a1 = 0, 1 or 2, then scored items are different
+            if($score_record['a1'] =='0' || $score_record['a1'] =='1' || $score_record['a1'] =='2' ) {
+                
+                // individual items
+                if($score_record['a1']=='8' AND $score_record3['a1']=='8'){}    
+				elseif ($score_record['a1'] =='9' && $score_record3['a1'] =='9'){}
+                else {
+                    $denominator++; 
+                    if($score_record3['a1'] != $score_record['a1']) {$reliability_count_raw++;}}
+                
+                if($score_record['a2']=='8' AND $score_record3['a2']=='8'){}	 
+                elseif ($score_record['a2'] =='9' && $score_record3['a2'] =='9'){}
+                else {
+                    $denominator++;$denominator_scored++;
+                    if($score_record3['a2'] != $score_record['a2']) {$reliability_count_raw++;$reliability_count_scored++;}}
+                
+                if($score_record['a3']=='8' AND $score_record3['a3']=='8'){}	 
+                elseif ($score_record['a3'] =='9' && $score_record3['a3'] =='9'){}
+                else {
+                    $denominator++;
+                    if (($score_record['a3'] =='2' AND $score_record3['a3']=='3') ||
+                   ($score_record['a3'] =='3' AND $score_record3['a3']=='2'))
+                   {
+                      #Don't count this
+                   }
+                   else if($score_record3['a3'] != $score_record['a3'] ) {$reliability_count_raw++;}}
+                
+                if($score_record['a4']=='8' AND $score_record3['a4']=='8'){}	 
+				elseif ($score_record['a4'] =='9' && $score_record3['a4'] =='9'){}
+                else {
+                    $denominator++;
+                    if($score_record3['a4']  != $score_record['a4'] ) {$reliability_count_raw++;}}
+
+                if($score_record['a5']=='8' AND $score_record3['a5']=='8'){}	 
+				elseif ($score_record['a5'] =='9' && $score_record3['a5'] =='9'){}
+                else {
+                    $denominator++;$denominator_scored++;
+                    if (($score_record['a5'] =='2' AND $score_record3['a5']=='3') ||
+                     ($score_record['a5'] =='3' AND $score_record3['a5']=='2'))
+                     {
+                        #Don't count this
+                     }
+                     else if($score_record3['a5']  != $score_record['a5'] ) {$reliability_count_raw++;$reliability_count_scored++;}}
+                
+				if($score_record['a6']=='8' AND $score_record3['a6']=='8'){}	 
+				elseif ($score_record['a6'] =='9' && $score_record3['a6'] =='9'){}
+                else {
+                    $denominator++;
+                    if($score_record3['a6'] != $score_record['a6'] ) {$reliability_count_raw++;}}
+
+                if($score_record['a7']=='8' AND $score_record3['a7']=='8'){}	 
+				elseif ($score_record['a7'] =='9' && $score_record3['a7'] =='9'){}
+                else {
+                    $denominator++;$denominator_scored++;
+                    if($score_record3['a7'] != $score_record['a7'] ) {$reliability_count_raw++;$reliability_count_scored++;}}
+
+                if($score_record['a8']=='8' AND $score_record3['a8']=='8'){}	 
+				elseif ($score_record['a8'] =='9' && $score_record3['a8'] =='9'){}
+                else {
+                    $denominator++;$denominator_scored++;
+                    if($score_record3['a8'] != $score_record['a8'] ) {$reliability_count_raw++;$reliability_count_scored++;}}
+                if($score_record['b1']=='8' AND $score_record3['b1']=='8'){}	 
+				elseif ($score_record['b1'] =='9' && $score_record3['b1'] =='9'){}
+                else {
+                    $denominator++;$denominator_scored++;
+                    if (($score_record['b1'] =='2' AND $score_record3['b1']=='3') ||
+                       ($score_record['b1'] =='3' AND $score_record3['b1']=='2'))
+                       {
+                          #Don't count this
+                       }
+                       else if($score_record3['b1'] != $score_record['b1'] ) {$reliability_count_raw++;$reliability_count_scored++;}}
+                if($score_record['b2']=='8' AND $score_record3['b2']=='8'){}	 
+				elseif ($score_record['b2'] =='9' && $score_record3['b2'] =='9'){}
+                else {
+                    $denominator++;
+                    if (($score_record['b2'] =='2' AND $score_record3['b2']=='3') ||
+                    ($score_record['b2'] =='3' AND $score_record3['b2']=='2'))
+                    {
+                       #Don't count this
+                    }
+                    else if($score_record3['b2']  != $score_record['b2'] ) {$reliability_count_raw++;}}
+                if($score_record['b3']=='8' AND $score_record3['b3']=='8'){}	 
+				elseif ($score_record['b3'] =='9' && $score_record3['b3'] =='9'){}
+                else {
+                    $denominator++;$denominator_scored++;
+                    if($score_record3['b3'] != $score_record['b3'] ) {$reliability_count_raw++;$reliability_count_scored++;}}
+                if($score_record['b4']=='8' AND $score_record3['b4']=='8'){}	 
+				elseif ($score_record['b4'] =='9' && $score_record3['b4'] =='9'){}
+                else {
+                    $denominator++;$denominator_scored++;
+                    if($score_record3['b4']  != $score_record['b4'] ) {$reliability_count_raw++;$reliability_count_scored++;}}
+                if($score_record['b5']=='8' AND $score_record3['b5']=='8'){}	 
+				elseif ($score_record['b5'] =='9' && $score_record3['b5'] =='9'){}
+                else {
+                    $denominator++;$denominator_scored++;
+                    if($score_record3['b5']  != $score_record['b5'] ) {$reliability_count_raw++;$reliability_count_scored++;}}
+                if($score_record['b6']=='8' AND $score_record3['b6']=='8'){}	 
+				elseif ($score_record['b6'] =='9' && $score_record3['b6'] =='9'){}
+                else {
+                    $denominator++;
+                    if($score_record3['b6'] != $score_record['b6'] ) {$reliability_count_raw++;}}
+                if($score_record['b7']=='8' AND $score_record3['b7']=='8'){}	 
+				elseif ($score_record['b7'] =='9' && $score_record3['b7'] =='9'){}
+                else {
+                    $denominator++;
+                    if($score_record3['b7']  != $score_record['b7'] ) {$reliability_count_raw++;}}
+                if($score_record['b8']=='8' AND $score_record3['b8']=='8'){}	 
+				elseif ($score_record['b8'] =='9' && $score_record3['b8'] =='9'){}
+                else {
+                    $denominator++;
+                    if($score_record3['b8'] != $score_record['b8'] ) {$reliability_count_raw++;}}
+                if($score_record['b9']=='8' AND $score_record3['b9']=='8'){}	 
+				elseif ($score_record['b9'] =='9' && $score_record3['b9'] =='9'){}
+                else {
+                    $denominator++;$denominator_scored++;
+                    if($score_record3['b9']  != $score_record['b9'] ) {$reliability_count_raw++;$reliability_count_scored++;}}
+                if($score_record['b10']=='8' AND $score_record3['b10']=='8'){}  
+				elseif ($score_record['b10'] =='9' && $score_record3['b10'] =='9'){}
+                else {
+                    $denominator++;$denominator_scored++;
+                    if($score_record3['b10']  != $score_record['b10'] ) {$reliability_count_raw++;$reliability_count_scored++;}}
+                if($score_record['b11']=='8' AND $score_record3['b11']=='8'){}  
+				elseif ($score_record['b11'] =='9' && $score_record3['b11'] =='9'){}
+                else {
+                    $denominator++;
+                    if($score_record3['b11']  != $score_record['b11'] ) {$reliability_count_raw++;}}
+                if($score_record['b12']=='8' AND $score_record3['b12']=='8'){}  
+				elseif ($score_record['b12'] =='9' && $score_record3['b12'] =='9'){}
+                else {
+                    $denominator++;$denominator_scored++;
+                    if (($score_record['b12'] =='2' AND $score_record3['b12']=='3') ||
+                      ($score_record['b12'] =='3' AND $score_record3['b12']=='2'))
+                      {
+                         #Don't count this
+                      }
+                      else if($score_record3['b12'] != $score_record['b12'] ) {$reliability_count_raw++;$reliability_count_scored++;}}
+                if($score_record['c1']=='8' AND $score_record3['c1']=='8'){}	 
+				elseif ($score_record['c1'] =='9' && $score_record3['c1'] =='9'){}
+                else {
+                    $denominator++;
+                    if (($score_record['c1'] =='2' AND $score_record3['c1']=='3') ||
+                    ($score_record['c1'] =='3' AND $score_record3['c1']=='2'))
+                    {
+                       #Don't count this
+                    }
+                    else if($score_record3['c1'] != $score_record['c1'] ) {$reliability_count_raw++;}}
+                if($score_record['c2']=='8' AND $score_record3['c2']=='8'){}	 
+				elseif ($score_record['c2'] =='9' && $score_record3['c2'] =='9'){}
+                else {
+                    $denominator++;
+                    if($score_record3['c2']  != $score_record['c2'] ) {$reliability_count_raw++;}}
+                if($score_record['d1']=='8' AND $score_record3['d1']=='8'){}	 
+				elseif ($score_record['d1'] =='9' && $score_record3['d1'] =='9'){}
+                else {
+                    $denominator++;$denominator_scored++;
+                    if (($score_record['d1'] =='2' AND $score_record3['d1']=='3') ||
+                      ($score_record['d1'] =='3' AND $score_record3['d1']=='2'))
+                      {
+                         #Don't count this
+                      }
+                      else if($score_record3['d1']  != $score_record['d1'] ) {$reliability_count_raw++;$reliability_count_scored++;}}
+                if($score_record['d2']=='8' AND $score_record3['d2']=='8'){}	 
+				elseif ($score_record['d2'] =='9' && $score_record3['d2'] =='9'){}
+                else {
+                    $denominator++;$denominator_scored++;
+                    if (($score_record['d2'] =='2' AND $score_record3['d2']=='3') ||
+                        ($score_record['d2'] =='3' AND $score_record3['d2']=='2'))
+                        {
+                           #Don't count this
+                        }
+                        else if($score_record3['d2']  != $score_record['d2'] ) {$reliability_count_raw++;$reliability_count_scored++;}}
+                if($score_record['d3']=='8' AND $score_record3['d3']=='8'){}	 
+				elseif ($score_record['d3'] =='9' && $score_record3b['d3']	=='9'){}
+                else {
+                    $denominator++;
+                    if($score_record3['d3'] != $score_record['d3'] ) {$reliability_count_raw++;}}
+                if($score_record['d4']=='8' AND $score_record3['d4']=='8'){}	 
+				elseif ($score_record['d4'] =='9' && $score_record3['d4'] =='9'){}
+                else {
+                    $denominator++;$denominator_scored++;
+                    if (($score_record['d4'] =='2' AND $score_record3['d4']=='3') ||
+                    ($score_record['d4'] =='3' AND $score_record3['d4']=='2'))
+                    {
+                       #Don't count this
+                    }
+                    elseif($score_record3['d4']  != $score_record['d4'] ) {$reliability_count_raw++;$reliability_count_scored++;}}
+                if($score_record['e1']=='8' AND $score_record3['e1']=='8'){}	 
+				elseif ($score_record['e1'] =='9' && $score_record3['e1'] =='9'){}
+                else {
+                    $denominator++;
+                    if($score_record3['e1'] != $score_record['e1'] ) {$reliability_count_raw++;}}
+                if($score_record['e2']=='8' AND $score_record3['e2']=='8'){}	 
+				elseif ($score_record['e2'] =='9' && $score_record3['e2'] =='9'){}
+                else {
+                    $denominator++;
+                    if($score_record3['e2']  != $score_record['e2'] ) {$reliability_count_raw++;}}
+                if($score_record['e3']=='8' AND $score_record3['e3']=='8'){}	 
+				elseif ($score_record['e3'] =='9' && $score_record3['e3'] =='9'){}
+                else {
+                    $denominator++;
+                if($score_record3['e3'] != $score_record['e3']) {$reliability_count_raw++;}}
+                
+            } // endif 0, 1, 2 check
+
+        }  elseif ($score_record['Gold_standard']=='Gold_standard_SEA0017'){
+            echo("This is the Gold standard check for SEA0017<br>");
+            
+            $reliability_count_raw=0;            
+            $reliability_count_scored=0;            
+            $denominator=0;
+            $denominator_scored=0;
+
+
+            // if the score for a1 = 3 or 8, then scored items are different
+            if($score_record['a1'] =='3' || $score_record['a1'] =='8') {
+                
+                // individual items
+                if($score_record['a1']=='8' AND $score_record4['a1']=='8'){}    
+				elseif ($score_record['a1'] =='9' && $score_record4['a1'] =='9'){}
+                else {
+                    $denominator++; 
+                    if($score_record4['a1'] != $score_record['a1']) {$reliability_count_raw++;}}
+
+                if($score_record['a2']=='8' AND $score_record4['a2']=='8'){}	 
+                elseif ($score_record['a2'] =='9' && $score_record4['a2'] =='9'){}
+                else {
+                    $denominator++;$denominator_scored++;
+                    if (($score_record['a2'] =='2' AND $score_record4['a2']=='3') ||
+                      ($score_record['a2'] =='3' AND $score_record4['a2']=='2'))
+                      {
+                         #Don't count this
+                      }
+                      else if($score_record4['a2'] != $score_record['a2']) {$reliability_count_raw++;$reliability_count_scored++;}}
+                
+                if($score_record['a3']=='8' AND $score_record4['a3']=='8'){}	 
+                elseif ($score_record['a3'] =='9' && $score_record4['a3'] =='9'){}
+                else {
+                    $denominator++;$denominator_scored++;
+                    if (($score_record['a3'] =='2' AND $score_record4['a3']=='3') ||
+                        ($score_record['a3'] =='3' AND $score_record4['a3']=='2'))
+                        {
+                           #Don't count this
+                        }
+                        else if($score_record4['a3'] != $score_record['a3'] ) {$reliability_count_raw++;$reliability_count_scored++;}}
+                
+                if($score_record['a4']=='8' AND $score_record4['a4']=='8'){}	 
+				elseif ($score_record['a4'] =='9' && $score_record4['a4'] =='9'){}
+                else {
+                    $denominator++;
+                    if($score_record4['a4']  != $score_record['a4'] ) {$reliability_count_raw++;}}
+
+                if($score_record['a5']=='8' AND $score_record4['a5']=='8'){}	 
+				elseif ($score_record['a5'] =='9' && $score_record4['a5'] =='9'){}
+                else {
+                    $denominator++;
+                    if($score_record4['a5']  != $score_record['a5'] ) {$reliability_count_raw++;}}
+                
+				if($score_record['a6']=='8' AND $score_record4['a6']=='8'){}	 
+				elseif ($score_record['a6'] =='9' && $score_record4['a6'] =='9'){}
+                else {
+                    $denominator++;
+                    if($score_record4['a6'] != $score_record['a6'] ) {$reliability_count_raw++;}}
+
+                if($score_record['a7']=='8' AND $score_record4['a7']=='8'){}	 
+				elseif ($score_record['a7'] =='9' && $score_record4['a7'] =='9'){}
+                else {
+                    $denominator++;
+                    if (($score_record['a7'] =='2' AND $score_record4['a7']=='3') ||
+                          ($score_record['a7'] =='3' AND $score_record4['a7']=='2'))
+                          {
+                             #Don't count this
+                          }
+                          else if($score_record4['a7'] != $score_record['a7'] ) {$reliability_count_raw++;}}
+
+                if($score_record['a8']=='8' AND $score_record4['a8']=='8'){}	 
+				elseif ($score_record['a8'] =='9' && $score_record4['a8'] =='9'){}
+                else {
+                    $denominator++;$denominator_scored++;
+                    if (($score_record['a8'] =='2' AND $score_record4['a8']=='3') ||
+                            ($score_record['a8'] =='3' AND $score_record4['a8']=='2'))
+                            {
+                               #Don't count this
+                            }
+                            else if($score_record4['a8'] != $score_record['a8'] ) {$reliability_count_raw++;$reliability_count_scored++;}}
+                if($score_record['b1']=='8' AND $score_record4['b1']=='8'){}	 
+				elseif ($score_record['b1'] =='9' && $score_record4['b1'] =='9'){}
+                else {
+                    $denominator++;$denominator_scored++;
+                    if (($score_record['b1'] =='2' AND $score_record4['b1']=='3') ||
+                              ($score_record['b1'] =='3' AND $score_record4['b1']=='2'))
+                              {
+                                 #Don't count this
+                              }
+                              else if($score_record4['b1'] != $score_record['b1'] ) {$reliability_count_raw++;$reliability_count_scored++;}}
+                if($score_record['b2']=='8' AND $score_record4['b2']=='8'){}	 
+				elseif ($score_record['b2'] =='9' && $score_record4['b2'] =='9'){}
+                else {
+                    $denominator++;
+                    if (($score_record['b2'] =='2' AND $score_record4['b2']=='3') ||
+                    ($score_record['b2'] =='3' AND $score_record4['b2']=='2'))
+                    {
+                       #Don't count this
+                    }
+                    else if($score_record4['b2']  != $score_record['b2'] ) {$reliability_count_raw++;}}
+                if($score_record['b3']=='8' AND $score_record4['b3']=='8'){}	 
+				elseif ($score_record['b3'] =='9' && $score_record4['b3'] =='9'){}
+                else {
+                    $denominator++;$denominator_scored++;
+                    if($score_record4['b3'] != $score_record['b3'] ) {$reliability_count_raw++;$reliability_count_scored++;}}
+                if($score_record['b4']=='8' AND $score_record4['b4']=='8'){}	 
+				elseif ($score_record['b4'] =='9' && $score_record4['b4'] =='9'){}
+                else {
+                    $denominator++;$denominator_scored++;
+                    if (($score_record['b4'] =='2' AND $score_record4['b4']=='3') ||
+                      ($score_record['b4'] =='3' AND $score_record4['b4']=='2'))
+                      {
+                         #Don't count this
+                      }
+                      else if($score_record4['b4']  != $score_record['b4'] ) {$reliability_count_raw++;$reliability_count_scored++;}}
+                if($score_record['b5']=='8' AND $score_record4['b5']=='8'){}	 
+				elseif ($score_record['b5'] =='9' && $score_record4['b5'] =='9'){}
+                else {
+                    $denominator++;$denominator_scored++;
+                    if($score_record4['b5']  != $score_record['b5'] ) {$reliability_count_raw++;$reliability_count_scored++;}}
+                if($score_record['b6']=='8' AND $score_record4['b6']=='8'){}	 
+				elseif ($score_record['b6'] =='9' && $score_record4['b6'] =='9'){}
+                else {
+                    $denominator++;
+                    if (($score_record['b6'] =='2' AND $score_record4['b6']=='3') ||
+                        ($score_record['b6'] =='3' AND $score_record4['b6']=='2'))
+                        {
+                           #Don't count this
+                        }
+                        else if($score_record4['b6'] != $score_record['b6'] ) {$reliability_count_raw++;}}
+                if($score_record['b7']=='8' AND $score_record4['b7']=='8'){}	 
+				elseif ($score_record['b7'] =='9' && $score_record4['b7'] =='9'){}
+                else {
+                    $denominator++;
+                    if($score_record4['b7']  != $score_record['b7'] ) {$reliability_count_raw++;}}
+                if($score_record['b8']=='8' AND $score_record4['b8']=='8'){}	 
+				elseif ($score_record['b8'] =='9' && $score_record4['b8'] =='9'){}
+                else {
+                    $denominator++;
+                    if (($score_record['b8'] =='2' AND $score_record4['b8']=='3') ||
+                          ($score_record['b8'] =='3' AND $score_record4['b8']=='2'))
+                          {
+                             #Don't count this
+                          }
+                          else if($score_record4['b8'] != $score_record['b8'] ) {$reliability_count_raw++;}}
+                if($score_record['b9']=='8' AND $score_record4['b9']=='8'){}	 
+				elseif ($score_record['b9'] =='9' && $score_record4['b9'] =='9'){}
+                else {
+                    $denominator++;$denominator_scored++;
+                    if (($score_record['b9'] =='2' AND $score_record4['b9']=='3') ||
+                            ($score_record['b9'] =='3' AND $score_record4['b9']=='2'))
+                            {
+                               #Don't count this
+                            }
+                            else if($score_record4['b9']  != $score_record['b9'] ) {$reliability_count_raw++;$reliability_count_scored++;}}
+                if($score_record['b10']=='8' AND $score_record4['b10']=='8'){}  
+				elseif ($score_record['b10'] =='9' && $score_record4['b10'] =='9'){}
+                else {
+                    $denominator++;$denominator_scored++;
+                    if($score_record4['b10']  != $score_record['b10'] ) {$reliability_count_raw++;$reliability_count_scored++;}}
+                if($score_record['b11']=='8' AND $score_record4['b11']=='8'){}  
+				elseif ($score_record['b11'] =='9' && $score_record4['b11'] =='9'){}
+                else {
+                    $denominator++;$denominator_scored++;
+                    if (($score_record['b11'] =='2' AND $score_record4['b11']=='3') ||
+                    ($score_record['b11'] =='3' AND $score_record4['b11']=='2'))
+                    {
+                       #Don't count this
+                    }
+                    else if($score_record4['b11']  != $score_record['b11'] ) {$reliability_count_raw++;$reliability_count_scored++;}}
+                if($score_record['b12']=='8' AND $score_record4['b12']=='8'){}  
+				elseif ($score_record['b12'] =='9' && $score_record4['b12'] =='9'){}
+                else {
+                    $denominator++;$denominator_scored++;
+                    if (($score_record['b12'] =='2' AND $score_record4['b12']=='3') ||
+                      ($score_record['b12'] =='3' AND $score_record4['b12']=='2'))
+                      {
+                         #Don't count this
+                      }
+                      else if($score_record4['b12'] != $score_record['b12'] ) {$reliability_count_raw++;$reliability_count_scored++;}}
+                if($score_record['c1']=='8' AND $score_record4['c1']=='8'){}	 
+				elseif ($score_record['c1'] =='9' && $score_record4['c1'] =='9'){}
+                else {
+                    $denominator++;
+                    if (($score_record['c1'] =='2' AND $score_record4['c1']=='3') ||
+                        ($score_record['c1'] =='3' AND $score_record4['c1']=='2'))
+                        {
+                           #Don't count this
+                        }
+                        else if($score_record4['c1'] != $score_record['c1'] ) {$reliability_count_raw++;}}
+                if($score_record['c2']=='8' AND $score_record4['c2']=='8'){}	 
+				elseif ($score_record['c2'] =='9' && $score_record4['c2'] =='9'){}
+                else {
+                    $denominator++;
+                    if (($score_record['c2'] =='2' AND $score_record4['c2']=='3') ||
+                          ($score_record['c2'] =='3' AND $score_record4['c2']=='2'))
+                          {
+                             #Don't count this
+                          }
+                          else if($score_record4['c2']  != $score_record['c2'] ) {$reliability_count_raw++;}}
+                if($score_record['d1']=='8' AND $score_record4['d1']=='8'){}	 
+				elseif ($score_record['d1'] =='9' && $score_record4['d1'] =='9'){}
+                else {
+                    $denominator++;$denominator_scored++;
+                    if (($score_record['d1'] =='2' AND $score_record4['d1']=='3') ||
+                     ($score_record['d1'] =='3' AND $score_record4['d1']=='2'))
+                     {
+                        #Don't count this
+                     }
+                     else if($score_record4['d1']  != $score_record['d1'] ) {$reliability_count_raw++;$reliability_count_scored++;}}
+                if($score_record['d2']=='8' AND $score_record4['d2']=='8'){}	 
+				elseif ($score_record['d2'] =='9' && $score_record4['d2'] =='9'){}
+                else {
+                    $denominator++;$denominator_scored++;
+                    if (($score_record['d2'] =='2' AND $score_record4['d2']=='3') ||
+                       ($score_record['d2'] =='3' AND $score_record4['d2']=='2'))
+                       {
+                          #Don't count this
+                       }
+                       else if($score_record4['d2']  != $score_record['d2'] ) {$reliability_count_raw++;$reliability_count_scored++;}}
+                if($score_record['d3']=='8' AND $score_record4['d3']=='8'){}	 
+				elseif ($score_record['d3'] =='9' && $score_record4b['d3']	=='9'){}
+                else {
+                    $denominator++;
+                    if($score_record4['d3'] != $score_record['d3'] ) {$reliability_count_raw++;}}
+                if($score_record['d4']=='8' AND $score_record4['d4']=='8'){}	 
+				elseif ($score_record['d4'] =='9' && $score_record4['d4'] =='9'){}
+                else {
+                    $denominator++;$denominator_scored++;
+                    if (($score_record['d4'] =='2' AND $score_record4['d4']=='3') ||
+                       ($score_record['d4'] =='3' AND $score_record4['d4']=='2'))
+                       {
+                          #Don't count this
+                       }
+                       else if($score_record4['d4']  != $score_record['d4'] ) {$reliability_count_raw++;$reliability_count_scored++;}}
+                if($score_record['e1']=='8' AND $score_record4['e1']=='8'){}	 
+				elseif ($score_record['e1'] =='9' && $score_record4['e1'] =='9'){}
+                else {
+                    $denominator++;
+                    if($score_record4['e1'] != $score_record['e1'] ) {$reliability_count_raw++;}}
+                if($score_record['e2']=='8' AND $score_record4['e2']=='8'){}	 
+				elseif ($score_record['e2'] =='9' && $score_record4['e2'] =='9'){}
+                else {
+                    $denominator++;
+                    if($score_record4['e2']  != $score_record['e2'] ) {$reliability_count_raw++;}}
+                if($score_record['e3']=='8' AND $score_record4['e3']=='8'){}	 
+				elseif ($score_record['e3'] =='9' && $score_record4['e3'] =='9'){}
+                else {
+                    $denominator++;
+                if($score_record4['e3'] != $score_record['e3']) {$reliability_count_raw++;}}
+                               
+            } // endif 3 or 8 check
+            
+            // if the score for a1 = 0, 1 or 2, then scored items are different
+            if($score_record['a1'] =='0' || $score_record['a1'] =='1' || $score_record['a1'] =='2' ) {
+                
+                // individual items
+                if($score_record['a1']=='8' AND $score_record4['a1']=='8'){}    
+				elseif ($score_record['a1'] =='9' && $score_record4['a1'] =='9'){}
+                else {
+                    $denominator++; 
+                    if($score_record4['a1'] != $score_record['a1']) {$reliability_count_raw++;}}
+
+                if($score_record['a2']=='8' AND $score_record4['a2']=='8'){}	 
+                elseif ($score_record['a2'] =='9' && $score_record4['a2'] =='9'){}
+                else {
+                    $denominator++;$denominator_scored++;
+                    if (($score_record['a2'] =='2' AND $score_record4['a2']=='3') ||
+                         ($score_record['a2'] =='3' AND $score_record4['a2']=='2'))
+                         {
+                            #Don't count this
+                         }
+                         else if($score_record4['a2'] != $score_record['a2']) {$reliability_count_raw++;$reliability_count_scored++;}}
+                
+                if($score_record['a3']=='8' AND $score_record4['a3']=='8'){}	 
+                elseif ($score_record['a3'] =='9' && $score_record4['a3'] =='9'){}
+                else {
+                    $denominator++;
+                    if (($score_record['a3'] =='2' AND $score_record4['a3']=='3') ||
+                   ($score_record['a3'] =='3' AND $score_record4['a3']=='2'))
+                   {
+                      #Don't count this
+                   }
+                   else if($score_record4['a3'] != $score_record['a3'] ) {$reliability_count_raw++;}}
+                
+                if($score_record['a4']=='8' AND $score_record4['a4']=='8'){}	 
+				elseif ($score_record['a4'] =='9' && $score_record4['a4'] =='9'){}
+                else {
+                    $denominator++;
+                    if($score_record4['a4']  != $score_record['a4'] ) {$reliability_count_raw++;}}
+
+                if($score_record['a5']=='8' AND $score_record4['a5']=='8'){}	 
+				elseif ($score_record['a5'] =='9' && $score_record4['a5'] =='9'){}
+                else {
+                    $denominator++;$denominator_scored++;
+                    if($score_record4['a5']  != $score_record['a5'] ) {$reliability_count_raw++;$reliability_count_scored++;}}
+                
+				if($score_record['a6']=='8' AND $score_record4['a6']=='8'){}	 
+				elseif ($score_record['a6'] =='9' && $score_record4['a6'] =='9'){}
+                else {
+                    $denominator++;
+                    if($score_record4['a6'] != $score_record['a6'] ) {$reliability_count_raw++;}}
+
+                if($score_record['a7']=='8' AND $score_record4['a7']=='8'){}	 
+				elseif ($score_record['a7'] =='9' && $score_record4['a7'] =='9'){}
+                else {
+                    $denominator++;$denominator_scored++;
+                    if (($score_record['a7'] =='2' AND $score_record4['a7']=='3') ||
+                     ($score_record['a7'] =='3' AND $score_record4['a7']=='2'))
+                     {
+                        #Don't count this
+                     }
+                     else if($score_record4['a7'] != $score_record['a7'] ) {$reliability_count_raw++;$reliability_count_scored++;}}
+
+                if($score_record['a8']=='8' AND $score_record4['a8']=='8'){}	 
+				elseif ($score_record['a8'] =='9' && $score_record4['a8'] =='9'){}
+                else {
+                    $denominator++;$denominator_scored++;
+                    if (($score_record['a8'] =='2' AND $score_record4['a8']=='3') ||
+                       ($score_record['a8'] =='3' AND $score_record4['a8']=='2'))
+                       {
+                          #Don't count this
+                       }
+                       else if($score_record4['a8'] != $score_record['a8'] ) {$reliability_count_raw++;$reliability_count_scored++;}}
+                if($score_record['b1']=='8' AND $score_record4['b1']=='8'){}	 
+				elseif ($score_record['b1'] =='9' && $score_record4['b1'] =='9'){}
+                else {
+                    $denominator++;$denominator_scored++;
+                    if (($score_record['b1'] =='2' AND $score_record4['b1']=='3') ||
+                         ($score_record['b1'] =='3' AND $score_record4['b1']=='2'))
+                         {
+                            #Don't count this
+                         }
+                         else if($score_record4['b1'] != $score_record['b1'] ) {$reliability_count_raw++;$reliability_count_scored++;}}
+                if($score_record['b2']=='8' AND $score_record4['b2']=='8'){}	 
+				elseif ($score_record['b2'] =='9' && $score_record4['b2'] =='9'){}
+                else {
+                    $denominator++;
+                    if (($score_record['b2'] =='2' AND $score_record4['b2']=='3') ||
+                    ($score_record['b2'] =='3' AND $score_record4['b2']=='2'))
+                    {
+                       #Don't count this
+                    }
+                    else if($score_record4['b2']  != $score_record['b2'] ) {$reliability_count_raw++;}}
+                if($score_record['b3']=='8' AND $score_record4['b3']=='8'){}	 
+				elseif ($score_record['b3'] =='9' && $score_record4['b3'] =='9'){}
+                else {
+                    $denominator++;$denominator_scored++;
+                    if($score_record4['b3'] != $score_record['b3'] ) {$reliability_count_raw++;$reliability_count_scored++;}}
+                if($score_record['b4']=='8' AND $score_record4['b4']=='8'){}	 
+				elseif ($score_record['b4'] =='9' && $score_record4['b4'] =='9'){}
+                else {
+                    $denominator++;$denominator_scored++;
+                    if (($score_record['b4'] =='2' AND $score_record4['b4']=='3') ||
+                      ($score_record['b4'] =='3' AND $score_record4['b4']=='2'))
+                      {
+                         #Don't count this
+                      }
+                      else if($score_record4['b4']  != $score_record['b4'] ) {$reliability_count_raw++;$reliability_count_scored++;}}
+                if($score_record['b5']=='8' AND $score_record4['b5']=='8'){}	 
+				elseif ($score_record['b5'] =='9' && $score_record4['b5'] =='9'){}
+                else {
+                    $denominator++;$denominator_scored++;
+                    if($score_record4['b5']  != $score_record['b5'] ) {$reliability_count_raw++;$reliability_count_scored++;}}
+                if($score_record['b6']=='8' AND $score_record4['b6']=='8'){}	 
+				elseif ($score_record['b6'] =='9' && $score_record4['b6'] =='9'){}
+                else {
+                    $denominator++;
+                    if (($score_record['b6'] =='2' AND $score_record4['b6']=='3') ||
+                        ($score_record['b6'] =='3' AND $score_record4['b6']=='2'))
+                        {
+                           #Don't count this
+                        }
+                        else if($score_record4['b6'] != $score_record['b6'] ) {$reliability_count_raw++;}}
+                if($score_record['b7']=='8' AND $score_record4['b7']=='8'){}	 
+				elseif ($score_record['b7'] =='9' && $score_record4['b7'] =='9'){}
+                else {
+                    $denominator++;
+                    if($score_record4['b7']  != $score_record['b7'] ) {$reliability_count_raw++;}}
+                if($score_record['b8']=='8' AND $score_record4['b8']=='8'){}	 
+				elseif ($score_record['b8'] =='9' && $score_record4['b8'] =='9'){}
+                else {
+                    $denominator++;
+                    if (($score_record['b8'] =='2' AND $score_record4['b8']=='3') ||
+                          ($score_record['b8'] =='3' AND $score_record4['b8']=='2'))
+                          {
+                             #Don't count this
+                          }
+                          else if($score_record4['b8'] != $score_record['b8'] ) {$reliability_count_raw++;}}
+                if($score_record['b9']=='8' AND $score_record4['b9']=='8'){}	 
+				elseif ($score_record['b9'] =='9' && $score_record4['b9'] =='9'){}
+                else {
+                    $denominator++;$denominator_scored++;
+                    if (($score_record['b9'] =='2' AND $score_record4['b9']=='3') ||
+                     ($score_record['b9'] =='3' AND $score_record4['b9']=='2'))
+                     {
+                        #Don't count this
+                     }
+                     else if($score_record4['b9']  != $score_record['b9'] ) {$reliability_count_raw++;$reliability_count_scored++;}}
+                if($score_record['b10']=='8' AND $score_record4['b10']=='8'){}  
+				elseif ($score_record['b10'] =='9' && $score_record4['b10'] =='9'){}
+                else {
+                    $denominator++;$denominator_scored++;
+                    if($score_record4['b10']  != $score_record['b10'] ) {$reliability_count_raw++;$reliability_count_scored++;}}
+                if($score_record['b11']=='8' AND $score_record4['b11']=='8'){}  
+				elseif ($score_record['b11'] =='9' && $score_record4['b11'] =='9'){}
+                else {
+                    $denominator++;
+                    if (($score_record['b11'] =='2' AND $score_record4['b11']=='3') ||
+                       ($score_record['b11'] =='3' AND $score_record4['b11']=='2'))
+                       {
+                          #Don't count this
+                       }
+                       else if($score_record4['b11']  != $score_record['b11'] ) {$reliability_count_raw++;}}
+                if($score_record['b12']=='8' AND $score_record4['b12']=='8'){}  
+				elseif ($score_record['b12'] =='9' && $score_record4['b12'] =='9'){}
+                else {
+                    $denominator++;$denominator_scored++;
+                    if (($score_record['b12'] =='2' AND $score_record4['b12']=='3') ||
+                         ($score_record['b12'] =='3' AND $score_record4['b12']=='2'))
+                         {
+                            #Don't count this
+                         }
+                         else if($score_record4['b12'] != $score_record['b12'] ) {$reliability_count_raw++;$reliability_count_scored++;}}
+                if($score_record['c1']=='8' AND $score_record4['c1']=='8'){}	 
+				elseif ($score_record['c1'] =='9' && $score_record4['c1'] =='9'){}
+                else {
+                    $denominator++;
+                    if (($score_record['c1'] =='2' AND $score_record4['c1']=='3') ||
+                    ($score_record['c1'] =='3' AND $score_record4['c1']=='2'))
+                    {
+                       #Don't count this
+                    }
+                    else if($score_record4['c1'] != $score_record['c1'] ) {$reliability_count_raw++;}}
+                if($score_record['c2']=='8' AND $score_record4['c2']=='8'){}	 
+				elseif ($score_record['c2'] =='9' && $score_record4['c2'] =='9'){}
+                else {
+                    $denominator++;
+                    if (($score_record['c2'] =='2' AND $score_record4['c2']=='3') ||
+                      ($score_record['c2'] =='3' AND $score_record4['c2']=='2'))
+                      {
+                         #Don't count this
+                      }
+                      else if($score_record4['c2']  != $score_record['c2'] ) {$reliability_count_raw++;}}
+                if($score_record['d1']=='8' AND $score_record4['d1']=='8'){}	 
+				elseif ($score_record['d1'] =='9' && $score_record4['d1'] =='9'){}
+                else {
+                    $denominator++;$denominator_scored++;
+                    if (($score_record['d1'] =='2' AND $score_record4['d1']=='3') ||
+                        ($score_record['d1'] =='3' AND $score_record4['d1']=='2'))
+                        {
+                           #Don't count this
+                        }
+                        else if($score_record4['d1']  != $score_record['d1'] ) {$reliability_count_raw++;$reliability_count_scored++;}}
+                if($score_record['d2']=='8' AND $score_record4['d2']=='8'){}	 
+				elseif ($score_record['d2'] =='9' && $score_record4['d2'] =='9'){}
+                else {
+                    $denominator++;$denominator_scored++;
+                    if (($score_record['d2'] =='2' AND $score_record4['d2']=='3') ||
+                    ($score_record['d2'] =='3' AND $score_record4['d2']=='2'))
+                    {
+                       #Don't count this
+                    }
+                    else if($score_record4['d2']  != $score_record['d2'] ) {$reliability_count_raw++;$reliability_count_scored++;}}
+                if($score_record['d3']=='8' AND $score_record4['d3']=='8'){}	 
+				elseif ($score_record['d3'] =='9' && $score_record4b['d3']	=='9'){}
+                else {
+                    $denominator++;
+                    if($score_record4['d3'] != $score_record['d3'] ) {$reliability_count_raw++;}}
+                if($score_record['d4']=='8' AND $score_record4['d4']=='8'){}	 
+				elseif ($score_record['d4'] =='9' && $score_record4['d4'] =='9'){}
+                else {
+                    $denominator++;$denominator_scored++;
+                    if (($score_record['d4'] =='2' AND $score_record4['d4']=='3') ||
+                      ($score_record['d4'] =='3' AND $score_record4['d4']=='2'))
+                      {
+                         #Don't count this
+                      }
+                      else if($score_record4['d4']  != $score_record['d4'] ) {$reliability_count_raw++;$reliability_count_scored++;}}
+                if($score_record['e1']=='8' AND $score_record4['e1']=='8'){}	 
+				elseif ($score_record['e1'] =='9' && $score_record4['e1'] =='9'){}
+                else {
+                    $denominator++;
+                    if($score_record4['e1'] != $score_record['e1'] ) {$reliability_count_raw++;}}
+                if($score_record['e2']=='8' AND $score_record4['e2']=='8'){}	 
+				elseif ($score_record['e2'] =='9' && $score_record4['e2'] =='9'){}
+                else {
+                    $denominator++;
+                    if($score_record4['e2']  != $score_record['e2'] ) {$reliability_count_raw++;}}
+                if($score_record['e3']=='8' AND $score_record4['e3']=='8'){}	 
+				elseif ($score_record['e3'] =='9' && $score_record4['e3'] =='9'){}
+                else {
+                    $denominator++;
+                if($score_record4['e3'] != $score_record['e3']) {$reliability_count_raw++;}}
+                
+            } // endif 0, 1, 2 check
+
+        }
+        // If the reliability is to be compared to the initial data entry
+        elseif ($score_record['Gold_standard']=='Initial_entry') {
+            echo("This is the initial check.");
+            
+             $reliability_count_raw=0;            
+              $reliability_count_scored=0;            
+              $denominator=0;
+              $denominator_scored=0;
+
+              // if the score for a1 = 3 or 8, then scored items are different
+              if($score_record['a1'] =='3' OR $score_record['a1'] =='8') {
+
+                  // individual items
+                  if($score_record['a1']=='8' AND $score_record1['a1']=='8'){}    
+  				elseif ($score_record['a1'] =='9' && $score_record1['a1'] =='9'){}
+                  else {
+                      $denominator++; 
+                      if($score_record1['a1'] != $score_record['a1']) {$reliability_count_raw++;}}
+
+                  if($score_record['a2']=='8' AND $score_record1['a2']=='8'){}	 
+                  elseif ($score_record['a2'] =='9' && $score_record1['a2'] =='9'){}
+                  else {
+                      $denominator++;$denominator_scored++;
+                      if($score_record1['a2'] != $score_record['a2']) {$reliability_count_raw++;$reliability_count_scored++;}}
+
+                  if($score_record['a3']=='8' AND $score_record1['a3']=='8'){}	 
+                  elseif ($score_record['a3'] =='9' && $score_record1['a3'] =='9'){}
+                  else {
+                      $denominator++;$denominator_scored++;
+                      if($score_record1['a3'] != $score_record['a3'] ) {$reliability_count_raw++;$reliability_count_scored++;}}
+
+                  if($score_record['a4']=='8' AND $score_record1['a4']=='8'){}	 
+  				elseif ($score_record['a4'] =='9' && $score_record1['a4'] =='9'){}
+                  else {
+                      $denominator++;
+                      if($score_record1['a4']  != $score_record['a4'] ) {$reliability_count_raw++;}}
+
+                  if($score_record['a5']=='8' AND $score_record1['a5']=='8'){}	 
+  				elseif ($score_record['a5'] =='9' && $score_record1['a5'] =='9'){}
+                  else {
+                      $denominator++;
+                      if($score_record1['a5']  != $score_record['a5'] ) {$reliability_count_raw++;}}
+
+  				if($score_record['a6']=='8' AND $score_record1['a6']=='8'){}	 
+  				elseif ($score_record['a6'] =='9' && $score_record1['a6'] =='9'){}
+                  else {
+                      $denominator++;
+                      if($score_record1['a6'] != $score_record['a6'] ) {$reliability_count_raw++;}}
+
+                  if($score_record['a7']=='8' AND $score_record1['a7']=='8'){}	 
+  				elseif ($score_record['a7'] =='9' && $score_record1['a7'] =='9'){}
+                  else {
+                      $denominator++;
+                      if($score_record1['a7'] != $score_record['a7'] ) {$reliability_count_raw++;}}
+
+                  if($score_record['a8']=='8' AND $score_record1['a8']=='8'){}	 
+  				elseif ($score_record['a8'] =='9' && $score_record1['a8'] =='9'){}
+                  else {
+                      $denominator++;$denominator_scored++;
+                      if($score_record1['a8'] != $score_record['a8'] ) {$reliability_count_raw++;$reliability_count_scored++;}}
+                  if($score_record['b1']=='8' AND $score_record1['b1']=='8'){}	 
+  				elseif ($score_record['b1'] =='9' && $score_record1['b1'] =='9'){}
+                  else {
+                      $denominator++;$denominator_scored++;
+                      if (($score_record['b1'] =='2' AND $score_record1['b1']=='3') ||
+                             ($score_record['b1'] =='3' AND $score_record1['b1']=='2'))
+                            {
+                               #Don't count this
+                            }
+                            else if($score_record1['b1'] != $score_record['b1'] ) {$reliability_count_raw++;$reliability_count_scored++;}}
+                  if($score_record['b2']=='8' AND $score_record1['b2']=='8'){}	 
+  				elseif ($score_record['b2'] =='9' && $score_record1['b2'] =='9'){}
+                  else {
+                      $denominator++;
+                      if (($score_record['b2'] =='2' AND $score_record1['b2']=='3') ||
+                               ($score_record['b2'] =='3' AND $score_record1['b2']=='2'))
+                              {
+                                 #Don't count this
+                              }
+                              else if($score_record1['b2']  != $score_record['b2'] ) {$reliability_count_raw++;}}
+                  if($score_record['b3']=='8' AND $score_record1['b3']=='8'){}	 
+  				elseif ($score_record['b3'] =='9' && $score_record1['b3'] =='9'){}
+                  else {
+                      $denominator++;$denominator_scored++;
+                      if($score_record1['b3'] != $score_record['b3'] ) {$reliability_count_raw++;$reliability_count_scored++;}}
+                  if($score_record['b4']=='8' AND $score_record1['b4']=='8'){}	 
+  				elseif ($score_record['b4'] =='9' && $score_record1['b4'] =='9'){}
+                  else {
+                      $denominator++;$denominator_scored++;
+                      if($score_record1['b4']  != $score_record['b4'] ) {$reliability_count_raw++;$reliability_count_scored++;}}
+                  if($score_record['b5']=='8' AND $score_record1['b5']=='8'){}	 
+  				elseif ($score_record['b5'] =='9' && $score_record1['b5'] =='9'){}
+                  else {
+                      $denominator++;$denominator_scored++;
+                      if($score_record1['b5']  != $score_record['b5'] ) {$reliability_count_raw++;$reliability_count_scored++;}}
+                  if($score_record['b6']=='8' AND $score_record1['b6']=='8'){}	 
+  				elseif ($score_record['b6'] =='9' && $score_record1['b6'] =='9'){}
+                  else {
+                      $denominator++;
+                      if($score_record1['b6'] != $score_record['b6'] ) {$reliability_count_raw++;}}
+                  if($score_record['b7']=='8' AND $score_record1['b7']=='8'){}	 
+  				elseif ($score_record['b7'] =='9' && $score_record1['b7'] =='9'){}
+                  else {
+                      $denominator++;
+                      if($score_record1['b7']  != $score_record['b7'] ) {$reliability_count_raw++;}}
+                  if($score_record['b8']=='8' AND $score_record1['b8']=='8'){}	 
+  				elseif ($score_record['b8'] =='9' && $score_record1['b8'] =='9'){}
+                  else {
+                      $denominator++;
+                      if($score_record1['b8'] != $score_record['b8'] ) {$reliability_count_raw++;}}
+                  if($score_record['b9']=='8' AND $score_record1['b9']=='8'){}	 
+  				elseif ($score_record['b9'] =='9' && $score_record1['b9'] =='9'){}
+                  else {
+                      $denominator++;$denominator_scored++;
+                      if($score_record1['b9']  != $score_record['b9'] ) {$reliability_count_raw++;$reliability_count_scored++;}}
+                  if($score_record['b10']=='8' AND $score_record1['b10']=='8'){}  
+  				elseif ($score_record['b10'] =='9' && $score_record1['b10'] =='9'){}
+                  else {
+                      $denominator++;$denominator_scored++;
+                      if($score_record1['b10']  != $score_record['b10'] ) {$reliability_count_raw++;$reliability_count_scored++;}}
+                  if($score_record['b11']=='8' AND $score_record1['b11']=='8'){}  
+  				elseif ($score_record['b11'] =='9' && $score_record1['b11'] =='9'){}
+                  else {
+                      $denominator++;$denominator_scored++;
+                      if($score_record1['b11']  != $score_record['b11'] ) {$reliability_count_raw++;$reliability_count_scored++;}}
+                  if($score_record['b12']=='8' AND $score_record1['b12']=='8'){}  
+  				elseif ($score_record['b12'] =='9' && $score_record1['b12'] =='9'){}
+                  else {
+                      $denominator++;$denominator_scored++;
+                      if($score_record1['b12'] != $score_record['b12'] ) {$reliability_count_raw++;$reliability_count_scored++;}}
+                  if($score_record['c1']=='8' AND $score_record1['c1']=='8'){}	 
+  				elseif ($score_record['c1'] =='9' && $score_record1['c1'] =='9'){}
+                  else {
+                      $denominator++;
+                      if($score_record1['c1'] != $score_record['c1'] ) {$reliability_count_raw++;}}
+                  if($score_record['c2']=='8' AND $score_record1['c2']=='8'){}	 
+  				elseif ($score_record['c2'] =='9' && $score_record1['c2'] =='9'){}
+                  else {
+                      $denominator++;
+                      if($score_record1['c2']  != $score_record['c2'] ) {$reliability_count_raw++;}}
+                  if($score_record['d1']=='8' AND $score_record1['d1']=='8'){}	 
+  				elseif ($score_record['d1'] =='9' && $score_record1['d1'] =='9'){}
+                  else {
+                      $denominator++;$denominator_scored++;
+                      if($score_record1['d1']  != $score_record['d1'] ) {$reliability_count_raw++;$reliability_count_scored++;}}
+                  if($score_record['d2']=='8' AND $score_record1['d2']=='8'){}	 
+  				elseif ($score_record['d2'] =='9' && $score_record1['d2'] =='9'){}
+                  else {
+                      $denominator++;$denominator_scored++;
+                      if (($score_record['d2'] =='2' AND $score_record1['d2']=='3') ||
+                                 ($score_record['d2'] =='3' AND $score_record1['d2']=='2'))
+                                {
+                                   #Don't count this
+                                }
+                                else if($score_record1['d2']  != $score_record['d2'] ) {$reliability_count_raw++;$reliability_count_scored++;}}
+                  if($score_record['d3']=='8' AND $score_record1['d3']=='8'){}	 
+  				elseif ($score_record['d3'] =='9' && $score_record1b['d3']	=='9'){}
+                  else {
+                      $denominator++;
+                      if($score_record1['d3'] != $score_record['d3'] ) {$reliability_count_raw++;}}
+                  if($score_record['d4']=='8' AND $score_record1['d4']=='8'){}	 
+  				elseif ($score_record['d4'] =='9' && $score_record1['d4'] =='9'){}
+                  else {
+                      $denominator++;$denominator_scored++;
+                      if (($score_record['d4'] =='2' AND $score_record1['d4']=='3') ||
+                                   ($score_record['d4'] =='3' AND $score_record1['d4']=='2'))
+                                  {
+                                     #Don't count this
+                                  }
+                                  else if($score_record1['d4']  != $score_record['d4'] ) {$reliability_count_raw++;$reliability_count_scored++;}}
+                  if($score_record['e1']=='8' AND $score_record1['e1']=='8'){}	 
+  				elseif ($score_record['e1'] =='9' && $score_record1['e1'] =='9'){}
+                  else {
+                      $denominator++;
+                      if($score_record1['e1'] != $score_record['e1'] ) {$reliability_count_raw++;}}
+                  if($score_record['e2']=='8' AND $score_record1['e2']=='8'){}	 
+  				elseif ($score_record['e2'] =='9' && $score_record1['e2'] =='9'){}
+                  else {
+                      $denominator++;
+                      if($score_record1['e2']  != $score_record['e2'] ) {$reliability_count_raw++;}}
+                  if($score_record['e3']=='8' AND $score_record1['e3']=='8'){}	 
+  				elseif ($score_record['e3'] =='9' && $score_record1['e3'] =='9'){}
+                  else {
+                      $denominator++;
+                  if($score_record1['e3'] != $score_record['e3']) {$reliability_count_raw++;}}
+
+              } // endif 3 or 8 check
+
+              // if the score for a1 = 0, 1 or 2, then scored items are different
+              if($score_record['a1'] =='0' || $score_record['a1'] =='1' || $score_record['a1'] =='2' ) {
+
+                  // individual items
+                  if($score_record['a1']=='8' AND $score_record1['a1']=='8'){}    
+  				elseif ($score_record['a1'] =='9' && $score_record1['a1'] =='9'){}
+                  else {
+                      $denominator++; 
+                      if($score_record1['a1'] != $score_record['a1']) {$reliability_count_raw++;}}
+
+                  if($score_record['a2']=='8' AND $score_record1['a2']=='8'){}	 
+                  elseif ($score_record['a2'] =='9' && $score_record1['a2'] =='9'){}
+                  else {
+                      $denominator++;$denominator_scored++;
+                      if($score_record1['a2'] != $score_record['a2']) {$reliability_count_raw++;$reliability_count_scored++;}}
+
+                  if($score_record['a3']=='8' AND $score_record1['a3']=='8'){}	 
+                  elseif ($score_record['a3'] =='9' && $score_record1['a3'] =='9'){}
+                  else {
+                      $denominator++;
+                      if($score_record1['a3'] != $score_record['a3'] ) {$reliability_count_raw++;}}
+
+                  if($score_record['a4']=='8' AND $score_record1['a4']=='8'){}	 
+  				elseif ($score_record['a4'] =='9' && $score_record1['a4'] =='9'){}
+                  else {
+                      $denominator++;
+                      if($score_record1['a4']  != $score_record['a4'] ) {$reliability_count_raw++;}}
+
+                  if($score_record['a5']=='8' AND $score_record1['a5']=='8'){}	 
+  				elseif ($score_record['a5'] =='9' && $score_record1['a5'] =='9'){}
+                  else {
+                      $denominator++;$denominator_scored++;
+                      if($score_record1['a5']  != $score_record['a5'] ) {$reliability_count_raw++;$reliability_count_scored++;}}
+
+  				if($score_record['a6']=='8' AND $score_record1['a6']=='8'){}	 
+  				elseif ($score_record['a6'] =='9' && $score_record1['a6'] =='9'){}
+                  else {
+                      $denominator++;
+                      if($score_record1['a6'] != $score_record['a6'] ) {$reliability_count_raw++;}}
+
+                  if($score_record['a7']=='8' AND $score_record1['a7']=='8'){}	 
+  				elseif ($score_record['a7'] =='9' && $score_record1['a7'] =='9'){}
+                  else {
+                      $denominator++;$denominator_scored++;
+                      if($score_record1['a7'] != $score_record['a7'] ) {$reliability_count_raw++;$reliability_count_scored++;}}
+
+                  if($score_record['a8']=='8' AND $score_record1['a8']=='8'){}	 
+  				elseif ($score_record['a8'] =='9' && $score_record1['a8'] =='9'){}
+                  else {
+                      $denominator++;$denominator_scored++;
+                      if($score_record1['a8'] != $score_record['a8'] ) {$reliability_count_raw++;$reliability_count_scored++;}}
+                  if($score_record['b1']=='8' AND $score_record1['b1']=='8'){}	 
+  				elseif ($score_record['b1'] =='9' && $score_record1['b1'] =='9'){}
+                  else {
+                      $denominator++;$denominator_scored++;
+                       if (($score_record['b1'] =='2' AND $score_record1['b1']=='3') ||
+                        ($score_record['b1'] =='3' AND $score_record1['b1']=='2'))
+                       {
+                          #Don't count this
+                       }
+                       else if($score_record1['b1'] != $score_record['b1'] ) {$reliability_count_raw++;$reliability_count_scored++;}}
+                  if($score_record['b2']=='8' AND $score_record1['b2']=='8'){}	 
+  				elseif ($score_record['b2'] =='9' && $score_record1['b2'] =='9'){}
+                  else {
+                      $denominator++;
+                      if (($score_record['b2'] =='2' AND $score_record1['b2']=='3') ||
+                       ($score_record['b2'] =='3' AND $score_record1['b2']=='2'))
+                      {
+                         #Don't count this
+                      }
+                      else if($score_record1['b2']  != $score_record['b2'] ) {$reliability_count_raw++;}}
+                  if($score_record['b3']=='8' AND $score_record1['b3']=='8'){}	 
+  				elseif ($score_record['b3'] =='9' && $score_record1['b3'] =='9'){}
+                  else {
+                      $denominator++;$denominator_scored++;
+                      if($score_record1['b3'] != $score_record['b3'] ) {$reliability_count_raw++;$reliability_count_scored++;}}
+                  if($score_record['b4']=='8' AND $score_record1['b4']=='8'){}	 
+  				elseif ($score_record['b4'] =='9' && $score_record1['b4'] =='9'){}
+                  else {
+                      $denominator++;$denominator_scored++;
+                      if($score_record1['b4']  != $score_record['b4'] ) {$reliability_count_raw++;$reliability_count_scored++;}}
+                  if($score_record['b5']=='8' AND $score_record1['b5']=='8'){}	 
+  				elseif ($score_record['b5'] =='9' && $score_record1['b5'] =='9'){}
+                  else {
+                      $denominator++;$denominator_scored++;
+                      if($score_record1['b5']  != $score_record['b5'] ) {$reliability_count_raw++;$reliability_count_scored++;}}
+                  if($score_record['b6']=='8' AND $score_record1['b6']=='8'){}	 
+  				elseif ($score_record['b6'] =='9' && $score_record1['b6'] =='9'){}
+                  else {
+                      $denominator++;
+                      if($score_record1['b6'] != $score_record['b6'] ) {$reliability_count_raw++;}}
+                  if($score_record['b7']=='8' AND $score_record1['b7']=='8'){}	 
+  				elseif ($score_record['b7'] =='9' && $score_record1['b7'] =='9'){}
+                  else {
+                      $denominator++;
+                      if($score_record1['b7']  != $score_record['b7'] ) {$reliability_count_raw++;}}
+                  if($score_record['b8']=='8' AND $score_record1['b8']=='8'){}	 
+  				elseif ($score_record['b8'] =='9' && $score_record1['b8'] =='9'){}
+                  else {
+                      $denominator++;
+                      if($score_record1['b8'] != $score_record['b8'] ) {$reliability_count_raw++;}}
+                  if($score_record['b9']=='8' AND $score_record1['b9']=='8'){}	 
+  				elseif ($score_record['b9'] =='9' && $score_record1['b9'] =='9'){}
+                  else {
+                      $denominator++;$denominator_scored++;
+                      if($score_record1['b9']  != $score_record['b9'] ) {$reliability_count_raw++;$reliability_count_scored++;}}
+                  if($score_record['b10']=='8' AND $score_record1['b10']=='8'){}  
+  				elseif ($score_record['b10'] =='9' && $score_record1['b10'] =='9'){}
+                  else {
+                      $denominator++;$denominator_scored++;
+                      if($score_record1['b10']  != $score_record['b10'] ) {$reliability_count_raw++;$reliability_count_scored++;}}
+                  if($score_record['b11']=='8' AND $score_record1['b11']=='8'){}  
+  				elseif ($score_record['b11'] =='9' && $score_record1['b11'] =='9'){}
+                  else {
+                      $denominator++;
+                      if($score_record1['b11']  != $score_record['b11'] ) {$reliability_count_raw++;}}
+                  if($score_record['b12']=='8' AND $score_record1['b12']=='8'){}  
+  				elseif ($score_record['b12'] =='9' && $score_record1['b12'] =='9'){}
+                  else {
+                      $denominator++;$denominator_scored++;
+                      if($score_record1['b12'] != $score_record['b12'] ) {$reliability_count_raw++;$reliability_count_scored++;}}
+                  if($score_record['c1']=='8' AND $score_record1['c1']=='8'){}	 
+  				elseif ($score_record['c1'] =='9' && $score_record1['c1'] =='9'){}
+                  else {
+                      $denominator++;
+                      if($score_record1['c1'] != $score_record['c1'] ) {$reliability_count_raw++;}}
+                  if($score_record['c2']=='8' AND $score_record1['c2']=='8'){}	 
+  				elseif ($score_record['c2'] =='9' && $score_record1['c2'] =='9'){}
+                  else {
+                      $denominator++;
+                      if($score_record1['c2']  != $score_record['c2'] ) {$reliability_count_raw++;}}
+                  if($score_record['d1']=='8' AND $score_record1['d1']=='8'){}	 
+  				elseif ($score_record['d1'] =='9' && $score_record1['d1'] =='9'){}
+                  else {
+                      $denominator++;$denominator_scored++;
+                      if($score_record1['d1']  != $score_record['d1'] ) {$reliability_count_raw++;$reliability_count_scored++;}}
+                  if($score_record['d2']=='8' AND $score_record1['d2']=='8'){}	 
+  				elseif ($score_record['d2'] =='9' && $score_record1['d2'] =='9'){}
+                  else {
+                      $denominator++;$denominator_scored++;
+                      if (($score_record['d2'] =='2' AND $score_record1['d2']=='3') ||
+                         ($score_record['d2'] =='3' AND $score_record1['d2']=='2'))
+                        {
+                           #Don't count this
+                        }
+                        else if($score_record1['d2']  != $score_record['d2'] ) {$reliability_count_raw++;$reliability_count_scored++;}}
+                  if($score_record['d3']=='8' AND $score_record1['d3']=='8'){}	 
+  				elseif ($score_record['d3'] =='9' && $score_record1b['d3']	=='9'){}
+                  else {
+                      $denominator++;
+                      if($score_record1['d3'] != $score_record['d3'] ) {$reliability_count_raw++;}}
+                  if($score_record['d4']=='8' AND $score_record1['d4']=='8'){}	 
+  				elseif ($score_record['d4'] =='9' && $score_record1['d4'] =='9'){}
+                  else {
+                      $denominator++;$denominator_scored++;
+                      if (($score_record['d4'] =='2' AND $score_record1['d4']=='3') ||
+                           ($score_record['d4'] =='3' AND $score_record1['d4']=='2'))
+                          {
+                             #Don't count this
+                          }
+                          else if($score_record1['d4']  != $score_record['d4'] ) {$reliability_count_raw++;$reliability_count_scored++;}}
+                  if($score_record['e1']=='8' AND $score_record1['e1']=='8'){}	 
+  				elseif ($score_record['e1'] =='9' && $score_record1['e1'] =='9'){}
+                  else {
+                      $denominator++;
+                      if($score_record1['e1'] != $score_record['e1'] ) {$reliability_count_raw++;}}
+                  if($score_record['e2']=='8' AND $score_record1['e2']=='8'){}	 
+  				elseif ($score_record['e2'] =='9' && $score_record1['e2'] =='9'){}
+                  else {
+                      $denominator++;
+                      if($score_record1['e2']  != $score_record['e2'] ) {$reliability_count_raw++;}}
+                  if($score_record['e3']=='8' AND $score_record1['e3']=='8'){}	 
+  				elseif ($score_record['e3'] =='9' && $score_record1['e3'] =='9'){}
+                  else {
+                      $denominator++;
+                  if($score_record1['e3'] != $score_record['e3']) {$reliability_count_raw++;}}
+
+              } // endif 0, 1, 2 check
+                 
+                                               
+        }
+              
+        // end elseif
+        else {
+            echo("what the heck is going on?<br>");
+        } // end else
+        
+        // print_r($this->identifier);
+        
+        // Score the reliability
+        $reliability['Reliability_score_all_items']= (($denominator-$reliability_count_raw)/$denominator*100);
+        $reliability['Reliability_score_scored_items']= (($denominator_scored-$reliability_count_scored)/$denominator_scored*100);
+
+        // Do the update here for the relibaility scores - saving the scores
+		$result = $db->update("ados_module1_reliability", $reliability, array("CommentID"=>$this->identifier, "reliability_center_id" => $this->reliability_center_id));
+		if($db->isError($result)) {
+			return PEAR::raiseError("Could not save total score: ". $result->getMessage());
+		}
+		
+			$result = $db->update("reliability", array("Reliability_score" => $reliability['Reliability_score_all_items']), array("CommentID"=>$this->identifier, "Instrument" => 'ados_module1', "reliability_center_id" => $this->reliability_center_id));
+   		if($db->isError($result)) {
+   			return PEAR::raiseError("Could not save total score: ". $result->getMessage());
+   		}
+        
+        /*	 // Update the main relibaility table with the overall reliability score 
+                $result1 = $db->update("reliability", $reliability['reliability_score'], array("CommentID"=>$this->identifier));
+                if($db->isError($result1)) {
+                        return PEAR::raiseError("Could not save total score: ". $result1->getMessage());
+                }
+        */
+        
+    } // end function score
+    
+    function _nullScores()
+    {
+        $db=& Database::singleton();
+        if (PEAR::isError($db)) {
+            return PEAR::raiseError("Could not connect to database: ".$db->getMessage()."\n");
+        }
+        
+        // set the scores to NULL
+        foreach ($this->scores as $val) {
+            $scores[$val]=null;
+        }
+
+        // update the scores
+        $success = $db->update("ados_module1_reliability",$scores,array("CommentID"=>$this->identifier, "reliability_center_id" => $this->reliability_center_id));
+        if (PEAR::isError($success)) {
+            return PEAR::raiseError("DB Error, fail null the scores:\n".$success->getMessage()."\n");
+        }
+        return;
+    }    
+
+    function ados_module1_reliability()
+    {
+       $this->_addMetadataFields();
+       $this->form->addElement("static", "reliability_center", "Site of Reliability Test:");
+       
+       
+        $option01238 = array(""=>NULL, 0=>0, 1=>1, 2=>2, 3=>3, 8=>8, "not_answered"=>"Not Answered");
+        $option0128 = array(""=>NULL, 0=>0, 1=>1, 2=>2, 8=>8, "not_answered"=>"Not Answered");
+        $option0123 = array(""=>NULL, 0=>0, 1=>1, 2=>2, 3=>3, "not_answered"=>"Not Answered");
+        $option02 = array(""=>NULL, 0=>0, 2=>2, "not_answered"=>"Not Answered");
+        $option012 = array(""=>NULL, 0=>0, 1=>1, 2=>2, "not_answered"=>"Not Answered");
+        $option0127 = array(""=>NULL, 0=>0, 1=>1, 2=>2, 7=>7, "not_answered"=>"Not Answered");
+        
+        //Scoring header
+        $this->form->addElement('header', 'instrument_title', "Scoring:");
+        $this->form->addElement("static", "Reliability_score_all_items", "Reliability Score - all items (%):");
+        $this->form->addElement("static", "Reliability_score_scored_items", "Reliability Score - scored items (%):");
+
+        $GoldStandardArray = array("Initial_entry"=>"Initial Entry", "Gold_standard_SEA0010"=>"Gold standard SEA0010", "Gold_standard_SEA0015"=>"Gold standard SEA0015","Gold_standard_SEA0017"=>"Gold standard SEA0017");
+        $this->form->addElement("select", "Gold_standard", "Compare against:", $GoldStandardArray);
+        $this->form->addRule('Gold_standard', 'Gold standard is required', 'required');
+        
+        $this->form->addElement("static", "CommentID", "CommentID:");
+       
+        //CODING
+    	//Section A: Language and Communication
+        $this->form->addElement('header', null, "Coding:");
+        $this->form->addElement("static", null, "<BR>"); //line space
+
+        $this->form->addElement('header', null, "Section A: Language and Communication");
+        $this->form->addElement("static", null, "<BR>"); //line space
+        $this->form->addElement("static", null, "<BR>"); //line space
+        $this->form->addElement('select', 'a1', '1. Overall Level of Non-Echoed Language', $option01238);
+        $this->form->addElement("static", null, "<BR>"); //line space
+        $this->form->addElement('select', 'a2', '2. Frequency of Vocalization Directed to Others', $option0123);
+        $this->form->addElement("static", null, "<BR>"); //line space
+        $this->form->addElement('select', 'a3', '3. Intonation of Vocalizations or Verbalization', $option0128);
+        $this->form->addElement("static", null, "<BR>"); //line space
+        $this->form->addElement('select', 'a4', '4. Immediate Echolalia', $option01238);
+        $this->form->addElement("static", null, "<BR>"); //line space
+        $this->form->addElement('select', 'a5', '5. Stereotyped/Idiosyncratic Use of Words or Phrases', $option01238);
+        $this->form->addElement("static", null, "<BR>"); //line space
+        $this->form->addElement('select', 'a6', '6. Use of Others Body to Communicate', $option0128);
+        $this->form->addElement("static", null, "<BR>"); //line space
+        $this->form->addElement('select', 'a7', '7. Pointing', $option0123);
+        $this->form->addElement("static", null, "<BR>"); //line space
+        $this->form->addElement('select', 'a8', '8. Gestures', $option0128);
+        $this->form->addElement("static", null, "<BR>"); //line space
+        $this->form->addElement("static", null, "<BR>"); //line space
+
+
+	   //Section B: Reciprocal Social Interaction
+        $this->form->addElement('header', null, "Section B: Reciprocal Social Interaction");
+        $this->form->addElement("static", null, "<BR>"); //line space
+        $this->form->addElement("static", null, "<BR>"); //line space
+
+        $this->form->addElement('select', 'b1', '1. Unusual Eye Contact', $option02);
+        $this->form->addElement("static", null, "<BR>"); //line space
+        $this->form->addElement('select', 'b2', '2. Responsive Social Smile', $option0123);
+        $this->form->addElement("static", null, "<BR>"); //line space
+        $this->form->addElement('select', 'b3', '3. Facial Expressions Directed to Others', $option012);
+        $this->form->addElement("static", null, "<BR>"); //line space
+        $this->form->addElement('select', 'b4', '4. Integration of Gaze and Other Behaviors During Social Overtures', $option0123);
+        $this->form->addElement("static", null, "<BR>"); //line space
+        $this->form->addElement('select', 'b5', '5. Shared Enjoyment in Interaction', $option012);
+        $this->form->addElement("static", null, "<BR>"); //line space
+        $this->form->addElement('select', 'b6', '6. Response to Name', $option0123);
+        $this->form->addElement("static", null, "<BR>"); //line space
+        $this->form->addElement('select', 'b7', '7. Requesting', $option0123);
+        $this->form->addElement("static", null, "<BR>"); //line space
+        $this->form->addElement('select', 'b8', '8. Giving', $option012);
+        $this->form->addElement("static", null, "<BR>"); //line space
+        $this->form->addElement('select', 'b9', '9. Showing', $option012);
+        $this->form->addElement("static", null, "<BR>"); //line space
+        $this->form->addElement('select', 'b10', '10. Spontaneous Initiation of Joint Attention', $option012);
+        $this->form->addElement("static", null, "<BR>"); //line space
+        $this->form->addElement('select', 'b11', '11. Response to Joint Attention', $option0123);
+        $this->form->addElement("static", null, "<BR>"); //line space
+        $this->form->addElement('select', 'b12', '12. Quality of Social Overtures', $option0123);
+        $this->form->addElement("static", null, "<BR>"); //line space
+
+        $this->form->addElement("static", null, "<BR>"); //line space
+        $this->form->addElement("static", null, "<BR>"); //line space
+        
+        //Section C: Play
+        $this->form->addElement('header', null, "Section C: Play");
+        $this->form->addElement("static", null, "<BR>"); //line space
+        $this->form->addElement("static", null, "<BR>"); //line space
+        $this->form->addElement('select', 'c1', '1. Functional Play with Objects', $option0123);
+        $this->form->addElement("static", null, "<BR>"); //line space
+        $this->form->addElement('select', 'c2', '2. Imagination/Creativity', $option0123);
+
+        $this->form->addElement("static", null, "<BR>"); //line space
+        $this->form->addElement("static", null, "<BR>"); //line space
+
+    	//Section D: Stereotyped Behaviors and Restricted Interests
+        $this->form->addElement('header', null, "Section D: Stereotyped Behaviors and Restricted Interests");
+        $this->form->addElement("static", null, "<BR>"); //line space
+        $this->form->addElement("static", null, "<BR>"); //line space
+        $this->form->addElement('select', 'd1', '1. Unusual Sensory Interest in Play Material/Person', $option012);
+        $this->form->addElement("static", null, "<BR>"); //line space
+     	$this->addTextAreaElement('d1_specify', $this->indent . "Please specify:");
+        $this->form->addElement("static", null, "<BR>"); //line space
+        $this->form->addElement('select', 'd2', '2. Hand and Finger and Other Complex Mannerisms', $option012);
+        $this->form->addElement("static", null, "<BR>"); //line space
+    	$this->addTextAreaElement('d2_specify', $this->indent . "Please specify:");
+        $this->form->addElement("static", null, "<BR>"); //line space
+        $this->form->addElement('select', 'd3', '3. Self-Injurious Behavior', $option012);
+        $this->form->addElement("static", null, "<BR>"); //line space
+        $this->form->addElement('select', 'd4', '4. Unusually Repetitive Interests or Stereotyped Behaviors', $option0123);
+        $this->form->addElement("static", null, "<BR>"); //line space
+    	$this->addTextAreaElement('d4_specify', $this->indent . "Please specify unusual preoccupations, rituals, repetitive behaviors:");
+
+        $this->form->addElement("static", null, "<BR>"); //line space
+        $this->form->addElement("static", null, "<BR>"); //line space
+
+    	//Section E: Other Abnormal Behaviors
+        $this->form->addElement('header', null, "Section E: Other Abnormal Behaviors");
+        $this->form->addElement("static", null, "<BR>"); //line space
+        $this->form->addElement("static", null, "<BR>"); //line space
+        $this->form->addElement('select', 'e1', '1. Overactivity', $option0127);
+        $this->form->addElement("static", null, "<BR>"); //line space
+        $this->form->addElement('select', 'e2', '2. Tantrums, Aggression, Negative or Disruptive Behavior', $option012);
+        $this->form->addElement("static", null, "<BR>"); //line space
+        $this->form->addElement('select', 'e3', '3. Anxiety', $option012);
+
+        $this->form->addElement("static", null, "<BR>"); //line space
+        $this->form->addElement("static", null, "<BR>"); //line space
+
+        $this->redirect = "test_name=$this->name"; // what does this do?
+        
+        //------------------------------------------------------------
+       
+       //  //Take this out
+//         // put this into ados_module1_reliability function
+//         $renderer =& new HTML_QuickForm_Renderer_Default();
+//         $renderer->setFormTemplate("<form{attributes}><table class=\"instrument\">{content}</table></form>");
+//         $renderer->setElementTemplate("<tr><td class=\"lab\"><!-- BEGIN required --><span style=\"color: #ff0000\">*</span><!-- END required -->{label}</td><td class=\"ele\"><!-- BEGIN error --><span style=\"color: #ff0000\">{error}</span><br /><!-- END error -->{element}</td></tr>");
+//         $renderer->setElementTemplate("<tr><td class=\"lab\"><i>{label}</i></td><td class=\"ele\">\t<i>{element}</i></td></tr>", "static");
+//         $renderer->setHeaderTemplate("<tr><th colspan=\"2\"><br><b>{header}</b></th></tr>");
+//         $this->form->accept($renderer);
+//         $this->tpl_data['tempFormHTML'] = $renderer->toHtml();
+
+//         // My get defaults function sets $defaults array
+//         $localDefaults = $this->_getDefaults();
+//         if (PEAR::isError($localDefaults)) {
+//             return PEAR::raiseError("NDB_Form::display(): ".$localDefaults->getMessage());
+//         }
+//         if(!is_array($localDefaults)) { $localDefaults = array(); }
+
+
+//         $this->form->setDefaults($this->defaults);
+//     	$this->form->applyFilter('__ALL__', 'trim');
+
+
+    } // End function 
+
+    function addDateElement($name, $label){
+        $group [] = $this->form->createElement("date", $name . "_date", null, $this->dateOptions);
+        $this->dateTimeFields[] = $name . "_date"; //add to array of dates and times.
+        $group [] = $this->form->createElement("select", $name . "_date_status", null, array(NULL=>"", 'not_answered'=>"Not Answered"));
+        $this->form->addGroup($group, $name . "_date_group", $label, $this->_GUIDelimiter, FALSE);
+        unset($group);
+        $this->XINRegisterRule($name . "_date", array($name . "_date_status{@}=={@}"), "A Date, or Not Answered is required.", $name . "_date_group");
+        
+    }
+
+    function addTextAreaElement($field, $label, $rules=array(), $rule_message='This field is required.'){
+        $group[]=&$this->form->createElement("textarea", $field, null, array('cols'=>25, 'rows'=>4));
+        $group[]=&$this->form->createElement("select", $field."_status", "", array(NULL=>'', 'not_answered'=>'Not Answered'));
+        $this->form->addGroup($group, $field.'_group', $label, null, false);
+        unset($group);
+        $rules_array=array_merge(array($field.'_status{@}=={@}'),$rules);
+        $this->XINRegisterRule($field, $rules_array, $rule_message, $field.'_group');
+    }
+
+
+    function XINRegisterRule($elname, $rules, $message="", $group=""){
+        if(!is_array($rules)){
+            $rules_array[]=$rules;
+        } else {
+            $rules_array=$rules;
+        }
+        $this->XINRules[$elname]['message']=$message;
+        $this->XINRules[$elname]['group']=$group;
+        
+        foreach($rules_array AS $rule){
+            $this->XINRules[$elname]['rules'][]=$rule;
+        }
+        return true;
+    }
+    function _process($values)
+    {
+        $DB =& Database::singleton();
+        if(PEAR::isError($DB)) {
+            return PEAR::raiseError("Could not connect to database: ".$DB->getMessage());
+        }
+        
+       
+        
+        $user =& User::singleton();
+        // if(!$user->hasPermission('tracking_logs_edit_all')) {
+        //    $values['Lock_record'] = 'Locked';
+        // }
+        
+        $DB->selectRow("SELECT * FROM ados_module1_reliability WHERE CommentID = '$this->identifier' AND reliability_center_id = $this->reliability_center_id", $row);
+        if (PEAR::isError($row)) {
+            return PEAR::raiseError("DB Error: ".$row->getMessage());
+        }
+        
+        if (empty($row)) { 
+            
+            // insert the event
+            $success = $DB->insert('ados_module1_reliability', array(
+                                                                     'Examiner' => $values['Examiner'],
+                                                                      'Date_taken' => $this->_getDatabaseDate($values['Date_taken']),
+                                                                     'CommentID' => $this->identifier,
+                                                                     'Gold_standard' => $values['Gold_standard'],
+                                                                     'Reliability_score_all_items' => $values['Reliability_score_all_items'],
+                                                                     'Reliability_score_scored_items' => $values['Reliability_score_scored_items'],
+                                                                     "reliability_center_id" => $this->reliability_center_id,
+                                                                     'a1' => $values['a1'],
+                                                                     'a2' => $values['a2'],
+                                                                     'a3' => $values['a3'],
+                                                                     'a4' => $values['a4'],
+                                                                     'a5' => $values['a5'],
+                                                                     'a6' => $values['a6'],
+                                                                     'a7' => $values['a7'],
+                                                                     'a8' => $values['a8'],
+                                                                     'b1' => $values['b1'],
+                                                                     'b2' => $values['b2'],
+                                                                     'b3' => $values['b3'],
+                                                                     'b4' => $values['b4'],
+                                                                     'b5' => $values['b5'],
+                                                                     'b6' => $values['b6'],
+                                                                     'b7' => $values['b7'],
+                                                                     'b8' => $values['b8'],
+                                                                     'b9' => $values['b9'],
+                                                                     'b10' => $values['b10'],
+                                                                     'b11' => $values['b11'],
+                                                                     'b12' => $values['b12'],
+                                                                     'c1' => $values['c1'],
+                                                                     'c2' => $values['c2'],
+                                                                     'd1' => $values['d1'],
+                                                                     'd2' => $values['d2'],
+                                                                     'd3' => $values['d3'],
+                                                                     'd4' => $values['d4'],
+                                                                     'e1' => $values['e1'],
+                                                                     'e2' => $values['e2'],
+                                                                     'e3' => $values['e3']
+                                                                     ));
+            if (PEAR::isError($success)) {
+                return PEAR::raiseError("DB Error: ".$success->getMessage());
+            }
+            $this->identifier = $DB->lastInsertID;
+        } else {
+            // update the event
+            $success = $DB->update('ados_module1_reliability', array(
+                                                                     // 'CommentID' => $this->identifier,
+                                                                     'Examiner' => $values['Examiner'],
+                                                                      'Date_taken' => $this->_getDatabaseDate($values['Date_taken']),
+                                                                     'Gold_standard' => $values['Gold_standard'],
+                                                                     'a1' => $values['a1'],
+                                                                     'a2' => $values['a2'],
+                                                                     'a3' => $values['a3'],
+                                                                     'a4' => $values['a4'],
+                                                                     'a5' => $values['a5'],
+                                                                     'a6' => $values['a6'],
+                                                                     'a7' => $values['a7'],
+                                                                     'a8' => $values['a8'],
+                                                                     'b1' => $values['b1'],
+                                                                     'b2' => $values['b2'],
+                                                                     'b3' => $values['b3'],
+                                                                     'b4' => $values['b4'],
+                                                                     'b5' => $values['b5'],
+                                                                     'b6' => $values['b6'],
+                                                                     'b7' => $values['b7'],
+                                                                     'b8' => $values['b8'],
+                                                                     'b9' => $values['b9'],
+                                                                     'b10' => $values['b10'],
+                                                                     'b11' => $values['b11'],
+                                                                     'b12' => $values['b12'],
+                                                                     'c1' => $values['c1'],
+                                                                     'c2' => $values['c2'],
+                                                                     'd1' => $values['d1'],
+                                                                     'd2' => $values['d2'],
+                                                                     'd3' => $values['d3'],
+                                                                     'd4' => $values['d4'],
+                                                                     'e1' => $values['e1'],
+                                                                     'e2' => $values['e2'],
+                                                                     'e3' => $values['e3']
+                                                                     ),          
+                                   array('CommentID'=>$this->identifier, "reliability_center_id" => $this->reliability_center_id)
+                                   ); 
+            if (PEAR::isError($success)) {
+                return PEAR::raiseError("DB Error: ".$success->getMessage());
+            }
+        }
+        
+         $scoreResult = $this->score();
+
+  	if($this->isError($scoreResult)) {
+              return PEAR::raiseError($scoreResult->getMessage());
+          }
+        
+        $this->form->freeze();
+        $this->tpl_data['success'] = true;
+    }
+    
+    function _validate($values)
+    {
+        $DB =& Database::singleton();
+        $query = "SELECT count(*) AS counter FROM candidate WHERE CandID='$values[CandID]' and PSCID='$values[PSCID]'";
+        $recordsFound = $DB->selectOne($query);
+        $errors = array();
+        
+        if($recordsFound < 1) {
+            $errors['CandID'] = "Specified DCCID and PSCID do not exist or do not match.";
+        }
+        
+        return $errors;
+    }   
+    
+    function display()
+    {
+        if(!$this->form->isFrozen()) {
+            // hidden values
+            $this->form->addElement('hidden', 'test_name', $this->name);
+            $this->form->addElement('hidden', 'subtest', $this->page);
+            $this->form->addElement('hidden', 'identifier', $this->identifier);
+            $this->form->addElement('hidden', 'reliability_center_id', $this->reliability_center_id);
+            $this->form->addElement('submit', 'fire_away', 'Save Data', 'class=button');
+        }
+        
+        // get the defaults
+        $localDefaults = $this->_getDefaults();
+        if (PEAR::isError($localDefaults)) {
+            return PEAR::raiseError("NDB_Form::display(): ".$localDefaults->getMessage());
+        }
+        if(!is_array($localDefaults)) { $localDefaults = array(); }
+        // set the quickform object defaults
+        $this->form->setDefaults(array_merge($this->defaults, $localDefaults));
+        
+        // trim all values
+        $this->form->applyFilter('__ALL__', 'trim');
+        
+        // display the HTML_Quickform object
+        $smarty = new Smarty_neurodb;
+        
+        // display the HTML_Quickform object
+        return $this->form->toHTML();
+        
+        $renderer =& new HTML_QuickForm_Renderer_Default();
+        $renderer->setFormTemplate("<form{attributes}><table class=\"instrument\">{content}</table></form>");
+        $renderer->setElementTemplate("<tr><td class=\"lab\"><!-- BEGIN required --><span style=\"color: #ff0000\">*</span><!-- END required -->{label}</td><td class=\"ele\"><!-- BEGIN error --><span style=\"color: #ff0000\">{error}</span><br /><!-- END error -->{element}</td></tr>");
+        $renderer->setElementTemplate("<tr><td class=\"lab\"><i>{label}</i></td><td class=\"ele\">\t<i>{element}</i></td></tr>", "static");
+        $renderer->setHeaderTemplate("<tr><th colspan=\"2\"><br><b>{header}</b></th></tr>");
+        $this->form->accept($renderer);
+     return $renderer->toHtml();
+     
+    } // end function display
+    
+
+}
+?>
