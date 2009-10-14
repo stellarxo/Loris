@@ -59,6 +59,9 @@ class NDB_Form_adi_r_reliability extends NDB_Form
      
             // Set the defaults
             // print_r($row['CommentID']);
+            
+            $defaults['Examiner'] = $row['Examiner'];
+            $defaults['Date_taken'] = $row['Date_taken'];
             $defaults['CommentID'] = $row['CommentID'];
             $defaults['DoB_proband'] = $row['DoB_proband'];
             $defaults['Reliability_score_all_items'] = $row['Reliability_score_all_items'];
@@ -284,22 +287,22 @@ class NDB_Form_adi_r_reliability extends NDB_Form
 
         $db->selectRow($query, $score_record);
         if (PEAR::isError($score_record)) {
-            return PEAR::raiseError("Could not get scores: ".$score_record->getMessage());
+            return PEAR::raiseError("Could not get scores: ".$score_record->getMessage() . " - Query: {$query}");
         }
               
         $db->selectRow($query1, $score_record1);
         if (PEAR::isError($score_record1)) {
-            return PEAR::raiseError("Could not get scores: ".$score_record1->getMessage());
+            return PEAR::raiseError("Could not get scores: ".$score_record1->getMessage() . " - Query: {$query1}");
         }
         
         $db->selectRow($query2, $score_record2);
         if (PEAR::isError($score_record2)) {
-            return PEAR::raiseError("Could not get scores: ".$score_record2->getMessage());
+            return PEAR::raiseError("Could not get scores: ".$score_record2->getMessage() . " - Query: {$query2}");
         }
         
         $db->selectRow($query3, $score_record3);
         if (PEAR::isError($score_record3)) {
-            return PEAR::raiseError("Could not get scores: ".$score_record3->getMessage());
+            return PEAR::raiseError("Could not get scores: ".$score_record3->getMessage() . " - Query: {$query3}");
         }
         
      
@@ -316,8 +319,8 @@ class NDB_Form_adi_r_reliability extends NDB_Form
             if($score_record['q_2_age_first_noticed_code']=='8' AND $score_record2['q_2_age_first_noticed_code']=='8'){}
             elseif ($score_record['q_2_age_first_noticed_code']=='998' && $score_record2['q_2_age_first_noticed_code']=='998'){}
             else {
-                $denominator++; echo('q2 is neither 8 or 998 for both entries<br>');
-                if($score_record2['q_2_age_first_noticed_code'] - $score_record['q_2_age_first_noticed_code'] >3){$reliability_count_raw++;}}
+                $denominator++; $denominator_scored++; echo('q2 is neither 8 or 998 for both entries<br>');
+                if(abs($score_record2['q_2_age_first_noticed_code'] - $score_record['q_2_age_first_noticed_code']) >3){$reliability_count_raw++; $reliability_count_scored++;}}
             
             if($score_record['q_4_onset_as_perceived_code']=='8' AND $score_record2['q_4_onset_as_perceived_code']=='8'){}
             elseif($score_record['q_4_onset_as_perceived_code']=='998' AND $score_record2['q_4_onset_as_perceived_code']=='998'){}
@@ -350,13 +353,13 @@ class NDB_Form_adi_r_reliability extends NDB_Form
             if($score_record['q_9_first_single_words_code'] =='8' AND $score_record2['q_9_first_single_words_code']=='8'){}
             elseif($score_record['q_9_first_single_words_code']=='998' && $score_record2['q_9_first_single_words_code']=='998'){}
             else {
-                $denominator++;echo('q9 is neither 8 or 998 for both entries<br>');
-                if (abs($score_record['q_9_first_single_words_code'] - $score_record2['q_9_first_single_words_code']) >3){ $reliability_count_raw++;}} 
+                $denominator++; $denominator_scored++; echo('q9 is neither 8 or 998 for both entries<br>');
+                if (abs($score_record['q_9_first_single_words_code'] - $score_record2['q_9_first_single_words_code']) >3){ $reliability_count_raw++; $reliability_count_scored++;}} 
             if($score_record['q_10_first_phrases_code'] =='8' AND $score_record2['q_10_first_phrases_code']=='8'){}
             elseif($score_record['q_10_first_phrases_code']=='998' && $score_record2['q_10_first_phrases_code']=='998'){}
             else {
-                $denominator++;echo('q10 is neither 8 or 998 for both entries<br>');
-                if (abs($score_record['q_10_first_phrases_code'] - $score_record2['q_10_first_phrases_code']) >3){ $reliability_count_raw++;}} 
+                $denominator++; $denominator_scored++; echo('q10 is neither 8 or 998 for both entries<br>');
+                if (abs($score_record['q_10_first_phrases_code'] - $score_record2['q_10_first_phrases_code']) >3){ $reliability_count_raw++; $reliability_count_scored++;}} 
             if ($score_record['q_11_loss_of_language'] =='8_NA' AND $score_record2['q_11_loss_of_language']=='8_NA'){}
             elseif($score_record['q_10_first_phrases_code']=='998' && $score_record2['q_11_loss_of_language']=='998'){}
             else {                    
@@ -554,7 +557,7 @@ class NDB_Form_adi_r_reliability extends NDB_Form
             elseif($score_record['q_39_verbal_rituals_ever_code'] =='998' && $score_record2['q_39_verbal_rituals_ever_code']=='998'){}
             else {
                 $denominator++;$denominator_scored++;
-                if ($score_record['q_39_verbal_rituals_ever_code'] != $score_record2['q_39_verbal_rituals_ever_code']){ $reliability_count_raw++; $reliability_count_scored++;}} 
+                if ($score_record['q_39_verbal_rituals_ever_code'] != $score_record2['q_39_verbal_rituals_ever_code']){ $reliability_count_raw++; $reliability_count_scored++;}}
             if($score_record['q_40_inton_vol_rhythm_rate_current_code'] =='8_NA' AND $score_record2['q_40_inton_vol_rhythm_rate_current_code']=='8_NA'){}
                 elseif($score_record['q_40_inton_vol_rhythm_rate_current_code'] =='998' && $score_record2['q_40_inton_vol_rhythm_rate_current_code']=='998'){}
             else {
@@ -662,8 +665,6 @@ class NDB_Form_adi_r_reliability extends NDB_Form
             else {
                 $denominator++;echo('q49abn is neither 8 or 998 for both entries<br>');
                 if ($score_record['q_49_imag_play_peers_most_abnormal_code'] != $score_record2['q_49_imag_play_peers_most_abnormal_code']){ $reliability_count_raw++;}} 
-            
-
 
             if($score_record['q_50_direct_gaze_current_code'] =='8_NA' AND $score_record2['q_50_direct_gaze_current_code']=='8_NA'){}
             elseif($score_record['q_50_direct_gaze_current_code'] =='998' && $score_record2['q_50_direct_gaze_current_code']=='998'){}
@@ -719,7 +720,7 @@ class NDB_Form_adi_r_reliability extends NDB_Form
             elseif($score_record['q_55_offer_comf_current_code'] =='998' && $score_record2['q_55_offer_comf_current_code']=='998'){}
             else {
                 $denominator++;$denominator_scored++;
-                if ($score_record['comf'] != $score_record2['comf']){ $reliability_count_raw++; $reliability_count_scored++;}} 
+                if ($score_record['q_55_offer_comf_current_code'] != $score_record2['q_55_offer_comf_current_code']){ $reliability_count_raw++; $reliability_count_scored++;}} 
             if($score_record['q_55_offer_comf_most_abnormal_code'] =='8_NA' AND $score_record2['q_55_offer_comf_most_abnormal_code']=='8_NA'){}
             elseif($score_record['q_55_offer_comf_most_abnormal_code'] =='998' && $score_record2['q_55_offer_comf_most_abnormal_code']=='998'){}
             else {
@@ -1028,15 +1029,15 @@ class NDB_Form_adi_r_reliability extends NDB_Form
             if($score_record['q_86_age_when_abnormality_first_evident'] =='8_NA' AND $score_record2['q_86_age_when_abnormality_first_evident']=='8_NA'){}
             elseif($score_record['q_86_age_when_abnormality_first_evident'] =='998' && $score_record2['q_86_age_when_abnormality_first_evident']=='998'){}
             else {
-                $denominator++;
-                if ($score_record['q_86_age_when_abnormality_first_evident'] != $score_record2['q_86_age_when_abnormality_first_evident']){ $reliability_count_raw++;}} 
+                $denominator++; $denominator_scored++;
+                if ($score_record['q_86_age_when_abnormality_first_evident'] != $score_record2['q_86_age_when_abnormality_first_evident']){ $reliability_count_raw++; $reliability_count_scored++;}} 
             if($score_record['q_87_interviewers_judgment'] =='8' AND $score_record2['q_87_interviewers_judgment']=='8'){}
             elseif($score_record['q_87_interviewers_judgment'] =='998' && $score_record2['q_87_interviewers_judgment']=='998'){}
             else {
-                $denominator++;
-                if (abs($score_record['q_87_interviewers_judgment'] - $score_record2['q_87_interviewers_judgment']) >3){ $reliability_count_raw++;}} 
-            if($score_record['q_88_visuospatial_ability_current_code'] =='8_NA' AND $score_record2['']=='8_NA'){}
-            elseif($score_record['q_88_visuospatial_ability_current_code'] =='998' && $score_record2['']=='998'){}
+                $denominator++; $denominator_scored++;
+                if (abs($score_record['q_87_interviewers_judgment'] - $score_record2['q_87_interviewers_judgment']) >3){ $reliability_count_raw++; $reliability_count_scored++;}} 
+            if($score_record['q_88_visuospatial_ability_current_code'] =='8_NA' AND $score_record2['q_88_visuospatial_ability_current_code']=='8_NA'){}
+            elseif($score_record['q_88_visuospatial_ability_current_code'] =='998' && $score_record2['q_88_visuospatial_ability_current_code']=='998'){}
             else {
                 $denominator++;
                 if ($score_record['q_88_visuospatial_ability_current_code'] != $score_record2['q_88_visuospatial_ability_current_code']){ $reliability_count_raw++;}} 
@@ -1127,780 +1128,962 @@ class NDB_Form_adi_r_reliability extends NDB_Form
 
             // TO DO!!!!!!!!!!!!!!!!!!!!! CHECK scoring range. Might use different values for scored count. And score
             // record 2 to score record 3 once things are known about the check.
-if($score_record['q_2_age_first_noticed_code']=='8' AND $score_record2['q_2_age_first_noticed_code']=='8'){}
-            elseif ($score_record['q_2_age_first_noticed_code']=='998' && $score_record2['q_2_age_first_noticed_code']=='998'){}
+if($score_record['q_2_age_first_noticed_code']=='8' AND $score_record3['q_2_age_first_noticed_code']=='8'){}
+            elseif ($score_record['q_2_age_first_noticed_code']=='998' && $score_record3['q_2_age_first_noticed_code']=='998'){}
             else {
-                $denominator++; echo('q2 is neither 8 or 998 for both entries<br>');
-                if($score_record2['q_2_age_first_noticed_code'] - $score_record['q_2_age_first_noticed_code'] >3){$reliability_count_raw++;}}
+                $denominator++; $denominator_scored;
+                if(abs($score_record3['q_2_age_first_noticed_code'] - $score_record['q_2_age_first_noticed_code']) >3){$reliability_count_raw++; $reliability_count_scored++;}}
+
+            if($score_record['q_4_onset_as_perceived_code']=='8' AND $score_record3['q_4_onset_as_perceived_code']=='8'){}
+            elseif($score_record['q_4_onset_as_perceived_code']=='998' AND $score_record3['q_4_onset_as_perceived_code']=='998'){}
+            else {
+                $denominator++;
+                if ($score_record['q_4_onset_as_perceived_code'] != $score_record3['q_4_onset_as_perceived_code']) { $reliability_count_raw++;}}
+
+            if($score_record['q_5_first_walked_code'] =='8' AND $score_record3['q_5_first_walked_code']=='8'){}
+            elseif($score_record['q_5_first_walked_code'] =='998' && $score_record3['q_5_first_walked_code']=='998'){}
+            else {
+                $denominator++;
+                if (abs($score_record['q_5_first_walked_code'] - $score_record3['q_5_first_walked_code']) >3) { $reliability_count_raw++;}} 
             
-            if($score_record['q_4_onset_as_perceived_code']=='8' AND $score_record2['q_4_onset_as_perceived_code']=='8'){}
-            elseif($score_record['q_4_onset_as_perceived_code']=='998' AND $score_record2['q_4_onset_as_perceived_code']=='998'){}
+            if($score_record['q_6_bladder_daytime_code'] =='8' AND $score_record3['q_6_bladder_daytime_code']=='8'){}
+            elseif($score_record['q_6_bladder_daytime_code'] =='998' && $score_record3['q_6_bladder_daytime_code']=='998'){}
             else {
-                $denominator++; echo('q4 is neither 8 or 998 for both entries<br>');
-                if ($score_record['q_4_onset_as_perceived_code'] != $score_record2['q_4_onset_as_perceived_code']) { $reliability_count_raw++;}}
+                $denominator++;
+                if (abs($score_record['q_6_bladder_daytime_code'] - $score_record3['q_6_bladder_daytime_code']) >3){ $reliability_count_raw++;}}
             
-            if($score_record['q_5_first_walked_code']=='8' AND $score_record2['']=='8'){}
-            elseif($score_record['q_5_first_walked_code']=='998' && $score_record2['']=='998'){}
+            if($score_record['q_7_bladder_nighttime_code'] =='8' AND $score_record3['q_7_bladder_nighttime_code']=='8'){}
+            elseif($score_record['q_7_bladder_nighttime_code'] =='998' && $score_record3['q_7_bladder_nighttime_code']=='998'){}
             else {
                 $denominator++;
-                if (abs($score_record['q_5_first_walked_code'] - $score_record2['q_5_first_walked_code']) >3) { $reliability_count_raw++;}} 
-            
-            if($score_record['q_6_bladder_daytime_code'] =='8' AND $score_record2['']=='8'){}
-            elseif($score_record['q_6_bladder_daytime_code']=='998' && $score_record2['']=='998'){}
+                if (abs($score_record['q_7_bladder_nighttime_code'] - $score_record3['q_7_bladder_nighttime_code']) >3){ $reliability_count_raw++;}} 
+
+            if($score_record['q_8_bowel_control_code'] =='8' AND $score_record3['q_8_bowel_control_code']=='8'){}
+            elseif($score_record['q_8_bowel_control_code'] =='998' && $score_record3['q_8_bowel_control_code']=='998'){}
             else {
                 $denominator++;
-                if (abs($score_record['q_6_bladder_daytime_code'] - $score_record2['q_6_bladder_daytime_code']) >3){ $reliability_count_raw++;}}
-            
-            if($score_record['q_7_bladder_nighttime_code'] =='8' AND $score_record2['']=='8'){}
-            elseif($score_record['q_7_bladder_nighttime_code'] =='998' && $score_record2['']=='998'){}
-            else {
-                $denominator++;
-                if (abs($score_record['q_7_bladder_nighttime_code'] - $score_record2['q_7_bladder_nighttime_code']) >3){ $reliability_count_raw++;}} 
-            if($score_record['q_8_bowel_control_code'] =='8' AND $score_record2['']=='8'){}
-            elseif($score_record['q_8_bowel_control_code'] =='998' && $score_record2['']=='998'){}
-            else {
-                $denominator++;
-                if (abs($score_record['q_8_bowel_control_code'] - $score_record2['q_8_bowel_control_code']) >3){ $reliability_count_raw++;}} 
-            if($score_record['q_9_first_single_words_code'] =='8' AND $score_record2['']=='8'){}
-            elseif($score_record['q_9_first_single_words_code']=='998' && $score_record2['']=='998'){}
-            else {
-                $denominator++;
-                if (abs($score_record['q_9_first_single_words_code'] - $score_record2['q_9_first_single_words_code']) >3){ $reliability_count_raw++;}} 
-            if($score_record['q_10_first_phrases_code'] =='8' AND $score_record2['']=='8'){}
-            elseif($score_record['q_10_first_phrases_code']=='998' && $score_record2['']=='998'){}
-            else {
-                $denominator++;
-                if (abs($score_record['q_10_first_phrases_code'] - $score_record2['q_10_first_phrases_code']) >3){ $reliability_count_raw++;}} 
-            if ($score_record['q_11_loss_of_language'] =='8' AND $score_record2['']=='8'){}
-            elseif($score_record['q_10_first_phrases_code']=='998' && $score_record2['']=='998'){}
-            else {                    
-                $denominator++;
-                if($score_record['q_11_loss_of_language']  != $score_record2['q_11_loss_of_language']){ $reliability_count_raw++;}} 
-            if($score_record['q_12_level_before_loss_code'] =='8' AND $score_record2['']=='8'){}
-            elseif($score_record['q_12_level_before_loss_code'] =='998' && $score_record2['']=='998'){}
-            else {
-                $denominator++;
-                if ($score_record['q_12_level_before_loss_code'] != $score_record2['q_12_level_before_loss_code']){ $reliability_count_raw++;}} 
-            if($score_record['13_loss_of_spontaneous_use_code'] =='8' AND $score_record2['']=='8'){}
-            elseif($score_record['13_loss_of_spontaneous_use_code']=='998' && $score_record2['']=='998'){}
-            else {
-                $denominator++;
-                if ($score_record['13_loss_of_spontaneous_use_code'] != $score_record2['13_loss_of_spontaneous_use_code']){ $reliability_count_raw++;}} 
-            if($score_record['14_loss_of_intent_code'] =='8' AND $score_record2['']=='8'){}
-            elseif($score_record['14_loss_of_intent_code'] =='998' && $score_record2['']=='998'){}
-            else {
-                $denominator++;
-                if ($score_record['14_loss_of_intent_code'] != $score_record2['14_loss_of_intent_code']){ $reliability_count_raw++;}} 
-            if($score_record['15_loss_of_syntactical_code'] =='8' AND $score_record2['']=='8'){}
-            elseif($score_record['15_loss_of_syntactical_code'] =='998' && $score_record2['']=='998'){}
-            else {
-                $denominator++;
-                if ($score_record['15_loss_of_syntactical_code'] != $score_record2['15_loss_of_syntactical_code']){ $reliability_count_raw++;}} 
-            if($score_record['16_loss_of_articulation_code'] =='8' AND $score_record2['']=='8'){}
-            elseif($score_record['16_loss_of_articulation_code'] =='998' && $score_record2['']=='998'){}
-            else {
-                $denominator++;
-                if ($score_record['16_loss_of_articulation_code'] != $score_record2['16_loss_of_articulation_code']){ $reliability_count_raw++;}} 
-            if($score_record['q_17_main_loss_apparent_code'] =='8' AND $score_record2['']=='8'){}
-            elseif($score_record['q_17_main_loss_apparent_code'] =='998' && $score_record2['']=='998'){}
-            else {
-                $denominator++;
-                if (abs($score_record['q_17_main_loss_apparent_code'] - $score_record2['q_17_main_loss_apparent_code']) >3){ $reliability_count_raw++;}} 
-            if($score_record['q_18_loss_due_to_illness'] =='8' AND $score_record2['']=='8'){}
-            elseif($score_record['q_18_loss_due_to_illness'] =='998' && $score_record2['']=='998'){}
-            else {
-                $denominator++;
-                if ($score_record['q_18_loss_due_to_illness'] != $score_record2['q_18_loss_due_to_illness']){ $reliability_count_raw++;}} 
-            if($score_record['q_19_duration_of_loss_code'] =='8' AND $score_record2['']=='8'){}
-            elseif($score_record['q_19_duration_of_loss_code'] =='998' && $score_record2['']=='998'){}
-            else {
-                $denominator++;
-                if (abs($score_record['q_19_duration_of_loss_code'] - $score_record2['q_19_duration_of_loss_code']) >3){ $reliability_count_raw++;}} 
-            if($score_record['q_20_loss_of_skills_code'] =='8' AND $score_record2['']=='8'){}
-            elseif($score_record['q_20_loss_of_skills_code'] =='998' && $score_record2['']=='998'){}
-            else {
-                $denominator++;
-                if ($score_record['q_20_loss_of_skills_code'] != $score_record2['q_20_loss_of_skills_code']){ $reliability_count_raw++;}} 
-            if($score_record['q_21_puposive_hand_movements_code'] =='8' AND $score_record2['']=='8'){}
-            elseif($score_record['q_21_puposive_hand_movements_code'] =='998' && $score_record2['']=='998'){}
-            else {
-                $denominator++;
-                if ($score_record['q_21_puposive_hand_movements_code'] != $score_record2['q_21_puposive_hand_movements_code']){ $reliability_count_raw++;}} 
-            if($score_record['q_22_motor_skills_code'] =='8' AND $score_record2['']=='8'){}
-            elseif($score_record['q_22_motor_skills_code'] =='998' && $score_record2['']=='998'){}
-            else {
-                $denominator++;
-                if ($score_record['q_22_motor_skills_code'] != $score_record2['q_22_motor_skills_code']){ $reliability_count_raw++;}} 
-            if($score_record['q_23_self_help_skills_code'] =='8' AND $score_record2['']=='8'){}
-            elseif($score_record['q_23_self_help_skills_code'] =='998' && $score_record2['']=='998'){}
-            else {
-                $denominator++;
-                if ($score_record['q_23_self_help_skills_code'] != $score_record2['q_23_self_help_skills_code']){ $reliability_count_raw++;}} 
-            if($score_record['q_24_constructive_play_code'] =='8' AND $score_record2['']=='8'){}
-            elseif($score_record['q_24_constructive_play_code'] =='998' && $score_record2['']=='998'){}
-            else {
-                $denominator++;
-                if ($score_record['q_24_constructive_play_code'] != $score_record2['q_24_constructive_play_code']){ $reliability_count_raw++;}} 
-            if($score_record['q_25_social_engagement_code'] =='8' AND $score_record2['']=='8'){}
-            elseif($score_record['q_25_social_engagement_code'] =='998' && $score_record2['']=='998'){}
-            else {
-                $denominator++;
-                if ($score_record['q_25_social_engagement_code'] != $score_record2['q_25_social_engagement_code']){ $reliability_count_raw++;}} 
-            if($score_record['q_26_loss_first_apparent_code'] =='8' AND $score_record2['']=='8'){}
-            elseif($score_record['q_26_loss_first_apparent_code']=='998' && $score_record2['']=='998'){}
-            else {
-                $denominator++;
-                if (abs($score_record['q_26_loss_first_apparent_code'] - $score_record2['q_26_loss_first_apparent_code']) >3){ $reliability_count_raw++;}} 
-            if($score_record['q_27_physical_illness_code'] =='8' AND $score_record2['']=='8'){}
-            elseif($score_record['q_27_physical_illness_code'] =='998' && $score_record2['']=='998'){}
-            else {
-                $denominator++;
-                if ($score_record['q_27_physical_illness_code'] != $score_record2['q_27_physical_illness_code']){ $reliability_count_raw++;}} 
-            if($score_record['q_28_duration_of_loss_code'] =='8' AND $score_record2['']=='8'){}
-            elseif($score_record['q_28_duration_of_loss_code']=='998' && $score_record2['']=='998'){}
-            else {
-                $denominator++;
-                if (abs($score_record['q_28_duration_of_loss_code'] - $score_record2['q_28_duration_of_loss_code']) >3){ $reliability_count_raw++;}} 
-            if($score_record['q_29_compreh_simple_current'] =='8' AND $score_record2['']=='8'){}
-            elseif($score_record['q_29_compreh_simple_current'] =='998' && $score_record2['']=='998'){}
-            else {
-                $denominator++;
-                if ($score_record['q_29_compreh_simple_current'] != $score_record2['q_29_compreh_simple_current']){ $reliability_count_raw++;}} 
-            if($score_record['q_29_compreh_simple_most_abnormal'] =='8' AND $score_record2['']=='8'){}
-            elseif($score_record['q_29_compreh_simple_most_abnormal'] =='998' && $score_record2['']=='998'){}
-            else {
-                $denominator++;
-                if ($score_record['q_29_compreh_simple_most_abnormal'] != $score_record2['q_29_compreh_simple_most_abnormal']){ $reliability_count_raw++;}} 
-            if($score_record['q_30_overall_level_of_language'] =='8' AND $score_record2['']=='8'){}
-            elseif($score_record['q_30_overall_level_of_language'] =='998' && $score_record2['']=='998'){}
-            else {
-                $denominator++;
-                if ($score_record['q_30_overall_level_of_language'] != $score_record2['q_30_overall_level_of_language']){ $reliability_count_raw++;}} 
-            if($score_record['q_31_use_of_others_body_current_code'] =='8' AND $score_record2['']=='8'){}
-            elseif($score_record['q_31_use_of_others_body_current_code'] =='998' && $score_record2['']=='998'){}
-            else {
-                $denominator++;
-                if ($score_record['q_31_use_of_others_body_current_code'] != $score_record2['q_31_use_of_others_body_current_code']){ $reliability_count_raw++;}} 
-            if($score_record['q_31_use_of_others_body_ever_code'] =='8' AND $score_record2['']=='8'){}
-            elseif($score_record['q_31_use_of_others_body_ever_code'] =='998' && $score_record2['']=='998'){}
+                if (abs($score_record['q_8_bowel_control_code'] - $score_record3['q_8_bowel_control_code']) >3){ $reliability_count_raw++;}} 
+            if($score_record['q_9_first_single_words_code'] =='8' AND $score_record3['q_9_first_single_words_code']=='8'){}
+            elseif($score_record['q_9_first_single_words_code'] =='998' && $score_record3['q_9_first_single_words_code']=='998'){}
             else {
                 $denominator++; $denominator_scored++;
-                if ($score_record['q_31_use_of_others_body_ever_code'] != $score_record2['q_31_use_of_others_body_ever_code']){ $reliability_count_raw++; $reliability_count_scored++;}} 
-            if($score_record['q_32_artic_pronun_current_code'] =='8' AND $score_record2['']=='8'){}
-            elseif($score_record['q_32_artic_pronun_current_code'] =='998' && $score_record2['']=='998'){}
+                if (abs($score_record['q_9_first_single_words_code'] - $score_record3['q_9_first_single_words_code']) >3){ $reliability_count_raw++; $reliability_count_scored++;}} 
+            if($score_record['q_10_first_phrases_code'] =='8' AND $score_record3['q_10_first_phrases_code']=='8'){}
+            elseif($score_record['q_10_first_phrases_code'] =='998' && $score_record3['q_10_first_phrases_code']=='998'){}
+            else {
+                $denominator++; $denominator_scored++;
+                if (abs($score_record['q_10_first_phrases_code'] - $score_record3['q_10_first_phrases_code']) >3){ $reliability_count_raw++; $reliability_count_scored++;}} 
+            if ($score_record['q_11_loss_of_language'] =='8' AND $score_record3['q_11_loss_of_language']=='8'){}
+            elseif($score_record['q_10_first_phrases_code'] =='998' && $score_record3['q_10_first_phrases_code']=='998'){}
+            else {                    
+                $denominator++;
+                if($score_record['q_11_loss_of_language']  != $score_record3['q_11_loss_of_language']){ $reliability_count_raw++;}} 
+            if($score_record['q_12_level_before_loss_code'] =='8' AND $score_record3['q_12_level_before_loss_code']=='8'){}
+            elseif($score_record['q_12_level_before_loss_code'] =='998' && $score_record3['q_12_level_before_loss_code']=='998'){}
             else {
                 $denominator++;
-                if ($score_record['q_32_artic_pronun_current_code'] != $score_record2['q_32_artic_pronun_current_code']){ $reliability_count_raw++;}} 
-            if($score_record['q_32_artic_pronun_5years_code'] =='8' AND $score_record2['']=='8'){}
-            elseif($score_record['q_32_artic_pronun_5years_code'] =='998' && $score_record2['']=='998'){}
+                if ($score_record['q_12_level_before_loss_code'] != $score_record3['q_12_level_before_loss_code']){ $reliability_count_raw++;}} 
+            if($score_record['13_loss_of_spontaneous_use_code'] =='8' AND $score_record3['13_loss_of_spontaneous_use_code']=='8'){}
+            elseif($score_record['13_loss_of_spontaneous_use_code'] =='998' && $score_record3['13_loss_of_spontaneous_use_code']=='998'){}
             else {
                 $denominator++;
-                if ($score_record['q_32_artic_pronun_5years_code'] != $score_record2['q_32_artic_pronun_5years_code']){ $reliability_count_raw++;}} 
-            if($score_record['q_33_stereotyped_utterances_current_code'] =='8' AND $score_record2['']=='8'){}
-            elseif($score_record['q_33_stereotyped_utterances_current_code'] =='998' && $score_record2['']=='998'){}
+                if (($score_record['13_loss_of_spontaneous_use_code'] =='2' AND $score_record3['13_loss_of_spontaneous_use_code']=='3') ||
+                      ($score_record['13_loss_of_spontaneous_use_code'] =='3' AND $score_record3['13_loss_of_spontaneous_use_code']=='2'))
+                {
+                   #Don't count this
+                }
+                 else if ($score_record['13_loss_of_spontaneous_use_code'] != $score_record3['13_loss_of_spontaneous_use_code']){ $reliability_count_raw++;}} 
+
+            if($score_record['14_loss_of_intent_code'] =='8' AND $score_record3['14_loss_of_intent_code']=='8'){}
+            elseif($score_record['14_loss_of_intent_code'] =='998' && $score_record3['14_loss_of_intent_code']=='998'){}
             else {
                 $denominator++;
-                if ($score_record['q_33_stereotyped_utterances_current_code'] != $score_record2['q_33_stereotyped_utterances_current_code']){ $reliability_count_raw++;}} 
-            if($score_record['q_33_stereotyped_utterances_ever_code'] =='8' AND $score_record2['']=='8'){}
-            elseif($score_record['q_33_stereotyped_utterances_ever_code'] =='998' && $score_record2['']=='998'){}
+                if (($score_record['14_loss_of_intent_code'] =='2' AND $score_record3['14_loss_of_intent_code']=='3') ||
+                     ($score_record['14_loss_of_intent_code'] =='3' AND $score_record3['14_loss_of_intent_code']=='2'))
+               {
+                  #Don't count this
+               }
+                else if ($score_record['14_loss_of_intent_code'] != $score_record3['14_loss_of_intent_code']){ $reliability_count_raw++;}} 
+            if($score_record['15_loss_of_syntactical_code'] =='8' AND $score_record3['15_loss_of_syntactical_code']=='8'){}
+            elseif($score_record['15_loss_of_syntactical_code'] =='998' && $score_record3['15_loss_of_syntactical_code']=='998'){}
+            else {
+                $denominator++;
+                if ($score_record['15_loss_of_syntactical_code'] != $score_record3['15_loss_of_syntactical_code']){ $reliability_count_raw++;}} 
+            if($score_record['16_loss_of_articulation_code'] =='8' AND $score_record3['16_loss_of_articulation_code']=='8'){}
+            elseif($score_record['16_loss_of_articulation_code'] =='998' && $score_record3['16_loss_of_articulation_code']=='998'){}
+            else {
+                $denominator++;
+                if ($score_record['16_loss_of_articulation_code'] != $score_record3['16_loss_of_articulation_code']){ $reliability_count_raw++;}} 
+            if($score_record['q_17_main_loss_apparent_code'] =='8' AND $score_record3['q_17_main_loss_apparent_code']=='8'){}
+            elseif($score_record['q_17_main_loss_apparent_code'] =='998' && $score_record3['q_17_main_loss_apparent_code']=='998'){}
+            else {
+                $denominator++;
+                if (abs($score_record['q_17_main_loss_apparent_code'] - $score_record3['q_17_main_loss_apparent_code']) >3){ $reliability_count_raw++;}} 
+            if($score_record['q_18_loss_due_to_illness'] =='8' AND $score_record3['q_18_loss_due_to_illness']=='8'){}
+            elseif($score_record['q_18_loss_due_to_illness'] =='998' && $score_record3['q_18_loss_due_to_illness']=='998'){}
+            else {
+                $denominator++;
+                if ($score_record['q_18_loss_due_to_illness'] != $score_record3['q_18_loss_due_to_illness']){ $reliability_count_raw++;}} 
+            if($score_record['q_19_duration_of_loss_code'] =='8' AND $score_record3['q_19_duration_of_loss_code']=='8'){}
+            elseif($score_record['q_19_duration_of_loss_code'] =='998' && $score_record3['q_19_duration_of_loss_code']=='998'){}
+            else {
+                $denominator++;
+                if (abs($score_record['q_19_duration_of_loss_code'] - $score_record3['q_19_duration_of_loss_code']) >3){ $reliability_count_raw++;}} 
+            if($score_record['q_20_loss_of_skills_code'] =='8' AND $score_record3['q_20_loss_of_skills_code']=='8'){}
+            elseif($score_record['q_20_loss_of_skills_code'] =='998' && $score_record3['q_20_loss_of_skills_code']=='998'){}
+            else {
+                $denominator++;
+                if (($score_record['q_20_loss_of_skills_code'] =='2' AND $score_record3['q_20_loss_of_skills_code']=='3') ||
+                  ($score_record['q_20_loss_of_skills_code'] =='3' AND $score_record3['q_20_loss_of_skills_code']=='2'))
+                 {
+                    #Don't count this
+                 }
+                 else if ($score_record['q_20_loss_of_skills_code'] != $score_record3['q_20_loss_of_skills_code']){ $reliability_count_raw++;}} 
+            if($score_record['q_21_puposive_hand_movements_code'] =='8' AND $score_record3['q_21_puposive_hand_movements_code']=='8'){}
+            elseif($score_record['q_21_puposive_hand_movements_code'] =='998' && $score_record3['q_21_puposive_hand_movements_code']=='998'){}
+            else {
+                $denominator++;
+                if ($score_record['q_21_puposive_hand_movements_code'] != $score_record3['q_21_puposive_hand_movements_code']){ $reliability_count_raw++;}} 
+            if($score_record['q_22_motor_skills_code'] =='8' AND $score_record3['q_22_motor_skills_code']=='8'){}
+            elseif($score_record['q_22_motor_skills_code'] =='998' && $score_record3['q_22_motor_skills_code']=='998'){}
+            else {
+                $denominator++;
+                if ($score_record['q_22_motor_skills_code'] != $score_record3['q_22_motor_skills_code']){ $reliability_count_raw++;}} 
+            if($score_record['q_23_self_help_skills_code'] =='8' AND $score_record3['q_23_self_help_skills_code']=='8'){}
+            elseif($score_record['q_23_self_help_skills_code'] =='998' && $score_record3['q_23_self_help_skills_code']=='998'){}
+            else {
+                $denominator++;
+                if ($score_record['q_23_self_help_skills_code'] != $score_record3['q_23_self_help_skills_code']){ $reliability_count_raw++;}} 
+            if($score_record['q_24_constructive_play_code'] =='8' AND $score_record3['q_24_constructive_play_code']=='8'){}
+            elseif($score_record['q_24_constructive_play_code'] =='998' && $score_record3['q_24_constructive_play_code']=='998'){}
+            else {
+                $denominator++;
+                if ($score_record['q_24_constructive_play_code'] != $score_record3['q_24_constructive_play_code']){ $reliability_count_raw++;}} 
+            if($score_record['q_25_social_engagement_code'] =='8' AND $score_record3['q_25_social_engagement_code']=='8'){}
+            elseif($score_record['q_25_social_engagement_code'] =='998' && $score_record3['q_25_social_engagement_code']=='998'){}
+            else {
+                $denominator++;
+                if (($score_record['q_25_social_engagement_code'] =='2' AND $score_record3['q_25_social_engagement_code']=='3') ||
+                   ($score_record['q_25_social_engagement_code'] =='3' AND $score_record3['q_25_social_engagement_code']=='2'))
+                  {
+                     #Don't count this
+                  }
+                  else if ($score_record['q_25_social_engagement_code'] != $score_record3['q_25_social_engagement_code']){ $reliability_count_raw++;}} 
+            if($score_record['q_26_loss_first_apparent_code'] =='8' AND $score_record3['q_26_loss_first_apparent_code']=='8'){}
+            elseif($score_record['q_26_loss_first_apparent_code'] =='998' && $score_record3['q_26_loss_first_apparent_code']=='998'){}
+            else {
+                $denominator++;
+                if (abs($score_record['q_26_loss_first_apparent_code'] - $score_record3['q_26_loss_first_apparent_code']) >3){ $reliability_count_raw++;}} 
+            if($score_record['q_27_physical_illness_code'] =='8' AND $score_record3['q_27_physical_illness_code']=='8'){}
+            elseif($score_record['q_27_physical_illness_code'] =='998' && $score_record3['q_27_physical_illness_code']=='998'){}
+            else {
+                $denominator++;
+                if ($score_record['q_27_physical_illness_code'] != $score_record3['q_27_physical_illness_code']){ $reliability_count_raw++;}} 
+            if($score_record['q_28_duration_of_loss_code'] =='8' AND $score_record3['q_28_duration_of_loss_code']=='8'){}
+            elseif($score_record['q_28_duration_of_loss_code'] =='998' && $score_record3['q_28_duration_of_loss_code']=='998'){}
+            else {
+                $denominator++;
+                if (abs($score_record['q_28_duration_of_loss_code'] - $score_record3['q_28_duration_of_loss_code']) >3){ $reliability_count_raw++;}} 
+            if($score_record['q_29_compreh_simple_current'] =='8' AND $score_record3['q_29_compreh_simple_current']=='8'){}
+            elseif($score_record['q_29_compreh_simple_current'] =='998' && $score_record3['q_29_compreh_simple_current']=='998'){}
+            else {
+                $denominator++;
+                if (($score_record['q_29_compreh_simple_current'] =='2' AND $score_record3['q_29_compreh_simple_current']=='3') ||
+                    ($score_record['q_29_compreh_simple_current'] =='3' AND $score_record3['q_29_compreh_simple_current']=='2'))
+                   {
+                      #Don't count this
+                   }
+                   else if ($score_record['q_29_compreh_simple_current'] != $score_record3['q_29_compreh_simple_current']){ $reliability_count_raw++;}} 
+            if($score_record['q_29_compreh_simple_most_abnormal'] =='8' AND $score_record3['q_29_compreh_simple_most_abnormal']=='8'){}
+            elseif($score_record['q_29_compreh_simple_most_abnormal'] =='998' && $score_record3['q_29_compreh_simple_most_abnormal']=='998'){}
+            else {
+                $denominator++;
+                if ($score_record['q_29_compreh_simple_most_abnormal'] != $score_record3['q_29_compreh_simple_most_abnormal']){ $reliability_count_raw++;}} 
+            if($score_record['q_30_overall_level_of_language'] =='8' AND $score_record3['q_30_overall_level_of_language']=='8'){}
+            elseif($score_record['q_30_overall_level_of_language'] =='998' && $score_record3['q_30_overall_level_of_language']=='998'){}
+            else {
+                $denominator++;
+                if ($score_record['q_30_overall_level_of_language'] != $score_record3['q_30_overall_level_of_language']){ $reliability_count_raw++;}} 
+            if($score_record['q_31_use_of_others_body_current_code'] =='8' AND $score_record3['q_31_use_of_others_body_current_code']=='8'){}
+            elseif($score_record['q_31_use_of_others_body_current_code'] =='998' && $score_record3['q_31_use_of_others_body_current_code']=='998'){}
+            else {
+                $denominator++;
+                if ($score_record['q_31_use_of_others_body_current_code'] != $score_record3['q_31_use_of_others_body_current_code']){ $reliability_count_raw++;}} 
+            if($score_record['q_31_use_of_others_body_ever_code'] =='8' AND $score_record3['q_31_use_of_others_body_ever_code']=='8'){}
+            elseif($score_record['q_31_use_of_others_body_ever_code'] =='998' && $score_record3['q_31_use_of_others_body_ever_code']=='998'){}
+            else {
+                $denominator++; $denominator_scored++;
+                if ($score_record['q_31_use_of_others_body_ever_code'] != $score_record3['q_31_use_of_others_body_ever_code']){ $reliability_count_raw++; $reliability_count_scored++;}} 
+            if($score_record['q_32_artic_pronun_current_code'] =='8' AND $score_record3['q_32_artic_pronun_current_code']=='8'){}
+            elseif($score_record['q_32_artic_pronun_current_code'] =='998' && $score_record3['q_32_artic_pronun_current_code']=='998'){}
+            else {
+                $denominator++;
+                if ($score_record['q_32_artic_pronun_current_code'] != $score_record3['q_32_artic_pronun_current_code']){ $reliability_count_raw++;}} 
+            if($score_record['q_32_artic_pronun_5years_code'] =='8' AND $score_record3['q_32_artic_pronun_5years_code']=='8'){}
+            elseif($score_record['q_32_artic_pronun_5years_code'] =='998' && $score_record3['q_32_artic_pronun_5years_code']=='998'){}
+            else {
+                $denominator++;
+                if ($score_record['q_32_artic_pronun_5years_code'] != $score_record3['q_32_artic_pronun_5years_code']){ $reliability_count_raw++;}} 
+            if($score_record['q_33_stereotyped_utterances_current_code'] =='8' AND $score_record3['q_33_stereotyped_utterances_current_code']=='8'){}
+            elseif($score_record['q_33_stereotyped_utterances_current_code'] =='998' && $score_record3['q_33_stereotyped_utterances_current_code']=='998'){}
+            else {
+                $denominator++;
+                if ($score_record['q_33_stereotyped_utterances_current_code'] != $score_record3['q_33_stereotyped_utterances_current_code']){ $reliability_count_raw++;}} 
+            if($score_record['q_33_stereotyped_utterances_ever_code'] =='8' AND $score_record3['q_33_stereotyped_utterances_ever_code']=='8'){}
+            elseif($score_record['q_33_stereotyped_utterances_ever_code'] =='998' && $score_record3['q_33_stereotyped_utterances_ever_code']=='998'){}
             else {
                 $denominator++;$denominator_scored++;
-                if ($score_record['q_33_stereotyped_utterances_ever_code'] != $score_record2['q_33_stereotyped_utterances_ever_code']){ $reliability_count_raw++; $reliability_count_scored++;}} 
-            if($score_record['q_34_social_verb_chat_current_code'] =='8' AND $score_record2['']=='8'){}
-            elseif($score_record['q_34_social_verb_chat_current_code'] =='998' && $score_record2['']=='998'){}
+                if ($score_record['q_33_stereotyped_utterances_ever_code'] != $score_record3['q_33_stereotyped_utterances_ever_code']){ $reliability_count_raw++; $reliability_count_scored++;}} 
+            if($score_record['q_34_social_verb_chat_current_code'] =='8' AND $score_record3['q_34_social_verb_chat_current_code']=='8'){}
+            elseif($score_record['q_34_social_verb_chat_current_code'] =='998' && $score_record3['q_34_social_verb_chat_current_code']=='998'){}
             else {
                 $denominator++;$denominator_scored++;
-                if ($score_record['q_34_social_verb_chat_current_code'] != $score_record2['q_34_social_verb_chat_current_code']){ $reliability_count_raw++; $reliability_count_scored++;}} 
-            if($score_record['q_34_social_verb_chat_ever_code'] =='8' AND $score_record2['']=='8'){}
-            elseif($score_record['q_34_social_verb_chat_ever_code'] =='998' && $score_record2['']=='998'){}
+                if ($score_record['q_34_social_verb_chat_current_code'] != $score_record3['q_34_social_verb_chat_current_code']){ $reliability_count_raw++; $reliability_count_scored++;}} 
+            if($score_record['q_34_social_verb_chat_ever_code'] =='8' AND $score_record3['q_34_social_verb_chat_ever_code']=='8'){}
+            elseif($score_record['q_34_social_verb_chat_ever_code'] =='998' && $score_record3['q_34_social_verb_chat_ever_code']=='998'){}
             else {
                 $denominator++;
-                if ($score_record['q_34_social_verb_chat_ever_code'] != $score_record2['q_34_social_verb_chat_ever_code']){ $reliability_count_raw++;}} 
-            if($score_record['q_35_recipr_convers_current_code'] =='8' AND $score_record2['']=='8'){}
-            elseif($score_record['q_35_recipr_convers_current_code'] =='998' && $score_record2['']=='998'){}
+                if ($score_record['q_34_social_verb_chat_ever_code'] != $score_record3['q_34_social_verb_chat_ever_code']){ $reliability_count_raw++;}} 
+            if($score_record['q_35_recipr_convers_current_code'] =='8' AND $score_record3['q_35_recipr_convers_current_code']=='8'){}
+            elseif($score_record['q_35_recipr_convers_current_code'] =='998' && $score_record3['q_35_recipr_convers_current_code']=='998'){}
             else {
                 $denominator++;$denominator_scored++;
-                if ($score_record['q_35_recipr_convers_current_code'] != $score_record2['q_35_recipr_convers_current_code']){ $reliability_count_raw++; $reliability_count_scored++;}}
-            if($score_record['q_35_recipr_convers_ever_code'] =='8' AND $score_record2['']=='8'){}
-            elseif($score_record['q_35_recipr_convers_ever_code'] =='998' && $score_record2['']=='998'){}
+                if ($score_record['q_35_recipr_convers_current_code'] != $score_record3['q_35_recipr_convers_current_code']){ $reliability_count_raw++; $reliability_count_scored++;}}
+            if($score_record['q_35_recipr_convers_ever_code'] =='8' AND $score_record3['q_35_recipr_convers_ever_code']=='8'){}
+            elseif($score_record['q_35_recipr_convers_ever_code'] =='998' && $score_record3['q_35_recipr_convers_ever_code']=='998'){}
             else {
                 $denominator++;
-                if ($score_record['q_35_recipr_convers_ever_code'] != $score_record2['q_35_recipr_convers_ever_code']){ $reliability_count_raw++;}} 
-            if($score_record['q_36_inappropriate_qs_current_code'] =='8' AND $score_record2['']=='8'){}
-            elseif($score_record['q_36_inappropriate_qs_current_code'] =='998' && $score_record2['']=='998'){}
+                if ($score_record['q_35_recipr_convers_ever_code'] != $score_record3['q_35_recipr_convers_ever_code']){ $reliability_count_raw++;}} 
+            if($score_record['q_36_inappropriate_qs_current_code'] =='8' AND $score_record3['q_36_inappropriate_qs_current_code']=='8'){}
+            elseif($score_record['q_36_inappropriate_qs_current_code'] =='998' && $score_record3['q_36_inappropriate_qs_current_code']=='998'){}
             else {
                 $denominator++;
-                if ($score_record['q_36_inappropriate_qs_current_code'] != $score_record2['q_36_inappropriate_qs_current_code']){ $reliability_count_raw++;}} 
-            if($score_record['q_36_inappropriate_qs_ever_code'] =='8' AND $score_record2['']=='8'){}
-            elseif($score_record['q_36_inappropriate_qs_ever_code'] =='998' && $score_record2['']=='998'){}
+                if ($score_record['q_36_inappropriate_qs_current_code'] != $score_record3['q_36_inappropriate_qs_current_code']){ $reliability_count_raw++;}} 
+            if($score_record['q_36_inappropriate_qs_ever_code'] =='8' AND $score_record3['q_36_inappropriate_qs_ever_code']=='8'){}
+            elseif($score_record['q_36_inappropriate_qs_ever_code'] =='998' && $score_record3['q_36_inappropriate_qs_ever_code']=='998'){}
             else {
                 $denominator++;$denominator_scored++;
-                if ($score_record['q_36_inappropriate_qs_ever_code'] != $score_record2['q_36_inappropriate_qs_ever_code']){ $reliability_count_raw++; $reliability_count_scored++;}} 
-            if($score_record['q_37_prenominal_reversal_current_code'] =='8' AND $score_record2['']=='8'){}
-            elseif($score_record['q_37_prenominal_reversal_current_code'] =='998' && $score_record2['']=='998'){}
+                if ($score_record['q_36_inappropriate_qs_ever_code'] != $score_record3['q_36_inappropriate_qs_ever_code']){ $reliability_count_raw++; $reliability_count_scored++;}} 
+            if($score_record['q_37_prenominal_reversal_current_code'] =='8' AND $score_record3['q_37_prenominal_reversal_current_code']=='8'){}
+            elseif($score_record['q_37_prenominal_reversal_current_code'] =='998' && $score_record3['q_37_prenominal_reversal_current_code']=='998'){}
             else {
                 $denominator++;
-                if ($score_record['q_37_prenominal_reversal_current_code'] != $score_record2['q_37_prenominal_reversal_current_code']){ $reliability_count_raw++;}} 
-            if($score_record['q_37_prenominal_reversal_ever_code'] =='8' AND $score_record2['']=='8'){}
-            elseif($score_record['q_37_prenominal_reversal_ever_code'] =='998' && $score_record2['']=='998'){}
+                if ($score_record['q_37_prenominal_reversal_current_code'] != $score_record3['q_37_prenominal_reversal_current_code']){ $reliability_count_raw++;}} 
+            if($score_record['q_37_prenominal_reversal_ever_code'] =='8' AND $score_record3['q_37_prenominal_reversal_ever_code']=='8'){}
+            elseif($score_record['q_37_prenominal_reversal_ever_code'] =='998' && $score_record3['q_37_prenominal_reversal_ever_code']=='998'){}
             else {
                 $denominator++;$denominator_scored++;
-                if ($score_record['q_37_prenominal_reversal_ever_code'] != $score_record2['q_37_prenominal_reversal_ever_code']){ $reliability_count_raw++; $reliability_count_scored++;}} 
-            if($score_record['q_38_neologisms_current_code'] =='8' AND $score_record2['']=='8'){}
-            elseif($score_record['q_38_neologisms_current_code'] =='998' && $score_record2['']=='998'){}
+                if ($score_record['q_37_prenominal_reversal_ever_code'] != $score_record3['q_37_prenominal_reversal_ever_code']){ $reliability_count_raw++; $reliability_count_scored++;}} 
+            if($score_record['q_38_neologisms_current_code'] =='8' AND $score_record3['q_38_neologisms_current_code']=='8'){}
+            elseif($score_record['q_38_neologisms_current_code'] =='998' && $score_record3['q_38_neologisms_current_code']=='998'){}
             else {
                     $denominator++;
-                    if ($score_record['q_38_neologisms_current_code'] != $score_record2['q_38_neologisms_current_code']){ $reliability_count_raw++;}} 
-            if($score_record['q_38_neologisms_ever_code'] =='8' AND $score_record2['']=='8'){}
-            elseif($score_record['q_38_neologisms_ever_code'] =='998' && $score_record2['']=='998'){}
+                    if ($score_record['q_38_neologisms_current_code'] != $score_record3['q_38_neologisms_current_code']){ $reliability_count_raw++;}} 
+            if($score_record['q_38_neologisms_ever_code'] =='8' AND $score_record3['q_38_neologisms_ever_code']=='8'){}
+            elseif($score_record['q_38_neologisms_ever_code'] =='998' && $score_record3['q_38_neologisms_ever_code']=='998'){}
             else {
                 $denominator++;$denominator_scored++;
-                if ($score_record['q_38_neologisms_ever_code'] != $score_record2['q_38_neologisms_ever_code']){ $reliability_count_raw++; $reliability_count_scored++;}} 
-            if($score_record['q_39_verbal_rituals_current_code'] =='8' AND $score_record2['']=='8'){}
-            elseif($score_record['q_39_verbal_rituals_current_code'] =='998' && $score_record2['']=='998'){}
+                if ($score_record['q_38_neologisms_ever_code'] != $score_record3['q_38_neologisms_ever_code']){ $reliability_count_raw++; $reliability_count_scored++;}} 
+            if($score_record['q_39_verbal_rituals_current_code'] =='8' AND $score_record3['q_39_verbal_rituals_current_code']=='8'){}
+            elseif($score_record['q_39_verbal_rituals_current_code'] =='998' && $score_record3['q_39_verbal_rituals_current_code']=='998'){}
             else {
                 $denominator++;
-                if ($score_record['q_39_verbal_rituals_current_code'] != $score_record2['q_39_verbal_rituals_current_code']){ $reliability_count_raw++;}} 
-            if($score_record['q_39_verbal_rituals_ever_code'] =='8' AND $score_record2['']=='8'){}
-            elseif($score_record['q_39_verbal_rituals_ever_code'] =='998' && $score_record2['']=='998'){}
+                if ($score_record['q_39_verbal_rituals_current_code'] != $score_record3['q_39_verbal_rituals_current_code']){ $reliability_count_raw++;}} 
+            if($score_record['q_39_verbal_rituals_ever_code'] =='8' AND $score_record3['q_39_verbal_rituals_ever_code']=='8'){}
+            elseif($score_record['q_39_verbal_rituals_ever_code'] =='998' && $score_record3['q_39_verbal_rituals_ever_code']=='998'){}
             else {
                 $denominator++;$denominator_scored++;
-                if ($score_record['q_39_verbal_rituals_ever_code'] != $score_record2['q_39_verbal_rituals_ever_code']){ $reliability_count_raw++; $reliability_count_scored++;}} 
-            if($score_record['q_40_inton_vol_rhythm_rate_current_code'] =='8' AND $score_record2['']=='8'){}
-                elseif($score_record['q_40_inton_vol_rhythm_rate_current_code'] =='998' && $score_record2['']=='998'){}
+                if ($score_record['q_39_verbal_rituals_ever_code'] != $score_record3['q_39_verbal_rituals_ever_code']){ $reliability_count_raw++; $reliability_count_scored++;}} 
+            if($score_record['q_40_inton_vol_rhythm_rate_current_code'] =='8' AND $score_record3['q_40_inton_vol_rhythm_rate_current_code']=='8'){}
+                elseif($score_record['q_40_inton_vol_rhythm_rate_current_code'] =='998' && $score_record3['q_40_inton_vol_rhythm_rate_current_code']=='998'){}
             else {
                 $denominator++;
-                if ($score_record['q_40_inton_vol_rhythm_rate_current_code'] != $score_record2['q_40_inton_vol_rhythm_rate_current_code']){ $reliability_count_raw++;}} 
-            if($score_record['q_40_inton_vol_rhythm_rate_ever_code'] =='8' AND $score_record2['']=='8'){}
-            elseif($score_record['q_40_inton_vol_rhythm_rate_ever_code'] =='998' && $score_record2['']=='998'){}
+                if ($score_record['q_40_inton_vol_rhythm_rate_current_code'] != $score_record3['q_40_inton_vol_rhythm_rate_current_code']){ $reliability_count_raw++;}} 
+            if($score_record['q_40_inton_vol_rhythm_rate_ever_code'] =='8' AND $score_record3['q_40_inton_vol_rhythm_rate_ever_code']=='8'){}
+            elseif($score_record['q_40_inton_vol_rhythm_rate_ever_code'] =='998' && $score_record3['q_40_inton_vol_rhythm_rate_ever_code']=='998'){}
             else {
                 $denominator++;
-                if ($score_record['q_40_inton_vol_rhythm_rate_ever_code'] != $score_record2['q_40_inton_vol_rhythm_rate_ever_code']){ $reliability_count_raw++;}} 
-            if($score_record['q_41_cur_comm_speech_current_code'] =='8' AND $score_record2['']=='8'){}
-            elseif($score_record['q_41_cur_comm_speech_current_code'] =='998' && $score_record2['']=='998'){}
+                if ($score_record['q_40_inton_vol_rhythm_rate_ever_code'] != $score_record3['q_40_inton_vol_rhythm_rate_ever_code']){ $reliability_count_raw++;}} 
+            if($score_record['q_41_cur_comm_speech_current_code'] =='8' AND $score_record3['q_41_cur_comm_speech_current_code']=='8'){}
+            elseif($score_record['q_41_cur_comm_speech_current_code'] =='998' && $score_record3['q_41_cur_comm_speech_current_code']=='998'){}
             else {
                 $denominator++;
-                if ($score_record['q_41_cur_comm_speech_current_code'] != $score_record2['q_41_cur_comm_speech_current_code']){ $reliability_count_raw++;}} 
-            if($score_record['q_41_cur_comm_speech_at5_code'] =='8' AND $score_record2['']=='8'){}
-            elseif($score_record['q_41_cur_comm_speech_at5_code'] =='998' && $score_record2['']=='998'){}
+                if ($score_record['q_41_cur_comm_speech_current_code'] != $score_record3['q_41_cur_comm_speech_current_code']){ $reliability_count_raw++;}} 
+            if($score_record['q_41_cur_comm_speech_at5_code'] =='8' AND $score_record3['q_41_cur_comm_speech_at5_code']=='8'){}
+            elseif($score_record['q_41_cur_comm_speech_at5_code'] =='998' && $score_record3['q_41_cur_comm_speech_at5_code']=='998'){}
             else {
                 $denominator++;
-                if ($score_record['q_41_cur_comm_speech_at5_code'] != $score_record2['q_41_cur_comm_speech_at5_code']){ $reliability_count_raw++;}} 
-            if($score_record['q_42_point_express_interest_current_code'] =='8' AND $score_record2['']=='8'){}
-            elseif($score_record['q_42_point_express_interest_current_code'] =='998' && $score_record2['']=='998'){}
+                if ($score_record['q_41_cur_comm_speech_at5_code'] != $score_record3['q_41_cur_comm_speech_at5_code']){ $reliability_count_raw++;}} 
+            if($score_record['q_42_point_express_interest_current_code'] =='8' AND $score_record3['q_42_point_express_interest_current_code']=='8'){}
+            elseif($score_record['q_42_point_express_interest_current_code'] =='998' && $score_record3['q_42_point_express_interest_current_code']=='998'){}
             else {
                 $denominator++;$denominator_scored++;
-                if ($score_record['q_42_point_express_interest_current_code'] != $score_record2['q_42_point_express_interest_current_code']){ $reliability_count_raw++; $reliability_count_scored++;}} 
-            if($score_record['q_42_point_express_inter_most_abnormal_code'] =='8' AND $score_record2['']=='8'){}
-            elseif($score_record['q_42_point_express_inter_most_abnormal_code'] =='998' && $score_record2['']=='998'){}
+                if ($score_record['q_42_point_express_interest_current_code'] != $score_record3['q_42_point_express_interest_current_code']){ $reliability_count_raw++; $reliability_count_scored++;}} 
+            if($score_record['q_42_point_express_inter_most_abnormal_code'] =='8' AND $score_record3['q_42_point_express_inter_most_abnormal_code']=='8'){}
+            elseif($score_record['q_42_point_express_inter_most_abnormal_code'] =='998' && $score_record3['q_42_point_express_inter_most_abnormal_code']=='998'){}
             else {
                 $denominator++;
-                if ($score_record['q_42_point_express_inter_most_abnormal_code'] != $score_record2['q_42_point_express_inter_most_abnormal_code']){ $reliability_count_raw++;}} 
-            if($score_record['q_43_nodding_current_code'] =='8' AND $score_record2['']=='8'){}
-            elseif($score_record['q_43_nodding_current_code'] =='998' && $score_record2['']=='998'){}
+                if ($score_record['q_42_point_express_inter_most_abnormal_code'] != $score_record3['q_42_point_express_inter_most_abnormal_code']){ $reliability_count_raw++;}} 
+            if($score_record['q_43_nodding_current_code'] =='8' AND $score_record3['q_43_nodding_current_code']=='8'){}
+            elseif($score_record['q_43_nodding_current_code'] =='998' && $score_record3['q_43_nodding_current_code']=='998'){}
             else {
                 $denominator++;$denominator_scored++;
-                if ($score_record['q_43_nodding_current_code'] != $score_record2['q_43_nodding_current_code']){ $reliability_count_raw++; $reliability_count_scored++;}} 
-            if($score_record['q_43_nodding_most_abnormal_code'] =='8' AND $score_record2['']=='8'){}
-            elseif($score_record['q_43_nodding_most_abnormal_code'] =='998' && $score_record2['']=='998'){}
+                if ($score_record['q_43_nodding_current_code'] != $score_record3['q_43_nodding_current_code']){ $reliability_count_raw++; $reliability_count_scored++;}} 
+            if($score_record['q_43_nodding_most_abnormal_code'] =='8' AND $score_record3['q_43_nodding_most_abnormal_code']=='8'){}
+            elseif($score_record['q_43_nodding_most_abnormal_code'] =='998' && $score_record3['q_43_nodding_most_abnormal_code']=='998'){}
             else {
                 $denominator++;
-                if ($score_record['q_43_nodding_most_abnormal_code'] != $score_record2['q_43_nodding_most_abnormal_code']){ $reliability_count_raw++;}} 
-            if($score_record['q_44_head_shaking_current_code'] =='8' AND $score_record2['']=='8'){}
-            elseif($score_record['q_44_head_shaking_current_code'] =='998' && $score_record2['']=='998'){}
+                if ($score_record['q_43_nodding_most_abnormal_code'] != $score_record3['q_43_nodding_most_abnormal_code']){ $reliability_count_raw++;}} 
+            if($score_record['q_44_head_shaking_current_code'] =='8' AND $score_record3['q_44_head_shaking_current_code']=='8'){}
+            elseif($score_record['q_44_head_shaking_current_code'] =='998' && $score_record3['q_44_head_shaking_current_code']=='998'){}
             else {
                 $denominator++;$denominator_scored++;
-                if ($score_record['q_44_head_shaking_current_code'] != $score_record2['q_44_head_shaking_current_code']){ $reliability_count_raw++; $reliability_count_scored++;}} 
-            if($score_record['q_44_head_shaking_most_abnormal_code'] =='8' AND $score_record2['']=='8'){}
-            elseif($score_record['q_44_head_shaking_most_abnormal_code'] =='998' && $score_record2['']=='998'){}
+                if ($score_record['q_44_head_shaking_current_code'] != $score_record3['q_44_head_shaking_current_code']){ $reliability_count_raw++; $reliability_count_scored++;}} 
+            if($score_record['q_44_head_shaking_most_abnormal_code'] =='8' AND $score_record3['q_44_head_shaking_most_abnormal_code']=='8'){}
+            elseif($score_record['q_44_head_shaking_most_abnormal_code'] =='998' && $score_record3['q_44_head_shaking_most_abnormal_code']=='998'){}
             else {
                 $denominator++;
-                if ($score_record['q_44_head_shaking_most_abnormal_code'] != $score_record2['q_44_head_shaking_most_abnormal_code']){ $reliability_count_raw++;}} 
-            if($score_record['q_45_conventional_instr_gests_current_code'] =='8' AND $score_record2['']=='8'){}
-            elseif($score_record['q_45_conventional_instr_gests_current_code'] =='998' && $score_record2['']=='998'){}
+                if ($score_record['q_44_head_shaking_most_abnormal_code'] != $score_record3['q_44_head_shaking_most_abnormal_code']){ $reliability_count_raw++;}} 
+            if($score_record['q_45_conventional_instr_gests_current_code'] =='8' AND $score_record3['q_45_conventional_instr_gests_current_code']=='8'){}
+            elseif($score_record['q_45_conventional_instr_gests_current_code'] =='998' && $score_record3['q_45_conventional_instr_gests_current_code']=='998'){}
             else {
                 $denominator++;$denominator_scored++;
-                if ($score_record['q_45_conventional_instr_gests_current_code'] != $score_record2['q_45_conventional_instr_gests_current_code']){ $reliability_count_raw++; $reliability_count_scored++;}}              
-            if($score_record['q_45_conventional_instr_gests_most_abnormal_code'] =='8' AND $score_record2['']=='8'){}
-            elseif($score_record['q_45_conventional_instr_gests_most_abnormal_code'] =='998' && $score_record2['']=='998'){}
+                if (($score_record['q_45_conventional_instr_gests_current_code'] =='2' AND $score_record3['q_45_conventional_instr_gests_current_code']=='3') ||
+                    ($score_record['q_45_conventional_instr_gests_current_code'] =='3' AND $score_record3['q_45_conventional_instr_gests_current_code']=='2'))
+                   {
+                      #Don't count this
+                   }
+                   else if ($score_record['q_45_conventional_instr_gests_current_code'] != $score_record3['q_45_conventional_instr_gests_current_code']){ $reliability_count_raw++; $reliability_count_scored++;}}              
+            if($score_record['q_45_conventional_instr_gests_most_abnormal_code'] =='8' AND $score_record3['q_45_conventional_instr_gests_most_abnormal_code']=='8'){}
+            elseif($score_record['q_45_conventional_instr_gests_most_abnormal_code'] =='998' && $score_record3['q_45_conventional_instr_gests_most_abnormal_code']=='998'){}
             else {
                 $denominator++;
-                if ($score_record['q_45_conventional_instr_gests_most_abnormal_code'] != $score_record2['q_45_conventional_instr_gests_most_abnormal_code']){ $reliability_count_raw++;}} 
-            if($score_record['q_46_attent_voice_current_code'] =='8' AND $score_record2['']=='8'){}
-            elseif($score_record['q_46_attent_voice_current_code'] =='998' && $score_record2['']=='998'){}
+                if ($score_record['q_45_conventional_instr_gests_most_abnormal_code'] != $score_record3['q_45_conventional_instr_gests_most_abnormal_code']){ $reliability_count_raw++;}} 
+            if($score_record['q_46_attent_voice_current_code'] =='8' AND $score_record3['q_46_attent_voice_current_code']=='8'){}
+            elseif($score_record['q_46_attent_voice_current_code'] =='998' && $score_record3['q_46_attent_voice_current_code']=='998'){}
             else {
                 $denominator++;
-                if ($score_record['q_46_attent_voice_current_code'] != $score_record2['q_46_attent_voice_current_code']){ $reliability_count_raw++;}} 
-            if($score_record['q_46_attent_voice_most_abnormal_code'] =='8' AND $score_record2['']=='8'){}
-            elseif($score_record['q_46_attent_voice_most_abnormal_code'] =='998' && $score_record2['']=='998'){}
+                if ($score_record['q_46_attent_voice_current_code'] != $score_record3['q_46_attent_voice_current_code']){ $reliability_count_raw++;}} 
+            if($score_record['q_46_attent_voice_most_abnormal_code'] =='8' AND $score_record3['q_46_attent_voice_most_abnormal_code']=='8'){}
+            elseif($score_record['q_46_attent_voice_most_abnormal_code'] =='998' && $score_record3['q_46_attent_voice_most_abnormal_code']=='998'){}
             else {
                 $denominator++;
-                if ($score_record['q_46_attent_voice_most_abnormal_code'] != $score_record2['q_46_attent_voice_most_abnormal_code']){ $reliability_count_raw++;}} 
-            if($score_record['q_47_spont_imit_current_code'] =='8' AND $score_record2['']=='8'){}
-            elseif($score_record['q_47_spont_imit_current_code'] =='998' && $score_record2['']=='998'){}
+                if ($score_record['q_46_attent_voice_most_abnormal_code'] != $score_record3['q_46_attent_voice_most_abnormal_code']){ $reliability_count_raw++;}} 
+            if($score_record['q_47_spont_imit_current_code'] =='8' AND $score_record3['q_47_spont_imit_current_code']=='8'){}
+            elseif($score_record['q_47_spont_imit_current_code'] =='998' && $score_record3['q_47_spont_imit_current_code']=='998'){}
             else {
                 $denominator++;$denominator_scored++;
-                if ($score_record['q_47_spont_imit_current_code'] != $score_record2['q_47_spont_imit_current_code']){ $reliability_count_raw++; $reliability_count_scored++;}} 
-            if($score_record['q_47_spont_imit_most_abnormal_code'] =='8' AND $score_record2['']=='8'){}
-            elseif($score_record['q_47_spont_imit_most_abnormal_code'] =='998' && $score_record2['']=='998'){}
+                if (($score_record['q_47_spont_imit_current_code'] =='2' AND $score_record3['q_47_spont_imit_current_code']=='3') ||
+                     ($score_record['q_47_spont_imit_current_code'] =='3' AND $score_record3['q_47_spont_imit_current_code']=='2'))
+                    {
+                       #Don't count this
+                    }
+                    else if ($score_record['q_47_spont_imit_current_code'] != $score_record3['q_47_spont_imit_current_code']){ $reliability_count_raw++; $reliability_count_scored++;}} 
+            if($score_record['q_47_spont_imit_most_abnormal_code'] =='8' AND $score_record3['q_47_spont_imit_most_abnormal_code']=='8'){}
+            elseif($score_record['q_47_spont_imit_most_abnormal_code'] =='998' && $score_record3['q_47_spont_imit_most_abnormal_code']=='998'){}
             else {
                 $denominator++;
-                if ($score_record['q_47_spont_imit_most_abnormal_code'] != $score_record2['q_47_spont_imit_most_abnormal_code']){ $reliability_count_raw++;}} 
-            if($score_record['q_48_imag_play_current_code'] =='8' AND $score_record2['']=='8'){}
-            elseif($score_record['q_48_imag_play_current_code'] =='998' && $score_record2['']=='998'){}
+                if ($score_record['q_47_spont_imit_most_abnormal_code'] != $score_record3['q_47_spont_imit_most_abnormal_code']){ $reliability_count_raw++;}} 
+            if($score_record['q_48_imag_play_current_code'] =='8' AND $score_record3['q_48_imag_play_current_code']=='8'){}
+            elseif($score_record['q_48_imag_play_current_code'] =='998' && $score_record3['q_48_imag_play_current_code']=='998'){}
             else {
                 $denominator++;$denominator_scored++;
-                if ($score_record['q_48_imag_play_current_code'] != $score_record2['q_48_imag_play_current_code']){ $reliability_count_raw++; $reliability_count_scored++;}} 
-            if($score_record['q_48_imag_play_most_abnormal_code'] =='8' AND $score_record2['']=='8'){}
-            elseif($score_record['q_48_imag_play_most_abnormal_code'] =='998' && $score_record2['']=='998'){}
+                if ($score_record['q_48_imag_play_current_code'] != $score_record3['q_48_imag_play_current_code']){ $reliability_count_raw++; $reliability_count_scored++;}} 
+            if($score_record['q_48_imag_play_most_abnormal_code'] =='8' AND $score_record3['q_48_imag_play_most_abnormal_code']=='8'){}
+            elseif($score_record['q_48_imag_play_most_abnormal_code'] =='998' && $score_record3['q_48_imag_play_most_abnormal_code']=='998'){}
             else {
                 $denominator++;
-                if ($score_record['q_48_imag_play_most_abnormal_code'] != $score_record2['q_48_imag_play_most_abnormal_code']){ $reliability_count_raw++;}} 
-            if($score_record['q_49_imag_play_peers_current_code'] =='8' AND $score_record2['']=='8'){}
-            elseif($score_record['q_49_imag_play_peers_current_code'] =='998' && $score_record2['']=='998'){}
+                if ($score_record['q_48_imag_play_most_abnormal_code'] != $score_record3['q_48_imag_play_most_abnormal_code']){ $reliability_count_raw++;}} 
+            if($score_record['q_49_imag_play_peers_current_code'] =='8' AND $score_record3['q_49_imag_play_peers_current_code']=='8'){}
+            elseif($score_record['q_49_imag_play_peers_current_code'] =='998' && $score_record3['q_49_imag_play_peers_current_code']=='998'){}
             else {
                 $denominator++;
-                if ($score_record['q_49_imag_play_peers_current_code'] != $score_record2['q_49_imag_play_peers_current_code']){ $reliability_count_raw++;}} 
-            if($score_record['q_49_imag_play_peers_most_abnormal_code'] =='8' AND $score_record2['']=='8'){}
-            elseif($score_record['q_49_imag_play_peers_most_abnormal_code'] =='998' && $score_record2['']=='998'){}
+                if ($score_record['q_49_imag_play_peers_current_code'] != $score_record3['q_49_imag_play_peers_current_code']){ $reliability_count_raw++;}} 
+            if($score_record['q_49_imag_play_peers_most_abnormal_code'] =='8' AND $score_record3['q_49_imag_play_peers_most_abnormal_code']=='8'){}
+            elseif($score_record['q_49_imag_play_peers_most_abnormal_code'] =='998' && $score_record3['q_49_imag_play_peers_most_abnormal_code']=='998'){}
             else {
                 $denominator++;
-                if ($score_record['q_49_imag_play_peers_most_abnormal_code'] != $score_record2['q_49_imag_play_peers_most_abnormal_code']){ $reliability_count_raw++;}} 
-            if($score_record['q_50_direct_gaze_current_code'] =='8' AND $score_record2['']=='8'){}
-            elseif($score_record['q_50_direct_gaze_current_code'] =='998' && $score_record2['']=='998'){}
+                if ($score_record['q_49_imag_play_peers_most_abnormal_code'] != $score_record3['q_49_imag_play_peers_most_abnormal_code']){ $reliability_count_raw++;}} 
+            if($score_record['q_50_direct_gaze_current_code'] =='8' AND $score_record3['q_50_direct_gaze_current_code']=='8'){}
+            elseif($score_record['q_50_direct_gaze_current_code'] =='998' && $score_record3['q_50_direct_gaze_current_code']=='998'){}
             else {
                 $denominator++;$denominator_scored++;
-                if ($score_record['q_50_direct_gaze_current_code'] != $score_record2['q_50_direct_gaze_current_code']){ $reliability_count_raw++; $reliability_count_scored++;}} 
-            if($score_record['q_50_direct_gaze_most_abnormal_code'] =='8' AND $score_record2['']=='8'){}
-            elseif($score_record['q_50_direct_gaze_most_abnormal_code'] =='998' && $score_record2['']=='998'){}
+                if ($score_record['q_50_direct_gaze_current_code'] != $score_record3['q_50_direct_gaze_current_code']){ $reliability_count_raw++; $reliability_count_scored++;}} 
+            if($score_record['q_50_direct_gaze_most_abnormal_code'] =='8' AND $score_record3['q_50_direct_gaze_most_abnormal_code']=='8'){}
+            elseif($score_record['q_50_direct_gaze_most_abnormal_code'] =='998' && $score_record3['q_50_direct_gaze_most_abnormal_code']=='998'){}
             else {
                 $denominator++;
-                if ($score_record['q_50_direct_gaze_most_abnormal_code'] != $score_record2['q_50_direct_gaze_most_abnormal_code']){ $reliability_count_raw++;}} 
-            if($score_record['q_51_social_smiling_current_code'] =='8' AND $score_record2['']=='8'){}
-            elseif($score_record['q_51_social_smiling_current_code'] =='998' && $score_record2['']=='998'){}
+                if ($score_record['q_50_direct_gaze_most_abnormal_code'] != $score_record3['q_50_direct_gaze_most_abnormal_code']){ $reliability_count_raw++;}} 
+            if($score_record['q_51_social_smiling_current_code'] =='8' AND $score_record3['q_51_social_smiling_current_code']=='8'){}
+            elseif($score_record['q_51_social_smiling_current_code'] =='998' && $score_record3['q_51_social_smiling_current_code']=='998'){}
             else {
                 $denominator++;$denominator_scored++;
-                if ($score_record['q_51_social_smiling_current_code'] != $score_record2['q_51_social_smiling_current_code']){ $reliability_count_raw++; $reliability_count_scored++;}} 
-            if($score_record['q_51_social_smiling_most_abnormal_code'] =='8' AND $score_record2['']=='8'){}
-            elseif($score_record['q_51_social_smiling_most_abnormal_code'] =='998' && $score_record2['']=='998'){}
+                if ($score_record['q_51_social_smiling_current_code'] != $score_record3['q_51_social_smiling_current_code']){ $reliability_count_raw++; $reliability_count_scored++;}} 
+            if($score_record['q_51_social_smiling_most_abnormal_code'] =='8' AND $score_record3['q_51_social_smiling_most_abnormal_code']=='8'){}
+            elseif($score_record['q_51_social_smiling_most_abnormal_code'] =='998' && $score_record3['q_51_social_smiling_most_abnormal_code']=='998'){}
             else {
                 $denominator++;
-                if ($score_record['q_51_social_smiling_most_abnormal_code'] != $score_record2['q_51_social_smiling_most_abnormal_code']){ $reliability_count_raw++;}} 
-            if($score_record['q_52_show_direct_atten_current_code'] =='8' AND $score_record2['']=='8'){}
-            elseif($score_record['q_52_show_direct_atten_current_code'] =='998' && $score_record2['']=='998'){}
+                if ($score_record['q_51_social_smiling_most_abnormal_code'] != $score_record3['q_51_social_smiling_most_abnormal_code']){ $reliability_count_raw++;}} 
+            if($score_record['q_52_show_direct_atten_current_code'] =='8' AND $score_record3['q_52_show_direct_atten_current_code']=='8'){}
+            elseif($score_record['q_52_show_direct_atten_current_code'] =='998' && $score_record3['q_52_show_direct_atten_current_code']=='998'){}
             else {
                 $denominator++;$denominator_scored++;
-                if ($score_record['q_52_show_direct_atten_current_code'] != $score_record2['q_52_show_direct_atten_current_code']){ $reliability_count_raw++; $reliability_count_scored++;}} 
-            if($score_record['q_52_show_direct_atten_most_abnormal_code'] =='8' AND $score_record2['']=='8'){}
-            elseif($score_record['q_52_show_direct_atten_most_abnormal_code'] =='998' && $score_record2['']=='998'){}
+                if ($score_record['q_52_show_direct_atten_current_code'] != $score_record3['q_52_show_direct_atten_current_code']){ $reliability_count_raw++; $reliability_count_scored++;}} 
+            if($score_record['q_52_show_direct_atten_most_abnormal_code'] =='8' AND $score_record3['q_52_show_direct_atten_most_abnormal_code']=='8'){}
+            elseif($score_record['q_52_show_direct_atten_most_abnormal_code'] =='998' && $score_record3['q_52_show_direct_atten_most_abnormal_code']=='998'){}
             else {
                 $denominator++;
-                if ($score_record['q_52_show_direct_atten_most_abnormal_code'] != $score_record2['q_52_show_direct_atten_most_abnormal_code']){ $reliability_count_raw++;}} 
-            if($score_record['q_53_offer_share_current_code'] =='8' AND $score_record2['']=='8'){}
-            elseif($score_record['q_53_offer_share_current_code'] =='998' && $score_record2['']=='998'){}
+                if ($score_record['q_52_show_direct_atten_most_abnormal_code'] != $score_record3['q_52_show_direct_atten_most_abnormal_code']){ $reliability_count_raw++;}} 
+            if($score_record['q_53_offer_share_current_code'] =='8' AND $score_record3['q_53_offer_share_current_code']=='8'){}
+            elseif($score_record['q_53_offer_share_current_code'] =='998' && $score_record3['q_53_offer_share_current_code']=='998'){}
             else {
                 $denominator++;$denominator_scored++;
-                if ($score_record['q_53_offer_share_current_code'] != $score_record2['q_53_offer_share_current_code']){ $reliability_count_raw++; $reliability_count_scored++;}} 
-            if($score_record['q_53_offer_share_most_abnormal_code'] =='8' AND $score_record2['']=='8'){}
-            elseif($score_record['q_53_offer_share_most_abnormal_code'] =='998' && $score_record2['']=='998'){}
+                if (($score_record['q_53_offer_share_current_code'] =='2' AND $score_record3['q_53_offer_share_current_code']=='3') ||
+                      ($score_record['q_53_offer_share_current_code'] =='3' AND $score_record3['q_53_offer_share_current_code']=='2'))
+                     {
+                        #Don't count this
+                     }
+                     else if ($score_record['q_53_offer_share_current_code'] != $score_record3['q_53_offer_share_current_code']){ $reliability_count_raw++; $reliability_count_scored++;}} 
+            if($score_record['q_53_offer_share_most_abnormal_code'] =='8' AND $score_record3['q_53_offer_share_most_abnormal_code']=='8'){}
+            elseif($score_record['q_53_offer_share_most_abnormal_code'] =='998' && $score_record3['q_53_offer_share_most_abnormal_code']=='998'){}
             else {
                 $denominator++;
-                if ($score_record['q_53_offer_share_most_abnormal_code'] != $score_record2['q_53_offer_share_most_abnormal_code']){ $reliability_count_raw++;}} 
-            if($score_record['q_54_seek_share_enjoy_current_code'] =='8' AND $score_record2['']=='8'){}
-            elseif($score_record['q_54_seek_share_enjoy_current_code'] =='998' && $score_record2['']=='998'){}
+                if ($score_record['q_53_offer_share_most_abnormal_code'] != $score_record3['q_53_offer_share_most_abnormal_code']){ $reliability_count_raw++;}} 
+            if($score_record['q_54_seek_share_enjoy_current_code'] =='8' AND $score_record3['q_54_seek_share_enjoy_current_code']=='8'){}
+            elseif($score_record['q_54_seek_share_enjoy_current_code'] =='998' && $score_record3['q_54_seek_share_enjoy_current_code']=='998'){}
             else {
                 $denominator++;$denominator_scored++;
-                if ($score_record['q_54_seek_share_enjoy_current_code'] != $score_record2['q_54_seek_share_enjoy_current_code']){ $reliability_count_raw++; $reliability_count_scored++;}} 
-            if($score_record['q_54_seek_share_enjoy_most_abnormal_code'] =='8' AND $score_record2['']=='8'){}
-            elseif($score_record['q_54_seek_share_enjoy_most_abnormal_code'] =='998' && $score_record2['']=='998'){}
+                if ($score_record['q_54_seek_share_enjoy_current_code'] != $score_record3['q_54_seek_share_enjoy_current_code']){ $reliability_count_raw++; $reliability_count_scored++;}} 
+            if($score_record['q_54_seek_share_enjoy_most_abnormal_code'] =='8' AND $score_record3['q_54_seek_share_enjoy_most_abnormal_code']=='8'){}
+            elseif($score_record['q_54_seek_share_enjoy_most_abnormal_code'] =='998' && $score_record3['q_54_seek_share_enjoy_most_abnormal_code']=='998'){}
             else {
                 $denominator++;
-                if ($score_record['q_54_seek_share_enjoy_most_abnormal_code'] != $score_record2['q_54_seek_share_enjoy_most_abnormal_code']){ $reliability_count_raw++;}} 
-            if($score_record['q_55_offer_comf_current_code'] =='8' AND $score_record2['']=='8'){}
-            elseif($score_record['q_55_offer_comf_current_code'] =='998' && $score_record2['']=='998'){}
+                if ($score_record['q_54_seek_share_enjoy_most_abnormal_code'] != $score_record3['q_54_seek_share_enjoy_most_abnormal_code']){ $reliability_count_raw++;}} 
+            if($score_record['q_55_offer_comf_current_code'] =='8' AND $score_record3['q_55_offer_comf_current_code']=='8'){}
+            elseif($score_record['q_55_offer_comf_current_code'] =='998' && $score_record3['q_55_offer_comf_current_code']=='998'){}
             else {
                 $denominator++;$denominator_scored++;
-                if ($score_record['comf'] != $score_record2['comf']){ $reliability_count_raw++; $reliability_count_scored++;}} 
-            if($score_record['q_55_offer_comf_most_abnormal_code'] =='8' AND $score_record2['']=='8'){}
-            elseif($score_record['q_55_offer_comf_most_abnormal_code'] =='998' && $score_record2['']=='998'){}
+                if (($score_record['q_55_offer_comf_current_code'] =='2' AND $score_record3['q_55_offer_comf_current_code']=='3') ||
+                       ($score_record['q_55_offer_comf_current_code'] =='3' AND $score_record3['q_55_offer_comf_current_code']=='2'))
+                      {
+                         #Don't count this
+                      }
+                      else if ($score_record['q_55_offer_comf_current_code'] != $score_record3['q_55_offer_comf_current_code']){ $reliability_count_raw++; $reliability_count_scored++;}} 
+            if($score_record['q_55_offer_comf_most_abnormal_code'] =='8' AND $score_record3['q_55_offer_comf_most_abnormal_code']=='8'){}
+            elseif($score_record['q_55_offer_comf_most_abnormal_code'] =='998' && $score_record3['q_55_offer_comf_most_abnormal_code']=='998'){}
             else {
                 $denominator++;
-                if ($score_record['q_55_offer_comf_most_abnormal_code'] != $score_record2['q_55_offer_comf_most_abnormal_code']){ $reliability_count_raw++;}} 
-            if($score_record['q_56_qual_social_overts_current_code'] =='8' AND $score_record2['']=='8'){}
-            elseif($score_record['q_56_qual_social_overts_current_code'] =='998' && $score_record2['']=='998'){}
+                if ($score_record['q_55_offer_comf_most_abnormal_code'] != $score_record3['q_55_offer_comf_most_abnormal_code']){ $reliability_count_raw++;}} 
+            if($score_record['q_56_qual_social_overts_current_code'] =='8' AND $score_record3['q_56_qual_social_overts_current_code']=='8'){}
+            elseif($score_record['q_56_qual_social_overts_current_code'] =='998' && $score_record3['q_56_qual_social_overts_current_code']=='998'){}
             else {
                 $denominator++;$denominator_scored++;
-                if ($score_record['q_56_qual_social_overts_current_code'] != $score_record2['q_56_qual_social_overts_current_code']){ $reliability_count_raw++; $reliability_count_scored++;}} 
-            if($score_record['q_56_qual_social_overts_most_abnormal_code'] =='8' AND $score_record2['']=='8'){}
-            elseif($score_record['q_56_qual_social_overts_most_abnormal_code'] =='998' && $score_record2['']=='998'){}
+                if (($score_record['q_56_qual_social_overts_current_code'] =='2' AND $score_record3['q_56_qual_social_overts_current_code']=='3') ||
+                   ($score_record['q_56_qual_social_overts_current_code'] =='3' AND $score_record3['q_56_qual_social_overts_current_code']=='2'))
+                  {
+                     #Don't count this
+                  }
+                  else if ($score_record['q_56_qual_social_overts_current_code'] != $score_record3['q_56_qual_social_overts_current_code']){ $reliability_count_raw++; $reliability_count_scored++;}} 
+            if($score_record['q_56_qual_social_overts_most_abnormal_code'] =='8' AND $score_record3['q_56_qual_social_overts_most_abnormal_code']=='8'){}
+            elseif($score_record['q_56_qual_social_overts_most_abnormal_code'] =='998' && $score_record3['q_56_qual_social_overts_most_abnormal_code']=='998'){}
             else {
                 $denominator++;
-                if ($score_record['q_56_qual_social_overts_most_abnormal_code'] != $score_record2['q_56_qual_social_overts_most_abnormal_code']){ $reliability_count_raw++;}}             
-            if($score_record['q_57_range_facial_expr_current_code'] =='8' AND $score_record2['']=='8'){}
-            elseif($score_record['q_57_range_facial_expr_current_code'] =='998' && $score_record2['']=='998'){}
+                if ($score_record['q_56_qual_social_overts_most_abnormal_code'] != $score_record3['q_56_qual_social_overts_most_abnormal_code']){ $reliability_count_raw++;}}             
+            if($score_record['q_57_range_facial_expr_current_code'] =='8' AND $score_record3['q_57_range_facial_expr_current_code']=='8'){}
+            elseif($score_record['q_57_range_facial_expr_current_code'] =='998' && $score_record3['q_57_range_facial_expr_current_code']=='998'){}
             else {
                 $denominator++;$denominator_scored++;
-                if ($score_record['q_57_range_facial_expr_current_code'] != $score_record2['q_57_range_facial_expr_current_code']){ $reliability_count_raw++; $reliability_count_scored++;}} 
-            if($score_record['q_57_range_facial_expr_most_abnormal_code'] =='8' AND $score_record2['']=='8'){}
-                elseif($score_record['q_57_range_facial_expr_most_abnormal_code'] =='998' && $score_record2['']=='998'){}
+                if ($score_record['q_57_range_facial_expr_current_code'] != $score_record3['q_57_range_facial_expr_current_code']){ $reliability_count_raw++; $reliability_count_scored++;}} 
+            if($score_record['q_57_range_facial_expr_most_abnormal_code'] =='8' AND $score_record3['q_57_range_facial_expr_most_abnormal_code']=='8'){}
+                elseif($score_record['q_57_range_facial_expr_most_abnormal_code'] =='998' && $score_record3['q_57_range_facial_expr_most_abnormal_code']=='998'){}
             else {
                 $denominator++;
-                if ($score_record['q_57_range_facial_expr_most_abnormal_code'] != $score_record2['q_57_range_facial_expr_most_abnormal_code']){ $reliability_count_raw++;}} 
-            if($score_record['q_58_inappropriate_facial_current_code'] =='8' AND $score_record2['']=='8'){}
-            elseif($score_record['q_58_inappropriate_facial_current_code'] =='998' && $score_record2['']=='998'){}
+                if ($score_record['q_57_range_facial_expr_most_abnormal_code'] != $score_record3['q_57_range_facial_expr_most_abnormal_code']){ $reliability_count_raw++;}} 
+            if($score_record['q_58_inappropriate_facial_current_code'] =='8' AND $score_record3['q_58_inappropriate_facial_current_code']=='8'){}
+            elseif($score_record['q_58_inappropriate_facial_current_code'] =='998' && $score_record3['q_58_inappropriate_facial_current_code']=='998'){}
             else {
                 $denominator++;
-                if ($score_record['q_58_inappropriate_facial_current_code'] != $score_record2['q_58_inappropriate_facial_current_code']){ $reliability_count_raw++;}} 
-            if($score_record['q_58_inappropriate_facial_ever_code'] =='8' AND $score_record2['']=='8'){}
-            elseif($score_record['q_58_inappropriate_facial_ever_code'] =='998' && $score_record2['']=='998'){}
+                if ($score_record['q_58_inappropriate_facial_current_code'] != $score_record3['q_58_inappropriate_facial_current_code']){ $reliability_count_raw++;}} 
+            if($score_record['q_58_inappropriate_facial_ever_code'] =='8' AND $score_record3['q_58_inappropriate_facial_ever_code']=='8'){}
+            elseif($score_record['q_58_inappropriate_facial_ever_code'] =='998' && $score_record3['q_58_inappropriate_facial_ever_code']=='998'){}
             else {
                 $denominator++;$denominator_scored++;
-                if ($score_record['q_58_inappropriate_facial_ever_code'] != $score_record2['q_58_inappropriate_facial_ever_code']){ $reliability_count_raw++; $reliability_count_scored++;}} 
-            if($score_record['q_59_appropriat_resp_current_code'] =='8' AND $score_record2['']=='8'){}
-            elseif($score_record['q_59_appropriat_resp_current_code'] =='998' && $score_record2['']=='998'){}
+                if ($score_record['q_58_inappropriate_facial_ever_code'] != $score_record3['q_58_inappropriate_facial_ever_code']){ $reliability_count_raw++; $reliability_count_scored++;}} 
+            if($score_record['q_59_appropriat_resp_current_code'] =='8' AND $score_record3['q_59_appropriat_resp_current_code']=='8'){}
+            elseif($score_record['q_59_appropriat_resp_current_code'] =='998' && $score_record3['q_59_appropriat_resp_current_code']=='998'){}
             else {
                 $denominator++;$denominator_scored++;
-                if ($score_record['q_59_appropriat_resp_current_code'] != $score_record2['q_59_appropriat_resp_current_code']){ $reliability_count_raw++; $reliability_count_scored++;}} 
-            if($score_record['q_59_appropriat_resp_most_abnormal_code'] =='8' AND $score_record2['']=='8'){}
-            elseif($score_record['q_59_appropriat_resp_most_abnormal_code'] =='998' && $score_record2['']=='998'){}
+                if (($score_record['q_59_appropriat_resp_current_code'] =='2' AND $score_record3['q_59_appropriat_resp_current_code']=='3') ||
+                    ($score_record['q_59_appropriat_resp_current_code'] =='3' AND $score_record3['q_59_appropriat_resp_current_code']=='2'))
+                   {
+                      #Don't count this
+                   }
+                   elseif ($score_record['q_59_appropriat_resp_current_code'] != $score_record3['q_59_appropriat_resp_current_code']){ $reliability_count_raw++; $reliability_count_scored++;}} 
+            if($score_record['q_59_appropriat_resp_most_abnormal_code'] =='8' AND $score_record3['q_59_appropriat_resp_most_abnormal_code']=='8'){}
+            elseif($score_record['q_59_appropriat_resp_most_abnormal_code'] =='998' && $score_record3['q_59_appropriat_resp_most_abnormal_code']=='998'){}
             else {
                 $denominator++;
-                    if ($score_record['q_59_appropriat_resp_most_abnormal_code'] != $score_record2['q_59_appropriat_resp_most_abnormal_code']){ $reliability_count_raw++;}} 
-            if($score_record['q_60_init_activities_current_code'] =='8' AND $score_record2['']=='8'){}
-            elseif($score_record['q_60_init_activities_current_code'] =='998' && $score_record2['']=='998'){}
+                    if ($score_record['q_59_appropriat_resp_most_abnormal_code'] != $score_record3['q_59_appropriat_resp_most_abnormal_code']){ $reliability_count_raw++;}} 
+            if($score_record['q_60_init_activities_current_code'] =='8' AND $score_record3['q_60_init_activities_current_code']=='8'){}
+            elseif($score_record['q_60_init_activities_current_code'] =='998' && $score_record3['q_60_init_activities_current_code']=='998'){}
             else {
                 $denominator++;
-                if ($score_record['q_60_init_activities_current_code'] != $score_record2['q_60_init_activities_current_code']){ $reliability_count_raw++;}} 
-            if($score_record['q_60_init_activities_most_abnormal_code'] =='8' AND $score_record2['']=='8'){}
-            elseif($score_record['q_60_init_activities_most_abnormal_code'] =='998' && $score_record2['']=='998'){}
+                if (($score_record['q_60_init_activities_current_code'] =='2' AND $score_record3['q_60_init_activities_current_code']=='3') ||
+                     ($score_record['q_60_init_activities_current_code'] =='3' AND $score_record3['q_60_init_activities_current_code']=='2'))
+                    {
+                       #Don't count this
+                    }
+                    else if ($score_record['q_60_init_activities_current_code'] != $score_record3['q_60_init_activities_current_code']){ $reliability_count_raw++;}} 
+            if($score_record['q_60_init_activities_most_abnormal_code'] =='8' AND $score_record3['q_60_init_activities_most_abnormal_code']=='8'){}
+            elseif($score_record['q_60_init_activities_most_abnormal_code'] =='998' && $score_record3['q_60_init_activities_most_abnormal_code']=='998'){}
             else {
                     $denominator++;
-                    if ($score_record['q_60_init_activities_most_abnormal_code'] != $score_record2['q_60_init_activities_most_abnormal_code']){ $reliability_count_raw++;}} 
-            if($score_record['q_61_imit_soc_play_current_code'] =='8' AND $score_record2['']=='8'){}
-            elseif($score_record['q_61_imit_soc_play_current_code'] =='998' && $score_record2['']=='998'){}
+                    if ($score_record['q_60_init_activities_most_abnormal_code'] != $score_record3['q_60_init_activities_most_abnormal_code']){ $reliability_count_raw++;}} 
+            if($score_record['q_61_imit_soc_play_current_code'] =='8' AND $score_record3['q_61_imit_soc_play_current_code']=='8'){}
+            elseif($score_record['q_61_imit_soc_play_current_code'] =='998' && $score_record3['q_61_imit_soc_play_current_code']=='998'){}
             else {
                 $denominator++;$denominator_scored++;
-                if ($score_record['q_61_imit_soc_play_current_code'] != $score_record2['q_61_imit_soc_play_current_code']){ $reliability_count_raw++; $reliability_count_scored++;}} 
-            if($score_record['q_61_imit_soc_play_most_abnormal_code'] =='8' AND $score_record2['']=='8'){}
-            elseif($score_record['q_61_imit_soc_play_most_abnormal_code'] =='998' && $score_record2['']=='998'){}
+                if ($score_record['q_61_imit_soc_play_current_code'] != $score_record3['q_61_imit_soc_play_current_code']){ $reliability_count_raw++; $reliability_count_scored++;}} 
+            if($score_record['q_61_imit_soc_play_most_abnormal_code'] =='8' AND $score_record3['q_61_imit_soc_play_most_abnormal_code']=='8'){}
+            elseif($score_record['q_61_imit_soc_play_most_abnormal_code'] =='998' && $score_record3['q_61_imit_soc_play_most_abnormal_code']=='998'){}
             else {
                 $denominator++;
-                if ($score_record['q_61_imit_soc_play_most_abnormal_code'] != $score_record2['q_61_imit_soc_play_most_abnormal_code']){ $reliability_count_raw++;}} 
-            if($score_record['q_62_inter_children_current_code'] =='8' AND $score_record2['']=='8'){}
-            elseif($score_record['q_62_inter_children_current_code'] =='998' && $score_record2['']=='998'){}
+                if ($score_record['q_61_imit_soc_play_most_abnormal_code'] != $score_record3['q_61_imit_soc_play_most_abnormal_code']){ $reliability_count_raw++;}} 
+            if($score_record['q_62_inter_children_current_code'] =='8' AND $score_record3['q_62_inter_children_current_code']=='8'){}
+            elseif($score_record['q_62_inter_children_current_code'] =='998' && $score_record3['q_62_inter_children_current_code']=='998'){}
             else {
                 $denominator++;$denominator_scored++;
-                if ($score_record['q_62_inter_children_current_code'] != $score_record2['q_62_inter_children_current_code']){ $reliability_count_raw++; $reliability_count_scored++;}} 
-            if($score_record['q_62_inter_children_most_abnormal_code'] =='8' AND $score_record2['']=='8'){}
-            elseif($score_record['q_62_inter_children_most_abnormal_code'] =='998' && $score_record2['']=='998'){}
+                if (($score_record['q_62_inter_children_current_code'] =='2' AND $score_record3['q_62_inter_children_current_code']=='3') ||
+                      ($score_record['q_62_inter_children_current_code'] =='3' AND $score_record3['q_62_inter_children_current_code']=='2'))
+                     {
+                        #Don't count this
+                     }
+                     else if ($score_record['q_62_inter_children_current_code'] != $score_record3['q_62_inter_children_current_code']){ $reliability_count_raw++; $reliability_count_scored++;}} 
+            if($score_record['q_62_inter_children_most_abnormal_code'] =='8' AND $score_record3['q_62_inter_children_most_abnormal_code']=='8'){}
+            elseif($score_record['q_62_inter_children_most_abnormal_code'] =='998' && $score_record3['q_62_inter_children_most_abnormal_code']=='998'){}
             else {
                 $denominator++;
-                if ($score_record['q_62_inter_children_most_abnormal_code'] != $score_record2['q_62_inter_children_most_abnormal_code']){ $reliability_count_raw++;}} 
-            if($score_record['q_63_resp_approaches_current_code'] =='8' AND $score_record2['']=='8'){}
-            elseif($score_record['q_63_resp_approaches_current_code'] =='998' && $score_record2['']=='998'){}
+                if ($score_record['q_62_inter_children_most_abnormal_code'] != $score_record3['q_62_inter_children_most_abnormal_code']){ $reliability_count_raw++;}} 
+            if($score_record['q_63_resp_approaches_current_code'] =='8' AND $score_record3['q_63_resp_approaches_current_code']=='8'){}
+            elseif($score_record['q_63_resp_approaches_current_code'] =='998' && $score_record3['q_63_resp_approaches_current_code']=='998'){}
             else {
                 $denominator++;$denominator_scored++;
-                if ($score_record['q_63_resp_approaches_current_code'] != $score_record2['q_63_resp_approaches_current_code']){ $reliability_count_raw++; $reliability_count_scored++;}} 
-            if($score_record['q_63_resp_approaches_most_abnormal_code'] =='8' AND $score_record2['']=='8'){}
-            elseif($score_record['q_63_resp_approaches_most_abnormal_code'] =='998' && $score_record2['']=='998'){}
+                if ($score_record['q_63_resp_approaches_current_code'] != $score_record3['q_63_resp_approaches_current_code']){ $reliability_count_raw++; $reliability_count_scored++;}} 
+            if($score_record['q_63_resp_approaches_most_abnormal_code'] =='8' AND $score_record3['q_63_resp_approaches_most_abnormal_code']=='8'){}
+            elseif($score_record['q_63_resp_approaches_most_abnormal_code'] =='998' && $score_record3['q_63_resp_approaches_most_abnormal_code']=='998'){}
             else {
                 $denominator++;
-                if ($score_record['q_63_resp_approaches_most_abnormal_code'] != $score_record2['q_63_resp_approaches_most_abnormal_code']){ $reliability_count_raw++;}} 
-            if($score_record['q_64_group_play_peers_current_code'] =='8' AND $score_record2['']=='8'){}
-            elseif($score_record['q_64_group_play_peers_current_code'] =='998' && $score_record2['']=='998'){}
+                if ($score_record['q_63_resp_approaches_most_abnormal_code'] != $score_record3['q_63_resp_approaches_most_abnormal_code']){ $reliability_count_raw++;}} 
+            if($score_record['q_64_group_play_peers_current_code'] =='8' AND $score_record3['q_64_group_play_peers_current_code']=='8'){}
+            elseif($score_record['q_64_group_play_peers_current_code'] =='998' && $score_record3['q_64_group_play_peers_current_code']=='998'){}
             else {
                 $denominator++;
-                if ($score_record['q_64_group_play_peers_current_code'] != $score_record2['q_64_group_play_peers_current_code']){ $reliability_count_raw++;}} 
-            if($score_record['q_64_group_play_peers_most_abnormal_code'] =='8' AND $score_record2['']=='8'){}
-            elseif($score_record['q_64_group_play_peers_most_abnormal_code'] =='998' && $score_record2['']=='998'){}
+                if ($score_record['q_64_group_play_peers_current_code'] != $score_record3['q_64_group_play_peers_current_code']){ $reliability_count_raw++;}} 
+            if($score_record['q_64_group_play_peers_most_abnormal_code'] =='8' AND $score_record3['q_64_group_play_peers_most_abnormal_code']=='8'){}
+            elseif($score_record['q_64_group_play_peers_most_abnormal_code'] =='998' && $score_record3['q_64_group_play_peers_most_abnormal_code']=='998'){}
             else {
                 $denominator++;
-                if ($score_record['q_64_group_play_peers_most_abnormal_code'] != $score_record2['q_64_group_play_peers_most_abnormal_code']){ $reliability_count_raw++;}} 
-            if($score_record['q_65_friendships_current_code'] =='8' AND $score_record2['']=='8'){}
-            elseif($score_record['q_65_friendships_current_code'] =='998' && $score_record2['']=='998'){}
+                if ($score_record['q_64_group_play_peers_most_abnormal_code'] != $score_record3['q_64_group_play_peers_most_abnormal_code']){ $reliability_count_raw++;}} 
+            if($score_record['q_65_friendships_current_code'] =='8' AND $score_record3['q_65_friendships_current_code']=='8'){}
+            elseif($score_record['q_65_friendships_current_code'] =='998' && $score_record3['q_65_friendships_current_code']=='998'){}
             else {
                 $denominator++;
-                if ($score_record['q_65_friendships_current_code'] != $score_record2['q_65_friendships_current_code']){ $reliability_count_raw++;}} 
-            if($score_record['q_65_friendships_most_abnormal_code'] =='8' AND $score_record2['']=='8'){}
-            elseif($score_record['q_65_friendships_most_abnormal_code'] =='998' && $score_record2['']=='998'){}
+                if ($score_record['q_65_friendships_current_code'] != $score_record3['q_65_friendships_current_code']){ $reliability_count_raw++;}} 
+            if($score_record['q_65_friendships_most_abnormal_code'] =='8' AND $score_record3['q_65_friendships_most_abnormal_code']=='8'){}
+            elseif($score_record['q_65_friendships_most_abnormal_code'] =='998' && $score_record3['q_65_friendships_most_abnormal_code']=='998'){}
             else {
                 $denominator++;
-                if ($score_record['q_65_friendships_most_abnormal_code'] != $score_record2['q_65_friendships_most_abnormal_code']){ $reliability_count_raw++;}} 
-            if($score_record['q_66_soc_disinhibit_current_code'] =='8' AND $score_record2['']=='8'){}
-            elseif($score_record['q_66_soc_disinhibit_current_code'] =='998' && $score_record2['']=='998'){}
+                if ($score_record['q_65_friendships_most_abnormal_code'] != $score_record3['q_65_friendships_most_abnormal_code']){ $reliability_count_raw++;}} 
+            if($score_record['q_66_soc_disinhibit_current_code'] =='8' AND $score_record3['q_66_soc_disinhibit_current_code']=='8'){}
+            elseif($score_record['q_66_soc_disinhibit_current_code'] =='998' && $score_record3['q_66_soc_disinhibit_current_code']=='998'){}
             else {
                 $denominator++;
-                if ($score_record['q_66_soc_disinhibit_current_code'] != $score_record2['q_66_soc_disinhibit_current_code']){ $reliability_count_raw++;}} 
-            if($score_record['q_66_soc_disinhibit_most_abnormal_code'] =='8' AND $score_record2['']=='8'){}
-            elseif($score_record['q_66_soc_disinhibit_most_abnormal_code'] =='998' && $score_record2['']=='998'){}
+                if ($score_record['q_66_soc_disinhibit_current_code'] != $score_record3['q_66_soc_disinhibit_current_code']){ $reliability_count_raw++;}} 
+            if($score_record['q_66_soc_disinhibit_most_abnormal_code'] =='8' AND $score_record3['q_66_soc_disinhibit_most_abnormal_code']=='8'){}
+            elseif($score_record['q_66_soc_disinhibit_most_abnormal_code'] =='998' && $score_record3['q_66_soc_disinhibit_most_abnormal_code']=='998'){}
             else {
                 $denominator++;
-                if ($score_record['q_66_soc_disinhibit_most_abnormal_code'] != $score_record2['q_66_soc_disinhibit_most_abnormal_code']){ $reliability_count_raw++;}} 
-            if($score_record['q_67_unusual_preoccupations_current_code'] =='8' AND $score_record2['']=='8'){}
-            elseif($score_record['q_67_unusual_preoccupations_current_code'] =='998' && $score_record2['']=='998'){}
+                if ($score_record['q_66_soc_disinhibit_most_abnormal_code'] != $score_record3['q_66_soc_disinhibit_most_abnormal_code']){ $reliability_count_raw++;}} 
+            if($score_record['q_67_unusual_preoccupations_current_code'] =='8' AND $score_record3['q_67_unusual_preoccupations_current_code']=='8'){}
+            elseif($score_record['q_67_unusual_preoccupations_current_code'] =='998' && $score_record3['q_67_unusual_preoccupations_current_code']=='998'){}
             else {
                 $denominator++;
-                if ($score_record['q_67_unusual_preoccupations_current_code'] != $score_record2['q_67_unusual_preoccupations_current_code']){ $reliability_count_raw++;}} 
-            if($score_record['q_67_unusual_preoccupations_ever_code'] =='8' AND $score_record2['']=='8'){}
-            elseif($score_record['q_67_unusual_preoccupations_ever_code'] =='998' && $score_record2['']=='998'){}
+                if (($score_record['q_67_unusual_preoccupations_current_code'] =='2' AND $score_record3['q_67_unusual_preoccupations_current_code']=='3') ||
+                       ($score_record['q_67_unusual_preoccupations_current_code'] =='3' AND $score_record3['q_67_unusual_preoccupations_current_code']=='2'))
+                      {
+                         #Don't count this
+                      }
+                      else if ($score_record['q_67_unusual_preoccupations_current_code'] != $score_record3['q_67_unusual_preoccupations_current_code']){ $reliability_count_raw++;}} 
+            if($score_record['q_67_unusual_preoccupations_ever_code'] =='8' AND $score_record3['q_67_unusual_preoccupations_ever_code']=='8'){}
+            elseif($score_record['q_67_unusual_preoccupations_ever_code'] =='998' && $score_record3['q_67_unusual_preoccupations_ever_code']=='998'){}
             else {
                 $denominator++;$denominator_scored++;
-                if ($score_record['q_67_unusual_preoccupations_ever_code'] != $score_record2['q_67_unusual_preoccupations_ever_code']){ $reliability_count_raw++; $reliability_count_scored++;}} 
-            if($score_record['q_68_circumscr_ints_current_code'] =='8' AND $score_record2['']=='8'){}
-            elseif($score_record['q_68_circumscr_ints_current_code'] =='998' && $score_record2['']=='998'){}
+                if (($score_record['q_67_unusual_preoccupations_ever_code'] =='2' AND $score_record3['q_67_unusual_preoccupations_ever_code']=='3') ||
+                        ($score_record['q_67_unusual_preoccupations_ever_code'] =='3' AND $score_record3['q_67_unusual_preoccupations_ever_code']=='2'))
+                       {
+                          #Don't count this
+                       }
+                       else if ($score_record['q_67_unusual_preoccupations_ever_code'] != $score_record3['q_67_unusual_preoccupations_ever_code']){ $reliability_count_raw++; $reliability_count_scored++;}} 
+            if($score_record['q_68_circumscr_ints_current_code'] =='8' AND $score_record3['q_68_circumscr_ints_current_code']=='8'){}
+            elseif($score_record['q_68_circumscr_ints_current_code'] =='998' && $score_record3['q_68_circumscr_ints_current_code']=='998'){}
             else {
                 $denominator++;
-                if ($score_record['q_68_circumscr_ints_current_code'] != $score_record2['q_68_circumscr_ints_current_code']){ $reliability_count_raw++;}} 
-            if($score_record['q_68_circumscr_ints_ever_code'] =='8' AND $score_record2['']=='8'){}
-            elseif($score_record['q_68_circumscr_ints_ever_code'] =='998' && $score_record2['']=='998'){}
+                if ($score_record['q_68_circumscr_ints_current_code'] != $score_record3['q_68_circumscr_ints_current_code']){ $reliability_count_raw++;}} 
+            if($score_record['q_68_circumscr_ints_ever_code'] =='8' AND $score_record3['q_68_circumscr_ints_ever_code']=='8'){}
+            elseif($score_record['q_68_circumscr_ints_ever_code'] =='998' && $score_record3['q_68_circumscr_ints_ever_code']=='998'){}
             else {
                 $denominator++;$denominator_scored++;
-                if ($score_record['q_68_circumscr_ints_ever_code'] != $score_record2['q_68_circumscr_ints_ever_code']){ $reliability_count_raw++; $reliability_count_scored++;}} 
-            if($score_record['q_69_repet_use_objects_current_code'] =='8' AND $score_record2['']=='8'){}
-            elseif($score_record['q_69_repet_use_objects_current_code'] =='998' && $score_record2['']=='998'){}
+                if ($score_record['q_68_circumscr_ints_ever_code'] != $score_record3['q_68_circumscr_ints_ever_code']){ $reliability_count_raw++; $reliability_count_scored++;}} 
+            if($score_record['q_69_repet_use_objects_current_code'] =='8' AND $score_record3['q_69_repet_use_objects_current_code']=='8'){}
+            elseif($score_record['q_69_repet_use_objects_current_code'] =='998' && $score_record3['q_69_repet_use_objects_current_code']=='998'){}
             else {
                 $denominator++;
-                if ($score_record['q_69_repet_use_objects_current_code'] != $score_record2['q_69_repet_use_objects_current_code']){ $reliability_count_raw++;}} 
-            if($score_record['q_69_repet_use_objects_ever_code'] =='8' AND $score_record2['']=='8'){}
-            elseif($score_record['q_69_repet_use_objects_ever_code'] =='998' && $score_record2['']=='998'){}
+                if (($score_record['q_69_repet_use_objects_current_code'] =='2' AND $score_record3['q_69_repet_use_objects_current_code']=='3') ||
+                         ($score_record['q_69_repet_use_objects_current_code'] =='3' AND $score_record3['q_69_repet_use_objects_current_code']=='2'))
+                        {
+                           #Don't count this
+                        }
+                        else if ($score_record['q_69_repet_use_objects_current_code'] != $score_record3['q_69_repet_use_objects_current_code']){ $reliability_count_raw++;}} 
+            if($score_record['q_69_repet_use_objects_ever_code'] =='8' AND $score_record3['q_69_repet_use_objects_ever_code']=='8'){}
+            elseif($score_record['q_69_repet_use_objects_ever_code'] =='998' && $score_record3['q_69_repet_use_objects_ever_code']=='998'){}
             else {
                 $denominator++;$denominator_scored++;
-                if ($score_record['q_69_repet_use_objects_ever_code'] != $score_record2['q_69_repet_use_objects_ever_code']){ $reliability_count_raw++; $reliability_count_scored++;}} 
-            if($score_record['q_70_compulsions_rituals_current_code'] =='8' AND $score_record2['']=='8'){}
-            elseif($score_record['q_70_compulsions_rituals_current_code'] =='998' && $score_record2['']=='998'){}
+                if (($score_record['q_69_repet_use_objects_ever_code'] =='2' AND $score_record3['q_69_repet_use_objects_ever_code']=='3') ||
+                   ($score_record['q_69_repet_use_objects_ever_code'] =='3' AND $score_record3['q_69_repet_use_objects_ever_code']=='2'))
+                  {
+                     #Don't count this
+                  }
+                  else if ($score_record['q_69_repet_use_objects_ever_code'] != $score_record3['q_69_repet_use_objects_ever_code']){ $reliability_count_raw++; $reliability_count_scored++;}} 
+            if($score_record['q_70_compulsions_rituals_current_code'] =='8' AND $score_record3['q_70_compulsions_rituals_current_code']=='8'){}
+            elseif($score_record['q_70_compulsions_rituals_current_code'] =='998' && $score_record3['q_70_compulsions_rituals_current_code']=='998'){}
             else {
                 $denominator++;
-                if ($score_record['q_70_compulsions_rituals_current_code'] != $score_record2['q_70_compulsions_rituals_current_code']){ $reliability_count_raw++;}} 
-            if($score_record['q_70_compulsions_rituals_ever_code'] =='8' AND $score_record2['']=='8'){}
-            elseif($score_record['q_70_compulsions_rituals_ever_code'] =='998' && $score_record2['']=='998'){}
+                if (($score_record['q_70_compulsions_rituals_current_code'] =='2' AND $score_record3['q_70_compulsions_rituals_current_code']=='3') ||
+                    ($score_record['q_70_compulsions_rituals_current_code'] =='3' AND $score_record3['q_70_compulsions_rituals_current_code']=='2'))
+                   {
+                      #Don't count this
+                   }
+                   else if ($score_record['q_70_compulsions_rituals_current_code'] != $score_record3['q_70_compulsions_rituals_current_code']){ $reliability_count_raw++;}} 
+            if($score_record['q_70_compulsions_rituals_ever_code'] =='8' AND $score_record3['q_70_compulsions_rituals_ever_code']=='8'){}
+            elseif($score_record['q_70_compulsions_rituals_ever_code'] =='998' && $score_record3['q_70_compulsions_rituals_ever_code']=='998'){}
             else {
                 $denominator++;$denominator_scored++;
-                if ($score_record['q_70_compulsions_rituals_ever_code'] != $score_record2['q_70_compulsions_rituals_ever_code']){ $reliability_count_raw++; $reliability_count_scored++;}} 
-            if($score_record['q_71_unusual_sens_ints_current_code'] =='8' AND $score_record2['']=='8'){}
-            elseif($score_record['q_71_unusual_sens_ints_current_code'] =='998' && $score_record2['']=='998'){}
+                if (($score_record['q_70_compulsions_rituals_ever_code'] =='2' AND $score_record3['q_70_compulsions_rituals_ever_code']=='3') ||
+                     ($score_record['q_70_compulsions_rituals_ever_code'] =='3' AND $score_record3['q_70_compulsions_rituals_ever_code']=='2'))
+                    {
+                       #Don't count this
+                    }
+                    else if ($score_record['q_70_compulsions_rituals_ever_code'] != $score_record3['q_70_compulsions_rituals_ever_code']){ $reliability_count_raw++; $reliability_count_scored++;}} 
+            if($score_record['q_71_unusual_sens_ints_current_code'] =='8' AND $score_record3['q_71_unusual_sens_ints_current_code']=='8'){}
+            elseif($score_record['q_71_unusual_sens_ints_current_code'] =='998' && $score_record3['q_71_unusual_sens_ints_current_code']=='998'){}
             else {
                 $denominator++;
-                if ($score_record['q_71_unusual_sens_ints_current_code'] != $score_record2['q_71_unusual_sens_ints_current_code']){ $reliability_count_raw++;}} 
-            if($score_record['q_71_unusual_sens_ints_ever_code'] =='8' AND $score_record2['']=='8'){}
-            elseif($score_record['q_71_unusual_sens_ints_ever_code'] =='998' && $score_record2['']=='998'){}
+                if ($score_record['q_71_unusual_sens_ints_current_code'] != $score_record3['q_71_unusual_sens_ints_current_code']){ $reliability_count_raw++;}} 
+            if($score_record['q_71_unusual_sens_ints_ever_code'] =='8' AND $score_record3['q_71_unusual_sens_ints_ever_code']=='8'){}
+            elseif($score_record['q_71_unusual_sens_ints_ever_code'] =='998' && $score_record3['q_71_unusual_sens_ints_ever_code']=='998'){}
             else {
                 $denominator++;$denominator_scored++;
-                if ($score_record['q_71_unusual_sens_ints_ever_code'] != $score_record2['q_71_unusual_sens_ints_ever_code']){ $reliability_count_raw++; $reliability_count_scored++;}} 
-            if($score_record['q_72_undo_gen_sens_noise_current_code'] =='8' AND $score_record2['']=='8'){}
-            elseif($score_record['q_72_undo_gen_sens_noise_current_code'] =='998' && $score_record2['']=='998'){}
+                if ($score_record['q_71_unusual_sens_ints_ever_code'] != $score_record3['q_71_unusual_sens_ints_ever_code']){ $reliability_count_raw++; $reliability_count_scored++;}} 
+            if($score_record['q_72_undo_gen_sens_noise_current_code'] =='8' AND $score_record3['q_72_undo_gen_sens_noise_current_code']=='8'){}
+            elseif($score_record['q_72_undo_gen_sens_noise_current_code'] =='998' && $score_record3['q_72_undo_gen_sens_noise_current_code']=='998'){}
             else {
                 $denominator++;
-                if ($score_record['q_72_undo_gen_sens_noise_current_code'] != $score_record2['q_72_undo_gen_sens_noise_current_code']){ $reliability_count_raw++;}} 
-            if($score_record['q_72_undo_gen_sens_noise_ever_code'] =='8' AND $score_record2['']=='8'){}
-            elseif($score_record['q_72_undo_gen_sens_noise_ever_code'] =='998' && $score_record2['']=='998'){}
+                if (($score_record['q_72_undo_gen_sens_noise_current_code'] =='2' AND $score_record3['q_72_undo_gen_sens_noise_current_code']=='3') ||
+                      ($score_record['q_72_undo_gen_sens_noise_current_code'] =='3' AND $score_record3['q_72_undo_gen_sens_noise_current_code']=='2'))
+                     {
+                        #Don't count this
+                     }
+                     else if ($score_record['q_72_undo_gen_sens_noise_current_code'] != $score_record3['q_72_undo_gen_sens_noise_current_code']){ $reliability_count_raw++;}} 
+            if($score_record['q_72_undo_gen_sens_noise_ever_code'] =='8' AND $score_record3['q_72_undo_gen_sens_noise_ever_code']=='8'){}
+            elseif($score_record['q_72_undo_gen_sens_noise_ever_code'] =='998' && $score_record3['q_72_undo_gen_sens_noise_ever_code']=='998'){}
             else {
                 $denominator++;
-                if ($score_record['q_72_undo_gen_sens_noise_ever_code'] != $score_record2['q_72_undo_gen_sens_noise_ever_code']){ $reliability_count_raw++;}} 
-            if($score_record['q_73_idiosyncratic_current_code'] =='8' AND $score_record2['']=='8'){}
-            elseif($score_record['q_73_idiosyncratic_current_code'] =='998' && $score_record2['']=='998'){}
+                if (($score_record['q_72_undo_gen_sens_noise_ever_code'] =='2' AND $score_record3['q_72_undo_gen_sens_noise_ever_code']=='3') ||
+                  ($score_record['q_72_undo_gen_sens_noise_ever_code'] =='3' AND $score_record3['q_72_undo_gen_sens_noise_ever_code']=='2'))
+                 {
+                    #Don't count this
+                 }
+                 else if ($score_record['q_72_undo_gen_sens_noise_ever_code'] != $score_record3['q_72_undo_gen_sens_noise_ever_code']){ $reliability_count_raw++;}} 
+            if($score_record['q_73_idiosyncratic_current_code'] =='8' AND $score_record3['q_73_idiosyncratic_current_code']=='8'){}
+            elseif($score_record['q_73_idiosyncratic_current_code'] =='998' && $score_record3['q_73_idiosyncratic_current_code']=='998'){}
             else {
                 $denominator++;
-                if ($score_record['q_73_idiosyncratic_current_code'] != $score_record2['q_73_idiosyncratic_current_code']){ $reliability_count_raw++;}} 
-            if($score_record['q_73_idiosyncratic_ever_code'] =='8' AND $score_record2['']=='8'){}
-            elseif($score_record['q_73_idiosyncratic_ever_code'] =='998' && $score_record2['']=='998'){}
+                if (($score_record['q_73_idiosyncratic_current_code'] =='2' AND $score_record3['q_73_idiosyncratic_current_code']=='3') ||
+                   ($score_record['q_73_idiosyncratic_current_code'] =='3' AND $score_record3['q_73_idiosyncratic_current_code']=='2'))
+                  {
+                     #Don't count this
+                  }
+                  else if ($score_record['q_73_idiosyncratic_current_code'] != $score_record3['q_73_idiosyncratic_current_code']){ $reliability_count_raw++;}} 
+            if($score_record['q_73_idiosyncratic_ever_code'] =='8' AND $score_record3['q_73_idiosyncratic_ever_code']=='8'){}
+            elseif($score_record['q_73_idiosyncratic_ever_code'] =='998' && $score_record3['q_73_idiosyncratic_ever_code']=='998'){}
             else {
                 $denominator++;
-                if ($score_record['q_73_idiosyncratic_ever_code'] != $score_record2['q_73_idiosyncratic_ever_code']){ $reliability_count_raw++;}} 
-            if($score_record['q_74_diff_minor_changes_current_code'] =='8' AND $score_record2['']=='8'){}
-            elseif($score_record['q_74_diff_minor_changes_current_code'] =='998' && $score_record2['']=='998'){}
+                if (($score_record['q_73_idiosyncratic_ever_code'] =='2' AND $score_record3['q_73_idiosyncratic_ever_code']=='3') ||
+                    ($score_record['q_73_idiosyncratic_ever_code'] =='3' AND $score_record3['q_73_idiosyncratic_ever_code']=='2'))
+                   {
+                      #Don't count this
+                   }
+                   else if ($score_record['q_73_idiosyncratic_ever_code'] != $score_record3['q_73_idiosyncratic_ever_code']){ $reliability_count_raw++;}} 
+            if($score_record['q_74_diff_minor_changes_current_code'] =='8' AND $score_record3['q_74_diff_minor_changes_current_code']=='8'){}
+            elseif($score_record['q_74_diff_minor_changes_current_code'] =='998' && $score_record3['q_74_diff_minor_changes_current_code']=='998'){}
             else {
                 $denominator++;
-                if ($score_record['q_74_diff_minor_changes_current_code'] != $score_record2['q_74_diff_minor_changes_current_code']){ $reliability_count_raw++;}} 
-            if($score_record['q_74_diff_minor_changes_ever_code'] =='8' AND $score_record2['']=='8'){}
-            elseif($score_record['q_74_diff_minor_changes_ever_code'] =='998' && $score_record2['']=='998'){}
+                if (($score_record['q_74_diff_minor_changes_current_code'] =='2' AND $score_record3['q_74_diff_minor_changes_current_code']=='3') ||
+                     ($score_record['q_74_diff_minor_changes_current_code'] =='3' AND $score_record3['q_74_diff_minor_changes_current_code']=='2'))
+                    {
+                       #Don't count this
+                    }
+                    else if ($score_record['q_74_diff_minor_changes_current_code'] != $score_record3['q_74_diff_minor_changes_current_code']){ $reliability_count_raw++;}} 
+            if($score_record['q_74_diff_minor_changes_ever_code'] =='8' AND $score_record3['q_74_diff_minor_changes_ever_code']=='8'){}
+            elseif($score_record['q_74_diff_minor_changes_ever_code'] =='998' && $score_record3['q_74_diff_minor_changes_ever_code']=='998'){}
             else {
                 $denominator++;
-                if ($score_record['q_74_diff_minor_changes_ever_code'] != $score_record2['q_74_diff_minor_changes_ever_code']){ $reliability_count_raw++;}} 
-            if($score_record['q_75_resist_trivial_chng_current_code'] =='8' AND $score_record2['']=='8'){}
-            elseif($score_record['q_75_resist_trivial_chng_current_code'] =='998' && $score_record2['']=='998'){}
+                if (($score_record['q_74_diff_minor_changes_ever_code'] =='2' AND $score_record3['q_74_diff_minor_changes_ever_code']=='3') ||
+                      ($score_record['q_74_diff_minor_changes_ever_code'] =='3' AND $score_record3['q_74_diff_minor_changes_ever_code']=='2'))
+                     {
+                        #Don't count this
+                     }
+                     else if ($score_record['q_74_diff_minor_changes_ever_code'] != $score_record3['q_74_diff_minor_changes_ever_code']){ $reliability_count_raw++;}} 
+            if($score_record['q_75_resist_trivial_chng_current_code'] =='8' AND $score_record3['q_75_resist_trivial_chng_current_code']=='8'){}
+            elseif($score_record['q_75_resist_trivial_chng_current_code'] =='998' && $score_record3['q_75_resist_trivial_chng_current_code']=='998'){}
             else {
                 $denominator++;
-                if ($score_record['q_75_resist_trivial_chng_current_code'] != $score_record2['q_75_resist_trivial_chng_current_code']){ $reliability_count_raw++;}} 
-            if($score_record['q_75_resist_trivial_chng_ever_code'] =='8' AND $score_record2['']=='8'){}
-            elseif($score_record['q_75_resist_trivial_chng_ever_code'] =='998' && $score_record2['']=='998'){}
+                if ($score_record['q_75_resist_trivial_chng_current_code'] != $score_record3['q_75_resist_trivial_chng_current_code']){ $reliability_count_raw++;}} 
+            if($score_record['q_75_resist_trivial_chng_ever_code'] =='8' AND $score_record3['q_75_resist_trivial_chng_ever_code']=='8'){}
+            elseif($score_record['q_75_resist_trivial_chng_ever_code'] =='998' && $score_record3['q_75_resist_trivial_chng_ever_code']=='998'){}
             else {
                 $denominator++;
-                if ($score_record['q_75_resist_trivial_chng_ever_code'] != $score_record2['q_75_resist_trivial_chng_ever_code']){ $reliability_count_raw++;}} 
-            if($score_record['q_76_unus_attach_objects_current_code'] =='8' AND $score_record2['']=='8'){}
-            elseif($score_record['q_76_unus_attach_objects_current_code'] =='998' && $score_record2['']=='998'){}
+                if ($score_record['q_75_resist_trivial_chng_ever_code'] != $score_record3['q_75_resist_trivial_chng_ever_code']){ $reliability_count_raw++;}} 
+            if($score_record['q_76_unus_attach_objects_current_code'] =='8' AND $score_record3['q_76_unus_attach_objects_current_code']=='8'){}
+            elseif($score_record['q_76_unus_attach_objects_current_code'] =='998' && $score_record3['q_76_unus_attach_objects_current_code']=='998'){}
             else {
                 $denominator++;
-                if ($score_record['q_76_unus_attach_objects_current_code'] != $score_record2['q_76_unus_attach_objects_current_code']){ $reliability_count_raw++;}} 
-            if($score_record['q_76_unus_attach_objects_ever_code'] =='8' AND $score_record2['']=='8'){}
-            elseif($score_record['q_76_unus_attach_objects_ever_code'] =='998' && $score_record2['']=='998'){}
+                if ($score_record['q_76_unus_attach_objects_current_code'] != $score_record3['q_76_unus_attach_objects_current_code']){ $reliability_count_raw++;}} 
+            if($score_record['q_76_unus_attach_objects_ever_code'] =='8' AND $score_record3['q_76_unus_attach_objects_ever_code']=='8'){}
+            elseif($score_record['q_76_unus_attach_objects_ever_code'] =='998' && $score_record3['q_76_unus_attach_objects_ever_code']=='998'){}
             else {
                 $denominator++;
-                if ($score_record['q_76_unus_attach_objects_ever_code'] != $score_record2['q_76_unus_attach_objects_ever_code']){ $reliability_count_raw++;}} 
-            if($score_record['q_77_hands_finger_manners_current_code'] =='8' AND $score_record2['']=='8'){}
-            elseif($score_record['q_77_hands_finger_manners_current_code'] =='998' && $score_record2['']=='998'){}
+                if ($score_record['q_76_unus_attach_objects_ever_code'] != $score_record3['q_76_unus_attach_objects_ever_code']){ $reliability_count_raw++;}} 
+            if($score_record['q_77_hands_finger_manners_current_code'] =='8' AND $score_record3['q_77_hands_finger_manners_current_code']=='8'){}
+            elseif($score_record['q_77_hands_finger_manners_current_code'] =='998' && $score_record3['q_77_hands_finger_manners_current_code']=='998'){}
             else {
                 $denominator++;
-                if ($score_record['q_77_hands_finger_manners_current_code'] != $score_record2['q_77_hands_finger_manners_current_code']){ $reliability_count_raw++;}} 
-            if($score_record['q_77_hands_finger_manners_ever_code'] =='8' AND $score_record2['']=='8'){}
-            elseif($score_record['q_77_hands_finger_manners_ever_code'] =='998' && $score_record2['']=='998'){}
+                if (($score_record['q_77_hands_finger_manners_current_code'] =='2' AND $score_record3['q_77_hands_finger_manners_current_code']=='3') ||
+                       ($score_record['q_77_hands_finger_manners_current_code'] =='3' AND $score_record3['q_77_hands_finger_manners_current_code']=='2'))
+                      {
+                         #Don't count this
+                      }
+                      else if ($score_record['q_77_hands_finger_manners_current_code'] != $score_record3['q_77_hands_finger_manners_current_code']){ $reliability_count_raw++;}} 
+            if($score_record['q_77_hands_finger_manners_ever_code'] =='8' AND $score_record3['q_77_hands_finger_manners_ever_code']=='8'){}
+            elseif($score_record['q_77_hands_finger_manners_ever_code'] =='998' && $score_record3['q_77_hands_finger_manners_ever_code']=='998'){}
             else {
                 $denominator++;$denominator_scored++;
-                if ($score_record['q_77_hands_finger_manners_ever_code'] != $score_record2['q_77_hands_finger_manners_ever_code']){ $reliability_count_raw++; $reliability_count_scored++;}} 
-            if($score_record['q_78_oth_complex_manners_current_code'] =='8' AND $score_record2['']=='8'){}
-            elseif($score_record['q_78_oth_complex_manners_current_code'] =='998' && $score_record2['']=='998'){}
+                if (($score_record['q_77_hands_finger_manners_ever_code'] =='2' AND $score_record3['q_77_hands_finger_manners_ever_code']=='3') ||
+                        ($score_record['q_77_hands_finger_manners_ever_code'] =='3' AND $score_record3['q_77_hands_finger_manners_ever_code']=='2'))
+                       {
+                          #Don't count this
+                       }
+                       else if ($score_record['q_77_hands_finger_manners_ever_code'] != $score_record3['q_77_hands_finger_manners_ever_code']){ $reliability_count_raw++; $reliability_count_scored++;}} 
+            if($score_record['q_78_oth_complex_manners_current_code'] =='8' AND $score_record3['q_78_oth_complex_manners_current_code']=='8'){}
+            elseif($score_record['q_78_oth_complex_manners_current_code'] =='998' && $score_record3['q_78_oth_complex_manners_current_code']=='998'){}
             else {
                 $denominator++;
-                if ($score_record['q_78_oth_complex_manners_current_code'] != $score_record2['q_78_oth_complex_manners_current_code']){ $reliability_count_raw++;}} 
-            if($score_record['q_78_oth_complex_manners_ever_code'] =='8' AND $score_record2['']=='8'){}
-            elseif($score_record['q_78_oth_complex_manners_ever_code'] =='998' && $score_record2['']=='998'){}
+                if (($score_record['q_78_oth_complex_manners_current_code'] =='2' AND $score_record3['q_78_oth_complex_manners_current_code']=='3') ||
+                         ($score_record['q_78_oth_complex_manners_current_code'] =='3' AND $score_record3['q_78_oth_complex_manners_current_code']=='2'))
+                        {
+                           #Don't count this
+                        }
+                        else if ($score_record['q_78_oth_complex_manners_current_code'] != $score_record3['q_78_oth_complex_manners_current_code']){ $reliability_count_raw++;}} 
+            if($score_record['q_78_oth_complex_manners_ever_code'] =='8' AND $score_record3['q_78_oth_complex_manners_ever_code']=='8'){}
+            elseif($score_record['q_78_oth_complex_manners_ever_code'] =='998' && $score_record3['q_78_oth_complex_manners_ever_code']=='998'){}
             else {
                 $denominator++;$denominator_scored++;
-                if ($score_record['q_78_oth_complex_manners_ever_code'] != $score_record2['q_78_oth_complex_manners_ever_code']){ $reliability_count_raw++; $reliability_count_scored++;}}  
-            if($score_record['q_79_midline_hand_moves_current_code'] =='8' AND $score_record2['']=='8'){}
-            elseif($score_record['q_79_midline_hand_moves_current_code'] =='998' && $score_record2['']=='998'){}
+                if (($score_record['q_78_oth_complex_manners_ever_code'] =='2' AND $score_record3['q_78_oth_complex_manners_ever_code']=='3') ||
+                          ($score_record['q_78_oth_complex_manners_ever_code'] =='3' AND $score_record3['q_78_oth_complex_manners_ever_code']=='2'))
+                         {
+                            #Don't count this
+                         }
+                         else if ($score_record['q_78_oth_complex_manners_ever_code'] != $score_record3['q_78_oth_complex_manners_ever_code']){ $reliability_count_raw++; $reliability_count_scored++;}}  
+            if($score_record['q_79_midline_hand_moves_current_code'] =='8' AND $score_record3['q_79_midline_hand_moves_current_code']=='8'){}
+            elseif($score_record['q_79_midline_hand_moves_current_code'] =='998' && $score_record3['q_79_midline_hand_moves_current_code']=='998'){}
             else {
                 $denominator++;
-                if ($score_record['q_79_midline_hand_moves_current_code'] != $score_record2['q_79_midline_hand_moves_current_code']){ $reliability_count_raw++;}} 
-            if($score_record['q_79_midline_hand_moves_ever_code'] =='8' AND $score_record2['']=='8'){}
-            elseif($score_record['q_79_midline_hand_moves_ever_code'] =='998' && $score_record2['']=='998'){}
+                if ($score_record['q_79_midline_hand_moves_current_code'] != $score_record3['q_79_midline_hand_moves_current_code']){ $reliability_count_raw++;}} 
+            if($score_record['q_79_midline_hand_moves_ever_code'] =='8' AND $score_record3['q_79_midline_hand_moves_ever_code']=='8'){}
+            elseif($score_record['q_79_midline_hand_moves_ever_code'] =='998' && $score_record3['q_79_midline_hand_moves_ever_code']=='998'){}
             else {
                 $denominator++;
-                if ($score_record['q_79_midline_hand_moves_ever_code'] != $score_record2['q_79_midline_hand_moves_ever_code']){ $reliability_count_raw++;}} 
-            if($score_record['q_80_gait_current_code'] =='8' AND $score_record2['']=='8'){}
-            elseif($score_record['q_80_gait_current_code'] =='998' && $score_record2['']=='998'){}
+                if ($score_record['q_79_midline_hand_moves_ever_code'] != $score_record3['q_79_midline_hand_moves_ever_code']){ $reliability_count_raw++;}} 
+            if($score_record['q_80_gait_current_code'] =='8' AND $score_record3['q_80_gait_current_code']=='8'){}
+            elseif($score_record['q_80_gait_current_code'] =='998' && $score_record3['q_80_gait_current_code']=='998'){}
             else {
                 $denominator++;
-                if ($score_record['q_80_gait_current_code'] != $score_record2['q_80_gait_current_code']){ $reliability_count_raw++;}} 
-            if($score_record['q_80_gait_most_abnormal_code'] =='8' AND $score_record2['']=='8'){}
-            elseif($score_record['q_80_gait_most_abnormal_code'] =='998' && $score_record2['']=='998'){}
+                if (($score_record['q_80_gait_current_code'] =='2' AND $score_record3['q_80_gait_current_code']=='3') ||
+                           ($score_record['q_80_gait_current_code'] =='3' AND $score_record3['q_80_gait_current_code']=='2'))
+                          {
+                             #Don't count this
+                          }
+                          else if ($score_record['q_80_gait_current_code'] != $score_record3['q_80_gait_current_code']){ $reliability_count_raw++;}} 
+            if($score_record['q_80_gait_most_abnormal_code'] =='8' AND $score_record3['q_80_gait_most_abnormal_code']=='8'){}
+            elseif($score_record['q_80_gait_most_abnormal_code'] =='998' && $score_record3['q_80_gait_most_abnormal_code']=='998'){}
             else {
                 $denominator++;
-                if ($score_record['q_80_gait_most_abnormal_code'] != $score_record2['q_80_gait_most_abnormal_code']){ $reliability_count_raw++;}} 
-            if($score_record['q_81_aggress_caregivers_current_code'] =='8' AND $score_record2['']=='8'){}
-            elseif($score_record['q_81_aggress_caregivers_current_code'] =='998' && $score_record2['']=='998'){}
+                if ($score_record['q_80_gait_most_abnormal_code'] != $score_record3['q_80_gait_most_abnormal_code']){ $reliability_count_raw++;}} 
+            if($score_record['q_81_aggress_caregivers_current_code'] =='8' AND $score_record3['q_81_aggress_caregivers_current_code']=='8'){}
+            elseif($score_record['q_81_aggress_caregivers_current_code'] =='998' && $score_record3['q_81_aggress_caregivers_current_code']=='998'){}
             else {
                 $denominator++;
-                if ($score_record['q_81_aggress_caregivers_current_code'] != $score_record2['q_81_aggress_caregivers_current_code']){ $reliability_count_raw++;}} 
-            if($score_record['q_81_aggress_caregivers_ever_code'] =='8' AND $score_record2['']=='8'){}
-            elseif($score_record['q_81_aggress_caregivers_ever_code'] =='998' && $score_record2['']=='998'){}
+                if (($score_record['q_81_aggress_caregivers_current_code'] =='2' AND $score_record3['q_81_aggress_caregivers_current_code']=='3') ||
+                 ($score_record['q_81_aggress_caregivers_current_code'] =='3' AND $score_record3['q_81_aggress_caregivers_current_code']=='2'))
+                {
+                   #Don't count this
+                }
+                else if ($score_record['q_81_aggress_caregivers_current_code'] != $score_record3['q_81_aggress_caregivers_current_code']){ $reliability_count_raw++;}} 
+            if($score_record['q_81_aggress_caregivers_ever_code'] =='8' AND $score_record3['q_81_aggress_caregivers_ever_code']=='8'){}
+            elseif($score_record['q_81_aggress_caregivers_ever_code'] =='998' && $score_record3['q_81_aggress_caregivers_ever_code']=='998'){}
             else {
                 $denominator++;
-                if ($score_record['q_81_aggress_caregivers_ever_code'] != $score_record2['q_81_aggress_caregivers_ever_code']){ $reliability_count_raw++;}} 
-            if($score_record['q_82_aggress_noncaregivers_current_code'] =='8' AND $score_record2['']=='8'){}
-            elseif($score_record['q_82_aggress_noncaregivers_current_code'] =='998' && $score_record2['']=='998'){}
+                if (($score_record['q_81_aggress_caregivers_ever_code'] =='2' AND $score_record3['q_81_aggress_caregivers_ever_code']=='3') ||
+                  ($score_record['q_81_aggress_caregivers_ever_code'] =='3' AND $score_record3['q_81_aggress_caregivers_ever_code']=='2'))
+                 {
+                    #Don't count this
+                 }
+                 else if ($score_record['q_81_aggress_caregivers_ever_code'] != $score_record3['q_81_aggress_caregivers_ever_code']){ $reliability_count_raw++;}} 
+            if($score_record['q_82_aggress_noncaregivers_current_code'] =='8' AND $score_record3['q_82_aggress_noncaregivers_current_code']=='8'){}
+            elseif($score_record['q_82_aggress_noncaregivers_current_code'] =='998' && $score_record3['q_82_aggress_noncaregivers_current_code']=='998'){}
             else {
                 $denominator++;
-                if ($score_record['q_82_aggress_noncaregivers_current_code'] != $score_record2['q_82_aggress_noncaregivers_current_code']){ $reliability_count_raw++;}} 
-            if($score_record['q_82_aggress_noncaregivers_ever_code'] =='8' AND $score_record2['']=='8'){}
-            elseif($score_record['q_82_aggress_noncaregivers_ever_code'] =='998' && $score_record2['']=='998'){}
+                if ($score_record['q_82_aggress_noncaregivers_current_code'] != $score_record3['q_82_aggress_noncaregivers_current_code']){ $reliability_count_raw++;}} 
+            if($score_record['q_82_aggress_noncaregivers_ever_code'] =='8' AND $score_record3['q_82_aggress_noncaregivers_ever_code']=='8'){}
+            elseif($score_record['q_82_aggress_noncaregivers_ever_code'] =='998' && $score_record3['q_82_aggress_noncaregivers_ever_code']=='998'){}
             else {
                 $denominator++;
-                if ($score_record['q_82_aggress_noncaregivers_ever_code'] != $score_record2['q_82_aggress_noncaregivers_ever_code']){ $reliability_count_raw++;}} 
-            if($score_record['q_83_self_injury_current_code'] =='8' AND $score_record2['']=='8'){}
-            elseif($score_record['q_83_self_injury_current_code'] =='998' && $score_record2['']=='998'){}
+                if ($score_record['q_82_aggress_noncaregivers_ever_code'] != $score_record3['q_82_aggress_noncaregivers_ever_code']){ $reliability_count_raw++;}} 
+            if($score_record['q_83_self_injury_current_code'] =='8' AND $score_record3['q_83_self_injury_current_code']=='8'){}
+            elseif($score_record['q_83_self_injury_current_code'] =='998' && $score_record3['q_83_self_injury_current_code']=='998'){}
             else {
                 $denominator++;
-                if ($score_record['q_83_self_injury_current_code'] != $score_record2['q_83_self_injury_current_code']){ $reliability_count_raw++;}} 
-            if($score_record['q_83_self_injury_ever_code'] =='8' AND $score_record2['']=='8'){}
-            elseif($score_record['q_83_self_injury_ever_code'] =='998' && $score_record2['']=='998'){}
+                if (($score_record['q_83_self_injury_current_code'] =='2' AND $score_record3['q_83_self_injury_current_code']=='3') ||
+                   ($score_record['q_83_self_injury_current_code'] =='3' AND $score_record3['q_83_self_injury_current_code']=='2'))
+                  {
+                     #Don't count this
+                  }
+                  else if ($score_record['q_83_self_injury_current_code'] != $score_record3['q_83_self_injury_current_code']){ $reliability_count_raw++;}} 
+            if($score_record['q_83_self_injury_ever_code'] =='8' AND $score_record3['q_83_self_injury_ever_code']=='8'){}
+            elseif($score_record['q_83_self_injury_ever_code'] =='998' && $score_record3['q_83_self_injury_ever_code']=='998'){}
             else {
                 $denominator++;
-                if ($score_record['q_83_self_injury_ever_code'] != $score_record2['q_83_self_injury_ever_code']){ $reliability_count_raw++;}} 
-            if($score_record['q_84_hyperventilation_current_code'] =='8' AND $score_record2['']=='8'){}
-            elseif($score_record['q_84_hyperventilation_current_code'] =='998' && $score_record2['']=='998'){}
+                if (($score_record['q_83_self_injury_ever_code'] =='2' AND $score_record3['q_83_self_injury_ever_code']=='3') ||
+                    ($score_record['q_83_self_injury_ever_code'] =='3' AND $score_record3['q_83_self_injury_ever_code']=='2'))
+                   {
+                      #Don't count this
+                   }
+                   else if ($score_record['q_83_self_injury_ever_code'] != $score_record3['q_83_self_injury_ever_code']){ $reliability_count_raw++;}} 
+            if($score_record['q_84_hyperventilation_current_code'] =='8' AND $score_record3['q_84_hyperventilation_current_code']=='8'){}
+            elseif($score_record['q_84_hyperventilation_current_code'] =='998' && $score_record3['q_84_hyperventilation_current_code']=='998'){}
             else {
                 $denominator++;
-                if ($score_record['q_84_hyperventilation_current_code'] != $score_record2['q_84_hyperventilation_current_code']){ $reliability_count_raw++;}} 
-            if($score_record['q_84_hyperventilation_ever_code'] =='8' AND $score_record2['']=='8'){}
-            elseif($score_record['q_84_hyperventilation_ever_code'] =='998' && $score_record2['']=='998'){}
+                if ($score_record['q_84_hyperventilation_current_code'] != $score_record3['q_84_hyperventilation_current_code']){ $reliability_count_raw++;}} 
+            if($score_record['q_84_hyperventilation_ever_code'] =='8' AND $score_record3['q_84_hyperventilation_ever_code']=='8'){}
+            elseif($score_record['q_84_hyperventilation_ever_code'] =='998' && $score_record3['q_84_hyperventilation_ever_code']=='998'){}
             else {
                 $denominator++;
-                if ($score_record['q_84_hyperventilation_ever_code'] != $score_record2['q_84_hyperventilation_ever_code']){ $reliability_count_raw++;}} 
-            if($score_record['q_85_faints_fits_blackouts_current_code'] =='8' AND $score_record2['']=='8'){}
-            elseif($score_record['q_85_faints_fits_blackouts_current_code'] =='998' && $score_record2['']=='998'){}
+                if ($score_record['q_84_hyperventilation_ever_code'] != $score_record3['q_84_hyperventilation_ever_code']){ $reliability_count_raw++;}} 
+            if($score_record['q_85_faints_fits_blackouts_current_code'] =='8' AND $score_record3['q_85_faints_fits_blackouts_current_code']=='8'){}
+            elseif($score_record['q_85_faints_fits_blackouts_current_code'] =='998' && $score_record3['q_85_faints_fits_blackouts_current_code']=='998'){}
             else {
                 $denominator++;
-                if ($score_record['q_85_faints_fits_blackouts_current_code'] != $score_record2['q_85_faints_fits_blackouts_current_code']){ $reliability_count_raw++;}} 
-            if($score_record['q_85_faints_fits_blackouts_ever_code'] =='8' AND $score_record2['']=='8'){}
-            elseif($score_record['q_85_faints_fits_blackouts_ever_code'] =='998' && $score_record2['']=='998'){}
+                if ($score_record['q_85_faints_fits_blackouts_current_code'] != $score_record3['q_85_faints_fits_blackouts_current_code']){ $reliability_count_raw++;}} 
+            if($score_record['q_85_faints_fits_blackouts_ever_code'] =='8' AND $score_record3['q_85_faints_fits_blackouts_ever_code']=='8'){}
+            elseif($score_record['q_85_faints_fits_blackouts_ever_code'] =='998' && $score_record3['q_85_faints_fits_blackouts_ever_code']=='998'){}
             else {
                 $denominator++;
-                if ($score_record['q_85_faints_fits_blackouts_ever_code'] != $score_record2['q_85_faints_fits_blackouts_ever_code']){ $reliability_count_raw++;}} 
-            if($score_record['q_86_age_when_abnormality_first_evident'] =='8' AND $score_record2['']=='8'){}
-            elseif($score_record['q_86_age_when_abnormality_first_evident'] =='998' && $score_record2['']=='998'){}
+                if ($score_record['q_85_faints_fits_blackouts_ever_code'] != $score_record3['q_85_faints_fits_blackouts_ever_code']){ $reliability_count_raw++;}} 
+            if($score_record['q_86_age_when_abnormality_first_evident'] =='8' AND $score_record3['q_86_age_when_abnormality_first_evident']=='8'){}
+            elseif($score_record['q_86_age_when_abnormality_first_evident'] =='998' && $score_record3['q_86_age_when_abnormality_first_evident']=='998'){}
             else {
                 $denominator++;
-                if ($score_record['q_86_age_when_abnormality_first_evident'] != $score_record2['q_86_age_when_abnormality_first_evident']){ $reliability_count_raw++;}} 
-            if($score_record['q_87_interviewers_judgment'] =='8' AND $score_record2['']=='8'){}
-            elseif($score_record['q_87_interviewers_judgment'] =='998' && $score_record2['']=='998'){}
+                if ($score_record['q_86_age_when_abnormality_first_evident'] != $score_record3['q_86_age_when_abnormality_first_evident']){ $reliability_count_raw++;}} 
+            if($score_record['q_87_interviewers_judgment'] =='8' AND $score_record3['q_87_interviewers_judgment']=='8'){}
+            elseif($score_record['q_87_interviewers_judgment'] =='998' && $score_record3['q_87_interviewers_judgment']=='998'){}
+            else {
+                $denominator++; $demoninator_scored++;
+                if (abs($score_record['q_87_interviewers_judgment'] - $score_record3['q_87_interviewers_judgment']) >3){ $reliability_count_raw++; $reliability_count_scored++;}} 
+            if($score_record['q_88_visuospatial_ability_current_code'] =='8' AND $score_record3['q_88_visuospatial_ability_current_code']=='8'){}
+            elseif($score_record['q_88_visuospatial_ability_current_code'] =='998' && $score_record3['q_88_visuospatial_ability_current_code']=='998'){}
+            else {
+                $denominator++; $demoninator_scrored++;
+                if ($score_record['q_88_visuospatial_ability_current_code'] != $score_record3['q_88_visuospatial_ability_current_code']){ $reliability_count_raw++; $reliability_count_scored++;}} 
+            if($score_record['q_88_visuospatial_ability_ever_code'] =='8' AND $score_record3['q_88_visuospatial_ability_ever_code']=='8'){}
+            elseif($score_record['q_88_visuospatial_ability_ever_code'] =='998' && $score_record3['q_88_visuospatial_ability_ever_code']=='998'){}
             else {
                 $denominator++;
-                if (abs($score_record['q_87_interviewers_judgment'] - $score_record2['q_87_interviewers_judgment']) >3){ $reliability_count_raw++;}} 
-            if($score_record['q_88_visuospatial_ability_current_code'] =='8' AND $score_record2['']=='8'){}
-            elseif($score_record['q_88_visuospatial_ability_current_code'] =='998' && $score_record2['']=='998'){}
+                if ($score_record['q_88_visuospatial_ability_ever_code'] != $score_record3['q_88_visuospatial_ability_ever_code']){ $reliability_count_raw++;}} 
+            if($score_record['q_89_memory_still_current_code'] =='8' AND $score_record3['q_89_memory_still_current_code']=='8'){}
+            elseif($score_record['q_89_memory_still_current_code'] =='998' && $score_record3['q_89_memory_still_current_code']=='998'){}
             else {
                 $denominator++;
-                if ($score_record['q_88_visuospatial_ability_current_code'] != $score_record2['q_88_visuospatial_ability_current_code']){ $reliability_count_raw++;}} 
-            if($score_record['q_88_visuospatial_ability_ever_code'] =='8' AND $score_record2['']=='8'){}
-            elseif($score_record['q_88_visuospatial_ability_ever_code'] =='998' && $score_record2['']=='998'){}
+                if ($score_record['q_89_memory_still_current_code'] != $score_record3['q_89_memory_still_current_code']){ $reliability_count_raw++;}} 
+            if($score_record['q_89_memory_still_ever_code'] =='8' AND $score_record3['q_89_memory_still_ever_code']=='8'){}
+            elseif($score_record['q_89_memory_still_ever_code'] =='998' && $score_record3['q_89_memory_still_ever_code']=='998'){}
             else {
                 $denominator++;
-                if ($score_record['q_88_visuospatial_ability_ever_code'] != $score_record2['q_88_visuospatial_ability_ever_code']){ $reliability_count_raw++;}} 
-            if($score_record['q_89_memory_still_current_code'] =='8' AND $score_record2['']=='8'){}
-            elseif($score_record['q_89_memory_still_current_code'] =='998' && $score_record2['']=='998'){}
+                if ($score_record['q_89_memory_still_ever_code'] != $score_record3['q_89_memory_still_ever_code']){ $reliability_count_raw++;}} 
+            if($score_record['q_90_musical_ability_current_code'] =='8' AND $score_record3['q_90_musical_ability_current_code']=='8'){}
+            elseif($score_record['q_90_musical_ability_current_code'] =='998' && $score_record3['q_90_musical_ability_current_code']=='998'){}
             else {
                 $denominator++;
-                if ($score_record['q_89_memory_still_current_code'] != $score_record2['q_89_memory_still_current_code']){ $reliability_count_raw++;}} 
-            if($score_record['q_89_memory_still_ever_code'] =='8' AND $score_record2['']=='8'){}
-            elseif($score_record['q_89_memory_still_ever_code'] =='998' && $score_record2['']=='998'){}
+                if (($score_record['q_90_musical_ability_current_code'] =='2' AND $score_record3['q_90_musical_ability_current_code']=='3') ||
+                     ($score_record['q_90_musical_ability_current_code'] =='3' AND $score_record3['q_90_musical_ability_current_code']=='2'))
+                    {
+                       #Don't count this
+                    }
+                    else if ($score_record['q_90_musical_ability_current_code'] != $score_record3['q_90_musical_ability_current_code']){ $reliability_count_raw++;}} 
+            if($score_record['q_90_musical_ability_ever_code'] =='8' AND $score_record3['q_90_musical_ability_ever_code']=='8'){}
+            elseif($score_record['q_90_musical_ability_ever_code'] =='998' && $score_record3['q_90_musical_ability_ever_code']=='998'){}
             else {
                 $denominator++;
-                if ($score_record['q_89_memory_still_ever_code'] != $score_record2['q_89_memory_still_ever_code']){ $reliability_count_raw++;}} 
-            if($score_record['q_90_musical_ability_current_code'] =='8' AND $score_record2['']=='8'){}
-            elseif($score_record['q_90_musical_ability_current_code'] =='998' && $score_record2['']=='998'){}
+                if (($score_record['q_90_musical_ability_ever_code'] =='2' AND $score_record3['q_90_musical_ability_ever_code']=='3') ||
+                      ($score_record['q_90_musical_ability_ever_code'] =='3' AND $score_record3['q_90_musical_ability_ever_code']=='2'))
+                     {
+                        #Don't count this
+                     }
+                     else if ($score_record['q_90_musical_ability_ever_code'] != $score_record3['q_90_musical_ability_ever_code']){ $reliability_count_raw++;}} 
+            if($score_record['q_91_drawings_skill_current_code'] =='8' AND $score_record3['q_91_drawings_skill_current_code']=='8'){}
+            elseif($score_record['q_91_drawings_skill_current_code'] =='998' && $score_record3['q_91_drawings_skill_current_code']=='998'){}
             else {
                 $denominator++;
-                if ($score_record['q_90_musical_ability_current_code'] != $score_record2['q_90_musical_ability_current_code']){ $reliability_count_raw++;}} 
-            if($score_record['q_90_musical_ability_ever_code'] =='8' AND $score_record2['']=='8'){}
-            elseif($score_record['q_90_musical_ability_ever_code'] =='998' && $score_record2['']=='998'){}
+                if ($score_record['q_91_drawings_skill_current_code'] != $score_record3['q_91_drawings_skill_current_code']){ $reliability_count_raw++;}} 
+            if($score_record['q_91_drawings_skill_ever_code'] =='8' AND $score_record3['q_91_drawings_skill_ever_code']=='8'){}
+            elseif($score_record['q_91_drawings_skill_ever_code'] =='998' && $score_record3['q_91_drawings_skill_ever_code']=='998'){}
             else {
                 $denominator++;
-                if ($score_record['q_90_musical_ability_ever_code'] != $score_record2['q_90_musical_ability_ever_code']){ $reliability_count_raw++;}} 
-            if($score_record['q_91_drawings_skill_current_code'] =='8' AND $score_record2['']=='8'){}
-            elseif($score_record['q_91_drawings_skill_current_code'] =='998' && $score_record2['']=='998'){}
+                if ($score_record['q_91_drawings_skill_ever_code'] != $score_record3['q_91_drawings_skill_ever_code']){ $reliability_count_raw++;}} 
+            if($score_record['q_92_reading_ability_current_code'] =='8' AND $score_record3['q_92_reading_ability_current_code']=='8'){}
+            elseif($score_record['q_92_reading_ability_current_code'] =='998' && $score_record3['q_92_reading_ability_current_code']=='998'){}
             else {
                 $denominator++;
-                if ($score_record['q_91_drawings_skill_current_code'] != $score_record2['q_91_drawings_skill_current_code']){ $reliability_count_raw++;}} 
-            if($score_record['q_91_drawings_skill_ever_code'] =='8' AND $score_record2['']=='8'){}
-            elseif($score_record['q_91_drawings_skill_ever_code'] =='998' && $score_record2['']=='998'){}
+                if ($score_record['q_92_reading_ability_current_code'] != $score_record3['q_92_reading_ability_current_code']){ $reliability_count_raw++;}} 
+            if($score_record['q_92_reading_ability_ever_code'] =='8' AND $score_record3['q_92_reading_ability_ever_code']=='8'){}
+            elseif($score_record['q_92_reading_ability_ever_code'] =='998' && $score_record3['q_92_reading_ability_ever_code']=='998'){}
             else {
                 $denominator++;
-                if ($score_record['q_91_drawings_skill_ever_code'] != $score_record2['q_91_drawings_skill_ever_code']){ $reliability_count_raw++;}} 
-            if($score_record['q_92_reading_ability_current_code'] =='8' AND $score_record2['']=='8'){}
-            elseif($score_record['q_92_reading_ability_current_code'] =='998' && $score_record2['']=='998'){}
+                if ($score_record['q_92_reading_ability_ever_code'] != $score_record3['q_92_reading_ability_ever_code']){ $reliability_count_raw++;}} 
+            if($score_record['q_93_computational_ability_current_code'] =='8' AND $score_record3['q_93_computational_ability_current_code']=='8'){}
+            elseif($score_record['q_93_computational_ability_current_code'] =='998' && $score_record3['q_93_computational_ability_current_code']=='998'){}
             else {
                 $denominator++;
-                if ($score_record['q_92_reading_ability_current_code'] != $score_record2['q_92_reading_ability_current_code']){ $reliability_count_raw++;}} 
-            if($score_record['q_92_reading_ability_ever_code'] =='8' AND $score_record2['']=='8'){}
-            elseif($score_record['q_92_reading_ability_ever_code'] =='998' && $score_record2['']=='998'){}
+                if ($score_record['q_93_computational_ability_current_code'] != $score_record3['q_93_computational_ability_current_code']){ $reliability_count_raw++;}} 
+            if($score_record['q_93_computational_ability_ever_code'] =='8' AND $score_record3['q_93_computational_ability_ever_code']=='8'){}
+            elseif($score_record['q_93_computational_ability_ever_code'] =='998' && $score_record3['q_93_computational_ability_ever_code']=='998'){}
             else {
                 $denominator++;
-                if ($score_record['q_92_reading_ability_ever_code'] != $score_record2['q_92_reading_ability_ever_code']){ $reliability_count_raw++;}} 
-            if($score_record['q_93_computational_ability_current_code'] =='8' AND $score_record2['']=='8'){}
-            elseif($score_record['q_93_computational_ability_current_code'] =='998' && $score_record2['']=='998'){}
-            else {
-                $denominator++;
-                if ($score_record['q_93_computational_ability_current_code'] != $score_record2['q_93_computational_ability_current_code']){ $reliability_count_raw++;}} 
-            if($score_record['q_93_computational_ability_ever_code'] =='8' AND $score_record2['']=='8'){}
-            elseif($score_record['q_93_computational_ability_ever_code'] =='998' && $score_record2['']=='998'){}
-            else {
-                $denominator++;
-                if ($score_record['q_93_computational_ability_ever_code'] != $score_record2['q_93_computational_ability_ever_code']){ $reliability_count_raw++;}} 
+                if ($score_record['q_93_computational_ability_ever_code'] != $score_record3['q_93_computational_ability_ever_code']){ $reliability_count_raw++;}} 
             
             // Score the reliability
             $reliability['Reliability_score_all_items']= (($denominator-$reliability_count_raw)/$denominator*100);
             $reliability['Reliability_score_scored_items']= (($denominator_scored-$reliability_count_scored)/$denominator_scored*100);
-
+print_r($reliability['Reliability_score_all_items']);
            
          }
          // If the reliability is to be compared to the initial data entry
@@ -1920,10 +2103,11 @@ if($score_record['q_2_age_first_noticed_code']=='8' AND $score_record2['q_2_age_
         // end elseif
         else {
             echo("what the heck is going on?<br>");
+            $reliability['reliability_score_all_items']= 0;
         } // end else
         
          // print_r($this->identifier);
-
+      
         // Do the update here for the relibaility scores - saving the scores
 		$result = $db->update("adi_r_reliability", $reliability, array("CommentID"=>$this->identifier));
 		if($db->isError($result)) {
@@ -1962,6 +2146,7 @@ if($score_record['q_2_age_first_noticed_code']=='8' AND $score_record2['q_2_age_
 
     function adi_r_reliability()
     {
+       $this->_addMetadataFields();
         //Scoring header
         $this->form->addElement('header', 'instrument_title', "Scoring:");
         $this->form->addElement("static", "Reliability_score_all_items", "Reliability Score - all items (%):");
@@ -1969,6 +2154,8 @@ if($score_record['q_2_age_first_noticed_code']=='8' AND $score_record2['q_2_age_
 
         $GoldStandardArray = array(""=>NULL, "Gold_standard_SEA0012"=>"Gold standard SEA0012","Gold_standard_SEA0070"=>"Gold standard SEA0070", "Initial_entry"=>"Initial Entry");
         $this->form->addElement("select", "Gold_standard", "Compare against:", $GoldStandardArray);
+        $this->form->addRule('Gold_standard', 'Gold standard is required', 'required');
+        
         $this->form->addElement("static", "CommentID", "CommentID:");
 
         // Form stuff (page 2)
@@ -2502,16 +2689,24 @@ if($score_record['q_2_age_first_noticed_code']=='8' AND $score_record2['q_2_age_
         }
        
         $scoreResult = $this->score();
+        
+        if($this->isError($scoreResult)) {
+           echo($scoreResult->getMessage());
+           
+           return PEAR::raiseError($scoreResult->getMessage());
+        }
 
         $user =& User::singleton();
         // if(!$user->hasPermission('tracking_logs_edit_all')) {
         //    $values['Lock_record'] = 'Locked';
         // }
-              
+           
         if (empty($this->identifier)) { 
             
             // insert the event
             $success = $DB->insert('adi_r_reliability', array(
+                                                             'Examiner' => $values['Examiner'],
+                                                             'Date_taken' => $this->_getDatabaseDate($values['Date_taken']),
                                                              'CommentID' => $this->identifier,
                                                              'DoB_proband' => $values['DoB_proband'],
                                                              'Gold_standard' => $values['Gold_standard'],
@@ -2690,6 +2885,8 @@ if($score_record['q_2_age_first_noticed_code']=='8' AND $score_record2['q_2_age_
             // update the event
             $success = $DB->update('adi_r_reliability', array(
                                                               // 'CommentID' => $this->identifier,
+                                                              'Examiner' => $values['Examiner'],
+                                                              'Date_taken' => $this->_getDatabaseDate($values['Date_taken']),
                                                               'Gold_standard' => $values['Gold_standard'],
                                                               'DoB_proband' => $values['DoB_proband'],
                                                               'q_2_age_first_noticed_code' => $values['q_2_age_first_noticed_code'],
@@ -2921,6 +3118,63 @@ if($score_record['q_2_age_first_noticed_code']=='8' AND $score_record2['q_2_age_
      return $renderer->toHtml();
      
  } // end function display
+ 
+ function _addMetadataFields()
+  {
+      $config =& NDB_Config::singleton();
+      $dateOptions = array(
+                           'language' => 'en',
+                           'format'   => 'YMd',
+                           'minYear'  => $config->getSetting('startYear'),
+                           'maxYear'  => $config->getSetting('endYear'),
+                           'addEmptyOption' => true,
+                           'emptyOptionValue' => null
+                           );
+
+      $this->form->addElement('date', 'Date_taken', 'Date of Administration', $dateOptions);
+      
+      $examiners = $this->_getExaminerNames();
+      $this->form->addElement('select', 'Examiner', 'Examiner', $examiners);
+      
+      //$this->form->addElement('text', 'Examiner', 'Examiner');
+      
+      $this->form->addGroupRule('Date_taken', 'Date of Administration is required', 'required');
+      
+      $this->form->registerRule('checkdate', 'callback', '_checkDate');
+      $this->form->addRule('Date_taken', 'Date of Administration is invalid', 'checkdate');
+      
+      $this->form->addRule('Examiner', 'Examiner is required', 'required');
+  }
+  
+  function _getExaminerNames()
+   {
+       $db =& Database::singleton();
+       $centerID = $db->selectOne("SELECT session.CenterID FROM session, flag WHERE session.ID=flag.SessionID and flag.CommentID='".$this->identifier."'");
+
+       $db->select("SELECT examinerID, full_name FROM examiners WHERE centerID='$centerID' ORDER BY full_name", $results);
+       if($db->isError($results)) {
+           return $this->raiseError("Could not get examiner names: ".$results->getMessage());
+       }
+       
+       $examiners = array(''=>'');
+       if(is_array($results) && !empty($results)) {
+           foreach($results AS $row) {
+               $examiners[$row['examinerID']] = $row['full_name'];
+           }
+       }
+       return $examiners;
+   }
+   
+   function _getDatabaseDate($formDateValue){
+        if(!empty($formDateValue)){
+            if(count($formDateValue)==2){
+                $databaseValue = "$formDateValue[H]:$formDateValue[i]";  //handle time (HH:MM:SS)
+            } else {
+                $databaseValue = "$formDateValue[Y]-$formDateValue[M]-$formDateValue[d]";  //handle date (YYYY/MM/DD)
+            }
+        }
+        return $databaseValue;
+    }
  
 }
 ?>
