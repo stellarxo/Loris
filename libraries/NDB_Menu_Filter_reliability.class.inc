@@ -49,7 +49,7 @@ class NDB_Menu_Filter_reliability extends NDB_Menu_Filter
             $this->centerIDMap[$row['CenterID']] = $row['Name'];
         }
         
-//        $this->_populate_reliability_table();
+        $this->_populate_reliability_table();
 
         // the base query
         $query = " FROM candidate, session, flag, reliability WHERE reliability.CommentID=flag.CommentID AND candidate.CandID=session.CandID AND session.ID=flag.SessionID";
@@ -65,18 +65,19 @@ class NDB_Menu_Filter_reliability extends NDB_Menu_Filter
         $this->query = $query;
         $this->group_by = '';
         $this->order_by = 'reliability.Instrument, session.CandID, session.Visit_label';
-        $this->headers = array('PSCID', 'Site of Reliability Test','Cohort', 'DCCID', 'Gender', 'Visit_label', 'Instrument', 'reliability_score', 'Reliable');
-        $this->validFilters = array('reliability.CommentID','session.SubprojectID', 'candidate.CenterID', 'session.CandID', 'candidate.PSCID', 'candidate.Gender', 'session.Visit_label', 'reliability.Instrument', 'reliability.Reliability_score');
+        $this->headers = array('PSCID', 'reliability_center_id','Cohort', 'DCCID', 'Gender', 'Visit_label', 'Instrument', 'reliability_score', 'Reliable');
+        $this->validFilters = array('reliability.CommentID', 'reliability.reliability_center_id', 'session.SubprojectID', 'candidate.CenterID', 'session.CandID', 'candidate.PSCID', 'candidate.Gender', 'session.Visit_label', 'reliability.Instrument', 'reliability.Reliability_score');
 
         $this->formToFilter = array(
                                     'CommentID' => 'reliability.CommentID',
                                     'Cohort' => 'session.SubprojectID',
                                     'CenterID' => 'candidate.CenterID',
+                                    'reliability_center_id'=> 'reliability.reliability_center_id',
                                     'DCCID' => 'candidate.CandID',
                                     'PSCID' => 'candidate.PSCID',
                                     'Gender' => 'candidate.Gender',
                                     'Visit_label' => 'session.Visit_label',
-				    'Instrument' => 'reliability.Instrument',
+				                            'Instrument' => 'reliability.Instrument',
                                     'reliability_score'=>'reliability.Reliability_score',
                                     // 'Lock_record' => 'session.Lock_record'
                                     );
@@ -198,25 +199,36 @@ class NDB_Menu_Filter_reliability extends NDB_Menu_Filter
        $site_list = array('SEA', 'PHI', 'STL', 'UNC');
         
         foreach($site_list as $site){
-          $this->within_site_flagging("adi_r_subject", 10, $site, $db);
-          $this->within_site_flagging("adi_r_proband", 7, $site, $db);
-          $this->within_site_flagging("aosi", 10, $site, $db);
-          $this->within_site_flagging("ados_module1", 10, $site, $db);
-          $this->within_site_flagging("ados_module2", 10, $site, $db);
-          $this->within_site_flagging("csbs", 10, $site, $db);
+          $this->within_site_flagging("adi_r_subject", 0.1, $site, $db);
+          $this->within_site_flagging("adi_r_proband", 0.15, $site, $db);
+          $this->within_site_flagging("aosi", 0.1, $site, $db);
+          $this->within_site_flagging("ados_module1", 0.1, $site, $db);
+          $this->within_site_flagging("ados_module2", 0.1, $site, $db);
+          $this->within_site_flagging("csbs", 0.1, $site, $db);
         }            
        
     }
     
-    function within_site_flagging($instrument, $jump_step, $current_site, $db){
-        $db->select("SELECT CommentID FROM {$instrument} WHERE CommentID LIKE '%{$current_site}%'", $instrument_records);
-       for($i = 9; $i < count($instrument_records); $i += $jump_step){
+    function within_site_flagging($instrument, $ratio, $current_site, $db){
+        $jump_step = round(1 / $ratio);
+        $db->select("SELECT i.CommentID FROM {$instrument} as i, flag as f, session as s WHERE i.CommentID=f.CommentID AND f.sessionID=s.ID AND s.Current_stage<>'Recycling Bin' AND f.Data_entry='Complete' AND i.CommentID LIKE '%{$current_site}%' AND s.Visit='Pass' AND s.visit_label<>'v18'", $instrument_records);
+        
+        $current_count = $db->selectOne("SELECT count(*) FROM reliability WHERE CommentID LIKE '%{$current_site}%' AND Instrument='{$instrument}' AND reliability_center_id={$this->site_id[$current_site]}");
+        $total_count = count($instrument_records);
+        $max = floor($ratio * $total_count);
+        // 
+        // echo("Site: {$current_site} <BR>");
+        // echo($current_count . " --- " . $total_count . "<BR>");
+        // echo("Max (ratio: {$ratio}/jump: {$jump_step}): {$max} <BR><BR>");
+        
+       for($i = $jump_step - 1; $i < count($instrument_records) && $current_count < $max; $i += $jump_step){
           $commentID = $instrument_records[$i]["CommentID"];
           if(!find_cID($commentID, $this->site_id[$current_site], $this->reliability_table)){
             $db->insert('reliability', array('CommentID' => $instrument_records[$i]["CommentID"],
                                               'reliability_center_id' => $this->site_id[$current_site],
                                               'Instrument' => $instrument
                                               ));
+            $current_count++;
           }                  
        }
     }
