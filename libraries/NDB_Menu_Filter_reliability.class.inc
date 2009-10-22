@@ -60,13 +60,13 @@ class NDB_Menu_Filter_reliability extends NDB_Menu_Filter
         }
 
         // set the class variables
-        $this->columns = array('reliability.CommentID', 'candidate.PSCID', 'reliability.reliability_center_id AS Site', 'session.SubprojectID as Cohort', 'session.CandID AS DCCID', 'candidate.Gender', 'session.Visit_label', 'reliability.Instrument', 'reliability.Reliability_score');
+        $this->columns = array('reliability.CommentID', 'candidate.PSCID', 'reliability.reliability_center_id AS Site', 'session.SubprojectID as Cohort', 'session.CandID AS DCCID', 'candidate.Gender', 'session.Visit_label', 'reliability.Instrument', 'reliability.Reliability_score', 'session.Current_stage');
 
         $this->query = $query;
         $this->group_by = '';
         $this->order_by = 'reliability.Instrument, session.CandID, session.Visit_label';
         $this->headers = array('PSCID', 'reliability_center_id','Cohort', 'DCCID', 'Gender', 'Visit_label', 'Instrument', 'reliability_score', 'Reliable');
-        $this->validFilters = array('reliability.CommentID', 'reliability.reliability_center_id', 'session.SubprojectID', 'candidate.CenterID', 'session.CandID', 'candidate.PSCID', 'candidate.Gender', 'session.Visit_label', 'reliability.Instrument', 'reliability.Reliability_score');
+        $this->validFilters = array('reliability.CommentID', 'reliability.reliability_center_id', 'session.SubprojectID', 'candidate.CenterID', 'session.CandID', 'candidate.PSCID', 'candidate.Gender', 'session.Visit_label', 'reliability.Instrument', 'reliability.Reliability_score', 'session.Current_stage');
 
         $this->formToFilter = array(
                                     'CommentID' => 'reliability.CommentID',
@@ -79,6 +79,7 @@ class NDB_Menu_Filter_reliability extends NDB_Menu_Filter
                                     'Visit_label' => 'session.Visit_label',
 				                            'Instrument' => 'reliability.Instrument',
                                     'reliability_score'=>'reliability.Reliability_score',
+                                    'Current_stage'=>'session.Current_stage',
                                     // 'Lock_record' => 'session.Lock_record'
                                     );
         return true;
@@ -150,11 +151,13 @@ class NDB_Menu_Filter_reliability extends NDB_Menu_Filter
             // $identifier = $item['Tracking_log_ID'];
             $comment_id = $item['CommentID'];
             $site_id = $item['Site'];
+            $current_stage = $item['Current_stage'];
             foreach ($item as $key => $val) {
 
                 // Confused about this line
                 if ($key =='Tracking_log_ID') continue;
                 if ($key == 'CommentID') continue;
+                if ($key == 'Current_stage') continue;
                 // {
                 //                    $this->tpl_data['items'][$x][$i]['CommentID'] = $item['CommentID'];
                 //               $this->tpl_data['items'][$x][$i]['Instrument'] = $item['Instrument'];
@@ -165,6 +168,7 @@ class NDB_Menu_Filter_reliability extends NDB_Menu_Filter
                    $this->tpl_data['items'][$x][$i]['CommentID'] = $comment_id;
                    $this->tpl_data['items'][$x][$i]['SiteID'] = $item['Site'];
                    $this->tpl_data['items'][$x][$i]['Instrument'] = $item['Instrument'];
+                   $this->tpl_data['items'][$x][$i]['Current_stage'] = $current_stage;
                 }
                 if ($key == 'Site')
                 {
@@ -211,7 +215,7 @@ class NDB_Menu_Filter_reliability extends NDB_Menu_Filter
     
     function within_site_flagging($instrument, $ratio, $current_site, $db){
         $jump_step = round(1 / $ratio);
-        $db->select("SELECT i.CommentID FROM {$instrument} as i, flag as f, session as s WHERE i.CommentID=f.CommentID AND f.sessionID=s.ID AND s.Current_stage<>'Recycling Bin' AND f.Data_entry='Complete' AND i.CommentID LIKE '%{$current_site}%' AND s.Visit='Pass' AND s.visit_label<>'v18'", $instrument_records);
+        $db->select("SELECT i.CommentID FROM {$instrument} as i, flag as f, session as s WHERE i.CommentID=f.CommentID AND f.sessionID=s.ID AND s.Current_stage<>'Recycling Bin' AND f.Data_entry='Complete' AND i.CommentID LIKE '%{$current_site}%' AND s.visit_label<>'v18'", $instrument_records);
         
         $current_count = $db->selectOne("SELECT count(*) FROM reliability WHERE CommentID LIKE '%{$current_site}%' AND Instrument='{$instrument}' AND reliability_center_id={$this->site_id[$current_site]}");
         $total_count = count($instrument_records);
