@@ -6,6 +6,7 @@
    <tr bgcolor="#08245b">
       <th><font color="#CCCCCC">Site</font></th>
       <th><font color="#CCCCCC">Rater</font></th>
+      <th><font color="#CCCCCC">Outside Research Group</font></th>
       <th><font color="#CCCCCC">Reliable</font></th>
       <th><font color="#CCCCCC">Date Reliability Established</font></th>
    </tr>
@@ -13,6 +14,7 @@
    <tr bgcolor="#FFFFFF">
       <td>{$adi_r_data[item].site}</td>
       <td>{$adi_r_data[item].rater}</td>
+      <td>{$adi_r_data[item].outside_research_group}</td>
       <td>{$adi_r_data[item].reliable}</td>
       <td>{$adi_r_data[item].reliability_established_date}</td>
    </tr>
@@ -167,6 +169,7 @@ Initial reliability: Raters must send, at least, one v06 and v12 AOSI videotape 
    <tr bgcolor="#08245b">
       <th><font color="#CCCCCC">Site</font></th>
       <th><font color="#CCCCCC">Rater</font></th>
+      <th><font color="#CCCCCC">Coder Status</font></th>
       <th><font color="#CCCCCC">Reliable</font></th>
       <th><font color="#CCCCCC">Date Reliability Established</font></th>
    </tr>
@@ -174,6 +177,7 @@ Initial reliability: Raters must send, at least, one v06 and v12 AOSI videotape 
    <tr bgcolor="#FFFFFF">
       <td>{$csbs_data_gold[item].site}</td>
       <td>{$csbs_data_gold[item].rater}</td>
+      <td>{$csbs_data_gold[item].examiner_coder_status}</td>
       <td>{$csbs_data_gold[item].reliable}</td>
       <td>{$csbs_data_gold[item].reliability_established_date}</td>
    </tr>
