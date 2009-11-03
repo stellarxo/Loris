@@ -5,32 +5,34 @@ CREATE TABLE `adi_r_initial_reliability` (
 			`rater` varchar(256) NOT NULL,
             `reliable` enum('Yes','No','In progress') default NULL,
 		  	`with_umacc_reliable_clinician` boolean,
+                        `outside_research_group` enum('Yes','No') default NULL,
 		  	`reliability_established_date` date
               ) TYPE=MyISAM;
 
 
-INSERT INTO adi_r_initial_reliability (site, rater, reliable, with_umacc_reliable_clinician, reliability_established_date) VALUES 
-('SEA', 'Annette Estes', "Yes", FALSE, '1998-01-01'),
-('SEA', 'Lindsey Sterling', "Yes", FALSE, '2007-01-01'),
-('SEA', 'Karen Burner', "Yes", FALSE, '2006-03-20'),
-('SEA', 'Vanessa Hus', "Yes", FALSE, '2007-01-01'),
-('SEA', 'Tanya St. John', "Yes", TRUE, '2008-10-01'),
-('UNC', 'Chad Chappell', "Yes", FALSE, '2001-01-01'),
-('UNC', 'Leigh Anne Weisenfeld', "In progress", FALSE, NULL),
-('UNC', 'Deb Childress', "Yes", FALSE, NULL),
-('UNC', 'Jessica Hetrick', "In progress", FALSE, NULL),
-('???', 'Lauren Elder', "In progress", FALSE, NULL),
-('STL', 'Helen Valenza', "Yes", FALSE, '2008-02-05'),
-('STL', 'Patti LaVesser', "Yes", TRUE, '2008-02-17'),
-('STL', 'Lisa Flake', "In progress", FALSE, NULL),
-('STL', 'Anna Abbaachi', "Yes", TRUE, '2008-03-01'),
-('PHI', 'Sarah Paterson', "Yes", FALSE, '2008-07-13'),
-('PHI', 'Sarah Woldoff', "Yes", FALSE, '2007-01-01'),
-('PHI', 'Juhi Pandey', "Yes", FALSE, '2007-01-01'),
-('PHI', 'Elizabeth McCaffery', "Yes", TRUE, NULL),
-('PHI', 'Christine Ghilain', "In progress", FALSE, NULL),
-('PHI', 'Jordana Woodford', "Yes", TRUE, '2009-07-20'),
-('PHI', 'Susan Epstein', "Yes", TRUE, '2008-08-01');
+INSERT INTO adi_r_initial_reliability (site, rater, reliable, with_umacc_reliable_clinician, outside_research_group, reliability_established_date) VALUES 
+('SEA', 'Annette Estes', "Yes", FALSE, "No", '1998-01-01'),
+('SEA', 'Lindsey Sterling', "Yes", FALSE, "No", '2007-01-01'),
+('SEA', 'Karen Burner', "Yes", FALSE, "No", '2006-03-20'),
+('SEA', 'Vanessa Hus', "Yes", FALSE, "No", '2007-01-01'),
+('SEA', 'Tanya St. John', "Yes", TRUE, "No", '2008-10-01'),
+('SEA', 'Phil Cali', "In progress", FALSE, "No", NULL),
+('UNC', 'Chad Chappell', "Yes", FALSE, "No", '2001-01-01'),
+('UNC', 'Leigh Anne Weisenfeld', "In progress", FALSE, "No", NULL),
+('UNC', 'Deb Childress', "Yes", FALSE, "No", NULL),
+('UNC', 'Jessica Hetrick', "In progress", FALSE, "No", NULL),
+('???', 'Lauren Elder', "In progress", FALSE, "No", NULL),
+('STL', 'Helen Valenza', "Yes", FALSE, "No", '2008-02-05'),
+('STL', 'Patti LaVesser', "Yes", TRUE, "No", '2008-02-17'),
+('STL', 'Lisa Flake', "In progress", FALSE, "No", NULL),
+('STL', 'Anna Abbaachi', "Yes", TRUE, "No", '2008-03-01'),
+('PHI', 'Sarah Paterson', "Yes", FALSE, "No", '2008-07-13'),
+('PHI', 'Sarah Woldoff', "Yes", FALSE, "No", '2007-01-01'),
+('PHI', 'Juhi Pandey', "Yes", FALSE, "No", '2007-01-01'),
+('PHI', 'Elizabeth McCaffery', "Yes", TRUE, "No", NULL),
+('PHI', 'Christine Ghilain', "In progress", FALSE, "No", NULL),
+('PHI', 'Jordana Woodford', "Yes", TRUE, "No", '2009-07-20'),
+('PHI', 'Susan Epstein', "Yes", TRUE, "No", '2008-08-01');
 
 DROP TABLE IF EXISTS figs_initial_reliability;
 
@@ -65,7 +67,6 @@ INSERT INTO figs_initial_reliability (site, rater, lead_clinician, case_ID_1, da
 ('SEA', 'Lindsey Sterling'  , NULL , 'SEA0003', '2008-01-11', '2008-02-13', '2008-4-8'  , NULL     , NULL        , NULL        , NULL        , NULL     , NULL       , NULL        , NULL       , "In progress", NULL),
 ('SEA', 'Karen Burner'    , NULL , 'SEA0004', '2008-03-03', '2008-03-17', '2008-6-9'  , NULL     , NULL        , NULL        , NULL        , NULL     , NULL       , NULL        , NULL       , "In progress", NULL),
 ('SEA', 'Vanessa Rivera', NULL ,  NULL    ,  NULL       ,  NULL       ,  NULL       , NULL     , NULL        , NULL        , NULL        , NULL     , NULL       , NULL        , NULL       , "In progress", NULL),
-('SEA', 'Annette Estes' , NULL ,  NULL    ,  NULL       ,  NULL       ,  NULL       , NULL     , NULL        , NULL        , NULL        , NULL     , NULL       , NULL        , NULL       , "In progress", NULL),
 ('STL', 'Helen Valenza'    , "Yes",  NULL    ,  NULL       ,  NULL       ,  NULL       , NULL     , NULL        , NULL        , NULL        , NULL     , NULL       , NULL        , NULL       , "Yes"        , '2004-10-01'),
 ('STL', 'Jeanette Mattingly' , NULL ,  NULL    ,  NULL       ,  NULL       ,  NULL       , NULL     , NULL        , NULL        , NULL        , NULL     , NULL       , NULL        , NULL       , "In progress", NULL),
 ('PHI', 'Amanda Bennett' , NULL ,  NULL    ,  NULL       ,  NULL       ,  NULL       , NULL     , NULL        , NULL        , NULL        , NULL     , NULL       , NULL        , NULL       , "In progress", NULL),
@@ -98,8 +99,6 @@ INSERT INTO aosi_initial_reliability (site, rater, reliable, tape_sent_date, cas
 ('SEA', 'Vanessa Hus', "Yes", '2008-10-14', 'SEA0014', '12', '89', '2008-10-10'),
 ('SEA', 'Shanna Alvarez',"In progress", '2009-07-16', 'SEA0100', '6', NULL, NULL),
 ('SEA', 'Shanna Alvarez',"In progress", NULL, NULL, '12', NULL, NULL),
-('SEA', 'Annette Estes',"In progress", NULL, NULL, '6', NULL, NULL),
-('SEA', 'Annette Estes',"In progress", '2008-10-14', NULL, '12', NULL, NULL),
 ('PHI', 'Sarah Paterson', "Yes", NULL, 'PHI0002', '6', '79', '2008-9-10'),
 ('PHI', 'Sarah Paterson', "Yes", NULL, 'PHI0015', '12', '95', '2008-11-25'),
 ('PHI', 'Christine Ghilain', "In progress", NULL, NULL, '6', NULL, NULL),
@@ -122,7 +121,7 @@ CREATE TABLE `csbs_initial_reliability` (
             `site` varchar(256) NOT NULL,
 			`rater` varchar(256) NOT NULL,
 			`type` varchar(256) NOT NULL,
-            `reliable` enum('Yes','No','In progress') default NULL,
+            `reliable` enum('Yes','No','In progress','Not applicable') default NULL,
             `reliability_percentage` integer(3),
             `examiner_coder_status` varchar(256) NOT NULL,
 		  	`reliability_established_date` date
@@ -130,12 +129,13 @@ CREATE TABLE `csbs_initial_reliability` (
              
 
 INSERT INTO csbs_initial_reliability (site, rater, type, reliable, reliability_established_date, examiner_coder_status) VALUES 
-('SEA', 'Karen Burner', "training kit", "Yes", '2008-4-9', NULL),
-('SEA', 'Karen Burner', "UW Gold Standard", "In progress", NULL, NULL),
-('SEA', 'Vanessa Hus', "training kit", "Yes", '2008-4-9', NULL),
+('SEA', 'Karen Burner', "training kit", "Yes", '2008-04-09', NULL),
+('SEA', 'Karen Burner', "UW Gold Standard", "Yes", '2008-04-09', NULL),
+('SEA', 'Vanessa Hus', "training kit", "Yes", '2008-04-09', NULL),
 ('SEA', 'Vanessa Hus', "UW Gold Standard", "In progress", NULL, NULL),
-('SEA', 'Tanya St. John', "training kit", "In progress", NULL, 'Examiner'),
-('SEA', 'Tanya St. John', "UW Gold Standard", "In progress", NULL, 'Examiner'),
+('SEA', 'Tanya St. John', "training kit", "Not applicable", NULL, 'Examiner'),
+('SEA', 'Shanna Alvarez', "training kit", "Yes", '2009-10-23', NULL),
+('SEA', 'Shanna Alvarez', "UW Gold Standard", "Yes", '2009-10-23', NULL),
 ('PHI', 'Sarah Paterson', "training kit", "Yes", '2008-04-01', NULL),
 ('PHI', 'Sarah Paterson', "UW Gold Standard", "Yes", '2008-09-28', NULL),
 ('PHI', 'Jordana Woodford', "training kit", "Yes", '2005-06-01', NULL),
