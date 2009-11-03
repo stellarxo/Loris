@@ -188,14 +188,14 @@ class NDB_Menu_statistics extends NDB_Menu
          $mri_data = array();
          $completion_data = array();
          foreach($sites as $id=>$name){
-            $DB->select("SELECT count(s.CandID)  FROM session as s, candidate as c, flag as f WHERE s.ID=f.SessionID AND s.CandID=c.CandID AND s.Cancelled='N' AND s.Active='Y' AND s.CenterID={$id} AND f.Data_entry='Complete' ORDER BY c.PSCID;", $result20);
+            $DB->select("SELECT count(s.CandID)  FROM session as s, candidate as c, flag as f WHERE s.ID=f.SessionID AND s.CandID=c.CandID AND s.Cancelled='N' AND s.Active='Y' AND s.CenterID={$id} AND f.Data_entry='Complete' AND f.CommentID NOT LIKE 'DDE%' ORDER BY c.PSCID;", $result20);
               if (PEAR::isError($result20)) {
                   return PEAR::raiseError("DB Error: ".$result20->getMessage());
               }
               list(,$result20)=each($result20[0]);
               $bvl_completed = $result20;
               
-              $DB->select("SELECT count(s.CandID)  FROM session as s, candidate as c, flag as f WHERE s.ID=f.SessionID AND s.CandID=c.CandID AND s.Cancelled='N' AND s.Active='Y' AND s.CenterID={$id} ORDER BY c.PSCID;", $result21);
+              $DB->select("SELECT count(s.CandID)  FROM session as s, candidate as c, flag as f WHERE s.ID=f.SessionID AND s.CandID=c.CandID AND s.Cancelled='N' AND s.Active='Y' AND s.CenterID={$id} AND f.CommentID NOT LIKE 'DDE%'  ORDER BY c.PSCID;", $result21);
                 if (PEAR::isError($result21)) {
                     return PEAR::raiseError("DB Error: ".$result21->getMessage());
                 }

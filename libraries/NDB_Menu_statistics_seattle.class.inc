@@ -59,7 +59,7 @@ class NDB_Menu_statistics_seattle extends NDB_Menu
          $name = 'sea';
          $data[$name] = array();
             foreach($instruments as $instrument){           
-               $DB->select("SELECT count(s.CandID)  FROM session as s, candidate as c, flag as f, {$instrument} as i WHERE s.ID=f.SessionID AND f.CommentID=i.CommentID AND s.CandID=c.CandID  AND s.Cancelled='N' AND s.Active='Y' AND s.CenterID={$id} AND f.Data_entry='Complete' AND f.Administration='All' ORDER BY c.PSCID;", $result);
+               $DB->select("SELECT count(s.CandID)  FROM session as s, candidate as c, flag as f, {$instrument} as i WHERE s.ID=f.SessionID AND f.CommentID=i.CommentID AND s.CandID=c.CandID  AND s.Cancelled='N' AND s.Active='Y' AND s.CenterID={$id} AND f.Data_entry='Complete' AND f.Administration='All'  AND i.CommentID NOT LIKE 'DDE%' ORDER BY c.PSCID;", $result);
                    if (PEAR::isError($result)) {
                        return PEAR::raiseError("DB Error: ".$result->getMessage());
                    }
@@ -67,8 +67,8 @@ class NDB_Menu_statistics_seattle extends NDB_Menu
                    $count = $result;
 
 
-                   //adir_proband incomplete
-                      $DB->select("SELECT s.CandID, f.SessionID, i.CommentID, c.PSCID  FROM session as s, candidate as c, flag as f, {$instrument} as i WHERE s.ID=f.SessionID AND f.CommentID=i.CommentID AND s.CandID=c.CandID  AND s.Cancelled='N' AND s.Active='Y' AND s.CenterID={$id} AND (f.Data_entry is NULL OR f.Data_entry<>'Complete') ORDER BY c.PSCID;", $result);
+                   //proband incomplete
+                      $DB->select("SELECT s.CandID, f.SessionID, i.CommentID, c.PSCID  FROM session as s, candidate as c, flag as f, {$instrument} as i WHERE s.ID=f.SessionID AND f.CommentID=i.CommentID AND s.CandID=c.CandID  AND s.Cancelled='N' AND s.Active='Y' AND s.CenterID={$id} AND (f.Data_entry is NULL OR f.Data_entry<>'Complete')  AND i.CommentID NOT LIKE 'DDE%' ORDER BY c.PSCID;", $result);
                         if (PEAR::isError($result)) {
                             return PEAR::raiseError("DB Error: ".$result->getMessage());
                         }
