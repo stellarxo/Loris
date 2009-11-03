@@ -197,7 +197,8 @@ class NDB_BVL_Instrument_adi_r extends NDB_BVL_Instrument
 							"Total_C3"=>"Total C3",
 							"Total_C4"=>"Total C4",
 							"C_Total"=>"C Total (cutoff = 3)",
-							"D_Total"=>"D Total (cutoff = 1)");
+							"D_Total"=>"D Total (cutoff = 1)",
+							"summary_diagnosis"=>"Summary Diagnosis");
 		foreach ($scoreLabels as $field=>$label) {
 			if(in_array($field, array("A_Total", "BV_Total", "BNV_Total", "C_Total", "D_Total")) == TRUE) {
 				$label = $this->indent . $this->indent . $label;
@@ -401,6 +402,15 @@ class NDB_BVL_Instrument_adi_r extends NDB_BVL_Instrument
 			if ($this->scores["q_87_interviewers_judgment"] < 36 && !is_null($this->scores["q_87_interviewers_judgment"])) {
 			     $scoreCols["D_Total"] += 1;
 			}
+        }
+        
+        //Summary Diagnosis
+        if (is_string($scoreCols["A_Total"])) {
+            $scoreCols["summary_diagnosis"] = "Respondent too young to score";
+        } elseif ($scoreCols["A_Total"] >= 10 && ($scoreCols["BV_Total"] >= 8 || $scoreCols["BNV_Total"] >= 7) && $scoreCols["C_Total"] >=3 && $scoreCols["D_Total"] >= 1) {
+            $scoreCols["summary_diagnosis"] = "ASD+";
+        } else {
+            $scoreCols["summary_diagnosis"] = "ASD-";
         }
         
         // save the resultant total
