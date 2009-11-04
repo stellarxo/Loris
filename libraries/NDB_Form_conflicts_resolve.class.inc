@@ -38,8 +38,25 @@ class NDB_Form_conflicts_resolve extends NDB_Form
                 $DB->selectRow("SELECT * FROM conflicts_unresolved WHERE MD5(CONCAT_WS(':',TableName, ExtraKeyColumn, ExtraKey1, ExtraKey2, FieldName, CommentId1, CommentId2)) = '$hash'", $row);
                 if(!empty($row)) {
                     // insert into conflicts_resolved
-                    print "Inserting into conflicts resolved... - user chose $val";
-                    print_r($row);
+                    $user1 = $DB->selectOne("SELECT UserID FROM $row[TableName] WHERE CommentID=$row[CommentId1]");
+                    $user2 = $DB->selectOne("SELECT UserID FROM $row[TableName] WHERE CommentID=$row[CommentId2]");
+                    $resolutionLog=array('UserID' => $user->getUsername(), 
+					 'ResolutionTimestamp'=>null, 
+					 'User1'=>$user1, 
+					 'User2'=>$user2, 
+					 'TableName'=>$row['TableName'], 
+					 'ExtraKeyColumn'=>$row['ExtraKeyColumn'], 
+					 'ExtraKey1'=>$row['ExtraKey1'], 
+					 'ExtraKey2'=>$row['ExtraKey2'], 
+					 'FieldName'=>$row['FieldName'], 
+					 'CommentId1'=>$row['CommentId1'], 
+					 'CommentId2'=>$row['CommentId2'], 
+					 'OldValue1'=>$row['Value1'], 
+					 'OldValue2'=>$row['Value2'], 
+					 'NewValue'=>$val
+					 );
+
+                    $DB->insert('conflicts_resolved', $resolutionLog);
 
                     // update the source tables
                     $setArray = array($row['FieldName'] => ($val == '1' ? $row['Value1'] : $row['Value2']));
