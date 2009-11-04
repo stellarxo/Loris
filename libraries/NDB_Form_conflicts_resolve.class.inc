@@ -32,16 +32,23 @@ class NDB_Form_conflicts_resolve extends NDB_Form
         
         $DB =& Database::singleton();
         
+        $user =& User::singleton();
+           if(PEAR::isError($user)) {
+             return PEAR::raiseError("User Error: ".$user->getMessage());
+           }
+
+
         foreach($values AS $key=>$val) {
             if($val != 'none') {
                 $hash = substr($key, 9);
                 $DB->selectRow("SELECT * FROM conflicts_unresolved WHERE MD5(CONCAT_WS(':',TableName, ExtraKeyColumn, ExtraKey1, ExtraKey2, FieldName, CommentId1, CommentId2)) = '$hash'", $row);
                 if(!empty($row)) {
+                   
                     // insert into conflicts_resolved
-                    $user1 = $DB->selectOne("SELECT UserID FROM $row[TableName] WHERE CommentID=$row[CommentId1]");
-                    $user2 = $DB->selectOne("SELECT UserID FROM $row[TableName] WHERE CommentID=$row[CommentId2]");
+                    $user1 = $DB->selectOne("SELECT UserID FROM $row[TableName] WHERE CommentID='$row[CommentId1]'");
+                    $user2 = $DB->selectOne("SELECT UserID FROM $row[TableName] WHERE CommentID='$row[CommentId2]'");
                     $resolutionLog=array('UserID' => $user->getUsername(), 
-					 'ResolutionTimestamp'=>null, 
+                                         // 'ResolutionTimestamp'=>null, 
 					 'User1'=>$user1, 
 					 'User2'=>$user2, 
 					 'TableName'=>$row['TableName'], 
