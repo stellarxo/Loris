@@ -233,7 +233,7 @@ class NDB_Reliability extends NDB_Form
            $this->form->addElement('date', 'Date_taken', 'Date of Administration', $dateOptions);
 
            $examiners = $this->_getExaminerNames();
-           $this->form->addElement('select', 'Examiner', 'Examiner', $examiners);
+           $this->form->addElement('select', 'Examiner', 'Reliability Coder', $examiners);
 
            //$this->form->addElement('text', 'Examiner', 'Examiner');
 
