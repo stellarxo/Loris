@@ -223,7 +223,7 @@ class NDB_Menu_Filter_reliability extends NDB_Menu_Filter
         
         foreach($site_list as $site){
           $this->cross_site_flagging("adi_r_subject", $site, array_remove($site, $site_list), $db);
-          $this->cross_site_flagging("adi_r_proband", $site, array_remove($site, $site_list), $db);
+//          $this->cross_site_flagging("adi_r_proband", $site, array_remove($site, $site_list), $db);
           $this->cross_site_flagging("aosi", $site, array("UofA"), $db);
           $this->cross_site_flagging("ados_module1", $site, array_remove($site, $site_list), $db);
           $this->cross_site_flagging("ados_module2", $site, array_remove($site, $site_list), $db);
