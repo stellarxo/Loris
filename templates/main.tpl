@@ -178,6 +178,7 @@ function feedback_bvl_popup(features) {
                     <th nowrap="nowrap">Visit to Site</th>
                     <th nowrap="nowrap">Subproject</th>
                     <th nowrap="nowrap">MR Scan Done</th>
+                    <th nowrap="nowrap">Grant Status</th>
         {/if}
                 </tr>
                 <tr>
@@ -193,6 +194,7 @@ function feedback_bvl_popup(features) {
                     <td nowrap="nowrap">{$timePoint.PSC}</td>
                     <td nowrap="nowrap">{$timePoint.SubprojectTitle}</td>
                     <td nowrap="nowrap">{$timePoint.Scan_done|default:"<img alt=\"Data Missing\" src=\"images/help2.gif\" width=\"12\" height=\"12\" />"}</td>
+                    <td nowrap="nowrap">{$timePoint.grant_status}</td>
         {/if}
                 </tr>
             </table>
