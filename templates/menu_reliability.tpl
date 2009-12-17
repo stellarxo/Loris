@@ -68,7 +68,15 @@
  <th nowrap="nowrap">No.</th>
     <!-- print out column headings - quick & dirty hack -->
     {section name=header loop=$headers}
-        <th nowrap="nowrap"><a href="main.php?test_name=reliability&filter[order][field]={$headers[header].name}&filter[order][fieldOrder]={$headers[header].fieldOrder}">{$headers[header].displayName}</a></th>
+        <th nowrap="nowrap">
+          <a href="main.php?test_name=reliability&filter[order][field]={$headers[header].name}&filter[order][fieldOrder]={$headers[header].fieldOrder}">
+            {if $headers[header].displayName == "Reliability Center Id"}
+              Site of Reliability Test
+            {else}
+              {$headers[header].displayName}
+            {/if}
+          </a>
+        </th>
     {/section}
 </tr>
 
@@ -79,8 +87,13 @@
     
 
 	{if $items[item][piece].name == "PSCID"}
-   <td nowrap="nowrap">   <a href="main.php?test_name={$items[item][piece].Instrument}_reliability&subtest={$items[item][piece].Instrument}_reliability&identifier={$items[item][piece].CommentID}&reliability_center_id={$items[item][piece].SiteID}">{$items[item][piece].value}</a> </td>
-
+	   <td nowrap="nowrap">
+	   {if $items[item][piece].Current_stage != 'Recycling Bin'}
+        <a href="main.php?test_name={$items[item][piece].Instrument}_reliability&subtest={$items[item][piece].Instrument}_reliability&identifier={$items[item][piece].CommentID}&reliability_center_id={$items[item][piece].SiteID}">{$items[item][piece].value}</a> 
+       {else}
+          {$items[item][piece].value} <font color="red">(Invalid)</font>
+       {/if}
+      </td>
 	{elseif  $items[item][piece].name == "Cohort"}
 	      <td nowrap="nowrap">
   	    {if $items[item][piece].value== "1"}
@@ -91,11 +104,12 @@
       					Control
       		{/if}</td>
   	{elseif  $items[item][piece].name == "Reliability"}
-  	  
   	  {if $items[item][piece].value== "Yes"}
   	  <td nowrap="nowrap" style="background-color:#55FF55;">{$items[item][piece].value}</td>
-  	  {else}
+  	  {elseif $items[item][piece].value== "No"}
   	  <td nowrap="nowrap" style="background-color:#FF2222;color:white">{$items[item][piece].value}</td>
+  	  {else}
+  	  <td nowrap="nowrap"></td>
   	  {/if}
 	  {else}
 	     <td nowrap="nowrap">{$items[item][piece].value}</td>
