@@ -16,9 +16,12 @@ function map_cIDs($array){
     return $new_array;
 }
 
-function find_cID($cID, $reliability_center_id, $array){
+function find_cID($cID, $array){
+  if(empty($array)){
+    return false;
+  }
   foreach($array as $key=>$value){
-    if($key == $cID && $value == $reliability_center_id){
+    if($key == $cID){
       return true;
     }
   }
@@ -186,7 +189,9 @@ class NDB_Menu_Filter_reliability extends NDB_Menu_Filter
                 }
                 if($key == 'Reliability_score'){
                   $this->tpl_data['items'][$x][$i+1]['name'] = 'Reliability';
-                  if($val >= $threshold[$item['Instrument']])
+                  if(is_null($val))
+                    $reliable = null;
+                  else if($val >= $threshold[$item['Instrument']])
                     $reliable = 'Yes';
                   else
                     $reliable = 'No';
@@ -219,7 +224,7 @@ class NDB_Menu_Filter_reliability extends NDB_Menu_Filter
           $this->within_site_flagging("ados_module1", 0.1, $site, $db);
           $this->within_site_flagging("ados_module2", 0.1, $site, $db);
           $this->within_site_flagging("csbs", 0.1, $site, $db);
-        }            
+        }    
         
         foreach($site_list as $site){
           $this->cross_site_flagging("adi_r_subject", $site, array_remove($site, $site_list), $db);
@@ -233,8 +238,12 @@ class NDB_Menu_Filter_reliability extends NDB_Menu_Filter
     }
     
     function within_site_flagging($instrument, $ratio, $current_site, $db){
-        $jump_step = round(1 / $ratio);
-        $db->select("SELECT i.CommentID FROM {$instrument} as i, flag as f, session as s WHERE i.CommentID=f.CommentID AND f.sessionID=s.ID AND s.Current_stage<>'Recycling Bin' AND f.Data_entry='Complete' AND i.CommentID LIKE '%{$current_site}%' AND s.visit_label<>'v18' AND i.CommentID NOT LIKE 'DDE%'", $instrument_records);
+        if($current_site == "PHI"){
+          $phi_site_clause = " AND Date_taken >= 2008-11-11 ";
+        }
+      
+        $db->select("SELECT i.CommentID FROM {$instrument} as i, flag as f, session as s WHERE i.CommentID=f.CommentID AND f.sessionID=s.ID AND s.Current_stage<>'Recycling Bin' AND f.Data_entry='Complete' AND i.CommentID LIKE '%{$current_site}%' AND s.visit_label<>'v18' AND i.CommentID NOT LIKE 'DDE%' {$phi_site_clause} ORDER BY i.CommentID", $instrument_records);
+        
         
         $current_count = $db->selectOne("SELECT count(*) FROM reliability WHERE CommentID LIKE '%{$current_site}%' AND Instrument='{$instrument}' AND reliability_center_id={$this->site_id[$current_site]}");
         $total_count = count($instrument_records);
@@ -242,15 +251,16 @@ class NDB_Menu_Filter_reliability extends NDB_Menu_Filter
         // 
         // echo("Site: {$current_site} <BR>");
         // echo($current_count . " --- " . $total_count . "<BR>");
-        // echo("Max (ratio: {$ratio}/jump: {$jump_step}): {$max} <BR><BR>");
+        // echo("Max (ratio: {$ratio}/jump: {$jump_step}): {$max} <BR><BR>")
         
-       for($i = $jump_step - 1; $i < count($instrument_records) && $current_count < $max; $i += $jump_step){
+       for($i = 0; $i < count($instrument_records) && $current_count + 1 <= $max; $i += 2){
           $commentID = $instrument_records[$i]["CommentID"];
-          if(!find_cID($commentID, $this->site_id[$current_site], $this->reliability_table)){
+          if(!find_cID($commentID, $this->reliability_table)){
             $db->insert('reliability', array('CommentID' => $instrument_records[$i]["CommentID"],
                                               'reliability_center_id' => $this->site_id[$current_site],
                                               'Instrument' => $instrument
                                               ));
+            $this->reliability_table[$instrument_records[$i]["CommentID"]] = $this->site_id[$current_site];
             $current_count++;
           }                  
        }
@@ -258,14 +268,17 @@ class NDB_Menu_Filter_reliability extends NDB_Menu_Filter
     
     function cross_site_flagging($instrument, $current_site, $reliability_sites, $db){
         $ratio = 0.1;
-        $jump_step = round(1 / $ratio);
-        $reliability_site_index = $this->get_current_index($instrument, $current_site, $reliability_sites, $db); 
+        $reliability_site_index = 0; 
         
         if($instrument == "adi_r_subject"){
           $query_extra = " AND (s.visit_label='v24' OR s.visit_label='v36')";
         }
-               
-        $db->select("SELECT i.CommentID FROM {$instrument} as i, flag as f, session as s WHERE i.CommentID=f.CommentID AND f.sessionID=s.ID AND s.Current_stage<>'Recycling Bin' AND f.Data_entry='Complete' AND i.CommentID LIKE '%{$current_site}%' AND s.visit_label<>'v18'{$query_extra} AND i.CommentID NOT LIKE 'DDE%'", $instrument_records);
+        
+        if($current_site == "PHI"){
+          $phi_site_clause = " AND Date_taken >= 2008-11-11";
+        }
+          
+        $db->select("SELECT i.CommentID FROM {$instrument} as i, flag as f, session as s WHERE i.CommentID=f.CommentID AND f.sessionID=s.ID AND s.Current_stage<>'Recycling Bin' AND f.Data_entry='Complete' AND i.CommentID LIKE '%{$current_site}%' AND s.visit_label<>'v18'{$query_extra} AND i.CommentID NOT LIKE 'DDE%' {$phi_site_clause} ORDER BY i.CommentID", $instrument_records);
         
         $current_count = $db->selectOne("SELECT count(*) FROM reliability WHERE CommentID LIKE '%{$current_site}%' AND Instrument='{$instrument}' AND reliability_center_id<>{$this->site_id[$current_site]}");
         $total_count = count($instrument_records);
@@ -275,16 +288,17 @@ class NDB_Menu_Filter_reliability extends NDB_Menu_Filter
         // echo($current_count . " --- " . $total_count . "<BR>");
         // echo("Max (ratio: {$ratio}/jump: {$jump_step}): {$max} <BR><BR>");
         
-       for($i = $jump_step - 1; $i < count($instrument_records) && $current_count < $max; $i += $jump_step){
+       for($i = 0; $i < count($instrument_records) && $current_count + 1 <= $max; $i += 2){
           $commentID = $instrument_records[$i]["CommentID"];
-          if(!find_cID($commentID, $this->site_id[$reliability_sites[$reliability_site_index]], $this->reliability_table)){
+          if(!find_cID($commentID, $this->reliability_table)){
             $db->insert('reliability', array('CommentID' => $instrument_records[$i]["CommentID"],
                                               'reliability_center_id' => $this->site_id[$reliability_sites[$reliability_site_index]],
                                               'Instrument' => $instrument
                                               ));
-            $reliability_site_index = ($reliability_site_index + 1) % count($reliability_sites);
+            $this->reliability_table[$instrument_records[$i]["CommentID"]] = $this->site_id[$current_site];
             $current_count++;
-          }                  
+          }
+          $reliability_site_index = ($reliability_site_index + 1) % count($reliability_sites);                  
        }
     }
     
