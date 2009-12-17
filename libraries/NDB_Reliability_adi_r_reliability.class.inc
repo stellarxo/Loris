@@ -65,6 +65,7 @@ class NDB_Reliability_adi_r_reliability extends NDB_Reliability
             $defaults['Examiner'] = $row['Examiner'];
             $defaults['Date_taken'] = $row['Date_taken'];
             $defaults['CommentID'] = $row['CommentID'];
+            $defaults['Gold_standard'] = $row['Gold_standard'];
             $defaults['reliability_center'] = $sites[$row['reliability_center_id']];
             $defaults['DoB_proband'] = $row['DoB_proband'];
             $defaults['Reliability_score_all_items'] = $row['Reliability_score_all_items'];
@@ -2930,7 +2931,7 @@ if($score_record['q_2_age_first_noticed_code']=='8' AND $score_record2['q_2_age_
 			return PEAR::raiseError("Could not save total score: ". $result->getMessage());
 		}
 		
-		$result = $db->update("reliability", array("Reliability_score" => $reliability['Reliability_score_all_items']), array("CommentID"=>$this->identifier, "Instrument" => 'adi_r', 'reliability_center_id' => $this->reliability_center_id));
+		$result = $db->update("reliability", array("Reliability_score" => $reliability['Reliability_score_all_items']), array("CommentID"=>$this->identifier, "Instrument" => preg_replace("/_reliability$/", "", $this->name), 'reliability_center_id' => $this->reliability_center_id));
 		if($db->isError($result)) {
 			return PEAR::raiseError("Could not save total score: ". $result->getMessage());
 		}
