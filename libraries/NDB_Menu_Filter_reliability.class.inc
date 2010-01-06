@@ -239,7 +239,7 @@ class NDB_Menu_Filter_reliability extends NDB_Menu_Filter
     
     function within_site_flagging($instrument, $ratio, $current_site, $db){
         if($current_site == "PHI"){
-          $phi_site_clause = " AND Date_taken >= 2008-11-11 ";
+          $phi_site_clause = " AND Date_taken >= 2009-11-11 ";
         }
       
         $db->select("SELECT i.CommentID FROM {$instrument} as i, flag as f, session as s WHERE i.CommentID=f.CommentID AND f.sessionID=s.ID AND s.Current_stage<>'Recycling Bin' AND f.Data_entry='Complete' AND i.CommentID LIKE '%{$current_site}%' AND s.visit_label<>'v18' AND i.CommentID NOT LIKE 'DDE%' {$phi_site_clause} ORDER BY i.CommentID", $instrument_records);
@@ -275,7 +275,7 @@ class NDB_Menu_Filter_reliability extends NDB_Menu_Filter
         }
         
         if($current_site == "PHI"){
-          $phi_site_clause = " AND Date_taken >= 2008-11-11";
+          $phi_site_clause = " AND Date_taken >= 2009-11-11";
         }
           
         $db->select("SELECT i.CommentID FROM {$instrument} as i, flag as f, session as s WHERE i.CommentID=f.CommentID AND f.sessionID=s.ID AND s.Current_stage<>'Recycling Bin' AND f.Data_entry='Complete' AND i.CommentID LIKE '%{$current_site}%' AND s.visit_label<>'v18'{$query_extra} AND i.CommentID NOT LIKE 'DDE%' {$phi_site_clause} ORDER BY i.CommentID", $instrument_records);
