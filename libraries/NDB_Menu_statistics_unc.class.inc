@@ -79,7 +79,9 @@ class NDB_Menu_statistics_unc extends NDB_Menu
                            $test_url = "figs_year3";
                         }
                         foreach($result as $row){
-                           if(!empty($result_string)){
+                           if(empty($result_string)){
+                             $result_string = "(Total: " . count($result) . ")<BR>";
+                           }else{
                               $result_string .= ', ';
                            }
                            $result_string .= "<a href='main.php?test_name={$test_url}&candID={$row['CandID']}&sessionID={$row['SessionID']}&commentID={$row['CommentID']}'>{$row['PSCID']}</a>";
