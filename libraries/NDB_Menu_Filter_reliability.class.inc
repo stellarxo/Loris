@@ -238,7 +238,7 @@ class NDB_Menu_Filter_reliability extends NDB_Menu_Filter
     }
     
     function within_site_flagging($instrument, $ratio, $current_site, $db){
-        if($current_site == "PHI"){
+        if($current_site == "PHI"  && ($instrument == "adi_r_subject" || $instrument == "adi_r_proband")) {
           $phi_site_clause = " AND Date_taken >= 2009-11-11 ";
         }
       
@@ -274,7 +274,7 @@ class NDB_Menu_Filter_reliability extends NDB_Menu_Filter
           $query_extra = " AND (s.visit_label='v24' OR s.visit_label='v36')";
         }
         
-        if($current_site == "PHI"){
+        if($current_site == "PHI" && ($instrument == "adi_r_subject" || $instrument == "adi_r_proband")){
           $phi_site_clause = " AND Date_taken >= 2009-11-11";
         }
           
