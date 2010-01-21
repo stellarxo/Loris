@@ -376,7 +376,7 @@ class NDB_BVL_Instrument_ados_module2 extends NDB_BVL_Instrument
         
         // NO WORDS scoring
         if($age_years < 5) {
-    		$scoreCols["social_affect_total"] = $scores["a7"] + $scores["a8"] + $scores["b1"] + $scores["b2"] + $scores["b3"] + $scores["b5"] + $scores["b6"] + $scores["b8"] + $scores["b110"] + $scores["b11"];
+    		$scoreCols["social_affect_total"] = $scores["a7"] + $scores["a8"] + $scores["b1"] + $scores["b2"] + $scores["b3"] + $scores["b5"] + $scores["b6"] + $scores["b8"] + $scores["b10"] + $scores["b11"];
     		$scoreCols["restricted_repetitive_behavior_total"] = $scores["a5"] + $scores["d1"] + $scores["d2"] + $scores["d4"];
     		$scoreCols["social_affect_restricted_repetitive_behavior_total"] = $scoreCols["social_affect_total"] + $scoreCols["restricted_repetitive_behavior_total"];
     
