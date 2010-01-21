@@ -695,7 +695,8 @@ class NDB_BVL_Instrument_mullen extends NDB_BVL_Instrument
         18=>"21-26 mo.",
         22=>"27+ mo.");
 
-
+        $this->form->addElement("header", null, "Note: Basal level refers to the FIRST of the three questions used to determine the basal level.<br>" .
+                                                "Note: Ceiling level refers to the LAST of the three questions used to determine the ceiling level.");
         
         $this->form->addElement("select", "gross_motor_basal", $this->indent . "Select basal level:", array(null => null) +  array_combine(range(1,35), range(1,35)));
         $this->form->addElement("select", "gross_motor_ceiling", $this->indent . "Select ceiling level:", array(null => null) + array_combine(range(35,1), range(35,1)));
@@ -791,6 +792,8 @@ class NDB_BVL_Instrument_mullen extends NDB_BVL_Instrument
         25=>"45+ mo.");
 
 
+      $this->form->addElement("header", null, "Note: Basal level refers to the FIRST of the three questions used to determine the basal level.<br>" .
+                                              "Note: Ceiling level refers to the LAST of the three questions used to determine the ceiling level.");
         $this->form->addElement("select", "visual_recept_basal", $this->indent . "Select basal level:", array(null => null) + array_combine(range(1,33), range(1,33)));
         $this->form->addElement("select", "visual_recept_ceiling", $this->indent . "Select ceiling level:", array(null => null) + array_combine(range(33,1), range(33,1)));
        $this->form->addRule("visual_recept_basal", 'Basal level must be set', 'required');
@@ -868,6 +871,8 @@ class NDB_BVL_Instrument_mullen extends NDB_BVL_Instrument
         16=>"30-44 mo.",
         21=>"45+ mo.");
 
+      $this->form->addElement("header", null, "Note: Basal level refers to the FIRST of the three questions used to determine the basal level.<br>" .
+                                              "Note: Ceiling level refers to the LAST of the three questions used to determine the ceiling level.");
         $this->form->addElement("select", "fine_motor_basal", $this->indent . "Select basal level:", array(null => null) + array_combine(range(1,30), range(1,30)));
         $this->form->addElement("select", "fine_motor_ceiling", $this->indent . "Select ceiling level:", array(null => null) + array_combine(range(30,1), range(30,1)));
         $this->form->addRule("fine_motor_basal", 'Basal level must be set', 'required');
@@ -950,6 +955,8 @@ class NDB_BVL_Instrument_mullen extends NDB_BVL_Instrument
         22=>"33-44 mo.",
         25=>"45+ mo.");
 
+      $this->form->addElement("header", null, "Note: Basal level refers to the FIRST of the three questions used to determine the basal level.<br>" .
+                                              "Note: Ceiling level refers to the LAST of the three questions used to determine the ceiling level.");
         $this->form->addElement("select", "receptive_lang_basal", $this->indent . "Select basal level:", array(null => null) + array_combine(range(1,33), range(1,33)));
         $this->form->addElement("select", "receptive_lang_ceiling", $this->indent . "Select ceiling level:", array(null => null) + array_combine(range(33,1), range(33,1)));
         $this->form->addRule("receptive_lang_basal", 'Basal level must be set', 'required');
@@ -1026,6 +1033,8 @@ class NDB_BVL_Instrument_mullen extends NDB_BVL_Instrument
         19=>"33-44 mo.",
         22=>"45+ mo.");
         
+        $this->form->addElement("header", null, "Note: Basal level refers to the FIRST of the three questions used to determine the basal level.<br>" .
+                                                "Note: Ceiling level refers to the LAST of the three questions used to determine the ceiling level.");
         $this->form->addElement("select", "expressive_lang_basal", $this->indent . "Select basal level:", array(null => null) + array_combine(range(1,28), range(1,28)));
         $this->form->addElement("select", "expressive_lang_ceiling", $this->indent . "Select ceiling level:", array(null => null) + array_combine(range(28,1), range(28,1)));
         $this->form->addRule("expressive_lang_basal", 'Basal level must be set', 'required');
