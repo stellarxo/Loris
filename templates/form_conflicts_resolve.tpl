@@ -1,3 +1,8 @@
+<a href="/main.php?test_name=conflicts_resolve&site=2">Seattle</a>
+<a href="/main.php?test_name=conflicts_resolve&site=3">Philadelphia</a>
+<a href="/main.php?test_name=conflicts_resolve&site=4">St. Louis</a>
+<a href="/main.php?test_name=conflicts_resolve&site=5">UNC</a>
+
 <br />
 <form method="post" name="conflicts_resolve" id="conflicts_resolve">
 <table class="std">

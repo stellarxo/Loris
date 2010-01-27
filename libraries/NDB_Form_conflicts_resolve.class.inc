@@ -94,12 +94,28 @@ class NDB_Form_conflicts_resolve extends NDB_Form
 
  		//Extract the fields from the parameter_type table
         $conflicts = array();
-        $DB->select("SELECT TableName, ExtraKeyColumn, ExtraKey1, ExtraKey2, FieldName, CommentId1, CommentId2, Value1, Value2, MD5(CONCAT_WS(':',TableName, ExtraKeyColumn, ExtraKey1, ExtraKey2, FieldName, CommentId1, CommentId2)) AS hash FROM conflicts_unresolved", $conflicts);
+
+
+        if(!empty($_REQUEST['site'])) {
+            $DB->select("SELECT TableName, ExtraKeyColumn, ExtraKey1, ExtraKey2, FieldName, CommentId1, CommentId2, Value1, Value2, MD5(CONCAT_WS(':',TableName, ExtraKeyColumn, ExtraKey1, ExtraKey2, FieldName, CommentId1, CommentId2)) AS hash FROM conflicts_unresolved c LEFT JOIN flag f ON (c.CommentId1=f.CommentID) LEFT JOIN session s ON (f.SessionID=s.ID) WHERE s.CenterID='$_REQUEST[site]'", $conflicts);
+            //If there are no conflicts print a message to that effect
+            if(empty($conflicts)){
+                $this->form->addElement('static', "static", "No conflicts detected at this time.");
+                return;
+            }
+        } else {
+            $this->form->addElement('static', 'static', 'Please select a site first.');
+                return;
+        }
+
+
+        /*        $DB->select("SELECT TableName, ExtraKeyColumn, ExtraKey1, ExtraKey2, FieldName, CommentId1, CommentId2, Value1, Value2, MD5(CONCAT_WS(':',TableName, ExtraKeyColumn, ExtraKey1, ExtraKey2, FieldName, CommentId1, CommentId2)) AS hash FROM conflicts_unresolved", $conflicts);
+        
         //If there are no conflicts print a message to that effect
         if(empty($conflicts)){
         	$this->form->addElement('static', "static", "No conflicts detected at this time.");
         	return;
-        }
+        } */
         
         
         //Loop through the conflicts and add a row per
