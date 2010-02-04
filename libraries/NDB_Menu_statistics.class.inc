@@ -215,6 +215,26 @@ class NDB_Menu_statistics extends NDB_Menu
                 $this->tpl_data["{$name}_total"] = $bvl_total;
                 $this->tpl_data["{$name}_percent"] = floor(($bvl_completed / $bvl_total) * 100);
                 
+                $DB->select("SELECT count(s.CandID)  FROM session as s, candidate as c, flag as f WHERE s.ID=f.SessionID AND s.CandID=c.CandID AND s.Cancelled='N' AND s.Active='Y' AND s.CenterID={$id} AND f.Data_entry='Complete' AND f.CommentID LIKE 'DDE%' ORDER BY c.PSCID;", $result20);
+                  if (PEAR::isError($result20)) {
+                      return PEAR::raiseError("DB Error: ".$result20->getMessage());
+                  }
+                  list(,$result20)=each($result20[0]);
+                  $dde_completed = $result20;
+
+                  $DB->select("SELECT count(s.CandID)  FROM session as s, candidate as c, flag as f WHERE s.ID=f.SessionID AND s.CandID=c.CandID AND s.Cancelled='N' AND s.Active='Y' AND s.CenterID={$id} AND f.CommentID LIKE 'DDE%'  ORDER BY c.PSCID;", $result21);
+                    if (PEAR::isError($result21)) {
+                        return PEAR::raiseError("DB Error: ".$result21->getMessage());
+                    }
+                    list(,$result21)=each($result21[0]);
+                    $dde_total = $result21;
+                    
+                    $this->tpl_data["{$name}_dde_completed"] = $dde_completed;
+                    $this->tpl_data["{$name}_dde_total"] = $dde_total;
+                    
+                    if($dde_total == 0)
+                      $dde_total = 1;
+                    $this->tpl_data["{$name}_dde_percent"] = floor(($dde_completed / $dde_total) * 100);
 
 	// -------- MRI STATS---------------
             $DB->select("SELECT COUNT(distinct s.CandID, s.Visit_label) FROM tarchive as t, session as s WHERE MID(t.PatientName,9,6)=s.CandID AND s.CenterID={$id};", $result23);
