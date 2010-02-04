@@ -73,7 +73,7 @@ class NDB_Menu_Filter_reliability extends NDB_Menu_Filter
         }
 
         // set the class variables
-        $this->columns = array('reliability.CommentID', 'candidate.PSCID', 'reliability.reliability_center_id AS Site', 'session.SubprojectID as Cohort', 'session.CandID AS DCCID', 'candidate.Gender', 'session.Visit_label', 'reliability.Instrument', 'reliability.Reliability_score', 'session.Current_stage');
+        $this->columns = array('reliability.CommentID', 'candidate.PSCID', 'reliability.reliability_center_id AS Site', 'session.SubprojectID as Cohort', 'session.CandID AS DCCID', 'candidate.Gender', 'session.Visit_label', 'reliability.Instrument', 'reliability.Reliability_score', 'session.Current_stage', 'reliability.invalid');
 
         $this->query = $query;
         $this->group_by = '';
@@ -152,7 +152,7 @@ class NDB_Menu_Filter_reliability extends NDB_Menu_Filter
     function _setDataTableRows($count)
     {
 
-        $threshold = array("adi_r_proband" => 90, "adi_r_subject" => 90, "adi_r" => 90, 'aosi' => 79, 'csbs' => 80, 'ados_module1' => 80, 'ados_module2' => 80);
+        $threshold = array("adi_r_proband" => 90, "adi_r_subject" => 90, "adi_r" => 90, 'aosi' => 78.9, 'csbs' => 80, 'ados_module1' => 80, 'ados_module2' => 80);
         // print out
         $x = 0;
         foreach ($this->list as $item) {
@@ -165,12 +165,14 @@ class NDB_Menu_Filter_reliability extends NDB_Menu_Filter
             $comment_id = $item['CommentID'];
             $site_id = $item['Site'];
             $current_stage = $item['Current_stage'];
+            $invalid = $item['invalid'];
             foreach ($item as $key => $val) {
 
                 // Confused about this line
                 if ($key =='Tracking_log_ID') continue;
                 if ($key == 'CommentID') continue;
                 if ($key == 'Current_stage') continue;
+                if ($key == 'invalid') continue;
                 // {
                 //                    $this->tpl_data['items'][$x][$i]['CommentID'] = $item['CommentID'];
                 //               $this->tpl_data['items'][$x][$i]['Instrument'] = $item['Instrument'];
@@ -182,6 +184,7 @@ class NDB_Menu_Filter_reliability extends NDB_Menu_Filter
                    $this->tpl_data['items'][$x][$i]['SiteID'] = $item['Site'];
                    $this->tpl_data['items'][$x][$i]['Instrument'] = $item['Instrument'];
                    $this->tpl_data['items'][$x][$i]['Current_stage'] = $current_stage;
+                   $this->tpl_data['items'][$x][$i]['invalid'] = $invalid;
                 }
                 if ($key == 'Site')
                 {
@@ -238,14 +241,15 @@ class NDB_Menu_Filter_reliability extends NDB_Menu_Filter
     }
     
     function within_site_flagging($instrument, $ratio, $current_site, $db){
-        if($current_site == "PHI"  && ($instrument == "adi_r_subject" || $instrument == "adi_r_proband")) {
-          $phi_site_clause = " AND Date_taken >= '2009-11-11' ";
+        if($current_site == "PHI"){
+          $phi_site_clause = " AND Date_taken >= 2009-11-11 ";
         }
       
         $db->select("SELECT i.CommentID FROM {$instrument} as i, flag as f, session as s WHERE i.CommentID=f.CommentID AND f.sessionID=s.ID AND s.Current_stage<>'Recycling Bin' AND f.Data_entry='Complete' AND i.CommentID LIKE '%{$current_site}%' AND s.visit_label<>'v18' AND i.CommentID NOT LIKE 'DDE%' {$phi_site_clause} ORDER BY i.CommentID", $instrument_records);
         
         
-        $current_count = $db->selectOne("SELECT count(*) FROM reliability WHERE CommentID LIKE '%{$current_site}%' AND Instrument='{$instrument}' AND reliability_center_id={$this->site_id[$current_site]}");
+        #$current_count = $db->selectOne("SELECT count(*) FROM reliability WHERE CommentID LIKE '%{$current_site}%' AND Instrument='{$instrument}' AND reliability_center_id={$this->site_id[$current_site]}");
+        $current_count = $db->selectOne("SELECT count(*) FROM (SELECT DISTINCT r.CommentID FROM reliability as r, flag as f, session as s  WHERE r.CommentID LIKE '%{$current_site}%' AND r.Instrument='{$instrument}' AND r.reliability_center_id={$this->site_id[$current_site]} AND r.invalid = 'no' AND r.CommentID=f.CommentID AND f.sessionID=s.ID AND s.Current_stage<>'Recycling Bin') as t");
         $total_count = count($instrument_records);
         $max = floor($ratio * $total_count);
         // 
@@ -274,13 +278,14 @@ class NDB_Menu_Filter_reliability extends NDB_Menu_Filter
           $query_extra = " AND (s.visit_label='v24' OR s.visit_label='v36')";
         }
         
-        if($current_site == "PHI" && ($instrument == "adi_r_subject" || $instrument == "adi_r_proband")){
-          $phi_site_clause = " AND Date_taken >= '2009-11-11'";
+        if($current_site == "PHI"){
+          $phi_site_clause = " AND Date_taken >= 2009-11-11";
         }
           
         $db->select("SELECT i.CommentID FROM {$instrument} as i, flag as f, session as s WHERE i.CommentID=f.CommentID AND f.sessionID=s.ID AND s.Current_stage<>'Recycling Bin' AND f.Data_entry='Complete' AND i.CommentID LIKE '%{$current_site}%' AND s.visit_label<>'v18'{$query_extra} AND i.CommentID NOT LIKE 'DDE%' {$phi_site_clause} ORDER BY i.CommentID", $instrument_records);
         
-        $current_count = $db->selectOne("SELECT count(*) FROM reliability WHERE CommentID LIKE '%{$current_site}%' AND Instrument='{$instrument}' AND reliability_center_id<>{$this->site_id[$current_site]}");
+        //$current_count = $db->selectOne("SELECT count(*) FROM reliability WHERE CommentID LIKE '%{$current_site}%' AND Instrument='{$instrument}' AND reliability_center_id<>{$this->site_id[$current_site]}");
+         $current_count = $db->selectOne("SELECT count(*) FROM (SELECT DISTINCT r.CommentID FROM reliability as r, flag as f, session as s  WHERE r.CommentID LIKE '%{$current_site}%' AND r.Instrument='{$instrument}' AND r.reliability_center_id<>{$this->site_id[$current_site]} AND r.invalid = 'no'  r.CommentID=f.CommentID AND f.sessionID=s.ID AND s.Current_stage<>'Recycling Bin') as t");
         $total_count = count($instrument_records);
         $max = floor($ratio * $total_count);
         // 

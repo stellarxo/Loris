@@ -69,13 +69,17 @@
     <!-- print out column headings - quick & dirty hack -->
     {section name=header loop=$headers}
         <th nowrap="nowrap">
-          <a href="main.php?test_name=reliability&filter[order][field]={$headers[header].name}&filter[order][fieldOrder]={$headers[header].fieldOrder}">
-            {if $headers[header].displayName == "Reliability Center Id"}
-              Site of Reliability Test
-            {else}
-              {$headers[header].displayName}
-            {/if}
-          </a>
+          {if $headers[header].displayName != "Reliable"}
+            <a href="main.php?test_name=reliability&filter[order][field]={$headers[header].name}&filter[order][fieldOrder]={$headers[header].fieldOrder}">
+              {if $headers[header].displayName == "Reliability Center Id"}
+                Site of Reliability Test
+              {else}
+                {$headers[header].displayName}
+              {/if}
+            </a>
+          {else}
+            {$headers[header].displayName}
+          {/if}
         </th>
     {/section}
 </tr>
@@ -88,10 +92,12 @@
 
 	{if $items[item][piece].name == "PSCID"}
 	   <td nowrap="nowrap">
-	   {if $items[item][piece].Current_stage != 'Recycling Bin'}
-        <a href="main.php?test_name={$items[item][piece].Instrument}_reliability&subtest={$items[item][piece].Instrument}_reliability&identifier={$items[item][piece].CommentID}&reliability_center_id={$items[item][piece].SiteID}">{$items[item][piece].value}</a> 
-       {else}
-          {$items[item][piece].value} <font color="red">(Invalid)</font>
+	   {if $items[item][piece].Current_stage == 'Recycling Bin'}
+        {$items[item][piece].value} <font color="red">(Recycling Bin)</font>
+     {elseif $items[item][piece].invalid == "yes"}
+        {$items[item][piece].value} <font color="red">(Invalid)</font>
+     {else}     
+          <a href="main.php?test_name={$items[item][piece].Instrument}_reliability&subtest={$items[item][piece].Instrument}_reliability&identifier={$items[item][piece].CommentID}&reliability_center_id={$items[item][piece].SiteID}">{$items[item][piece].value}</a> 
        {/if}
       </td>
 	{elseif  $items[item][piece].name == "Cohort"}

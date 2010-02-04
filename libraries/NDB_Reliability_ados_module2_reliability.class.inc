@@ -538,7 +538,6 @@ class NDB_Reliability_ados_module2_reliability extends NDB_Reliability
 
         $GoldStandardArray = array("Initial_entry"=>"Initial Entry", "Gold_standard_SEA0012"=>"Gold standard SEA0012");
         $this->form->addElement("select", "Gold_standard", "Compare against:", $GoldStandardArray);
-        $this->form->addRule('Gold_standard', 'Gold standard is required', 'required');
         
         $this->form->addElement("static", "CommentID", "CommentID:");
        
@@ -694,6 +693,16 @@ class NDB_Reliability_ados_module2_reliability extends NDB_Reliability
               return PEAR::raiseError("DB Error: ".$row->getMessage());
           }
 
+          $invalid = $values['invalid'];
+          $DB->update("reliability", array('invalid' => $invalid), array("CommentID"=>$this->identifier, "Instrument" => 'ados_module2', "reliability_center_id" => $this->reliability_center_id));
+          unset($values['invalid']);
+          
+          if($invalid == "yes"){
+            $this->form->freeze();
+            $this->tpl_data['success'] = true;
+            return;
+          }
+
           if (empty($row)) {
             
             // insert the event
@@ -843,61 +852,5 @@ class NDB_Reliability_ados_module2_reliability extends NDB_Reliability
      return $renderer->toHtml();
      
     } // end function display
-    function _addMetadataFields()
-     {
-         $config =& NDB_Config::singleton();
-         $dateOptions = array(
-                              'language' => 'en',
-                              'format'   => 'YMd',
-                              'minYear'  => $config->getSetting('startYear'),
-                              'maxYear'  => $config->getSetting('endYear'),
-                              'addEmptyOption' => true,
-                              'emptyOptionValue' => null
-                              );
-
-         $this->form->addElement('date', 'Date_taken', 'Date of Administration', $dateOptions);
-
-         $examiners = $this->_getExaminerNames();
-         $this->form->addElement('select', 'Examiner', 'Examiner', $examiners);
-
-         //$this->form->addElement('text', 'Examiner', 'Examiner');
-
-         $this->form->addGroupRule('Date_taken', 'Date of Administration is required', 'required');
-
-         $this->form->registerRule('checkdate', 'callback', '_checkDate');
-         $this->form->addRule('Date_taken', 'Date of Administration is invalid', 'checkdate');
-
-         $this->form->addRule('Examiner', 'Examiner is required', 'required');
-     }
-
-     function _getExaminerNames()
-      {
-          $db =& Database::singleton();
-          $centerID = $db->selectOne("SELECT session.CenterID FROM session, flag WHERE session.ID=flag.SessionID and flag.CommentID='".$this->identifier."'");
-
-          $db->select("SELECT examinerID, full_name FROM examiners WHERE centerID='$centerID' ORDER BY full_name", $results);
-          if($db->isError($results)) {
-              return $this->raiseError("Could not get examiner names: ".$results->getMessage());
-          }
-
-          $examiners = array(''=>'');
-          if(is_array($results) && !empty($results)) {
-              foreach($results AS $row) {
-                  $examiners[$row['examinerID']] = $row['full_name'];
-              }
-          }
-          return $examiners;
-      }
-
-      function _getDatabaseDate($formDateValue){
-           if(!empty($formDateValue)){
-               if(count($formDateValue)==2){
-                   $databaseValue = "$formDateValue[H]:$formDateValue[i]";  //handle time (HH:MM:SS)
-               } else {
-                   $databaseValue = "$formDateValue[Y]-$formDateValue[M]-$formDateValue[d]";  //handle date (YYYY/MM/DD)
-               }
-           }
-           return $databaseValue;
-       }
 }
 ?>

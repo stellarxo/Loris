@@ -2983,7 +2983,6 @@ if($score_record['q_2_age_first_noticed_code']=='8' AND $score_record2['q_2_age_
 
         $GoldStandardArray = array("Initial_entry"=>"Initial Entry", "Gold_standard_SEA0012"=>"Gold standard SEA0012","Gold_standard_SEA0070"=>"Gold standard SEA0070");
         $this->form->addElement("select", "Gold_standard", "Compare against:", $GoldStandardArray, array('selected' => 'Initial_entry'));
-        $this->form->addRule('Gold_standard', 'Gold standard is required', 'required');
         $this->form->addElement("static", "CommentID", "CommentID:");
 
         // Form stuff (page 2)
@@ -2997,7 +2996,7 @@ if($score_record['q_2_age_first_noticed_code']=='8' AND $score_record2['q_2_age_
         'emptyOptionValue' => null
         );
 
-        $this->form->addElement('date', 'Age_proband', 'DoB Proband', $dateOptions);
+        $this->form->addElement('date', 'DoB_proband', 'DoB Proband', $dateOptions);
        
         // Form stuff (page 2)
         $this->form->addElement("header", null, "EARLY DEVELOPMENT");
@@ -3490,6 +3489,16 @@ if($score_record['q_2_age_first_noticed_code']=='8' AND $score_record2['q_2_age_
           if (PEAR::isError($row)) {
               return PEAR::raiseError("DB Error: ".$row->getMessage());
           }
+          
+          $invalid = $values['invalid'];
+          $DB->update("reliability", array('invalid' => $invalid), array("CommentID"=>$this->identifier, "Instrument" => preg_replace("/_reliability$/", "", $this->name), "reliability_center_id" => $this->reliability_center_id));
+          unset($values['invalid']);
+          
+          if($invalid == "yes"){
+            $this->form->freeze();
+            $this->tpl_data['success'] = true;
+            return;
+          }
 
           if (empty($row)) {
             
@@ -3499,7 +3508,7 @@ if($score_record['q_2_age_first_noticed_code']=='8' AND $score_record2['q_2_age_
                                                              'Date_taken' => $this->_getDatabaseDate($values['Date_taken']),
                                                              'reliability_center_id' => $this->reliability_center_id, 
                                                              'CommentID' => $this->identifier,
-                                                             'DoB_proband' => $values['DoB_proband'],
+                                                             'DoB_proband' => $this->_getDatabaseDate($values['DoB_proband']),
                                                              'Gold_standard' => $values['Gold_standard'],
                                                              'q_2_age_first_noticed_code' => $values['q_2_age_first_noticed_code'],
                                                              'q_2_age_first_noticed_code_status' => $values['q_2_age_first_noticed_code_status'],
@@ -3678,7 +3687,7 @@ if($score_record['q_2_age_first_noticed_code']=='8' AND $score_record2['q_2_age_
                                                               'Examiner' => $values['Examiner'],
                                                               'Date_taken' => $this->_getDatabaseDate($values['Date_taken']),
                                                               'Gold_standard' => $values['Gold_standard'],
-                                                              'DoB_proband' => $values['DoB_proband'],
+                                                              'DoB_proband' => $this->_getDatabaseDate($values['DoB_proband']),
                                                               'q_2_age_first_noticed_code' => $values['q_2_age_first_noticed_code'],
                                                               'q_2_age_first_noticed_code_status' => $values['q_2_age_first_noticed_code_status'],
                                                               'q_4_onset_as_perceived_code' => $values['q_4_onset_as_perceived_code'],

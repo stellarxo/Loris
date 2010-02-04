@@ -1872,7 +1872,6 @@ class NDB_Reliability_ados_module1_reliability extends NDB_Reliability
 
         $GoldStandardArray = array("Initial_entry"=>"Initial Entry", "Gold_standard_SEA0010"=>"Gold standard SEA0010", "Gold_standard_SEA0015"=>"Gold standard SEA0015","Gold_standard_SEA0017"=>"Gold standard SEA0017");
         $this->form->addElement("select", "Gold_standard", "Compare against:", $GoldStandardArray);
-        $this->form->addRule('Gold_standard', 'Gold standard is required', 'required');
         
         $this->form->addElement("static", "CommentID", "CommentID:");
        
@@ -2060,6 +2059,16 @@ class NDB_Reliability_ados_module1_reliability extends NDB_Reliability
         $DB->selectRow("SELECT * FROM ados_module1_reliability WHERE CommentID = '$this->identifier' AND reliability_center_id = $this->reliability_center_id", $row);
         if (PEAR::isError($row)) {
             return PEAR::raiseError("DB Error: ".$row->getMessage());
+        }
+        
+        $invalid = $values['invalid'];
+        $DB->update("reliability", array('invalid' => $invalid), array("CommentID"=>$this->identifier, "Instrument" => 'ados_module1', "reliability_center_id" => $this->reliability_center_id));
+        unset($values['invalid']);
+        
+        if($invalid == "yes"){
+          $this->form->freeze();
+          $this->tpl_data['success'] = true;
+          return;
         }
         
         if (empty($row)) { 

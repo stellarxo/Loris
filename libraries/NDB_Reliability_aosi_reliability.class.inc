@@ -495,7 +495,17 @@ class NDB_Reliability_aosi_reliability extends NDB_Reliability
           if (PEAR::isError($row)) {
               return PEAR::raiseError("DB Error: ".$row->getMessage());
           }
-
+          
+          $invalid = $values['invalid'];
+          $DB->update("reliability", array('invalid' => $invalid), array("CommentID"=>$this->identifier, "Instrument" => 'aosi', "reliability_center_id" => $this->reliability_center_id));
+          unset($values['invalid']);
+          
+          if($invalid == "yes"){
+            $this->form->freeze();
+            $this->tpl_data['success'] = true;
+            return;
+          }
+          
           if (empty($row)) {
             
             // insert the event
@@ -516,9 +526,9 @@ class NDB_Reliability_aosi_reliability extends NDB_Reliability
         
         $scoreResult = $this->score();
         
-            if($this->isError($scoreResult)) {
-                return PEAR::raiseError($scoreResult->getMessage());
-             }
+        if($this->isError($scoreResult)) {
+            return PEAR::raiseError($scoreResult->getMessage());
+        }
         
         $this->form->freeze();
         $this->tpl_data['success'] = true;
