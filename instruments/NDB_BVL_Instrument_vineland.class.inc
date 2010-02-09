@@ -475,18 +475,31 @@ class NDB_BVL_Instrument_vineland extends NDB_BVL_Instrument
          }
           
          $lname_value = strtolower($values['INDIVIDUAL_L']);
+         if($lname_value == 'candidate'){
+            $lname_value = 'subject';
+         }
          if('vineland_' . $lname_value != $this->testName){
             $errors[]="Last name must be set to '" . substr($this->testName, -7, 7). "', was set to '" . $values['INDIVIDUAL_L'] . "'";
              return $errors;
          }
          
          $fname_value = strtolower($values['INDIVIDUAL_F']);
-         if($fname_value != substr($args['PSCID'], 0, 3)){
-            $errors[]="First name must be set to '" . substr($args['PSCID'], 0, 3) . "', was set to '" . $fname_value . "'";
+         $site = strtolower(substr($args['PSCID'], 0, 3));
+         if($fname_value != $site){
+            $errors[]="First name must be set to '" . $site . "', was set to '" . $fname_value . "'";
              return $errors;
          }
          
-         $correct_id = $args['candID'] .'-'. substr($args['PSCID'], -4, 4) .'-'. substr($args['visitLabel'], -2, 2);
+         $visit = $args['visitLabel'];
+         if($visit == "6mo"){
+            $visit = "v06";
+         }else if($visit == "12m"){
+            $visit = "v12";
+         }else if($visit == "24m"){
+            $visit = "v24";
+         }
+         
+         $correct_id = $args['candID'] .'-'. substr($args['PSCID'], -4, 4) .'-'. substr($visit, -2, 2);
          if($values['INDIVIDUAL_ID'] != $correct_id){
             $errors[]="Id must be set to '" . $correct_id . "', was set to '" . $values['INDIVIDUAL_ID'] . "'";
              return $errors;
@@ -500,52 +513,52 @@ class NDB_BVL_Instrument_vineland extends NDB_BVL_Instrument
            }
            
            //Subdomains with base and ceiling some, but not all items must be filled in
-           $subdomains = array("REC"=>"Receptive", "EXP"=>"Expressive", "WRN"=>"Written",
-                             "PER"=>"Personal", "DOM"=>"Domestic", "CMM"=>"Community",
-                             "IPR"=>"Interpersonal Relationships", "PL"=>"Play and Leisure Time", "CS"=>"Coping Skills", 
-                             "GMS"=>"Gross Motor Skills", "FMS"=>"Fine Motor Skills");
-           $numQuestions = array("REC"=>20, "EXP"=>54, "WRN"=>25,
-                               "PER"=> 41, "DOM"=>24, "CMM"=> 44,
-                               "IPR"=>38, "PL"=>31, "CS"=>30, 
-                               "GMS"=>40, "FMS"=>36);
-         
-         foreach($subdomains as $key=>$value){
-            $no_entries = true;
-            for($i = 1; $i <= $numQuestions[$key]; $i++){
-               $item = $values[$key . '_ITEM_' . $i];
-               if($item != null && $item != "" && $item != ' ' && $item != '-'  && $item != '_'){
-                  $no_entries = false;
-               }
-            }
-            if($no_entries){
-               $errors[]="Individual items for subdomain '{$subdomains[$key]}' have not been filled out." ;
-               return $errors;
-            }
-         }
-         
-         //Maladaptive domain: all items must be filled in (no base or ceiling)
-         
-         $subdomains = array("INT" => "Maladaptive Internalizing","EXT" => "Maladaptive Externalizing", 
-                              "OTH" => "Maladaptive Other", "CRIT" => "Maladaptive Critical Items");
-         $numQuestions = array("INT" => 11, "EXT" => 10, "OTH" => 15, "CRIT" => 14);
-         
-         foreach($subdomains as $key=>$value){
-            for($i = 1; $i <= $numQuestions[$key]; $i++){
-               $item = $values[$key . '_ITEM_' . $i];
-               if($item == null || $item == "" || $item == ' ' || $item == '-' || $item == '_'){
-                  $errors[]="Individual items for subdomain '{$subdomains[$key]}' have not been completed in full." ;
-                  return $errors;
-               }
-            }
-         }
-         
-         for($i = 1; $i <= 14; $i++){
-            $item = $values['CRIT_SEVERITY_ITEM_' . $i];
-            if($item == null || $item == ""  || $item == ' ' || $item == '-' || $item == '_'){
-               $errors[]="Severity items for 'Maladaptive Critical Items' have not been completed in full." ;
-               return $errors;
-            }
-         }
+           // $subdomains = array("REC"=>"Receptive", "EXP"=>"Expressive", "WRN"=>"Written",
+           //                              "PER"=>"Personal", "DOM"=>"Domestic", "CMM"=>"Community",
+           //                              "IPR"=>"Interpersonal Relationships", "PL"=>"Play and Leisure Time", "CS"=>"Coping Skills", 
+           //                              "GMS"=>"Gross Motor Skills", "FMS"=>"Fine Motor Skills");
+           //            $numQuestions = array("REC"=>20, "EXP"=>54, "WRN"=>25,
+           //                                "PER"=> 41, "DOM"=>24, "CMM"=> 44,
+           //                                "IPR"=>38, "PL"=>31, "CS"=>30, 
+           //                                "GMS"=>40, "FMS"=>36);
+           //          
+           //          foreach($subdomains as $key=>$value){
+           //             $no_entries = true;
+           //             for($i = 1; $i <= $numQuestions[$key]; $i++){
+           //                $item = $values[$key . '_ITEM_' . $i];
+           //                if($item != null && $item != "" && $item != ' ' && $item != '-'  && $item != '_'){
+           //                   $no_entries = false;
+           //                }
+           //             }
+           //             if($no_entries){
+           //                $errors[]="Individual items for subdomain '{$subdomains[$key]}' have not been filled out." ;
+           //                return $errors;
+           //             }
+           //          }
+           //          
+           //          //Maladaptive domain: all items must be filled in (no base or ceiling)
+           //          
+           //          $subdomains = array("INT" => "Maladaptive Internalizing","EXT" => "Maladaptive Externalizing", 
+           //                               "OTH" => "Maladaptive Other", "CRIT" => "Maladaptive Critical Items");
+           //          $numQuestions = array("INT" => 11, "EXT" => 10, "OTH" => 15, "CRIT" => 14);
+           //          
+           //          foreach($subdomains as $key=>$value){
+           //             for($i = 1; $i <= $numQuestions[$key]; $i++){
+           //                $item = $values[$key . '_ITEM_' . $i];
+           //                if($item == null || $item == "" || $item == ' ' || $item == '-' || $item == '_'){
+           //                   $errors[]="Individual items for subdomain '{$subdomains[$key]}' have not been completed in full." ;
+           //                   return $errors;
+           //                }
+           //             }
+           //          }
+           //          
+           //          for($i = 1; $i <= 14; $i++){
+           //             $item = $values['CRIT_SEVERITY_ITEM_' . $i];
+           //             if($item == null || $item == ""  || $item == ' ' || $item == '-' || $item == '_'){
+           //                $errors[]="Severity items for 'Maladaptive Critical Items' have not been completed in full." ;
+           //                return $errors;
+           //             }
+           //          }
           return true;
       }
 

@@ -33,6 +33,7 @@ INSERT INTO instrument_subtests VALUES('', 'csbs', 'csbs_page2', 'Symbolic Behav
         "understanding_weighted",
         "object_use_weighted");
 
+
     /**
     * sets up basic data, such as the HTML_Quickform object, and so on.
     *
@@ -70,7 +71,7 @@ INSERT INTO instrument_subtests VALUES('', 'csbs', 'csbs_page2', 'Symbolic Behav
                                             "wind_up_toy"=>"Wind-up toy", "balloon"=>"Balloon", "bubbles"=>"Bubbles", "jar"=>"Jar",
                                             "books"=>"Books" . $this->indent . $this->indent . $this->indent . $this->indent . $this->indent . $this->indent . $this->indent,
                                             "play"=>"Play" . $this->indent . $this->indent . $this->indent . $this->indent . $this->indent . $this->indent . $this->indent,
-                                            "object_names"=>"object names:", "person_names"=>"person names:", "body_parts"=>"body parts:"));
+                                            "object_names"=>"object names:", "person_names"=>"person names:", "body_parts"=>"body parts:", "subscale"=>"Subscale", "raw_weighted"=>"Weighted Raw Score", 						    "standard_score"=>"Standard Score","percentile_rank"=>"Percentile Rank"));
 
         // setup the form
         $this->_setupForm();
@@ -125,6 +126,94 @@ INSERT INTO instrument_subtests VALUES('', 'csbs', 'csbs_page2', 'Symbolic Behav
 //        $this->form->addElement("select", "q_", "", array(null=>"", "1_"=>"1. ", "2_typical"=>"2. typical", "3_"=>"3. ", "not_answered"=>"Not Answered"));
 
         $this->addTextAreaElement("comments", "Comments:");    
+
+	$this->form->addElement("header",null,"Summary Scores:");
+	
+
+
+	
+	$group[]= &$this->form->createElement("static", "raw_weighted", null);
+        $group[]= &$this->form->createElement("static", "standard_score", null);
+        $group[]= &$this->form->createElement("static", "percentile_rank", null);
+  	$this->form->addGroup($group, null, Subscale, $this->_GUIDelimiter, false);
+        unset($group);
+	
+
+	$group[]= &$this->form->createElement("static", emotion_eye_gaze_weighted, null);
+        $group[]= &$this->form->createElement("static", emotion_eye_gaze_standard, null);
+        $group[]= &$this->form->createElement("static", emotion_eye_gaze_percentile, null);
+  	$this->form->addGroup($group, null, "Emotion and Eye Gaze", $this->_GUIDelimiter, false);
+        unset($group);
+
+
+	$group[]= &$this->form->createElement("static", communication_weighted, null);
+        $group[]= &$this->form->createElement("static", communication_standard, null);
+        $group[]= &$this->form->createElement("static", communication_percentile, null);
+  	$this->form->addGroup($group, null, "Communication", $this->_GUIDelimiter, false);
+        unset($group);
+
+
+	$group[]= &$this->form->createElement("static", gestures_weighted, null);
+        $group[]= &$this->form->createElement("static", gestures_standard, null);
+        $group[]= &$this->form->createElement("static", gestures_percentile, null);
+  	$this->form->addGroup($group, null, "Gestures", $this->_GUIDelimiter, false);
+        unset($group);
+
+
+	$group[]= &$this->form->createElement("static", sounds_weighted, null);
+        $group[]= &$this->form->createElement("static", sounds_standard, null);
+        $group[]= &$this->form->createElement("static", sounds_percentile, null);
+  	$this->form->addGroup($group, null, "Sounds", $this->_GUIDelimiter, false);
+        unset($group);
+
+
+	$group[]= &$this->form->createElement("static", words_weighted, null);
+        $group[]= &$this->form->createElement("static", words_standard, null);
+        $group[]= &$this->form->createElement("static", words_percentile, null);
+  	$this->form->addGroup($group, null, "Words", $this->_GUIDelimiter, false);
+        unset($group);
+
+
+	$group[]= &$this->form->createElement("static", understanding_weighted, null);
+        $group[]= &$this->form->createElement("static", understanding_standard, null);
+        $group[]= &$this->form->createElement("static", understanding_percentile, null);
+  	$this->form->addGroup($group, null, "Understanding", $this->_GUIDelimiter, false);
+        unset($group);
+ 
+
+	$group[]= &$this->form->createElement("static", object_use_weighted, null);
+        $group[]= &$this->form->createElement("static", object_use_standard, null);
+        $group[]= &$this->form->createElement("static", object_use_percentile, null);
+  	$this->form->addGroup($group, null, "Object Use", $this->_GUIDelimiter, false);
+        unset($group);
+
+
+	$group[]= &$this->form->createElement("static", social_composite_score, null);
+        $group[]= &$this->form->createElement("static", social_composite_standard, null);
+        $group[]= &$this->form->createElement("static", social_composite_percentile, null);
+  	$this->form->addGroup($group, null, "Social Composite", $this->_GUIDelimiter, false);
+        unset($group);
+
+
+	$group[]= &$this->form->createElement("static", speech_composite_score, null);
+        $group[]= &$this->form->createElement("static", speech_composite_standard, null);
+        $group[]= &$this->form->createElement("static", speech_composite_percentile, null);
+  	$this->form->addGroup($group, null, "Speech Composite", $this->_GUIDelimiter, false);
+        unset($group);
+
+
+	$group[]= &$this->form->createElement("static", symbolic_composite_score, null);
+        $group[]= &$this->form->createElement("static", symbolic_composite_standard, null);
+        $group[]= &$this->form->createElement("static", symbolic_composite_percentile, null);
+  	$this->form->addGroup($group, null, "Symbolic Composite", $this->_GUIDelimiter, false);
+        unset($group);
+
+
+	$group[]= &$this->form->createElement("static", total_weighted_raw_score, null);
+        $group[]= &$this->form->createElement("static", total_standard, null);
+        $group[]= &$this->form->createElement("static", total_percentile, null);
+  	$this->form->addGroup($group, null, "Total", $this->_GUIDelimiter, false);
+        unset($group);
     }
     
     function score(){
@@ -140,15 +229,28 @@ INSERT INTO instrument_subtests VALUES('', 'csbs', 'csbs_page2', 'Symbolic Behav
     	if(PEAR::isError($db)) {
 			return PEAR::raiseError ("Could not connect to database".$db->getMessage());
     	}
-    	
+  	
+	
     	$query = "SELECT * FROM $this->table WHERE CommentID = '$this->commentID'";
     	$record = array();
     	$db->selectRow($query, $record);
     	if (PEAR::isError($record)) {
     		return PEAR::raiseError("Could not retrieve scores: " . $record->getMessage());
     	}
-    	
-    	//calculate raw scores
+   
+ 	
+       // Get the subject age in months for scoring
+        $timepoint =& TimePoint::singleton($this->getSessionID());
+        $dob = $timepoint->getEffectiveDateOfBirth();
+        
+		$age = Utility::calculateAge($dob, $record["Date_taken"]);
+       		$age_months = $age['year'] * 12 + $age['mon'];
+        if($this->isError($age)) {
+            return $this->raiseError("Could not compute age");
+        }  
+
+
+  	//calculate raw scores
         $scores["q_1_gaze_shifts_raw_score"] = $this->_countChecked($record, "q_1_gaze_shifts_");
         $scores["q_2_shared_positive_affect_raw_score"] = $this->_countChecked($record, "q_2_shared_positive_affect_");
         $scores["q_3_gaze_point_following_raw_score"] = $this->_countChecked($record, "q_3_gaze_point_following_");
@@ -159,6 +261,7 @@ INSERT INTO instrument_subtests VALUES('', 'csbs', 'csbs_page2', 'Symbolic Behav
             }
         }
         $scores["q_4_rate_of_communicating_raw_score"] = $score;
+
         $scores["q_5_behaviour_regulation_raw_score"] = $this->_countChecked($record, "q_5_behaviour_regulation");
         $scores["q_6_social_interaction_raw_score"] = $this->_countChecked($record, "q_6_social_interaction");
         $scores["q_7_joint_attention_raw_score"] = $this->_countChecked($record, "q_7_joint_attention");
@@ -169,7 +272,6 @@ INSERT INTO instrument_subtests VALUES('', 'csbs', 'csbs_page2', 'Symbolic Behav
         $scores["q_12_words_raw_score"] = $this->_countChecked($record, "q_12_words_");
         
         $scores["q_13_words_raw_score"] = $this->_countWords($record, "q_13_words_");
-
         $scores["q_14_word_combos_raw_score"] = $this->_countChecked($record, "q_14_word_combos_");
         $scores["q_15_word_combos_raw_score"] = $this->_countWords($record, "q_15_word_combos_");
         $scores["q_16_language_comp_raw_score"] = $this->_countWords($record, "q_16_language_");
@@ -188,8 +290,8 @@ INSERT INTO instrument_subtests VALUES('', 'csbs', 'csbs_page2', 'Symbolic Behav
         $scores["q_2_shared_positive_affect_raw_score"] +
         3 * $scores["q_3_gaze_point_following_raw_score"];
 
-        $scores["communication_weighted"] = $scores["q_4_rate_of_communicating_raw_score"] / 3 +
-        $scores["q_5_behaviour_regulation_raw_score"] +
+        $scores["communication_weighted"] = round($scores["q_4_rate_of_communicating_raw_score"] / 3) +
+ 	$scores["q_5_behaviour_regulation_raw_score"] +
         $scores["q_6_social_interaction_raw_score"] +
         $scores["q_7_joint_attention_raw_score"];
 
@@ -199,8 +301,7 @@ INSERT INTO instrument_subtests VALUES('', 'csbs', 'csbs_page2', 'Symbolic Behav
         $scores["sounds_weighted"] = $scores["q_10_syllables_consonants_raw_score"] +
         2 * $scores["q_11_inventory_of_consonants_raw_score"];
 
-        $scores["words_weighted"] = $scores["q_12_words_raw_score"] +
-        $scores["q_13_words_raw_score"] / 2 +  
+        $scores["words_weighted"] = $scores["q_12_words_raw_score"] + round($scores["q_13_words_raw_score"] / 2) +  
         $scores["q_14_word_combos_raw_score"] +
         $scores["q_15_word_combos_raw_score"];
 
@@ -222,13 +323,151 @@ INSERT INTO instrument_subtests VALUES('', 'csbs', 'csbs_page2', 'Symbolic Behav
         $scores["q_19_sequence_action_schemes_raw_score"] +
         $scores["q_20_stacks_tower_raw_score"];
 
-        //save scores
-		$result = $db->update($this->table, $scores, array("CommentID"=>$this->getCommentID()));
-		if($db->isError($result)) {
-			return PEAR::raiseError("Could not save total score: ". $result->getMessage());
-		}
+
+	//calculate weighted raw composite scores
+	$scores["social_composite_score"] = $scores["emotion_eye_gaze_weighted"] +
+        $scores["communication_weighted"] +
+        $scores["gestures_weighted"];
+
+
+	$scores["speech_composite_score"] = $scores["sounds_weighted"] +
+        $scores["words_weighted"];
+
+
+	$scores["symbolic_composite_score"] = $scores["understanding_weighted"] +
+        $scores["object_use_weighted"];
+
+
+	//calculate weighted total scores
+	$scores["total_weighted_raw_score"] = $scores["social_composite_score"] +
+        $scores["speech_composite_score"] +
+        $scores["symbolic_composite_score"];
+
+
+	//establish standard scores and percentile rank for Emotion Eye Gaze
+	$query_scores1 = "SELECT * FROM csbs_lookup WHERE age_months=".$age_months. " AND score_weighted=".$scores['emotion_eye_gaze_weighted']." AND subscale='emotion_eye_gaze_weighted'";
+    	$record_1 = array();
+	$db->selectRow($query_scores1, $record_1);
+    	if (PEAR::isError($record_1)) {
+    		return PEAR::raiseError("Could not retrieve scores: " . $record_1->getMessage());
+    	}
+	$scores['emotion_eye_gaze_standard']=($record_1['score_standard']);
+	$scores['emotion_eye_gaze_percentile']=($record_1['score_percentile']);
+
+
+	$query_scores2 = "SELECT * FROM csbs_lookup WHERE age_months=".$age_months. " AND score_weighted=".$scores['communication_weighted']." AND subscale='communication_weighted'";
+    	$record_2 = array();
+	$db->selectRow($query_scores2, $record_2);
+    	if (PEAR::isError($record_2)) {
+    		return PEAR::raiseError("Could not retrieve scores: " . $record_2->getMessage());
+    	}
+	$scores['communication_standard']=($record_2['score_standard']);
+	$scores['communication_percentile']=($record_2['score_percentile']);
+
+
+	$query_scores3 = "SELECT * FROM csbs_lookup WHERE age_months=".$age_months. " AND score_weighted=".$scores['gestures_weighted']." AND subscale='gestures_weighted'";
+    	$record_3 = array();
+	$db->selectRow($query_scores3, $record_3);
+    	if (PEAR::isError($record_3)) {
+    		return PEAR::raiseError("Could not retrieve scores: " . $record_3->getMessage());
+    	}
+	$scores['gestures_standard']=($record_3['score_standard']);
+	$scores['gestures_percentile']=($record_3['score_percentile']);
+
+
+	$query_scores4 = "SELECT * FROM csbs_lookup WHERE age_months=".$age_months. " AND score_weighted=".$scores['sounds_weighted']." AND subscale='sounds_weighted'";
+    	$record_4 = array();
+	$db->selectRow($query_scores4, $record_4);
+    	if (PEAR::isError($record_4)) {
+    		return PEAR::raiseError("Could not retrieve scores: " . $record_4->getMessage());
+    	}
+	$scores['sounds_standard']=($record_4['score_standard']);
+	$scores['sounds_percentile']=($record_4['score_percentile']);
+
+
+	$query_scores5 = "SELECT * FROM csbs_lookup WHERE age_months=".$age_months. " AND score_weighted=".$scores['words_weighted']." AND subscale='words_weighted'";
+    	$record_5 = array();
+	$db->selectRow($query_scores5, $record_5);
+    	if (PEAR::isError($record_5)) {
+    		return PEAR::raiseError("Could not retrieve scores: " . $record_5->getMessage());
+    	}
+	$scores['words_standard']=($record_5['score_standard']);
+	$scores['words_percentile']=($record_5['score_percentile']);
+
+
+
+	$query_scores6 = "SELECT * FROM csbs_lookup WHERE age_months=".$age_months. " AND score_weighted=".$scores['understanding_weighted']." AND subscale='understanding_weighted'";
+    	$record_6 = array();
+	$db->selectRow($query_scores6, $record_6);
+    	if (PEAR::isError($record_6)) {
+    		return PEAR::raiseError("Could not retrieve scores: " . $record_6->getMessage());
+    	}
+	$scores['understanding_standard']=($record_6['score_standard']);
+	$scores['understanding_percentile']=($record_6['score_percentile']);
+
+
+
+	$query_scores7 = "SELECT * FROM csbs_lookup WHERE age_months=".$age_months. " AND score_weighted=".$scores['object_use_weighted']." AND subscale='object_use_weighted'";
+    	$record_7 = array();
+	$db->selectRow($query_scores7, $record_7);
+    	if (PEAR::isError($record_7)) {
+    		return PEAR::raiseError("Could not retrieve scores: " . $record_7->getMessage());
+    	}
+	$scores['object_use_standard']=($record_7['score_standard']);
+	$scores['object_use_percentile']=($record_7['score_percentile']);
+
+
+	$query_scores8 = "SELECT * FROM csbs_lookup WHERE age_months=".$age_months. " AND score_weighted=".$scores['social_composite_score']." AND subscale='social_composite_score'";
+    	$record_8 = array();
+	$db->selectRow($query_scores8, $record_8);
+    	if (PEAR::isError($record_8)) {
+    		return PEAR::raiseError("Could not retrieve scores: " . $record_8->getMessage());
+    	}
+	$scores['social_composite_standard']=($record_8['score_standard']);
+	$scores['social_composite_percentile']=($record_8['score_percentile']);
+
+
+
+	$query_scores9 = "SELECT * FROM csbs_lookup WHERE age_months=".$age_months. " AND score_weighted=".$scores['speech_composite_score']." AND subscale='speech_composite_score'";
+    	$record_9 = array();
+	$db->selectRow($query_scores9, $record_9);
+    	if (PEAR::isError($record_9)) {
+    		return PEAR::raiseError("Could not retrieve scores: " . $record_9->getMessage());
+    	}
+	$scores['speech_composite_standard']=($record_9['score_standard']);
+	$scores['speech_composite_percentile']=($record_9['score_percentile']);
+
+
+
+	$query_scores10 = "SELECT * FROM csbs_lookup WHERE age_months=".$age_months. " AND score_weighted=".$scores['symbolic_composite_score']." AND subscale='symbolic_composite_score'";
+    	$record_10 = array();
+	$db->selectRow($query_scores10, $record_10);
+    	if (PEAR::isError($record_10)) {
+    		return PEAR::raiseError("Could not retrieve scores: " . $record_10->getMessage());
+    	}
+	$scores['symbolic_composite_standard']=($record_10['score_standard']);
+	$scores['symbolic_composite_percentile']=($record_10['score_percentile']);
+
+
+
+	$query_scores11 = "SELECT * FROM csbs_lookup WHERE age_months=".$age_months. " AND score_weighted=".$scores['total_weighted_raw_score']." AND subscale='total_weighted_raw_score'";
+    	$record_11 = array();
+	$db->selectRow($query_scores11, $record_11);
+    	if (PEAR::isError($record_11)) {
+    		return PEAR::raiseError("Could not retrieve scores: " . $record_11->getMessage());
+    	}
+	$scores['total_standard']=($record_11['score_standard']);
+	$scores['total_percentile']=($record_11['score_percentile']);
+
+
+	// save scores
+	$result = $db->update($this->table, $scores, array("CommentID"=>$this->getCommentID()));
+	if($db->isError($result)) {
+		return PEAR::raiseError("Could not save total score: ". $result->getMessage());
+	}
 		
-    }    
+    }    // end score function
+
 
     function _page1(){
         //Emotion and Eye Gaze

@@ -6,6 +6,20 @@ INSERT INTO test_names VALUES ('', 'fyi', 'First Year Inventory', '0', '1');
 INSERT INTO instrument_subtests VALUES('', 'fyi', 'fyi_page1', '#1-#46', 1);
 INSERT INTO instrument_subtests VALUES('', 'fyi', 'fyi_page2', '#47-#63', 2);
 */
+
+   var $scoreCols = array('risk_score' => "Risk Score",
+   'percentile' => "Percentile", 
+   'soc_com_risk'=>"Social-Communication domain",
+   'sen_reg_risk'=>"Sensory-Regulatory domain",
+	'orientrec'=>"Social Orienting and Receptive",
+	'affeng'=>"Social Affective Engagement",
+	'imitate'=>"Imitation",
+	'express'=>"Expressive Communication",
+	'senproc'=>"Sensory Processing",
+	'regpat'=>"Regulatory Patterns",
+	'react'=>"Reactivity",
+	'repplay'=>"Repetitive Play & Behavior");
+
     /**
     * sets up basic data, such as the HTML_Quickform object, and so on.
     *
@@ -98,6 +112,10 @@ INSERT INTO instrument_subtests VALUES('', 'fyi', 'fyi_page2', '#47-#63', 2);
         $this->form->addElement("select", "person_filling_out", "The person filling out this form is the (check one):", array(null=>"", "mother"=>"Mother", "father"=>"Father", "both"=>"Both", "other"=>"Other (specify):", "not_answered"=>"Not Answered"));
         $this->addTextElement("person_filling_out_specify", $this->indent . "Specify:", array("person_filling_out{@}=={@}other"), "Please specify.");
         
+         $this->form->addElement("header", null, "Scores");
+         foreach($this->scoreCols as $db_name=>$english_name){
+            $this->form->addElement("static", $db_name, $english_name);            
+         }
     }
    
     function _page1(){
@@ -160,7 +178,7 @@ INSERT INTO instrument_subtests VALUES('', 'fyi', 'fyi_page2', '#47-#63', 2);
     }
 
     function _page2(){
-        $this->form->addElement("header", null, "For the following questions, please cirlce the ONE ANSWER that best describes your baby:");
+        $this->form->addElement("header", null, "For the following questions, please circle the ONE ANSWER that best describes your baby:");
         
         $this->form->addElement("select", "q_47", "47. Which of the following best describes your baby's typical play..?", array(
                                 ""=>null,
@@ -270,8 +288,8 @@ INSERT INTO instrument_subtests VALUES('', 'fyi', 'fyi_page2', '#47-#63', 2);
                                 "not_answered"=>"Not Answered"));
 
         $questionArray = array("p", "b", "t", "d", "k", "g", "m", "n", "w", "y", "h", "s");
-            $this->form->addElement("static", null, "61. Please check all of the following sounds you've heard your baby use in babble..:");
-        foreach($questionArray as $letter) {
+         $this->form->addElement("static", null, "61. Please check all of the following sounds you've heard your baby use in babble..:");
+         foreach($questionArray as $letter) {
             $this->form->addElement("advcheckbox", "sounds_" . $letter, null, $letter, null, array("not_used", "used"));
         }
 
@@ -281,5 +299,1043 @@ INSERT INTO instrument_subtests VALUES('', 'fyi', 'fyi_page2', '#47-#63', 2);
 
         $this->form->addElement("static", null, "Thank you for taking the time to respond to this questionnaire.");
     }
+    
+    function score() {
+         if($this->_determineDataEntryCompletionStatus() == "Incomplete") {
+            return;
+         }
+
+         // Get the item scores
+         $score_record=array();
+
+         $db =& Database::singleton();
+         if(PEAR::isError($db)) {
+             return PEAR::raiseError ("Could not connect to database: ".$db->getMessage());
+         }
+
+         $this->_nullScores($this->scoreCols);
+   		
+   		$query = "SELECT * FROM ".$this->table." WHERE CommentID='".$this->getCommentID()."'";
+         $db->selectRow($query, $score_record);
+         
+         if (PEAR::isError($score_record)) {
+            return PEAR::raiseError("Could not get scores: ".$score_record->getMessage());
+         }
+         
+         //print_r($score_record);
+         
+         //Calculate risk points
+         $risk_points = array();
+         
+         //Question 1
+         if($score_record["q_1"] == "never" || $score_record["q_1"] == "seldom"){
+            $risk_points["q_1"] = 2;
+         }
+         else if ($score_record["q_1"] == "sometimes" ){
+            $risk_points["q_1"] = 1;
+         }
+         else if ($score_record["q_1"] == "often" ){
+            $risk_points["q_1"] = 0;
+         }
+         
+         if($score_record["q_2"] == "never" || $score_record["q_2"] == "often"){
+            $risk_points["q_2"] = 1;
+         }
+         else if ($score_record["q_2"] == "sometimes" || $score_record["q_2"] == "seldom"){
+            $risk_points["q_2"] = 0;
+         }
+         
+         if($score_record["q_3"] == "never" || $score_record["q_3"] == "seldom"){
+            $risk_points["q_3"] = 0;
+         }
+         else if ($score_record["q_3"] == "sometimes" ){
+            $risk_points["q_3"] = 1;
+         }
+         else if ($score_record["q_3"] == "often" ){
+            $risk_points["q_3"] = 2;
+         }
+         
+         if($score_record["q_4"] == "never" || $score_record["q_4"] == "seldom"){
+            $risk_points["q_4"] = 2;
+         }
+         else if ($score_record["q_4"] == "sometimes" ){
+            $risk_points["q_4"] = 1;
+         }
+         else if ($score_record["q_4"] == "often" ){
+            $risk_points["q_4"] = 0;
+         }
+         
+         if($score_record["q_5"] == "never"){
+            $risk_points["q_5"] = 0;
+         }
+         else if ($score_record["q_5"] == "seldom" ){
+            $risk_points["q_5"] = 1;
+         }
+         else if ($score_record["q_5"] == "often" ||  $score_record["q_5"] == "sometimes"){
+            $risk_points["q_5"] = 2;
+         }
+         
+         if($score_record["q_6"] == "never" || $score_record["q_6"] == "seldom"){
+            $risk_points["q_6"] = 0;
+         }
+         else if ($score_record["q_6"] == "sometimes" ){
+            $risk_points["q_6"] = 1;
+         }
+         else if ($score_record["q_6"] == "often" ){
+            $risk_points["q_6"] = 2;
+         }
+         
+         if($score_record["q_7"] == "never"){
+            $risk_points["q_7"] = 2;
+         }
+         else if ($score_record["q_7"] == "seldom" ){
+            $risk_points["q_7"] = 1;
+         }
+         else if ($score_record["q_7"] == "often" ||  $score_record["q_7"] == "sometimes"){
+            $risk_points["q_7"] = 0;
+         }
+         
+         if($score_record["q_8"] == "never" || $score_record["q_8"] == "seldom" || $score_record["q_8"] == "sometimes"){
+            $risk_points["q_8"] = 0;
+         }
+         else if ($score_record["q_8"] == "often"){
+            $risk_points["q_8"] = 1;
+         }
+         
+         if($score_record["q_9"] == "never" || $score_record["q_9"] == "seldom" || $score_record["q_9"] == "sometimes"){
+            $risk_points["q_9"] = 0;
+         }
+         else if ($score_record["q_9"] == "often"){
+            $risk_points["q_9"] = 1;
+         }
+         
+         if($score_record["q_10"] == "never" || $score_record["q_10"] == "seldom"){
+            $risk_points["q_10"] = 2;
+         }
+         else if ($score_record["q_10"] == "often" || $score_record["q_10"] == "sometimes"){
+            $risk_points["q_10"] = 0;
+         }
+         
+         if($score_record["q_11"] == "never" || $score_record["q_11"] == "seldom" || $score_record["q_11"] == "sometimes"){
+            $risk_points["q_11"] = 0;
+         }
+         else if ($score_record["q_11"] == "often"){
+            $risk_points["q_11"] = 1;
+         }
+         
+         if($score_record["q_12"] == "never" || $score_record["q_12"] == "seldom"){
+            $risk_points["q_12"] = 2;
+         }
+         else if ($score_record["q_12"] == "often" || $score_record["q_12"] == "sometimes"){
+            $risk_points["q_12"] = 0;
+         }
+         
+         if($score_record["q_13"] == "never" || $score_record["q_13"] == "seldom" || $score_record["q_13"] == "sometimes"){
+            $risk_points["q_13"] = 0;
+         }
+         else if ($score_record["q_13"] == "often"){
+            $risk_points["q_13"] = 1;
+         }
+         
+         if($score_record["q_14"] == "never" || $score_record["q_14"] == "seldom"){
+            $risk_points["q_14"] = 2;
+         }
+         else if ($score_record["q_14"] == "often" || $score_record["q_14"] == "sometimes"){
+            $risk_points["q_14"] = 0;
+         }
+         
+         if($score_record["q_15"] == "never" || $score_record["q_15"] == "seldom" || $score_record["q_15"] == "sometimes"){
+            $risk_points["q_15"] = 0;
+         }
+         else if ($score_record["q_15"] == "often"){
+            $risk_points["q_15"] = 1;
+         }
+         
+         if($score_record["q_16"] == "never" || $score_record["q_16"] == "seldom"){
+            $risk_points["q_16"] = 2;
+         }
+         else if ($score_record["q_16"] == "sometimes" ){
+            $risk_points["q_16"] = 1;
+         }
+         else if ($score_record["q_16"] == "often" ){
+            $risk_points["q_16"] = 0;
+         }
+         
+         if($score_record["q_17"] == "never" || $score_record["q_17"] == "seldom" || $score_record["q_17"] == "sometimes"){
+            $risk_points["q_17"] = 0;
+         }
+         else if ($score_record["q_17"] == "often"){
+            $risk_points["q_17"] = 1;
+         }
+         
+         if($score_record["q_18"] == "never" || $score_record["q_18"] == "seldom"){
+            $risk_points["q_18"] = 2;
+         }
+         else if ($score_record["q_18"] == "sometimes" ){
+            $risk_points["q_18"] = 1;
+         }
+         else if ($score_record["q_18"] == "often" ){
+            $risk_points["q_18"] = 0;
+         }
+         
+         if($score_record["q_19"] == "often" || $score_record["q_19"] == "seldom" || $score_record["q_19"] == "sometimes"){
+            $risk_points["q_19"] = 0;
+         }
+         else if ($score_record["q_19"] == "never"){
+            $risk_points["q_19"] = 1;
+         }
+         
+         if($score_record["q_20"] == "often" || $score_record["q_20"] == "seldom" || $score_record["q_20"] == "sometimes"){
+            $risk_points["q_20"] = 0;
+         }
+         else if ($score_record["q_20"] == "never"){
+            $risk_points["q_20"] = 1;
+         }
+         
+         if($score_record["q_21"] == "never"){
+            $risk_points["q_21"] = 2;
+         }
+         else if ($score_record["q_21"] == "seldom" ){
+            $risk_points["q_21"] = 1;
+         }
+         else if ($score_record["q_21"] == "often" ||  $score_record["q_21"] == "sometimes"){
+            $risk_points["q_21"] = 0;
+         }
+         
+         if($score_record["q_22"] == "often" || $score_record["q_22"] == "seldom" || $score_record["q_22"] == "sometimes"){
+            $risk_points["q_22"] = 0;
+         }
+         else if ($score_record["q_22"] == "never"){
+            $risk_points["q_22"] = 1;
+         }
+         
+         if($score_record["q_23"] == "never"){
+            $risk_points["q_23"] = 0;
+         }
+         else if ($score_record["q_23"] == "seldom" ){
+            $risk_points["q_23"] = 1;
+         }
+         else if ($score_record["q_23"] == "often" ||  $score_record["q_23"] == "sometimes"){
+            $risk_points["q_23"] = 2;
+         }
+         
+         if($score_record["q_24"] == "never" || $score_record["q_24"] == "seldom"){
+            $risk_points["q_24"] = 2;
+         }
+         else if ($score_record["q_24"] == "often" || $score_record["q_24"] == "sometimes"){
+            $risk_points["q_24"] = 0;
+         }
+         
+         if($score_record["q_25"] == "never" || $score_record["q_25"] == "seldom"){
+            $risk_points["q_25"] = 2;
+         }
+         else if ($score_record["q_25"] == "often" || $score_record["q_25"] == "sometimes"){
+            $risk_points["q_25"] = 0;
+         }
+         
+         if($score_record["q_26"] == "never" || $score_record["q_26"] == "seldom"){
+            $risk_points["q_26"] = 2;
+         }
+         else if ($score_record["q_26"] == "often" || $score_record["q_26"] == "sometimes"){
+            $risk_points["q_26"] = 0;
+         }
+         
+         if($score_record["q_27"] == "never" || $score_record["q_27"] == "seldom" || $score_record["q_27"] == "sometimes"){
+            $risk_points["q_27"] = 0;
+         }
+         else if ($score_record["q_27"] == "often"){
+            $risk_points["q_27"] = 2;
+         }
+         
+         if($score_record["q_28"] == "never" || $score_record["q_28"] == "seldom"){
+            $risk_points["q_28"] = 2;
+         }
+         else if ($score_record["q_28"] == "often" || $score_record["q_28"] == "sometimes"){
+            $risk_points["q_28"] = 0;
+         }
+         
+         if($score_record["q_29"] == "never" || $score_record["q_29"] == "seldom"){
+            $risk_points["q_29"] = 2;
+         }
+         else if ($score_record["q_29"] == "often" || $score_record["q_29"] == "sometimes"){
+            $risk_points["q_29"] = 0;
+         }
+         
+         if($score_record["q_30"] == "never" || $score_record["q_30"] == "seldom" || $score_record["q_30"] == "sometimes"){
+            $risk_points["q_30"] = 0;
+         }
+         else if ($score_record["q_30"] == "often"){
+            $risk_points["q_30"] = 2;
+         }
+         
+         if($score_record["q_31"] == "never"){
+            $risk_points["q_31"] = 2;
+         }
+         else if ($score_record["q_31"] == "seldom" ){
+            $risk_points["q_31"] = 1;
+         }
+         else if ($score_record["q_31"] == "often" ||  $score_record["q_31"] == "sometimes"){
+            $risk_points["q_31"] = 0;
+         }
+         
+         if($score_record["q_32"] == "never" || $score_record["q_32"] == "seldom"){
+            $risk_points["q_32"] = 2;
+         }
+         else if ($score_record["q_32"] == "sometimes" ){
+            $risk_points["q_32"] = 1;
+         }
+         else if ($score_record["q_32"] == "often" ){
+            $risk_points["q_32"] = 0;
+         }
+         
+         if($score_record["q_33"] == "never" || $score_record["q_33"] == "seldom"){
+            $risk_points["q_33"] = 0;
+         }
+         else if ($score_record["q_33"] == "sometimes" ){
+            $risk_points["q_33"] = 1;
+         }
+         else if ($score_record["q_33"] == "often" ){
+            $risk_points["q_33"] = 2;
+         }
+         
+         if($score_record["q_34"] == "never" || $score_record["q_34"] == "seldom"){
+            $risk_points["q_34"] = 2;
+         }
+         else if ($score_record["q_34"] == "sometimes" ){
+            $risk_points["q_34"] = 1;
+         }
+         else if ($score_record["q_34"] == "often" ){
+            $risk_points["q_34"] = 0;
+         }
+         
+         if($score_record["q_35"] == "never"){
+            $risk_points["q_35"] = 2;
+         }
+         else if ($score_record["q_35"] == "seldom" ){
+            $risk_points["q_35"] = 1;
+         }
+         else if ($score_record["q_35"] == "often" ||  $score_record["q_35"] == "sometimes"){
+            $risk_points["q_35"] = 0;
+         }
+         
+         if($score_record["q_36"] == "never" || $score_record["q_36"] == "seldom" || $score_record["q_36"] == "sometimes"){
+            $risk_points["q_36"] = 0;
+         }
+         else if ($score_record["q_36"] == "often"){
+            $risk_points["q_36"] = 1;
+         }
+         
+         if($score_record["q_37"] == "never" || $score_record["q_37"] == "seldom" || $score_record["q_37"] == "sometimes"){
+            $risk_points["q_37"] = 0;
+         }
+         else if ($score_record["q_37"] == "often"){
+            $risk_points["q_37"] = 1;
+         }
+         
+         if($score_record["q_38"] == "often" || $score_record["q_38"] == "seldom" || $score_record["q_38"] == "sometimes"){
+            $risk_points["q_38"] = 0;
+         }
+         else if ($score_record["q_38"] == "never"){
+            $risk_points["q_38"] = 1;
+         }
+         
+         if($score_record["q_39"] == "never" || $score_record["q_39"] == "seldom"){
+            $risk_points["q_39"] = 0;
+         }
+         else if ($score_record["q_39"] == "sometimes" ){
+            $risk_points["q_39"] = 1;
+         }
+         else if ($score_record["q_39"] == "often" ){
+            $risk_points["q_39"] = 2;
+         }
+         
+         if($score_record["q_40"] == "never" || $score_record["q_40"] == "seldom" || $score_record["q_40"] == "sometimes"){
+            $risk_points["q_40"] = 2;
+         }
+         else if ($score_record["q_40"] == "often"){
+            $risk_points["q_40"] = 0;
+         }
+         
+         if($score_record["q_41"] == "never" || $score_record["q_41"] == "seldom"){
+            $risk_points["q_41"] = 2;
+         }
+         else if ($score_record["q_41"] == "often" || $score_record["q_41"] == "sometimes"){
+            $risk_points["q_41"] = 0;
+         }
+         
+         if($score_record["q_42"] == "never" || $score_record["q_42"] == "seldom"){
+            $risk_points["q_42"] = 0;
+         }
+         else if ($score_record["q_42"] == "sometimes" ){
+            $risk_points["q_42"] = 1;
+         }
+         else if ($score_record["q_42"] == "often" ){
+            $risk_points["q_42"] = 2;
+         }
+         
+         if($score_record["q_43"] == "never" || $score_record["q_43"] == "seldom"){
+            $risk_points["q_43"] = 0;
+         }
+         else if ($score_record["q_43"] == "sometimes" ){
+            $risk_points["q_43"] = 1;
+         }
+         else if ($score_record["q_43"] == "often" ){
+            $risk_points["q_43"] = 2;
+         }
+         
+         if($score_record["q_44"] == "never" || $score_record["q_44"] == "seldom" || $score_record["q_44"] == "sometimes"){
+            $risk_points["q_44"] = 0;
+         }
+         else if ($score_record["q_44"] == "often"){
+            $risk_points["q_44"] = 1;
+         }
+         
+         if($score_record["q_45"] == "never" || $score_record["q_45"] == "seldom" || $score_record["q_45"] == "sometimes"){
+            $risk_points["q_45"] = 0;
+         }
+         else if ($score_record["q_45"] == "often"){
+            $risk_points["q_45"] = 1;
+         }
+         
+         if($score_record["q_46"] == "never" || $score_record["q_46"] == "seldom" || $score_record["q_46"] == "sometimes"){
+            $risk_points["q_46"] = 0;
+         }
+         else if ($score_record["q_46"] == "often"){
+            $risk_points["q_46"] = 1;
+         }
+         
+         if(substr($score_record["q_47"], 0, 1) == "b" || substr($score_record["q_47"], 0, 1) == "c" || substr($score_record["q_47"], 0, 1) == "d"){
+            $risk_points["q_47"] = 0;
+         }
+         else if (substr($score_record["q_47"], 0, 1) == "a"){
+            $risk_points["q_47"] = 1;
+         }
+         
+         if(substr($score_record["q_48"], 0, 1) == "b" || substr($score_record["q_48"], 0, 1) == "c" || substr($score_record["q_48"], 0, 1) == "d"){
+            $risk_points["q_48"] = 0;
+         }
+         else if (substr($score_record["q_48"], 0, 1) == "a"){
+            $risk_points["q_48"] = 2;
+         }
+         
+         if(substr($score_record["q_49"], 0, 1) == "a" || substr($score_record["q_49"], 0, 1) == "b"){
+            $risk_points["q_49"] = 0;
+         }
+         else if (substr($score_record["q_49"], 0, 1) == "c" ){
+            $risk_points["q_49"] = 1;
+         }
+         else if (substr($score_record["q_49"], 0, 1) == "d" ){
+            $risk_points["q_49"] = 2;
+         }
+         
+         if(substr($score_record["q_50"], 0, 1) == "a" || substr($score_record["q_50"], 0, 1) == "b" || substr($score_record["q_50"], 0, 1) == "d"){
+            $risk_points["q_50"] = 0;
+         }
+         else if (substr($score_record["q_50"], 0, 1) == "c"){
+            $risk_points["q_50"] = 2;
+         }
+         
+         if(substr($score_record["q_51"], 0, 1) == "b" || substr($score_record["q_51"], 0, 1) == "d"){
+            $risk_points["q_51"] = 0;
+         }
+         else if (substr($score_record["q_51"], 0, 1) == "a" || substr($score_record["q_51"], 0, 1) == "c"){
+            $risk_points["q_51"] = 2;
+         }
+         
+         if(substr($score_record["q_52"], 0, 1) == "a" || substr($score_record["q_52"], 0, 1) == "b"){
+            $risk_points["q_52"] = 0;
+         }
+         else if (substr($score_record["q_52"], 0, 1) == "c" || substr($score_record["q_52"], 0, 1) == "d"){
+            $risk_points["q_52"] = 2;
+         }
+         
+         if(substr($score_record["q_53"], 0, 1) == "a"){
+            $risk_points["q_53"] = 0;
+         }
+         else if (substr($score_record["q_53"], 0, 1) == "b" ){
+            $risk_points["q_53"] = 1;
+         }
+         else if (substr($score_record["q_53"], 0, 1) == "c"  || substr($score_record["q_53"], 0, 1) == "d"){
+            $risk_points["q_53"] = 2;
+         }
+         
+         if(substr($score_record["q_54"], 0, 1) == "a" || substr($score_record["q_54"], 0, 1) == "b" || substr($score_record["q_54"], 0, 1) == "c"){
+            $risk_points["q_54"] = 0;
+         }
+         else if (substr($score_record["q_54"], 0, 1) == "d"){
+            $risk_points["q_54"] = 2;
+         }
+         
+         if(substr($score_record["q_55"], 0, 1) == "a" || substr($score_record["q_55"], 0, 1) == "b" || substr($score_record["q_55"], 0, 1) == "d"){
+            $risk_points["q_55"] = 0;
+         }
+         else if (substr($score_record["q_55"], 0, 1) == "c"){
+            $risk_points["q_55"] = 1;
+         }
+         
+         if(substr($score_record["q_56"], 0, 1) == "a" || substr($score_record["q_56"], 0, 1) == "b"){
+            $risk_points["q_56"] = 0;
+         }
+         else if (substr($score_record["q_56"], 0, 1) == "c" ){
+            $risk_points["q_56"] = 1;
+         }
+         else if (substr($score_record["q_56"], 0, 1) == "d"  ){
+            $risk_points["q_56"] = 2;
+         }
+         
+         if(substr($score_record["q_57"], 0, 1) == "a" || substr($score_record["q_57"], 0, 1) == "b"){
+            $risk_points["q_57"] = 0;
+         }
+         else if (substr($score_record["q_57"], 0, 1) == "c" ){
+            $risk_points["q_57"] = 1;
+         }
+         else if (substr($score_record["q_57"], 0, 1) == "d"  ){
+            $risk_points["q_57"] = 2;
+         }
+         
+         if(substr($score_record["q_58"], 0, 1) == "a"){
+            $risk_points["q_58"] = 2;
+         }
+         else if (substr($score_record["q_58"], 0, 1) == "b" ){
+            $risk_points["q_58"] = 1;
+         }
+         else if (substr($score_record["q_58"], 0, 1) == "c"   || substr($score_record["q_58"], 0, 1) == "d"){
+            $risk_points["q_58"] = 0;
+         }
+         
+         if(substr($score_record["q_59"], 0, 1) == "a" || substr($score_record["q_59"], 0, 1) == "b" || substr($score_record["q_59"], 0, 1) == "c"){
+            $risk_points["q_59"] = 0;
+         }
+         else if (substr($score_record["q_59"], 0, 1) == "d"){
+            $risk_points["q_59"] = 2;
+         }
+         
+         if(substr($score_record["q_60"], 0, 1) == "a" || substr($score_record["q_60"], 0, 1) == "b"){
+            $risk_points["q_60"] = 0;
+         }
+         else if (substr($score_record["q_60"], 0, 1) == "c" || substr($score_record["q_60"], 0, 1) == "d"){
+            $risk_points["q_60"] = 2;
+         }
+         
+         $sound_total = 0;
+         $BDM_total = 0;
+         
+         $questionArray = array("p", "b", "t", "d", "k", "g", "m", "n", "w", "y", "h", "s");
+         foreach($questionArray as $letter) {
+            if($score_record["sounds_" . $letter] == "used"){
+               $sound_total++;
+               if($letter == "b" || $letter == "d" || $letter == "m"){
+                  $BDM_total++;
+               }
+            }
+         }
+         $X = 0;
+         $Y = 0;
+         
+         if($BDM_total < 2){
+            $X = 1;
+         }
+         if($sound_total <= 3){
+            $Y = 1;
+         }
+         
+         $XY_total = $X + $Y;
+         
+         $D111 = $risk_points["q_1"] + $risk_points["q_5"] + $risk_points["q_10"] + $risk_points["q_12"] + $risk_points["q_14"]
+             + $risk_points["q_31"] + $risk_points["q_35"] + $risk_points["q_50"] + $risk_points["q_52"];
+                      
+         $D112 = $risk_points["q_4"] + $risk_points["q_7"] + $risk_points["q_16"] + $risk_points["q_18"] + $risk_points["q_19"]
+              + $risk_points["q_20"] + $risk_points["q_21"] + $risk_points["q_22"];
+         
+         $D113 = $risk_points["q_24"] + $risk_points["q_25"] + $risk_points["q_26"] + $risk_points["q_49"] + $risk_points["q_53"]
+                + $risk_points["q_58"];
+                
+         $D114 = $risk_points["q_29"] + $risk_points["q_32"] + $risk_points["q_34"] + $risk_points["q_38"] + $XY_total;
+         
+         $D115 = $risk_points["q_3"] + $risk_points["q_6"] + $risk_points["q_9"] + $risk_points["q_17"] + $risk_points["q_23"]
+                + $risk_points["q_59"];
+         
+         $D116 = $risk_points["q_28"] + $risk_points["q_41"] + $risk_points["q_54"] + $risk_points["q_55"];
+         
+         $D117 = $risk_points["q_15"] + $risk_points["q_27"] + $risk_points["q_57"];
+         
+         $D118 = $risk_points["q_11"] + $risk_points["q_13"] + $risk_points["q_30"] + $risk_points["q_33"] + $risk_points["q_37"]
+             + $risk_points["q_42"] + $risk_points["q_43"] + $risk_points["q_44"] + $risk_points["q_45"] + $risk_points["q_46"] 
+             + $risk_points["q_48"];
+          
+         if($D111 >= 12){
+            $calculatedScores['orientrec'] = 50;
+         }
+         else if($D111 >= 10){
+            $calculatedScores['orientrec'] = 49;
+         }
+         else if($D111 >= 8){
+            $calculatedScores['orientrec'] = 47;
+         }
+         else if($D111 == 7){
+            $calculatedScores['orientrec'] = 45;
+         }
+         else if($D111 == 6){
+            $calculatedScores['orientrec'] = 43;
+         }
+         else if($D111 == 5){
+            $calculatedScores['orientrec'] = 41;
+         }
+         else if($D111 == 4){
+            $calculatedScores['orientrec'] = 40;
+         }
+         else if($D111 == 3){
+            $calculatedScores['orientrec'] = 30;
+         }
+         else if($D111 == 2){
+            $calculatedScores['orientrec'] = 20;
+         }
+         else if($D111 == 1){
+            $calculatedScores['orientrec'] = 13;
+         }
+         else if($D111 == 0){
+            $calculatedScores['orientrec'] = 0;
+         }         
+            
+         if($D112 >= 11){
+            $calculatedScores['affeng'] = 50;
+         }
+         else if($D112 >= 7){
+            $calculatedScores['affeng'] = 49;
+         }
+         else if($D112 == 6){
+            $calculatedScores['affeng'] = 45;
+         }
+         else if($D112 == 5){
+            $calculatedScores['affeng'] = 43;
+         }
+         else if($D112 == 4){
+            $calculatedScores['affeng'] = 39;
+         }
+         else if($D112 == 3){
+            $calculatedScores['affeng'] = 28;
+         }
+         else if($D112 == 2){
+            $calculatedScores['affeng'] = 17;
+         }
+         else if($D112 == 1){
+            $calculatedScores['affeng'] = 11;
+         }
+         else if($D112 == 0){
+            $calculatedScores['affeng'] = 0;
+         }
+         
+         if($D113 >= 9){
+            $calculatedScores['imitate'] = 50;
+         }
+         else if($D113 >= 8){
+            $calculatedScores['imitate'] = 49;
+         }
+         else if($D113 == 7){
+            $calculatedScores['imitate'] = 46;
+         }
+         else if($D113 == 6){
+            $calculatedScores['imitate'] = 45;
+         }
+         else if($D113 == 5){
+            $calculatedScores['imitate'] = 43;
+         }
+         else if($D113 == 4){
+            $calculatedScores['imitate'] = 41;
+         }
+         else if($D113 == 3){
+            $calculatedScores['imitate'] = 40;
+         }
+         else if($D113 == 2){
+            $calculatedScores['imitate'] = 30;
+         }
+         else if($D113 == 1){
+            $calculatedScores['imitate'] = 20;
+         }
+         else if($D113 == 0){
+            $calculatedScores['imitate'] = 0;
+         }
+         
+         
+         if($D114 >= 6){
+            $calculatedScores['express'] = 50;
+         }
+         else if($D114 == 5){
+            $calculatedScores['express'] = 45;
+         }
+         else if($D114 == 4){
+            $calculatedScores['express'] = 43;
+         }
+         else if($D114 == 3){
+            $calculatedScores['express'] = 40;
+         }
+         else if($D114 == 2){
+            $calculatedScores['express'] = 20;
+         }
+         else if($D114 == 1){
+            $calculatedScores['express'] = 18;
+         }
+         else if($D114 == 0){
+            $calculatedScores['express'] = 0;
+         }
+         
+         if($D115 >= 7){
+            $calculatedScores['senproc'] = 50;
+         }
+         else if($D115 == 6){
+            $calculatedScores['senproc'] = 47;
+         }
+         else if($D115 == 5){
+            $calculatedScores['senproc'] = 44;
+         }
+         else if($D115 == 4){
+            $calculatedScores['senproc'] = 40;
+         }
+         else if($D115 == 3){
+            $calculatedScores['senproc'] = 35;
+         }
+         else if($D115 == 2){
+            $calculatedScores['senproc'] = 15;
+         }
+         else if($D115 == 1){
+            $calculatedScores['senproc'] = 8;
+         }
+         else if($D115 ==  0){
+            $calculatedScores['senproc'] = 0;
+         }
+         
+         if($D116 >= 7){
+            $calculatedScores['regpat'] = 50;
+         }
+         else if($D116 == 6){
+            $calculatedScores['regpat'] = 48;
+         }
+         else if($D116 == 5){
+            $calculatedScores['regpat'] = 47;
+         }
+         else if($D116 == 4){
+            $calculatedScores['regpat'] = 46;
+         }
+         else if($D116 == 3){
+            $calculatedScores['regpat'] = 45;
+         }
+         else if($D116 == 2){
+            $calculatedScores['regpat'] = 42;
+         }
+         else if($D116 == 1){
+            $calculatedScores['regpat'] = 40;
+         }
+         else if($D116 ==  0){
+            $calculatedScores['regpat'] = 0;
+         }
+         
+         if($D117 >= 4){
+            $calculatedScores['react'] = 50;
+         }
+         else if($D117 == 3){
+            $calculatedScores['react'] = 47;
+         }
+         else if($D117 == 2){
+            $calculatedScores['react'] = 45;
+         }
+         else if($D117 == 1){
+            $calculatedScores['react'] = 35;
+         }
+         else if($D117 == 0){
+            $calculatedScores['react'] = 0;
+         }
+         
+         if($D118 >= 11){
+            $calculatedScores['repplay'] = 50;
+         }
+         else if($D118 >= 10){
+            $calculatedScores['repplay'] = 48;
+         }
+         else if($D118 >= 9){
+            $calculatedScores['repplay'] = 46;
+         }
+         else if($D118 == 8){
+            $calculatedScores['repplay'] = 45;
+         }
+         else if($D118 == 7){
+            $calculatedScores['repplay'] = 43;
+         }
+         else if($D118 == 6){
+            $calculatedScores['repplay'] = 40;
+         }
+         else if($D118 == 5){
+            $calculatedScores['repplay'] = 29;
+         }
+         else if($D118 == 4){
+            $calculatedScores['repplay'] = 18;
+         }
+         else if($D118 == 3){
+            $calculatedScores['repplay'] = 15;
+         }
+         else if($D118 == 2){
+            $calculatedScores['repplay'] = 13;
+         }
+         else if($D118 == 1){
+            $calculatedScores['repplay'] = 9;
+         }
+         else if($D118 == 0){
+            $calculatedScores['repplay'] = 0;
+         }
+         
+         
+         $calculatedScores['soc_com_risk'] = ($calculatedScores['orientrec'] + $calculatedScores['affeng'] + $calculatedScores['imitate']
+                                             + $calculatedScores['express'])/4.0;
+         $calculatedScores['sen_reg_risk'] = ($calculatedScores['senproc'] + $calculatedScores['regpat'] + $calculatedScores['react']
+                                             + $calculatedScores['repplay'])/4.0;
+                                             
+         $calculatedScores['risk_score'] = ($calculatedScores['soc_com_risk'] + $calculatedScores['sen_reg_risk'])/2.0;
+         
+         //print_r($calculatedScores);
+         
+         
+         if($calculatedScores['risk_score'] == 0){
+            $calculatedScores['percentile'] = 5;
+         }
+         else if($calculatedScores['risk_score'] <= 1){
+            $calculatedScores['percentile'] = 12;
+         }
+         else if($calculatedScores['risk_score'] <= 1.13){
+            $calculatedScores['percentile'] = 14;
+         }
+         else if($calculatedScores['risk_score'] <= 1.38){
+            $calculatedScores['percentile'] = 17;
+         }
+         else if($calculatedScores['risk_score'] <= 1.63){
+            $calculatedScores['percentile'] = 19;
+         }
+         else if($calculatedScores['risk_score'] <= 1.88){
+            $calculatedScores['percentile'] = 20;
+         }
+         else if($calculatedScores['risk_score'] <= 2.13){
+            $calculatedScores['percentile'] = 21;
+         }
+         else if($calculatedScores['risk_score'] <= 2.25){
+            $calculatedScores['percentile'] = 22;
+         }
+         else if($calculatedScores['risk_score'] <= 2.38){
+            $calculatedScores['percentile'] = 23;
+         }
+         else if($calculatedScores['risk_score'] <= 2.5){
+            $calculatedScores['percentile'] = 27;
+         }
+         else if($calculatedScores['risk_score'] <= 2.63){
+            $calculatedScores['percentile'] = 29;
+         }
+         else if($calculatedScores['risk_score'] <= 3){
+            $calculatedScores['percentile'] = 30;
+         }
+         else if($calculatedScores['risk_score'] <= 3.25){
+            $calculatedScores['percentile'] = 31;
+         }
+         else if($calculatedScores['risk_score'] <= 3.38){
+            $calculatedScores['percentile'] = 32;
+         }
+         else if($calculatedScores['risk_score'] <= 3.5){
+            $calculatedScores['percentile'] = 34;
+         }
+         else if($calculatedScores['risk_score'] <= 3.63){
+            $calculatedScores['percentile'] = 35;
+         }
+         else if($calculatedScores['risk_score'] <= 3.75){
+            $calculatedScores['percentile'] = 36;
+         }
+         else if($calculatedScores['risk_score'] <= 3.88){
+            $calculatedScores['percentile'] = 38;
+         }
+         else if($calculatedScores['risk_score'] <= 4.25){
+            $calculatedScores['percentile'] = 39;
+         }
+         else if($calculatedScores['risk_score'] <= 4.38){
+            $calculatedScores['percentile'] = 42;
+         }
+         else if($calculatedScores['risk_score'] <= 4.63){
+            $calculatedScores['percentile'] = 43;
+         }
+         else if($calculatedScores['risk_score'] <= 4.75){
+            $calculatedScores['percentile'] = 44;
+         }
+         else if($calculatedScores['risk_score'] <= 4.88){
+            $calculatedScores['percentile'] = 45;
+         }
+         else if($calculatedScores['risk_score'] <= 5){
+            $calculatedScores['percentile'] = 46;
+         }
+         else if($calculatedScores['risk_score'] <= 5.13){
+            $calculatedScores['percentile'] = 47;
+         }
+         else if($calculatedScores['risk_score'] <= 5.38){
+            $calculatedScores['percentile'] = 48;
+         }
+         else if($calculatedScores['risk_score'] <= 5.5){
+            $calculatedScores['percentile'] = 49;
+         }
+         else if($calculatedScores['risk_score'] <= 5.75){
+            $calculatedScores['percentile'] = 50;
+         }
+         else if($calculatedScores['risk_score'] <= 5.88){
+            $calculatedScores['percentile'] = 51;
+         }
+         else if($calculatedScores['risk_score'] <= 6){
+            $calculatedScores['percentile'] = 52;
+         }
+         else if($calculatedScores['risk_score'] <= 6.13){
+            $calculatedScores['percentile'] = 53;
+         }
+         else if($calculatedScores['risk_score'] <= 6.25){
+            $calculatedScores['percentile'] = 54;
+         }
+         else if($calculatedScores['risk_score'] <= 6.38){
+            $calculatedScores['percentile'] = 55;
+         }
+         else if($calculatedScores['risk_score'] <= 6.63){
+            $calculatedScores['percentile'] = 56;
+         }
+         else if($calculatedScores['risk_score'] <= 6.88){
+            $calculatedScores['percentile'] = 57;
+         }
+         else if($calculatedScores['risk_score'] <= 7){
+            $calculatedScores['percentile'] = 58;
+         }
+         else if($calculatedScores['risk_score'] <= 7.13){
+            $calculatedScores['percentile'] = 59;
+         }
+         else if($calculatedScores['risk_score'] <= 7.25){
+            $calculatedScores['percentile'] = 60;
+         }
+         else if($calculatedScores['risk_score'] <= 7.38){
+            $calculatedScores['percentile'] = 61;
+         }
+         else if($calculatedScores['risk_score'] <= 7.63){
+            $calculatedScores['percentile'] = 62;
+         }
+         else if($calculatedScores['risk_score'] <= 7.88){
+            $calculatedScores['percentile'] = 63;
+         }
+         else if($calculatedScores['risk_score'] <= 8){
+            $calculatedScores['percentile'] = 64;
+         }
+         else if($calculatedScores['risk_score'] <= 8.13){
+            $calculatedScores['percentile'] = 65;
+         }
+         else if($calculatedScores['risk_score'] <= 8.25){
+            $calculatedScores['percentile'] = 66;
+         }
+         else if($calculatedScores['risk_score'] <= 8.5){
+            $calculatedScores['percentile'] = 67;
+         }
+         else if($calculatedScores['risk_score'] <= 8.63){
+            $calculatedScores['percentile'] = 68;
+         }
+         else if($calculatedScores['risk_score'] <= 8.88){
+            $calculatedScores['percentile'] = 69;
+         }
+         else if($calculatedScores['risk_score'] <= 9){
+            $calculatedScores['percentile'] = 70;
+         }
+         else if($calculatedScores['risk_score'] <= 9.25){
+            $calculatedScores['percentile'] = 71;
+         }
+         else if($calculatedScores['risk_score'] <= 9.38){
+            $calculatedScores['percentile'] = 72;
+         }
+         else if($calculatedScores['risk_score'] <= 9.63){
+            $calculatedScores['percentile'] = 73;
+         }
+         else if($calculatedScores['risk_score'] <= 9.75){
+            $calculatedScores['percentile'] = 74;
+         }
+         else if($calculatedScores['risk_score'] <= 10){
+            $calculatedScores['percentile'] = 75;
+         }
+         else if($calculatedScores['risk_score'] <= 10.25){
+            $calculatedScores['percentile'] = 76;
+         }
+         else if($calculatedScores['risk_score'] <= 10.38){
+            $calculatedScores['percentile'] = 77;
+         }
+         else if($calculatedScores['risk_score'] <= 10.5){
+            $calculatedScores['percentile'] = 78;
+         }
+         else if($calculatedScores['risk_score'] <= 10.75){
+            $calculatedScores['percentile'] = 79;
+         }
+         else if($calculatedScores['risk_score'] <= 11){
+            $calculatedScores['percentile'] = 80;
+         }
+         else if($calculatedScores['risk_score'] <= 11.25){
+            $calculatedScores['percentile'] = 81;
+         }
+         else if($calculatedScores['risk_score'] <= 11.5){
+            $calculatedScores['percentile'] = 82;
+         }
+         else if($calculatedScores['risk_score'] <= 11.88){
+            $calculatedScores['percentile'] = 83;
+         }
+         else if($calculatedScores['risk_score'] <= 12.13){
+            $calculatedScores['percentile'] = 84;
+         }
+         else if($calculatedScores['risk_score'] <= 12.38){
+            $calculatedScores['percentile'] = 85;
+         }
+         else if($calculatedScores['risk_score'] <= 12.75){
+            $calculatedScores['percentile'] = 86;
+         }
+         else if($calculatedScores['risk_score'] <= 13){
+            $calculatedScores['percentile'] = 87;
+         }
+         else if($calculatedScores['risk_score'] <= 13.38){
+            $calculatedScores['percentile'] = 88;
+         }
+         else if($calculatedScores['risk_score'] <= 13.75){
+            $calculatedScores['percentile'] = 89;
+         }
+         else if($calculatedScores['risk_score'] <= 14.25){
+            $calculatedScores['percentile'] = 90;
+         }
+         else if($calculatedScores['risk_score'] <= 14.63){
+            $calculatedScores['percentile'] = 91;
+         }
+         else if($calculatedScores['risk_score'] <= 15){
+            $calculatedScores['percentile'] = 92;
+         }
+         else if($calculatedScores['risk_score'] <= 15.88){
+            $calculatedScores['percentile'] = 93;
+         }
+         else if($calculatedScores['risk_score'] <= 17){
+            $calculatedScores['percentile'] = 94;
+         }
+         else if($calculatedScores['risk_score'] <= 17.75){
+            $calculatedScores['percentile'] = 95;
+         }
+         else if($calculatedScores['risk_score'] <= 19){
+            $calculatedScores['percentile'] = 96;
+         }
+         else if($calculatedScores['risk_score'] <= 20.5){
+            $calculatedScores['percentile'] = 97;
+         }
+         else if($calculatedScores['risk_score'] <= 22.63){
+            $calculatedScores['percentile'] = 98;
+         }
+         else if($calculatedScores['risk_score'] <= 26.25){
+            $calculatedScores['percentile'] = 99;
+         }
+         else{
+            $calculatedScores['percentile'] = 100;
+         }
+         
+         // save the resultant total
+         $result = $db->update($this->table, $calculatedScores, array('CommentID'=>$this->getCommentID()));
+          if($db->isError($result)) {
+             return PEAR::raiseError("Could not save total score: ".$result->getMessage());
+          }
+         #echo("D118: " . $D118);
+         #echo("\nBDM: " . $BDM_total);
+        // print_r($calculatedScores);
+     }
 }
 ?>
