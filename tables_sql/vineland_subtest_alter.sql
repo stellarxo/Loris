@@ -1,0 +1,3 @@
+DELETE FROM instrument_subtests WHERE Test_name LIKE "vineland%" AND Description = "About the Interview";
+INSERT INTO instrument_subtests (Test_name, Subtest_name, Description, Order_number) VALUES ("vineland_subject", "vineland_subject_page15", "General Information", "15");
+INSERT INTO instrument_subtests (Test_name, Subtest_name, Description, Order_number) VALUES ("vineland_proband", "vineland_proband_page15", "General Information", "15");

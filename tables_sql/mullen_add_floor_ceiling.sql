@@ -1,0 +1,10 @@
+qALTER TABLE mullen ADD COLUMN gross_motor_basal integer(2) NULL;
+ALTER TABLE mullen ADD COLUMN gross_motor_ceiling integer(2) NULL;
+ALTER TABLE mullen ADD COLUMN visual_recept_basal integer(2) NULL;
+ALTER TABLE mullen ADD COLUMN visual_recept_ceiling integer(2) NULL;
+ALTER TABLE mullen ADD COLUMN fine_motor_basal integer(2) NULL;
+ALTER TABLE mullen ADD COLUMN fine_motor_ceiling integer(2) NULL;
+ALTER TABLE mullen ADD COLUMN receptive_lang_basal integer(2) NULL;
+ALTER TABLE mullen ADD COLUMN receptive_lang_ceiling integer(2) NULL;
+ALTER TABLE mullen ADD COLUMN expressive_lang_basal integer(2) NULL;
+ALTER TABLE mullen ADD COLUMN expressive_lang_ceiling integer(2) NULL;

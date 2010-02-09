@@ -1,0 +1,1 @@
+ALTER TABLE mullen ADD COLUMN other_comments text NULL;
