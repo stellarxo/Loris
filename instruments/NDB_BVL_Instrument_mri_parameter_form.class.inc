@@ -74,21 +74,21 @@ class NDB_BVL_Instrument_mri_parameter_form extends NDB_BVL_Instrument
         $this->form->addElement('header', null, '3D T1 MP-Rage');
         $this->form->addElement('static', null, 'SIEMENS: tfl');
         $this->form->addElement('select', 'T1_Scan_done', 'Was this sequence acquired?', $yes_no_option);
-        $this->addNumericElement("T1_number_attempts", "Number of scan attempts:");
+        $this->form->addElement('text', "T1_number_attempts", "Number of scan attempts:");
         $this->addDateElement('T1_Scan_done', 'If so, when?');
         $this->addTextAreaElement('T1_Comments', 'Comments');
 
         $this->form->addElement('header', null, 'High Resolution 3D T2W');
         $this->form->addElement('static', null, 'SIEMENS: tse_vfl');
         $this->form->addElement('select', 'T2_Scan_done', 'Was this sequence acquired?', $yes_no_option);
-        $this->addNumericElement("T2_number_attempts", "Number of scan attempts:");
+        $this->form->addElement('text',"T2_number_attempts", "Number of scan attempts:");
         $this->addDateElement('T2_Scan_done', 'If so, when?');
         $this->addTextAreaElement('T2_Comments', 'Comments');
 
         $this->form->addElement('header', null, '25 Direction DTI');
         $this->form->addElement('static', null, 'SIEMENS: epd2_diff');
         $this->form->addElement('select', 'DTI_Scan_done', 'Was this sequence acquired?', $yes_no_option);
-        $this->addNumericElement("DTI_number_attempts", "Number of scan attempts:");
+        $this->form->addElement('text', "DTI_number_attempts", "Number of scan attempts:");
         $this->addDateElement('DTI_Scan_done', 'If so, when?');
         $this->addTextAreaElement('DTI_Comments', 'Comments');
 
