@@ -96,7 +96,9 @@ INSERT INTO instrument_subtests VALUES('', 'fyi', 'fyi_page2', '#47-#63', 2);
         "native_hawaiian_pacific_islander"=>"Native Hawaiian/Pacific Islander",
         "not_answered"=>"Not Answered"), "multiple");
         
-        $this->addTextElement("mother_highest_grade", "Mother's highest grade completed or degree obtained:");
+        $education_levels = array(nil => "", "Less Than 6th Grade" => "Less Than 6th Grade", "Less Than High School" => "Less Than High School", "High School" => "High School", "Some College" => "Some College", "College" => "College", "Some Graduate Level" => "Some Graduate Level", "Graduate Level" => "Graduate Level", "NA" => "NA");
+        
+        $this->form->addElement("select", "mother_highest_grade", "Mother's highest grade completed or degree obtained:", $education_levels);
         
         
         $this->form->addElement("select", "father_ethnicity", "Baby's Father Race/Ethnicity (check 1 or more)", array(null=>"", "white"=>"White",
@@ -107,7 +109,7 @@ INSERT INTO instrument_subtests VALUES('', 'fyi', 'fyi_page2', '#47-#63', 2);
         "native_hawaiian_pacific_islander"=>"Native Hawaiian/Pacific Islander",
         "not_answered"=>"Not Answered"), "multiple");
         
-        $this->addTextElement("father_highest_grade", "Father's highest grade completed or degree obtained:");
+        $this->form->addElement("select", "father_highest_grade", "Father's highest grade completed or degree obtained:", $education_levels);
         
         $this->form->addElement("select", "person_filling_out", "The person filling out this form is the (check one):", array(null=>"", "mother"=>"Mother", "father"=>"Father", "both"=>"Both", "other"=>"Other (specify):", "not_answered"=>"Not Answered"));
         $this->addTextElement("person_filling_out_specify", $this->indent . "Specify:", array("person_filling_out{@}=={@}other"), "Please specify.");
