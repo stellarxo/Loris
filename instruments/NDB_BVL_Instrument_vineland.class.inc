@@ -92,6 +92,8 @@ class NDB_BVL_Instrument_vineland extends NDB_BVL_Instrument
          }
 
          $this->_addMetadataFields();
+         $this->form->addElement("advcheckbox", "dde_check", "Performed in-software double data entry:", null, null, array(false, true));
+         $this->form->addRule('dde_check', 'Double data entry must be preformed in software.', 'required');
 
          $this->form->addElement('file', 'vineland_file', 'Upload the vineland file');
 
@@ -408,6 +410,7 @@ class NDB_BVL_Instrument_vineland extends NDB_BVL_Instrument
           $file->setFileHandler("vineland_file", &$this);
                     
           //Set the target directory that you want files moved into once they are validated and processed.
+          
           $file->setBaseUploadDirectory("/export-01/nihace/behavioural_uploads/vineland/");
 
           //Set the prefix to prepend to the filenames
