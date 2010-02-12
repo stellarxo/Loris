@@ -17,6 +17,7 @@ INSERT INTO instrument_subtests VALUES('', 'aosi', 'aosi_page2', 'General Observ
                         "5_anticipatory_response_score"=>"",
                         "6_imitation_of_actions_score"=>"");
 
+
     /**
     * sets up basic data, such as the HTML_Quickform object, and so on.
     *
@@ -48,6 +49,38 @@ INSERT INTO instrument_subtests VALUES('', 'aosi', 'aosi_page2', 'General Observ
 
         // required fields for data entry completion status
         $this->_requiredElements = array('Examiner', 'examiner_location', "1_visual_tracking_press_1", "7_social_babbling");
+
+
+	/**
+	 * Array of column names to be ignored by the double data entry conflict detector.
+	 */
+	$this->_doubleDataEntryDiffIgnoreColumns = array('CommentID', 'UserID', 'Testdate',
+						       '1_visual_tracking_notes',
+						       '2_disengagement_of_attention_notes',
+						       'free_play_period_1_notes',
+						       '3_orients_to_name_notes',
+						       '4_differential_response_to_facial_emotion_notes',
+						       '5_anticipatory_response_notes',
+						       '6_imitation_of_actions_activity_1',
+						       '6_imitation_of_actions_activity_2',
+						       '6_imitation_of_actions_activity_3',
+						       '6_imitation_of_actions_notes',
+						       'free_play_period_2_notes',
+						       '7_social_babbling_notes',
+						       '8_eye_contact_notes',
+						       '9_reciprocal_social_smile_notes',
+						       '10_coordination_of_eye_gaze_and_action_notes',
+						       '11_reactivity_notes',
+						       '14_social_interest_notes',
+						       '15_transitions_notes',
+						       '16_motor_control_and_behaviour_notes'
+						       '17_atypical_motor_notes',
+						       '18_atypical_sensory_notes',
+						       '19_engagement_of_attention_notes',
+						       '20_insistence_on_particular_objects_notes',
+						       '21_social_referencing_notes');
+    
+
 
         // setup the form
         $this->_setupForm();
