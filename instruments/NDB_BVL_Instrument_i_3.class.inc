@@ -1,6 +1,6 @@
 <?php
 
-class NDB_BVL_Instrument_I-3 extends NDB_BVL_Instrument {
+class NDB_BVL_Instrument_i_3 extends NDB_BVL_Instrument {
 
 
 
@@ -35,8 +35,8 @@ class NDB_BVL_Instrument_I-3 extends NDB_BVL_Instrument {
         // user-defined child classes)
         
         // set the object properties
-        $this->testName = "I-3";           // test_names.Test_name
-        $this->table = 'I-3';              // name of table containing
+        $this->testName = "i_3";           // test_names.Test_name
+        $this->table = 'i_3';              // name of table containing
         // data keyed by commentID
         $this->commentID = $commentID;
         
