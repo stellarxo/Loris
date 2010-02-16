@@ -73,6 +73,69 @@ INSERT INTO instrument_subtests VALUES('', 'csbs', 'csbs_page2', 'Symbolic Behav
                                             "play"=>"Play" . $this->indent . $this->indent . $this->indent . $this->indent . $this->indent . $this->indent . $this->indent,
                                             "object_names"=>"object names:", "person_names"=>"person names:", "body_parts"=>"body parts:", "subscale"=>"Subscale", "raw_weighted"=>"Weighted Raw Score", 						    "standard_score"=>"Standard Score","percentile_rank"=>"Percentile Rank"));
 
+
+
+    /**
+     * Array of column names to be ignored by the double data entry conflict detector.
+     */
+    $this->_doubleDataEntryDiffIgnoreColumns = array('CommentID', 'UserID', 'Testdate',
+						   'relationship_to_child',
+						   'comments',
+						   'q_13_words_1',
+						   'q_13_words_2',
+						   'q_13_words_3',
+						   'q_13_words_4',
+						   'q_13_words_5',
+						   'q_13_words_6',
+						   'q_13_words_7',
+						   'q_13_words_8',
+						   'q_13_words_9',
+						   'q_13_words_10',
+						   'q_13_words_11',
+						   'q_13_words_12',
+						   'q_13_words_13',
+						   'q_13_words_14',
+						   'q_13_words_15',
+						   'q_13_words_16', 
+						   'q_15_word_combos_1',
+						   'q_15_word_combos_2',
+						   'q_15_word_combos_3',
+						   'q_15_word_combos_4',
+						   'q_15_word_combos_5',
+						   'q_15_word_combos_6',
+						   'q_15_word_combos_7',
+						   'q_15_word_combos_8',
+						   'q_16_language_comp_objects_1',
+						   'q_16_language_comp_objects_2',
+						   'q_16_language_comp_objects_3',
+						   'q_16_language_comp_objects_4',
+						   'q_16_language_comp_person_1',
+						   'q_16_language_comp_person_2',
+						   'q_16_language_comp_person_3',
+						   'q_16_language_comp_body_parts_1',
+						   'q_16_language_comp_body_parts_2',
+						   'q_16_language_comp_body_parts_3',
+						   'q_16_language_comp_body_parts_4',
+						   'q_18_actions_towards_other_1',
+						   'q_18_actions_towards_other_2',
+						   'q_18_actions_towards_other_3',
+						   'q_18_actions_towards_other_4',
+						   'q_18_actions_towards_other_5',
+						   'q_18_actions_towards_other_6',
+						   'q_19_sequence_action_schemes_1',
+						   'q_19_sequence_action_schemes_2',
+						   'q_19_sequence_action_schemes_3',
+						   'q_19_sequence_action_schemes_4',
+						   'q_19_sequence_action_schemes_5',
+						   'q_19_sequence_action_schemes_6');
+
+
+
+
+
+
+
+
         // setup the form
         $this->_setupForm();
 
