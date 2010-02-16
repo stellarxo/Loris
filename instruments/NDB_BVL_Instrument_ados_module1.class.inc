@@ -19,6 +19,13 @@ class NDB_BVL_Instrument_ados_module1 extends NDB_BVL_Instrument
     var $option0127 = array(""=>NULL, 0=>0, 1=>1, 2=>2, 7=>7, "not_answered"=>"Not Answered");
 
     var $scoreCols = array("social_affect_total", "restricted_repetitive_behavior_total", "social_affect_restricted_repetitive_behavior_total", "ADOS_classification");
+
+
+    /**
+     * Array of column names to be ignored by the double data entry conflict detector.
+     */
+
+
     /**
     * sets up basic data, such as the HTML_Quickform object, and so on.
     *
@@ -50,6 +57,13 @@ class NDB_BVL_Instrument_ados_module1 extends NDB_BVL_Instrument
 
         // required fields for data entry completion status
         $this->_requiredElements = array('Examiner', "a1", "c1");
+
+	$this->_doubleDataEntryDiffIgnoreColumns = array('CommentID', 'UserID', 'Testdate',
+						   'd1_specify',
+						   'd2_specify',
+						   'd4_specify');
+
+
 
        // setup the form
         $this->_setupForm();

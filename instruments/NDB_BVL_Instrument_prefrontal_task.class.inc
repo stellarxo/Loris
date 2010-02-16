@@ -7,6 +7,8 @@ INSERT INTO instrument_subtests VALUES('', 'prefrontal_task', 'prefrontal_task_p
 INSERT INTO test_battery VALUES ('', 'prefrontal_task', '300', '780', 'Y', 'Visit', '3');
 */
 
+
+						  	
     /**
     * sets up basic data, such as the HTML_Quickform object, and so on.
     *
@@ -40,6 +42,12 @@ INSERT INTO test_battery VALUES ('', 'prefrontal_task', '300', '780', 'Y', 'Visi
         $this->_requiredElements = array('Examiner', 'start_side');
         
         $this->localDefaults = array_merge($this->localDefaults, array("trial"=>"Trial", "outcome"=>"Outcome", "correct"=>"# Correct", "trials"=>"# Trials"));
+	/**
+	 * Array of column names to be ignored by the double data entry conflict detector.
+	 */
+	$this->_doubleDataEntryDiffIgnoreColumns = array('CommentID', 'UserID', 'Testdate',
+						       'invalidity_comment');
+	
 
         // setup the form
         $this->_setupForm();

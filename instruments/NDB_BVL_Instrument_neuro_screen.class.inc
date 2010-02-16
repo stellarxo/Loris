@@ -11,6 +11,7 @@ INSERT INTO instrument_subtests VALUES('', 'neuro_screen', 'neuro_screen_page1',
 
 class NDB_BVL_Instrument_neuro_screen extends NDB_BVL_Instrument
 {
+
     /**
     * sets up basic data, such as the HTML_Quickform object, and so on.
     *
@@ -42,6 +43,32 @@ class NDB_BVL_Instrument_neuro_screen extends NDB_BVL_Instrument
 
         // required fields for data entry completion status
         $this->_requiredElements = array('Examiner', 'visit', "1_strabismus");
+
+	/**
+	 * Array of column names to be ignored by the double data entry conflict detector.
+	 */
+	$this->_doubleDataEntryDiffIgnoreColumns = array('CommentID', 'UserID', 'Testdate',
+							 '1_strabismus_specify',
+							 '2_specify',
+							 '7_cleft_describe',
+							 '11_symmetrical_gait_abnormality_specify',
+							 '12_asymemtrical_gait_abnormality_specify',
+							 '13_tone_symmetrical_abnormality_specify',
+							 '14_tone_asymmetrical_abnormality_specify',
+							 '15_appearance_specify',
+							 '16_power_upper_limb_specify_status',
+							 '17_power_lower_limb_specify',
+							 '18_other_limb_hand_dysmorphic_describe',
+							 '19_other_physical_abnormalities',
+							 '23_adenoma_sebaceum_describe',
+							 '24_ash_leaf_macules_describe',
+							 '25_shagreen_patches_describe',
+							 '27_cafe_au_lait_spots_describe',
+							 '28_cutaneous_nodules_describe');
+
+
+
+
 
         // setup the form
         $this->_setupForm();

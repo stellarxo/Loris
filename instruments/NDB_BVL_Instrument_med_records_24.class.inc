@@ -14,7 +14,9 @@ class NDB_BVL_Instrument_med_records_24 extends NDB_BVL_Instrument_med_records {
 	
 	//instrument specific variables
 	var $developmental_concerns = array (null => "", 'language' => "language", 'social' => "social", 'motor' => "motor", 'other' => "other" );
-	
+
+
+
 	/**
 	 * sets up basic data, such as the HTML_Quickform object, and so on.
 	 *
@@ -28,6 +30,19 @@ class NDB_BVL_Instrument_med_records_24 extends NDB_BVL_Instrument_med_records {
 		$this->testName = "med_records_24"; // test_names.Test_name
 		$this->table = 'med_records_24'; // name of database table corresponding to instrument
 		
+		/**
+		 * Array of column names to be ignored by the double data entry conflict detector.
+		 */
+		$this->_doubleDataEntryDiffIgnoreColumns = array('CommentID', 'UserID', 'Testdate',
+								 'significant_injuries_or_illnesses_specify',
+								 'other_genetic_tests_completed_specify',
+								 'other_significant_events_or_diagnosis_specify',
+								 'developmental_concerns_other_specify',
+								 'developmental_concerns_age_months');
+		
+	
+
+
 
 		// setup the form
 		$this->_setup ( $commentID, $page );

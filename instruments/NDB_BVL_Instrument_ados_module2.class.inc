@@ -53,9 +53,21 @@ class NDB_BVL_Instrument_ados_module2 extends NDB_BVL_Instrument
         // required fields for data entry completion status
         $this->_requiredElements = array('Examiner', "a1", "c1");
 
+		
+		/**
+		 * Array of column names to be ignored by the double data entry conflict detector.
+		 */
+		$this->_doubleDataEntryDiffIgnoreColumns = array('CommentID', 'UserID', 'Testdate',
+							       'd1_specify',
+							       'd2_specify',
+							       'd4_specify'   );
+
+
+
        // setup the form
         $this->_setupForm();
     }
+
 
     //If the instrument is not paged, remove the switch from the _setupForm method and add all the form Elements in this function.
     /**

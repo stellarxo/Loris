@@ -53,6 +53,46 @@ INSERT INTO instrument_subtests VALUES('', 'seq', 'seq_page3', 'General and Adde
 	"22_refuse_new_foods"=>"Taste or Smell",
 	"26_enjoy_riding"=>"Movement");
 
+
+	/**
+	 * Array of column names to be ignored by the double data entry conflict detector.
+	 */
+	$this->_doubleDataEntryDiffIgnoreColumns = array('CommentID', 'UserID', 'Testdate',
+							 'person_completing_other',
+							 '1_react_sensitively_what_do',
+							 '2_enjoy_music_what_do',
+							 '3_ignore_call_what_do',
+							 '4_ignore_tune_out_what_do',
+							 '5_notive_sounds_what_do',
+							 '6_show_distress_loud_what_do',
+							 '7_enjoy_picture_books_what_do',
+							 '8_disturbed_by_light_what_do',
+							 '9_stare_at_lights_what_do',
+							 '10_slow_to_notice_what_do',
+							 '11_avoid_looking_what_do',
+							 '12_seem_to_ignore_what_do',
+							 '13_enjoy_watching_videos_what_do',
+							 '14_dislike_cuddling_what_do',
+							 '15_show_distress_grooming_what_do',
+							 '16_avoid_touching_what_do',
+							 '17_react_negatively_what_do',
+							 '18_trouble_adjusting_what_do',
+							 '19_slow_to_react_what_do',
+							 '20_dislike_tickled_what_do',
+							 '21_ignore_tap_what_do',
+							 '22_refuse_new_foods_what_do',
+							 '23_smell_objects_what_do',
+							 '24_interested_smell_what_do',
+							 '25_put_objects_what_do',
+							 '26_enjoy_riding_what_do',
+							 '27_like_jump_what_do',
+							 '28_seek_physical_what_do',
+							 '29_uneasy_dizzy_what_do',
+							 '30_flap_arms_what_do',
+							 '31_free_time',
+							 '32_seem_happiest');
+
+
 	/**
     * sets up basic data, such as the HTML_Quickform object, and so on.
     *

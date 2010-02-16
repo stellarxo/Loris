@@ -28,6 +28,7 @@ INSERT INTO instrument_subtests VALUES('', 'fyi', 'fyi_page2', '#47-#63', 2);
     * @return void
     * @access public
     */
+
     function setup($commentID, $page){
         $this->formType="XIN";
         $this->form = new HTML_Quickform('test_form');
@@ -51,6 +52,17 @@ INSERT INTO instrument_subtests VALUES('', 'fyi', 'fyi_page2', '#47-#63', 2);
 
         // required fields for data entry completion status
         $this->_requiredElements = array('Examiner', "q_1", "q_47");
+
+	/**
+	 * Array of column names to be ignored by the double data entry conflict detector.
+	 */
+	$this->_doubleDataEntryDiffIgnoreColumns = array('CommentID', 'UserID', 'Testdate',
+						       'mother_highest_grade',
+						       'father_highest_grade',
+						       'person_filling_out_specify',
+						       'q_62',
+						       'q_63');
+
 
         // setup the form
         $this->_setupForm();

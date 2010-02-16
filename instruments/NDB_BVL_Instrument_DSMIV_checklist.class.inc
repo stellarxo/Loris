@@ -13,15 +13,6 @@ class NDB_BVL_Instrument_DSMIV_checklist extends NDB_BVL_Instrument
 
 
     /**
-     * Array of column names to be ignored by the double data entry conflict detector.
-     */
-    var $_doubleDataEntryDiffIgnoreColumns = array('CommentID', 'UserID', 'Testdate',
-						   '4b_not_ASD_specify',
-						   'confidence_rating_specify',
-						   'name_assessor',
-						   'name_confirming_clinician');
-
-    /**
     * sets up basic data, such as the HTML_Quickform object, and so on.
     *
     * @param string $commentID  the CommentID identifying the data to load
@@ -58,7 +49,16 @@ class NDB_BVL_Instrument_DSMIV_checklist extends NDB_BVL_Instrument
         'maxYear'  => $config->getSetting('endYear'),
         'addEmptyOption' => true,
         'emptyOptionValue' => null
-);
+		);
+	/**
+	 * Array of column names to be ignored by the double data entry conflict detector.
+	 */
+	$this->_doubleDataEntryDiffIgnoreColumns = array('CommentID', 'UserID', 'Testdate',
+						       '4b_not_ASD_specify',
+						       'confidence_rating_specify',
+						       'name_assessor',
+						       'name_confirming_clinician');
+	
 
 
         $this->_setupForm();

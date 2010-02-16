@@ -32,12 +32,21 @@ class NDB_BVL_Instrument_macarthur_cdi extends NDB_BVL_Instrument
 
         // required fields for data entry completion status
         $this->_requiredElements = array('Examiner', '<FIRST QUESTION OF EACH PAGE>');
+	/**
+	 * Array of column names to be ignored by the double data entry conflict detector.
+	 */
+	$this->_doubleDataEntryDiffIgnoreColumns = array('CommentID', 'UserID', 'Testdate',
+							 'II_F_replacement_examples',
+							 'II_F_replacement_comments');
+	
 
         // setup the form
         $this->_setupForm();
 
     }
-    
+
+
+
     //If the instrument is not paged, remove the switch from the _setupForm method and add all the form Elements in this function.
     
     /**
@@ -46,6 +55,7 @@ class NDB_BVL_Instrument_macarthur_cdi extends NDB_BVL_Instrument
     * @return void
     * @access private
     */
+
     function _setupForm(){
         if(ereg("macarthur_cdi(_page[0-9]+)",$this->page,$matches)){
             call_user_method($matches[1], &$this);

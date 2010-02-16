@@ -24,6 +24,7 @@ class NDB_BVL_Instrument_med_psych_hist extends NDB_BVL_Instrument
     * @return void
     * @access public
     */
+
     function setup($commentID, $page){
         $this->formType="XIN";
         $this->form = new HTML_Quickform('test_form');
@@ -91,8 +92,66 @@ class NDB_BVL_Instrument_med_psych_hist extends NDB_BVL_Instrument
         "relative_header"=>"Relative",
         "other_relative_header"=>"Other Relative"));
 
+    /**
+    * Array of column names to be ignored by the double data entry conflict detector.
+    */
+    $this->_doubleDataEntryDiffIgnoreColumns = array('CommentID', 'UserID', 'Testdate', 
+                                                   'relationship_to_child_other', 
+                                                   'a_aut_spect_disorder_who_other',
+                                                   'b_fragile_x_who_other', 
+                                                   'c_tuberous_sclerosis_who_other', 
+                                                   'd_neurofibromatosis_who_other', 
+                                                   'e_rett_syndrome_who_other', 
+                                                   'f_child_disint_disorder_who_other',
+                                                   'g_prader_willi_syndrome_who_other',
+						   'h_angelman_syndrome_who_other',
+						   'i_other_chromosomal_who_other',
+						   'i_other_chromosomal_other_status',
+						   'j_congenital_rubella_who_other',
+						   'k_pku_who_other',
+						   'l_hydrocephalus_who_other',
+						   'm_cerebral_palsy_who_other',
+						   'n_mental_retardation_who_other',
+						   'o_seizures_who_other',
+						   'p_speech_delay_therapy_who_other',
+						   'q_add_who_other',
+						   'r_panic_anxiety_dis_who_other',
+						   's_depression_who_other',
+						   't_manic_depres_bi_who_other',
+						   'u_schizophrenia_who_other',
+						   'v_hospital_mental_ill_who_other',
+						   'w_birth_defects_who_other',
+						   'x_cancer_who_other',
+						   'x_cancer_other',
+						   'y_norrie_syndrome_who_other',
+						   '4_pregnancy_ART_type_specify',
+						   '5_pregnancy_health_problems_specify',
+						   '6_preg_meds_q_thalid_specify',
+						   '6_preg_meds_r_miso_specify',
+						   '6_preg_meds_s_other_specify',
+						   '7_a_positive_blood_test_specify',
+						   '7_b_abnormal_ultra_sono_specify',
+						   '7_c_abnormal_amnio_CVS_specify',
+						   '7_d_other_specify',
+						   '9_i_other_specify',
+						   '16_unconscious_1_years',
+						   '16_unconscious_1_months',
+						   '16_unconscious_2_years',
+						   '16_unconscious_2_months',
+						   '16_unconscious_3_years',
+						   '16_unconscious_3_months',
+						   '17_d_heart_defect_specify',
+						   '17_e_kidney_defect_specify',
+						   '17_f_other_defect_specify',
+						   '18_other_chronic_a_specify',
+						   '18_other_chronic_b_specify',
+						   '18_other_chronic_c_specify');
+    
+
+
         // setup the form
         $this->_setupForm();
+						      
 
     }
 

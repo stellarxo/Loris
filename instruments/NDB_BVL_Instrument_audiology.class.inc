@@ -7,6 +7,8 @@ INSERT INTO test_names VALUES ('', 'audiology', 'Audiology Evaluation Results', 
 INSERT INTO test_battery VALUES ('', 'audiology', '660', '780', 'Y', 'Visit', '1');
 INSERT INTO test_battery VALUES ('', 'audiology', '660', '780', 'Y', 'Visit', '2');
 */
+
+
     /**
     * sets up basic data, such as the HTML_Quickform object, and so on.
     *
@@ -38,9 +40,19 @@ INSERT INTO test_battery VALUES ('', 'audiology', '660', '780', 'Y', 'Visit', '2
 
         // required fields for data entry completion status
         $this->_requiredElements = array('Examiner');
+	/**
+	 * Array of column names to be ignored by the double data entry conflict detector.
+	 */
+	$this->_doubleDataEntryDiffIgnoreColumns = array('CommentID', 'UserID', 'Testdate',
+						       'not_completed_other_specify',
+						       'other_method_specify',
+						       'equivocal_evaluation_results_specify');
+	
+
+
+
         // setup the form
         $this->_setupForm();
-
     }
     
     /**

@@ -6,7 +6,10 @@ class NDB_BVL_Instrument_figs_year3 extends NDB_BVL_Instrument
     
     var $scoreCols = array('ADHD','Alcohol','ASP','Depression','Drug_substance','Nicotine','Mania','OCD','Paranoid','Psychosis','Tic');
     var $scoreColsRelative = array('Score_adhd_combined','Score_adhd_inattentive','Score_adhd_hyperactive','Score_alcohol_abuse','Score_alcohol_dependence','Score_alcohol_nicotine','Score_alcohol_drug_substance','Score_asp','Score_depression','Score_chronic_depression','Score_recurrent_depression','Score_mania','Score_ocd','Score_paranoid_personality','Score_pervasive_development','Score_schizoid','Score_schizotypal','Score_psychosis_schizophrenia','Score_psychosis_depression','Score_psychosis_mania','Score_tic_tourettes','Score_tic_motor_c','Score_tic_vocal_c','Score_tic_motor_t','Score_tic_vocal_t');
-
+    
+    /**
+     * Array of column names to be ignored by the double data entry conflict detector.
+     */
     /**
     * sets up basic data, such as the HTML_Quickform object, and so on.
     *
@@ -35,6 +38,44 @@ class NDB_BVL_Instrument_figs_year3 extends NDB_BVL_Instrument
         $this->testName = "figs_year3";           // test_names.Test_name
         // data keyed by commentID
         $this->commentID = $commentID;
+
+	$this->_doubleDataEntryDiffIgnoreColumns = array('CommentID', 'UserID', 'Testdate',
+							 'Face_CauseOfDeath',
+							 'Face_Comments',
+							 'Other_Narrative',
+							 'Other_Q1_Disorder',
+							 'Other_Q1a_Description',
+							 'Depression_Q1cDescription',
+							 'Depression_Q1dDescription',
+							 'Depression_Q1eDescription',
+							 'Depression_Q2Description',
+							 'Mania_Q1bDescription',
+							 'Mania_Q1cDescription',
+							 'Mania_Q1dDescription',
+							 'Mania_Q1eDescription',
+							 'Mania_Q2Description',
+							 'Psychosis_Q1_Beliefs',
+							 'Psychosis_Q1eDescription',
+							 'Psychosis_Q1hDescription',
+							 'Psychosis_Q5Description',
+							 'Psychosis_Q11Description',
+							 'Alcohol_Q2Description',
+							 'Alcohol_Q6_WhichDrugs',
+							 'Alcohol_Q6a_MostProblemDrug1',
+							 'Alcohol_Q6a_MostProblemDrug2',
+							 'Alcohol_Q6a_MostProblemDrug3',
+							 'Alcohol_Q8Description',
+							 'Alcohol_Q13_WhichNicotine',
+							 'Schizoid_Q4aDescription',
+							 'Tic_Q1Description',
+							 'Tic_Q2Description',
+							 'Tic_Q3aDescription',
+							 'OCD_Q3b_Duration',
+							 'OCD_Q4aDescription',
+							 'ADHD_Q1k2_Grade',
+							 'ADHD_Q3aDescription');
+	
+
         
         // setup the form
         $this->_setupForm();
