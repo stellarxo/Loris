@@ -1,3 +1,4 @@
+#!/usr/bin/php
 <?
 
 /*
@@ -15,7 +16,7 @@ require_once "ConflictDetector.class.inc";
 $db =& Database::singleton();
 
 
-$instrument_name='head_measurements_subject';
+$instrument_name=$argv[0];
 
 
 $instance_pairs = getInstancePairsForInstrument($instrument_name);
