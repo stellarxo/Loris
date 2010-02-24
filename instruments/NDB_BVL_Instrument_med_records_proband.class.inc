@@ -31,9 +31,6 @@ class NDB_BVL_Instrument_med_records_proband extends NDB_BVL_Instrument_med_reco
 		$this->testName = "med_records_proband"; // test_names.Test_name
 		$this->table = 'med_records_proband'; // name of database table corresponding to instrument
 		
-
-		// setup the form
-		$this->_setup ( $commentID, $page );
 		$this->_doubleDataEntryDiffIgnoreColumns = array('CommentID', 'UserID', 'Testdate',
 								 'diagnositic_setting_result',
 								 'diagnositic_setting_result_status',
@@ -44,6 +41,10 @@ class NDB_BVL_Instrument_med_records_proband extends NDB_BVL_Instrument_med_reco
 								 'other_diagnoses_specify',
 								 'other_genetic_tests_completed_specify',
 								 'other_genetic_tests_completed_specify_status');
+	       
+
+		// setup the form
+		$this->_setup ( $commentID, $page );
 	}
 	
 	/**

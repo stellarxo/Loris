@@ -74,7 +74,7 @@ class NDB_BVL_Instrument_tsi extends NDB_BVL_Instrument
 								 'med_his_q_9_anethesia_problems_status',
 								 'med_his_q_10_nap',
 								 'med_his_q_10_nap_status',
-								 'med_his_q_11_nap_how_long'
+								 'med_his_q_11_nap_how_long',
 								 'med_his_q_11_nap_how_long_status');
 		
 

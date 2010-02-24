@@ -99,7 +99,7 @@ class NDB_BVL_Instrument_med_psych_hist extends NDB_BVL_Instrument
 						     'relationship_to_child_other', 
 						     'relationship_to_child_other_status',
 						     'a_aut_spect_disorder_who_other',
-						     'a_aut_spect_disorder_who_other_status'
+						     'a_aut_spect_disorder_who_other_status',
 						     'b_fragile_x_who_other', 
 						     'b_fragile_x_who_other_status', 
 						     'c_tuberous_sclerosis_who_other', 
