@@ -5,7 +5,7 @@
 Compare tsting script
 */
 
-set_include_path(get_include_path().":../../php/libraries:");
+set_include_path(get_include_path().":../libraries:../../php/libraries:");
 require_once "NDB_Client.class.inc";
 
 $client = new NDB_Client();
@@ -16,7 +16,7 @@ require_once "ConflictDetector.class.inc";
 $db =& Database::singleton();
 
 
-$instrument_name=$argv[0];
+$instrument_name=$argv[1];
 
 
 $instance_pairs = getInstancePairsForInstrument($instrument_name);
