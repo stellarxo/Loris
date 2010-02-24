@@ -54,10 +54,12 @@ class NDB_BVL_Instrument_DSMIV_checklist extends NDB_BVL_Instrument
 	 * Array of column names to be ignored by the double data entry conflict detector.
 	 */
 	$this->_doubleDataEntryDiffIgnoreColumns = array('CommentID', 'UserID', 'Testdate',
-						       '4b_not_ASD_specify',
-						       'confidence_rating_specify',
-						       'name_assessor',
-						       'name_confirming_clinician');
+							 '4b_not_ASD_specify',
+							 'confidence_rating_specify',
+							 'confidence_rating_specify_status',
+							 'name_assessor',
+							 'name_confirming_clinician',
+							 'equivocal_evaluation_results_specify');
 	
 
 

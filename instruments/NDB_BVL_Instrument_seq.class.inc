@@ -54,6 +54,38 @@ INSERT INTO instrument_subtests VALUES('', 'seq', 'seq_page3', 'General and Adde
 	"26_enjoy_riding"=>"Movement");
 
 
+
+	/**
+    * sets up basic data, such as the HTML_Quickform object, and so on.
+    *
+    * @param string $commentID  the CommentID identifying the data to load
+    * @param string $page       if a multipage form, the page to show
+    * @return void
+    * @access public
+    */
+	function setup($commentID, $page){
+		$this->formType="XIN";
+		$this->form = new HTML_Quickform('test_form');
+		$this->page = $page;            // page label (number or
+		// string - used by
+		// user-defined child classes)
+
+		// set the object properties
+		$this->testName = "seq";           // test_names.Test_name
+		$this->table = 'seq';              // name of database table corresponding to instrument
+		// data keyed by commentID
+		$this->commentID = $commentID;
+
+		//The array of dates/timestamps to convert to database dates/timestamps
+		//Any HTML_Quickform date elements must be listed here
+		$this->dateTimeFields=array("Date_taken");
+
+		//The array of selects with multiple answers allowed
+		//Any HTML_Quickform multiple selects must be listed here
+		$this->_selectMultipleElements = array();
+
+		// required fields for data entry completion status
+		$this->_requiredElements = array('Examiner', "1_react_sensitively", "14_dislike_cuddling", "36_a_sounds");
 	/**
 	 * Array of column names to be ignored by the double data entry conflict detector.
 	 */
@@ -93,37 +125,7 @@ INSERT INTO instrument_subtests VALUES('', 'seq', 'seq_page3', 'General and Adde
 							 '32_seem_happiest');
 
 
-	/**
-    * sets up basic data, such as the HTML_Quickform object, and so on.
-    *
-    * @param string $commentID  the CommentID identifying the data to load
-    * @param string $page       if a multipage form, the page to show
-    * @return void
-    * @access public
-    */
-	function setup($commentID, $page){
-		$this->formType="XIN";
-		$this->form = new HTML_Quickform('test_form');
-		$this->page = $page;            // page label (number or
-		// string - used by
-		// user-defined child classes)
 
-		// set the object properties
-		$this->testName = "seq";           // test_names.Test_name
-		$this->table = 'seq';              // name of database table corresponding to instrument
-		// data keyed by commentID
-		$this->commentID = $commentID;
-
-		//The array of dates/timestamps to convert to database dates/timestamps
-		//Any HTML_Quickform date elements must be listed here
-		$this->dateTimeFields=array("Date_taken");
-
-		//The array of selects with multiple answers allowed
-		//Any HTML_Quickform multiple selects must be listed here
-		$this->_selectMultipleElements = array();
-
-		// required fields for data entry completion status
-		$this->_requiredElements = array('Examiner', "1_react_sensitively", "14_dislike_cuddling", "36_a_sounds");
 
 		// setup the form
 		$this->_setupForm();

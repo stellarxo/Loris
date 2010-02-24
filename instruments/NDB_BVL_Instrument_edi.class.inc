@@ -185,15 +185,6 @@ INSERT INTO test_battery VALUES ('', 'edi', '1050', '1140', 'Y', 'Visit', '2');
     //combined array to hold the calculated scores
     var $scores = array();
 
-    /**
-     * Array of column names to be ignored by the double data entry conflict detector.
-     */
-    var $_doubleDataEntryDiffIgnoreColumns = array('CommentID', 'UserID', 'Testdate', 'EDI8ot', 'EDI19ot', 'EDIT33ot', 
-						   'EDI45ot', 'EDI58ot', 'EDI70ot', 'EDI82ot', 'EDI96ot', 'inj_month', 
-						   'dear_month', 'conf_month', 'legl_month', 'emp_month', 'crim_month', 
-						   'other_1_month', 'other_2_month', 'comnt');
-
-
 	/**
     * sets up basic data, such as the HTML_Quickform object, and so on.
     *
@@ -201,54 +192,95 @@ INSERT INTO test_battery VALUES ('', 'edi', '1050', '1140', 'Y', 'Visit', '2');
     * @param string $page       if a multipage form, the page to show
     * @return void
     * @access public
-    */    FUNCTION SETUP($COMMENTID, $PAGE){
-        $THIS->FORMTYPE="XIN";
-        $THIS->FORM = NEW HTML_QUICKFORM('TEST_FORM');
-        $THIS->PAGE = $PAGE;            // PAGE LABEL (NUMBER OR
-        // STRING - USED BY
-        // USER-DEFINED CHILD CLASSES)
+    */
+    function setup($commentID, $page){
+        $this->formType="XIN";
+        $this->form = new HTML_Quickform('test_form');
+        $this->page = $page;            // page label (number or
+        // string - used by
+        // user-defined child classes)
         
-        // SET THE OBJECT PROPERTIES
-        $THIS->TESTNAME = "EDI";           // TEST_NAMES.TEST_NAME
-        $THIS->TABLE = 'EDI';              // NAME OF DATABASE TABLE CORRESPONDING TO INSTRUMENT
-        // DATA KEYED BY COMMENTID
-        $THIS->COMMENTID = $COMMENTID;
+        // set the object properties
+        $this->testName = "edi";           // test_names.Test_name
+        $this->table = 'edi';              // name of database table corresponding to instrument
+        // data keyed by commentID
+        $this->commentID = $commentID;
         
-        //THE ARRAY OF DATES/TIMESTAMPS TO CONVERT TO DATABASE DATES/TIMESTAMPS
-        //ANY HTML_QUICKFORM DATE ELEMENTS MUST BE LISTED HERE
-        $THIS->DATETIMEFIELDS=ARRAY("DATE_TAKEN");
+        //The array of dates/timestamps to convert to database dates/timestamps
+        //Any HTML_Quickform date elements must be listed here
+        $this->dateTimeFields=array("Date_taken");
             
-        //THE ARRAY OF SELECTS WITH MULTIPLE ANSWERS ALLOWED
-        //ANY HTML_QUICKFORM MULTIPLE SELECTS MUST BE LISTED HERE
-        $THIS->_SELECTMULTIPLEELEMENTS = ARRAY();
+        //The array of selects with multiple answers allowed
+        //Any HTML_Quickform multiple selects must be listed here
+        $this->_selectMultipleElements = array();
 
-        // REQUIRED FIELDS FOR DATA ENTRY COMPLETION STATUS
-        $THIS->_REQUIREDELEMENTS = ARRAY('EXAMINER');
+        // required fields for data entry completion status
+        $this->_requiredElements = array('Examiner');
 
-        // FIND THE DATE_TAKEN
-        $DB =& DATABASE::SINGLETON();
-        IF(PEAR::ISERROR($DB)) {
-            RETURN PEAR::RAISEERROR ("COULD NOT CONNECT TO DATABASE: ".$DB->GETMESSAGE());
+        // Find the Date_taken
+        $db =& Database::singleton();
+        if(PEAR::isError($db)) {
+            return PEAR::raiseError ("Could not connect to database: ".$db->getMessage());
         }
         
-        $QUERY = "SELECT DATE_TAKEN FROM " . $THIS->TESTNAME . " WHERE COMMENTID = '".$THIS->GETCOMMENTID()."'";
-        $RESULT = $DB->SELECTONE($QUERY);
-        IF(PEAR::ISERROR($RESULT)){
-            RETURN PEAR::RAISEERROR("QUERY HAS FAILED TO SELECT DATE_TAKEN.".$RESULT->GETMESSAGE());
+        $query = "SELECT Date_taken from " . $this->testName . " WHERE CommentID = '".$this->getCommentID()."'";
+        $result = $db->selectOne($query);
+        if(PEAR::isError($result)){
+            return PEAR::raiseError("Query has failed to select Date_taken.".$result->getMessage());
         }
-        $THIS->DATE_TAKEN=$RESULT;
+        $this->Date_taken=$result;
 
-        //SCORING COLUMN HEADERS
-        FOREACH($THIS->COLUMNHEADERS AS $FIELD=>$LABEL) {
-            $THIS->COLUMNHEADERS[$FIELD] .= $THIS->INDENT;
+        //Scoring column headers
+        foreach($this->columnHeaders as $field=>$label) {
+            $this->columnHeaders[$field] .= $this->indent;
         }
-        $THIS->LOCALDEFAULTS = ARRAY_MERGE($THIS->LOCALDEFAULTS, $THIS->COLUMNHEADERS);
+        $this->localDefaults = array_merge($this->localDefaults, $this->columnHeaders);
         
-        //COMBINE ALL SCORABLE FIELDS INTO ONE, SAVABLE ARRAY
-        $THIS->SCORES = ARRAY_MERGE($THIS->TOTAL_SYMPTOMANCHORS, $THIS->REGULATORYANCHORS, $THIS->SOCIALANCHORS, $THIS->COMMUNICATIONANCHORS, $THIS->REPETITIVE_BEHAVIOURANCHORS);
+        //combine all scorable fields into one, savable array
+        $this->scores = array_merge($this->total_symptomAnchors, $this->regulatoryAnchors, $this->socialAnchors, $this->communicationAnchors, $this->repetitive_behaviourAnchors);
 
-        // SETUP THE FORM
-        $THIS->_SETUPFORM();
+/**
+     * Array of column names to be ignored by the double data entry conflict detector.
+     */
+    $this->_doubleDataEntryDiffIgnoreColumns = array('CommentID', 'UserID', 'Testdate', 
+						     'EDI8ot', 
+						     'EDI19ot', 
+						     'EDIT33ot',
+						     'EDI45ot', 
+						     'EDI58ot', 
+						     'EDI70ot', 
+						     'EDI82ot', 
+						     'EDI96ot', 
+						     'inj_month',
+						     'dear_month', 
+						     'conf_month', 
+						     'legl_month', 
+						     'emp_month', 
+						     'crim_month',
+						     'other_1_month', 
+						     'other_2_month', 
+						     'comnt',
+						     'EDI8ot_status', 
+						     'EDI19ot_status', 
+						     'EDIT33ot_status',
+						     'EDI45ot_status', 
+						     'EDI58ot_status', 
+						     'EDI70ot_status', 
+						     'EDI82ot_status', 
+						     'EDI96ot_status', 
+						     'inj_month_status',
+						     'dear_month_status', 
+						     'conf_month_status', 
+						     'legl_month_status', 
+						     'emp_month_status', 
+						     'crim_month_status',
+						     'other_1_month_status', 
+						     'other_2_month_status', 
+						     'comnt_status');
+
+
+        // setup the form
+        $this->_setupForm();
 
     }
     

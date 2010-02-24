@@ -46,7 +46,8 @@ INSERT INTO test_battery VALUES ('', 'prefrontal_task', '300', '780', 'Y', 'Visi
 	 * Array of column names to be ignored by the double data entry conflict detector.
 	 */
 	$this->_doubleDataEntryDiffIgnoreColumns = array('CommentID', 'UserID', 'Testdate',
-						       'invalidity_comment');
+							 'invalidity_comment',
+							 'invalidity_comment_status');
 	
 
         // setup the form

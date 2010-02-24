@@ -34,6 +34,16 @@ class NDB_BVL_Instrument_med_records_proband extends NDB_BVL_Instrument_med_reco
 
 		// setup the form
 		$this->_setup ( $commentID, $page );
+		$this->_doubleDataEntryDiffIgnoreColumns = array('CommentID', 'UserID', 'Testdate',
+								 'diagnositic_setting_result',
+								 'diagnositic_setting_result_status',
+								 'clinician_background_specify',
+								 'clinician_background_specify_status',
+								 'age_diagnosis_months',
+								 'age_diagnosis_months_status',
+								 'other_diagnoses_specify',
+								 'other_genetic_tests_completed_specify',
+								 'other_genetic_tests_completed_specify_status');
 	}
 	
 	/**

@@ -37,7 +37,9 @@ class NDB_BVL_Instrument_macarthur_cdi extends NDB_BVL_Instrument
 	 */
 	$this->_doubleDataEntryDiffIgnoreColumns = array('CommentID', 'UserID', 'Testdate',
 							 'II_F_replacement_examples',
-							 'II_F_replacement_comments');
+							 'II_F_replacement_examples_status',
+							 'II_F_replacement_comments',
+							 'II_F_replacement_comments_status');
 	
 
         // setup the form

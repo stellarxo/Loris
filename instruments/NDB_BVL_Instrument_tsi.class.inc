@@ -5,6 +5,7 @@ require_once('RequiredIf.inc');
 class NDB_BVL_Instrument_tsi extends NDB_BVL_Instrument
 {
 	var $yesNo = array(null=>"", "yes"=>"Yes", "no"=>"No", "not_answered"=>"Not Answered");
+	var $education_choices = array(null => "", "not_answered" => "Not Answered", "j_high" => "Junior High", "some_hs" => "Some Highschool", "some_college_12yr_degree" => "Some College 12yr Degree", "college_degree" => "College Degree", "some_grad_level" => "Some Graduate Level", "grad_degree" => "Graduate Degree");
 	
 	/*
 	INSERT INTO test_names VALUES ('', 'tsi', 'Telephone Screening Interview', '0', '1');
@@ -53,17 +54,28 @@ class NDB_BVL_Instrument_tsi extends NDB_BVL_Instrument
 		// required fields for data entry completion status
 		$this->_requiredElements = array('Examiner', "ses_income", "typical_or_asd_subject");
 		$this->_doubleDataEntryDiffIgnoreColumns = array('CommentID', 'UserID', 'Testdate', 
-							       'in_utero_substance_proband',
-							       'in_utero_substance_amount_proband',
+								 'in_utero_substance_proband',
+								 'in_utero_substance_proband_status',
+								 'in_utero_substance_amount_proband',
+								 'in_utero_substance_amount_proband_status',
 								 'in_utero_time_exposure_proband',
+								 'in_utero_time_exposure_proband_status',
 								 'asd_further_information',
+								 'asd_further_information_status',
 								 'med_his_q_3_surgery_describe',
+								 'med_his_q_3_surgery_describe_status',
 								 'med_his_q_5_medications_describe',
+								 'med_his_q_5_medications_describe_status',
 								 'med_his_q_6_allergies_describe',
+								 'med_his_q_6_allergies_describe_status',
 								 'med_his_q_8_brain_MRI_results',
+								 'med_his_q_8_brain_MRI_results_status',								
 								 'med_his_q_9_anethesia_problems',
+								 'med_his_q_9_anethesia_problems_status',
 								 'med_his_q_10_nap',
-								 'med_his_q_11_nap_how_long');
+								 'med_his_q_10_nap_status',
+								 'med_his_q_11_nap_how_long'
+								 'med_his_q_11_nap_how_long_status');
 		
 
 		// setup the form
@@ -126,12 +138,75 @@ class NDB_BVL_Instrument_tsi extends NDB_BVL_Instrument
         $this->form->addRule("mother_race", "Must answer this race question", 'required');
 
         $this->form->addElement("select", "father_race", "Father Race:", array("white"=>"White", "black_african_american"=>"Black or African American", "asian"=>"Asian", "unknown_not_reported"=>"Unknown or not Reported", "american_indian_alaska_native"=>"American Indian / Alaska Native", "native_hawaiian_pacific_islander"=>"Native Hawaiian / Other Pacific Islander", "more_than_one_race"=>"More than one race (select all applicable)"), "multiple");
+       
         $this->form->addRule("father_race", "Must answer this race question", 'required');
 		
-		$this->form->addElement("static", null, "Parent's Information:");
+		$this->form->addElement("static", null, "<b>Parent's Information:</b><br><br>");
+		
+		$this->addTextElement("primary_language", "Primary language spoken in the home:");
+		
+		//Mother's Information
+    	$this->form->addElement("static", null, "<b>Mother's Information</b><br>");
+		
+		/*
+     	$this->addTextElement("mother_first_name", "First Name:");
+     	$this->form->addElement("text", "mother_middle_name", "Middle Name:");
+	    $this->addTextElement ("mother_last_name", "Last Name" );
+        */
+        
+        $this->form->addElement("static", null, "First Name:<br>");
+    	$this->form->addElement("static", null, "Middle Name: <br>");
+    	$this->form->addElement("static", null, "Last Name: <br>");
+    	
+        $this->addTextElement("mother_occupation", "Occupation:");        
+        
+        $this->form->addElement("select", "mother_education", "Highest Level of Education", array(null => "", "not_answered" => "Not Answered", "j_high" => "Junior High", "some_hs" => "Some Highschool", "high_school"=> "High School", "some_college" => "Some College/2yr Degree", "college_degree" => "College Degree", "some_grad_level" => "Some Graduate Level", "grad_degree" => "Graduate Degree"));
+    	
+    	$this->XINRegisterRule ( "mother_education_rule", array ("mother_education{@}!={@}"), "Please enter the mother's education" );
+        
+    
+    	$config =& NDB_Config::singleton();
+        
+        $this->dateOptions = array(
+            'language' => 'en',
+            'format'   => 'YMd',
+            'minYear'  => $config->getSetting('startYear') -80, //allows for siblings up to 20 years older than candidate
+            'maxYear'  => $config->getSetting('endYear'),
+            'addEmptyOption' => true,
+            'emptyOptionValue' => null
+    	);
+		
+	   $this->addDateElement('mother_dob', "Date of Birth:");
+       
+	    //Father's Information
+	    
+        $this->form->addElement("static", null, "<br><br><b>Father's Information</b><br>");
+        
+        $this->form->addElement("static", null, "First Name:<br>");
+        $this->form->addElement("static", null, "Middle Name: <br>");
+        $this->form->addElement("static", null, "Last Name: <br>");
+
+        /*
+        $this->addTextElement("father_first_name", "First Name:");
+        $this->form->addElement("text", "father_middle_name", "Middle Name:");
+    	$this->addTextElement ("father_last_name", "Last Name" );
+        */
+        
+        $this->addTextElement("father_occupation", "Occupation:");        
+
+        $this->form->addElement("select", "father_education", "Highest Level of Education", array(null => "", "not_answered" => "Not Answered", "j_high" => "Junior High", "some_hs" => "Some Highschool", "high_school"=> "High School", "some_college" => "Some College/2yr Degree", "college_degree" => "College Degree", "some_grad_level" => "Some Graduate Level", "grad_degree" => "Graduate Degree"));
+        
+        $this->XINRegisterRule ( "father_education_rule", array ("father_education{@}!={@}"), "Please enter the father's education" );
+
+    	$config =& NDB_Config::singleton();
+
+	    $this->addDateElement('father_dob', "Date of Birth:");
+      		
+      	$this->form->addElement("static", null, "<br><br>");
+      	
 		$this->form->addElement("select", "ses_income", "SES:", array(null=>"", "less_than_25K"=>"less than $24,999", "25K-35K"=>"$25,000 - 34,999", "35K-50K"=>"$35,000 - 49,999", "50K-75K"=>"$50,000 - 74,999", "75K-100K"=>"$75,000 - 99,999", "100K-150K"=>"$100,000 - 149,999", "150K-200K"=>"$150,000 - 199,000", "over_200K"=>"over $200,000", "not_answered"=>"Not Answered"));
 
-        $nonAskedQuestions = array("Parent's Telephone:",
+        $nonAskedQuestions = array("<br>Parent's Telephone:",
 		"Parent's Address:",
 		"$this->indent a) Older sibling",
 		"$this->indent b) other siblings:",
@@ -226,6 +301,8 @@ class NDB_BVL_Instrument_tsi extends NDB_BVL_Instrument
 
 	function _page3() {
 		$this->form->addElement("header", null, "Medical Records");
+		$this->addTextElement("city_of_birth", "City of Birth:");
+        
 		$this->form->addElement('header', null, "This type of identifying information should not be entered in the database");
 		$this->form->addElement("static", null, "Any diagnoses, dates and locations:");
 		$this->form->addElement("static", null, "Has X had any other cognitive/developmental testing?");

@@ -57,11 +57,14 @@ INSERT INTO instrument_subtests VALUES('', 'fyi', 'fyi_page2', '#47-#63', 2);
 	 * Array of column names to be ignored by the double data entry conflict detector.
 	 */
 	$this->_doubleDataEntryDiffIgnoreColumns = array('CommentID', 'UserID', 'Testdate',
-						       'mother_highest_grade',
-						       'father_highest_grade',
-						       'person_filling_out_specify',
-						       'q_62',
-						       'q_63');
+							 'mother_highest_grade',
+							 'father_highest_grade',
+							 'person_filling_out_specify',
+							 'person_filling_out_specify_status',
+							 'q_62',
+							 'q_62_status',
+							 'q_63',
+							 'q_63_status');
 
 
         // setup the form

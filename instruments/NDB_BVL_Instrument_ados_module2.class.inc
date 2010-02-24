@@ -58,9 +58,12 @@ class NDB_BVL_Instrument_ados_module2 extends NDB_BVL_Instrument
 		 * Array of column names to be ignored by the double data entry conflict detector.
 		 */
 		$this->_doubleDataEntryDiffIgnoreColumns = array('CommentID', 'UserID', 'Testdate',
-							       'd1_specify',
-							       'd2_specify',
-							       'd4_specify'   );
+								 'd1_specify',
+								 'd1_specify_status',
+								 'd2_specify',
+								 'd2_specify_status',
+								 'd4_specify',
+								 'd4_specify_status');
 
 
 

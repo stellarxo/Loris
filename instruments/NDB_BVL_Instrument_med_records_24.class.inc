@@ -35,9 +35,14 @@ class NDB_BVL_Instrument_med_records_24 extends NDB_BVL_Instrument_med_records {
 		 */
 		$this->_doubleDataEntryDiffIgnoreColumns = array('CommentID', 'UserID', 'Testdate',
 								 'significant_injuries_or_illnesses_specify',
+								 'significant_injuries_or_illnesses_specify_status',
 								 'other_genetic_tests_completed_specify',
+								 'other_genetic_tests_completed_specify_status',
 								 'other_significant_events_or_diagnosis_specify',
+								 'other_significant_events_or_diagnosis_specify_status',
 								 'developmental_concerns_other_specify',
+								 'developmental_concerns_other_specify_status',
+								 'developmental_concerns_age_months_status',
 								 'developmental_concerns_age_months');
 		
 	

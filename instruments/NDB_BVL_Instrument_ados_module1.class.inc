@@ -59,9 +59,12 @@ class NDB_BVL_Instrument_ados_module1 extends NDB_BVL_Instrument
         $this->_requiredElements = array('Examiner', "a1", "c1");
 
 	$this->_doubleDataEntryDiffIgnoreColumns = array('CommentID', 'UserID', 'Testdate',
-						   'd1_specify',
-						   'd2_specify',
-						   'd4_specify');
+							 'd1_specify',
+							 'd1_specify_status',
+							 'd2_specify',
+							 'd2_specify_status',
+							 'd4_specify',
+							 'd4_specify_status');
 
 
 
