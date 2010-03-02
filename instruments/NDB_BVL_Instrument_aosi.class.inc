@@ -55,6 +55,30 @@ INSERT INTO instrument_subtests VALUES('', 'aosi', 'aosi_page2', 'General Observ
 	 * Array of column names to be ignored by the double data entry conflict detector.
 	 */
 	$this->_doubleDataEntryDiffIgnoreColumns = array('CommentID', 'UserID', 'Testdate',
+						       '1_visual_tracking_notes',
+						       '2_disengagement_of_attention_notes',
+						       'free_play_period_1_notes',
+						       '3_orients_to_name_notes',
+						       '4_differential_response_to_facial_emotion_notes',
+						       '5_anticipatory_response_notes',
+						       '6_imitation_of_actions_activity_1',
+						       '6_imitation_of_actions_activity_2',
+						       '6_imitation_of_actions_activity_3',
+						       '6_imitation_of_actions_notes',
+						       'free_play_period_2_notes',
+						       '7_social_babbling_notes',
+						       '8_eye_contact_notes',
+						       '9_reciprocal_social_smile_notes',
+						       '10_coordination_of_eye_gaze_and_action_notes',
+						       '11_reactivity_notes',
+						       '14_social_interest_notes',
+						       '15_transitions_notes',
+						       '16_motor_control_and_behaviour_notes',
+						       '17_atypical_motor_notes',
+						       '18_atypical_sensory_notes',
+						       '19_engagement_of_attention_notes',
+						       '20_insistence_on_particular_objects_notes',
+						       '21_social_referencing_notes',
 							 '1_visual_tracking_notes',
 							 '1_visual_tracking_notes_status',
 							 '2_disengagement_of_attention_notes',
@@ -103,8 +127,6 @@ INSERT INTO instrument_subtests VALUES('', 'aosi', 'aosi_page2', 'General Observ
 							 '20_insistence_on_particular_objects_notes_status',
 							 '21_social_referencing_notes',
 							 '21_social_referencing_notes_status');
-    
-
 
         // setup the form
         $this->_setupForm();
@@ -308,9 +330,9 @@ INSERT INTO instrument_subtests VALUES('', 'aosi', 'aosi_page2', 'General Observ
         
         //Question 1
         //override
-        if($score_record["1_visual_tracking_score_override"] != null) {
-            $this->scores["1_visual_tracking_score"] = $score_record["1_visual_tracking_score_override"];
-        } else {
+//        if($score_record["1_visual_tracking_score_override"] != null) {
+//            $this->scores["1_visual_tracking_score"] = $score_record["1_visual_tracking_score_override"];
+//        } else {
         //calculate
             //8
             if($score_record["1_visual_tracking_press_1"] == 8 || $score_record["1_visual_tracking_press_2"] == 8) {      
@@ -328,12 +350,13 @@ INSERT INTO instrument_subtests VALUES('', 'aosi', 'aosi_page2', 'General Observ
             else {
                 $this->scores["1_visual_tracking_score"] = "Scoring Error";
             }
-        }
+//        }
+
         //Question 2
         //override
-        if($score_record["2_disengagement_of_attention_score_override"] != null) {
-            $this->scores["2_disengagement_of_attention_score"] = $score_record["2_disengagement_of_attention_score_override"];
-        } else {
+//        if($score_record["2_disengagement_of_attention_score_override"] != null) {
+//            $this->scores["2_disengagement_of_attention_score"] = $score_record["2_disengagement_of_attention_score_override"];
+//        } else {
         //calculate
             //8
             if($score_record["2_disengagement_of_attention_press_1"] == 8 || $score_record["2_disengagement_of_attention_press_2"] == 8 || $score_record["2_disengagement_of_attention_press_3"] == 8) {      
@@ -351,13 +374,13 @@ INSERT INTO instrument_subtests VALUES('', 'aosi', 'aosi_page2', 'General Observ
             else {
                 $this->scores["2_disengagement_of_attention_score"] = "Scoring Error";
             }
-        }
+//        }
         
         //Question 3
         //override
-        if($score_record["3_orients_to_name_score_override"] != null) {
-            $this->scores["3_orients_to_name_score"] = $score_record["3_orients_to_name_score_override"];
-        } else {
+//        if($score_record["3_orients_to_name_score_override"] != null) {
+//            $this->scores["3_orients_to_name_score"] = $score_record["3_orients_to_name_score_override"];
+//        } else {
         //calculate
             //2
             if($score_record["3_orients_to_name_press_1_trial_1"] == "fail_to_orient" && 
@@ -392,7 +415,8 @@ INSERT INTO instrument_subtests VALUES('', 'aosi', 'aosi_page2', 'General Observ
             else {
                 $this->scores["3_orients_to_name_score"] = "Scoring Error";
             }
-        }
+//        }
+        
         //Question 4
         $this->scores["4_differential_response_to_facial_emotion_score"] = $score_record["4_differential_response_to_facial_emotion"];
 
@@ -401,9 +425,9 @@ INSERT INTO instrument_subtests VALUES('', 'aosi', 'aosi_page2', 'General Observ
 
         //Question 6
         //override
-        if($score_record["6_imitation_of_actions_score_override"] != null) {
-            $this->scores["6_imitation_of_actions_score"] = $score_record["6_imitation_of_actions_score_override"];
-        } else {
+//        if($score_record["6_imitation_of_actions_score_override"] != null) {
+//            $this->scores["6_imitation_of_actions_score"] = $score_record["6_imitation_of_actions_score_override"];
+//        } else {
         //calculate
             $this->scores["6_imitation_of_actions_score"] = 8; //start with worst score possible
             for($activity = 1; $activity <= 3; $activity++) {
@@ -412,7 +436,8 @@ INSERT INTO instrument_subtests VALUES('', 'aosi', 'aosi_page2', 'General Observ
                     $this->scores["6_imitation_of_actions_score"] =  $score_record["6_imitation_of_actions_act_{$activity}_att_{$attempt}"] < $this->scores["6_imitation_of_actions_score"] ? $score_record["6_imitation_of_actions_act_{$activity}_att_{$attempt}"] : $this->scores["6_imitation_of_actions_score"]; 
                 }
             }
-        }
+//        }
+        
         //Summary scores
         //build array of all scorable fields
         $scorables[]= $this->scores["1_visual_tracking_score"];
