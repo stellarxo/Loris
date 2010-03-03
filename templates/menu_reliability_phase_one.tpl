@@ -9,6 +9,7 @@
       <th><font color="#CCCCCC">Outside Research Group</font></th>
       <th><font color="#CCCCCC">Reliable</font></th>
       <th><font color="#CCCCCC">Date Reliability Established</font></th>
+      <th><font color="#CCCCCC">Administration Status</font></th>
    </tr>
    {section name=item loop=$adi_r_data}
    <tr bgcolor="#FFFFFF">
@@ -17,6 +18,7 @@
       <td>{$adi_r_data[item].outside_research_group}</td>
       <td>{$adi_r_data[item].reliable}</td>
       <td>{$adi_r_data[item].reliability_established_date}</td>
+      <td>{$adi_r_data[item].administration_status}</td>
    </tr>
    {/section}
 </table>
@@ -37,6 +39,7 @@
       <th colspan="4"><font color="#CCCCCC">Tape 3</font></th>
       <th rowspan="2"><font color="#CCCCCC">Reliable</font></th>
       <th rowspan="2"><font color="#CCCCCC">Date Reliability Established</font></th>
+      <th rowspan="2"><font color="#CCCCCC">Administration Status</font></th>
    </tr>
    <tr bgcolor="#08245b">
       <th><font color="#CCCCCC">Case ID</font></th>
@@ -71,6 +74,7 @@
       <td>{$figs_data[item].tape_3_feedback}</td>
       <td>{$figs_data[item].reliable}</td>
       <td>{$figs_data[item].reliability_established_date}</td>
+      <td>{$figs_data[item].administration_status}</td>
    </tr>
    {/section}
 </table>
@@ -83,23 +87,33 @@ Initial reliability: Raters must send, at least, one v06 and v12 AOSI videotape 
 </p>
 <table>
    <tr bgcolor="#08245b">
-      <th><font color="#CCCCCC">Site</font></th>
-      <th><font color="#CCCCCC">Rater</font></th>
+      <th rowspan="2"><font color="#CCCCCC">Site</font></th>
+      <th rowspan="2"><font color="#CCCCCC">Rater</font></th>
+      <th rowspan="2"><font color="#CCCCCC">Case Age (months)</font></th>
+      <th colspan="2"><font color="#CCCCCC">Tape 1</font></th>
+      <th colspan="2"><font color="#CCCCCC">Tape 2</font></th>
+      <th rowspan="2"><font color="#CCCCCC">Reliable</font></th>
+      <th rowspan="2"><font color="#CCCCCC">Date Reliability Established</font></th>
+      <th rowspan="2"><font color="#CCCCCC">Administration Status</font></th>
+   </tr>
+   <tr bgcolor="#08245b">
       <th><font color="#CCCCCC">Case ID</font></th>
-      <th><font color="#CCCCCC">Case Age (months)</font></th>
       <th><font color="#CCCCCC">Date Tape Was Sent</font></th>
-      <th><font color="#CCCCCC">Reliable</font></th>
-      <th><font color="#CCCCCC">Date Reliability Established</font></th>
+      <th><font color="#CCCCCC">Case ID</font></th> 
+      <th><font color="#CCCCCC">Date Tape Was Sent</font></th>
    </tr>
    {section name=item loop=$aosi_data_6mo}
    <tr bgcolor="#FFFFFF">
       <td>{$aosi_data_6mo[item].site}</td>
       <td>{$aosi_data_6mo[item].rater}</td>
-      <td>{$aosi_data_6mo[item].case_ID}</td>
       <td>{$aosi_data_6mo[item].case_age_mo}</td>
-      <td>{$aosi_data_6mo[item].tape_sent_date}</td>
+      <td>{$aosi_data_6mo[item].case_ID_1}</td>
+      <td>{$aosi_data_6mo[item].tape_sent_date_1}</td>
+      <td>{$aosi_data_6mo[item].case_ID_2}</td>
+      <td>{$aosi_data_6mo[item].tape_sent_date_2}</td>
       <td>{$aosi_data_6mo[item].reliable}</td>
       <td>{$aosi_data_6mo[item].reliability_established_date}</td>
+      <td>{$aosi_data_6mo[item].administration_status}</td>
    </tr>
    {/section}
 </table>
@@ -112,23 +126,33 @@ Initial reliability: Raters must send, at least, one v06 and v12 AOSI videotape 
 </p>
 <table>
    <tr bgcolor="#08245b">
-      <th><font color="#CCCCCC">Site</font></th>
-      <th><font color="#CCCCCC">Rater</font></th>
+      <th rowspan="2"><font color="#CCCCCC">Site</font></th>
+      <th rowspan="2"><font color="#CCCCCC">Rater</font></th>
+      <th rowspan="2"><font color="#CCCCCC">Case Age (months)</font></th>
+      <th colspan="2"><font color="#CCCCCC">Tape 1</font></th>
+      <th colspan="2"><font color="#CCCCCC">Tape 2</font></th>
+      <th rowspan="2"><font color="#CCCCCC">Reliable</font></th>
+      <th rowspan="2"><font color="#CCCCCC">Date Reliability Established</font></th>
+      <th rowspan="2"><font color="#CCCCCC">Administration Status</font></th>
+   </tr>
+   <tr bgcolor="#08245b">
       <th><font color="#CCCCCC">Case ID</font></th>
-      <th><font color="#CCCCCC">Case Age (months)</font></th>
       <th><font color="#CCCCCC">Date Tape Was Sent</font></th>
-      <th><font color="#CCCCCC">Reliable</font></th>
-      <th><font color="#CCCCCC">Date Reliability Established</font></th>
+      <th><font color="#CCCCCC">Case ID</font></th> 
+      <th><font color="#CCCCCC">Date Tape Was Sent</font></th>
    </tr>
    {section name=item loop=$aosi_data_12mo}
    <tr bgcolor="#FFFFFF">
       <td>{$aosi_data_12mo[item].site}</td>
       <td>{$aosi_data_12mo[item].rater}</td>
-      <td>{$aosi_data_12mo[item].case_ID}</td>
       <td>{$aosi_data_12mo[item].case_age_mo}</td>
-      <td>{$aosi_data_12mo[item].tape_sent_date}</td>
+      <td>{$aosi_data_12mo[item].case_ID_1}</td>
+      <td>{$aosi_data_12mo[item].tape_sent_date_1}</td>
+      <td>{$aosi_data_12mo[item].case_ID_2}</td>
+      <td>{$aosi_data_12mo[item].tape_sent_date_2}</td>
       <td>{$aosi_data_12mo[item].reliable}</td>
       <td>{$aosi_data_12mo[item].reliability_established_date}</td>
+      <td>{$aosi_data_12mo[item].administration_status}</td>
    </tr>
    {/section}
 </table>
@@ -146,6 +170,7 @@ Initial reliability: Raters must send, at least, one v06 and v12 AOSI videotape 
       <th><font color="#CCCCCC">Coder Status</font></th>
       <th><font color="#CCCCCC">Reliable</font></th>
       <th><font color="#CCCCCC">Date Reliability Established</font></th>
+      <th><font color="#CCCCCC">Administration Status</font></th>
    </tr>
    {section name=item loop=$csbs_data_tk}
    <tr bgcolor="#FFFFFF">
@@ -154,6 +179,7 @@ Initial reliability: Raters must send, at least, one v06 and v12 AOSI videotape 
       <td>{$csbs_data_tk[item].examiner_coder_status}</td>
       <td>{$csbs_data_tk[item].reliable}</td>
       <td>{$csbs_data_tk[item].reliability_established_date}</td>
+      <td>{$csbs_data_tk[item].administration_status}</td>
    </tr>
    {/section}
 </table>
@@ -172,6 +198,7 @@ Initial reliability: Raters must send, at least, one v06 and v12 AOSI videotape 
       <th><font color="#CCCCCC">Coder Status</font></th>
       <th><font color="#CCCCCC">Reliable</font></th>
       <th><font color="#CCCCCC">Date Reliability Established</font></th>
+      <th><font color="#CCCCCC">Administration Status</font></th>
    </tr>
    {section name=item loop=$csbs_data_gold}
    <tr bgcolor="#FFFFFF">
@@ -180,6 +207,7 @@ Initial reliability: Raters must send, at least, one v06 and v12 AOSI videotape 
       <td>{$csbs_data_gold[item].examiner_coder_status}</td>
       <td>{$csbs_data_gold[item].reliable}</td>
       <td>{$csbs_data_gold[item].reliability_established_date}</td>
+      <td>{$csbs_data_gold[item].administration_status}</td>
    </tr>
    {/section}
 </table>
@@ -197,6 +225,7 @@ Initial reliability: Raters must send, at least, one v06 and v12 AOSI videotape 
       <th><font color="#CCCCCC">Rater</font></th>
       <th><font color="#CCCCCC">Reliable</font></th>
       <th><font color="#CCCCCC">Date Reliability Established</font></th>
+      <th><font color="#CCCCCC">Administration Status</font></th>
    </tr>
    {section name=item loop=$ados_data}
    <tr bgcolor="#FFFFFF">
@@ -204,6 +233,7 @@ Initial reliability: Raters must send, at least, one v06 and v12 AOSI videotape 
       <td>{$ados_data[item].rater}</td>
       <td>{$ados_data[item].reliable}</td>
       <td>{$ados_data[item].reliability_established_date}</td>
+      <td>{$ados_data[item].administration_status}</td>
    </tr>
    {/section}
 </table>
@@ -221,7 +251,7 @@ Initial reliability: Raters must send, at least, one v06 and v12 AOSI videotape 
       <th><font color="#CCCCCC">Lead Clinician</font></th>
       <th><font color="#CCCCCC">Reliable</font></th>
       <th><font color="#CCCCCC">Date Reliability Established</font></th>
-
+      <th><font color="#CCCCCC">Administration Status</font></th>
    </tr>
    {section name=item loop=$mullen_data}
    <tr bgcolor="#FFFFFF">
@@ -230,6 +260,7 @@ Initial reliability: Raters must send, at least, one v06 and v12 AOSI videotape 
       <td>{$mullen_data[item].lead_clinician}</td>
       <td>{$mullen_data[item].reliable}</td>
       <td>{$mullen_data[item].reliability_established_date}</td>
+      <td>{$mullen_data[item].administration_status}</td>
    </tr>
    {/section}
 </table>

@@ -34,7 +34,8 @@ class NDB_Menu_reliability_phase_one extends NDB_Menu
                else
                   $row['with_umacc_reliable_clinician'] = 'Yes';
                $data[] = array('site' => $row['site'], 'rater' => $row['rater'], 'reliable' => $row['reliable'], 'outside_research_group' => $row['outside_research_group'],
-                              'with_umacc_reliable_clinician' => $row['with_umacc_reliable_clinician'], 'reliability_established_date' => $row['reliability_established_date']);
+                              'with_umacc_reliable_clinician' => $row['with_umacc_reliable_clinician'], 'reliability_established_date' => $row['reliability_established_date'],
+                              'administration_status' => $row['administration_status']);
             }
             $this->tpl_data["{$instrument}_data"] = $data;      
       
@@ -56,7 +57,9 @@ class NDB_Menu_reliability_phase_one extends NDB_Menu
                                     'tape_3_admin' => $row['date_administration_3'],
                                     'tape_3_sent'  => $row['tape_sent_date_3'],
                                     'tape_3_feedback' =>$row['feedback_date_3'],
-                                     'reliability_established_date' => $row['reliability_established_date'], 'lead_clinician' => $row['lead_clinician']);
+                                     'reliability_established_date' => $row['reliability_established_date'], 
+                                     'lead_clinician' => $row['lead_clinician'],
+                                     'administration_status' => $row['administration_status']);
                   }
                   $this->tpl_data["{$instrument}_data"] = $data; 
                   
@@ -69,9 +72,15 @@ class NDB_Menu_reliability_phase_one extends NDB_Menu
                            foreach($result as $row){
 
                               $data[] = array('site' => $row['site'], 'rater' => $row['rater'], 'reliable' => $row['reliable'],
-                                             'tape_sent_date' => $row['tape_sent_date'], 'case_age_mo' => $row['case_age_mo'], 'reliable' => $row['reliable'],
-                                             'case_ID' => $row['case_ID'], 'reliability_established_date' => $row['reliability_established_date'],
-                                             'reliability_percentage' => $row['reliability_percentage']);
+                                             'tape_sent_date_1' => $row['tape_sent_date_1'], 
+                                             'case_age_mo' => $row['case_age_mo'], 
+                                             'case_ID_1' => $row['case_ID_1'],
+                                             'tape_sent_date_2' => $row['tape_sent_date_2'], 
+                                             'case_ID_2' => $row['case_ID_2'], 
+                                             'reliable' => $row['reliable'],
+                                             'reliability_established_date' => $row['reliability_established_date'],
+                                             'reliability_percentage' => $row['reliability_percentage'],
+                                             'administration_status' => $row['administration_status']);
                            }
                            $this->tpl_data["{$instrument}_data_6mo"] = $data;
                            
@@ -85,9 +94,15 @@ class NDB_Menu_reliability_phase_one extends NDB_Menu
                 foreach($result as $row){
              
                    $data[] = array('site' => $row['site'], 'rater' => $row['rater'], 'reliable' => $row['reliable'],
-                                  'tape_sent_date' => $row['tape_sent_date'], 'case_age_mo' => $row['case_age_mo'], 'reliable' => $row['reliable'],
-                                  'case_ID' => $row['case_ID'], 'reliability_established_date' => $row['reliability_established_date'],
-                                  'reliability_percentage' => $row['reliability_percentage']);
+                                  'tape_sent_date_1' => $row['tape_sent_date_1'], 
+                                  'case_age_mo' => $row['case_age_mo'], 
+                                  'case_ID_1' => $row['case_ID_1'],
+                                  'tape_sent_date_2' => $row['tape_sent_date_2'], 
+                                  'case_ID_2' => $row['case_ID_2'], 
+                                  'reliable' => $row['reliable'],
+                                  'reliability_established_date' => $row['reliability_established_date'],
+                                  'reliability_percentage' => $row['reliability_percentage'],
+                                  'administration_status' => $row['administration_status']);
                 }
                 $this->tpl_data["{$instrument}_data_12mo"] = $data;
                            
@@ -102,7 +117,8 @@ class NDB_Menu_reliability_phase_one extends NDB_Menu
                          
                                 $data[] = array('site' => $row['site'], 'rater' => $row['rater'], 'reliable' => $row['reliable'],
                                                'type' => $row['type'], 'reliability_established_date' => $row['reliability_established_date'],
-                                               'reliability_percentage' => $row['reliability_percentage'], 'examiner_coder_status' => $row['examiner_coder_status']);
+                                               'reliability_percentage' => $row['reliability_percentage'], 'examiner_coder_status' => $row['examiner_coder_status'],
+                                               'administration_status' => $row['administration_status']);
                              }
                              $this->tpl_data["{$instrument}_data_tk"] = $data;
                              
@@ -116,7 +132,8 @@ class NDB_Menu_reliability_phase_one extends NDB_Menu
 
                                      $data[] = array('site' => $row['site'], 'rater' => $row['rater'], 'reliable' => $row['reliable'],
                                                     'type' => $row['type'], 'reliability_established_date' => $row['reliability_established_date'],
-                                                    'reliability_percentage' => $row['reliability_percentage'], 'examiner_coder_status' => $row['examiner_coder_status']);
+                                                    'reliability_percentage' => $row['reliability_percentage'], 'examiner_coder_status' => $row['examiner_coder_status'],
+                                                    'administration_status' => $row['administration_status']);
                                   }
                                   $this->tpl_data["{$instrument}_data_gold"] = $data;
                   
@@ -133,7 +150,8 @@ class NDB_Menu_reliability_phase_one extends NDB_Menu
                                     else
                                        $row['with_umacc_reliable_clinician'] = 'Yes';
                                     $data[] = array('site' => $row['site'], 'rater' => $row['rater'], 'reliable' => $row['reliable'],
-                                                   'with_umacc_reliable_clinician' => $row['with_umacc_reliable_clinician'], 'reliability_established_date' => $row['reliability_established_date']);
+                                                   'with_umacc_reliable_clinician' => $row['with_umacc_reliable_clinician'], 'reliability_established_date' => $row['reliability_established_date'],
+                                                   'administration_status' => $row['administration_status']);
                                  }
                                  $this->tpl_data["{$instrument}_data"] = $data;
                            
@@ -149,7 +167,8 @@ class NDB_Menu_reliability_phase_one extends NDB_Menu
                                           else
                                              $row['with_umacc_reliable_clinician'] = 'Yes';
                                           $data[] = array('site' => $row['site'], 'rater' => $row['rater'], 'reliable' => $row['reliable'], 'lead_clinician' => $row['lead_clinician'], 
-                                          'reliability_established_date' => $row['reliability_established_date']);
+                                          'reliability_established_date' => $row['reliability_established_date'],
+                                            'administration_status' => $row['administration_status']);
                                        }
                                        $this->tpl_data["{$instrument}_data"] = $data;
     } // End function
