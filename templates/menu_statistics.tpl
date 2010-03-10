@@ -71,44 +71,129 @@
    <td>
       <table>
          <tr bgcolor="#08245b">
-            <th><font color="#CCCCCC">Site</font></th>
-            <th><font color="#CCCCCC">Completed</font></th>
-            <th><font color="#CCCCCC">Total Timepoints Created</font></th>
-            <th><font color="#CCCCCC">% Completion</font></th>
-             <th><font color="#CCCCCC">Per instrument stats</font></th>
+            <th rowspan="2"><font color="#CCCCCC">Site</font></th>
+            <th colspan="3"><font color="#CCCCCC">V06</font></th>
+            <th colspan="3"><font color="#CCCCCC">V12</font></th>
+            <th colspan="3"><font color="#CCCCCC">V18</font></th>
+            <th colspan="3"><font color="#CCCCCC">V24</font></th>
+            <th colspan="3"><font color="#CCCCCC">V36</font></th>
+            <th colspan="3"><font color="#CCCCCC">Total</font></th>
+            <th rowspan="2"><font color="#CCCCCC">Per instrument stats</font></th>
          </tr>
+         <tr bgcolor="#08245b">
+             <th><font color="#CCCCCC">Completed</font></th>
+             <th><font color="#CCCCCC">Created</font></th>
+             <th><font color="#CCCCCC">% Completion</font></th>
+             <th><font color="#CCCCCC">Completed</font></th>
+             <th><font color="#CCCCCC">Created</font></th>
+             <th><font color="#CCCCCC">% Completion</font></th>
+             <th><font color="#CCCCCC">Completed</font></th>
+             <th><font color="#CCCCCC">Created</font></th>
+             <th><font color="#CCCCCC">% Completion</font></th>
+             <th><font color="#CCCCCC">Completed</font></th>
+             <th><font color="#CCCCCC">Created</font></th>
+             <th><font color="#CCCCCC">% Completion</font></th>
+             <th><font color="#CCCCCC">Completed</font></th>
+             <th><font color="#CCCCCC">Created</font></th>
+             <th><font color="#CCCCCC">% Completion</font></th>
+             <th><font color="#CCCCCC">Completed</font></th>
+             <th><font color="#CCCCCC">Created</font></th>
+             <th><font color="#CCCCCC">% Completion</font></th>
+          </tr>
          <tr bgcolor="#FFFFFF">
             <td>Philadelphia</td>
-            <td>{$phi_completed}</td>
-            <td>{$phi_total}</td>
-            <td>{$phi_percent}%</td>
+            <td>{$v06_phi_completed}</td>
+            <td>{$v06_phi_total}</td>
+            <td>{$v06_phi_percent}%</td>
+            <td>{$v12_phi_completed}</td>
+            <td>{$v12_phi_total}</td>
+            <td>{$v12_phi_percent}%</td>
+            <td>{$v18_phi_completed}</td>
+            <td>{$v18_phi_total}</td>
+            <td>{$v18_phi_percent}%</td>
+            <td>{$v24_phi_completed}</td>
+            <td>{$v24_phi_total}</td>
+            <td>{$v24_phi_percent}%</td>
+            <td>{$v36_phi_completed}</td>
+            <td>{$v36_phi_total}</td>
+            <td>{$v36_phi_percent}%</td>
+            <td>{$all_phi_completed}</td>
+            <td>{$all_phi_total}</td>
+            <td>{$all_phi_percent}%</td>
             <td> <a href='main.php?test_name=statistics_philadelphia'>Please Click Here</a></td>
 
          </tr>
          <tr bgcolor="#FFFFFF">
             <td>Seattle</td>
-            <td>{$sea_completed}</td>
-            <td>{$sea_total}</td>
-            <td>{$sea_percent}%</td>
+            <td>{$v06_sea_completed}</td>
+            <td>{$v06_sea_total}</td>
+            <td>{$v06_sea_percent}%</td>
+            <td>{$v12_sea_completed}</td>
+            <td>{$v12_sea_total}</td>
+            <td>{$v12_sea_percent}%</td>
+            <td>{$v18_sea_completed}</td>
+            <td>{$v18_sea_total}</td>
+            <td>{$v18_sea_percent}%</td>
+            <td>{$v24_sea_completed}</td>
+            <td>{$v24_sea_total}</td>
+            <td>{$v24_sea_percent}%</td>
+            <td>{$v36_sea_completed}</td>
+            <td>{$v36_sea_total}</td>
+            <td>{$v36_sea_percent}%</td>
+            <td>{$all_sea_completed}</td>
+            <td>{$all_sea_total}</td>
+            <td>{$all_sea_percent}%</td>
             <td> <a href='main.php?test_name=statistics_seattle'>Please Click Here</a></td>
          </tr>
          <tr bgcolor="#FFFFFF">
             <td>St. Louis</td>
-            <td>{$stl_completed}</td>
-            <td>{$stl_total}</td>
-            <td>{$stl_percent}%</td>
+            <td>{$v06_stl_completed}</td>
+            <td>{$v06_stl_total}</td>
+            <td>{$v06_stl_percent}%</td>
+            <td>{$v12_stl_completed}</td>
+            <td>{$v12_stl_total}</td>
+            <td>{$v12_stl_percent}%</td>
+            <td>{$v18_stl_completed}</td>
+            <td>{$v18_stl_total}</td>
+            <td>{$v18_stl_percent}%</td>
+            <td>{$v24_stl_completed}</td>
+            <td>{$v24_stl_total}</td>
+            <td>{$v24_stl_percent}%</td>
+            <td>{$v36_stl_completed}</td>
+            <td>{$v36_stl_total}</td>
+            <td>{$v36_stl_percent}%</td>
+            <td>{$all_stl_completed}</td>
+            <td>{$all_stl_total}</td>
+            <td>{$all_stl_percent}%</td>
             <td> <a href='main.php?test_name=statistics_stl'>Please Click Here</a></td>
          </tr>
          <tr bgcolor="#FFFFFF">
             <td>University of North Carolina</td>
-            <td>{$unc_completed}</td>
-            <td>{$unc_total}</td>
-            <td>{$unc_percent}%</td>
+            <td>{$v06_unc_completed}</td>
+            <td>{$v06_unc_total}</td>
+            <td>{$v06_unc_percent}%</td>
+            <td>{$v12_unc_completed}</td>
+            <td>{$v12_unc_total}</td>
+            <td>{$v12_unc_percent}%</td>
+            <td>{$v18_unc_completed}</td>
+            <td>{$v18_unc_total}</td>
+            <td>{$v18_unc_percent}%</td>
+            <td>{$v24_unc_completed}</td>
+            <td>{$v24_unc_total}</td>
+            <td>{$v24_unc_percent}%</td>
+            <td>{$v36_unc_completed}</td>
+            <td>{$v36_unc_total}</td>
+            <td>{$v36_unc_percent}%</td>
+            <td>{$all_unc_completed}</td>
+            <td>{$all_unc_total}</td>
+            <td>{$all_unc_percent}%</td>
             <td> <a href='main.php?test_name=statistics_unc'>Please Click Here</a></td>
          </tr>
       </table>
    </td>
 </tr>
+
+
 
 <tr><td><p><b>Double Data Entry Statistics:</b></p></td></tr>
 
@@ -116,39 +201,123 @@
    <td>
       <table>
          <tr bgcolor="#08245b">
-            <th><font color="#CCCCCC">Site</font></th>
-            <th><font color="#CCCCCC">Completed</font></th>
-            <th><font color="#CCCCCC">Total Timepoints Created</font></th>
-            <th><font color="#CCCCCC">% Completion</font></th>
-            <th><font color="#CCCCCC">Per instrument stats</font></th>
+            <th rowspan="2"><font color="#CCCCCC">Site</font></th>
+            <th colspan="3"><font color="#CCCCCC">V06</font></th>
+            <th colspan="3"><font color="#CCCCCC">V12</font></th>
+            <th colspan="3"><font color="#CCCCCC">V18</font></th>
+            <th colspan="3"><font color="#CCCCCC">V24</font></th>
+            <th colspan="3"><font color="#CCCCCC">V36</font></th>
+            <th colspan="3"><font color="#CCCCCC">Total</font></th>
+            <th rowspan="2"><font color="#CCCCCC">Per instrument stats</font></th>
          </tr>
+         <tr bgcolor="#08245b">
+             <th><font color="#CCCCCC">Completed</font></th>
+             <th><font color="#CCCCCC">Created</font></th>
+             <th><font color="#CCCCCC">% Completion</font></th>
+             <th><font color="#CCCCCC">Completed</font></th>
+             <th><font color="#CCCCCC">Created</font></th>
+             <th><font color="#CCCCCC">% Completion</font></th>
+             <th><font color="#CCCCCC">Completed</font></th>
+             <th><font color="#CCCCCC">Created</font></th>
+             <th><font color="#CCCCCC">% Completion</font></th>
+             <th><font color="#CCCCCC">Completed</font></th>
+             <th><font color="#CCCCCC">Created</font></th>
+             <th><font color="#CCCCCC">% Completion</font></th>
+             <th><font color="#CCCCCC">Completed</font></th>
+             <th><font color="#CCCCCC">Created</font></th>
+             <th><font color="#CCCCCC">% Completion</font></th>
+             <th><font color="#CCCCCC">Completed</font></th>
+             <th><font color="#CCCCCC">Created</font></th>
+             <th><font color="#CCCCCC">% Completion</font></th>
+          </tr>
          <tr bgcolor="#FFFFFF">
             <td>Philadelphia</td>
-            <td>{$phi_dde_completed}</td>
-            <td>{$phi_dde_total}</td>
-            <td>{$phi_dde_percent}%</td>
-            <td><a href='main.php?test_name=statistics_dd_philadelphia'>Please Click Here</a></td>
+            <td>{$v06_phi_dde_completed}</td>
+            <td>{$v06_phi_dde_total}</td>
+            <td>{$v06_phi_dde_percent}%</td>
+            <td>{$v12_phi_dde_completed}</td>
+            <td>{$v12_phi_dde_total}</td>
+            <td>{$v12_phi_dde_percent}%</td>
+            <td>{$v18_phi_dde_completed}</td>
+            <td>{$v18_phi_dde_total}</td>
+            <td>{$v18_phi_dde_percent}%</td>
+            <td>{$v24_phi_dde_completed}</td>
+            <td>{$v24_phi_dde_total}</td>
+            <td>{$v24_phi_dde_percent}%</td>
+            <td>{$v36_phi_dde_completed}</td>
+            <td>{$v36_phi_dde_total}</td>
+            <td>{$v36_phi_dde_percent}%</td>
+            <td>{$all_phi_dde_completed}</td>
+            <td>{$all_phi_dde_total}</td>
+            <td>{$all_phi_dde_percent}%</td>
+            <td> <a href='main.php?test_name=statistics_philadelphia'>Please Click Here</a></td>
+
          </tr>
          <tr bgcolor="#FFFFFF">
             <td>Seattle</td>
-            <td>{$sea_dde_completed}</td>
-            <td>{$sea_dde_total}</td>
-            <td>{$sea_dde_percent}%</td>
-            <td><a href='main.php?test_name=statistics_dd_seattle'>Please Click Here</a></td>
+            <td>{$v06_sea_dde_completed}</td>
+            <td>{$v06_sea_dde_total}</td>
+            <td>{$v06_sea_dde_percent}%</td>
+            <td>{$v12_sea_dde_completed}</td>
+            <td>{$v12_sea_dde_total}</td>
+            <td>{$v12_sea_dde_percent}%</td>
+            <td>{$v18_sea_dde_completed}</td>
+            <td>{$v18_sea_dde_total}</td>
+            <td>{$v18_sea_dde_percent}%</td>
+            <td>{$v24_sea_dde_completed}</td>
+            <td>{$v24_sea_dde_total}</td>
+            <td>{$v24_sea_dde_percent}%</td>
+            <td>{$v36_sea_dde_completed}</td>
+            <td>{$v36_sea_dde_total}</td>
+            <td>{$v36_sea_dde_percent}%</td>
+            <td>{$all_sea_dde_completed}</td>
+            <td>{$all_sea_dde_total}</td>
+            <td>{$all_sea_dde_percent}%</td>
+            <td> <a href='main.php?test_name=statistics_seattle'>Please Click Here</a></td>
          </tr>
          <tr bgcolor="#FFFFFF">
             <td>St. Louis</td>
-            <td>{$stl_dde_completed}</td>
-            <td>{$stl_dde_total}</td>
-            <td>{$stl_dde_percent}%</td>
-            <td><a href='main.php?test_name=statistics_dd_stl'>Please Click Here</a></td>
+            <td>{$v06_stl_dde_completed}</td>
+            <td>{$v06_stl_dde_total}</td>
+            <td>{$v06_stl_dde_percent}%</td>
+            <td>{$v12_stl_dde_completed}</td>
+            <td>{$v12_stl_dde_total}</td>
+            <td>{$v12_stl_dde_percent}%</td>
+            <td>{$v18_stl_dde_completed}</td>
+            <td>{$v18_stl_dde_total}</td>
+            <td>{$v18_stl_dde_percent}%</td>
+            <td>{$v24_stl_dde_completed}</td>
+            <td>{$v24_stl_dde_total}</td>
+            <td>{$v24_stl_dde_percent}%</td>
+            <td>{$v36_stl_dde_completed}</td>
+            <td>{$v36_stl_dde_total}</td>
+            <td>{$v36_stl_dde_percent}%</td>
+            <td>{$all_stl_dde_completed}</td>
+            <td>{$all_stl_dde_total}</td>
+            <td>{$all_stl_dde_percent}%</td>
+            <td> <a href='main.php?test_name=statistics_stl'>Please Click Here</a></td>
          </tr>
          <tr bgcolor="#FFFFFF">
             <td>University of North Carolina</td>
-            <td>{$unc_dde_completed}</td>
-            <td>{$unc_dde_total}</td>
-            <td>{$unc_dde_percent}%</td>
-            <td><a href='main.php?test_name=statistics_dd_unc'>Please Click Here</a></td>
+            <td>{$v06_unc_dde_completed}</td>
+            <td>{$v06_unc_dde_total}</td>
+            <td>{$v06_unc_dde_percent}%</td>
+            <td>{$v12_unc_dde_completed}</td>
+            <td>{$v12_unc_dde_total}</td>
+            <td>{$v12_unc_dde_percent}%</td>
+            <td>{$v18_unc_dde_completed}</td>
+            <td>{$v18_unc_dde_total}</td>
+            <td>{$v18_unc_dde_percent}%</td>
+            <td>{$v24_unc_dde_completed}</td>
+            <td>{$v24_unc_dde_total}</td>
+            <td>{$v24_unc_dde_percent}%</td>
+            <td>{$v36_unc_dde_completed}</td>
+            <td>{$v36_unc_dde_total}</td>
+            <td>{$v36_unc_dde_percent}%</td>
+            <td>{$all_unc_dde_completed}</td>
+            <td>{$all_unc_dde_total}</td>
+            <td>{$all_unc_dde_percent}%</td>
+            <td> <a href='main.php?test_name=statistics_unc'>Please Click Here</a></td>
          </tr>
       </table>
    </td>
