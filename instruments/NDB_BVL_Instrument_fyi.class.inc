@@ -111,7 +111,7 @@ INSERT INTO instrument_subtests VALUES('', 'fyi', 'fyi_page2', '#47-#63', 2);
         "native_hawaiian_pacific_islander"=>"Native Hawaiian/Pacific Islander",
         "not_answered"=>"Not Answered"), "multiple");
         
-        $education_levels = array(nil => "", "Less Than 6th Grade" => "Less Than 6th Grade", "Less Than High School" => "Less Than High School", "High School" => "High School", "Some College" => "Some College", "College" => "College", "Some Graduate Level" => "Some Graduate Level", "Graduate Level" => "Graduate Level", "NA" => "NA");
+        $education_levels = array(null => "", "not_answered" => "Not Answered", "j_high" => "Junior High", "some_hs" => "Some Highschool", "high_school"=> "High School", "some_college" => "Some College/2yr Degree", "college_degree" => "College Degree", "some_grad_level" => "Some Graduate Level", "grad_degree" => "Graduate Degree");
         
         $this->form->addElement("select", "mother_highest_grade", "Mother's highest grade completed or degree obtained:", $education_levels);
         
