@@ -61,6 +61,8 @@ class NDB_BVL_Instrument_mri_parameter_form extends NDB_BVL_Instrument
         $this->addTextElement("session_attempts", "Number of Session Attempts:");
         $this->addHourMinElement("wait_time", "Wait Time for Scanner (hours:minutes)");
         $this->addHourMinElement("total_duration", "Total Duration of Session (hours:minutes)");
+        $this->form->addElement('select','sedation', "Was sedation administered?", array(""=>NULL,"Yes" => "Yes", "No"=>"No", "not_applicable" => "Not Applicable"));
+        $this->form->addElement('static', null, "(please use comment field for details)");
 
         $yes_no_option= array(""=>NULL, "No"=>"No", "Complete"=>"Yes, Complete Acquisition", "Partial"=>"Yes, Partial Acquisition", "not_answered"=>"Not Answered");
 
