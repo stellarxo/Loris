@@ -21,8 +21,8 @@ class NDB_Menu_statistics extends NDB_Menu
             return PEAR::raiseError("DB Error: ".$result1->getMessage());
         }
         list(,$result1)=each($result1[0]);
-        $count1 = $result1;
-        $this->tpl_data['count1'] = $count1;
+        $SixMonthRecruit_SixMonthVisit = $result1;
+        $this->tpl_data['SixMonthRecruit_SixMonthVisit'] = $SixMonthRecruit_SixMonthVisit;
 
         // Query: Number of 6 month recruits that are not failed/withdrawn
         $DB->select("SELECT count(s.CandID) from session as s, candidate as c WHERE s.CandID=c.CandID AND s.Cancelled='N' AND (s.Current_stage='Visit' OR s.Current_stage='Screening') AND s.SubprojectID=1 AND (s.Visit_label='v06' OR s.Visit_label='6mo') AND s.Active='Y' AND s.CenterID<>'1' ORDER BY c.PSCID;", $result2);
@@ -223,14 +223,14 @@ class NDB_Menu_statistics extends NDB_Menu
                   $bvl_total = 1;
                 $this->tpl_data["{$vl}_{$name}_percent"] = floor(($bvl_completed / $bvl_total) * 100);
                 
-                $DB->select("SELECT count(s.CandID)  FROM session as s, candidate as c, flag as f WHERE s.ID=f.SessionID AND s.CandID=c.CandID AND s.Cancelled='N' AND s.Active='Y' AND s.CenterID={$id} AND f.Data_entry='Complete' AND f.CommentID LIKE 'DDE%'  {$vl_query} ORDER BY c.PSCID;", $result20);
+                $DB->select("SELECT count(s.CandID)  FROM session as s, candidate as c, flag as f WHERE s.ID=f.SessionID AND s.CandID=c.CandID AND s.Cancelled='N' AND s.Active='Y' AND s.CenterID={$id} AND f.Data_entry='Complete' AND f.CommentID LIKE 'DDE%' AND (f.Test_name NOT LIKE '%parameter%' AND f.Test_name NOT LIKE '%radiological%' AND f.Test_name NOT LIKE '%vineland%')  {$vl_query} ORDER BY c.PSCID;", $result20);
                   if (PEAR::isError($result20)) {
                       return PEAR::raiseError("DB Error: ".$result20->getMessage());
                   }
                   list(,$result20)=each($result20[0]);
                   $dde_completed = $result20;
 
-                  $DB->select("SELECT count(s.CandID)  FROM session as s, candidate as c, flag as f WHERE s.ID=f.SessionID AND s.CandID=c.CandID AND s.Cancelled='N' AND s.Active='Y' AND s.CenterID={$id} AND f.CommentID LIKE 'DDE%'  {$vl_query}  ORDER BY c.PSCID;", $result21);
+                  $DB->select("SELECT count(s.CandID)  FROM session as s, candidate as c, flag as f WHERE s.ID=f.SessionID AND s.CandID=c.CandID AND s.Cancelled='N' AND s.Active='Y' AND s.CenterID={$id} AND f.CommentID LIKE 'DDE%' AND (f.Test_name NOT LIKE '%parameter%' AND f.Test_name NOT LIKE '%radiological%' AND f.Test_name NOT LIKE '%vineland%') {$vl_query}  ORDER BY c.PSCID;", $result21);
                     if (PEAR::isError($result21)) {
                         return PEAR::raiseError("DB Error: ".$result21->getMessage());
                     }
