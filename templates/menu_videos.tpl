@@ -90,9 +90,13 @@
 
 	{if $items[item][piece].name == "File_name"}
 	   <td nowrap="nowrap">
-        <a href="{$items[item][piece].Data_dir}{$items[item][piece].value}" target="_blank">{$items[item][piece].value}</a> 
+        <a href="{$items[item][piece].Data_dir}{$items[item][piece].value}" target="_blank">{$items[item][piece].value}</a> {if !empty($items[item][piece].File_size)}({$items[item][piece].File_size}){/if}
       </td>
-	  {else}
+   {elseif $items[item][piece].name == "record_id"}
+      <td nowrap="nowrap">
+          <a href="main.php?test_name=video_upload&identifier={$items[item][piece].value}" target="_blank">Edit</a> 
+        </td>
+	 {else}
 	     <td nowrap="nowrap">{$items[item][piece].value}</td>
     {/if}
    </td>

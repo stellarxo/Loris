@@ -51,12 +51,12 @@ class NDB_Menu_Filter_videos extends NDB_Menu_Filter
         }
 
         // set the class variables
-        $this->columns = array('videos.File_name', 'videos.uploaded_by', 'videos.Instrument', 'videos.PSCID', 'videos.visitLabel', 'videos.For_site', 'videos.comments', 'videos.Data_dir', 'videos.Date_uploaded');
+        $this->columns = array('videos.record_id', 'videos.File_name', 'videos.File_size', 'videos.uploaded_by', 'videos.Instrument', 'videos.PSCID', 'videos.visitLabel', 'videos.Date_taken', 'videos.For_site', 'videos.comments', 'videos.Data_dir', 'videos.Date_uploaded');
 
         $this->query = $query;
         $this->group_by = '';
         $this->order_by = 'videos.Instrument';
-        $this->headers = array('File_name','uploaded_by', 'Instrument', 'PSCID', 'visitLabel', 'For_site', 'comments', 'Date_uploaded');
+        $this->headers = array('File_name','uploaded_by', 'Instrument', 'PSCID', 'visitLabel', 'Date_Taken', 'For_site', 'comments', 'Date_uploaded', 'Edit Metadata');
         $this->validFilters = array('videos.PSCID', 'videos.Instrument', 'videos.Data_dir', 'videos.For_site', 'videos.visitLabel');
 
         $this->formToFilter = array(
@@ -121,7 +121,6 @@ class NDB_Menu_Filter_videos extends NDB_Menu_Filter
 
     function _setDataTableRows($count)
     {
-
         $site_names =array(null, "DCC", "SEA", "PHI", "STL", "UNC");
         // print out
         $x = 0;
@@ -133,11 +132,15 @@ class NDB_Menu_Filter_videos extends NDB_Menu_Filter
             $i = 1;
             // $identifier = $item['Tracking_log_ID'];
             $Data_dir = $item['Data_dir'];
+            $record_id = $item['record_id'];
+            $File_size = $item['File_size'];
             foreach ($item as $key => $val) {
 
                 // Confused about this line
                 if ($key =='Tracking_log_ID') continue;
                 if ($key == 'Data_dir') continue;
+                if ($key == 'record_id') continue;
+                if ($key == 'File_size') continue;
                 // {
                 //                    $this->tpl_data['items'][$x][$i]['CommentID'] = $item['CommentID'];
                 //               $this->tpl_data['items'][$x][$i]['Instrument'] = $item['Instrument'];
@@ -152,6 +155,12 @@ class NDB_Menu_Filter_videos extends NDB_Menu_Filter
                 
                 if ($key == 'File_name'){
                    $this->tpl_data['items'][$x][$i]['Data_dir'] = $Data_dir;
+                   $this->tpl_data['items'][$x][$i]['File_size'] = $this->format_size($File_size);
+                }
+                
+                if ($key == 'Date_uploaded'){
+                   $this->tpl_data['items'][$x][$i+1]['name'] = 'record_id';
+                   $this->tpl_data['items'][$x][$i+1]['value'] = $record_id;
                 }
                 
                $i++;
@@ -160,6 +169,28 @@ class NDB_Menu_Filter_videos extends NDB_Menu_Filter
         }
 
         return true;
+    }
+    
+    function format_size($value){
+      if(is_null($value)){
+        return null;
+      }
+      
+      if($value >= 1000000000){
+        $value = floor($value/1000000000);
+        return "{$value} GB";
+      }
+      if($value >= 1000000){
+        $value = floor($value/1000000);
+        return "{$value} MB";
+      }
+      if($value >= 1000){
+        $value = floor($value/1000);
+        return "{$value} KB";
+      }
+      
+      return "{$value} bytes";
+      
     }
 }
 ?>

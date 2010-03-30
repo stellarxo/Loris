@@ -75,22 +75,37 @@ class NDB_Form_video_upload extends NDB_Form
         $instruments = hash_it($instruments, "test_name");
          
         $db->select("SELECT PSCID FROM candidate WHERE PSCID LIKE '{$site->getCenterName()}%' ORDER BY PSCID", $candidates);
+        $db->select("SELECT PSCID FROM candidate WHERE PSCID NOT LIKE '{$site->getCenterName()}%' ORDER BY PSCID", $candidates2);
 
-
-        $candidates = hash_it($candidates, "PSCID");
+        $candidates = hash_it($candidates + $candidates2, "PSCID");
         
         $this->form->addElement("select", "Instrument", "Instrument", $instruments);
         $this->form->addElement("select", "PSCID", "PSCID", $candidates);
-        $this->form->addElement("select", "visitLabel", "visitLabel", array("v06" => "v06", "v12" => "v12", "v24" => "v24", "v36" => "v36"));
-        $this->form->addElement("select", "For_site", "For_site", array(null, "DCC", "SEA", "PHI", "STL", "UNC"));
-        $this->form->addElement("textarea", "comments", "comments");
+        $this->form->addElement("select", "visitLabel", "Visit Label", array("v06" => "v06", "v12" => "v12", "v18" => "v18", "v24" => "v24", "v36" => "v36"));
+        $dateOptions = array(
+                             'language' => 'en',
+                             'format'   => 'YMd',
+                             'minYear'  => $config->getSetting('startYear'),
+                             'maxYear'  => $config->getSetting('endYear'),
+                             'addEmptyOption' => true,
+                             'emptyOptionValue' => null
+                             );
+
+        $this->form->addElement('date', 'Date_taken', 'Date of Administration', $dateOptions);
+        $this->form->addElement("select", "For_site", "Site This File is Being Uploaded For (optional)", array(null, "DCC", "SEA", "PHI", "STL", "UNC"));
+        $this->form->addElement("textarea", "comments", "Comments (optional)");
+        if($this->identifier){
+          $this->form->addElement('static', 'File_name', 'File name');
+        }else{
+          $this->form->addElement('file', 'video_file', 'File to Upload');
+          $this->form->addRule('video_file', 'No file selected.', 'required');
+        }
         
-        $this->form->addElement('file', 'video_file', 'Upload a video');
         $this->form->addRule('PSCID', 'PSCID required.', 'required');
         $this->form->addRule('Instrument', 'Instrument is required.', 'required');
         $this->form->addRule('visitLabel', 'Visit Label is required.', 'required');
-        $this->form->addRule('video_file', 'No file selected.', 'required');
-
+        
+       
         $this->form->addFormRule(array(&$this, '_validate'));
     }
 
@@ -134,45 +149,74 @@ class NDB_Form_video_upload extends NDB_Form
               $Date_taken = $values['Date_taken'];
               $values['Date_taken'] = sprintf("%04d-%02d-%02d", $Date_taken['Y'], $Date_taken['M'], $Date_taken['d']);
           }
-
-          require_once "File_Upload.class.inc";
-          $file=new File_Upload;
-
-          //pass the existing form ($form) by reference to File_Upload, and register the file_upload field names being used.
-          $file->registerForm($this->form);
-
-          //Tell File_Upload what file handlers to use.
-          $file->setFileHandler("video_file", &$this);
-          $file->overwriteMode="overwrite";
-                    
-          //Set the target directory that you want files moved into once they are validated and processed.
-          $file->setBaseUploadDirectory("./videos");
-
-          //Set the prefix to prepend to the filenames
-          //$file->setFilenamePrefix($timepoint->getVisitLabel()."-".$this->testName."-");
           
-          $user =& User::singleton();
-          if(PEAR::isError($user)) {
-              return PEAR::raiseError("User Error: ".$user->getMessage());
+          if(!empty($this->identifier)){
+            $db=& Database::singleton();
+            $result = $db->update('videos', $values, array('record_id'=>$this->identifier));
+            if($this->isError($result)) {
+                print $result->getMessage();
+                return $this->raiseError('Could not save to database');
+            }
+            return true;
+          }else{
+            require_once "File_Upload.class.inc";
+            $file=new File_Upload;
+
+            //pass the existing form ($form) by reference to File_Upload, and register the file_upload field names being used.
+            $file->registerForm($this->form);
+
+            //Tell File_Upload what file handlers to use.
+            $file->setFileHandler("video_file", &$this);
+            $file->overwriteMode="overwrite";
+
+            //Set the target directory that you want files moved into once they are validated and processed.
+            $file->setBaseUploadDirectory("./videos");
+
+            //Set the prefix to prepend to the filenames
+            //$file->setFilenamePrefix($timepoint->getVisitLabel()."-".$this->testName."-");
+
+            $user =& User::singleton();
+            if(PEAR::isError($user)) {
+                return PEAR::raiseError("User Error: ".$user->getMessage());
+            }
+
+            //set the the IDs to the handler functions.
+            $file->setHandlerArgs(array("user_id" => $user->getUsername(), "values"=>$values));
+
+            //If the form is validated, call File_Upload::processFiles() which loops through the files and 
+            //proccesses them (including verify, move, and import steps)
+            $file->processFiles();
+
+            //echo error messages
+            if(!empty($file->errorLog)){
+               while(list($fileType,$fileErrors)=each($file->errorLog)){
+                   foreach($fileErrors AS $error){
+                        echo "<span style='color:red'><b>Upload Error</b> $fileType: $error</span><br>";
+                   }
+               }
+               return false;
+            } 
+            return true;
           }
-          
-          //set the the IDs to the handler functions.
-          $file->setHandlerArgs(array("user_id" => $user->getUsername(), "values"=>$values));
 
-          //If the form is validated, call File_Upload::processFiles() which loops through the files and 
-          //proccesses them (including verify, move, and import steps)
-          $file->processFiles();
-          
-          //echo error messages
-          if(!empty($file->errorLog)){
-             while(list($fileType,$fileErrors)=each($file->errorLog)){
-                 foreach($fileErrors AS $error){
-                      echo "<span style='color:red'><b>Upload Error</b> $fileType: $error</span><br>";
-                 }
-             }
-             return false;
-          } 
-          return true;
+      }
+      
+      function _getDefaults()
+      {
+          $defaults = array();
+
+          if (!empty($this->identifier)) {
+            $db=& Database::singleton();
+
+            $db->selectRow("SELECT * FROM videos WHERE record_id = '{$this->identifier}'", $row);
+            if (PEAR::isError($row)) {
+              return PEAR::raiseError("DB Error: ".$row->getMessage());
+            }
+
+              // get the user defaults
+  	        $defaults = $row;
+          }
+          return $defaults;
       }
       
       function isValid(&$file, $args){
@@ -190,11 +234,13 @@ class NDB_Form_video_upload extends NDB_Form
             'File_type' =>'video_file',
             'File_name' =>$file->getDestinationFilename(),
             'Data_dir'  =>$file->getDestinationDirectory(),
+            'File_size' => $file->fileInfo['size'],
             'Instrument'=>$args['values']['Instrument'],
             'PSCID'=>$args['values']['PSCID'],
             'uploaded_by' => $args['user_id'],
             'For_site' => $args['values']['For_site'],
             'visitLabel' => $args['values']['visitLabel'],
+            'Date_taken' => $args['values']['Date_taken'],
             'comments' => $args['values']['comments']
         );
         
@@ -215,7 +261,7 @@ class NDB_Form_video_upload extends NDB_Form
             $result = $db->update('videos', $values, array('PSCID'=>$args['values']['PSCID'], 'Instrument'=>$args['values']['Instrument'], 'visitLabel' => $args['values']['visitLabel']));
         }
 
-        $result = $db->update('videos', $values, array('PSCID'=>$args['values']['PSCID'], 'Instrument'=>$args['values']['Instrument'], 'visitLabel' => $args['values']['visitLabel']));
+        //$result = $db->update('videos', $values, array('PSCID'=>$args['values']['PSCID'], 'Instrument'=>$args['values']['Instrument'], 'visitLabel' => $args['values']['visitLabel']));
         if($this->isError($result)) {
             print $result->getMessage();
             return $this->raiseError('Could not save to database');
