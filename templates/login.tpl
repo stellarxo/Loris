@@ -6,24 +6,140 @@
 <link rel="shortcut icon" href="images/mni_icon.ico" type="image/ico" />
 <!-- page title -->
 <title>{$title}</title>
+
+<!-- About this Javascript. As time goes on, one may need to update this file with new browsers and latest versions -->
+{literal}
+<script type="text/javascript">
+<!--
+var BrowserDetect = {
+	init: function () {
+		this.browser = this.searchString(this.dataBrowser) || "An unknown browser";
+		this.version = this.searchVersion(navigator.userAgent)
+			|| this.searchVersion(navigator.appVersion)
+			|| "an unknown version";
+		this.OS = this.searchString(this.dataOS) || "an unknown OS";
+	},
+	searchString: function (data) {
+		for (var i=0;i<data.length;i++)	{
+			var dataString = data[i].string;
+			var dataProp = data[i].prop;
+			this.versionSearchString = data[i].versionSearch || data[i].identity;
+			if (dataString) {
+				if (dataString.indexOf(data[i].subString) != -1)
+					return data[i].identity;
+			}
+			else if (dataProp)
+				return data[i].identity;
+		}
+	},
+	searchVersion: function (dataString) {
+		var index = dataString.indexOf(this.versionSearchString);
+		if (index == -1) return;
+		return parseFloat(dataString.substring(index+this.versionSearchString.length+1));
+	},
+	dataBrowser: [
+		{ 	string: navigator.userAgent,
+			subString: "OmniWeb",
+			versionSearch: "OmniWeb/",
+			identity: "OmniWeb"
+		},
+		{
+			string: navigator.vendor,
+			subString: "Apple",
+			identity: "Safari"
+		},
+		{
+			prop: window.opera,
+			identity: "Opera"
+		},
+		{
+			string: navigator.vendor,
+			subString: "iCab",
+			identity: "iCab"
+		},
+		{
+			string: navigator.vendor,
+			subString: "KDE",
+			identity: "Konqueror"
+		},
+		{
+			string: navigator.userAgent,
+			subString: "Firefox",
+			identity: "Firefox"
+		},
+		{
+			string: navigator.vendor,
+			subString: "Camino",
+			identity: "Camino"
+		},
+		{		// for newer Netscapes (6+)
+			string: navigator.userAgent,
+			subString: "Netscape",
+			identity: "Netscape"
+		},
+		{
+			string: navigator.userAgent,
+			subString: "MSIE",
+			identity: "Explorer",
+			versionSearch: "MSIE"
+		},
+		{
+			string: navigator.userAgent,
+			subString: "Gecko",
+			identity: "Mozilla",
+			versionSearch: "rv"
+		},
+		{ 		// for older Netscapes (4-)
+			string: navigator.userAgent,
+			subString: "Mozilla",
+			identity: "Netscape",
+			versionSearch: "Mozilla"
+		}
+	],
+	dataOS : [
+		{
+			string: navigator.platform,
+			subString: "Win",
+			identity: "Windows"
+		},
+		{
+			string: navigator.platform,
+			subString: "Mac",
+			identity: "Mac"
+		},
+		{
+			string: navigator.platform,
+			subString: "Linux",
+			identity: "Linux"
+		}
+	]
+
+};
+BrowserDetect.init();
+
+// -->
+</script>
+
+{/literal}
 </head>
 
 <body>
 
-<form action="{$action}" method="post">
+<form action="main.php" method="post">
+
+
 
 <table align="center" bgcolor="#D3DCE3" border="0" cellpadding="2" cellspacing="0">
     <tr>
     	<th align="left" class="banner" colspan="2" background="images/title_background.jpg">
-    	    Autism Centers of Excellence (ACE) - Baby Sibs Network
+    	    Montreal Neurological Hospital and Institute
 	    </th>
-</tr>
+    </tr>
+    <tr>
     	<td><img src="images/mni_logo_transparent.gif" alt="Montreal Neurological Institute" border="0" width="128" height="106" /></td>
 	    <td>
 	        <table border="0" cellpadding="2" cellspacing="2">
-<br>
-        <tr>Montreal Neurological Hospital and Institute</tr>	
-		<tr>
+        		<tr>
 		            <td align="center" colspan="2">{$error_message}&nbsp;</td>
     		    </tr>
         		<tr>
@@ -43,11 +159,30 @@
     </tr>
     <tr>
     	<td align="left" class="tabox" colspan="2">
-    	    Created By: <a href="http:www.bic.mni.mcgill.ca" target="_blank">McConnell Brain Imaging Centre</a>
+    	    Created By: <a href="http://www.bic.mni.mcgill.ca" target="_blank">McConnell Brain Imaging Centre</a>
 	    </td>
     </tr>
 </table>
 
+{literal}
+<script type='text/javascript'>
+<!--
+if(BrowserDetect.browser == "Explorer") {
+	document.write('<p align="center"><b>The browser you are using (Internet Explorer) is not compatible with this database!</b><br>For full functionality please download the latest version of <a href="http://www.mozilla.com/" target="blank">Firefox.</a></p>');
+}
+// -->	
+</script>
+{/literal}
+
+{*
+{literal}
+<script type='text/javascript'>
+<!--
+	document.write('<p><b>Browser check:</b> You\'re using ' + BrowserDetect.browser + ' ' + BrowserDetect.version + ' on ' + BrowserDetect.OS + '!</p>');
+// -->	
+</script>
+{/literal}
+*}
 </form>
 
 </body>
