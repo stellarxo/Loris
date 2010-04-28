@@ -140,67 +140,67 @@ class NDB_BVL_Instrument_RSMS extends NDB_BVL_Instrument{
         
  
         
-        $group[]=&$this->form->createElement("select", "1_rate_body_1", null,  array(null => "", 0 => "0", 1=>"1", 2 => "2", 3 =>"3+", "NA" => "NA"));
-        $group[]=&$this->form->createElement("select", "1_rate_body_2", null,  array(null => "", 0 => "0", 1=>"1", 2 => "2", 3 =>"3+", "NA" => "NA"));
+        $group[]=&$this->form->createElement("select", "q1_rate_body_1", null,  array(null => "", 0 => "0", 1=>"1", 2 => "2", 3 =>"3+", "NA" => "NA"));
+        $group[]=&$this->form->createElement("select", "q1_rate_body_2", null,  array(null => "", 0 => "0", 1=>"1", 2 => "2", 3 =>"3+", "NA" => "NA"));
         $group[] = $this->form->createElement("static", null, $this->indent);
-        $group[]=&$this->form->createElement("select", "1_rate_body_3", null,  array(null => "", 0 => "0", 1=>"1", 2 => "2", 3 =>"3+", "NA" => "NA"));
+        $group[]=&$this->form->createElement("select", "q1_rate_body_3", null,  array(null => "", 0 => "0", 1=>"1", 2 => "2", 3 =>"3+", "NA" => "NA"));
         $group[] = $this->form->createElement("static", null, $this->indent);
-        $group[]=&$this->form->createElement("select", "1_rate_body_4", null,  array(null => "", 0 => "0", 1=>"1", 2 => "2", 3 =>"3+", "NA" => "NA"));
+        $group[]=&$this->form->createElement("select", "q1_rate_body_4", null,  array(null => "", 0 => "0", 1=>"1", 2 => "2", 3 =>"3+", "NA" => "NA"));
         $group[] = $this->form->createElement("static", null, $this->indent);
-        $group[]=&$this->form->createElement("select", "1_rate_body_5", null,  array(null => "", 0 => "0", 1=>"1", 2 => "2", 3 =>"3+", "NA" => "NA"));
+        $group[]=&$this->form->createElement("select", "q1_rate_body_5", null,  array(null => "", 0 => "0", 1=>"1", 2 => "2", 3 =>"3+", "NA" => "NA"));
         $group[] = $this->form->createElement("static", null, $this->indent);
-        $group[]=&$this->form->createElement("select", "1_rate_body_6", null,  array(null => "", 0 => "0", 1=>"1", 2 => "2", 3 =>"3+", "NA" => "NA"));
+        $group[]=&$this->form->createElement("select", "q1_rate_body_6", null,  array(null => "", 0 => "0", 1=>"1", 2 => "2", 3 =>"3+", "NA" => "NA"));
                
         $this->form->addGroup($group, "1_rate_body_group", "1. Rate of RSM with Body", $this->_GUIDelimiter, false);
                
-        $this->XINRegisterRule("1_rate_body_1", array("1_rate_body_1{@}=={@}"), "Required", '1_rate_body_group');               
-        $this->XINRegisterRule("1_rate_body_2", array("1_rate_body_2{@}=={@}"), "Required", '1_rate_body_group');
-        $this->XINRegisterRule("1_rate_body_3", array("1_rate_body_3{@}=={@}"), "Required", '1_rate_body_group');
-        $this->XINRegisterRule("1_rate_body_4", array("1_rate_body_4{@}=={@}"), "Required", '1_rate_body_group');
-        $this->XINRegisterRule("1_rate_body_5", array("1_rate_body_5{@}=={@}"), "Required", '1_rate_body_group');
-        $this->XINRegisterRule("1_rate_body_6", array("1_rate_body_6{@}=={@}"), "Required", '1_rate_body_group');
+        $this->XINRegisterRule("q1_rate_body_1", array("q1_rate_body_1{@}=={@}"), "Required", '1_rate_body_group');               
+        $this->XINRegisterRule("q1_rate_body_2", array("q1_rate_body_2{@}=={@}"), "Required", '1_rate_body_group');
+        $this->XINRegisterRule("q1_rate_body_3", array("q1_rate_body_3{@}=={@}"), "Required", '1_rate_body_group');
+        $this->XINRegisterRule("q1_rate_body_4", array("q1_rate_body_4{@}=={@}"), "Required", '1_rate_body_group');
+        $this->XINRegisterRule("q1_rate_body_5", array("q1_rate_body_5{@}=={@}"), "Required", '1_rate_body_group');
+        $this->XINRegisterRule("q1_rate_body_6", array("q1_rate_body_6{@}=={@}"), "Required", '1_rate_body_group');
                
         unset($group);
             
        $this->form->addElement("static", null, "2. Inventory of RSM with Body<br> (check all that apply)");
        
-       $group[] = &$this->form->createElement("advcheckbox", "2_inv_body_flaps", null, null, null, array("no", "yes"));
-       $this->XINRegisterRule ("2_inv_body_flaps", array ("2_inv_body_flaps{@}=={@}never_required"), "Not required" );
+       $group[] = &$this->form->createElement("advcheckbox", "q2_inv_body_flaps", null, null, null, array("no", "yes"));
+       $this->XINRegisterRule ("q2_inv_body_flaps", array ("q2_inv_body_flaps{@}=={@}never_required"), "Not required" );
        $this->form->addGroup($group, null, "Flaps arms or hands", $this->_GUIDelimiter, false);  
        unset($group);
        
-       $group[] = &$this->form->createElement("advcheckbox", "2_inv_body_pats", null, null, null, array("no", "yes"));
-       $this->XINRegisterRule ("2_inv_body_pats", array ("2_inv_body_pats{@}=={@}never_required"), "Not required" );
+       $group[] = &$this->form->createElement("advcheckbox", "q2_inv_body_pats", null, null, null, array("no", "yes"));
+       $this->XINRegisterRule ("q2_inv_body_pats", array ("q2_inv_body_pats{@}=={@}never_required"), "Not required" );
        $this->form->addGroup($group, null, "Pats, taps or presses body part", $this->_GUIDelimiter, false);
        unset($group);
        
-       $group[] = &$this->form->createElement("advcheckbox", "2_inv_body_rubs", null, null, null, array("no", "yes"));
-       $this->XINRegisterRule ("2_inv_body_rubs", array ("2_inv_body_rubs{@}=={@}never_required"), "Not required" );
+       $group[] = &$this->form->createElement("advcheckbox", "q2_inv_body_rubs", null, null, null, array("no", "yes"));
+       $this->XINRegisterRule ("q2_inv_body_rubs", array ("q2_inv_body_rubs{@}=={@}never_required"), "Not required" );
        $this->form->addGroup($group, null, "Rubs body part", $this->_GUIDelimiter, false);
        unset($group);
        
-       $group[] = &$this->form->createElement("advcheckbox", "2_inv_body_stiffens", null, null, null, array("no", "yes"));
-       $this->XINRegisterRule ("2_inv_body_stiffens", array ("2_inv_body_stiffens{@}=={@}never_required"), "Not required" );  
+       $group[] = &$this->form->createElement("advcheckbox", "q2_inv_body_stiffens", null, null, null, array("no", "yes"));
+       $this->XINRegisterRule ("q2_inv_body_stiffens", array ("q2_inv_body_stiffens{@}=={@}never_required"), "Not required" );  
        $this->form->addGroup($group, null, "Stiffens fingers, hands, or arms", $this->_GUIDelimiter, false);
        unset($group);
         
        $this->form->addElement ( 'static', null, "<BR><b>Weighted Raw Score</b>");
      
-       $this->form->addElement("static", "1_score", "Scale 1 &divide 3", array('size'=> 2));
-       $this->XINRegisterRule ( "1_score", array ("1_score{@}=={@}never_required"), "Not required" );
+       $this->form->addElement("static", "q1_score", "Scale 1 &divide 3", array('size'=> 2));
+       $this->XINRegisterRule ( "q1_score", array ("q1_score{@}=={@}never_required"), "Not required" );
      
-       $this->form->addElement("static", "2_score", "Scale 2", array('size'=> 2));
-   	   $this->XINRegisterRule ( "2_score", array ("2_score{@}=={@}never_required"), "Not required" );
+       $this->form->addElement("static", "q2_score", "Scale 2", array('size'=> 2));
+   	   $this->XINRegisterRule ( "q2_score", array ("q2_score{@}=={@}never_required"), "Not required" );
        
-       $this->form->addElement("static", "1_2_score", "Total", array('size'=> 2));
-       $this->XINRegisterRule ( "1_2_score", array ("1_2_score{@}=={@}never_required"), "Not required" );
+       $this->form->addElement("static", "q1_2_score", "Total", array('size'=> 2));
+       $this->XINRegisterRule ( "q1_2_score", array ("q1_2_score{@}=={@}never_required"), "Not required" );
         
         /* repetitive or Stereotyped Movements with Objects (RS< with Objects) */     
      
         $this->form->addElement("static", null, "<BR><b>Repetitive or Stereotyped Movements <br> with Objects (RSM with Objects)");
                 
         for($int=1; $int<=6; $int++){
-            $group[] = &$this->form->createElement("static", "3_rate_object_static" . $int, "", "$int");
+            $group[] = &$this->form->createElement("static", "q3_rate_object_static" . $int, "", "$int");
             if($int > 1){
                 $group[] = &$this->form->createElement("static", null, $this->indent);
             }      
@@ -214,7 +214,7 @@ class NDB_BVL_Instrument_RSMS extends NDB_BVL_Instrument{
         reset($activities);  
         while ( list ( $field, $label ) = each ( $activities ) ) {
             ///fix me!
-            $group[] = $this->form->createElement("static", null, "3_rate_object_static" . $int, $label); 
+            $group[] = $this->form->createElement("static", null, "q3_rate_object_static" . $int, $label); 
             if($int > 1){
                 $group[] = $this->form->createElement("static", "null", $this->indent);
             }
@@ -225,27 +225,27 @@ class NDB_BVL_Instrument_RSMS extends NDB_BVL_Instrument{
         unset($group);
         
         
-        $rate_object = "3_rate_object_";
+        $rate_object = "q3_rate_object_";
         $int= 1;
           
-        $group[]=&$this->form->createElement("select", "3_rate_object_1", null,  array(null => "", 0 => "0", 1=>"1", 2 => "2", 3 =>"3+", "NA" => "NA"));
-        $group[]=&$this->form->createElement("select", "3_rate_object_2", null,  array(null => "", 0 => "0", 1=>"1", 2 => "2", 3 =>"3+", "NA" => "NA"));
+        $group[]=&$this->form->createElement("select", "q3_rate_object_1", null,  array(null => "", 0 => "0", 1=>"1", 2 => "2", 3 =>"3+", "NA" => "NA"));
+        $group[]=&$this->form->createElement("select", "q3_rate_object_2", null,  array(null => "", 0 => "0", 1=>"1", 2 => "2", 3 =>"3+", "NA" => "NA"));
         $group[] = $this->form->createElement("static", null, $this->indent);
-        $group[]=&$this->form->createElement("select", "3_rate_object_3", null,  array(null => "", 0 => "0", 1=>"1", 2 => "2", 3 =>"3+", "NA" => "NA"));
+        $group[]=&$this->form->createElement("select", "q3_rate_object_3", null,  array(null => "", 0 => "0", 1=>"1", 2 => "2", 3 =>"3+", "NA" => "NA"));
         $group[] = $this->form->createElement("static", null, $this->indent);
-        $group[]=&$this->form->createElement("select", "3_rate_object_4", null,  array(null => "", 0 => "0", 1=>"1", 2 => "2", 3 =>"3+", "NA" => "NA"));
+        $group[]=&$this->form->createElement("select", "q3_rate_object_4", null,  array(null => "", 0 => "0", 1=>"1", 2 => "2", 3 =>"3+", "NA" => "NA"));
         $group[] = $this->form->createElement("static", null, $this->indent);
-        $group[]=&$this->form->createElement("select", "3_rate_object_5", null,  array(null => "", 0 => "0", 1=>"1", 2 => "2", 3 =>"3+", "NA" => "NA"));
+        $group[]=&$this->form->createElement("select", "q3_rate_object_5", null,  array(null => "", 0 => "0", 1=>"1", 2 => "2", 3 =>"3+", "NA" => "NA"));
         $group[] = $this->form->createElement("static", null, $this->indent);
-        $group[]=&$this->form->createElement("select", "3_rate_object_6", null,  array(null => "", 0 => "0", 1=>"1", 2 => "2", 3 =>"3+", "NA" => "NA"));
+        $group[]=&$this->form->createElement("select", "q3_rate_object_6", null,  array(null => "", 0 => "0", 1=>"1", 2 => "2", 3 =>"3+", "NA" => "NA"));
 
         $this->form->addGroup($group, "3_rate_object_group", "3. Rate of RSM with Objects", $this->_GUIDelimiter, false); 
-        $this->XINRegisterRule("3_rate_object_1", array("3_rate_object_1{@}=={@}"), "Required", '3_rate_object_group');               
-        $this->XINRegisterRule("3_rate_object_2", array("3_rate_object_2{@}=={@}"), "Required", '3_rate_object_group');
-        $this->XINRegisterRule("3_rate_object_3", array("3_rate_object_3{@}=={@}"), "Required", '3_rate_object_group');
-        $this->XINRegisterRule("3_rate_object_4", array("3_rate_object_4{@}=={@}"), "Required", '3_rate_object_group');
-        $this->XINRegisterRule("3_rate_object_5", array("3_rate_object_5{@}=={@}"), "Required", '3_rate_object_group');
-        $this->XINRegisterRule("3_rate_object_6", array("3_rate_object_6{@}=={@}"), "Required", '3_rate_object_group');
+        $this->XINRegisterRule("q3_rate_object_1", array("q3_rate_object_1{@}=={@}"), "Required", '3_rate_object_group');               
+        $this->XINRegisterRule("q3_rate_object_2", array("q3_rate_object_2{@}=={@}"), "Required", '3_rate_object_group');
+        $this->XINRegisterRule("q3_rate_object_3", array("q3_rate_object_3{@}=={@}"), "Required", '3_rate_object_group');
+        $this->XINRegisterRule("q3_rate_object_4", array("q3_rate_object_4{@}=={@}"), "Required", '3_rate_object_group');
+        $this->XINRegisterRule("q3_rate_object_5", array("q3_rate_object_5{@}=={@}"), "Required", '3_rate_object_group');
+        $this->XINRegisterRule("q3_rate_object_6", array("q3_rate_object_6{@}=={@}"), "Required", '3_rate_object_group');
 
         unset($group);  
                              
@@ -254,68 +254,66 @@ class NDB_BVL_Instrument_RSMS extends NDB_BVL_Instrument{
         
         $this->form->addElement("static", "null", "<br/>4a. Restricted: Preoccupation in Intensity <br/> or Focus with Restricted Interest<br/>");
        
-        $group[] = &$this->form->createElement("advcheckbox", "4a_inv_object_swipes", null, null, null, array("no", "yes"));
-        $this->XINRegisterRule ("4a_inv_object_swipes", array ("4a_inv_object_swipes{@}=={@}never_required"), "Not required" );  
+        $group[] = &$this->form->createElement("advcheckbox", "q4a_inv_object_swipes", null, null, null, array("no", "yes"));
+        $this->XINRegisterRule ("q4a_inv_object_swipes", array ("q4a_inv_object_swipes{@}=={@}never_required"), "Not required" );  
         $this->form->addGroup($group, null, "Swipes object away", $this->_GUIDelimiter, false);
         unset($group);
 
-        $group[] = &$this->form->createElement("advcheckbox", "4a_inv_object_rubs", null, null, null, array("no", "yes"));
-        $this->XINRegisterRule ("4a_inv_object_rubs", array ("4a_inv_object_rubs{@}=={@}never_required"), "Not required" );  
+        $group[] = &$this->form->createElement("advcheckbox", "q4a_inv_object_rubs", null, null, null, array("no", "yes"));
+        $this->XINRegisterRule ("q4a_inv_object_rubs", array ("q4a_inv_object_rubs{@}=={@}never_required"), "Not required" );  
         $this->form->addGroup($group, null, "Rubs or squeezes object", $this->_GUIDelimiter, false);
         unset($group);
 
-        $group[] = &$this->form->createElement("advcheckbox", "4a_inv_object_rolls", null, null, null, array("no", "yes"));
-        $this->XINRegisterRule ("4a_inv_object_rolls", array ("4a_inv_object_rolls{@}=={@}never_required"), "Not required" );  
+        $group[] = &$this->form->createElement("advcheckbox", "q4a_inv_object_rolls", null, null, null, array("no", "yes"));
+        $this->XINRegisterRule ("q4a_inv_object_rolls", array ("q4a_inv_object_rolls{@}=={@}never_required"), "Not required" );  
         $this->form->addGroup($group, null, "Rolls or knocks over object", $this->_GUIDelimiter, false);
         unset($group);
 
-        $group[] = &$this->form->createElement("advcheckbox", "4a_inv_object_rocks", null, null, null, array("no", "yes"));
-        $this->XINRegisterRule ("4a_inv_object_rocks", array ("4a_inv_object_rocks{@}=={@}never_required"), "Not required" );  
+        $group[] = &$this->form->createElement("advcheckbox", "q4a_inv_object_rocks", null, null, null, array("no", "yes"));
+        $this->XINRegisterRule ("q4a_inv_object_rocks", array ("q4a_inv_object_rocks{@}=={@}never_required"), "Not required" );  
         $this->form->addGroup($group, null, "Rocks, flips, turns over, or flicks object", $this->_GUIDelimiter, false);
         unset($group);
 
-        $group[] = &$this->form->createElement("advcheckbox", "4a_inv_object_spins", null, null, null, array("no", "yes"));
-        $this->XINRegisterRule ("4a_inv_object_spins", array ("4a_inv_object_spins{@}=={@}never_required"), "Not required" );  
+        $group[] = &$this->form->createElement("advcheckbox", "q4a_inv_object_spins", null, null, null, array("no", "yes"));
+        $this->XINRegisterRule ("q4a_inv_object_spins", array ("q4a_inv_object_spins{@}=={@}never_required"), "Not required" );  
         $this->form->addGroup($group, null, "Spins or wobbles object", $this->_GUIDelimiter, false);
         unset($group);
          
         $this->form->addElement("static", "null", "<br/>4b. Sameness: Insistence on Sameness <br/> or Difficulty with Change in Activity<br/>");
         
-        $group[] = &$this->form->createElement("advcheckbox", "4b_inv_object_collects", null, null, null, array("no", "yes"));
-        $this->XINRegisterRule ("4b_inv_object_collects", array ("4b_inv_object_collects{@}=={@}never_required"), "Not required" );  
+        $group[] = &$this->form->createElement("advcheckbox", "q4b_inv_object_collects", null, null, null, array("no", "yes"));
+        $this->XINRegisterRule ("q4b_inv_object_collects", array ("q4b_inv_object_collects{@}=={@}never_required"), "Not required" );  
         $this->form->addGroup($group, null, "Collects objects", $this->_GUIDelimiter, false);
         unset($group);
 
-        $group[] = &$this->form->createElement("advcheckbox", "4b_inv_object_moves", null, null, null, array("no", "yes"));
-        $this->XINRegisterRule ("4b_inv_object_moves", array ("4b_inv_object_moves{@}=={@}never_required"), "Not required" );  
+        $group[] = &$this->form->createElement("advcheckbox", "q4b_inv_object_moves", null, null, null, array("no", "yes"));
+        $this->XINRegisterRule ("q4b_inv_object_moves", array ("q4b_inv_object_moves{@}=={@}never_required"), "Not required" );  
         $this->form->addGroup($group, null, "Moves or places objects to one location", $this->_GUIDelimiter, false);
         unset($group);
 
-        $group[] = &$this->form->createElement("advcheckbox", "4b_inv_object_lines", null, null, null, array("no", "yes"));
-        $this->XINRegisterRule ("4b_inv_object_lines", array ("4b_inv_object_lines{@}=={@}never_required"), "Not required" );  
+        $group[] = &$this->form->createElement("advcheckbox", "q4b_inv_object_lines", null, null, null, array("no", "yes"));
+        $this->XINRegisterRule ("q4b_inv_object_lines", array ("q4b_inv_object_lines{@}=={@}never_required"), "Not required" );  
         $this->form->addGroup($group, null, "Lines up or stacks objects", $this->_GUIDelimiter, false);
         unset($group);
 
-        $group[] = &$this->form->createElement("advcheckbox", "4b_inv_object_clutches", null, null, null, array("no", "yes"));
-        $this->XINRegisterRule ("4b_inv_object_clutches", array ("4b_inv_object_clutches{@}=={@}never_required"), "Not required" );  
+        $group[] = &$this->form->createElement("advcheckbox", "q4b_inv_object_clutches", null, null, null, array("no", "yes"));
+        $this->XINRegisterRule ("q4b_inv_object_clutches", array ("q4b_inv_object_clutches{@}=={@}never_required"), "Not required" );  
         $this->form->addGroup($group, null, "Clutches object<BR><BR>", $this->_GUIDelimiter, false);
         unset($group);
 
 
         $this->form->addElement ( 'static', null, "<BR><b>Weighted Raw Score</b>");
 
-       $this->form->addElement("static", "3_score", "Scale 3 &divide 3", array('size'=> 2));
-       $this->XINRegisterRule ( "3_score", array ("3_score{@}=={@}never_required"), "Not required" );
+       $this->form->addElement("static", "q3_score", "Scale 3 &divide 3", array('size'=> 2));
+       $this->XINRegisterRule ( "q3_score", array ("q3_score{@}=={@}never_required"), "Not required" );
 
-       $this->form->addElement("static", "4_score", "Scale 4", array('size'=> 2));
-       $this->XINRegisterRule ( "4_score", array ("4_score{@}=={@}never_required"), "Not required" );
+       $this->form->addElement("static", "q4_score", "Scale 4", array('size'=> 2));
+       $this->XINRegisterRule ( "q4_score", array ("q4_score{@}=={@}never_required"), "Not required" );
 
-       $this->form->addElement("static", "3_4_score", "Total", array('size'=> 2));
-       $this->XINRegisterRule ( "3_4_score", array ("3_4_score{@}=={@}never_required"), "Not required" );
-
+       $this->form->addElement("static", "q3_4_score", "Total", array('size'=> 2));
+       $this->XINRegisterRule ( "q3_4_score", array ("q3_4_score{@}=={@}never_required"), "Not required" );
         
         }
-
     
         
         function score() {
@@ -342,89 +340,89 @@ class NDB_BVL_Instrument_RSMS extends NDB_BVL_Instrument{
                         
             $score1 =0;
             for($int = 1; $int <= 6; $int ++){
-                 if($result["1_rate_body_".$int]!="NA"){
-                     $score1 = $score1 + $result["1_rate_body_".$int];
+                 if($result["q1_rate_body_".$int]!="NA"){
+                     $score1 = $score1 + $result["q1_rate_body_".$int];
                  }
             }
            
             
-            $newValues["1_score"] = round($score1/3, 2);
+            $newValues["q1_score"] = round($score1/3, 2);
             
                     
             $score2 = 0;
-            if($result["2_inv_body_flaps"] == "yes"){
+            if($result["q2_inv_body_flaps"] == "yes"){
                 $score2++;
             }
-            if($result["2_inv_body_pats"]=="yes"){
+            if($result["q2_inv_body_pats"]=="yes"){
                 $score2++;
             }
-            if($result["2_inv_body_rubs"]=="yes"){
+            if($result["q2_inv_body_rubs"]=="yes"){
                 $score2++;
             }
-            if($result["2_inv_body_stiffens"]=="yes"){
+            if($result["q2_inv_body_stiffens"]=="yes"){
                 $score2++;
             }
             
-            $newValues["2_score"] = $score2;
+            $newValues["q2_score"] = $score2;
             
-            $newValues["1_2_score"] = $newValues["1_score"] + $score2;
+            $newValues["q1_2_score"] = $newValues["1_score"] + $score2;
             
             
             $score3=0;
             for($int = 1; $int <= 6; $int ++){
-                 if($result["3_rate_object_".$int]!="NA"){
-                     $score3 = $score3 + $result["3_rate_object_".$int];
+                 if($result["q3_rate_object_".$int]!="NA"){
+                     $score3 = $score3 + $result["q3_rate_object_".$int];
 
                  }
             }
             
             
-            $newValues["3_score"] = round($score3/3, 2);
+            $newValues["q3_score"] = round($score3/3, 2);
             
             $score4a =0;
                     
-            if($result["4a_inv_object_swipes"] == "yes"){
+            if($result["q4a_inv_object_swipes"] == "yes"){
                 $score4a++;
             }            
             
-            if($result["4a_inv_object_rubs"] == "yes"){
+            if($result["q4a_inv_object_rubs"] == "yes"){
                 $score4a++;
             }
             
-            if($result["4a_inv_object_rolls"] == "yes"){
+            if($result["q4a_inv_object_rolls"] == "yes"){
                 $score4a++;
             }
             
-           if($result["4a_inv_object_rocks"]=="yes"){
+           if($result["q4a_inv_object_rocks"]=="yes"){
                $score4a++;
            }
            
-           if($result["4a_inv_object_spins"]=="yes"){
+           if($result["q4a_inv_object_spins"]=="yes"){
                $score4a++;
            }
             
        
            $score4b=0;
            
-           if($result["4b_inv_object_collects"]=="yes"){
+           if($result["q4b_inv_object_collects"]=="yes"){
                 $score4b++;
                 
             }
-            if($result["4b_inv_object_moves"]=="yes"){
+            if($result["q4b_inv_object_moves"]=="yes"){
                 $score4b++;
             }
             
-            if($result["4b_inv_object_lines"]=="yes"){
+            if($result["q4b_inv_object_lines"]=="yes"){
                 $score4b++;
             }
             
-            if($result["4b_inv_object_clutches"]=="yes"){
+            if($result["q4b_inv_object_clutches"]=="yes"){
                 $score4b++;
             }
             
-            $newValues["4_score"] = $score4a + $score4b;   
+            $newValues["q4_score"] = $score4a + $score4b;   
             
-            $newValues["3_4_score"] = $newValues["3_score"] + $score4a + $score4b;     
+            $newValues["q3_4_score"] = $newValues["q3_score"] + $score4a + $score4b;     
         
              $result = $db->update($this->table, $newValues, array('CommentID' => $this->getCommentID()));
              if($db->isError($result)) {
