@@ -1,0 +1,437 @@
+<?php
+
+
+require_once('RequiredIfGroup.inc');
+require_once('RequiredIf.inc');
+require_once 'HTML/QuickForm.php';
+
+class NDB_BVL_Instrument_RSMS extends NDB_BVL_Instrument{
+	var $yesNo = array(null=>"", "Yes" =>"Yes", "No" =>"No", 333 => "Unknown", 999 =>"NA");	
+	var $rate_rsm_array = array(null => "", 0 => "0", 1=>"1", 2 => "2", 3 =>"3+", "NA" => "NA");
+    
+	/*
+	INSERT INTO test_names VALUES ('', 'RSMS', 'Repetitive and Stereotyped Movement Scales: Scoring Worksheet', '0', '1');
+	INSERT INTO instrument_subtests VALUES('', 'RSMS', 'RSMS_page1', 'Repetitive and Stereotyped Movement Scales', 1);
+	INSERT INTO test_battery VALUES ('', 'RSMS', '120', '1440', 'Y', 'Visit', '1');
+
+	*/
+
+	/**
+	 * Array of column names to be ignored by the double data entry conflict detector.
+	 */
+	/**
+	 * sets up basic data, such as the HTML_Quickform object, and so on.
+	 *
+	 * @param string $commentID  the CommentID identifying the data to load
+	 * @param string $page       if a multipage form, the page to show
+	 * @return void
+	 * @access public
+	 */
+	function setup($commentID, $page){
+		$this->formType="XIN";
+		$this->form = new HTML_Quickform('test_form');
+		$this->page = $page;            // page label (number or
+		// string - used by
+		// user-defined child classes)
+
+		// set the object properties
+		$this->testName = "RSMS";           // test_names.Test_name
+		$this->table = 'RSMS';              // name of database table corresponding to instrument
+		// data keyed by commentID
+		$this->commentID = $commentID;
+
+		//The array of dates/timestamps to convert to database dates/timestamps
+		//Any HTML_Quickform date elements must be listed here
+		$this->dateTimeFields=array("Date_taken");
+
+		// required fields for data entry completion status
+		$this->_requiredElements = array('Examiner', 'Date_taken');
+	
+		// setup the form
+	    $this->_setupForm();
+        
+
+	}
+
+	/**
+    * method to build the HTML_Quickform object into a paged form
+    *
+    * @return void
+    * @access private
+    */
+	function _setupForm(){
+	       if(ereg("RSMS(_page[0-9]+)",$this->page,$matches)){
+                call_user_method($matches[1], &$this);
+            } else {
+                $this->_main();
+            }
+
+		//Defines the call back function for HTML Quickform to use when validating the form.
+		$this->form->addFormRule(array(&$this,'XINValidate'));
+    
+	}
+
+	/**
+    * generates the main page of the form.
+    *
+    * @return void
+    * @access private
+    *
+    */
+	function _main(){
+		// display test name
+		$this->form->addElement('header', 'instrument_title', "Repetitive and Stereotyped Movement Scales: Scoring Worksheet");
+
+		// automatically adds examiner & date of administration
+		$this->_addMetadataFields();
+		
+    	$config =& NDB_Config::singleton();
+        
+        $this->dateOptions = array(
+            'language' => 'en',
+            'format'   => 'YMd',
+            'minYear'  => $config->getSetting('startYear') -80, //allows for siblings up to 20 years older than candidate
+            'maxYear'  => $config->getSetting('endYear'),
+            'addEmptyOption' => true,
+            'emptyOptionValue' => null
+    	);
+   
+}
+        
+    function _page1(){
+    
+    
+     	$this->form->addElement ( "static", null, "<b>Repetitive and Stereotyped Movements <br>(score during opportunities 1 to 6)<b>" );
+	    $this->form->addElement ( "static", null, "<BR>" ); //line space
+    
+    	
+        $sample_num = array (1 => "1", 2 => "2", 3 => "3", 4 => "4", 5 => "5", 6 => "6");
+        
+        $activities = array("windup" => "Windup Toy", "balloon" => "Balloon", "bubbles" => "Bubbles","jar" => "Jar", "books" => "Books", "play" => "Play");
+        $yesNo = array(null => "", "0" => "No", "1" => "Yes", "NA"=>"NA" );
+        $sample_choices = array(null=> "", "Sample Taken", "NA" => "NA" );
+        $this->form->addElement("static", null, "Repetitive Movements or Posturing of Body, <br> Arms, Hands, or Fingers (RSM with Body)<br>");
+
+                
+        for($int=1; $int<=6; $int++){
+            $group[] = &$this->form->createElement("static", "sample_body_static" . $int, "", $int);    
+             if($int > 1){
+                    $group[] = $this->form->createElement("static", null, $this->indent);
+            }  
+        }
+        
+        
+        $this->form->addGroup($group, null, "Sampling Opportunity", $this->_GUIDelimiter, false);
+        unset($group);
+        
+        reset($activities);  
+        
+        $int =1;
+        while ( list ( $field, $label ) = each ( $activities ) ) {
+            $group[] = &$this->form->createElement("static", "sample_body_static" . $int, null, $label);
+            if($int > 1){
+                $group[] = $this->form->createElement("static", null, $this->indent);
+            }
+            $int++;
+        }
+        
+        $this->form->addGroup($group, null, "", $this->_GUIDelimiter, false);
+        unset($group);
+        
+ 
+        
+        $group[]=&$this->form->createElement("select", "1_rate_body_1", null,  array(null => "", 0 => "0", 1=>"1", 2 => "2", 3 =>"3+", "NA" => "NA"));
+        $group[]=&$this->form->createElement("select", "1_rate_body_2", null,  array(null => "", 0 => "0", 1=>"1", 2 => "2", 3 =>"3+", "NA" => "NA"));
+        $group[] = $this->form->createElement("static", null, $this->indent);
+        $group[]=&$this->form->createElement("select", "1_rate_body_3", null,  array(null => "", 0 => "0", 1=>"1", 2 => "2", 3 =>"3+", "NA" => "NA"));
+        $group[] = $this->form->createElement("static", null, $this->indent);
+        $group[]=&$this->form->createElement("select", "1_rate_body_4", null,  array(null => "", 0 => "0", 1=>"1", 2 => "2", 3 =>"3+", "NA" => "NA"));
+        $group[] = $this->form->createElement("static", null, $this->indent);
+        $group[]=&$this->form->createElement("select", "1_rate_body_5", null,  array(null => "", 0 => "0", 1=>"1", 2 => "2", 3 =>"3+", "NA" => "NA"));
+        $group[] = $this->form->createElement("static", null, $this->indent);
+        $group[]=&$this->form->createElement("select", "1_rate_body_6", null,  array(null => "", 0 => "0", 1=>"1", 2 => "2", 3 =>"3+", "NA" => "NA"));
+               
+        $this->form->addGroup($group, "1_rate_body_group", "1. Rate of RSM with Body", $this->_GUIDelimiter, false);
+               
+        $this->XINRegisterRule("1_rate_body_1", array("1_rate_body_1{@}=={@}"), "Required", '1_rate_body_group');               
+        $this->XINRegisterRule("1_rate_body_2", array("1_rate_body_2{@}=={@}"), "Required", '1_rate_body_group');
+        $this->XINRegisterRule("1_rate_body_3", array("1_rate_body_3{@}=={@}"), "Required", '1_rate_body_group');
+        $this->XINRegisterRule("1_rate_body_4", array("1_rate_body_4{@}=={@}"), "Required", '1_rate_body_group');
+        $this->XINRegisterRule("1_rate_body_5", array("1_rate_body_5{@}=={@}"), "Required", '1_rate_body_group');
+        $this->XINRegisterRule("1_rate_body_6", array("1_rate_body_6{@}=={@}"), "Required", '1_rate_body_group');
+               
+        unset($group);
+            
+       $this->form->addElement("static", null, "2. Inventory of RSM with Body<br> (check all that apply)");
+       
+       $group[] = &$this->form->createElement("advcheckbox", "2_inv_body_flaps", null, null, null, array("no", "yes"));
+       $this->XINRegisterRule ("2_inv_body_flaps", array ("2_inv_body_flaps{@}=={@}never_required"), "Not required" );
+       $this->form->addGroup($group, null, "Flaps arms or hands", $this->_GUIDelimiter, false);  
+       unset($group);
+       
+       $group[] = &$this->form->createElement("advcheckbox", "2_inv_body_pats", null, null, null, array("no", "yes"));
+       $this->XINRegisterRule ("2_inv_body_pats", array ("2_inv_body_pats{@}=={@}never_required"), "Not required" );
+       $this->form->addGroup($group, null, "Pats, taps or presses body part", $this->_GUIDelimiter, false);
+       unset($group);
+       
+       $group[] = &$this->form->createElement("advcheckbox", "2_inv_body_rubs", null, null, null, array("no", "yes"));
+       $this->XINRegisterRule ("2_inv_body_rubs", array ("2_inv_body_rubs{@}=={@}never_required"), "Not required" );
+       $this->form->addGroup($group, null, "Rubs body part", $this->_GUIDelimiter, false);
+       unset($group);
+       
+       $group[] = &$this->form->createElement("advcheckbox", "2_inv_body_stiffens", null, null, null, array("no", "yes"));
+       $this->XINRegisterRule ("2_inv_body_stiffens", array ("2_inv_body_stiffens{@}=={@}never_required"), "Not required" );  
+       $this->form->addGroup($group, null, "Stiffens fingers, hands, or arms", $this->_GUIDelimiter, false);
+       unset($group);
+        
+       $this->form->addElement ( 'static', null, "<BR><b>Weighted Raw Score</b>");
+     
+       $this->form->addElement("static", "1_score", "Scale 1 &divide 3", array('size'=> 2));
+       $this->XINRegisterRule ( "1_score", array ("1_score{@}=={@}never_required"), "Not required" );
+     
+       $this->form->addElement("static", "2_score", "Scale 2", array('size'=> 2));
+   	   $this->XINRegisterRule ( "2_score", array ("2_score{@}=={@}never_required"), "Not required" );
+       
+       $this->form->addElement("static", "1_2_score", "Total", array('size'=> 2));
+       $this->XINRegisterRule ( "1_2_score", array ("1_2_score{@}=={@}never_required"), "Not required" );
+        
+        /* repetitive or Stereotyped Movements with Objects (RS< with Objects) */     
+     
+        $this->form->addElement("static", null, "<BR><b>Repetitive or Stereotyped Movements <br> with Objects (RSM with Objects)");
+                
+        for($int=1; $int<=6; $int++){
+            $group[] = &$this->form->createElement("static", "3_rate_object_static" . $int, "", "$int");
+            if($int > 1){
+                $group[] = &$this->form->createElement("static", null, $this->indent);
+            }      
+        }
+           
+        $this->form->addGroup($group, null, "<br>Sampling Opportunity", $this->_GUIDelimiter, false);
+        unset($group);
+        
+        
+        $int=1;
+        reset($activities);  
+        while ( list ( $field, $label ) = each ( $activities ) ) {
+            ///fix me!
+            $group[] = $this->form->createElement("static", null, "3_rate_object_static" . $int, $label); 
+            if($int > 1){
+                $group[] = $this->form->createElement("static", "null", $this->indent);
+            }
+            $int++;
+        }
+        
+        $this->form->addGroup($group, "rate_object_static", "", $this->_GUIDelimiter, false);
+        unset($group);
+        
+        
+        $rate_object = "3_rate_object_";
+        $int= 1;
+          
+        $group[]=&$this->form->createElement("select", "3_rate_object_1", null,  array(null => "", 0 => "0", 1=>"1", 2 => "2", 3 =>"3+", "NA" => "NA"));
+        $group[]=&$this->form->createElement("select", "3_rate_object_2", null,  array(null => "", 0 => "0", 1=>"1", 2 => "2", 3 =>"3+", "NA" => "NA"));
+        $group[] = $this->form->createElement("static", null, $this->indent);
+        $group[]=&$this->form->createElement("select", "3_rate_object_3", null,  array(null => "", 0 => "0", 1=>"1", 2 => "2", 3 =>"3+", "NA" => "NA"));
+        $group[] = $this->form->createElement("static", null, $this->indent);
+        $group[]=&$this->form->createElement("select", "3_rate_object_4", null,  array(null => "", 0 => "0", 1=>"1", 2 => "2", 3 =>"3+", "NA" => "NA"));
+        $group[] = $this->form->createElement("static", null, $this->indent);
+        $group[]=&$this->form->createElement("select", "3_rate_object_5", null,  array(null => "", 0 => "0", 1=>"1", 2 => "2", 3 =>"3+", "NA" => "NA"));
+        $group[] = $this->form->createElement("static", null, $this->indent);
+        $group[]=&$this->form->createElement("select", "3_rate_object_6", null,  array(null => "", 0 => "0", 1=>"1", 2 => "2", 3 =>"3+", "NA" => "NA"));
+
+        $this->form->addGroup($group, "3_rate_object_group", "3. Rate of RSM with Objects", $this->_GUIDelimiter, false); 
+        $this->XINRegisterRule("3_rate_object_1", array("3_rate_object_1{@}=={@}"), "Required", '3_rate_object_group');               
+        $this->XINRegisterRule("3_rate_object_2", array("3_rate_object_2{@}=={@}"), "Required", '3_rate_object_group');
+        $this->XINRegisterRule("3_rate_object_3", array("3_rate_object_3{@}=={@}"), "Required", '3_rate_object_group');
+        $this->XINRegisterRule("3_rate_object_4", array("3_rate_object_4{@}=={@}"), "Required", '3_rate_object_group');
+        $this->XINRegisterRule("3_rate_object_5", array("3_rate_object_5{@}=={@}"), "Required", '3_rate_object_group');
+        $this->XINRegisterRule("3_rate_object_6", array("3_rate_object_6{@}=={@}"), "Required", '3_rate_object_group');
+
+        unset($group);  
+                             
+
+        $this->form->addElement("static", null, "4. Inventory of RSM with Objects<br> (check all that apply)");
+        
+        $this->form->addElement("static", "null", "<br/>4a. Restricted: Preoccupation in Intensity <br/> or Focus with Restricted Interest<br/>");
+       
+        $group[] = &$this->form->createElement("advcheckbox", "4a_inv_object_swipes", null, null, null, array("no", "yes"));
+        $this->XINRegisterRule ("4a_inv_object_swipes", array ("4a_inv_object_swipes{@}=={@}never_required"), "Not required" );  
+        $this->form->addGroup($group, null, "Swipes object away", $this->_GUIDelimiter, false);
+        unset($group);
+
+        $group[] = &$this->form->createElement("advcheckbox", "4a_inv_object_rubs", null, null, null, array("no", "yes"));
+        $this->XINRegisterRule ("4a_inv_object_rubs", array ("4a_inv_object_rubs{@}=={@}never_required"), "Not required" );  
+        $this->form->addGroup($group, null, "Rubs or squeezes object", $this->_GUIDelimiter, false);
+        unset($group);
+
+        $group[] = &$this->form->createElement("advcheckbox", "4a_inv_object_rolls", null, null, null, array("no", "yes"));
+        $this->XINRegisterRule ("4a_inv_object_rolls", array ("4a_inv_object_rolls{@}=={@}never_required"), "Not required" );  
+        $this->form->addGroup($group, null, "Rolls or knocks over object", $this->_GUIDelimiter, false);
+        unset($group);
+
+        $group[] = &$this->form->createElement("advcheckbox", "4a_inv_object_rocks", null, null, null, array("no", "yes"));
+        $this->XINRegisterRule ("4a_inv_object_rocks", array ("4a_inv_object_rocks{@}=={@}never_required"), "Not required" );  
+        $this->form->addGroup($group, null, "Rocks, flips, turns over, or flicks object", $this->_GUIDelimiter, false);
+        unset($group);
+
+        $group[] = &$this->form->createElement("advcheckbox", "4a_inv_object_spins", null, null, null, array("no", "yes"));
+        $this->XINRegisterRule ("4a_inv_object_spins", array ("4a_inv_object_spins{@}=={@}never_required"), "Not required" );  
+        $this->form->addGroup($group, null, "Spins or wobbles object", $this->_GUIDelimiter, false);
+        unset($group);
+         
+        $this->form->addElement("static", "null", "<br/>4b. Sameness: Insistence on Sameness <br/> or Difficulty with Change in Activity<br/>");
+        
+        $group[] = &$this->form->createElement("advcheckbox", "4b_inv_object_collects", null, null, null, array("no", "yes"));
+        $this->XINRegisterRule ("4b_inv_object_collects", array ("4b_inv_object_collects{@}=={@}never_required"), "Not required" );  
+        $this->form->addGroup($group, null, "Collects objects", $this->_GUIDelimiter, false);
+        unset($group);
+
+        $group[] = &$this->form->createElement("advcheckbox", "4b_inv_object_moves", null, null, null, array("no", "yes"));
+        $this->XINRegisterRule ("4b_inv_object_moves", array ("4b_inv_object_moves{@}=={@}never_required"), "Not required" );  
+        $this->form->addGroup($group, null, "Moves or places objects to one location", $this->_GUIDelimiter, false);
+        unset($group);
+
+        $group[] = &$this->form->createElement("advcheckbox", "4b_inv_object_lines", null, null, null, array("no", "yes"));
+        $this->XINRegisterRule ("4b_inv_object_lines", array ("4b_inv_object_lines{@}=={@}never_required"), "Not required" );  
+        $this->form->addGroup($group, null, "Lines up or stacks objects", $this->_GUIDelimiter, false);
+        unset($group);
+
+        $group[] = &$this->form->createElement("advcheckbox", "4b_inv_object_clutches", null, null, null, array("no", "yes"));
+        $this->XINRegisterRule ("4b_inv_object_clutches", array ("4b_inv_object_clutches{@}=={@}never_required"), "Not required" );  
+        $this->form->addGroup($group, null, "Clutches object<BR><BR>", $this->_GUIDelimiter, false);
+        unset($group);
+
+
+        $this->form->addElement ( 'static', null, "<BR><b>Weighted Raw Score</b>");
+
+       $this->form->addElement("static", "3_score", "Scale 3 &divide 3", array('size'=> 2));
+       $this->XINRegisterRule ( "3_score", array ("3_score{@}=={@}never_required"), "Not required" );
+
+       $this->form->addElement("static", "4_score", "Scale 4", array('size'=> 2));
+       $this->XINRegisterRule ( "4_score", array ("4_score{@}=={@}never_required"), "Not required" );
+
+       $this->form->addElement("static", "3_4_score", "Total", array('size'=> 2));
+       $this->XINRegisterRule ( "3_4_score", array ("3_4_score{@}=={@}never_required"), "Not required" );
+
+        
+        }
+
+    
+        
+        function score() {
+   
+            // Get the item scores
+            $array_of_conversion=array();
+
+            $db =& Database::singleton();
+            if(PEAR::isError($db)) {
+                return PEAR::raiseError ("Could not connect to database: ".$db->getMessage());
+            }
+
+
+            $query = "SELECT * FROM ".$this->table." WHERE CommentID='".$this->getCommentID()."'";
+
+            //select the row with the commentID of the row where the information is being taken
+            $db->selectRow($query, $result);
+
+            //if you cannot get the score
+            if (PEAR::isError($result)) {
+              return PEAR::raiseError("Could not get scores: ".$result->getMessage());
+            }
+               
+                        
+            $score1 =0;
+            for($int = 1; $int <= 6; $int ++){
+                 if($result["1_rate_body_".$int]!="NA"){
+                     $score1 = $score1 + $result["1_rate_body_".$int];
+                 }
+            }
+           
+            
+            $newValues["1_score"] = round($score1/3, 2);
+            
+                    
+            $score2 = 0;
+            if($result["2_inv_body_flaps"] == "yes"){
+                $score2++;
+            }
+            if($result["2_inv_body_pats"]=="yes"){
+                $score2++;
+            }
+            if($result["2_inv_body_rubs"]=="yes"){
+                $score2++;
+            }
+            if($result["2_inv_body_stiffens"]=="yes"){
+                $score2++;
+            }
+            
+            $newValues["2_score"] = $score2;
+            
+            $newValues["1_2_score"] = $newValues["1_score"] + $score2;
+            
+            
+            $score3=0;
+            for($int = 1; $int <= 6; $int ++){
+                 if($result["3_rate_object_".$int]!="NA"){
+                     $score3 = $score3 + $result["3_rate_object_".$int];
+
+                 }
+            }
+            
+            
+            $newValues["3_score"] = round($score3/3, 2);
+            
+            $score4a =0;
+                    
+            if($result["4a_inv_object_swipes"] == "yes"){
+                $score4a++;
+            }            
+            
+            if($result["4a_inv_object_rubs"] == "yes"){
+                $score4a++;
+            }
+            
+            if($result["4a_inv_object_rolls"] == "yes"){
+                $score4a++;
+            }
+            
+           if($result["4a_inv_object_rocks"]=="yes"){
+               $score4a++;
+           }
+           
+           if($result["4a_inv_object_spins"]=="yes"){
+               $score4a++;
+           }
+            
+       
+           $score4b=0;
+           
+           if($result["4b_inv_object_collects"]=="yes"){
+                $score4b++;
+                
+            }
+            if($result["4b_inv_object_moves"]=="yes"){
+                $score4b++;
+            }
+            
+            if($result["4b_inv_object_lines"]=="yes"){
+                $score4b++;
+            }
+            
+            if($result["4b_inv_object_clutches"]=="yes"){
+                $score4b++;
+            }
+            
+            $newValues["4_score"] = $score4a + $score4b;   
+            
+            $newValues["3_4_score"] = $newValues["3_score"] + $score4a + $score4b;     
+        
+             $result = $db->update($this->table, $newValues, array('CommentID' => $this->getCommentID()));
+             if($db->isError($result)) {
+                 return PEAR::raiseError("Could not save total score: ".$result->getMessage());
+             }
+                
+        }
+
+    	
+    }
