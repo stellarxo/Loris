@@ -39,7 +39,27 @@ class NDB_BVL_Instrument_mri_parameter_form extends NDB_BVL_Instrument
         'addEmptyOption' => true,
         'emptyOptionValue' => null
         );
+        
+        $db =& Database::singleton();
+        if(PEAR::isError($db)) {
+            return PEAR::raiseError ("Could not connect to database: ".$db->getMessage());
+        }
+        
+        $query = "SELECT * FROM ".$this->table." WHERE CommentID='".$this->getCommentID()."'";
+        $db->selectRow($query, $record);
+        
+        if (PEAR::isError($record)) {
+           $record = array();
+        }
+        
+        for($i=0; $i < 25; $i++){
+            $vector_x = number_format($record["vector{$i}_x"], 5);
+            $vector_y = number_format($record["vector{$i}_y"], 5);
+            $vector_z = number_format($record["vector{$i}_z"], 5);
 
+            $this->localDefaults["vector{$i}"] = "({$vector_x}, {$vector_y}, {$vector_z})";
+        }
+        
         // setup the form
         $this->_setupForm();
     }
@@ -61,7 +81,7 @@ class NDB_BVL_Instrument_mri_parameter_form extends NDB_BVL_Instrument
         $this->addTextElement("session_attempts", "Number of Session Attempts:");
         $this->addHourMinElement("wait_time", "Wait Time for Scanner (hours:minutes)");
         $this->addHourMinElement("total_duration", "Total Duration of Session (hours:minutes)");
-        $this->form->addElement('select','sedation', "Was sedation administered?", array(""=>NULL,"Yes" => "Yes", "No"=>"No", "not_applicable" => "Not Applicable"));
+        $this->form->addElement('select','sedation', "Was sedation administered?", array(""=>NULL,"Yes" => "Yes", "No"=>"No"));
         $this->form->addElement('static', null, "(please use comment field for details)");
 
         $yes_no_option= array(""=>NULL, "No"=>"No", "Complete"=>"Yes, Complete Acquisition", "Partial"=>"Yes, Partial Acquisition", "not_answered"=>"Not Answered");
@@ -93,7 +113,212 @@ class NDB_BVL_Instrument_mri_parameter_form extends NDB_BVL_Instrument
         $this->form->addElement('text', "DTI_number_attempts", "Number of scan attempts:");
         $this->addDateElement('DTI_Scan_done', 'If so, when?');
         $this->addTextAreaElement('DTI_Comments', 'Comments');
+        
+        $this->form->addElement('header', null, 'Direction File');
+        
+        $this->form->addElement('static', 'coordinate_system', 'Coordinate system:');
+        $this->form->addElement('static', 'normalization', 'Normalization:');
+        
+        for($i=0; $i < 25; $i++){
+          $this->form->addElement('static', "vector{$i}", "Vector {$i}:");
+        }
 
+        $this->form->addElement('file', 'directions_file', 'Upload the directions file (optional)');
     } // End setupForm
+    
+         // methods available to all children
+          /**
+           * preprocesses the array of values to be saved into the database
+           * (such as to rearrange date fields)
+           *
+           * @param array $values      the array of values ready to be passed to
+           * an Database::update call as the set array
+           * @return void
+           * @access private
+           */
+          function _saveValues($values)
+          {
+              $timepoint =& TimePoint::singleton($this->getSessionID());
+              $candidate =& Candidate::singleton($timepoint->getCandID());
+
+              if(isset($values['Date_taken'])) {
+                  $Date_taken = $values['Date_taken'];
+                  $values['Date_taken'] = sprintf("%04d-%02d-%02d", $Date_taken['Y'], $Date_taken['M'], $Date_taken['d']);
+              }
+
+              require_once "File_Upload.class.inc";
+              $file=new File_Upload;
+
+              //pass the existing form ($form) by reference to File_Upload, and register the file_upload field names being used.
+              $file->registerForm($this->form);
+
+              //Tell File_Upload what file handlers to use.
+              $file->setFileHandler("directions_file", &$this);
+
+              //Set the target directory that you want files moved into once they are validated and processed.
+
+///////////CHANGE THIS BACK/////////////
+              //$file->setBaseUploadDirectory("/export-01/nihace/behavioural_uploads/mri_parameter_directions/");
+              $file->setBaseUploadDirectory("/var/www/neurodb/behavioural_uploads/");
+
+              //Set the prefix to prepend to the filenames
+              //$file->setFilenamePrefix($timepoint->getVisitLabel()."-".$this->testName."-");
+
+              //set the the IDs to the handler functions.
+              $file->setHandlerArgs(array("CommentID"=>$this->getCommentID(),
+                                          "candID"=>$candidate->getCandID(),
+                                          "PSCID"=>$candidate->getPSCID(),
+                                          "visitLabel"=>$timepoint->getVisitLabel(),
+                                          "username"=>$_SESSION['State']->getUsername(),
+                                          "values"=>$values)
+
+
+                                   );
+
+              //If the form is validated, call File_Upload::processFiles() which loops through the files and 
+              //proccesses them (including verify, move, and import steps)
+              $file->processFiles();
+
+
+              //echo error messages
+              if(!empty($file->errorLog)){
+                 while(list($fileType,$fileErrors)=each($file->errorLog)){
+                     foreach($fileErrors AS $error){
+                          echo "<span style='color:red'><b>Upload Error</b> $fileType: $error</span><br>";
+                     }
+                 }
+              } 
+              unset($values['candID'], $values['sessionID'], $values['commentID'], $values['test_name'], $values['page'], $values['fire_away'], $values['subtest'], $values['MAX_FILE_SIZE'], $values['directions_file']);
+              $this->_save($values);
+          }
+
+          /**
+          * isValid checks the validity of the file.
+          *
+          * @param     string  $file    The full filename including directory.
+          *
+          * @return    bool    $success		if operation succeeded
+          * @access    public
+          */
+          function isValid(&$file, $args){
+               $fp=fopen($file->fileInfo['tmp_name'], "r");
+               $contents=fread($fp,filesize($file->fileInfo['tmp_name']));
+               fclose($fp);
+
+               $lines=explode("\n",$contents);
+
+               $i = 0;
+               $size = count($lines);
+               while(!preg_match("/\[directions\s*\=\s*25\]/", $lines[$i++])){
+                  if($i > $size){
+                     echo("<font color='red'>Improper format: Can't find entry with 25 directions.</font><BR>");
+                     return false;
+                  }
+               }
+               if(!preg_match("/CoordinateSystem\s*=\s*.+/", $lines[$i++])){
+                  echo("<font color='red'>Improper format: Can't find coordinate system.</font><BR>");
+                  return false;
+               }
+               if(!preg_match("/Normalisation\s*=\s*.+/", $lines[$i++])){
+                   echo("<font color='red'>Improper format: Can't find normalization.</font><BR>");
+                   return false;
+                }
+               
+               for($j = 0; $j < 25; $j++){
+                 if(!preg_match("/Vector\[{$j}\]\s*=\s*\(\s*(\-?[\d\.]+)\s*,\s*(\-?[\d\.]+)\s*,\s*(\-?[\d\.]+)\s*\)/", $lines[$i++])){
+                   echo("<font color='red'>Improper format: Can't find entry for vector {$j}.</font><BR>");
+                   return false;
+                 }
+               }               
+              return true;
+          }
+
+          /**
+          * importFile imports the vineland file into the database.
+          *
+          * @param     object       $file    A reference to the file object (passed automatically by callFileHandler)
+          * @param     assoc_array  $args    The arguments passed to the function they must be:
+          *   -
+          *
+          * @return    bool    $success		if operation succeeded
+          * @access    public
+          */
+          function importFile(&$file, $args){
+              $fp=fopen($file->fileInfo['tmp_name'], "r");
+              $contents=fread($fp,filesize($file->fileInfo['tmp_name']));
+              fclose($fp);
+
+              $values=array(
+                  'UserID'    =>$args['username'],
+                  'File_type' =>'directions',
+                  'File_name' =>$file->getDestinationFilename(),
+                  'Data_dir'  =>$file->getDestinationDirectory()
+              );
+
+
+              //Cycle through the lines and extract the data
+              $lines=explode("\n",$contents);
+              
+              $i = 0;
+              $size = count($lines);
+              while(!preg_match("/\[directions\s*\=\s*25\]/", $lines[$i++]) && $i < $size);
+              $result = preg_split("/\s*\=\s*/", $lines[$i++]);
+              $values["coordinate_system"] = trim($result[1]);
+              $result = preg_split("/\s*\=\s*/", $lines[$i++]);
+              $values["normalization"] = trim($result[1]);
+              
+              for($j = 0; $j < 25; $j++){
+                $matches = array();
+                if(preg_match("/Vector\[{$j}\]\s*=\s*\(\s*(\-?[\d\.]+)\s*,\s*(\-?[\d\.]+)\s*,\s*(\-?[\d\.]+)\s*\)/", $lines[$i++], $matches)){
+                  $values["vector{$j}_x"] = $matches[1];
+                  $values["vector{$j}_y"] = $matches[2];
+                  $values["vector{$j}_z"] = $matches[3];
+                  
+                  $vector_x = number_format($values["vector{$j}_x"], 5);
+                  $vector_y = number_format($values["vector{$j}_y"], 5);
+                  $vector_z = number_format($values["vector{$j}_z"], 5);
+                  
+                  $this->localDefaults["vector{$j}"] = "({$vector_x}, {$vector_y}, {$vector_z})";
+                }else{
+                  return false;
+                }
+              }
+                          
+              $db=& Database::singleton();
+
+    ///Setting trackchanges to false because getting error messages
+    $db->_trackChanges = false;
+    ////////////////////////////////////////////////////////////////
+
+              $result = $db->update($this->testName, $values, array('CommentID'=>$args['CommentID']));
+              if($this->isError($result)) {
+                  print $result->getMessage();
+                  return $this->raiseError('Could not save to database');
+              }
+              return true;
+          }
+
+          function formatDate($date){
+             if(empty($date)){
+                return null;
+             }
+             $dateBits = explode('/', $date);
+             return sprintf("%04d-%02d-%02d", $dateBits[2], $dateBits[0], $dateBits[1]); 
+          }
+
+          /**
+          * getTargetDirectory retrieves info about where the file should be stored.
+          *
+          * The returned directory is ADDED to the baseUploadDirectory proprety.  It should have a trailing slash.
+          *
+          * @param     string  $file    The full filename including directory.
+          *
+          * @return    bool    $success		if operation succeeded
+          * @access    public
+          */
+          function getTargetDirectory(&$file, $args){
+              $output=$args['candID']."/";
+              return $output;
+          }
 }
 ?>
