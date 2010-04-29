@@ -142,42 +142,69 @@ class NDB_BVL_Instrument_mri_parameter_form extends NDB_BVL_Instrument
               $candidate =& Candidate::singleton($timepoint->getCandID());
 
               if(isset($values['Date_taken'])) {
-                  $Date_taken = $values['Date_taken'];
-                  $values['Date_taken'] = sprintf("%04d-%02d-%02d", $Date_taken['Y'], $Date_taken['M'], $Date_taken['d']);
+                  $date = $values['Date_taken'];
+                  $values['Date_taken'] = sprintf("%04d-%02d-%02d", $date['Y'], $date['M'], $date['d']);
               }
+              
+              if(isset($values['T1_Scan_done_date'])) {
+                  $date = $values['T1_Scan_done_date'];
+                  $values['T1_Scan_done_date'] = sprintf("%04d-%02d-%02d", $date['Y'], $date['M'], $date['d']);
+              }
+              
+              if(isset($values['T2_Scan_done_date'])) {
+                  $date = $values['T2_Scan_done_date'];
+                  $values['T2_Scan_done_date'] = sprintf("%04d-%02d-%02d", $date['Y'], $date['M'], $date['d']);
+              }
+              
+              if(isset($values['DTI_Scan_done_date'])) {
+                  $date = $values['DTI_Scan_done_date'];
+                  $values['DTI_Scan_done_date'] = sprintf("%04d-%02d-%02d", $date['Y'], $date['M'], $date['d']);
+              }
+              
+              if(isset($values['wait_time'])) {
+                  $time = $values['wait_time'];
+                  $values['wait_time'] = sprintf("%02d:%02d:00", $time['H'], $time['i']);
+              }
+              
+              if(isset($values['total_duration'])) {
+                  $time = $values['total_duration'];
+                  $values['total_duration'] = sprintf("%02d:%02d:00", $time['H'], $time['i']);
+              }
+              
+              print_r($values['wait_time']);
+              if(isset($values['directions_file']) && !empty($values['directions_file']['name'])) {
+                require_once "File_Upload.class.inc";
+                $file=new File_Upload;
 
-              require_once "File_Upload.class.inc";
-              $file=new File_Upload;
+                //pass the existing form ($form) by reference to File_Upload, and register the file_upload field names being used.
+                $file->registerForm($this->form);
 
-              //pass the existing form ($form) by reference to File_Upload, and register the file_upload field names being used.
-              $file->registerForm($this->form);
+                //Tell File_Upload what file handlers to use.
+                $file->setFileHandler("directions_file", &$this);
 
-              //Tell File_Upload what file handlers to use.
-              $file->setFileHandler("directions_file", &$this);
+                //Set the target directory that you want files moved into once they are validated and processed.
 
-              //Set the target directory that you want files moved into once they are validated and processed.
+  ///////////CHANGE THIS BACK/////////////
+                //$file->setBaseUploadDirectory("/export-01/nihace/behavioural_uploads/mri_parameter_directions/");
+                $file->setBaseUploadDirectory("/var/www/neurodb/behavioural_uploads/");
 
-///////////CHANGE THIS BACK/////////////
-              //$file->setBaseUploadDirectory("/export-01/nihace/behavioural_uploads/mri_parameter_directions/");
-              $file->setBaseUploadDirectory("/var/www/neurodb/behavioural_uploads/");
+                //Set the prefix to prepend to the filenames
+                //$file->setFilenamePrefix($timepoint->getVisitLabel()."-".$this->testName."-");
 
-              //Set the prefix to prepend to the filenames
-              //$file->setFilenamePrefix($timepoint->getVisitLabel()."-".$this->testName."-");
+                //set the the IDs to the handler functions.
+                $file->setHandlerArgs(array("CommentID"=>$this->getCommentID(),
+                                            "candID"=>$candidate->getCandID(),
+                                            "PSCID"=>$candidate->getPSCID(),
+                                            "visitLabel"=>$timepoint->getVisitLabel(),
+                                            "username"=>$_SESSION['State']->getUsername(),
+                                            "values"=>$values)
+                                     );
 
-              //set the the IDs to the handler functions.
-              $file->setHandlerArgs(array("CommentID"=>$this->getCommentID(),
-                                          "candID"=>$candidate->getCandID(),
-                                          "PSCID"=>$candidate->getPSCID(),
-                                          "visitLabel"=>$timepoint->getVisitLabel(),
-                                          "username"=>$_SESSION['State']->getUsername(),
-                                          "values"=>$values)
-
-
-                                   );
-
-              //If the form is validated, call File_Upload::processFiles() which loops through the files and 
-              //proccesses them (including verify, move, and import steps)
-              $file->processFiles();
+                //If the form is validated, call File_Upload::processFiles() which loops through the files and 
+                //proccesses them (including verify, move, and import steps)
+               
+                 $file->processFiles();
+               }
 
 
               //echo error messages
