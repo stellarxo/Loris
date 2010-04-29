@@ -365,7 +365,7 @@ class NDB_BVL_Instrument_RSMS extends NDB_BVL_Instrument{
             
             $newValues["q2_score"] = $score2;
             
-            $newValues["q1_2_score"] = $newValues["1_score"] + $score2;
+            $newValues["q1_2_score"] = $newValues["q1_score"] + $score2;
             
             
             $score3=0;
