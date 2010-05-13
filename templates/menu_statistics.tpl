@@ -10,58 +10,129 @@
 <table>
    <tr bgcolor="#08245b">
       <th></th>
+       <th><font color="#CCCCCC">Undefined Yet</font></th>
+      <th><font color="#CCCCCC">6 Month Recruits</font></th>
+      <th><font color="#CCCCCC">12 Month Recruits</font></th>
+      <th><font color="#CCCCCC">Controls</font></th>
+      <th><font color="#CCCCCC">Total</font></th>
+   </tr>
+ 
+ <tr bgcolor="#FFFFFF">
+      <td>Number of registered candidates</td>
+       <td>{$Undefined_candidates}</td>
+      <td>{$SixMonthRecruit_SixMonthVisit}</td>
+      <td>{$count5}</td>
+      <td>{$Controls_number}</td>
+      <td>{$Total_candidates}</td>
+  </tr>
+
+</table>
+
+</td></tr>
+<tr><td>
+
+<table>
+<br>
+<tr bgcolor="#08245b">
+      <th></th>
+      <th><font color="#CCCCCC">6 Month Recruits</font></th>
+      <th><font color="#CCCCCC">12 Month Recruits</font></th>
+      <th><font color="#CCCCCC">Controls</font></th>
+      <th><font color="#CCCCCC">Total</font></th>
+</tr>
+
+ <tr bgcolor="#FFFFFF">
+      <td>Total number of registered candiates in visit stage<br></td>
+      <td>{$SixMonthRecruit_AllVisits}</td>
+      <td> - </td>
+      <td> - </td>
+      <td> - </td>
+   </tr>
+</table>
+
+</td></tr>
+<tr><td>
+
+<table>
+<br>
+<tr bgcolor="#08245b">
+      <th></th>
       <th><font color="#CCCCCC">Timepoint</font></th>
       <th><font color="#CCCCCC">6 Month Recruits</font></th>
       <th><font color="#CCCCCC">12 Month Recruits</font></th>
       <th><font color="#CCCCCC">Controls</font></th>
+      <th><font color="#CCCCCC">Total</font></th>
    </tr>
+
+ 
+ <tr bgcolor="#FFFFFF">
+      <td rowspan="5"> Number of registered visits<br></td>
+      <td>6 month</td>     
+      <td>{$count2}</td>
+      <td>NA</td>
+      <td>{$count7}</td>
+      <td></td>
+   </tr>
+   
    <tr bgcolor="#FFFFFF">
-      <td> Number of registered candidates</td>
+      <td>12 month</td>
+      <td>{$count4}</td>
+      <td>{$count14}</td>
+      <td>{$count13}</td>
       <td></td>
+   </tr>
+
+<tr bgcolor="#FFFFFF">
+      <td>18 month</td>
+      <td>{$Six_month_recruit_18_month_visit}</td>
+      <td>{$Twelve_month_recruit_18_month_visit}</td>
+      <td>{$controls_registered_v18}</td>
       <td></td>
-      <td></td>
+</tr>
+   
+   <tr bgcolor="#FFFFFF">
+      <td>24 month</td>
+      <td>{$Six_month_recruit_24_month_visit}</td>
+      <td>{$Twelve_month_recruit_24_month_visit}</td>
+      <td>{$controls_registered_v24}</td>
       <td></td>
    </tr>
  
-   <tr bgcolor="#FFFFFF">
-      <td rowspan="3"> Number of registered visits<br> (Not Started, In Progress, Recylcing Bin entires) </td>
-      <td>6 month</td>
-      <td>{$count1}</td>
+  <tr bgcolor="#FFFFFF">
+      <td>36 month</td>
       <td></td>
-      <td rowspan="2">{$count7}</td>
-   </tr>
-   <tr bgcolor="#FFFFFF">
-      <td>12 month</td>
-      <td>{$count3}</td>
-      <td>{$count5}</td>
-   </tr>
-   <tr bgcolor="#FFFFFF">
-      <td>24 month</td>
       <td></td>
       <td></td>
       <td></td>
    </tr>
 
+
+<!--
    <tr bgcolor="#FFFFFF">
       <td rowspan="3"> Number that have begun visit stage (or the screening stage)</td>
       <td>6 month</td>
+      <td></td>     
       <td>{$count2}</td>
       <td>{$count6}</td>
       <td rowspan="2">{$count8}</td>
    </tr>
    <tr bgcolor="#FFFFFF">
+ 
       <td>12 month</td>
+     <td></td>
       <td>{$count4}</td>
       <td>{$count14}</td>
-   </tr>
+    
+  </tr>
    <tr bgcolor="#FFFFFF">
       <td>24 month</td>
+      <td></td>  
       <td></td>
       <td></td>      
       <td></td>
     </tr>
 
-
+-->
 </table>
 </td></tr>
 

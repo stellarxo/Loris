@@ -14,6 +14,40 @@ class NDB_Menu_statistics extends NDB_Menu
             return PEAR::raiseError("Could not connect to database: ".$DB->getMessage());
         }
 
+
+
+      // This code is not optimized. It is fugly!
+
+       // Query: Total number of candidates registered in a visit stage
+        $DB->select("SELECT count(distinct(c.PSCID)) from session as s, candidate as c WHERE s.CandID=c.CandID AND s.Cancelled='N' AND s.SubprojectID=1 AND (s.Current_stage='Visit' OR s.Current_stage='Screening') AND s.Active='Y' AND s.CenterID<>'1';", $result6_all);
+        if (PEAR::isError($result6_all)) {
+            return PEAR::raiseError("DB Error: ".$result6_all->getMessage());
+        }
+        list(,$result6_all)=each($result6_all[0]);
+        $SixMonthRecruit_AllVisits = $result6_all;
+        $this->tpl_data['SixMonthRecruit_AllVisits'] = $SixMonthRecruit_AllVisits;
+
+	// Undefined number
+        $DB->select("SELECT count(c.CandID) from candidate as c LEFT JOIN session as s ON s.CandID=c.CandID WHERE s.CandID is NULL AND c.PSCID<>'scanner';", $undefined);
+        if (PEAR::isError($undefined)) {
+            return PEAR::raiseError("DB Error: ".$undefined->getMessage());
+        }
+        list(,$undefined)=each($undefined[0]);
+        $Undefined_candidates = $undefined;
+        $this->tpl_data['Undefined_candidates'] = $Undefined_candidates;
+
+
+	// Total
+        $DB->select("SELECT count(c.CandID) from candidate as c WHERE c.PSCID<>'scanner' AND c.CenterID<>'1';", $total);
+        if (PEAR::isError($total)) {
+            return PEAR::raiseError("DB Error: ".$total->getMessage());
+        }
+        list(,$total)=each($total[0]);
+        $Total_candidates = $total;
+        $this->tpl_data['Total_candidates'] = $Total_candidates;
+
+
+
         // 6 MONTH RECRUITS
         // Query: Number of 6 months registered in the database (6 month recruits)
         $DB->select("SELECT count(s.CandID) from session as s, candidate as c WHERE s.CandID=c.CandID AND s.Cancelled='N' AND s.SubprojectID=1 AND (s.Visit_label='v06' OR s.Visit_label='6mo') AND s.Active='Y' AND s.CenterID<>'1' ORDER BY c.PSCID;", $result1);
@@ -50,6 +84,27 @@ class NDB_Menu_statistics extends NDB_Menu
         list(,$result4)=each($result4[0]);
         $count4 = $result4;
         $this->tpl_data['count4'] = $count4;
+
+
+        // Query: Number of 6 month recruits for which the 18 month timepoint has not been failed/withdrawn
+        $DB->select("SELECT count(s.CandID) from session as s, candidate as c WHERE s.CandID=c.CandID AND s.Cancelled='N' AND (s.Current_stage='Visit' OR s.Current_stage='Screening') AND s.SubprojectID=1 AND (s.Visit_label='v18' OR s.Visit_label='18mo') AND s.Active='Y' AND s.CenterID<>'1' ORDER BY c.PSCID;", $result6_18);
+        if (PEAR::isError($result6_18)) {
+            return PEAR::raiseError("DB Error: ".$result6_18->getMessage());
+        }
+        list(,$result6_18)=each($result6_18[0]);
+        $Six_month_recruit_18_month_visit = $result6_18;
+        $this->tpl_data['Six_month_recruit_18_month_visit'] = $Six_month_recruit_18_month_visit;
+
+
+        // Query: Number of 6 month recruits for which the 24 month timepoint has not been failed/withdrawn
+        $DB->select("SELECT count(s.CandID) from session as s, candidate as c WHERE s.CandID=c.CandID AND s.Cancelled='N' AND (s.Current_stage='Visit' OR s.Current_stage='Screening') AND s.SubprojectID=1 AND (s.Visit_label='v24' OR s.Visit_label='24mo') AND s.Active='Y' AND s.CenterID<>'1' ORDER BY c.PSCID;", $result24);
+        if (PEAR::isError($result24)) {
+            return PEAR::raiseError("DB Error: ".$result24->getMessage());
+        }
+        list(,$result24)=each($result24[0]);
+        $Six_month_recruit_24_month_visit = $result24;
+        $this->tpl_data['Six_month_recruit_24_month_visit'] = $Six_month_recruit_24_month_visit;
+
 
         // 12 MONTH RECRUITS
      
@@ -89,7 +144,36 @@ class NDB_Menu_statistics extends NDB_Menu
         $count14 = $result14;
         $this->tpl_data['count14'] = $count14;
 
+       // Query: Number of 12 month recruits for which the 24 month timepoint has not been failed/withdrawn
+        $DB->select("SELECT count(s.CandID) from session as s, candidate as c WHERE s.CandID=c.CandID AND s.Cancelled='N' AND (s.Current_stage='Visit' OR s.Current_stage='Screening') AND s.SubprojectID=2 AND (s.Visit_label='v24' OR s.Visit_label='24mo') AND s.Active='Y' AND s.CenterID<>'1' ORDER BY c.PSCID;", $result12_24);
+        if (PEAR::isError($result12_24)) {
+            return PEAR::raiseError("DB Error: ".$result12_24->getMessage());
+        }
+        list(,$result12_24)=each($result12_24[0]);
+        $Twelve_month_recruit_24_month_visit = $result12_24;
+        $this->tpl_data['Twelve_month_recruit_24_month_visit'] = $Twelve_month_recruit_24_month_visit;
+
+        // Query: Number of 12 month recruits for which the 18 month timepoint has not been failed/withdrawn
+        $DB->select("SELECT count(s.CandID) from session as s, candidate as c WHERE s.CandID=c.CandID AND s.Cancelled='N' AND (s.Current_stage='Visit' OR s.Current_stage='Screening') AND s.SubprojectID=2 AND (s.Visit_label='v18' OR s.Visit_label='18mo') AND s.Active='Y' AND s.CenterID<>'1' ORDER BY c.PSCID;", $result12_18);
+        if (PEAR::isError($result12_18)) {
+            return PEAR::raiseError("DB Error: ".$result12_18->getMessage());
+        }
+        list(,$result12_18)=each($result12_18[0]);
+        $Twelve_month_recruit_18_month_visit = $result12_18;
+        $this->tpl_data['Twelve_month_recruit_18_month_visit'] = $Twelve_month_recruit_18_month_visit;
+
+
         // CONTROLS
+
+        // Query: Number of controls registered in the database 
+        $DB->select("SELECT COUNT(DISTINCT(s.CandID)) from session as s, candidate as c WHERE s.CandID=c.CandID AND s.Cancelled='N' AND s.SubprojectID=3 AND s.Active='Y' AND s.CenterID<>'1';", $number_of_controls);
+        if (PEAR::isError($number_of_controls)) {
+            return PEAR::raiseError("DB Error: ".$number_of_controls->getMessage());
+        }
+        list(,$number_of_controls)=each($number_of_controls[0]);
+        $Controls_number = $number_of_controls;
+        $this->tpl_data['Controls_number'] = $Controls_number;
+
         // Query: Number of 6 months registered in the database (Controls)
         $DB->select("SELECT count(s.CandID) from session as s, candidate as c WHERE s.CandID=c.CandID AND s.Cancelled='N' AND s.SubprojectID=3 AND (s.Visit_label='v06' OR s.Visit_label='6mo') AND s.Active='Y' AND s.CenterID<>'1' ORDER BY c.PSCID;", $result7);
         if (PEAR::isError($result7)) {
@@ -107,6 +191,28 @@ class NDB_Menu_statistics extends NDB_Menu
         list(,$result13)=each($result13[0]);
         $count13 = $result13;
         $this->tpl_data['count13'] = $count13;
+
+
+        // Query: Number of 18 months registered in the database (Controls)
+        $DB->select("SELECT count(s.CandID) from session as s, candidate as c WHERE s.CandID=c.CandID AND s.Cancelled='N' AND s.SubprojectID=3 AND 
+(s.Visit_label='v18' OR s.Visit_label='18mo') AND s.Active='Y' AND s.CenterID<>'1' ORDER BY c.PSCID;", $controls_registered_v18);
+        if (PEAR::isError($control_registered_v18)) {
+            return PEAR::raiseError("DB Error: ".$controls_registered_v18->getMessage());
+        }
+        list(,$controls_registered_v18)=each($controls_registered_v18[0]);
+        $controls_registered_v18 = $controls_registered_v18;
+        $this->tpl_data['controls_registered_v18'] = $controls_registered_v18;
+
+       // Query: Number of 24 months registered in the database (Controls)
+	$DB->select("SELECT count(s.CandID) from session as s, candidate as c WHERE s.CandID=c.CandID AND s.Cancelled='N' AND s.SubprojectID=3 AND
+(s.Visit_label='v24' OR s.Visit_label='24mo') AND s.Active='Y' AND s.CenterID<>'1' ORDER BY c.PSCID;", $controls_registered_v24);
+        if (PEAR::isError($control_registered_v24)) {
+            return PEAR::raiseError("DB Error: ".$controls_registered_v24->getMessage());
+        }
+        list(,$controls_registered_v24)=each($controls_registered_v24[0]);
+        $controls_registered_v24 = $controls_registered_v24;
+        $this->tpl_data['controls_registered_v24'] = $controls_registered_v24;
+
 
         // Query: Number of Controls for which the 6 month timepoint has been not been failed/withdrawn
         $DB->select("SELECT count(s.CandID) from session as s, candidate as c WHERE s.CandID=c.CandID AND s.Cancelled='N' AND (s.Current_stage='Visit' OR s.Current_stage='Screening') AND s.SubprojectID=3 AND (s.Visit_label='v06' OR s.Visit_label='6mo') AND s.Active='Y' AND s.CenterID<>'1' ORDER BY c.PSCID;", $result8);
@@ -134,6 +240,8 @@ class NDB_Menu_statistics extends NDB_Menu
         list(,$result15)=each($result15[0]);
         $count15 = $result15;
         $this->tpl_data['count15'] = $count15;
+
+
 
         // Query: Number of controls for which 12 month time point is in the Approval stage
         $DB->select("SELECT count(s.CandID) from session as s, candidate as c WHERE s.CandID=c.CandID AND s.Cancelled='N' AND (s.Current_stage='Approval') AND s.SubprojectID=3 AND (s.Visit_label='v12' OR s.Visit_label='12m') AND s.Active='Y' AND s.CenterID<>'1' ORDER BY c.PSCID;", $result16);
