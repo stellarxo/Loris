@@ -131,8 +131,8 @@ class NDB_Menu_Filter_reliability extends NDB_Menu_Filter
         $list_of_visit_labels = array(null=>'Any','V06'=>'V06','V12'=>'V12','V24'=>'V24','V36'=>'V36');
         $subproject_options = Utility::getSubprojectList();
         $subproject_options = array(null=>'Any') + $subproject_options;
-        $gender_options = array(null=>'All', 'Male'=>'Male', 'Female'=>'Female');
-        $list_of_instruments = array(null=>'Any', 'csbs'=>'CSBS', 'adi_r'=>'ADI-R', 'ados'=>'ADOS');
+        $gender_options = array(null=>'Any', 'Male'=>'Male', 'Female'=>'Female');
+        $list_of_instruments = array(null=>'Any', 'csbs'=>'CSBS', 'adi_r'=>'ADI-R', 'ados'=>'ADOS', 'aosi' => 'AOSI');
         $lock_options = array(null=>'','Locked'=>'Locked','Unlocked'=>'Unlocked');
 
         // Form Elements
