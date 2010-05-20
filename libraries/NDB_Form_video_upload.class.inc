@@ -93,7 +93,7 @@ class NDB_Form_video_upload extends NDB_Form
 
         $this->form->addElement('date', 'Date_taken', 'Date of Administration', $dateOptions);
         $this->form->addElement("select", "For_site", "Site This File is Being Uploaded For (optional)", array(null, "DCC", "SEA", "PHI", "STL", "UNC"));
-        $this->form->addElement("textarea", "comments", "Comments (optional)");
+        $this->form->addElement("textarea", "comments", "Comments (optional)", array ('rows' => 5, 'cols' => 50));
         if($this->identifier){
           $this->form->addElement('static', 'File_name', 'File name');
         }else{

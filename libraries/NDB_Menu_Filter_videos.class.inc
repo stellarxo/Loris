@@ -27,6 +27,22 @@ class NDB_Menu_Filter_videos extends NDB_Menu_Filter
     
     var $reliability_table;
 
+    function _hasAccess()
+    {
+        
+    	//create user object
+    	$user =& User::singleton();
+    	if (PEAR::isError($user)){
+    		
+    		return PEAR::raiseError("User error: " . $user->getMessage());
+    	}
+    	
+    	return $user->hasPermission('video_upload');
+    	    	
+    }
+
+
+
     function _setupVariables()
     {
         $user =& User::singleton();
@@ -51,7 +67,7 @@ class NDB_Menu_Filter_videos extends NDB_Menu_Filter
         }
 
         // set the class variables
-        $this->columns = array('videos.record_id', 'videos.File_name', 'videos.File_size', 'videos.uploaded_by', 'videos.Instrument', 'videos.PSCID', 'videos.visitLabel', 'videos.Date_taken', 'videos.For_site', 'videos.comments', 'videos.Data_dir', 'videos.Date_uploaded');
+        $this->columns = array('videos.record_id', 'videos.File_name', 'videos.File_size', 'videos.uploaded_by', 'videos.Instrument', 'videos.PSCID', 'videos.visitLabel', 'videos.Date_taken', 'videos.For_site', 'substring(videos.comments, 1, 50) as comments', 'videos.Data_dir', 'videos.Date_uploaded');
 
         $this->query = $query;
         $this->group_by = '';
@@ -68,7 +84,7 @@ class NDB_Menu_Filter_videos extends NDB_Menu_Filter
                                     'uploaded_by' => 'videos.uploaded_by',
                                     'visitLabel' => 'videos.visitLabel',
                                     'Date_uploaded' => 'videos.Date_uploaded',
-                                    'comments' => 'videos.comments'
+                                    'comments' => 'comments'
                                     // 'Lock_record' => 'session.Lock_record'
                                     );
         return true;
