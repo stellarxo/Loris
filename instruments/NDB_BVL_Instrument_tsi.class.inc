@@ -1,6 +1,8 @@
 <?php
 
+
 require_once('RequiredIf.inc');
+
 
 class NDB_BVL_Instrument_tsi extends NDB_BVL_Instrument
 {
@@ -17,6 +19,16 @@ class NDB_BVL_Instrument_tsi extends NDB_BVL_Instrument
 	INSERT INTO test_battery VALUES ('', 'tsi', '150', '210', 'Y', 'Screening', '1');
 	INSERT INTO test_battery VALUES ('', 'tsi', '300', '420', 'Y', 'Screening', '2');
 	INSERT INTO test_battery VALUES ('', 'tsi', '150', '420', 'Y', 'Screening', '3');
+	
+	ALTER TABLE tsi ADD contact_date date;	
+	ALTER TABLE tsi ADD contact_date_status enum('not_answered');
+	
+	ALTER TABLE tsi ADD contacted_by varchar(255);
+	
+	ALTER TABLE tsi ADD complications_birth enum('yes','no','not_answered');
+	
+	ALTER TABLE tsi ADD exc_inc_subject_meets_criteria enum('yes','no','not_answered');      
+	
 	*/
 
 	/**
@@ -117,14 +129,36 @@ class NDB_BVL_Instrument_tsi extends NDB_BVL_Instrument
 
 		$this->form->addElement('header', null, "Identifying information");
 		$this->form->addElement('header', null, "This type of identifying information should not be entered in the database");
+		
+		$config =& NDB_Config::singleton();
+
+        $this->dateOptions = array(
+        'language' => 'en',
+        'format'   => 'YMd',
+        'minYear'  => $config->getSetting('startYear') - 20, //allows for siblings up to 20 years older than candidate
+        'maxYear'  => $config->getSetting('endYear'),
+        'addEmptyOption' => true,
+        'emptyOptionValue' => null
+	    );
+        
 		$nonAskedQuestions = array("Subject's Name",
 		"Subject ID:",
-		"Date of Contact: Date of Birth:",
+		"Date of Contact:", 
+		"Date of Birth:",
 		"Contacted By:",
 		"Subject's Gender: $this->indent Subject's Age (in months):");
 		foreach ($nonAskedQuestions as $field) {
-			$this->form->addElement('static', null, $field);
+		    if($field == "Date of Contact:"){
+		        $this->addDateElement("contact", $field);
+		    }
+		    elseif($field == "Contacted By:"){
+		        $this->form->addElement("text", "contacted_by", $field);
+		    }
+		    else{
+		        $this->form->addElement('static', null, $field);
+		    }
 		}
+		
 		//Ethnicity
 		$this->form->addElement("select", "child_ethnicity", "Ethnicity:", array(null=>"", "hispanic"=>"Hispanic", "non_hispanic"=>"Non-Hispanic", "not_answered"=>"Not Answered"));
 		
@@ -255,6 +289,7 @@ class NDB_BVL_Instrument_tsi extends NDB_BVL_Instrument
 		"congenital_heart_problems"=>"Congenital heart problems?",
 		"hearing_vision_impairments"=>"Significant hearing/vision problems?",
 		"diabetes"=>"Diabetes or gestational diabetes?",
+		"complications_birth" => "Any complications at birth?",
 		"premature_birth"=>"Premature birth (<37 weeks )?",
 		"low_birth_weight"=>"Birth weight <4lbs. 6oz. (2000 grams)?",
 		"tested_for_fragile_x_subject"=>"Tested for Fragile X syndrome?",
@@ -311,7 +346,8 @@ class NDB_BVL_Instrument_tsi extends NDB_BVL_Instrument
 		
 		$this->form->addElement("header", null, "FOR RESEARCH STAFF TO COMPLETE");
 		$this->form->addElement("static", null, "Exclusion/Inclusion");
-		$this->form->addElement("select", "exc_inc_meets_criteria", "1. This subject meets any of the medical or neurological exclusion criteria for this study. (see Section A)", $this->yesNo);
+		$this->form->addElement("select", "exc_inc_meets_criteria", "1. This proband meets any of the medical or neurological exclusion criteria for this study. (see Section A)", $this->yesNo);
+		$this->form->addElement("select", "exc_inc_subject_meets_criteria", "2. This subject meets any of the medical or neurological exclusion criteria for this study. (see Section B)", $this->yesNo);
 		$this->form->addElement("select", "exc_inc_contraindication", "3. This subject has evidence for contraindication to MRI. (see Section B)", $this->yesNo);
 		$this->form->addElement("static", null, "Disposition");
 		$this->form->addElement("select", "disposition", "Proceed to next level beyond screening?", $this->yesNo);
