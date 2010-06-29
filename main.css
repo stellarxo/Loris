@@ -165,7 +165,9 @@ td.tabox {
 /* Message styles */
 .error {
 	color: #f00;
-    }
+    list-style: none;
+    font-size: 1.4em;
+}
 
 /* context help
 .pagetitle h1 {
@@ -216,6 +218,11 @@ table.fancytable tr:hover {
    color: #efefef;
    background: darkgrey;
 }
+
+table.fancytable tr.nohover:hover {
+    color: inherit;
+    background: inherit;
+}
 table.fancytable th {
   background:darkgrey;
   padding: 0.3em;
@@ -226,6 +233,10 @@ table.fancytable td {
   padding: 0.3em;
   border-right:2px groove silver;
   border-bottom:1px groove #999999;
+
+  border-left: 1px groove silver;
+  border-top: 1px groove silver;
+
 }
 table.fancytable th:hover {
   background: #efefef;
@@ -305,4 +316,39 @@ vertical-align:top;
 border-bottom: 1px solid #CCCCCC;
 }
 
+table.data {
+    border: thin solid black;
+}
+.data tr td.male {
+    background: #DEF;
+}
+
+.data tr td.female {
+    background: #FDF;
+}
+
+.data tr td.male.total {
+    background: #DEF;
+    font-weight: bold;
+}
+.data tr td.female.total {
+    font-weight: bold;
+    background: #FDF;
+}
+.data tr td.subtotal {
+    background: #DDD;
+}
+
+.data tr td.total {
+    font-weight: bold;
+    background: #DDD;
+}
+
+.data tr th {
+    background: #08245B;
+    color: #CCC;
+}
+.data tr td {
+    background: white;
+}
 
