@@ -87,7 +87,8 @@ class NDB_BVL_Instrument_tsi extends NDB_BVL_Instrument
 								 'med_his_q_10_nap',
 								 'med_his_q_10_nap_status',
 								 'med_his_q_11_nap_how_long',
-								 'med_his_q_11_nap_how_long_status');
+								 'med_his_q_11_nap_how_long_status',
+                                 'further_information');
 		
 
 		// setup the form
@@ -153,6 +154,8 @@ class NDB_BVL_Instrument_tsi extends NDB_BVL_Instrument
 		    }
 		    elseif($field == "Contacted By:"){
 		        $this->form->addElement("text", "contacted_by", $field);
+    	        $this->XINRegisterRule ( "contacted_by", array ("contact_date_status{@}!={@}not_answered"), "Please enter person who contacted" );
+
 		    }
 		    else{
 		        $this->form->addElement('static', null, $field);
