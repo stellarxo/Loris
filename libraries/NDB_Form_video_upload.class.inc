@@ -93,6 +93,7 @@ class NDB_Form_video_upload extends NDB_Form
 
         $this->form->addElement('date', 'Date_taken', 'Date of Administration', $dateOptions);
         $this->form->addElement("select", "For_site", "Site This File is Being Uploaded For (optional)", array(null, "DCC", "SEA", "PHI", "STL", "UNC"));
+        $this->form->addElement("select", "multipart", "Is this upload split into multiple parts?", array("Yes" => "Yes", "No" => "No"));
         $this->form->addElement("textarea", "comments", "Comments (optional)", array ('rows' => 5, 'cols' => 50));
         if($this->identifier){
           $this->form->addElement('static', 'File_name', 'File name');
@@ -203,7 +204,9 @@ class NDB_Form_video_upload extends NDB_Form
       
       function _getDefaults()
       {
-          $defaults = array();
+          // Default to "No" for multipart, so that the behaviour doesn't
+          // change
+          $defaults = array('multipart' => 'No');
 
           if (!empty($this->identifier)) {
             $db=& Database::singleton();
@@ -220,19 +223,33 @@ class NDB_Form_video_upload extends NDB_Form
       }
       
       function isValid(&$file, $args){
+        $errors = array();
+
         $correct_filename = $args['values']['PSCID'] .'_'. $args['values']['visitLabel'] .'_'. $args['values']['Instrument']; 
+
+        $Stmt = "SELECT count(*) as Total FROM videos WHERE Instrument = '{$args['values']['Instrument']}' AND PSCID = '{$args['values']['PSCID']}' AND visitLabel = '{$args['values']['visitLabel']}'";
+
+        $db=& Database::singleton();
+        $db->selectRow($Stmt, $CountFiles);
+        if($CountFiles['Total'] > 1 && $_REQUEST['multipart'] != 'Yes') {
+            $errors[]="Incorrect value for split file selected.";
+        }
+
          if(!preg_match("/^{$correct_filename}/i", $file->fileInfo['name']) ){
                $errors[]="Incorrect Filename: Filename begin with: " . $correct_filename;
-               return $errors;
            }
+
+        if(count($errors) > 0) 
+            return $errors;
         
         return true;
       }
 
       function importFile(&$file, $args){
+        $filename = $file->getDestinationFileName();
         $values=array(
             'File_type' =>'video_file',
-            'File_name' =>$file->getDestinationFilename(),
+            'File_name' =>$filename,
             'Data_dir'  =>$file->getDestinationDirectory(),
             'File_size' => $file->fileInfo['size'],
             'Instrument'=>$args['values']['Instrument'],
@@ -246,7 +263,14 @@ class NDB_Form_video_upload extends NDB_Form
         
         $db=& Database::singleton();
         
-        $db->selectRow("SELECT * FROM videos WHERE Instrument = '{$values['Instrument']}' AND PSCID = '{$values['PSCID']}' AND visitLabel = '{$values['visitLabel']}'", $row);
+        // SQL to run to check if the file's already 
+        $Stmt = "SELECT * FROM videos WHERE Instrument = '{$values['Instrument']}' AND PSCID = '{$values['PSCID']}' AND visitLabel = '{$values['visitLabel']}'";
+
+        if($_REQUEST['multipart'] == 'Yes') {
+            $Stmt .= " AND File_name=" . $db->quote($filename);
+        }
+
+        $db->selectRow($Stmt, $row);
           if (PEAR::isError($row)) {
               return PEAR::raiseError("DB Error: ".$row->getMessage());
           }
@@ -258,7 +282,19 @@ class NDB_Form_video_upload extends NDB_Form
   
         } else {
             // update the event
-            $result = $db->update('videos', $values, array('PSCID'=>$args['values']['PSCID'], 'Instrument'=>$args['values']['Instrument'], 'visitLabel' => $args['values']['visitLabel']));
+            $WhereCriteria = array('PSCID'=>$args['values']['PSCID'], 
+                        'Instrument'=>$args['values']['Instrument'], 
+                        'visitLabel' => $args['values']['visitLabel']);
+
+            // Using this if statement makes duplicates appear if a
+            // multipart file was already uploaded, and they forget
+            // to change the dropdown for the second upload. So for
+            // now the filename is always part of the criteria.
+            if($_REQUEST['multipart'] == 'Yes') {
+                $WhereCriteria['File_name'] = $filename;
+            }
+
+            $result = $db->update('videos', $values, $WhereCriteria);
         }
 
         //$result = $db->update('videos', $values, array('PSCID'=>$args['values']['PSCID'], 'Instrument'=>$args['values']['Instrument'], 'visitLabel' => $args['values']['visitLabel']));
