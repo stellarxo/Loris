@@ -7,132 +7,132 @@
 <tr><td><p><b>General statistics:</b></p></td></tr>
 
 <tr><td>
-<table>
-   <tr bgcolor="#08245b">
+<table class="data">
+   <tr>
       <th></th>
-       <th><font color="#CCCCCC">Undefined Yet</font></th>
-      <th><font color="#CCCCCC">6 Month Recruits</font></th>
-      <th><font color="#CCCCCC">12 Month Recruits</font></th>
-      <th><font color="#CCCCCC">Controls</font></th>
-      <th><font color="#CCCCCC">Total</font></th>
+       <th>Undefined Yet</th>
+      {foreach from=$Subprojects item=name key=proj}
+      <th>{$name}</th>
+      {/foreach}
+      <th class="data">Total</th>
    </tr>
- 
- <tr bgcolor="#FFFFFF">
-      <td>Number of registered candidates</td>
-       <td>{$Undefined_candidates}</td>
-      <td>{$SixMonthRecruit_SixMonthVisit}</td>
-      <td>{$count5}</td>
-      <td>{$Controls_number}</td>
-      <td>{$Total_candidates}</td>
-  </tr>
-
-</table>
-
-</td></tr>
-<tr><td>
-
-<table>
-<br>
-<tr bgcolor="#08245b">
-      <th></th>
-      <th><font color="#CCCCCC">6 Month Recruits</font></th>
-      <th><font color="#CCCCCC">12 Month Recruits</font></th>
-      <th><font color="#CCCCCC">Controls</font></th>
-      <th><font color="#CCCCCC">Total</font></th>
-</tr>
-
- <tr bgcolor="#FFFFFF">
-      <td>Total number of registered candiates in visit stage<br></td>
-      <td>{$SixMonthRecruit_AllVisits}</td>
-      <td> - </td>
-      <td> - </td>
-      <td> - </td>
+  <tr>
+       <td>Number of registered candidates</td>
+       <td>{$registered[NULL].total}</td>
+        {foreach from=$Subprojects item=proj key=keyid}
+            <td>{$registered[$keyid].total}</td>
+       {/foreach}
+       <td class="total">{$registered.total}{if $registered.total-$Total_candidates neq 0} ({$registered.total-$Total_candidates} require DCC review){/if}</td>
    </tr>
 </table>
 
 </td></tr>
 <tr><td>
 
-<table>
-<br>
-<tr bgcolor="#08245b">
+<table class="data">
+<tr>
       <th></th>
-      <th><font color="#CCCCCC">Timepoint</font></th>
-      <th><font color="#CCCCCC">6 Month Recruits</font></th>
-      <th><font color="#CCCCCC">12 Month Recruits</font></th>
-      <th><font color="#CCCCCC">Controls</font></th>
-      <th><font color="#CCCCCC">Total</font></th>
-   </tr>
-
- 
- <tr bgcolor="#FFFFFF">
-      <td rowspan="5"> Number of registered visits<br></td>
-      <td>6 month</td>     
-      <td>{$count2}</td>
-      <td>NA</td>
-      <td>{$count7}</td>
-      <td></td>
-   </tr>
-   
-   <tr bgcolor="#FFFFFF">
-      <td>12 month</td>
-      <td>{$count4}</td>
-      <td>{$count14}</td>
-      <td>{$count13}</td>
-      <td></td>
-   </tr>
-
-<tr bgcolor="#FFFFFF">
-      <td>18 month</td>
-      <td>{$Six_month_recruit_18_month_visit}</td>
-      <td>{$Twelve_month_recruit_18_month_visit}</td>
-      <td>{$controls_registered_v18}</td>
-      <td></td>
+      {foreach from=$Subprojects item=name key=proj}
+      <th>{$name}</th>
+      {/foreach}
+      <th>Total</th>
 </tr>
+
+ <tr>
+  <td>Total number of registered candidates in visit stage<br></td>
+  {foreach from=$Subprojects item=proj key=keyid}
+  <td>{$registered[$keyid].visit}</td>
+  {/foreach}
+  <td class="total">{$registered.visittotal}</td>
+</tr>
+      
+</table>
+
+</td></tr>
+<tr><td>
+
+<table class="data">
+<br>
+<tr>
+      <th rowspan="2"></th>
+      <th rowspan="2">Timepoint</th>
+      {foreach key=proj item=name from=$Subprojects}
+      <th colspan="3">{$name}</th>
+      {/foreach}
+      <th colspan="3">Total</th>
+   </tr>
    
-   <tr bgcolor="#FFFFFF">
-      <td>24 month</td>
-      <td>{$Six_month_recruit_24_month_visit}</td>
-      <td>{$Twelve_month_recruit_24_month_visit}</td>
-      <td>{$controls_registered_v24}</td>
-      <td></td>
-   </tr>
+   <tr>
+         <th>Male</th>
+         <th>Female</th>
+         <th>Total</th>
+         <th>Male</th>
+         <th>Female</th>
+         <th>Total</th>
+         <th>Male</th>
+         <th>Female</th>
+         <th>Total</th>
+         <th>Male</th>
+         <th>Female</th>
+         <th>Total</th>
+      </tr>
+
  
-  <tr bgcolor="#FFFFFF">
-      <td>36 month</td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-   </tr>
+      {foreach item=center from=$Centers}
+      <tr>
+            <td rowspan="5">{$center.LongName}<br></td>
+            {foreach item=visit from=$Visits key=title}
+            {if $visit neq 'v06'}
+            <tr>
+            {/if}
+                <td>{$title}</td>
+                {foreach key=proj item=value from=$Subprojects}
+                    {* Special case. proj=2 means its a 12 month visit.
+                     * and it's impossible to have a 6 month visit for
+                     * a 12 month recruit. *}
+                    {if $visit eq 'v06' and $proj eq 2}
+                        <td class="male">NA</td>
+                        <td class="female">NA</td>
+                        <td class="subtotal">NA</td>
+                    {else}
+                        <td class="male">{$recruits[$proj][$center.ID][$visit].male|default:"0"}</td>
+                        <td class="female">{$recruits[$proj][$center.ID][$visit].female|default:"0"}</td>
+                        <td class="subtotal">{$recruits[$proj][$center.ID][$visit].male+$recruits[$proj][$center.ID][$visit].female}</td>
+                    {/if}
+                {/foreach}
+                {* Totals for row *}
+                <td class="male total">{$recruits[$center.ID][$visit].male|default:"0"}</td>
+                <td class="female total">{$recruits[$center.ID][$visit].female|default:"0"}</td>
+                <td class="total">{$recruits[$center.ID][$visit].male+$recruits[$center.ID][$visit].female}</td>
+            </tr>
+            {/foreach}
+      </tr>
+      {/foreach}
+      {* Totals at the bottom *}
+      <tr>
+        <td rowspan="5">Total<br></td>
+        {foreach from=$Visits item=visit key=title}
+            {if $visit neq 'v06'}
+                <tr bgcolor="#FFFFFF">
+            {/if}
+            <td>{$title}</td>     
+            {foreach from=$Subprojects key=proj item=value}
+               {if $visit eq 'v06' and $proj eq 2}
+                    <td class="male">NA</td>
+                    <td class="female">NA</td>
+                    <td class="subtotal">NA</td>
+               {else}
+                    <td class="male">{$recruits[$proj][$visit].male|default:"0"}</td>
+                    <td class="female">{$recruits[$proj][$visit].female|default:"0"}</td>
+                    <td class="subtotal">{$recruits[$proj][$visit].male+$recruits[$proj][$visit].female}</td>
+               {/if}
+            {/foreach}
+            <td class="male total">{$recruits[$visit].male|default:"0"}</td>
+            <td class="female total">{$recruits[$visit].female|default:"0"}</td>
+            <td class="total">{$recruits[$visit].male+$recruits[$visit].female|default:"0"}</td>
+            </tr>
+        {/foreach}
 
-
-<!--
-   <tr bgcolor="#FFFFFF">
-      <td rowspan="3"> Number that have begun visit stage (or the screening stage)</td>
-      <td>6 month</td>
-      <td></td>     
-      <td>{$count2}</td>
-      <td>{$count6}</td>
-      <td rowspan="2">{$count8}</td>
-   </tr>
-   <tr bgcolor="#FFFFFF">
- 
-      <td>12 month</td>
-     <td></td>
-      <td>{$count4}</td>
-      <td>{$count14}</td>
-    
-  </tr>
-   <tr bgcolor="#FFFFFF">
-      <td>24 month</td>
-      <td></td>  
-      <td></td>
-      <td></td>      
-      <td></td>
-    </tr>
-
--->
 </table>
 </td></tr>
 
@@ -140,126 +140,40 @@
 
 <tr>
    <td>
-      <table>
-         <tr bgcolor="#08245b">
-            <th rowspan="2"><font color="#CCCCCC">Site</font></th>
-            <th colspan="3"><font color="#CCCCCC">V06</font></th>
-            <th colspan="3"><font color="#CCCCCC">V12</font></th>
-            <th colspan="3"><font color="#CCCCCC">V18</font></th>
-            <th colspan="3"><font color="#CCCCCC">V24</font></th>
-            <th colspan="3"><font color="#CCCCCC">V36</font></th>
-            <th colspan="3"><font color="#CCCCCC">Total</font></th>
-            <th rowspan="2"><font color="#CCCCCC">Per instrument stats</font></th>
+      <table class="data">
+         <tr>
+            <th rowspan="2">Site</th>
+            {foreach from=$Visits item=visit}
+            <th colspan="3">{$visit|upper}</th>
+            {/foreach}
+            <th colspan="3">Total</th>
+            <th rowspan="2">Per instrument stats</th>
          </tr>
-         <tr bgcolor="#08245b">
-             <th><font color="#CCCCCC">Completed</font></th>
-             <th><font color="#CCCCCC">Created</font></th>
-             <th><font color="#CCCCCC">% Completion</font></th>
-             <th><font color="#CCCCCC">Completed</font></th>
-             <th><font color="#CCCCCC">Created</font></th>
-             <th><font color="#CCCCCC">% Completion</font></th>
-             <th><font color="#CCCCCC">Completed</font></th>
-             <th><font color="#CCCCCC">Created</font></th>
-             <th><font color="#CCCCCC">% Completion</font></th>
-             <th><font color="#CCCCCC">Completed</font></th>
-             <th><font color="#CCCCCC">Created</font></th>
-             <th><font color="#CCCCCC">% Completion</font></th>
-             <th><font color="#CCCCCC">Completed</font></th>
-             <th><font color="#CCCCCC">Created</font></th>
-             <th><font color="#CCCCCC">% Completion</font></th>
-             <th><font color="#CCCCCC">Completed</font></th>
-             <th><font color="#CCCCCC">Created</font></th>
-             <th><font color="#CCCCCC">% Completion</font></th>
+         <tr>
+            {foreach from=$Visits item=visit}
+             <th>Completed</th>
+             <th>Created</th>
+             <th>% Completion</th>
+            {/foreach}
+             {* Total isn't in the visits array, so we need to manually add its header *}
+             <th>Completed</th>
+             <th>Created</th>
+             <th>% Completion</th>
           </tr>
-         <tr bgcolor="#FFFFFF">
-            <td>Philadelphia</td>
-            <td>{$v06_phi_completed}</td>
-            <td>{$v06_phi_total}</td>
-            <td>{$v06_phi_percent}%</td>
-            <td>{$v12_phi_completed}</td>
-            <td>{$v12_phi_total}</td>
-            <td>{$v12_phi_percent}%</td>
-            <td>{$v18_phi_completed}</td>
-            <td>{$v18_phi_total}</td>
-            <td>{$v18_phi_percent}%</td>
-            <td>{$v24_phi_completed}</td>
-            <td>{$v24_phi_total}</td>
-            <td>{$v24_phi_percent}%</td>
-            <td>{$v36_phi_completed}</td>
-            <td>{$v36_phi_total}</td>
-            <td>{$v36_phi_percent}%</td>
-            <td>{$all_phi_completed}</td>
-            <td>{$all_phi_total}</td>
-            <td>{$all_phi_percent}%</td>
-            <td> <a href='main.php?test_name=statistics_philadelphia'>Please Click Here</a></td>
-
+         {foreach from=$Centers item=center key=centername}
+         <tr>
+            <td>{$center.LongName}</td>
+            {foreach from=$Visits item=visit}
+                <td>{$behaviour[$center.ID][$visit].complete|default:"0"}</td>
+                <td>{$behaviour[$center.ID][$visit].total|default:"0"}</td>
+                <td>{$behaviour[$center.ID][$visit].percent|default:"0"}%</td>
+            {/foreach}
+            <td class="total">{$behaviour[$center.ID].all.complete|default:"0"}</td>
+            <td class="total">{$behaviour[$center.ID].all.total|default:"0"}</td>
+            <td class="total">{$behaviour[$center.ID].all.percent|default:"0"}%</td>
+            <td> <a href='main.php?test_name=statistics_site&CenterID={$center.NumericID}'>Please Click Here</a></td>
          </tr>
-         <tr bgcolor="#FFFFFF">
-            <td>Seattle</td>
-            <td>{$v06_sea_completed}</td>
-            <td>{$v06_sea_total}</td>
-            <td>{$v06_sea_percent}%</td>
-            <td>{$v12_sea_completed}</td>
-            <td>{$v12_sea_total}</td>
-            <td>{$v12_sea_percent}%</td>
-            <td>{$v18_sea_completed}</td>
-            <td>{$v18_sea_total}</td>
-            <td>{$v18_sea_percent}%</td>
-            <td>{$v24_sea_completed}</td>
-            <td>{$v24_sea_total}</td>
-            <td>{$v24_sea_percent}%</td>
-            <td>{$v36_sea_completed}</td>
-            <td>{$v36_sea_total}</td>
-            <td>{$v36_sea_percent}%</td>
-            <td>{$all_sea_completed}</td>
-            <td>{$all_sea_total}</td>
-            <td>{$all_sea_percent}%</td>
-            <td> <a href='main.php?test_name=statistics_seattle'>Please Click Here</a></td>
-         </tr>
-         <tr bgcolor="#FFFFFF">
-            <td>St. Louis</td>
-            <td>{$v06_stl_completed}</td>
-            <td>{$v06_stl_total}</td>
-            <td>{$v06_stl_percent}%</td>
-            <td>{$v12_stl_completed}</td>
-            <td>{$v12_stl_total}</td>
-            <td>{$v12_stl_percent}%</td>
-            <td>{$v18_stl_completed}</td>
-            <td>{$v18_stl_total}</td>
-            <td>{$v18_stl_percent}%</td>
-            <td>{$v24_stl_completed}</td>
-            <td>{$v24_stl_total}</td>
-            <td>{$v24_stl_percent}%</td>
-            <td>{$v36_stl_completed}</td>
-            <td>{$v36_stl_total}</td>
-            <td>{$v36_stl_percent}%</td>
-            <td>{$all_stl_completed}</td>
-            <td>{$all_stl_total}</td>
-            <td>{$all_stl_percent}%</td>
-            <td> <a href='main.php?test_name=statistics_stl'>Please Click Here</a></td>
-         </tr>
-         <tr bgcolor="#FFFFFF">
-            <td>University of North Carolina</td>
-            <td>{$v06_unc_completed}</td>
-            <td>{$v06_unc_total}</td>
-            <td>{$v06_unc_percent}%</td>
-            <td>{$v12_unc_completed}</td>
-            <td>{$v12_unc_total}</td>
-            <td>{$v12_unc_percent}%</td>
-            <td>{$v18_unc_completed}</td>
-            <td>{$v18_unc_total}</td>
-            <td>{$v18_unc_percent}%</td>
-            <td>{$v24_unc_completed}</td>
-            <td>{$v24_unc_total}</td>
-            <td>{$v24_unc_percent}%</td>
-            <td>{$v36_unc_completed}</td>
-            <td>{$v36_unc_total}</td>
-            <td>{$v36_unc_percent}%</td>
-            <td>{$all_unc_completed}</td>
-            <td>{$all_unc_total}</td>
-            <td>{$all_unc_percent}%</td>
-            <td> <a href='main.php?test_name=statistics_unc'>Please Click Here</a></td>
-         </tr>
+         {/foreach}
       </table>
    </td>
 </tr>
@@ -270,126 +184,40 @@
 
 <tr>
    <td>
-      <table>
-         <tr bgcolor="#08245b">
-            <th rowspan="2"><font color="#CCCCCC">Site</font></th>
-            <th colspan="3"><font color="#CCCCCC">V06</font></th>
-            <th colspan="3"><font color="#CCCCCC">V12</font></th>
-            <th colspan="3"><font color="#CCCCCC">V18</font></th>
-            <th colspan="3"><font color="#CCCCCC">V24</font></th>
-            <th colspan="3"><font color="#CCCCCC">V36</font></th>
-            <th colspan="3"><font color="#CCCCCC">Total</font></th>
-            <th rowspan="2"><font color="#CCCCCC">Per instrument stats</font></th>
+      <table class="data">
+         <tr>
+            <th rowspan="2">Site</th>
+            {foreach from=$Visits item=visit}
+            <th colspan="3">{$visit|upper}</th>
+            {/foreach}
+            <th colspan="3">Total</th>
+            <th rowspan="2">Per instrument stats</th>
          </tr>
-         <tr bgcolor="#08245b">
-             <th><font color="#CCCCCC">Completed</font></th>
-             <th><font color="#CCCCCC">Created</font></th>
-             <th><font color="#CCCCCC">% Completion</font></th>
-             <th><font color="#CCCCCC">Completed</font></th>
-             <th><font color="#CCCCCC">Created</font></th>
-             <th><font color="#CCCCCC">% Completion</font></th>
-             <th><font color="#CCCCCC">Completed</font></th>
-             <th><font color="#CCCCCC">Created</font></th>
-             <th><font color="#CCCCCC">% Completion</font></th>
-             <th><font color="#CCCCCC">Completed</font></th>
-             <th><font color="#CCCCCC">Created</font></th>
-             <th><font color="#CCCCCC">% Completion</font></th>
-             <th><font color="#CCCCCC">Completed</font></th>
-             <th><font color="#CCCCCC">Created</font></th>
-             <th><font color="#CCCCCC">% Completion</font></th>
-             <th><font color="#CCCCCC">Completed</font></th>
-             <th><font color="#CCCCCC">Created</font></th>
-             <th><font color="#CCCCCC">% Completion</font></th>
+         <tr>
+            {foreach from=$Visits item=visit}
+             <th>Completed</th>
+             <th>Created</th>
+             <th>% Completion</th>
+            {/foreach}
+             {* Total isn't in the visits array, so we need to manually add its header *}
+             <th>Completed</th>
+             <th>Created</th>
+             <th>% Completion</th>
           </tr>
-         <tr bgcolor="#FFFFFF">
-            <td>Philadelphia</td>
-            <td>{$v06_phi_dde_completed}</td>
-            <td>{$v06_phi_dde_total}</td>
-            <td>{$v06_phi_dde_percent}%</td>
-            <td>{$v12_phi_dde_completed}</td>
-            <td>{$v12_phi_dde_total}</td>
-            <td>{$v12_phi_dde_percent}%</td>
-            <td>{$v18_phi_dde_completed}</td>
-            <td>{$v18_phi_dde_total}</td>
-            <td>{$v18_phi_dde_percent}%</td>
-            <td>{$v24_phi_dde_completed}</td>
-            <td>{$v24_phi_dde_total}</td>
-            <td>{$v24_phi_dde_percent}%</td>
-            <td>{$v36_phi_dde_completed}</td>
-            <td>{$v36_phi_dde_total}</td>
-            <td>{$v36_phi_dde_percent}%</td>
-            <td>{$all_phi_dde_completed}</td>
-            <td>{$all_phi_dde_total}</td>
-            <td>{$all_phi_dde_percent}%</td>
-            <td> <a href='main.php?test_name=statistics_philadelphia'>Please Click Here</a></td>
-
+         {foreach from=$Centers item=center key=centername}
+         <tr>
+            <td>{$center.LongName}</td>
+            {foreach from=$Visits item=visit}
+                <td>{$dde[$center.ID][$visit].complete|default:"0"}</td>
+                <td>{$dde[$center.ID][$visit].total|default:"0"}</td>
+                <td>{$dde[$center.ID][$visit].percent|default:"0"}%</td>
+            {/foreach}
+                <td class="total">{$dde[$center.ID].all.complete|default:"0"}</td>
+                <td class="total">{$dde[$center.ID].all.total|default:"0"}</td>
+                <td class="total">{$dde[$center.ID].all.percent|default:"0"}%</td>
+            <td> <a href='main.php?test_name=statistics_dd_site&CenterID={$center.NumericID}'>Please Click Here</a></td>
          </tr>
-         <tr bgcolor="#FFFFFF">
-            <td>Seattle</td>
-            <td>{$v06_sea_dde_completed}</td>
-            <td>{$v06_sea_dde_total}</td>
-            <td>{$v06_sea_dde_percent}%</td>
-            <td>{$v12_sea_dde_completed}</td>
-            <td>{$v12_sea_dde_total}</td>
-            <td>{$v12_sea_dde_percent}%</td>
-            <td>{$v18_sea_dde_completed}</td>
-            <td>{$v18_sea_dde_total}</td>
-            <td>{$v18_sea_dde_percent}%</td>
-            <td>{$v24_sea_dde_completed}</td>
-            <td>{$v24_sea_dde_total}</td>
-            <td>{$v24_sea_dde_percent}%</td>
-            <td>{$v36_sea_dde_completed}</td>
-            <td>{$v36_sea_dde_total}</td>
-            <td>{$v36_sea_dde_percent}%</td>
-            <td>{$all_sea_dde_completed}</td>
-            <td>{$all_sea_dde_total}</td>
-            <td>{$all_sea_dde_percent}%</td>
-            <td> <a href='main.php?test_name=statistics_seattle'>Please Click Here</a></td>
-         </tr>
-         <tr bgcolor="#FFFFFF">
-            <td>St. Louis</td>
-            <td>{$v06_stl_dde_completed}</td>
-            <td>{$v06_stl_dde_total}</td>
-            <td>{$v06_stl_dde_percent}%</td>
-            <td>{$v12_stl_dde_completed}</td>
-            <td>{$v12_stl_dde_total}</td>
-            <td>{$v12_stl_dde_percent}%</td>
-            <td>{$v18_stl_dde_completed}</td>
-            <td>{$v18_stl_dde_total}</td>
-            <td>{$v18_stl_dde_percent}%</td>
-            <td>{$v24_stl_dde_completed}</td>
-            <td>{$v24_stl_dde_total}</td>
-            <td>{$v24_stl_dde_percent}%</td>
-            <td>{$v36_stl_dde_completed}</td>
-            <td>{$v36_stl_dde_total}</td>
-            <td>{$v36_stl_dde_percent}%</td>
-            <td>{$all_stl_dde_completed}</td>
-            <td>{$all_stl_dde_total}</td>
-            <td>{$all_stl_dde_percent}%</td>
-            <td> <a href='main.php?test_name=statistics_stl'>Please Click Here</a></td>
-         </tr>
-         <tr bgcolor="#FFFFFF">
-            <td>University of North Carolina</td>
-            <td>{$v06_unc_dde_completed}</td>
-            <td>{$v06_unc_dde_total}</td>
-            <td>{$v06_unc_dde_percent}%</td>
-            <td>{$v12_unc_dde_completed}</td>
-            <td>{$v12_unc_dde_total}</td>
-            <td>{$v12_unc_dde_percent}%</td>
-            <td>{$v18_unc_dde_completed}</td>
-            <td>{$v18_unc_dde_total}</td>
-            <td>{$v18_unc_dde_percent}%</td>
-            <td>{$v24_unc_dde_completed}</td>
-            <td>{$v24_unc_dde_total}</td>
-            <td>{$v24_unc_dde_percent}%</td>
-            <td>{$v36_unc_dde_completed}</td>
-            <td>{$v36_unc_dde_total}</td>
-            <td>{$v36_unc_dde_percent}%</td>
-            <td>{$all_unc_dde_completed}</td>
-            <td>{$all_unc_dde_total}</td>
-            <td>{$all_unc_dde_percent}%</td>
-            <td> <a href='main.php?test_name=statistics_unc'>Please Click Here</a></td>
-         </tr>
+         {/foreach}
       </table>
    </td>
 </tr>
@@ -397,15 +225,15 @@
 <tr><td><p><b>MRI Statistics:</b></p></td></tr>
 <tr>
    <td>
-      <table>
-         <tr bgcolor="#08245b">
-            <th><font color="#CCCCCC">Site</font></th>
-            <th><font color="#CCCCCC">Scans on the Workstations</font></th>
-            <th><font color="#CCCCCC">Scans Claimed</font></th>
-            <th><font color="#CCCCCC">Parameter Forms Completed</font></th>
+      <table class="data">
+         <tr>
+            <th>Site</th>
+            <th>Scans on the Workstations</th>
+            <th>Scans Claimed</th>
+            <th>Parameter Forms Completed</th>
          </tr>
          {section name=item loop=$mri_data}
-         <tr bgcolor="#FFFFFF">
+         <tr>
             <td>{$mri_data[item].name}</td>
             <td>{$mri_data[item].work_station_count}</td>
             <td>{$mri_data[item].claimed_count}</td>
@@ -415,285 +243,78 @@
       </table>
    </td>
 </tr>
-
-
-<!--
-
-<tr><td align="left" width="40%"><font color ="#006600"><b>Number of scans that have been completed according to the sites </b>(i.e number of completed parameter forms): <br>
-PHI: <b>28</b> | 
-SEA: <b>36</b> | 
-STL: <b>42</b> | 
-UNC: <b>27</b>
-</font></td></tr>
-
+<tr><td><p><b>T1 Scan Breakdown:</b></p></td></tr>
 <tr>
-
-</tr><td align="left" width="40%"><font color ="#006600"><b>Number of scans that have been processed </b>(i.e number of scans appearing in the MRI browser): <br>
-PHI: <b>16</b> | 
-SEA: <b>35</b> | 
-STL: <b>47</b> | 
-UNC: <b>53</b>
-
-</font></td></tr>
-
-
-
-<tr>
-<td>
-<p><b>Scan types by modality:</b></p>
+    <td>
+      <table class="data">
+         <tr>
+            <th>&nbsp;</th>
+            <th>Timepoint</th>
+            {foreach from=$Subprojects item=name key=proj}
+                <th>{$name}</th>
+            {/foreach}
+            <th>Total</th>
+         </tr>
+         <tr>
+      {foreach item=center from=$Centers}
+      <tr>
+            <td rowspan="3">{$center.LongName}<br></td>
+            {foreach item=visit from=$Visits key=title}
+            {if $visit neq 'v18' and $visit neq 'v36'}
+            
+            {if $visit neq 'v06'}
+            <tr>
+            {/if}
+                <td>{$title}</td>
+                {foreach key=proj item=value from=$Subprojects}
+                    {* Special case. proj=2 means its a 12 month visit.
+                     * and it's impossible to have a 6 month visit for
+                     * a 12 month recruit. *}
+                    {if $visit eq 'v06' and $proj eq 2}
+                        <td>NA</td>
+                    {else}
+                        <td>{$mri_total[$proj][$center.ID][$visit]|default:0}</td>
+                    {/if}
+                {/foreach}
+                <td class="subtotal">{$mri_total[$center.ID][$visit].total}</td>
+            </tr>
+            {/if}
+            {/foreach}
+      </tr>
+      {/foreach}
+      <tr>
+        <td>Total</td>
+        <td>All</td>
+        {foreach from=$Subprojects item=name key=proj}
+            <td class="subtotal">{$mri_total[$proj].total}</td>
+        {/foreach}
+        <td class="total">{$mri_total.total}</td>
+      </tr>
+      </table>
+    </td>
+</tr>
 </td>
 </tr>
+<tr><td><p><b>MRI Integrity Statistics:</b></p></td></tr>
 <tr>
-<td>
-<p><i> *Please note that these numbers might change slightly since we are still in the process of finalizing data quality control.</i></p>
-</td>
-</tr>
-<tr>
-<td>
-<table width="800px" border="1" bordercolor="#FFFFFF" cellspacing="0" cellpadding="0"  bgcolor="#f0f0f0">
-  <tr bgcolor="#08245b"> 
-    <td width="14%" ><font color="#FFFFFF"><strong>Objective 1</strong></font></td>
-    <td width="14%" ><font color="#FFFFFF"><strong>Modality</strong></font></td>
-    <td width="6%" ><font color="#FFFFFF"><strong>V1</strong></font></td>
-    <td width="6%" ><font color="#FFFFFF"><strong>V2</strong></font></td>
-    <td width="6%" ><font color="#FFFFFF"><strong>V3</strong></font></td>
-    <td width="6%" ><font color="#FFFFFF"><strong>V4</strong></font></td>
-    <td width="6%" ><font color="#FFFFFF"><strong>V5</strong></font></td>
-    <td width="6%" ><font color="#FFFFFF"><strong>V6</strong></font></td>
-    <td width="6%" ><font color="#FFFFFF"><strong>V7</strong></font></td>
-    <td width="6%" ><font color="#FFFFFF"><strong>V8</strong></font></td>
-    <td width="6%" ><font color="#FFFFFF"><strong>V9</strong></font></td>
-    <td width="6%" ><font color="#FFFFFF"><strong>V10</strong></font></td>
-    <td width="12%" ><font color="#FFFFFF"><strong>Total</strong></font></td>
-  </tr>
-  <tr> 
-    <td>&nbsp;</td>
-    <td>T1</td>
-    <td>429</td>
-    <td>386</td>
-    <td>328</td>
-    <td>&nbsp;</td>
-    <td>&nbsp;</td>
-    <td>&nbsp;</td>
-    <td>&nbsp;</td>
-    <td>&nbsp;</td>
-    <td>&nbsp;</td>
-    <td>&nbsp;</td>
-    <td bgcolor="#9966FF"><strong>1152</strong></td>
-  </tr>
-  <tr> 
-    <td>&nbsp;</td>
-    <td>T2</td>
-    <td>418</td>
-    <td>380</td>
-    <td>326</td>
-    <td>&nbsp;</td>
-    <td>&nbsp;</td>
-    <td>&nbsp;</td>
-    <td>&nbsp;</td>
-    <td>&nbsp;</td>
-    <td>&nbsp;</td>
-    <td>&nbsp;</td>
-    <td bgcolor="#9966ff"><strong>1132</strong></td>
-  </tr>
-  <tr> 
-    <td>&nbsp;</td>
-    <td>PD</td>
-    <td>416</td>
-    <td>380</td>
-    <td>324</td>
-    <td>&nbsp;</td>
-    <td>&nbsp;</td>
-    <td>&nbsp;</td>
-    <td>&nbsp;</td>
-    <td>&nbsp;</td>
-    <td>&nbsp;</td>
-    <td>&nbsp;</td>
-    <td bgcolor="#9966ff"><strong>1128</strong></td>
-  </tr>
-  <tr> 
-    <td>&nbsp;</td>
-    <td>MRS</td>
-    <td>148</td>
-    <td>139</td>
-    <td>114</td>
-    <td>&nbsp;</td>
-    <td>&nbsp;</td>
-    <td>&nbsp;</td>
-    <td>&nbsp;</td>
-    <td>&nbsp;</td>
-    <td>&nbsp;</td>
-    <td>&nbsp;</td>
-    <td bgcolor="#9966ff"><strong>401</strong></td>
-  </tr>
-  <tr> 
-    <td>&nbsp;</td>
-    <td>MRSI</td>
-    <td>4</td>
-    <td>59</td>
-    <td>39</td>
-    <td>&nbsp;</td>
-    <td>&nbsp;</td>
-    <td>&nbsp;</td>
-    <td>&nbsp;</td>
-    <td>&nbsp;</td>
-    <td>&nbsp;</td>
-    <td>&nbsp;</td>
-    <td bgcolor="#9966ff"><strong>102</strong></td>
-  </tr>
-  <tr> 
-    <td>&nbsp;</td>
-    <td>Relaxometry</td>
-    <td>&nbsp;</td>
-    <td>&nbsp;</td>
-    <td>&nbsp;</td>
-    <td>&nbsp;</td>
-    <td>&nbsp;</td>
-    <td>&nbsp;</td>
-    <td>&nbsp;</td>
-    <td>&nbsp;</td>
-    <td>&nbsp;</td>
-    <td>&nbsp;</td>
-    <td bgcolor="#9966ff">&nbsp;</td>
-  </tr>
-  <tr> 
-    <td>&nbsp;</td>
-    <td>DTI</td>
-    <td>214</td>
-    <td>279</td>
-    <td>242</td>
-    <td>&nbsp;</td>
-    <td>&nbsp;</td>
-    <td>&nbsp;</td>
-    <td>&nbsp;</td>
-    <td>&nbsp;</td>
-    <td>&nbsp;</td>
-    <td>&nbsp;</td>
-    <td bgcolor="#9966ff"><strong>743</strong></td>
-  </tr>
- Objective 2 ---------------------------------------------
-  <tr bgcolor="#08245b"> 
-    <td><font color="#FFFFFF"><strong>Objective 2</strong></font></td>
-    <td>&nbsp;</td>
-    <td>&nbsp;</td>
-    <td>&nbsp;</td>
-    <td>&nbsp;</td>
-    <td>&nbsp;</td>
-    <td>&nbsp;</td>
-    <td>&nbsp;</td>
-    <td>&nbsp;</td>
-    <td>&nbsp;</td>
-    <td>&nbsp;</td>
-    <td>&nbsp;</td>
-    <td>&nbsp;</td>
-  </tr>
-  <tr> 
-    <td>&nbsp;</td>
-    <td>T1</td>
-    <td>118</td>
-    <td>83</td>
-    <td>67</td>
-    <td>39</td>
-    <td>25</td>
-    <td>19</td>
-    <td>15</td>
-    <td>6</td>
-    <td>2</td>
-    <td>1</td>
-     <td bgcolor="#9966ff"><strong>375</strong></td>
-  </tr>
-  <tr> 
-    <td>&nbsp;</td>
-    <td>T2</td>
-    <td>115</td>
-    <td>83</td>
-    <td>64</td>
-    <td>38</td>
-    <td>25</td>
-    <td>19</td>
-    <td>14</td>
-    <td>6</td>
-    <td>2</td>
-    <td>1</td>
-    <td bgcolor="#9966ff"><strong>367</strong></td>
-  </tr>
-  <tr> 
-    <td>&nbsp;</td>
-    <td>PD</td>
-    <td>110</td>
-    <td>83</td>
-    <td>65</td>
-    <td>35</td>
-    <td>25</td>
-    <td>19</td>
-    <td>14</td>
-    <td>5</td>
-    <td>2</td>
-    <td>1</td>
-    <td bgcolor="#9966ff"><strong>360</strong></td>
-  </tr>
-  <tr> 
-    <td>&nbsp;</td>
-    <td>MRS</td>
-    <td>24</td>
-    <td>17</td>
-    <td>11</td>
-    <td>3</td>
-    <td>&nbsp;</td>
-    <td>&nbsp;</td>
-    <td>&nbsp;</td>
-    <td>&nbsp;</td>
-    <td>&nbsp;</td>
-    <td>&nbsp;</td>
-    <td bgcolor="#9966ff"><strong>55</strong></td>
-  </tr>
-  <tr> 
-    <td>&nbsp;</td>
-    <td>MRSI</td>
-    <td>&nbsp;</td>
-    <td>&nbsp;</td>
-    <td>&nbsp;</td>
-    <td>&nbsp;</td>
-    <td>&nbsp;</td>
-    <td>&nbsp;</td>
-    <td>&nbsp;</td>
-    <td>&nbsp;</td>
-    <td>&nbsp;</td>
-    <td>&nbsp;</td>
-    <td bgcolor="#9966ff">&nbsp;</td>
-  </tr>
-  <tr> 
-    <td>&nbsp;</td>
-    <td>Relaxometry</td>
-    <td>270</td>
-    <td>43</td>
-    <td>23</td>
-    <td>&nbsp;</td>
-    <td>&nbsp;</td>
-    <td>&nbsp;</td>
-    <td>&nbsp;</td>
-    <td>&nbsp;</td>
-    <td>&nbsp;</td>
-    <td>&nbsp;</td>
-    <td bgcolor="#9966ff"><strong>336</strong></td>
-  </tr>
-  <tr> 
-    <td>&nbsp;</td>
-    <td>DTI</td>
-    <td>56</td>
-    <td>29</td>
-    <td>30</td>
-    <td>25</td>
-    <td>9</td>
-    <td>12</td>
-    <td>6</td>
-    <td>4</td>
-    <td>2</td>
-    <td>&nbsp;</td>
-    <td bgcolor="#9966ff"><strong>173</strong></td>
-  </tr>
-</table> -->
-
-</td>
-</tr>
+    <td>
+      <table class="data">
+      <tr>
+            <th>Site</th>
+            <th>No Parameter Form Completed</th>
+            <th>Nothing in MRI Browser for Form</th>
+            <th>No tarchive Entry for Form</th>
+            <th>Breakdown of Problems</th>
+      </tr>
+      {foreach item=center from=$Centers}
+      <tr>
+            <td>{$center.LongName}</td>
+            <td>{$mri_errors[$center.NumericID].no_parameter}</td>
+            <td>{$mri_errors[$center.NumericID].no_browser}</td>
+            <td>{$mri_errors[$center.NumericID].no_tarchive}</td>
+            <td><a href="?test_name=statistics_mri_site&CenterID={$center.NumericID}">Please Click Here</a></td>
+      </tr>
+      {/foreach}
+      </table>
+      
 </table>
