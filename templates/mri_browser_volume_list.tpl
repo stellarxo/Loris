@@ -90,22 +90,22 @@ return true;
     <table class="fancytableleft" cellpadding="2">
         <tr><th nowrap="nowrap">QC Status</th>
             <td nowrap="nowrap">
-                {if $has_permission}
-                    {html_options options=$status_options selected=$subject.mriqcstatus name=visit_status tabindex=1>}
-                {else}
+                {*if $has_permission}
+                    {html_options options=$status_options selected=$subject.mriqcstatus name=visit_status tabindex=1> }
+                {else *}
                     {$subject.mriqcstatus}
-                {/if}
+                {* /if *}
             </td>
             <th nowrap="nowrap">PSCID</th><td nowrap="nowrap">{$subject.pscid}</td>
             <th nowrap="nowrap">Site</th><td nowrap="nowrap">{$subject.site}</td>
         </tr>
         <tr><th nowrap="nowrap">QC Pending</th>
             <td nowrap="nowrap">
-                {if $has_permission}
+                {*if $has_permission}
                     {html_options options=$pending_options selected=$subject.mriqcpending name=visit_pending tabindex=2}
-                {else}
+                {else*}
                     {if $subject.mriqcpending=="Y"}<img src="images/check_blue.gif" width="12" height="12">{else}&nbsp;{/if}
-                {/if}
+                {*/if*}
             </td>
             <th nowrap="nowrap">DCCID</th><td nowrap="nowrap">{$subject.candid}</td>
             <th nowrap="nowrap">Visit Label</th><td nowrap="nowrap">{$subject.visitLabel}</td>

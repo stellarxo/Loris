@@ -61,7 +61,6 @@ var x = 200, y = 400;
                {/if}
 </p>
 {if $has_permission}<input class="button" type="submit" accesskey="s" value="Save" name="save_changes">{/if}            
-{if $has_permission}</form>{/if}
 </div>
 
 {/if}
