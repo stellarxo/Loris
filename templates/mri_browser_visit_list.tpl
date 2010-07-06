@@ -32,21 +32,17 @@
 
 <table class="fancytable" width="100%" border="1">
     <tr>
-        <th>Site</th>
-        <th>DCCID</th>
-        <th>PSCID</th>
-        <th>Visit Label</th>
-        <th>QC Status</th>
-{*        <th>Subproject</th> *}
-        <th>First acq date</th>
-{*        <th>First added to DB</th> 	*}
-{*        <th>First QC</th>		*}
-        <th>Last QC</th>
-        <th>New data</th>
-        <th colspan="{$numOutputTypes+1}">Links</th>
+    {foreach from=$headers item=item key=key}
+        <th {if $key eq 'Links'}colspan="{$numOutputTypes+1}"{/if}>
+        {if $item neq ''}<a href="?filter[order][field]={$key}&filter[order][asc]={if $filter.order.field eq $key && $filter.order.asc eq 'ASC'}DESC{else}ASC{/if}">{/if}
+            {$key}
+        {if $item neq ''}</a>{/if}
+        </th>
+    {/foreach}
     </tr>
    {section name=timepointIdx loop=$timepoints}
     <tr>
+        <td>{$timepoints[timepointIdx].rownum}</td>
         <td>{$timepoints[timepointIdx].centerName}</td>
         <td>{$timepoints[timepointIdx].candID}</td>
         <td>{$timepoints[timepointIdx].PSCID}</td>
