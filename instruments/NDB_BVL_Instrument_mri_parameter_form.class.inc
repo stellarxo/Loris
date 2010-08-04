@@ -78,6 +78,10 @@ class NDB_BVL_Instrument_mri_parameter_form extends NDB_BVL_Instrument
         // automatically adds examiner & date of administration
         $this->_addMetadataFields();
         
+        $this->form->addElement("select", "Scanner_Type", "Type of Scanner:", array("" => NULL, "hospital" => "Hospital", "research" => "Research", "other" => "Other"));
+        $this->form->addElement("text", "Scanner_Type_other", "If other, specify:");
+        //$this->XINRegisterRule("Scanner_Type_other", array("Scanner_Type{@}=={@}other"), "Required if scanner type is other");
+
         $this->addTextElement("session_attempts", "Number of Session Attempts:");
         $this->addHourMinElement("wait_time", "Wait Time for Scanner (hours:minutes)");
         $this->addHourMinElement("total_duration", "Total Duration of Session (hours:minutes)");
@@ -114,6 +118,32 @@ class NDB_BVL_Instrument_mri_parameter_form extends NDB_BVL_Instrument
         $this->addDateElement('DTI_Scan_done', 'If so, when?');
         $this->addTextAreaElement('DTI_Comments', 'Comments');
         
+
+        $this->form->addElement('header', null, 'Resting BOLD');
+        $yes_no_option2 = array(""=>NULL, "No"=>"No", "Complete"=>"Yes, Complete Acquisition (2 Full Runs)", "Partial"=>"Yes, Partial Acquisition", "not_answered"=>"Not Answered");
+        $this->form->addElement('select', 'BOLD_Scan_done', 'Was this sequence acquired?', $yes_no_option2);
+        $this->form->addElement('text', "BOLD_number_attempts", "Number of scan attempts:");
+        $this->addDateElement('BOLD_Scan_done', 'If so, when?');
+        $this->addTextAreaElement('BOLD_Comments', 'Comments');
+
+        $this->form->addElement('header', null, 'Spectroscopy');
+        $this->form->addElement('select', 'Spectroscopy_Scan_done', 'Was this sequence acquired?', $yes_no_option);
+        $this->form->addElement('text', "Spectroscopy_number_attempts", "Number of scan attempts:");
+        $this->addDateElement('Spectroscopy_Scan_done', 'If so, when?');
+        $this->form->addElement('static', null, 'Which scans were acquired?');
+
+        $acquired_option= array(""=>NULL, "acquired" => "Acquired", "not_acquired" => "Not Acquired");
+        $this->form->addElement('select', 'Spectroscopy_long_echo_acquired', "Long echo", $acquired_option);
+        $this->form->addElement('select', 'Spectroscopy_short_echo_acquired', "Short echo", $acquired_option);
+        $this->form->addElement('select', 'Spectroscopy_water_scan_acquired', "Water Scan", $acquired_option);
+
+        $this->addTextAreaElement('Spectroscopy_Comments', 'Comments');
+
+
+
+
+
+
         $this->form->addElement('header', null, 'Direction File');
         
         $this->form->addElement('static', 'coordinate_system', 'Coordinate system:');
@@ -160,6 +190,14 @@ class NDB_BVL_Instrument_mri_parameter_form extends NDB_BVL_Instrument
                   $date = $values['DTI_Scan_done_date'];
                   $values['DTI_Scan_done_date'] = sprintf("%04d-%02d-%02d", $date['Y'], $date['M'], $date['d']);
               }
+              if(isset($values['BOLD_Scan_done_date'])) {
+                  $date = $values['BOLD_Scan_done_date'];
+                  $values['BOLD_Scan_done_date'] = sprintf("%04d-%02d-%02d", $date['Y'], $date['M'], $date['d']);
+              }
+              if(isset($values['Spectroscopy_Scan_done_date'])) {
+                  $date = $values['Spectroscopy_Scan_done_date'];
+                  $values['Spectroscopy_Scan_done_date'] = sprintf("%04d-%02d-%02d", $date['Y'], $date['M'], $date['d']);
+              }
               
               if(isset($values['wait_time'])) {
                   $time = $values['wait_time'];
@@ -171,7 +209,7 @@ class NDB_BVL_Instrument_mri_parameter_form extends NDB_BVL_Instrument
                   $values['total_duration'] = sprintf("%02d:%02d:00", $time['H'], $time['i']);
               }
               
-              print_r($values['wait_time']);
+              //print_r($values['wait_time']);
               if(isset($values['directions_file']) && !empty($values['directions_file']['name'])) {
                 require_once "File_Upload.class.inc";
                 $file=new File_Upload;
