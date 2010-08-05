@@ -21,6 +21,10 @@ class NDB_Form_conflicts_resolve extends NDB_Form
         foreach($value_results AS $vresult){
         	$defaults["PTID_".$vresult['ParameterTypeID']]=$vresult['Value'];
         }
+        $defaults['site'] = $_REQUEST['site'];
+        $defaults['Instrument'] = $_REQUEST['Instrument'];
+        $defaults['CandID'] = $_REQUEST['CandID'];
+        $defaults['PSCID'] = $_REQUEST['PSCID'];
         return $defaults;
     }
 
@@ -78,6 +82,23 @@ class NDB_Form_conflicts_resolve extends NDB_Form
 
                     // delete from conflics_unresolved
                     $DB->run("DELETE FROM conflicts_unresolved WHERE MD5(CONCAT_WS(':',TableName, ExtraKeyColumn, ExtraKey1, ExtraKey2, FieldName, CommentId1, CommentId2)) = '$hash'");
+
+                    // Load the instrument and save it to force the score 
+                    // function to run.
+                    // Wrapped in a try/catch block in case the table doesn't have its own
+                    // instrument (ie. figs_year3_relative)
+                    $TableName = $row['TableName'];
+                    $Instrument = NDB_BVL_Instrument::factory($TableName, $row['CommentId1'], '', false);
+                    if($Instrument != null) {
+                        $Instrument->score();
+                        $Instrument->save();
+                    }
+
+                    $Instrument = NDB_BVL_Instrument::factory($TableName, $row['CommentId2'], '', false);
+                    if($Instrument != null) {
+                        $Instrument->score();
+                        $Instrument->save();
+                    }
                 }
             }
         }
@@ -96,15 +117,57 @@ class NDB_Form_conflicts_resolve extends NDB_Form
         $conflicts = array();
 
 
+        $DB->select("SELECT Test_name FROM test_names", &$instruments_q);
+
+        // This array_map call turns the result of the above query to
+        // a non-associative array, so that we can use the array_combine
+        // trick to get an array of the form array( 'test_name' => 'test_name')
+        // which can be used by quickforms for the dropdown. The array_merge
+        // call after that just adds an Any/All Instruments option.
+
+        function Flatten($Arr) {
+            return $Arr['Test_name'];
+        }
+        $in = array_map('Flatten', $instruments_q); 
+        $instruments = array_combine($in, $in);
+        $instruments = array_merge(array('' => 'All Instruments'), $instruments);
+        
+        // Filter selection elements
+        $this->form->addElement('select', 'site', 'Site:', array ('all' => 'All', '2' => 'SEA', '3' => 'PHI', '4' => 'STL', '5' => 'UNC'));
+        $this->form->addElement('select', 'Instrument', 'Instrument:', $instruments);
+        $this->form->addElement('text', 'Question', 'Question:', '');
+        $this->form->addElement('text', 'CandID', 'DCCID:', '');
+        $this->form->addElement('text', 'PSCID', 'PSCID:', '');
+
         if(!empty($_REQUEST['site'])) {
-            $DB->select("SELECT TableName, ExtraKeyColumn, ExtraKey1, ExtraKey2, FieldName, CommentId1, CommentId2, Value1, Value2, MD5(CONCAT_WS(':',TableName, ExtraKeyColumn, ExtraKey1, ExtraKey2, FieldName, CommentId1, CommentId2)) AS hash FROM conflicts_unresolved c LEFT JOIN flag f ON (c.CommentId1=f.CommentID) LEFT JOIN session s ON (f.SessionID=s.ID) WHERE s.CenterID='$_REQUEST[site]'", $conflicts);
+            $extra_where = '';
+            function AddWhere($Column, $Filter) {
+                if(!empty($_REQUEST[$Filter]) && $_REQUEST[$Filter] != 'all') {
+                    global $DB;
+                    return " AND $Column LIKE " . $DB->quote($_REQUEST[$Filter] . '%');
+                }
+                return '';
+            }
+
+            $extra_where .= AddWhere("TableName", 'Instrument');
+            $extra_where .= AddWhere("FieldName", 'Question');
+            $extra_where .= AddWhere("s.CandID", 'CandID');
+            $extra_where .= AddWhere("s.PSCID", 'PSCID');
+            $extra_where .= AddWhere("s.CenterID", 'site');
+
+            // The 1=1 condition is just so that we can AND all the conditions together without worrying about whether or not
+            // it's the first condition to be added.
+            $DB->select("SELECT TableName, ExtraKeyColumn, ExtraKey1, ExtraKey2, FieldName, CommentId1, CommentId2, Value1, Value2, MD5(CONCAT_WS(':',TableName, ExtraKeyColumn, ExtraKey1, ExtraKey2, FieldName, CommentId1, CommentId2)) AS hash FROM conflicts_unresolved c LEFT JOIN flag f ON (c.CommentId1=f.CommentID) LEFT JOIN session s ON (f.SessionID=s.ID) WHERE 1=1 $extra_where", $conflicts);
             //If there are no conflicts print a message to that effect
             if(empty($conflicts)){
-                $this->form->addElement('static', "static", "No conflicts detected at this time.");
+                $this->form->addElement('static', "status", "No conflicts matching criteria found.");
                 return;
+            } else {
+                $DB->selectRow("SELECT COUNT(*) as total FROM conflicts_unresolved c LEFT JOIN flag f ON (c.CommentId1=f.CommentID) LEFT JOIN session s ON (f.SessionID=s.ID) WHERE 1=1 $extra_where", $conflicts_num);
+                $this->form->addElement('static', 'total', 'Total number of results:', $conflicts_num['total']);
             }
         } else {
-            $this->form->addElement('static', 'static', 'Please select a site first.');
+            $this->form->addElement('static', 'status', 'Please select a filter criteria first.');
                 return;
         }
 
@@ -120,9 +183,22 @@ class NDB_Form_conflicts_resolve extends NDB_Form
         
         //Loop through the conflicts and add a row per
         foreach($conflicts AS $conflict) {
+	    $indent = "&nbsp;&nbsp;&nbsp;&nbsp;";
+            $hash = 'conflict_' . $conflict['hash'];
+            $dccid = substr($conflict[CommentId1],0,6);
+            $ssid = substr($conflict[CommentId1],6,7);
             $options = array('none'=>'Unresolved', '1'=>$conflict['Value1'], '2'=>$conflict['Value2']);
-            $this->form->addElement('select', 'conflict_'.$conflict['hash'], "$conflict[TableName] $conflict[CommentId1] $conflict[ExtraKeyColumn] $conflict[ExtraKey1] $conflict[FieldName]", $options);
-            $this->tpl_data['elements_list'][]='conflict_'.$conflict['hash'];
+            $conflict_array = array(
+                'name' => 'conflict_' . $conflict['hash'],
+                'instrument' => $conflict['TableName'],
+                'dccid' => $dccid,
+                'pscid' => $ssid,
+                'field' => $conflict['FieldName']
+
+            );
+            $this->form->addElement('select', $hash, "$conflict[TableName] $indent $dccid $indent $ssid  $indent $conflict[FieldName]", $options);
+            $this->tpl_data['elements_list_names'][]= $hash;
+            $this->tpl_data['elements_array'][$hash] = $conflict_array;
         }
 
     }
