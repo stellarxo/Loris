@@ -489,7 +489,9 @@ class NDB_BVL_Instrument_mullen extends NDB_BVL_Instrument
             $timepoint =& TimePoint::singleton($this->getSessionID());
             $dob = $timepoint->getEffectiveDateOfBirth();
         }
-        $age = Utility::calculateAge($dob, $record["Date_taken"]);
+        if(!empty($dob) && !empty($record['Date_taken'])) {
+            $age = Utility::calculateAge($dob, $record["Date_taken"]);
+        } 
         if(!$this->isError($age)) {
           $age_months = $age['year'] * 12 + $age['mon'];
           $this->localDefaults = array_merge($this->localDefaults, array('age_months' => $age_months));
@@ -654,7 +656,7 @@ class NDB_BVL_Instrument_mullen extends NDB_BVL_Instrument
         "4. Held upright, holds head steady (Up)",
 
         "5. Supports on forearms (P)",
-        "6. Sits supported, head steady (5511)",
+        "6. Sits supported, head steady (SSit)",
         "7. Rolls over (P to S)",
 
         "8. Holds on to fingers/pulls self to sit (S to SSIt)",
@@ -1155,8 +1157,7 @@ class NDB_BVL_Instrument_mullen extends NDB_BVL_Instrument
             $calculatedScores["composite_description"] = $this->composite_descriptor($calculatedScores['cognitive_t_score_sum']);
          }
 
-
-         $this->_nullScores($calculatedScores);
+         $this->_nullScores(array_keys($calculatedScores));
 
          // save the resultant total
          $result = $db->update($this->table, $calculatedScores, array('CommentID'=>$this->getCommentID()));
