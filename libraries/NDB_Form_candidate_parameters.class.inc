@@ -72,7 +72,11 @@ class NDB_Form_candidate_parameters extends NDB_Form
     function _getInstrumentInfo($instrument, $param) {
         $DB =& Database::singleton();
 
-        return $DB->selectOne("SELECT t.$param FROM flag f JOIN $instrument t ON (t.CommentID=f.CommentID) JOIN session s ON (f.SessionID=s.ID) WHERE s.CandID=" . $DB->quote($this->identifier) . ' AND f.test_name=' . $DB->quote($instrument) . ' AND t.CommentID NOT LIKE \'DDE_%\'');
+        $ret = $DB->selectOne("SELECT t.$param FROM flag f JOIN $instrument t ON (t.CommentID=f.CommentID) JOIN session s ON (f.SessionID=s.ID) WHERE s.CandID=" . $DB->quote($this->identifier) . ' AND f.test_name=' . $DB->quote($instrument) . ' AND t.CommentID NOT LIKE \'DDE_%\'');
+        if($ret == array()) {
+            return;
+        }
+        return $ret;
     }
 
     function _getTSIinfo($param) {
