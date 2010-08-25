@@ -189,8 +189,14 @@ class NDB_Form_conflicts_resolve extends NDB_Form
             $ssid = substr($conflict[CommentId1],6,7);
             if($conflict['FieldName'] == 'Examiner') {
                 $name1 = $DB->selectOne("SELECT Full_Name FROM examiners WHERE examinerID=$conflict[Value1]");
+           	if(PEAR::isError($name1)) {
+			$name1 = $conflict['Value1'];
+		}
                 $name2 = $DB->selectOne("SELECT Full_Name FROM examiners WHERE examinerID=$conflict[Value2]");
-                $options = array('none'=>'Unresolved', '1'=> $name1 . "($conflict[Value1])", '2'=> $name2 . "($conflict[Value2])");
+           	if(PEAR::isError($name2)) {
+			$name2 = $conflict['Value2'];
+		}
+                $options = array('none'=>'Unresolved', '1'=> $name1, '2'=> $name2);
             } else {
                 $options = array('none'=>'Unresolved', '1'=>$conflict['Value1'], '2'=>$conflict['Value2']);
             }
