@@ -48,6 +48,7 @@
         <th>Instrument</th>
         <th>DCCID</th>
         <th>PSCID</th>
+        <th>Visit Label</th>
         <th>Question</th>
         <th>Correct Answer</th>
     </tr>
@@ -58,18 +59,19 @@
         <td>{$elements_array[$element].instrument}</td>
         <td>{$elements_array[$element].dccid}</td>
         <td>{$elements_array[$element].pscid}</td>
+        <td>{$elements_array[$element].visit_label}</td>
         <td>{$elements_array[$element].field}</td>
 		<td nowrap="nowrap" align="right">{$form.$element.html}</td>
 	</tr>
     {foreachelse}
         <tr>
-            <td colspan="5"><b>{$form.status.label}</b></td>
+            <td colspan="6"><b>{$form.status.label}</b></td>
         </tr>
 	{/foreach}
 
 
         <tr>
-        <td nowrap="nowrap" colspan="4">&nbsp;</td>
+        <td nowrap="nowrap" colspan="5">&nbsp;</td>
                 <td nowrap="nowrap">
         <input class="button" name="fire_away" value="Save" type="submit" />
         <input class="button" value="Reset" type="reset" />

@@ -157,7 +157,7 @@ class NDB_Form_conflicts_resolve extends NDB_Form
 
             // The 1=1 condition is just so that we can AND all the conditions together without worrying about whether or not
             // it's the first condition to be added.
-            $DB->select("SELECT TableName, ExtraKeyColumn, ExtraKey1, ExtraKey2, FieldName, CommentId1, CommentId2, Value1, Value2, MD5(CONCAT_WS(':',TableName, ExtraKeyColumn, ExtraKey1, ExtraKey2, FieldName, CommentId1, CommentId2)) AS hash FROM conflicts_unresolved c LEFT JOIN flag f ON (c.CommentId1=f.CommentID) LEFT JOIN session s ON (f.SessionID=s.ID) WHERE 1=1 $extra_where", $conflicts);
+            $DB->select("SELECT TableName, ExtraKeyColumn, ExtraKey1, ExtraKey2, FieldName, CommentId1, CommentId2, Value1, Value2, Visit_label, MD5(CONCAT_WS(':',TableName, ExtraKeyColumn, ExtraKey1, ExtraKey2, FieldName, CommentId1, CommentId2)) AS hash FROM conflicts_unresolved c LEFT JOIN flag f ON (c.CommentId1=f.CommentID) LEFT JOIN session s ON (f.SessionID=s.ID) WHERE 1=1 $extra_where", $conflicts);
             //If there are no conflicts print a message to that effect
             if(empty($conflicts)){
                 $this->form->addElement('static', "status", "No conflicts matching criteria found.");
@@ -187,13 +187,20 @@ class NDB_Form_conflicts_resolve extends NDB_Form
             $hash = 'conflict_' . $conflict['hash'];
             $dccid = substr($conflict[CommentId1],0,6);
             $ssid = substr($conflict[CommentId1],6,7);
-            $options = array('none'=>'Unresolved', '1'=>$conflict['Value1'], '2'=>$conflict['Value2']);
+            if($conflict['FieldName'] == 'Examiner') {
+                $name1 = $DB->selectOne("SELECT Full_Name FROM examiners WHERE examinerID=$conflict[Value1]");
+                $name2 = $DB->selectOne("SELECT Full_Name FROM examiners WHERE examinerID=$conflict[Value2]");
+                $options = array('none'=>'Unresolved', '1'=> $name1 . "($conflict[Value1])", '2'=> $name2 . "($conflict[Value2])");
+            } else {
+                $options = array('none'=>'Unresolved', '1'=>$conflict['Value1'], '2'=>$conflict['Value2']);
+            }
             $conflict_array = array(
                 'name' => 'conflict_' . $conflict['hash'],
                 'instrument' => $conflict['TableName'],
                 'dccid' => $dccid,
                 'pscid' => $ssid,
-                'field' => $conflict['FieldName']
+                'field' => $conflict['FieldName'],
+                'visit_label' => $conflict['Visit_label']
 
             );
             $this->form->addElement('select', $hash, "$conflict[TableName] $indent $dccid $indent $ssid  $indent $conflict[FieldName]", $options);
