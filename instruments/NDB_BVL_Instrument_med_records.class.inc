@@ -18,6 +18,7 @@ class NDB_BVL_Instrument_med_records extends NDB_BVL_Instrument {
 	 */
 	function _setup($commentID, $page) {
 		$this->formType = "XIN";
+//		$this->	
 		$this->form = new HTML_Quickform ( 'test_form' );
 		$this->page = $page; // page label (number or
 		// string - used by
@@ -37,7 +38,7 @@ class NDB_BVL_Instrument_med_records extends NDB_BVL_Instrument {
 		*/
 		
 		$config = & NDB_Config::singleton ();
-		$this->dateOptions = array ('language' => 'en', 'format' => 'YMd', 'minYear' => $config->getSetting ( 'startYear' ), //allows for siblings up to 20 years older than candidate
+		$this->dateOptions = array ('language' => 'en', 'format' => 'YMd', 'minYear' => $config->getSetting ( 'startYear' ) - 20, //allows for siblings up to 20 years older than candidate
 'maxYear' => $config->getSetting ( 'endYear' ), 'addEmptyOption' => true, 'emptyOptionValue' => null );
 
 		// setup the form
@@ -120,16 +121,6 @@ function _page2() {
 			prev ( $administrations );
 			$prevField = key ( $administrations );
 			next ( $administrations );
-			
-	    	$config =& NDB_Config::singleton();
-             $dateOptions = array(
-            'language' => 'en',
-            'format'   => 'YMd',
-            'minYear'  => $config->getSetting('startYear') - 20, //allows for siblings up to 20 years older than candidate
-            'maxYear'  => $config->getSetting('endYear') +20,
-            'addEmptyOption' => true,
-            'emptyOptionValue' => null
-    		     );
 		
 		/*	
 			$this->addDateElement("{$field}_date_taken", "Date of Administration", array("{$field}_date_stat{@}!={@}not_answered", "{$prevField}_chart{@}!={@}no_more_chart_data", "{$prevField}_chart{@}!={@}"), "The date is required unless not answered is selected");
@@ -619,7 +610,6 @@ function _page2() {
             //calculate percentile
             $newValues["{$field}_weight_percentage"] = round(normalDist($zWeight)*100, 2);
           
-            print_r($newValues["{$field}_weight_percentage"]);
           
            if ($newValues["{$field}_weight_percentage"] < 0){
                $newValues["{$field}_weight_percentage"]=0;
@@ -735,6 +725,8 @@ function _page2() {
                      }
                      
                      
+                  } else {
+                      $newValues["{$field}_head_percentage"] = NULL;
                   }
                 }
 
@@ -792,11 +784,14 @@ function _page2() {
                         }
                     }
                 }
+                else {
+                    $newValues["{$field}_bmi"] = NULL;
+                }
         }
     }
 }
 }
-    echo("Result");
+    //echo("Result");
     $result = $db->update($this->table, $newValues, array('CommentID' => $this->getCommentID()));
     if($db->isError($result)) {
         return PEAR::raiseError("Could not save total score: ".$result->getMessage());
