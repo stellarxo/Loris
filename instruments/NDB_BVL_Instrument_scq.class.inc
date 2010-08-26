@@ -78,6 +78,9 @@ class NDB_BVL_Instrument_scq extends NDB_BVL_Instrument
 		$this->form->addElement("static", "score", "Score: ");
 		$this->form->addElement("static", "scq_diagnosis", "SCQ Diagnosis: ");
 
+        $this->form->addElement("select", "scq_version", "Version of SCQ Questionaire used:", 
+            array("" => "", "current" => "Current", "lifetime" => "Lifetime")
+        );
 		$this->form->addElement("header", null, "Capable of phrase speech");
 		$this->form->addElement("select", "1_talk_short_phrases", "1. Is she/he now able to talk using short phrases...", $this->yesNo);
 
