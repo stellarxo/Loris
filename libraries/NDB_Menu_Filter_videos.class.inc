@@ -62,9 +62,10 @@ class NDB_Menu_Filter_videos extends NDB_Menu_Filter
         $query = " FROM videos join candidate using(pscid) ";
 
         // only view their own profiles, unless they have permission to see all
+        /*
         if (!($user->hasPermission('reliability_edit_all') || $user->hasPermission('access_all_profiles'))) {
             $query .= " WHERE candidate.centerID = '" . $user->getData('CenterID') . "' "; 
-        }
+        }*/
 
         // set the class variables
         $this->columns = array('videos.record_id', 'videos.File_name', 'videos.File_size', 'videos.uploaded_by', 'videos.Instrument', 'videos.PSCID', 'videos.visitLabel', 'videos.Date_taken', 'videos.For_site', 'substring(videos.comments, 1, 50) as comments', 'videos.Data_dir', 'videos.Date_uploaded');
