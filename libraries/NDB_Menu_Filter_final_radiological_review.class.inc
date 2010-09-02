@@ -67,7 +67,7 @@ class NDB_Menu_Filter_final_radiological_review extends NDB_Menu_Filter
                                'Finalized',
                                'Comments'
         );
-        $this->validFilters = array('DICOM_Folder_Name', 'c.CandID', 'r.DICOM_ID', 's.visit_label', 'c.PSCID', 'r.Final_Review_Results', 'COALESCE(r.Review_Done, False)', 'r.sas', 'r.pvs', 'r.Final_Exclusionary', $conflict_condition, 'r.Finalized');
+        $this->validFilters = array('substring_index(t.sourcelocation, \'/\', -1)', 'c.CandID', 'r.DICOM_ID', 's.visit_label', 'c.PSCID', 'r.Final_Review_Results', 'COALESCE(r.Review_Done, False)', 'r.sas', 'r.pvs', 'r.Final_Exclusionary', $conflict_condition, 'r.Finalized');
         $this->formToFilter = array (
                                     'folder' => 'substring_index(t.sourcelocation, \'/\', -1)',
                                     'dccid' => 'c.CandID',
@@ -123,6 +123,39 @@ class NDB_Menu_Filter_final_radiological_review extends NDB_Menu_Filter
             foreach ($item as $key => $val) {
                 if ($key == 'CommentID') continue;
                 if ($key == 'SessionID') continue;
+
+                // This is a bit of a hack to make sure that each CommentID only shows up once,
+                // it collapses DICOM_Folder_Names with the same CommentID into the same row, and
+                // comma separates them
+                
+                if ($key == 'DICOM_Folder_Name') {
+                    foreach ($this->tpl_data['items'] as $OtherRow => $OtherItems) {
+                        // OtherItems is an array of the form:
+                        // array (rownumber => array(
+                        //              colnumber => array(
+                        //                  name => colname
+                        //                  value => colvalue
+                        //                  session => x
+                        //                  CommentID => x
+                        //                ),
+                        //              colnumber2 => array(
+                        //                  name => colname2, ...
+                        //              )
+                        //        )
+                        //));
+                        // We happen to know that the second column
+                        // is DICOM_Folder_Name, which is what we're interested in
+                        // so we look directly at index 1.
+                        if($OtherItems[1]['CommentID'] != $item['CommentID']) {
+                            continue;
+                        }
+                        // Add this DICOM Folder Name
+                        $this->tpl_data['items'][$OtherRow]['1']['value'] .= ", $item[DICOM_Folder_Name]";
+                        // Skip the whole row, since a row has already been added for this CommentID
+                        continue 3;
+                    }
+                }
+                
 
                 $this->tpl_data['items'][$x][$i]['value'] = _makePretty($key, $val);
 
