@@ -50,7 +50,7 @@ class NDB_Menu_statistics_dd_site extends NDB_Menu
              "scq_subject",                            
              "seq",                                                     
              "tsi",
-             "tsi_followup",                                    
+             //"tsi_followup",                                    
              "vineland_proband",
              "vineland_subject"                       
            
@@ -71,7 +71,7 @@ class NDB_Menu_statistics_dd_site extends NDB_Menu
 
 
                    //adir_proband incomplete
-                      $DB->select("SELECT s.CandID, f.SessionID, i.CommentID, c.PSCID  FROM session as s, candidate as c, flag as f, {$instrument} as i WHERE s.ID=f.SessionID AND f.CommentID=i.CommentID AND s.CandID=c.CandID  AND s.Cancelled='N' AND s.Active='Y' AND s.CenterID={$id} AND (f.Data_entry is NULL OR f.Data_entry<>'Complete') AND i.CommentID LIKE 'DDE%' ORDER BY c.PSCID;", $result);
+                      $DB->select("SELECT s.CandID, f.SessionID, i.CommentID, c.PSCID, s.Visit_label  FROM session as s, candidate as c, flag as f, {$instrument} as i WHERE s.ID=f.SessionID AND f.CommentID=i.CommentID AND s.CandID=c.CandID  AND s.Cancelled='N' AND s.Active='Y' AND s.CenterID={$id} AND (f.Data_entry is NULL OR f.Data_entry<>'Complete') AND i.CommentID LIKE 'DDE%' ORDER BY c.PSCID;", $result);
                         if (PEAR::isError($result)) {
                             return PEAR::raiseError("DB Error: ".$result->getMessage());
                         }
@@ -86,7 +86,7 @@ class NDB_Menu_statistics_dd_site extends NDB_Menu
                            }else{
                               $result_string .= ', ';
                            }
-                           $result_string .= "<a href='main.php?test_name={$test_url}&candID={$row['CandID']}&sessionID={$row['SessionID']}&commentID={$row['CommentID']}'>{$row['PSCID']}</a>";
+                           $result_string .= "<a href='main.php?test_name={$test_url}&candID={$row['CandID']}&sessionID={$row['SessionID']}&commentID={$row['CommentID']}'>{$row['PSCID']}</a> ($row[Visit_label])";
                         }
                         $data[] = array('name' => $instrument, 'count' => $count, 'incompletes' => $result_string);
                         
