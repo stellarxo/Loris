@@ -235,7 +235,19 @@ INSERT INTO test_battery VALUES ('', 'edi', '1050', '1140', 'Y', 'Visit', '2');
             $this->columnHeaders[$field] .= $this->indent;
         }
         $this->localDefaults = array_merge($this->localDefaults, $this->columnHeaders);
-        
+
+
+        //combine all scorable fields into one, savable array
+        $this->scores = array_merge($this->total_symptomAnchors, $this->regulatoryAnchors, $this->socialAnchors, $this->communicationAnchors, $this->repetitive_behaviourAnchors);
+
+/**
+     * Array of column names to be ignored by the double data entry conflict detector.
+     */
+    $this->_doubleDataEntryDiffIgnoreColumns = array('CommentID', 'UserID', 'Testdate', 'EDI8ot', 'EDI19ot', 'EDIT33ot',
+                                                   'EDI45ot', 'EDI58ot', 'EDI70ot', 'EDI82ot', 'EDI96ot', 'inj_month',
+                                                   'dear_month', 'conf_month', 'legl_month', 'emp_month', 'crim_month',
+                                                   'other_1_month', 'other_2_month', 'comnt');
+
         //combine all scorable fields into one, savable array
         $this->scores = array_merge($this->total_symptomAnchors, $this->regulatoryAnchors, $this->socialAnchors, $this->communicationAnchors, $this->repetitive_behaviourAnchors);
 
