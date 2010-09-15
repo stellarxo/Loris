@@ -91,13 +91,16 @@ class NDB_Form_conflicts_resolve extends NDB_Form
                     $Instrument = NDB_BVL_Instrument::factory($TableName, $row['CommentId1'], '', false);
                     if($Instrument != null) {
                         $Instrument->score();
-                        $Instrument->save();
+                        // Score runs the update statements to update the scored columns. There's no need to save,
+                        // (and save() doesn't work) because it calles $this->form->getSubmittedValues(), and at
+                        // this point we're submitting the conflict resolver, not the instrument
+                        //$Instrument->save();
                     }
 
                     $Instrument = NDB_BVL_Instrument::factory($TableName, $row['CommentId2'], '', false);
                     if($Instrument != null) {
                         $Instrument->score();
-                        $Instrument->save();
+                        //$Instrument->save();
                     }
                 }
             }
@@ -188,14 +191,19 @@ class NDB_Form_conflicts_resolve extends NDB_Form
             $dccid = substr($conflict[CommentId1],0,6);
             $ssid = substr($conflict[CommentId1],6,7);
             if($conflict['FieldName'] == 'Examiner') {
-                $name1 = $DB->selectOne("SELECT Full_Name FROM examiners WHERE examinerID=$conflict[Value1]");
-           	if(PEAR::isError($name1)) {
-			$name1 = $conflict['Value1'];
-		}
-                $name2 = $DB->selectOne("SELECT Full_Name FROM examiners WHERE examinerID=$conflict[Value2]");
-           	if(PEAR::isError($name2)) {
-			$name2 = $conflict['Value2'];
-		}
+                if($conflict['Value1'] != '') {
+                    $name1 = $DB->selectOne("SELECT Full_Name FROM examiners WHERE examinerID=$conflict[Value1]");
+            	    if(PEAR::isError($name1)) {
+		    	        $name1 = $conflict['Value1'];
+		            }
+                }
+
+                if($conflict['Value2'] != '') {
+                    $name2 = $DB->selectOne("SELECT Full_Name FROM examiners WHERE examinerID=$conflict[Value2]");
+           	        if(PEAR::isError($name2)) {
+			            $name2 = $conflict['Value2'];
+		            }
+                }
                 $options = array('none'=>'Unresolved', '1'=> $name1, '2'=> $name2);
             } else {
                 $options = array('none'=>'Unresolved', '1'=>$conflict['Value1'], '2'=>$conflict['Value2']);
