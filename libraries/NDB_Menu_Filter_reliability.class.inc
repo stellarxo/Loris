@@ -73,7 +73,7 @@ class NDB_Menu_Filter_reliability extends NDB_Menu_Filter
         }
 
         // set the class variables
-        $this->columns = array('reliability.CommentID', 'candidate.PSCID', 'reliability.reliability_center_id AS Site', 'session.SubprojectID as Cohort', 'session.CandID AS DCCID', 'candidate.Gender', 'session.Visit_label', 'reliability.Instrument', 'reliability.Reliability_score', 'session.Current_stage', 'reliability.invalid');
+        $this->columns = array('reliability.CommentID', 'candidate.PSCID', 'reliability.reliability_center_id AS Site', 'session.SubprojectID as Cohort', 'session.CandID AS DCCID', 'candidate.Gender', 'session.Visit_label', 'reliability.Instrument', 'reliability.Reliability_score', 'session.Current_stage', 'reliability.invalid', 'reliability.Manual_Swap');
 
         $this->query = $query;
         $this->group_by = '';
@@ -90,7 +90,7 @@ class NDB_Menu_Filter_reliability extends NDB_Menu_Filter
                                     'PSCID' => 'candidate.PSCID',
                                     'Gender' => 'candidate.Gender',
                                     'Visit_label' => 'session.Visit_label',
-				                            'Instrument' => 'reliability.Instrument',
+				                    'Instrument' => 'reliability.Instrument',
                                     'reliability_score'=>'reliability.Reliability_score',
                                     'Current_stage'=>'session.Current_stage',
                                     // 'Lock_record' => 'session.Lock_record'
@@ -129,10 +129,12 @@ class NDB_Menu_Filter_reliability extends NDB_Menu_Filter
         
         /// hack for Visit Labels... maybe get all the real visit labels from DB?
         $list_of_visit_labels = array(null=>'Any','V06'=>'V06','V12'=>'V12','V24'=>'V24','V36'=>'V36');
+        $list_of_visit_labels_only = array('V06'=>'V06','V12'=>'V12','V24'=>'V24','V36'=>'V36');
         $subproject_options = Utility::getSubprojectList();
         $subproject_options = array(null=>'Any') + $subproject_options;
         $gender_options = array(null=>'Any', 'Male'=>'Male', 'Female'=>'Female');
         $list_of_instruments = array(null=>'Any', 'csbs'=>'CSBS', 'adi_r'=>'ADI-R', 'ados'=>'ADOS', 'aosi' => 'AOSI');
+        $list_of_instruments_only = array('csbs'=>'CSBS', 'adi_r_proband'=>'ADI-R (Proband)', 'adi_r_subject' => 'ADI-R (Subject)', 'ados_module1'=>'ADOS (Module 1)', 'ados_module2' => 'ADOS (Module 2)', 'aosi' => 'AOSI');
         $lock_options = array(null=>'','Locked'=>'Locked','Unlocked'=>'Unlocked');
 
         // Form Elements
@@ -146,6 +148,29 @@ class NDB_Menu_Filter_reliability extends NDB_Menu_Filter
         $this->form->addElement('select', 'Instrument', 'Instrument:', $list_of_instruments);
 	 // $this->form->addElement('select', 'Lock_record', 'Lock_record:', $lock_options);
        
+       // For swapping candidates
+        if ($user->hasPermission('reliability_swap_candidates')) {
+            $this->form->addElement('select', 'Cand1Visit_label', 'Visit Label:', $list_of_visit_labels_only);
+            $this->form->addElement('text', 'Cand1PSCID', 'PSCID:');
+            $this->form->addElement('select', 'Cand2Visit_label', 'Visit Label:', $list_of_visit_labels_only);
+            $this->form->addElement('text', 'Cand2PSCID', 'PSCID:');
+            $this->form->addElement('select', 'SwapInstrument', 'Instrument:', $list_of_instruments_only);
+        }
+
+        // Doing this here is a hack. Since this is a menu filter and not a Form, there's no 
+        // _process/_save functions automagically called. There should probably be something like
+        // a Menu_Filter_Form base class for instances like this or the conflict resolver, but as
+        // things stand you either need to work with the $_POST array/DB directly in a Menu_Filter,
+        // or rewrite/imitate the Menu_Filter in an NDB_Form. -- Dave
+        if($_POST['swap'] == 'Swap Candidates' || $_POST['swap'] == 'swap') {
+            $message = $this->_swap_candidates();
+            if(isset($message['error'])) {
+                $this->form->addElement('static', 'error', $message['error']);
+            }
+            if(isset($message['message'])) {
+                $this->form->addElement('static', 'message', $message['message']);
+            }
+        }
         return true;
     }
 
@@ -166,6 +191,10 @@ class NDB_Menu_Filter_reliability extends NDB_Menu_Filter
             $site_id = $item['Site'];
             $current_stage = $item['Current_stage'];
             $invalid = $item['invalid'];
+            $manual= $item['Manual_Swap'];
+            if($item['Manual_Swap'] == 'yes' && $item['invalid'] == 'yes') {
+                continue;
+            }
             foreach ($item as $key => $val) {
 
                 // Confused about this line
@@ -173,6 +202,7 @@ class NDB_Menu_Filter_reliability extends NDB_Menu_Filter
                 if ($key == 'CommentID') continue;
                 if ($key == 'Current_stage') continue;
                 if ($key == 'invalid') continue;
+                if ($key == 'Manual_swap') continue;
                 // {
                 //                    $this->tpl_data['items'][$x][$i]['CommentID'] = $item['CommentID'];
                 //               $this->tpl_data['items'][$x][$i]['Instrument'] = $item['Instrument'];
@@ -185,6 +215,7 @@ class NDB_Menu_Filter_reliability extends NDB_Menu_Filter
                    $this->tpl_data['items'][$x][$i]['Instrument'] = $item['Instrument'];
                    $this->tpl_data['items'][$x][$i]['Current_stage'] = $current_stage;
                    $this->tpl_data['items'][$x][$i]['invalid'] = $invalid;
+                   $this->tpl_data['items'][$x][$i]['manual'] = $manual;
                 }
                 if ($key == 'Site')
                 {
@@ -245,7 +276,7 @@ class NDB_Menu_Filter_reliability extends NDB_Menu_Filter
           $phi_site_clause = " AND Date_taken >= '2009-11-11' ";
         }
       
-        $db->select("SELECT i.CommentID FROM {$instrument} as i, flag as f, session as s WHERE i.CommentID=f.CommentID AND f.sessionID=s.ID AND s.Current_stage<>'Recycling Bin' AND f.Data_entry='Complete' AND i.CommentID LIKE '%{$current_site}%' AND s.visit_label<>'v18' AND i.CommentID NOT LIKE 'DDE%' {$phi_site_clause} ORDER BY RIGHT(i.CommentID, 6)", $instrument_records);
+        $db->select("SELECT i.CommentID FROM {$instrument} as i, flag as f, session as s WHERE i.CommentID=f.CommentID AND f.sessionID=s.ID AND s.Current_stage<>'Recycling Bin' AND f.Data_entry='Complete' AND i.CommentID LIKE '%{$current_site}%' AND s.visit_label<>'v18' AND i.CommentID NOT LIKE 'DDE%' {$phi_site_clause} AND f.Administration <> 'None' ORDER BY RIGHT(i.CommentID, 6)", $instrument_records);
         
         
         #$current_count = $db->selectOne("SELECT count(*) FROM reliability WHERE CommentID LIKE '%{$current_site}%' AND Instrument='{$instrument}' AND reliability_center_id={$this->site_id[$current_site]}");
@@ -282,7 +313,7 @@ class NDB_Menu_Filter_reliability extends NDB_Menu_Filter
           $phi_site_clause = " AND Date_taken >= '2009-11-11' ";
         }
           
-        $db->select("SELECT i.CommentID FROM {$instrument} as i, flag as f, session as s WHERE i.CommentID=f.CommentID AND f.sessionID=s.ID AND s.Current_stage<>'Recycling Bin' AND f.Data_entry='Complete' AND i.CommentID LIKE '%{$current_site}%' AND s.visit_label<>'v18'{$query_extra} AND i.CommentID NOT LIKE 'DDE%' {$phi_site_clause} ORDER BY RIGHT(i.CommentID, 6)", $instrument_records);
+        $db->select("SELECT i.CommentID FROM {$instrument} as i, flag as f, session as s WHERE i.CommentID=f.CommentID AND f.sessionID=s.ID AND s.Current_stage<>'Recycling Bin' AND f.Data_entry='Complete' AND i.CommentID LIKE '%{$current_site}%' AND s.visit_label<>'v18'{$query_extra} AND i.CommentID NOT LIKE 'DDE%' {$phi_site_clause} AND f.Administration <> 'None' ORDER BY RIGHT(i.CommentID, 6)", $instrument_records);
         
         //$current_count = $db->selectOne("SELECT count(*) FROM reliability WHERE CommentID LIKE '%{$current_site}%' AND Instrument='{$instrument}' AND reliability_center_id<>{$this->site_id[$current_site]}");
          $current_count = $db->selectOne("SELECT count(*) FROM (SELECT DISTINCT r.CommentID FROM reliability as r, flag as f, session as s  WHERE r.CommentID LIKE '%{$current_site}%' AND r.Instrument='{$instrument}' AND r.reliability_center_id<>{$this->site_id[$current_site]} AND r.invalid = 'no' AND r.CommentID=f.CommentID AND f.sessionID=s.ID AND s.Current_stage<>'Recycling Bin') as t");
@@ -316,6 +347,58 @@ class NDB_Menu_Filter_reliability extends NDB_Menu_Filter
       else{
         return (array_search($site_name[$last_site], $reliability_sites) + 1) % count($reliability_sites);
       }
+    }
+
+    function _swap_candidates() {
+        $user =& User::singleton();
+        if(PEAR::isError($user)) {
+            return PEAR::raiseError("User Error: ".$user->getMessage());
+        }
+        if (!($user->hasPermission('reliability_swap_candidates'))) {
+            return array("error" => "You do not have permission to swap candidates");
+        }
+        $DB =& Database::singleton();
+        $PSCID = $_POST['Cand1PSCID'];
+        $PSCID_V = $_POST['Cand1Visit_label'];
+        $PSCID_Replace= $_POST['Cand2PSCID'];
+        $PSCID_Replace_V = $_POST['Cand2Visit_label'];
+        $Instrument = $_POST['SwapInstrument'];
+
+        $query="SELECT reliability.CommentID as OldID, reliability.reliability_center_id as CenterID, reliability.Reliability_score as Score, candidate.CenterID as OldCenterID  FROM candidate, session, flag, reliability WHERE reliability.CommentID=flag.CommentID AND candidate.CandID=session.CandID AND session.ID=flag.SessionID AND candidate.PSCID='$PSCID' AND reliability.Instrument='$Instrument' and session.Visit_label='$PSCID_V'";
+
+        $DB->selectRow($query, $CommentID);
+        if(!$CommentID) {
+            return array("error" => "$PSCID/$PSCID_V is not in reliability coding for $Instrument. Cannot swap candidates.");
+        }
+
+        $query="SELECT f.CommentID as NewID, c.CenterID as NewCenterID FROM session s join flag f ON (f.SessionID=s.ID) JOIN candidate c ON (c.CandID=s.CandID)  WHERE f.Test_name='$Instrument' and c.PSCID='$PSCID_Replace' AND s.Visit_label='$PSCID_Replace_V'";
+        $DB->selectRow($query, $newCommentID);
+        if(!$newCommentID) {
+            return array('error' => "$PSCID_Replace/$PSCID_Replace_V did not complete $Instrument. Cannot swap candidates.");
+        }
+        if($newCommentID['NewCenterID'] !== $CommentID['OldCenterID']) {
+            return array('error' => "Candidates are not from the same site. Cannot swap candidates across sites.");
+        }
+        elseif($user->getCenterID() != $newCommentID['NewCenterID']) {
+            return array('error' => "$PSCID_Replace/$PSCID_Replace_V is from a different site than you. Can only swap candidates from the same site.");
+        }
+        elseif($user->getCenterID() != $CommentID['OldCenterID']) {
+            return array('error' => "$PSCID/$PSCID_V is from a different site than you. Can only swap candidates from the same site.");
+        }
+        $NewID = $newCommentID['NewID'];
+        $DB->selectRow("SELECT CommentID FROM reliability WHERE CommentID='$NewID'", $replacementCheck);
+        if(!empty($replacementCheck)) {
+            return array("error" => "$PSCID_Replace/$PSCID_Replace_V already in reliability. Cannot swap $PSCID/$PSCID_V for it.");
+        }
+
+        $CenterID = $CommentID['CenterID'];
+        if(!empty($CommentID['Score'])) {
+            return array( "error" => "Reliability score already exists for $PSCID/$PSCID_V. Can not swap candidate.");
+        }
+        $DB->run("UPDATE reliability SET invalid='yes', manual_swap='yes' WHERE CommentID='$CommentID[OldID]' AND Instrument='$Instrument'");
+        $DB->run("INSERT INTO reliability (CommentID, reliability_center_id, Instrument, Manual_Swap) VALUES ('$newCommentID[NewID]', $CenterID, '$Instrument', 'yes')");
+
+        return array("message" => "Swapped candidate $PSCID for $PSCID_Replace");
     }
 }
 ?>

@@ -1,5 +1,27 @@
+{* This is a hack. It should be in a separate javascript library file *}
+{* Used to make the swap candidate table expand/collapse onclick *}
+{literal}
+
+<script language="javascript" type="text/javascript">
+$(document).ready(function() {
+    function toggleTable() {
+            $('table#swapcandidates') .children('tbody') .toggle();
+    }
+
+    $('table#swapcandidates th') .click(toggleTable);
+    // Hide the tab by default
+    toggleTable();
+});
+</script>
+{/literal}
 <form method="post" action="main.php?test_name=reliability">
 <!-- start the selection table -->
+{if $form.error}
+<div class="error">{$form.error.label}</div>
+{/if}
+{if $form.message}
+<div class="error">{$form.message.label}</div>
+{/if}
 <table border="0" valign="top" class="std" width="75%">
     <tr>
         <th nowrap="nowrap" colspan="15">Selection Filter</th>
@@ -46,6 +68,47 @@
 </table>
 </form>
 
+{if $form.Cand2PSCID}
+{* Determine if we have permission by checking the existance of Cand2PSCID. If we didn't,
+   the field wouldn't have been added to $form *}
+<form method="post" action="main.php?test_name=reliability">
+    <input type="hidden" name="swap" value="swap" />
+    <table border="0" valign="top" class="std" id="swapcandidates">
+    <thead>
+    <tr>
+        <th colspan="4">Swap Candidates</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr colspan="4">
+        <td>Original Candidate</td>
+    </tr>
+    <tr>
+        <td>{$form.Cand1PSCID.label}</td>
+        <td>{$form.Cand1PSCID.html}</td>
+        <td>{$form.Cand1Visit_label.label}</td>
+        <td>{$form.Cand1Visit_label.html}</td>
+    </tr>
+    <tr colspan="4">
+        <td>Replacement Candidate</td>
+    </tr>
+    <tr>
+        <td>{$form.Cand2PSCID.label}</td>
+        <td>{$form.Cand2PSCID.html}</td>
+        <td>{$form.Cand2Visit_label.label}</td>
+        <td>{$form.Cand2Visit_label.html}</td>
+    </tr>
+    <tr>
+        <td>{$form.SwapInstrument.label}</td>
+        <td colspan="3">{$form.SwapInstrument.html}</td>
+    </tr>
+    <tr>
+        <td colspan="4" align="right"><input type="submit" name="swap" value="Swap Candidates" class="button" /></td>
+    </tr>
+    </tbody>
+    </table>
+</form>
+{/if}
 <br>
 <a href='main.php?test_name=reliability_phase_one'>Phase 1 Reliability</a> |
 <a href='main.php?test_name=reliability_diagnostic_calls'>Diagnostic Behavioural Call Cases</a> 
@@ -101,6 +164,9 @@
      {else}     
           <a href="main.php?test_name={$items[item][piece].Instrument}_reliability&subtest={$items[item][piece].Instrument}_reliability&identifier={$items[item][piece].CommentID}&reliability_center_id={$items[item][piece].SiteID}">{$items[item][piece].value}</a> 
        {/if}
+        {if $items[item][piece].manual == "yes"}
+            <font color="red">(Manual)</font>
+        {/if}
       </td>
 	{elseif  $items[item][piece].name == "Cohort"}
 	      <td nowrap="nowrap">
