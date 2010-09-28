@@ -155,6 +155,7 @@ class NDB_BVL_Instrument_adi_r extends NDB_BVL_Instrument
     function _main(){
         // display test name
         $this->form->addElement('header', 'instrument_title', "ADI-R");
+	$this->form->addElement('static', null, "<br /><br />");
         
         // automatically adds examiner & date of administration
         $this->_addMetadataFields();
@@ -205,6 +206,7 @@ class NDB_BVL_Instrument_adi_r extends NDB_BVL_Instrument
 			}
 	        $this->form->addElement("static", $field, $label);
 		}
+		$this->form->addElement('static', null, "<br /><br />");
 
     }
 
@@ -254,10 +256,10 @@ class NDB_BVL_Instrument_adi_r extends NDB_BVL_Instrument
         $this->scores["q_86_age_when_abnormality_first_evident"]	= $this->_cleanToDigits($record["q_86_age_when_abnormality_first_evident"]);
 		
 		//Age 2 years, 0 months through 3 years, 11 months.
-        if ($this->respondentAgeYears < 2) {
+        if ($this->respondentAgeYears < 1.75) {
             $scoreCols["A_Total"] = "Respondent too young to score";
         //Diagnostic Algorithm, 2y -> 3y11m
-        } elseif ($this->respondentAgeYears >= 2 && $this->respondentAgeYears <= 3) {
+        } elseif ($this->respondentAgeYears >= 1.75 && $this->respondentAgeYears < 4) {
             //Qualitative Abnormalities in Reciprocal Social Interaction
 	        $scoreCols["Total_A1"] = $this->scores["q_50_direct_gaze_current_code"] + $this->scores["q_51_social_smiling_current_code"] 
 									+ $this->scores["q_57_range_facial_expr_current_code"];
@@ -435,46 +437,72 @@ class NDB_BVL_Instrument_adi_r extends NDB_BVL_Instrument
     }
     
     function _page2() {
-    	$this->form->addElement("header", null, "EARLY DEVELOPMENT");
+	
+    		$this->form->addElement("header", null, "EARLY DEVELOPMENT");
+		$this->form->addElement('static', null, "<br /><br />");
 
-        $this->addNumericElement("q_2_age_first_noticed_code", "2. Age (in months) when parents first noticed that something was not quite right...");
+        	$this->addNumericElement("q_2_age_first_noticed_code", "2. Age (in months) when parents first noticed that something was not quite right...");
+		$this->XINRegisterRule("q_2_age_first_noticed_code", array("q_2_age_first_noticed_code_status{@}=={@}"), "Required");
+		$this->form->addElement('static', null, "<br />");
 
-        $this->form->addElement('static', "q_3_first_symptoms_text", "3. First symptoms to arouse parental concern");
-        $this->form->addElement('static', NULL); //blank line
+        	$this->addTextElement("q_3_first_symptoms_text", "3. First symptoms to arouse parental concern");
+        	$this->form->addElement('static', NULL, "<br />"); //blank line
     	
-    	$this->addTextElement("q_4_onset_as_perceived_code", "4. Onset as perceived with hindsight");
-    	//$this->addLargeTextAreaElement("q_4_onset_as_perceived_text");
+    		$this->addTextElement("q_4_onset_as_perceived_code", "4. Onset as perceived with hindsight");
+    		$this->addLargeTextAreaElement("q_4_onset_as_perceived_text");
     	
-    	$this->addTextElement("q_5_first_walked_code", "5. First walked unaided");
-		//$this->addLargeTextAreaElement("q_5_first_walked_text");
+		$this->form->addElement('static', null, "<br />");
+
+    		$this->addTextElement("q_5_first_walked_code", "5. First walked unaided");
+		$this->addLargeTextAreaElement("q_5_first_walked_text");
+
+		$this->form->addElement('static', null, "<br />");
 		
 		$this->addTextElement("q_6_bladder_daytime_code", "6. Acquisition of bladder control: daytime");
-		//$this->addLargeTextAreaElement("q_6_bladder_daytime_text");
+		$this->addLargeTextAreaElement("q_6_bladder_daytime_text");
+
+		$this->form->addElement('static', null, "<br />");
 		
 		$this->addTextElement("q_7_bladder_nighttime_code", "7. Acquisition of bladder control: nighttime");
-		//$this->addLargeTextAreaElement("q_7_bladder_nighttime_text");
+		$this->addLargeTextAreaElement("q_7_bladder_nighttime_text");
 
-		$this->addTextElement("q_8_bowel_control_code", "8. Acquisition of bowel control");
-		//$this->addLargeTextAreaElement("q_8_bowel_control_text");
+                $this->form->addElement('static', null, "<br />");
+
+
+ 		$this->addTextElement("q_8_bowel_control_code", "8. Acquisition of bowel control");
+
+                $this->form->addElement('static', null, "<br />");
+
+		$this->form->addElement('static', null, "<br /><br />");
+		$this->addLargeTextAreaElement("q_8_bowel_control_text");
 
     }
 		
-//		"q_8_bowel_control", "8. Acquisition of bowel control"
 	function _page3() {
-	
 		$this->form->addElement("header", null, "ACQUISITION AND LOSS OF LANGUAGE/OTHER SKILLS");
+		$this->form->addElement('static', null, "<br /><br />");
 	
 		$this->addNumericElement("q_9_first_single_words_code", "9. Age of first single words");
-		//$this->addLargeTextAreaElement("q_9_first_single_words_text");
+		$this->addLargeTextAreaElement("q_9_first_single_words_text");
+
+
+                $this->form->addElement('static', null, "<br />");
+
 	
 		$this->addNumericElement("q_10_first_phrases_code", "10. Age of first phrases (if ever used)");
-		//$this->addLargeTextAreaElement("q_10_first_phrases_text");
+		$this->addLargeTextAreaElement("q_10_first_phrases_text");
+
+
+                $this->form->addElement('static', null, "<br />");
+
 		
 		$this->form->addElement("select", "q_11_loss_of_language", "11. Loss of language skills after acquisition", $this->yesNoNA);
+                $this->form->addElement('static', null, "<br />");
 		
 		$answerArray = array(""=>NULL, "0_daily"=>"0. Daily", "1_occasional"=>"1. Occasional", "2_upon_request"=>"2. Produced upon request", "3_spontaneous_imitations"=>"3. Spontaneous imitations", "8_no_change_or_loss"=>"8. No change or loss", "9_not_asked"=>"9. Not asked", "not_answered"=>"Not Answered");
 		$this->form->addElement("select", "q_12_level_before_loss_code", "12. Level of communicative language before loss", $answerArray);
 		$this->XINRegisterRule("q_12_level_before_loss_code", array("q_11_loss_of_language{@}=={@}1_yes"), "This is required if language was lost (answered 'yes' to question 11)");
+                $this->form->addElement('static', null, "<br />");
 		//$this->addLargeTextAreaElement("q_12_level_before_loss_text", $this->indent . "Describe:", array("q_11_loss_of_language{@}=={@}1_yes"), "This is required if language was lost (answered 'yes' to question 11)");
 		
 		$answerArray = array(""=>NULL, "0_no_loss"=>"0. No definite loss", "1_probable_loss"=>"1. Probable loss", "2_definite_loss"=>"2. Definite Loss", "8_insufficient"=>"8. Insufficient", "9_not_asked"=>"9. Not asked", "not_answered"=>"Not Answered");
@@ -487,26 +515,36 @@ class NDB_BVL_Instrument_adi_r extends NDB_BVL_Instrument
 			$this->XINRegisterRule($field . "_code", array("q_11_loss_of_language{@}=={@}1_yes"), "This is required if language was lost (answered 'yes' to question 11)");
 //			$this->addTextAreaElement($field . "_text", $this->indent . "Describe:");
 			$this->XINRegisterRule($field . "_text", array("q_11_loss_of_language{@}=={@}1_yes"), "This is required if language was lost (answered 'yes' to question 11)");
+                	$this->form->addElement('static', null, "<br />");
 		}
 		
 		$this->addTextElement("q_17_main_loss_apparent_code", "17. Age when main loss of language skills first apparent", array("q_11_loss_of_language{@}=={@}1_yes"), "This is required if language was lost (answered 'yes' to question 11)");
-		//$this->addLargeTextAreaElement("q_17_main_loss_apparent_text", $this->indent . "Describe:", array("q_11_loss_of_language{@}=={@}1_yes"), "This is required if language was lost (answered 'yes' to question 11)");
+		$this->addLargeTextAreaElement("q_17_main_loss_apparent_text", $this->indent . "Describe:", array("q_11_loss_of_language{@}=={@}1_yes"), "This is required if language was lost (answered 'yes' to question 11)");
 	
+                $this->form->addElement('static', null, "<br />");
+
+
 		$answerArray = array(""=>NULL, "0_loss_no_relevance"=>"0. Loss no possible relevance", "1_loss_illness"=>"1. Loss from illness", "2_loss_impaired"=>"2. Loss from impaired consciousness", "8_no_loss"=>"8. No loss", "9_not_asked"=>"9. Not asked", "not_anwered"=>"Not Answered");
 		$this->form->addElement("select", "q_18_loss_due_to_illness", "18. Association of loss of language with physical illness", $answerArray);
-		$this->XINRegisterRule("q_18_loss_due_to_illness_code", array("q_11_loss_of_language{@}=={@}1_yes"), "This is required if language was lost (answered 'yes' to question 11)");
+		$this->XINRegisterRule("q_18_loss_due_to_illness", array("q_11_loss_of_language{@}=={@}1_yes"), "This is required if language was lost (answered 'yes' to question 11)");
+                $this->form->addElement('static', null, "<br />");
 		//$this->addLargeTextAreaElement("q_18_loss_due_to_illness_text", $this->indent . "Describe:", array("q_11_loss_of_language{@}=={@}1_yes"), "This is required if language was lost (answered 'yes' to question 11)");
 	
+
 		$this->addTextElement("q_19_duration_of_loss_code", "19. Duration of loss of language skills", array("q_11_loss_of_language{@}=={@}1_yes"), "This is required if language was lost (answered 'yes' to question 11)");
-		//$this->addLargeTextAreaElement("q_19_duration_of_loss_text", $this->indent . "Describe:", array("q_11_loss_of_language{@}=={@}1_yes"), "This is required if language was lost (answered 'yes' to question 11)");
+		$this->addLargeTextAreaElement("q_19_duration_of_loss_text", $this->indent . "Describe:", array("q_11_loss_of_language{@}=={@}1_yes"), "This is required if language was lost (answered 'yes' to question 11)");
 		
+                $this->form->addElement('static', null, "<br />"); 
+
 	}
 	
 	function _page4() {
 
 		$this->form->addElement("header", null, "GENERAL LOSS OF SKILLS");
+		$this->form->addElement('static', null, "<br /><br />");
 		$answerArray = array(""=>NULL, "0_no_consistent_loss"=>"0. No consistent loss", "1_probable_loss"=>"1. Probable loss", "2_account_definite_loss"=>"2. Account of definite loss", "9_not_asked"=>"9. Not asked", "not_answered"=>"Not Answered");
 		$this->form->addElement("select", "q_20_loss_of_skills_code", "20. Loss of skills (for at least 3 months)", $answerArray);
+                $this->form->addElement('static', null, "<br />"); 
 		//$this->addLargeTextAreaElement("q_20_loss_of_skills_text");
 		
 		$questionArray = array("q_21_puposive_hand_movements"=>"21. Purposive hand movements",
@@ -517,22 +555,32 @@ class NDB_BVL_Instrument_adi_r extends NDB_BVL_Instrument
 		$answerArray = array(""=>NULL, "0_none"=>"0. None", "1_possible"=>"1. Possible", "2_definite"=>"2. Definite", "not_answered"=>"Not Answered");
 		foreach ($questionArray as $field=>$label) {
 			$this->form->addElement("select", $field . "_code", $label, $answerArray);
+                	$this->form->addElement('static', null, "<br />"); 
 //			$this->addTextAreaElement($field . "_text", $this->indent . "Describe:");
 		}		
 		
+		$this->XINRegisterRule("q_21_purposive_hand_movements", array("q_20_loss_of_skills_code{@}=={@}01_yes"), "This is required if skills were lost (answered 'yes' to question 20)");
+
 		$this->addTextElement("q_26_loss_first_apparent_code", "26. Age when main loss of skill first apparent");
-//		$this->addTextAreaElement("q_26_loss_first_apparent_text", $this->indent . "Describe:");
-		
-		$answerArray = array(""=>NULL, "0_no_relevance"=>"0. No possibly relevance", "1_definite_illness"=>"1. Definite illness", "2_impaired_consciousness"=>"2. Impaired consciousness", "8_no_loss"=>"8. No loss", "9_not_asked"=>"9. Not asked", "not_answered"=>"Not Answered");
+                $this->form->addElement('static', null, "<br />");
+
+	
+		$answerArray = array(""=>NULL, "0_no_relevance"=>"0. No possible relevance", "1_definite_illness"=>"1. Definite illness", "2_impaired_consciousness"=>"2. Impaired consciousness", "8_no_loss"=>"8. No loss", "9_not_asked"=>"9. Not asked", "not_answered"=>"Not Answered");
 		$this->form->addElement("select", "q_27_physical_illness_code", "27. Association of loss of skills with physical illness", $answerArray);
+                $this->form->addElement('static', null, "<br />");
 		//$this->addLargeTextAreaElement("q_27_physical_illness_text");
 		
 		$this->addTextElement("q_28_duration_of_loss_code", "28. Duration of loss of skills");
-		//$this->addLargeTextAreaElement("q_28_duration_of_loss_text", $this->indent . "Describe:");
+
+
+		$this->form->addElement('static', null, "<br /><br />");
+		$this->addLargeTextAreaElement("q_28_duration_of_loss_text", $this->indent . "Describe:");
 	}
 
 	function _page5() {
+
 		$this->form->addElement("header", null, "LANGUAGE AND COMMUNICATION FUNCTIONING");
+		$this->form->addElement('static', null, "<br /><br />");
 		
 		$answerArray = array(""=>NULL, "0_perform_unexpected"=>"0. Perform an unexpected", "1_get_an_object"=>"1. Get an object", "2_understand_many_words"=>"2. Understand many words", "3_understand_fewer_than_50"=>"3. Understand fewer than 50", "4_little_or_no"=>"4. Little or no comprehension of words", "8_NA"=>"8. N/A", "9_not_asked"=>"9. Not asked", "not_answered"=>"Not Answered");
 		$this->form->addElement("static", null, "29. Comprehension of simple language");
@@ -540,10 +588,12 @@ class NDB_BVL_Instrument_adi_r extends NDB_BVL_Instrument
 		$this->form->addElement("select", "q_29_compreh_simple_most_abnormal",  $this->indent . "Most Abnormal (4.0-5.0)", $answerArray);
 		//$this->addLargeTextAreaElement("q_29_compreh_simple_text");
 		
+		$this->form->addElement('static', null, "<br />");
 		$answerArray = array(""=>NULL, "0_fuctional"=>"0. Functional", "1_no_functional"=>"1. No functional use", "2_fewer_than_5"=>"2. Fewer than five", "not_answered"=>"Not Answered");
 		$this->form->addElement("select", "q_30_overall_level_of_language", "30. Overall level of language", $answerArray);
+		$this->form->addElement('static', null, "<br />");
 		
-		$answerArray = array(""=>NULL, "0_no_use"=>"0. No use", "1_occasional_point"=>"1. Occasional to point", "2_occasional_for"=>"2. Occasional 'for'", "3_regular"=>"3. Regular", "8_little"=>"8. Little", "9_not_asked"=>"9. Not asked", "not_answered"=>"Not Answered");
+		$answerArray = array(""=>NULL, "0_no_use"=>"0. No use", "1_occasional_point"=>"1. Occasional to point", "2_occasional_for"=>"2. Occasional 'for'", "3_regular_for"=>"3. Regular 'for'", "8_little"=>"8. Little", "9_not_asked"=>"9. Not asked", "not_answered"=>"Not Answered");
 		$this->form->addElement("static", null, "31. Use of other's body to communicate");
 		$this->form->addElement("select", "q_31_use_of_others_body_current_code", $this->indent . "Current:", $answerArray);
 		$this->form->addElement("select", "q_31_use_of_others_body_ever_code", $this->indent . "Ever:", $answerArray);
@@ -602,11 +652,14 @@ class NDB_BVL_Instrument_adi_r extends NDB_BVL_Instrument
 		$this->form->addElement("select", "q_40_inton_vol_rhythm_rate_current_code", $this->indent . "Current:", $answerArray);
 		$this->form->addElement("select", "q_40_inton_vol_rhythm_rate_ever_code", $this->indent . "Ever:", $answerArray);
 		//$this->addLargeTextAreaElement("q_40_inton_vol_rhythm_rate_text");
+		$this->form->addElement('static', null, "<br /><br />");
 	
 	}
 	
 	function _page6() {
+
 		$this->form->addElement("header", null, "LANGUAGE AND COMMUNICATION FUNCTIONING (Continued)");
+		$this->form->addElement('static', null, "<br /><br />");
 
 		$answerArray = array(""=>NULL, "0_speech_used_frequently"=>"0. Speech used frequently", "1_some_communication"=>"1. Some communication", "2_some_spontaneous"=>"2. Some spontaneous", "3_lillte_or_no"=>"3. Little or no", "8_NA"=>"8. N/A", "9_not_asked"=>"9. Not asked", "not_answered"=>"Not Answered");
 		$this->form->addElement("static", null, "41. Current communicative speech");
@@ -630,7 +683,7 @@ class NDB_BVL_Instrument_adi_r extends NDB_BVL_Instrument
 		$label = "44. Head shaking";
 		$this->_addCurrentMostAbnormal($field, $label, $answerArray);
 		
-		$answerArray = array(""=>NULL, "0_appripriate"=>"0. Appropriate", "1_spontaneous"=>"1. Spontaneous", "2_inconsistent"=>"2_inconsistent", "3_no_use"=>"3. No use", "8_NA"=>"8. N/A", "9_not_asked"=>"9. Not asked", "not_answered"=>"Not Answered");
+		$answerArray = array(""=>NULL, "0_appripriate"=>"0. Appropriate", "1_spontaneous"=>"1. Spontaneous", "2_inconsistent"=>"2. Inconsistent", "3_no_use"=>"3. No use", "8_NA"=>"8. N/A", "9_not_asked"=>"9. Not asked", "not_answered"=>"Not Answered");
 		$field = "q_45_conventional_instr_gests";
 		$label = "45. Conventional/instrumental gestures";
 		$this->_addCurrentMostAbnormal($field, $label, $answerArray);
@@ -654,11 +707,14 @@ class NDB_BVL_Instrument_adi_r extends NDB_BVL_Instrument
 		$field = "q_49_imag_play_peers";
 		$label = "49. Imaginative play with peers";
 		$this->_addCurrentMostAbnormal($field, $label, $answerArray);
+		$this->form->addElement('static', null, "<br /><br />");
 
 	}
 	
 	function _page7() {
+
 		$this->form->addElement("header", null, "SOCIAL DEVELOPMENT AND PLAY");
+		$this->form->addElement('static', null, "<br /><br />");
 
 		$answerArray = array(""=>NULL, "0_normal"=>"0. Normal", "1_definite"=>"1. Definite", "2_uncertain"=>"2. Uncertain", "3_unusual"=>"3. Unusual", "8_NA"=>"8. N/A", "9_not_asked"=>"9. Not asked", "not_answered"=>"Not Answered");
 		$field = "q_50_direct_gaze";
@@ -710,12 +766,14 @@ class NDB_BVL_Instrument_adi_r extends NDB_BVL_Instrument
 		$field = "q_59_appropriat_resp";
 		$label = "59. Appropriateness of social responses";
 		$this->_addCurrentMostAbnormal($field, $label, $answerArray);
+		$this->form->addElement('static', null, "<br /><br />");
 		
 		//$this->addLargeTextAreaElement("q_60_favourite_activities", "Favourite Activities");
 		//$this->addLargeTextAreaElement("q_60_favourite_toys_objects", "Favourite Toys / Objects");
 	}
 	
 	function _page8() {
+		$this->form->addElement('static', null, "<br /><br />");
 		$answerArray = array(""=>NULL, "0_range"=>"0. Range", "1_initiates"=>"1. Initiates", "2_passive"=>"2. Passive", "3_no_active"=>"3. No active", "8_NA"=>"8. N/A", "9_not_asked"=>"9. Not asked", "not_answered"=>"Not Answered");
 		$field = "q_60_init_activities";
 		$label = "60. Initiation of appropriate activities";
@@ -741,7 +799,7 @@ class NDB_BVL_Instrument_adi_r extends NDB_BVL_Instrument
 		$label = "64. Group play peers";
 		$this->_addCurrentMostAbnormal($field, $label, $answerArray);
 
-		$answerArray = array(""=>NULL, "0"=>"0", "1"=>"1", "2"=>"2", "3_no_peer"=>"3. No peer", "8_NA"=>"8. N/A", "9_not_asked"=>"9. Not asked", "not_answered"=>"Not Answered");
+		$answerArray = array(""=>NULL, "0"=>"0. One or more, same age group", "1"=>"1. One or more, limited", "2"=>"2. Only in group situation", "3_no_peer"=>"3. No peer", "8_NA"=>"8. N/A", "9_not_asked"=>"9. Not asked", "not_answered"=>"Not Answered");
 		$field = "q_65_friendships";
 		$label = "65. Friendships";
 		$this->_addCurrentMostAbnormal($field, $label, $answerArray);
@@ -750,12 +808,14 @@ class NDB_BVL_Instrument_adi_r extends NDB_BVL_Instrument
 		$field = "q_66_soc_disinhibit";
 		$label = "66. Social disinhibition";
 		$this->_addCurrentMostAbnormal($field, $label, $answerArray);
+		$this->form->addElement('static', null, "<br /><br />");
 	}
 	
 	function _page9() {
 		$this->form->addElement("header", null, "INTERESTS AND BEHAVIOURS");
+		$this->form->addElement('static', null, "<br /><br />");
 
-		$answerArray = array(""=>NULL, "0_no_unusual"=>"0. No unusual", "1_unusual"=>"1. Unusual", "2_definite_intrudes"=>"2. Definite intrudes", "3_definite_interferes"=>"3. Definite Interferes", "8_NA"=>"8. N/A", "9_not_asked"=>"9. Not asked", "not_answered"=>"Not Answered");
+		$answerArray = array(""=>NULL, "0_no_unusual"=>"0. No unusual", "1_unusual"=>"1. Unusual", "2_definite_intrudes"=>"2. Definite intrudes", "3_definite_interferes"=>"3. Definite Interferes", "9_not_asked"=>"9. Not asked", "not_answered"=>"Not Answered");
 		$field = "q_67_unusual_preoccupations";
 		$label = "67. Unusual preoccupations";
 		$this->_addCurrentEver($field, $label, $answerArray);
@@ -770,37 +830,37 @@ class NDB_BVL_Instrument_adi_r extends NDB_BVL_Instrument
 		$label = "69. Repetitive use of objects or interest in parts of objects";
 		$this->_addCurrentEver($field, $label, $answerArray);
 
-		$answerArray = array(""=>NULL, "0_no"=>"0. No", "1_some"=>"1. Some", "2_one_or_more"=>"2. One or more", "3_marked"=>"3. Marked", "8_NA"=>"8. N/A", "9_not_asked"=>"9. Not asked", "not_answered"=>"Not Answered");
+		$answerArray = array(""=>NULL, "0_no"=>"0. No", "1_some"=>"1. Some", "2_one_or_more"=>"2. One or more", "3_marked"=>"3. Marked", "9_not_asked"=>"9. Not asked", "not_answered"=>"Not Answered");
 		$field = "q_70_compulsions_rituals";
 		$label = "70. Compulsions/rituals";
 		$this->_addCurrentEver($field, $label, $answerArray);
 
-		$answerArray = array(""=>NULL, "0_no_unusual"=>"0. No unusual", "1_one_or_two"=>"1. One or two", "2_has"=>"2. Has", "8_NA"=>"8. N/A", "9_not_asked"=>"9. Not asked", "not_answered"=>"Not Answered");
+		$answerArray = array(""=>NULL, "0_no_unusual"=>"0. No unusual", "1_one_or_two"=>"1. One or two", "2_has"=>"2. Has interest", "9_not_asked"=>"9. Not asked", "not_answered"=>"Not Answered");
 		$field = "q_71_unusual_sens_ints";
 		$label = "71. Unusual sensory interests";
 		$this->_addCurrentEver($field, $label, $answerArray);
 
-		$answerArray = array(""=>NULL, "0_no_general"=>"0. No general", "1_slight"=>"1. Slight", "2_definite_not_distressing"=>"2. Definite not distressing", "3_definite_interferes"=>"3. Definite interferes", "8_NA"=>"8. N/A", "9_not_asked"=>"9. Not asked", "not_answered"=>"Not Answered");
+		$answerArray = array(""=>NULL, "0_no_general"=>"0. No general", "1_slight"=>"1. Slight", "2_definite_not_distressing"=>"2. Definite not distressing", "3_definite_interferes"=>"3. Definite interferes", "9_not_asked"=>"9. Not asked", "not_answered"=>"Not Answered");
 		$field = "q_72_undo_gen_sens_noise";
 		$label = "72. Undo general sensitivity to noise";
 		$this->_addCurrentEver($field, $label, $answerArray);
 
-		$answerArray = array(""=>NULL, "0_no"=>"0. No", "1_mild"=>"1. Mild", "2_occasional"=>"2. Occasional", "3_substantial"=>"3. Substantial", "8_NA"=>"8. N/A", "9_not_asked"=>"9. Not asked", "not_answered"=>"Not Answered");
+		$answerArray = array(""=>NULL, "0_no"=>"0. No", "1_mild"=>"1. Mild", "2_occasional"=>"2. Occasional", "3_substantial"=>"3. Substantial", "9_not_asked"=>"9. Not asked", "not_answered"=>"Not Answered");
 		$field = "q_73_idiosyncratic";
 		$label = "73. Abnormal, idiosyncratic, negative response to specific sensory stimuli";
 		$this->_addCurrentEver($field, $label, $answerArray);
 
-		$answerArray = array(""=>NULL, "0_no"=>"0. No", "1_unusually"=>"1. Unusually", "2_resistance"=>"2. Resistance", "3_substantial"=>"3. Substantial", "8_NA"=>"8. N/A", "9_not_asked"=>"9. Not asked", "not_answered"=>"Not Answered");
+		$answerArray = array(""=>NULL, "0_no"=>"0. No", "1_unusually"=>"1. Unusually", "2_resistance"=>"2. Resistance", "3_substantial"=>"3. Substantial", "9_not_asked"=>"9. Not asked", "not_answered"=>"Not Answered");
 		$field = "q_74_diff_minor_changes";
 		$label = "74. Difficulties with minor changes in subjects own routines or personal environment";
 		$this->_addCurrentEver($field, $label, $answerArray);
 
-		$answerArray = array(""=>NULL, "0_none"=>"0. None", "1_unusually"=>"1. Unusually", "2_avoid"=>"2. Avoid", "3_substantial"=>"3. Substantial", "8_NA"=>"8. N/A", "9_not_asked"=>"9. Not asked", "not_answered"=>"Not Answered");
+		$answerArray = array(""=>NULL, "0_none"=>"0. None", "1_unusually"=>"1. Unusually", "2_avoid"=>"2. Avoid", "3_substantial"=>"3. Substantial", "9_not_asked"=>"9. Not asked", "not_answered"=>"Not Answered");
 		$field = "q_75_resist_trivial_chng";
 		$label = "75. Resistance to trivial changes in the environment";
 		$this->_addCurrentEver($field, $label, $answerArray);
 
-		$answerArray = array(""=>NULL, "0_no"=>"0. No", "1_some"=>"1. Some", "2_significant"=>"2. Significant", "3_intrusive"=>"3. Intrusive", "6_beyond_5"=>"6. Beyond age 5", "7_series"=>"7. Series", "8_NA"=>"8. N/A", "9_not_asked"=>"9. Not asked", "not_answered"=>"Not Answered");
+		$answerArray = array(""=>NULL, "0_no"=>"0. No", "1_some"=>"1. Some", "2_significant"=>"2. Significant", "3_intrusive"=>"3. Intrusive", "6_beyond_5"=>"6. Beyond age 5", "7_series"=>"7. Series", "9_not_asked"=>"9. Not asked", "not_answered"=>"Not Answered");
 		$field = "q_76_unus_attach_objects";
 		$label = "76. Unusual attachments to objects";
 		$this->_addCurrentEver($field, $label, $answerArray);
@@ -819,52 +879,59 @@ class NDB_BVL_Instrument_adi_r extends NDB_BVL_Instrument
 		$field = "q_79_midline_hand_moves";
 		$label = "79. Midline hand movements";
 		$this->_addCurrentEver($field, $label, $answerArray);
+		$this->form->addElement('static', null, "<br /><br />");
 
 	}
 	
 	function _page10() {
+
 		$this->form->addElement("header", null, "GENERAL BEHAVIOURS");
+		$this->form->addElement('static', null, "<br /><br />");
 	
 		$answerArray = array(""=>NULL, "0_normal"=>"0. Normal", "1_somewhat"=>"1. Somewhat", "2_defnitely"=>"2. Definitely", "3_gait_odd"=>"3. Gait odd", "7_gait_neurological"=>"7. Gait neurological", "8_NA"=>"8. N/A", "9_not_asked"=>"9. Not asked", "not_answered"=>"Not Answered");
 		$field = "q_80_gait";
 		$label = "80. Gait";
 		$this->_addCurrentMostAbnormal($field, $label, $answerArray);
 
-		$answerArray = array(""=>NULL, "0_no"=>"0. No", "1_mild"=>"1. Mild", "2_definite"=>"2. Definite", "3_violence"=>"3. Violence", "8_NA"=>"8. N/A", "9_not_asked"=>"9. Not asked", "not_answered"=>"Not Answered");
+		$answerArray = array(""=>NULL, "0_no"=>"0. No", "1_mild"=>"1. Mild", "2_definite"=>"2. Definite", "3_violence"=>"3. Violence", "9_not_asked"=>"9. Not asked", "not_answered"=>"Not Answered");
 		$field = "q_81_aggress_caregivers";
 		$label = "81. Aggression towards caregivers or family members";
 		$this->_addCurrentEver($field, $label, $answerArray);
 
-		$answerArray = array(""=>NULL, "0_rare"=>"0. Rare", "1_mild"=>"1. Mild", "2_definite"=>"2. Definite", "3_violence"=>"3. Violence", "8_NA"=>"8. N/A", "9_not_asked"=>"9. Not asked", "not_answered"=>"Not Answered");
+		$answerArray = array(""=>NULL, "0_rare"=>"0. Rare", "1_mild"=>"1. Mild", "2_definite"=>"2. Definite", "3_violence"=>"3. Violence", "9_not_asked"=>"9. Not asked", "not_answered"=>"Not Answered");
 		$field = "q_82_aggress_noncaregivers";
 		$label = "82. Aggression toward noncaregivers or nonfamily members";
 		$this->_addCurrentEver($field, $label, $answerArray);
 
-		$answerArray = array(""=>NULL, "0_no"=>"0. No", "1_slight"=>"1. Slight", "2_definitely"=>"2. Definitely", "3_serious"=>"3. Serious", "8_NA"=>"8. N/A", "9_not_asked"=>"9. Not asked", "not_answered"=>"Not Answered");
+		$answerArray = array(""=>NULL, "0_no"=>"0. No", "1_slight"=>"1. Slight", "2_definitely"=>"2. Definitely", "3_serious"=>"3. Serious", "9_not_asked"=>"9. Not asked", "not_answered"=>"Not Answered");
 		$field = "q_83_self_injury";
 		$label = "83. Self-injury";
 		$this->_addCurrentEver($field, $label, $answerArray);
 
-		$answerArray = array(""=>NULL, "0_no"=>"0. No", "1_occasional"=>"1. Occasional", "2_frequent"=>"2. Frequent", "8_NA"=>"8. N/A", "9_not_asked"=>"9. Not asked", "not_answered"=>"Not Answered");
+		$answerArray = array(""=>NULL, "0_no"=>"0. No", "1_occasional"=>"1. Occasional", "2_frequent"=>"2. Frequent", "9_not_asked"=>"9. Not asked", "not_answered"=>"Not Answered");
 		$field = "q_84_hyperventilation";
 		$label = "84. Hyperventilation";
 		$this->_addCurrentEver($field, $label, $answerArray);
 
-		$answerArray = array(""=>NULL, "0_no"=>"0. No", "1_history"=>"1. History", "2_definite"=>"2. Definite", "7_febrile"=>"7. Febrile", "8_NA"=>"8. N/A", "9_not_asked"=>"9. Not asked", "not_answered"=>"Not Answered");
+		$answerArray = array(""=>NULL, "0_no"=>"0. No", "1_history"=>"1. History", "2_definite"=>"2. Definite", "7_febrile"=>"7. Febrile", "9_not_asked"=>"9. Not asked", "not_answered"=>"Not Answered");
 		$field = "q_85_faints_fits_blackouts";
 		$label = "85. Faints/fits/blackouts";
 		$this->_addCurrentEver($field, $label, $answerArray);
+		$this->form->addElement('static', null, "<br />");
 
-		$answerArray = array(""=>NULL, "0"=>"0", "1"=>"1", "2"=>"2", "3"=>"3", "4"=>"4", "8_NA"=>"8. N/A", "9_not_asked"=>"9. Not asked", "not_answered"=>"Not Answered");
+		$answerArray = array(""=>NULL, "0"=>"0. Normal first 3 yrs", "1"=>"1. Within normal first 3", "2"=>"2. Probably abnormal by 3", "3"=>"3. Definitely abnormal by 3", "4"=>"4. Definitely abnormal by 3, indicative of autism", "9_not_asked"=>"9. Not asked", "not_answered"=>"Not Answered");
 		$this->form->addElement("select", "q_86_age_when_abnormality_first_evident", "86. Age when abnormality first evident", $answerArray);
+		$this->form->addElement('static', null, "<br />");
 		//$this->addLargeTextAreaElement("q_86_age_when_abnormality_first_evident_text");
 
 		$this->addNumericElement("q_87_interviewers_judgment", "87. Interviewers judgment on age when developmental abnormalities probably first manifest");
+		$this->form->addElement('static', null, "<br /><br />");
 		
 	}
 	
 	function _page11(){
 		$this->form->addElement("header", null, "SPECIAL ISOLATED SKILLS");
+		$this->form->addElement('static', null, "<br /><br />");
 		
 		//$this->addLargeTextAreaElement("special_isolated_skills", "Special isolated skills");
 
@@ -879,6 +946,7 @@ class NDB_BVL_Instrument_adi_r extends NDB_BVL_Instrument
 			$this->form->addElement("static", null, $label);
 			$this->form->addElement("select", $field . "_current_code", $this->indent . "Current:", $answerArray);
 			$this->form->addElement("select", $field . "_ever_code", $this->indent . "Ever:", $answerArray);
+			$this->form->addElement('static', null, "<br /><br />");
 		}
 		
 //		$this->form->addElement("header", null, "CONCLUDING COMMENTS");
@@ -890,6 +958,101 @@ class NDB_BVL_Instrument_adi_r extends NDB_BVL_Instrument
 //		}	
 
 	}
+
+/* Below are proposed changes to questions 2,4,5,6,7,8,9,10,17,19,26 and 28 to better reflect the paper version of the questionnaire. The drop-down menus in the status field for these questions include all options presented. 
+  
+--question2 
+
+//             $this->form->addElement('text', 'q_2_age_first_noticed_code', "2. Age (in months) when parents first noticed that something was not quite right...");             
+
+//		 $this->form->addElement('select', 'q_2_age_first_noticed_code_status', '', array(null=>"", "991"=>"991. Parents not concerned", "992"=>"992. Parents worried since birth", "996"=>"996. Before 3 years", "997"=>"997. After 3 years", "998"=>"998. N/A", "999"=>"999. Not asked", "not_answered"=>"Not Answered"));
+
+
+--question4
+               //$this->form->addElement('select', 'q_4_onset_as_perceived_code', "4. Onset as perceived with hindsi
+ght", array(null=>"", "0"=>"0. Problems in first 12 months", "1"=>"1. Before 2nd birthday", "2"=>"2. Before 3rd birt
+hday", "3"=>"3. Before 4th birthday", "4"=>"4. Before 5th birthday", "5"=>"5. Before 6th birthday", "6"=>"6. At a later date (specify)", "7"=>"7. Child always different", "8"=>"8. No problems noted by parents", "9"=>"9. Not asked", "not_answered"=>"Not Answered"));
+                // $this->addTextElement('q_4_specify', "If you selected '6. At a later date', please specify:");                //$this->XINRegisterRule("q_4_specify", array("q_4_onset_as_perceived_code{@}=={@}6"), "This is require
+d if onset was at a later date (answered '6. At a later date') above");
+
+
+--question5
+                // $this->form->addElement('text', 'q_5_first_walked_code', "5. First walked unaided");
+                // $this->form->addElement('select', 'q_5_first_walked_code_status', '', array(null=>"", "995"=>"995. Still not reached", "996"=>"996. N/K, apparently normal", "997"=>"997. N/K, apparently delayed", "998"=>"998. N/A"
+, "999"=>"999. Not asked", "not_answered"=>"Not Answered"));                //$this->XINRegisterRule("q_5_first_walked_code", array("q_5_first_walked_code_status{@}=={@}"), "Required");
+
+
+--question6
+
+                //  $this->form->addElement('text', 'q_6_bladder_daytime_code', "6. Acquisition of bladder control: 
+daytime");
+                //$this->form->addElement('select', 'q_6_bladder_daytime_code_status', '', array(null=>"", "993"=>"993. Successful for 12 months, but relapsed", "994"=>"994. Never achieved", "995"=>"995. Less than 12 months", "996"=
+>"996. N/K, apparently normal", "997"=>"997. N/K, apparently delayed", "998"=>"998. N/A", "999"=>"999. Not asked", "not_answered"=>"Not Answered"));                //$this->XINRegisterRule("q_6_bladder_daytime_code", array("q_6_bladder_daytime_code_status{@}=={@}"), "Required");
+
+--question7
+
+               // $this->form->addElement('text', 'q_7_bladder_nighttime_code', "7. Acquisition of bladder control: nighttime");
+               // $this->form->addElement('select', 'q_7_bladder_nighttime_code_status', '', array(null=>"", "993"=>"993. Successful for 12 months, but relapsed", "994"=>"994. Never achieved", "995"=>"995. Less than 12 months", "996"=>"996. N/K, apparently normal", "997"=>"997. N/K, apparently delayed", "998"=>"998. N/A", "999"=>"999. Not asked", "not_answered"=>"Not Answered"));
+        //      $this->XINRegisterRule("q_7_bladder_nighttime_code", array("q_7_bladder_nighttime_code_status{@}=={@}"), "Required");
+
+
+--question8
+
+            //    $this->form->addElement('text', 'q_8_bowel_control_code', "8. Acquisition of bowel control");
+          //      $this->form->addElement('select', 'q_8_bowel_control_code_status', '', array(null=>"", "993"=>"993. Successful for 12 months, but relapsed", "994"=>"994. Never achieved", "995"=>"995. Less than 12 months", "996"=>"996. N/K, apparently normal", "997"=>"997. N/K, apparently delayed", "998"=>"998. N/A", "999"=>"999. Not asked", "not_answered"=>"Not Answered"));
+        //      $this->XINRegisterRule("q_8_bowel_control_code", array("q_8_bowel_control_code_status{@}=={@}"), "Required");
+
+
+--question9
+
+             //   $this->form->addElement('text', 'q_9_first_single_words_code', "9. Age of first single words");
+             //   $this->form->addElement('select', 'q_9_first_single_words_code_status', '', array(null=>"", "993"=>"993. Some words, then lost", "994"=>"994. Not achieved", "996"=>"996. N/K, apparently normal", "997"=>"997. N/K, apparently delayed", "999"=>"999. Not asked", "not_answered"=>"Not Answered"));
+        //      $this->XINRegisterRule("q_9_first_single_words_code", array("q_9_first_single_words_code_status{@}=={@}"), "Required");
+
+
+--question10
+
+               // $this->form->addElement('text', 'q_10_first_phrases_code', "10. Age of first phrases (if ever used)");
+               // $this->form->addElement('select', 'q_10_first_phrases_code_status', '', array(null=>"", "993"=>"993. Some phrases, then lost", "994"=>"994. Not achieved", "996"=>"996. N/K, apparently normal", "997"=>"997. N/K, apparently delayed", "999"=>"999. Not asked", "not_answered"=>"Not Answered"));
+        //      $this->XINRegisterRule("q_10_first_phrases_code", array("q_10_first_phrases_code_status{@}=={@}"), "Required");
+
+
+--question17
+
+             // $this->form->addElement('text', 'q_17_main_loss_apparent_code', "17. Age when main loss of languag
+e skills first apparent");               // $this->form->addElement('select', 'q_17_main_loss_apparent_code_status', '', array(null=>"", "998"
+=>"998. No loss", "999"=>"999. Not asked", "not_answered"=>"Not Answered"));                //$this->XINRegisterRule("q_17_main_loss_apparent_code", array("q_11_loss_of_language{@}=={@}1_yes", "q_17_main_loss_apparent_code_status{@}=={@}"), "This is required if language was lost (answered 'yes' to question 
+11)");
+
+
+--question19
+
+               // $this->form->addElement('text', 'q_19_duration_of_loss_code', "19. Duration of loss of language skills");
+               // $this->form->addElement('select', 'q_19_duration_of_loss_code_status', '', array(null=>"", "993"=>"993. Loss still present", "994"=>"994. Progressive deterioration continuing", "998"=>"998. No loss", "999"=>"999. Not asked", "not_answered"=>"Not Answered"));
+               // $this->XINRegisterRule("q_19_duration_of_loss_code", array("q_11_loss_of_language{@}=={@}1_yes", "q_19_duration_of_loss_code_status{@}=={@}"), "This is required if language was lost (answered 'yes' to question 11)");
+
+
+--question26
+
+//              $this->addTextAreaElement("q_26_loss_first_apparent_text", $this->indent . "Describe:");
+
+//                $this->form->addElement('text', 'q_26_loss_first_apparent_code', "26. Age when main loss of skill first apparent");
+  //              $this->form->addElement('select', 'q_26_loss_first_apparent_code_status', '', array(null=>"", "998"=>"998. No loss at either '1' or '2' level of skills", "999"=>"999. Not asked", "not_answered"=>"Not Answered"));
+    //            $this->XINRegisterRule("q_26_loss_first_apparent_code", array("q_26_loss_first_apparent_code_status{@}=={@}"), "Required");
+
+
+--question28
+
+//              $this->addTextAreaElement("q_26_loss_first_apparent_text", $this->indent . "Describe:");
+
+//                $this->form->addElement('text', 'q_26_loss_first_apparent_code', "26. Age when main loss of skill first apparent");
+  //              $this->form->addElement('select', 'q_26_loss_first_apparent_code_status', '', array(null=>"", "998"=>"998. No loss at either '1' or '2' level of skills", "999"=>"999. Not asked", "not_answered"=>"Not Answered"));
+    //            $this->XINRegisterRule("q_26_loss_first_apparent_code", array("q_26_loss_first_apparent_code_status{@}=={@}"), "Required");
+
+
+
+*/
+
 	
 /*	
 		$answerArray = array(""=>NULL, ""=>"", "8_NA"=>"8. N/A", "9_not_asked"=>"9. Not asked", "not_answered"=>"Not Answered");

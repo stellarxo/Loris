@@ -1,6 +1,7 @@
 <?php
 
 require_once('NDB_BVL_Instrument_adi_r.class.inc');
+require_once("Utility.class.inc");
 
 class NDB_BVL_Instrument_adi_r_subject extends NDB_BVL_Instrument_adi_r
 {
@@ -86,7 +87,7 @@ DoB subject should be somewhere in the candidate table.  For now, we'll just mak
 
         //Diagnostic algorithm uses age in years.
 //		$this->respondentAgeMonths = $age['year'] * 12 + $age['$mon'];
-        $this->respondentAgeYears = $age['year'];
+        $this->respondentAgeYears = $age['year'] + ($age['mon'] / 12) + ($age['day'] / 30 / 12);
         
     }
 }

@@ -85,6 +85,13 @@ DoB Proband should be somewhere in the candidate table.  For now, we'll just mak
             return PEAR::raiseError("Query has failed to select the Date of Administration: ".$result->getMessage());
         }
         
+        //print "DoB: $DoB_proband Taken: $Date_taken xxx";
+        if(empty($DoB_proband) || empty($Date_taken)) {
+            // Must be more than 2 years old to score. So if we return -1, we won't score (and avoid the errors from
+            // calculateAge when either is empty
+            $this->respondentAgeYears=-1;
+            return;
+        }
         //Call to calculateAge generates an error in the quickFormParser.  I don't know why.  Everything works despite.
 		$age = Utility::calculateAge($DoB_proband, $Date_taken);
         if($this->isError($age)) {
@@ -94,7 +101,7 @@ DoB Proband should be somewhere in the candidate table.  For now, we'll just mak
         //Current Behaviour algorithm uses age in months.
 //		$this->respondentAgeMonths = $age['year'] * 12 + $age['$mon'];
         //Diagnostic algorithm uses age in years.
-        $this->respondentAgeYears = $age['year'];
+        $this->respondentAgeYears = $age['year'] + ($age['mon'] / 12) + ($age['day'] / 30 / 12);
     }
 }
 ?>
