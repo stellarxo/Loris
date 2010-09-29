@@ -153,7 +153,7 @@ JSFX_FloatDiv("divBottomLeft",    10, 350).flt();
                 <ul class="controlPanel">
                 {foreach from=$subject.tarchiveids item=Tarchive }
                 <li>
-                <a href="dicom_archive?TarchiveID={$Tarchive.TarchiveID}" class="linkButton">
+                <a href="dicom_archive.php?TarchiveID={$Tarchive.TarchiveID}" class="linkButton">
                 <img src="images/transfer.gif" alt="MRI Parameter Forms" border="0" width="12" height="12" />
                 DICOM Archive {$Tarchive.TarchiveID}</a>
                 </li>
