@@ -1,15 +1,27 @@
-<h2><font color="#000000">{$SiteName} Completion Statistics</font></h2>
-<table>
-   <tr bgcolor="#08245b">
-      <th><font color="#CCCCCC">Instrument</font></th>
-      <th><font color="#CCCCCC">Completion Count</font></th>
-      <th><font color="#CCCCCC">Incomplete Candidates</font></th>
+<h2>{$SiteName} Completion Statistics</h2>
+<table class="fancytable" width="100%">
+   <tr>
+      <th>Instrument</th>
+      <th>Completion Count</th>
+      <th colspan="{$NumVisitLabels}" width="80%">Incomplete Candidates</th>
+   </tr>
+   <tr>
+      <th>&nbsp;</th>
+      <th>&nbsp;</th>
+      {foreach from=$AllVisits item=visit}
+      <th width="20%">{$visit}</th>
+      {/foreach}
    </tr>
    {section name=item loop=$data}
    <tr bgcolor="#FFFFFF">
       <td>{$data[item].name}</td>
       <td>{$data[item].count}</td>
-      <td>{$data[item].incompletes}</td>
+      {foreach from=$AllVisits item=visit name=VisitLoop}
+      <td>{foreach from=$data[item].incompletes[$visit] item=Candidate name=CandLoop}
+            <a href="main.php?test_name={$Candidate.test_url}&candID={$Candidate.CandID}&sessionID={$Candidate.SessionID}&commentID={$Candidate.CommentID}">{$Candidate.PSCID}</a>
+          {/foreach}
+      </td>
+      {/foreach}
    </tr>
    {/section}
 </table>
