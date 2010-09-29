@@ -75,6 +75,7 @@ class NDB_Menu_statistics_mri_site extends NDB_Menu
                                         (mpf.CommentID=f.CommentID)
                             LEFT JOIN candidate c ON (c.CandID=s.CandID)
                       WHERE s.Active='Y' and s.Cancelled='N'
+                            AND c.PSCID <> 'scanner'
                             AND (f.ID IS NULL OR
                                 f.Data_entry <> 'Complete')
                             AND s.CenterID=" .
