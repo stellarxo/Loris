@@ -56,21 +56,90 @@ class NDB_Menu_statistics extends NDB_Menu
         $this->tpl_data['Subprojects'] = array('1' => '6 Month Recruit', '2' => '12 Month Recruit', '3' => 'Control');
         $this->tpl_data['Visits'] = array ('6 Month' => 'v06', '12 Month' => 'v12', '18 Month' => 'v18', '24 Month' => 'v24', '36 Month' => 'v36');
 
-        $DB->select("SELECT c.CenterID as CenterID, 
+        $this->tpl_data['instruments'] = array_merge(
+            array( '' => 'Recruit Gender Breakdown'),
+            Utility::getAllInstruments()
+        );
+        if(isset($_REQUEST['instrument']) && $_REQUEST['instrument'] != '') {
+            $this->tpl_data['instrument'] = $_REQUEST['instrument'];
+            $this->tpl_data['RecruitHeader'] = "Data Entry Completion Status Breakdown for $_REQUEST[instrument]";
+            $Subcategories = array('Complete', 'Incomplete'); 
+            $DB->select("SELECT count(*) as val, 
+                                f.Data_entry as Subcat, 
+                                c.CenterID as CenterID, 
+                                s.SubprojectID as SubprojectID,
+                                CASE s.visit_label
+                                    WHEN 'v6' THEN 'v06'
+                                    WHEN '6mo' THEN 'v06'
+                                    WHEN '12m' THEN 'v12'
+                                    WHEN '18mo' THEN 'v18'
+                                    WHEN '24mo' THEN 'v24'
+                                ELSE lower(s.visit_label) END as VLabel
+                        FROM session s JOIN candidate c ON (s.CandID=c.CandID)
+                            JOIN flag f ON (f.SessionID=s.ID)
+                            JOIN $_REQUEST[instrument] i USING(CommentID)
+                        WHERE s.Cancelled='N' AND s.Active='Y' AND
+                            c.CenterID <> '1' AND f.Data_entry='Complete' AND
+                            f.Administration='All' AND
+                            f.CommentID NOT LIKE 'DDE%'
+                    GROUP BY c.CenterID, SubprojectID, VLabel, Subcat
+                    UNION
+                    SELECT count(*) as val, 'Incomplete' as Subcat, 
+                            c.CenterID as CenterID, 
+                            s.SubprojectID as SubprojectID,
+                                CASE s.visit_label
+                                    -- WHEN 'v6' THEN 'v06'
+                                    WHEN '6mo' THEN 'v06'
+                                    WHEN '12m' THEN 'v12'
+                                    WHEN '18mo' THEN 'v18'
+                                    WHEN '24mo' THEN 'v24'
+                                ELSE lower(s.visit_label) END as VLabel
+                    FROM session s JOIN candidate c USING(CandID) 
+                        JOIN flag f ON (f.SessionID=s.ID) 
+                        JOIN $_REQUEST[instrument] i USING(CommentID)
+                    WHERE s.Cancelled='N' AND s.Active='Y' and s.CenterID <> 1
+                    AND f.CommentID NOT LIKE 'DDE%' AND (f.Data_entry IS NULL OR f.Data_entry <> 'Complete')
+                    GROUP BY c.CenterID, SubprojectID, VLabel, Subcat
+            ", &$result);
+
+            /*$DB->select("SELECT count(*) as val, 
+                        COALESCE(i.Data_entry_completion_status,'Confused') as Subcat, 
+                        c.CenterID as CenterID, 
+                        s.SubprojectID as SubprojectID, 
+                        CASE s.visit_label
+                            WHEN 'v6' THEN 'v06'
+                            WHEN '6mo' THEN 'v06'
+                            WHEN '12m' THEN 'v12'
+                            WHEN '18mo' THEN 'v18'
+                            WHEN '24mo' THEN 'v24'
+                            ELSE lower(s.visit_label) END as VLabel
+                    FROM session s JOIN candidate c USING (CandID) LEFT JOIN flag f ON (s.ID=f.SessionID)
+                        LEFT JOIN $_REQUEST[instrument] i USING(CommentID)
+                    WHERE s.active='Y' AND s.CenterID <> '1' AND s.Cancelled='N'
+                        AND (CommentID IS NULL OR CommentID NOT LIKE 'DDE%') AND (f.Test_name IS NULL OR f.Test_name='$_REQUEST[instrument]')
+                    AND ((s.Current_stage IN ('Visit', 'Screening')
+                    AND s.SubprojectID IN (1, 2)) OR s.SubprojectID=3) 
+                    GROUP BY c.CenterID, SubprojectID, VLabel, Subcat", &$result); */
+        } else {
+            $Subcategories = array('Male', 'Female');
+            $this->tpl_data['RecruitHeader'] = "Breakdown of Registered Candidates";
+            $DB->select("SELECT c.CenterID as CenterID, 
                             s.SubprojectID as SubprojectID, 
                             CASE s.visit_label
+                                WHEN 'v6' THEN 'v06'
                                 WHEN '6mo' THEN 'v06'
                                 WHEN '12m' THEN 'v12'
                                 WHEN '18mo' THEN 'v18'
                                 WHEN '24mo' THEN 'v24'
                                 ELSE lower(s.visit_label) END as VLabel,
-                        lower(c.gender) as Gender,
+                        c.gender as Subcat,
                         count(s.CandID) as val
                  FROM session s JOIN candidate c ON (s.CandID=c.CandID) 
                  WHERE s.Cancelled='N'  AND s.active='Y' AND s.CenterID <> '1'
                     AND ((s.Current_stage IN ('Visit', 'Screening')
-                    AND s.SubprojectID IN (1, 2)) OR s.SubProjectID=3) 
-                 GROUP BY c.CenterID, SubprojectID, VLabel, Gender", &$result);
+                    AND s.SubprojectID IN (1, 2)) OR s.SubprojectID=3) 
+                 GROUP BY c.CenterID, SubprojectID, VLabel, Subcat", &$result);
+        }
         if (PEAR::isError($result)) {
             return PEAR::raiseError("DB Error: ".$result->getMessage());
         }
@@ -78,21 +147,22 @@ class NDB_Menu_statistics extends NDB_Menu
         foreach($result as $row) {
             $subproj = $row['SubprojectID'];
             $vl = $row['VLabel'];
-            $gender = $row['Gender'];
+            $subcat = $row['Subcat'];
             $center = $row['CenterID'];
-            $this->tpl_data['recruits'][$subproj]['C' . $center][$vl][$gender] = $row['val'];
+            $this->tpl_data['recruits'][$subproj]['C' . $center][$vl][$subcat] = $row['val'];
 
             // Keep a running tally so that we can avoid calculating things
             // in the template
-            $this->tpl_data['recruits'][$subproj][$vl][$gender] += $row['val'];
+            $this->tpl_data['recruits'][$subproj][$vl][$subcat] += $row['val'];
             $this->tpl_data['recruits'][$subproj][$vl]['total'] += $row['val'];
-            $this->tpl_data['recruits'][$vl][$gender] += $row['val'];
+            $this->tpl_data['recruits'][$vl][$subcat] += $row['val'];
             $this->tpl_data['recruits'][$vl]['total'] += $row['val'];
             $this->tpl_data['recruits'][$subproj]['total'] += $row['val'];
 
-            $this->tpl_data['recruits']['C' . $center][$gender] += $row['val'];
-            $this->tpl_data['recruits']['C' . $center][$vl][$gender] += $row['val'];
+            $this->tpl_data['recruits']['C' . $center][$subcat] += $row['val'];
+            $this->tpl_data['recruits']['C' . $center][$vl][$subcat] += $row['val'];
         }
+        $this->tpl_data['Subcategories'] = $Subcategories;
 
 
 	//---- BEHAVIORAL STATS -----
@@ -220,7 +290,6 @@ class NDB_Menu_statistics extends NDB_Menu
                             AND (f.ID IS NULL OR f.Data_entry <> 'Complete')
                         GROUP BY s.CenterID", $result);
         foreach($result as $row) {
-            print $row['CenterID'];
             $this->tpl_data['mri_errors'][$row['CenterID']]['no_parameter'] = $row['val'];
         }
 
@@ -237,7 +306,6 @@ class NDB_Menu_statistics extends NDB_Menu
                            AND f.Data_entry = 'Complete'
                      GROUP by s.CenterID;", $result);
         foreach($result as $row) {
-            print $row['CenterID'];
             $this->tpl_data['mri_errors'][$row['CenterID']]['no_browser'] = $row['val'];
         }
 
@@ -255,7 +323,6 @@ class NDB_Menu_statistics extends NDB_Menu
                             AND f.Data_entry='Complete'
                      GROUP BY s.CenterID;", $result);
         foreach($result as $row) {
-            print $row['CenterID'];
             $this->tpl_data['mri_errors'][$row['CenterID']]['no_tarchive'] = $row['val'];
         }
 
