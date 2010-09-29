@@ -54,6 +54,8 @@
 {*        <td>{$timepoints[timepointIdx].firstQCDate|date_format}</td>	*}
         <td>{$timepoints[timepointIdx].lastQCDate|date_format}</td>
         <td>{if $timepoints[timepointIdx].newData}<font color="red">NEW</font>{else}&nbsp;{/if}</td>
+        <td>{$timepoints[timepointIdx].T1Pass}</td>
+        <td>{$timepoints[timepointIdx].T2Pass}</td>
         {section name=typeIdx loop=$outputTypes}
         <td><a href="mri_browser.php?sessionID={$timepoints[timepointIdx].sessionID}&outputType={if $outputTypes[typeIdx].outputType == 'selected'}native&selectedOnly=1
             {else}{$outputTypes[typeIdx].outputType|escape:"url"}{/if}&backURL={$backURL|escape:"url"}">{$outputTypes[typeIdx].outputType}</a>

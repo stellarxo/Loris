@@ -9,7 +9,6 @@
 <TITLE>MRI - {$study_title}</TITLE>
 <!-- end page header -->
 </head>
-
 {literal}
 <script type="text/javascript">
 function open_popup(newurl) {
@@ -132,13 +131,37 @@ JSFX_FloatDiv("divBottomLeft",    10, 350).flt();
         <!-- Start Section on the left -->
         <table border="0" valign="top" cellpadding="1" cellspacing="1" width="100px"><tr>
         
+        {*
         {if $efax.assigned_dir!=""}
         <tr>
             <td class="controlPanelItem">
-                <a href="mri_efax.php?mri_efax_screen=assigned" target="MRI_EFAX"><img src="images/transfer.gif" alt="MRI Parameter Forms" border="0" width="12" height="12">&nbsp;MRI Parameter Forms</a>
+                <a href="mri_efax.php?mri_efax_screen=assigned" target="MRI_EFAX"><img src="images/transfer.gif" alt="MRI Parameter Forms" border="0" width="12" height="12"> &nbsp;MRI Parameter Forms</a>
             </td>
         </tr>
         {/if}        
+        *}
+        {if $subject.ParameterFormCommentID}
+        <tr>
+            <td class="controlPanelItem">
+                <a href="main.php?test_name=mri_parameter_form&candID={$subject.candid}&sessionID={$subject.sessionID}&commentID={$subject.ParameterFormCommentID}"><img src="images/transfer.gif" alt="MRI Parameter Forms" border="0" width="12" height="12"> MRI Parameter Form</a>
+            </td>
+        </tr>
+        {/if}
+        {if $subject.tarchiveids != ""}
+        <tr>
+            <td>
+                <ul class="controlPanel">
+                {foreach from=$subject.tarchiveids item=Tarchive }
+                <li>
+                <a href="dicom_archive?TarchiveID={$Tarchive.TarchiveID}" class="linkButton">
+                <img src="images/transfer.gif" alt="MRI Parameter Forms" border="0" width="12" height="12" />
+                DICOM Archive {$Tarchive.TarchiveID}</a>
+                </li>
+                {/foreach}
+                </ul>
+            </td>
+        </tr>
+        {/if}
         <tr>
             <td class="controlPanelItem">
                 <a href="{$mantis}" target="mantis"><img src="images/transfer.gif" alt="Mantis" border="0" width="12" height="12">&nbsp;Mantis</a>

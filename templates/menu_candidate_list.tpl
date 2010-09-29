@@ -1,5 +1,9 @@
 {literal}
-<script>
+
+<script language="javascript" type="text/javascript">
+
+//window.onload = function(){ alert("welcome"); }
+
 function checkAccessProfileForm(){
    var form = document.accessProfileForm;
    if(form.candID.value == ""){
@@ -13,6 +17,14 @@ function checkAccessProfileForm(){
    }
    return true;
 }
+
+$(function(){
+		$('input[name=dob]').datepicker({
+			dateFormat: 'yy-mm-dd',
+			changeMonth: true,
+			changeYear: true
+		});
+});
 </script>
 {/literal}
 
@@ -77,7 +89,6 @@ function checkAccessProfileForm(){
     </tr>
 <table>
 </form>
-
 <!--  title table with pagination -->
 <table border="0" valign="bottom" width="100%">
 <tr>
@@ -89,7 +100,7 @@ function checkAccessProfileForm(){
 </table>
 
 <!-- start data table -->
-<table  class ="fancytable" border="0" width="100%" class="listColorCoded">
+<table  class ="fancytable" border="0" width="100%">
 <tr>
  <th nowrap="nowrap">No.</th>
     <!-- print out column headings - quick & dirty hack -->

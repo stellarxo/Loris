@@ -3,7 +3,7 @@
 <table border="0" valign="bottom" width="100%"><td class="controlPanelSection">Behavioral Battery of Instruments</td></table>
 
 <!-- table with list of instruments and links to open them -->
-<table class="listColorCoded" cellpadding="2">
+<table class="fancytable" cellpadding="2">
 {section name=group loop=$instruments}
     <!-- print the sub group header row -->
     <tr>

@@ -129,7 +129,7 @@ BrowserDetect.init();
 
 
 
-<table align="center" bgcolor="#D3DCE3" border="0" cellpadding="2" cellspacing="0">
+<table align="center" bgcolor="#d3d3e1" border="0" cellpadding="2" cellspacing="0">
     <tr>
     	<th align="left" class="banner" colspan="2" background="images/title_background.jpg">
     	    Montreal Neurological Hospital and Institute

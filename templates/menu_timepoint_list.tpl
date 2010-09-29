@@ -3,7 +3,7 @@
 <table border="0" valign="bottom" width="100%"><td class="controlPanelSection">List of Visits (Time Points)</td></table>
 
 <!-- list of timepoints table -->
-<table class="listColorCoded" cellpadding="2">
+<table class="fancytable" cellpadding="2">
 <!-- table column headings -->
     <tr>
         <th nowrap="nowrap">Visit Label<BR>(Click to Open)</th>

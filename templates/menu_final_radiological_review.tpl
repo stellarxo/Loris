@@ -57,7 +57,7 @@
 
 
 <!-- start data table -->
-<table border="0" width="100%" class="listColorCoded">
+<table border="0" width="100%" class="fancytable">
 <tr>
  <th nowrap="nowrap">No.</th>
     <!-- print out column headings - quick & dirty hack -->
