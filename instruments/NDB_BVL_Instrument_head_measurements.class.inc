@@ -71,8 +71,8 @@ INSERT INTO test_battery VALUES ('', 'head_measurements', '1050', '1140', 'Y', '
         $this->_addMetadataFields();
         
         $this->form->addElement('header', null, 'Head Measurements');
-        $this->addTextElement('head_cirfumference1', "Circumference 1: (in Centimeters)");
-        $this->addTextElement('head_cirfumference2', "Circumference 2:");
+        $this->addTextElement('head_circumference1', "Circumference 1: (in Centimeters)");
+        $this->addTextElement('head_circumference2', "Circumference 2:");
 
         $this->form->addElement('header', null, 'Length');
         $this->addTextElement('length1', "Length 1: (in Centimeters)");
