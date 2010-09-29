@@ -1132,9 +1132,27 @@ class NDB_BVL_Instrument_mullen extends NDB_BVL_Instrument
             $query = "SELECT * FROM mullen_lookup WHERE age_months=".$age_months. " AND raw_score=".$calculatedScores[$scale_name . '_raw'];
             $record = array();
          	$db->selectRow($query, $record);
-             	if (PEAR::isError($record)) {
-             		return PEAR::raiseError("Could not retrieve scores: " . $record->getMessage());
-             	}
+            if (PEAR::isError($record)) {
+                return PEAR::raiseError("Could not retrieve scores: " . $record->getMessage());
+            }
+
+            // If the score is above or below the highest score in the table,
+            // get the closest score
+            
+            if (count($record) == 0) {
+                $db->selectRow("SELECT MAX(raw_score) as max, MIN(raw_score) as min FROM mullen_lookup WHERE age_months=".$age_months, $maxmin);
+                if($calculatedScores[$scale_name . '_raw'] < $maxmin['min']) {
+                    $query = "SELECT * FROM mullen_lookup WHERE age_months=".$age_months. " AND raw_score=" . $maxmin['min'];
+                } elseif($calculatedScores[$scale_name . '_raw'] > $maxmin['max']) {
+                    $query = "SELECT * FROM mullen_lookup WHERE age_months=".$age_months. " AND raw_score=" . $maxmin['max'];
+                }
+         	    $db->selectRow($query, $record);
+                if (PEAR::isError($record)) {
+                    return PEAR::raiseError("Could not retrieve scores: " . $record->getMessage());
+                }
+
+            }
+            
          	$calculatedScores[$scale_name . '_t'] = ($record[$scale_name . '_t']);
          	$percentile = $this->percentile($calculatedScores[$scale_name . '_t']);
          	$calculatedScores[$scale_name . '_percentile'] = $percentile['percentile'];
