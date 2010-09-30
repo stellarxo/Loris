@@ -38,11 +38,10 @@
     <tr>
         <!-- nav bar table -->
         <td colspan="2" class="navigationRow">
-            &nbsp;
             <ul class="navigationBar">
                 <!-- the buttons -->
                 {foreach from=$tabs item=tab}
-                    <li class="navigationButtons {if $tab.link == $test_name && $subtest != "my_preferences" }active{/if}">
+                    <li class="navigationButtons {if ($tab.link == $test_name && $subtest != "my_preferences")}active{elseif $tab.link == $top_level && $subtest != "my_preferences"}active{/if}">
                         <a href="main.php?test_name={$tab.link}">{$tab.label}</a>
                     </li>
                 {/foreach}
