@@ -20,26 +20,30 @@ var x = 200, y = 400;
 </script>
 {/literal}
 
-<div id="divTopLeft" style="position:absolute">
+<div id="divTopLeft" style="position:absolute; top: 100px; padding-top: 50px;">
 <!-- back button and other navigation buttons -->
     {if $backURL!=""}
+        <h2>Navigation</h2>
+        <ul class="controlPanel">
 <!-- Back Button -  -->
-        <p>Navigation</p>
-        <p><a href="{$backURL}"><img src="images/left.gif" align="texttop" alt="Back" border="0" width="12" height="12"><img src="images/left.gif" align="texttop" alt="Back" border="0" width="12" height="12">&nbsp;Back to list</a></p>
+        <li><a href="{$backURL}"><img src="images/left.gif" align="texttop" alt="Back" border="0" width="12" height="12"><img src="images/left.gif" align="texttop" alt="Back" border="0" width="12" height="12">Back to list</a></li>
     {/if}
 <!-- Prev Button -->
     {if $prevTimepoint.URL!=""}
-         <p><a href="{$prevTimepoint.URL}">&nbsp;&nbsp;&nbsp;<img src="images/left.gif" align="texttop" alt="Back" border="0" width="12" height="12">&nbsp;Previous</a></p>
-    {else}<br><br>{/if}
+         <li><a href="{$prevTimepoint.URL}"><img src="images/left.gif" align="texttop" alt="Back" border="0" width="12" height="12">Previous</a></li>
+    {/if}
 <!-- Next Button -->
     {if $nextTimepoint.URL!=""}
-       <p><a href="{$nextTimepoint.URL}">&nbsp;&nbsp;&nbsp;Next&nbsp;<img src="images/right.gif" alt="Back" align="texttop" border="0" width="12" height="12"></a></p>
+       <li><a href="{$nextTimepoint.URL}">
+        <img src="images/right.gif" alt="Back" align="texttop" border="0" width="12" height="12">
+        Next</a>
+       </li>
     {/if}
-    {if $prevTimepoint.URL!="" && $nextTimepoint.URL!=""}<br><br>{/if}
+    </ul>
 </div>
 
 {if $showFloatJIV}
-<div id="divTopRight" style="position:absolute">
+<div id="divTopRight" style="position:absolute;">
 <p>3D panel viewing<br><br>
 <input type="button" accesskey="c" class="button" value="3D+Overlay" onClick="javascript:show_jiv(jivNames, jivData, true);"><br>
 <input type="button" accesskey="d" class="button" value="3D Only" onClick="javascript:show_jiv(jivNames, jivData, false);">
@@ -129,45 +133,23 @@ JSFX_FloatDiv("divBottomLeft",    10, 350).flt();
     <td width="10%" class="tabox" valign="top" nowrap="nowrap">
     
         <!-- Start Section on the left -->
-        <table border="0" valign="top" cellpadding="1" cellspacing="1" width="100px"><tr>
-        
-        {*
-        {if $efax.assigned_dir!=""}
-        <tr>
-            <td class="controlPanelItem">
-                <a href="mri_efax.php?mri_efax_screen=assigned" target="MRI_EFAX"><img src="images/transfer.gif" alt="MRI Parameter Forms" border="0" width="12" height="12"> &nbsp;MRI Parameter Forms</a>
-            </td>
-        </tr>
-        {/if}        
-        *}
+        <h2>Links</h2>
+        <ul class="controlPanel">
         {if $subject.ParameterFormCommentID}
-        <tr>
-            <td class="controlPanelItem">
-                <a href="main.php?test_name=mri_parameter_form&candID={$subject.candid}&sessionID={$subject.sessionID}&commentID={$subject.ParameterFormCommentID}"><img src="images/transfer.gif" alt="MRI Parameter Forms" border="0" width="12" height="12"> MRI Parameter Form</a>
-            </td>
-        </tr>
+            <li class="controlPanelItem">
+                <a href="main.php?test_name=mri_parameter_form&candID={$subject.candid}&sessionID={$subject.sessionID}&commentID={$subject.ParameterFormCommentID}">MRI Parameter Form</a>
+            </li>
         {/if}
         {if $subject.tarchiveids != ""}
-        <tr>
-            <td>
-                <ul class="controlPanel">
                 {foreach from=$subject.tarchiveids item=Tarchive }
-                <li>
-                <a href="dicom_archive.php?TarchiveID={$Tarchive.TarchiveID}" class="linkButton">
-                <img src="images/transfer.gif" alt="MRI Parameter Forms" border="0" width="12" height="12" />
-                DICOM Archive {$Tarchive.TarchiveID}</a>
+                <li class="controlPanelItem"><a href="dicom_archive.php?TarchiveID={$Tarchive.TarchiveID}" class="linkButton">DICOM Archive {$Tarchive.TarchiveID}</a>
                 </li>
                 {/foreach}
-                </ul>
-            </td>
-        </tr>
         {/if}
-        <tr>
-            <td class="controlPanelItem">
-                <a href="{$mantis}" target="mantis"><img src="images/transfer.gif" alt="Mantis" border="0" width="12" height="12">&nbsp;Mantis</a>
-            </td>
-        </tr>
-        </table>
+            <li class="controlPanelItem">
+                <a href="{$mantis}" target="mantis">Mantis</a>
+            </li>
+        </ul>
     </td>
     
     
