@@ -20,21 +20,24 @@ class NDB_Menu_statistics extends NDB_Menu
                             COUNT(DISTINCT(c.PSCID)) as val 
                      FROM candidate as c LEFT JOIN session s ON (s.CandID=c.CandID) 
                      WHERE s.active='Y' and s.Cancelled='N' AND s.CenterID <> '1'        
-                        AND (s.Current_stage IN ('Visit', 'Screening'))
+                        AND c.Active='Y' AND c.Cancelled='N'
+                        AND (s.Current_stage IN ('Visit', 'Screening')) 
                      GROUP BY s.subprojectid", $result);
         foreach($result as $row) {
             $this->tpl_data['registered'][$row['rowid']]['visit'] = $row['val'];
             $this->tpl_data['registered']['visittotal'] += $row['val'];
         }
 
-        $DB->select("SELECT s.subprojectid as rowid, count(DISTINCT(c.PSCID)) as val from candidate as c left join session s ON (s.CandID=c.CandID) WHERE coalesce(s.active, 'Y')='Y' and coalesce(s.Cancelled,'N')='N' AND c.CenterID <> '1' and c.PSCID <> 'scanner' and coalesce(s.visit_label, 'v06') in ('v06', 'v12', 'v18', 'v24', 'v36', '6mo', '12mo') group by s.subprojectid", $result);
+        $DB->select("SELECT s.subprojectid as rowid, count(DISTINCT(c.PSCID)) as val from candidate as c left join session s ON (s.CandID=c.CandID) WHERE coalesce(s.active, 'Y')='Y' and coalesce(s.Cancelled,'N')='N' AND c.CenterID <> '1' and c.PSCID <> 'scanner' and coalesce(s.visit_label, 'v06') in ('v06', 'v12', 'v18', 'v24', 'v36') 
+                        AND c.Active='Y' AND c.Cancelled='N'
+        group by s.subprojectid", $result);
         foreach($result as $row) {
             $this->tpl_data['registered'][$row['rowid']]['total'] = $row['val'];
             $this->tpl_data['registered']['total'] += $row['val'];
         }
 
 	// Total, explicitly calculated instead of added in the loop to ensure there's no one double registered in 2 different cohorts
-        $DB->select("SELECT count(distinct(c.PSCID)) from candidate as c WHERE c.PSCID<>'scanner' AND c.CenterID<>'1';", $total);
+        $DB->select("SELECT count(distinct(c.PSCID)) from candidate as c WHERE c.PSCID<>'scanner' AND c.CenterID<>'1' AND c.Active='Y' AND c.Cancelled='N'", $total);
         if (PEAR::isError($total)) {
             return PEAR::raiseError("DB Error: ".$total->getMessage());
         }
