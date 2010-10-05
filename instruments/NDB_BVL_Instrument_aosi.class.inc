@@ -1,4 +1,8 @@
 <?php
+function TrialName($press, $trial) {
+	return "3_orients_to_name_press_" . $press . 
+	"_trial_" . $trial;
+}
 class NDB_BVL_Instrument_aosi extends NDB_BVL_Instrument
 {
 /**
@@ -381,10 +385,6 @@ INSERT INTO instrument_subtests VALUES('', 'aosi', 'aosi_page2', 'General Observ
         //Question 3
         //calculate
             //2
-            function TrialName($press, $trial) {
-                return "3_orients_to_name_press_" . $press . 
-                        "_trial_" . $trial;
-            }
             if($score_record[TrialName(1,1)] == "not_answered" &&
                 $score_record[TrialName(2,1)] == "not_answered") {
                 $this->scores["3_orients_to_name_score"] = "Unable to score";
