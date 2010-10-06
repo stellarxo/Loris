@@ -7,6 +7,54 @@ require_once 'NDB_Menu.class.inc';
  */
 class NDB_Menu_statistics extends NDB_Menu
 {
+    function render_stats_table($header, $subcats, $visits, $dropdown_name, $dropdown_opt, $dropdown_selected, $centres, $data, $Subsection="") {
+        $tpl_data = array();
+        $tpl_data['test_name'] = $_REQUEST['test_name'];
+        $tpl_data['Subsection'] = $Subsection;
+        $tpl_data['Visits'] = $visits;
+        $smarty = new Smarty_neurodb();
+        $tpl_data['Header'] = $header;
+        $tpl_data['Subcategories'] = $subcats;
+        $tpl_data['Subprojects'] = Utility::getSubprojectList(); //array('1' => '6 Month Recruit', '2' => '12 Month Recruit', '3' => 'Control');
+        $tpl_data['DropdownName'] = $dropdown_name;
+        $tpl_data['DropdownOptions'] = $dropdown_opt;
+        $tpl_data['DropdownSelected'] = $dropdown_selected;
+        $tpl_data['Centers'] = $centres;
+        foreach($data as $row) {
+            $subproj = $row['SubprojectID'];
+            $vl = $row['VLabel'];
+            $subcat = $row['Subcat'];
+            $center = $row['CenterID'];
+            $tpl_data['data'][$subproj]['C' . $center][$vl][$subcat] = $row['val'];
+
+            // Keep a running tally so that we can avoid calculating things
+            // in the template
+            $tpl_data['data'][$subproj][$vl][$subcat] += $row['val'];
+            $tpl_data['data'][$subproj][$vl]['total'] += $row['val'];
+            $tpl_data['data'][$subproj][$subcat] += $row['val'];
+            if(array_search($vl, $visits) !== FALSE) {
+                $tpl_data['data'][$vl][$subcat] += $row['val'];
+                $tpl_data['data'][$vl]['total'] += $row['val'];
+            }
+            if(array_search($subcat, $subcats) !== FALSE) {
+                $tpl_data['data']['Cat' . $subcat] += $row['val'];
+                $tpl_data['data'][$subproj]['C' . $center][$subcat] += $row['val'];
+                $tpl_data['data']['C' . $center][$subcat] += $row['val'];
+            }
+            $tpl_data['data'][$subproj]['total'] += $row['val'];
+
+            $tpl_data['data']['C' . $center][$vl][$subcat] += $row['val'];
+
+            if(array_search($vl, $visits) !== FALSE && array_search($subcat, $subcats) !== FALSE) {
+                $tpl_data['data']['total'] += $row['val'];
+            }
+
+        }
+        $smarty->assign($tpl_data);
+        $html = $smarty->fetch("table_statistics.tpl");
+        return $html;
+
+    }
     function setup()
     {
         $DB =& Database::singleton();
@@ -28,9 +76,7 @@ class NDB_Menu_statistics extends NDB_Menu
             $this->tpl_data['registered']['visittotal'] += $row['val'];
         }
 
-        $DB->select("SELECT s.subprojectid as rowid, count(DISTINCT(c.PSCID)) as val from candidate as c left join session s ON (s.CandID=c.CandID) WHERE coalesce(s.active, 'Y')='Y' and coalesce(s.Cancelled,'N')='N' AND c.CenterID <> '1' and c.PSCID <> 'scanner' and coalesce(s.visit_label, 'v06') in ('v06', 'v12', 'v18', 'v24', 'v36') 
-                        AND c.Active='Y' AND c.Cancelled='N'
-        group by s.subprojectid", $result);
+        $DB->select("SELECT s.subprojectid as rowid, count(DISTINCT(c.PSCID)) as val from candidate as c left join session s ON (s.CandID=c.CandID) WHERE coalesce(s.active, 'Y')='Y' and coalesce(s.Cancelled,'N')='N' AND c.CenterID <> '1' and c.PSCID <> 'scanner' and coalesce(s.visit_label, 'v06') in ('v06', 'v12', 'v18', 'v24', 'v36') AND c.Active='Y' AND c.Cancelled='N' group by s.subprojectid", $result);
         foreach($result as $row) {
             $this->tpl_data['registered'][$row['rowid']]['total'] = $row['val'];
             $this->tpl_data['registered']['total'] += $row['val'];
@@ -57,15 +103,14 @@ class NDB_Menu_statistics extends NDB_Menu
         }
         $this->tpl_data['Centers'] = $centers;
         $this->tpl_data['Subprojects'] = array('1' => '6 Month Recruit', '2' => '12 Month Recruit', '3' => 'Control');
-        $this->tpl_data['Visits'] = array ('6 Month' => 'v06', '12 Month' => 'v12', '18 Month' => 'v18', '24 Month' => 'v24', '36 Month' => 'v36');
+        $Visits = array ('6 Month' => 'v06', '12 Month' => 'v12', '18 Month' => 'v18', '24 Month' => 'v24', '36 Month' => 'v36');
+        $this->tpl_data['Visits'] = $Visits;
 
-        $this->tpl_data['instruments'] = array_merge(
+        $instruments  = array_merge(
             array( '' => 'Recruit Gender Breakdown'),
-            Utility::getAllInstruments()
+                Utility::getAllInstruments()
         );
         if(isset($_REQUEST['instrument']) && $_REQUEST['instrument'] != '') {
-            $this->tpl_data['instrument'] = $_REQUEST['instrument'];
-            $this->tpl_data['RecruitHeader'] = "Data Entry Completion Status Breakdown for $_REQUEST[instrument]";
             $Subcategories = array('Complete', 'Incomplete'); 
             $DB->select("SELECT count(*) as val, 
                                 f.Data_entry as Subcat, 
@@ -91,7 +136,6 @@ class NDB_Menu_statistics extends NDB_Menu
                             c.CenterID as CenterID, 
                             s.SubprojectID as SubprojectID,
                                 CASE s.visit_label
-                                    -- WHEN 'v6' THEN 'v06'
                                     WHEN '6mo' THEN 'v06'
                                     WHEN '12m' THEN 'v12'
                                     WHEN '18mo' THEN 'v18'
@@ -104,32 +148,12 @@ class NDB_Menu_statistics extends NDB_Menu
                     AND f.CommentID NOT LIKE 'DDE%' AND (f.Data_entry IS NULL OR f.Data_entry <> 'Complete')
                     GROUP BY c.CenterID, SubprojectID, VLabel, Subcat
             ", &$result);
-
-            /*$DB->select("SELECT count(*) as val, 
-                        COALESCE(i.Data_entry_completion_status,'Confused') as Subcat, 
-                        c.CenterID as CenterID, 
-                        s.SubprojectID as SubprojectID, 
-                        CASE s.visit_label
-                            WHEN 'v6' THEN 'v06'
-                            WHEN '6mo' THEN 'v06'
-                            WHEN '12m' THEN 'v12'
-                            WHEN '18mo' THEN 'v18'
-                            WHEN '24mo' THEN 'v24'
-                            ELSE lower(s.visit_label) END as VLabel
-                    FROM session s JOIN candidate c USING (CandID) LEFT JOIN flag f ON (s.ID=f.SessionID)
-                        LEFT JOIN $_REQUEST[instrument] i USING(CommentID)
-                    WHERE s.active='Y' AND s.CenterID <> '1' AND s.Cancelled='N'
-                        AND (CommentID IS NULL OR CommentID NOT LIKE 'DDE%') AND (f.Test_name IS NULL OR f.Test_name='$_REQUEST[instrument]')
-                    AND ((s.Current_stage IN ('Visit', 'Screening')
-                    AND s.SubprojectID IN (1, 2)) OR s.SubprojectID=3) 
-                    GROUP BY c.CenterID, SubprojectID, VLabel, Subcat", &$result); */
+            $this->tpl_data['RecruitsTable'] = $this->render_stats_table("Data Entry Completion Status for $_REQUEST[instrument]", $Subcategories, $Visits, "instrument", $instruments, $_REQUEST['instrument'], $centers, $result, "demographics");
         } else {
             $Subcategories = array('Male', 'Female');
-            $this->tpl_data['RecruitHeader'] = "Breakdown of Registered Candidates";
             $DB->select("SELECT c.CenterID as CenterID, 
                             s.SubprojectID as SubprojectID, 
                             CASE s.visit_label
-                                WHEN 'v6' THEN 'v06'
                                 WHEN '6mo' THEN 'v06'
                                 WHEN '12m' THEN 'v12'
                                 WHEN '18mo' THEN 'v18'
@@ -142,30 +166,12 @@ class NDB_Menu_statistics extends NDB_Menu
                     AND ((s.Current_stage IN ('Visit', 'Screening')
                     AND s.SubprojectID IN (1, 2)) OR s.SubprojectID=3) 
                  GROUP BY c.CenterID, SubprojectID, VLabel, Subcat", &$result);
-        }
-        if (PEAR::isError($result)) {
-            return PEAR::raiseError("DB Error: ".$result->getMessage());
+            if (PEAR::isError($result)) {
+                return PEAR::raiseError("DB Error: ".$result->getMessage());
+            }
+            $this->tpl_data['RecruitsTable'] = $this->render_stats_table("Breakdown of Registered Candidates", $Subcategories, $Visits, "instrument", $instruments, '', $centers, $result, "demographics");
         }
 
-        foreach($result as $row) {
-            $subproj = $row['SubprojectID'];
-            $vl = $row['VLabel'];
-            $subcat = $row['Subcat'];
-            $center = $row['CenterID'];
-            $this->tpl_data['recruits'][$subproj]['C' . $center][$vl][$subcat] = $row['val'];
-
-            // Keep a running tally so that we can avoid calculating things
-            // in the template
-            $this->tpl_data['recruits'][$subproj][$vl][$subcat] += $row['val'];
-            $this->tpl_data['recruits'][$subproj][$vl]['total'] += $row['val'];
-            $this->tpl_data['recruits'][$vl][$subcat] += $row['val'];
-            $this->tpl_data['recruits'][$vl]['total'] += $row['val'];
-            $this->tpl_data['recruits'][$subproj]['total'] += $row['val'];
-
-            $this->tpl_data['recruits']['C' . $center][$subcat] += $row['val'];
-            $this->tpl_data['recruits']['C' . $center][$vl][$subcat] += $row['val'];
-        }
-        $this->tpl_data['Subcategories'] = $Subcategories;
 
 
 	//---- BEHAVIORAL STATS -----
@@ -249,6 +255,65 @@ class NDB_Menu_statistics extends NDB_Menu
                         floor($c['all']['complete'] / $c['all']['total']*100);
             }
         }
+
+        $MRISubcategories = array('Complete', 'Partial Run', 'No Scan'); 
+        $MRIOptions = array('T1' => 'T1', 
+            'T2' => 'T2', 
+            'T1T2' => 'T1 and T2',
+            'DTI' => 'DTI',
+            'BOLD' => 'BOLD',
+            'Spectroscopy' => 'Spectroscopy'
+        );
+        if($_REQUEST['mri_type']) {
+            $MRI_Type = $_REQUEST['mri_type'];
+            $MRI_Type_Field = $_REQUEST['mri_type'] . "_Scan_Done";
+            $MRIHeader = "$MRI_Type Breakdown";
+            if($_REQUEST['mri_type'] == 'T1T2') {
+                $MRI_Type_Field = "T1_Scan_Done='Complete' and T2_Scan_Done='Complete'";
+                $MRIHeader = "T1 and T2 Complete Breakdown";
+                $CaseStatement = "
+                         CASE($MRI_Type_Field)
+                            WHEN True then 'Complete'
+                            WHEN False Then 'Incomplete'
+                            ELSE 'Incomplete'
+                         END";
+                $MRISubcategories = array('Complete', 'Incomplete');
+            } else {
+                $CaseStatement = "
+                         CASE($MRI_Type_Field)
+                            WHEN 'Partial' THEN 'Partial Run'
+                            WHEN 'No' THEN 'No Scan'
+                            ELSE $MRI_Type_Field
+                         END";
+            }
+        } else {
+            $MRI_Type_Field = 'T1_Scan_Done';
+            $MRI_Type = 'T1';
+            $MRIHeader = "T1 Scan Done Breakdown";
+            $CaseStatement = "
+                     CASE($MRI_Type_Field)
+                        WHEN 'Partial' THEN 'Partial Run'
+                        WHEN 'No' THEN 'No Scan'
+                        ELSE $MRI_Type_Field
+                     END";
+        }
+        $DB->select("SELECT s.SubprojectID, 
+                         c.CenterID, 
+                         lower(s.Visit_label) as VLabel,
+                         $CaseStatement as Subcat,
+                         COUNT(*) as val 
+                  FROM mri_parameter_form m JOIN flag f USING (CommentID) 
+                        JOIN session s ON (f.SessionID=s.ID) 
+                        JOIN candidate c ON (c.CandID=s.CandID) 
+                  WHERE s.Current_stage <> 'Recycling Bin' 
+                        AND f.Administration <> 'None'
+                        AND s.Cancelled='N'
+                        AND s.Active='Y'
+                        AND c.Cancelled='N'
+                        AND c.Active='Y'
+                  GROUP BY Subcat, s.SubprojectID, c.CenterID, s.Visit_label", &$result);
+        $M_Visits = array ('6 Month' => 'v06', '12 Month' => 'v12', '24 Month' => 'v24');
+        $this->tpl_data['MRI_Done_Table'] = $this->render_stats_table($MRIHeader, $MRISubcategories, $M_Visits, "mri_type", $MRIOptions, $MRI_Type, $centers, $result, "mri");
 
         $DB->select("SELECT s.SubprojectID, 
                          c.CenterID, 
@@ -360,6 +425,7 @@ class NDB_Menu_statistics extends NDB_Menu
               $mri_data[] = array('name' => $name,  'work_station_count' => $work_station_count, 'claimed_count' => $claimed_count, 'forms_count' => $forms_count);
               
         }
+
         $this->tpl_data['mri_data'] = $mri_data;
     } // End function
 } // End class

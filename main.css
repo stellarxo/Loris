@@ -376,11 +376,14 @@ table.data {
 .data tr td.complete {
     background: #DFD;
 }
-.data tr td.incomplete {
+.data tr td.incomplete, .data tr td.no_scan, .data tr td.no_scan.total {
     background: #FDD;
 }
+.data tr td.partial_run, .data tr td.partial_run.total {
+    background: #FFD; /*rgb(217, 217, 119); */
+}
 .data tr td.complete.total {
-    background: #DFD;
+    background: #DFD; 
     font-weight: bold;
 }
 .data tr td.incomplete.total {

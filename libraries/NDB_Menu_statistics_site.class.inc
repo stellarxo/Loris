@@ -49,6 +49,12 @@ class NDB_Menu_statistics_site extends NDB_Menu
             "vineland_subject" 
     );
 
+    // Helper function to get a friendlier version of the instrument name.
+    // This is mostly used for the MRI site statistics, which uses 
+    // names like "Tarchive_Missing" for "MRI Parameter Form Completed but Missing Tarchive Entry"
+    function _getInstrumentName($instrument) {
+        return $instrument;
+    }
     function _CompleteCount($id, $instrument) {
         $DB =& Database::singleton();
         $count = $DB->selectOne(
@@ -126,7 +132,7 @@ class NDB_Menu_statistics_site extends NDB_Menu
                         'PSCID' => $row['PSCID']
                         );
             }
-            $data[] = array('name' => $instrument, 'count' => $complete_count, 'incompletes' => $results);
+            $data[] = array('name' => $this->_getInstrumentName($instrument), 'count' => $complete_count, 'incompletes' => $results);
         }
 
         $this->tpl_data["data"] = $data;
