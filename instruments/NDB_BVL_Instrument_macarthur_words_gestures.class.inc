@@ -18,7 +18,14 @@ class NDB_BVL_Instrument_macarthur_words_gestures extends NDB_BVL_Instrument
         "words_produced_number",
         "early_gestures_number",
         "later_gestures_number",
-        "total_gestures_number");
+        "total_gestures_number",
+        "phrases_understood_percentile",
+        "words_understood_percentile",
+        "words_produced_percentile",
+        "early_gestures_percentile",
+        "later_gestures_percentile",
+        "total_gestures_percentile"
+    );
 
 
     //answers to often asked questions
@@ -228,761 +235,241 @@ class NDB_BVL_Instrument_macarthur_words_gestures extends NDB_BVL_Instrument
     }
 
 
-    function score(){
-    	if($this->_determineDataEntryCompletionStatus() == "Incomplete") {
-    		return;
-    	}
+    function SumWords($questions, &$record, $question_prefix, &$understands, &$understands_and_says) {
+        $understands = 0;
+        $understands_and_says = 0;
+        for($qNum = 1; $qNum <= count($questions); $qNum++) {
+            if($record[$question_prefix . $qNum] == "understands") {
+                $understands++;
+            } else if($record[$question_prefix . $qNum] == "says_and_understands") {
+                $understands_and_says++;
+            }
+        }
+    }
+    function SumYesNo($questions, &$record, $question_prefix, &$yes, &$no) {
+        $yes = 0;
+        $no = 0;
+        for($qNum = 1; $qNum <= count($questions); $qNum++) {
+            if($record[$question_prefix . $qNum] == "yes") {
+                $yes++;
+            } else if($record[$question_prefix . $qNum] == "no") {
+                $no++;
+            }
+        }
+    }
+
+    function CalculatePercentile($scale, $age_months, $gender, &$scores) {
+        $db =& Database::singleton();
+        if(PEAR::isError($db)) {
+            return PEAR::raiseError ("Could not connect to database".$db->getMessage());
+        }
+        $scale_number = $scale . "_number";
+        $scale_percentile = $scale . "_percentile";
+
+        $query_scores = "SELECT * FROM macarthur_lookup WHERE age_months=".$age_months. " AND sex='$gender' AND score_raw=".$scores[$scale_number]." AND subscale='$scale_number'";
+        $PercentileScore  = array();
+        $db->selectRow($query_scores, $PercentileScore);
+        if (PEAR::isError($PercentileScore)) {
+            return PEAR::raiseError("Could not retrieve scores: " . $PercentileScore->getMessage());
+        }
+
+        $scores[$scale_percentile]= $PercentileScore['score_percentile'];
+
+        if ($PercentileScore == NULL) {
+            $score_holder = $scores[$scale_number];
+            $query_scores1a = "SELECT * FROM macarthur_lookup WHERE age_months=$age_months AND sex='$gender' AND subscale='$scale_number' AND score_raw>$score_holder ORDER BY score_raw ASC LIMIT 1";
+            $record_1a = array();
+            $db->selectRow($query_scores1a, $record_1a);
+            if (PEAR::isError($record_1a)) {
+                return PEAR::raiseError("Could not retrieve scores: " . $record_1a->getMessage());
+            }
+
+            $query_scores1b = "SELECT * FROM macarthur_lookup WHERE age_months=".$age_months. " AND sex='$gender' AND subscale='$scale_number' AND score_raw<$score_holder ORDER BY score_raw DESC LIMIT 1";
+            $record_1b = array();
+            $db->selectRow($query_scores1b, $record_1b);
+            if (PEAR::isError($record_1b)) {
+                return PEAR::raiseError("Could not retrieve scores: " . $record_1b->getMessage());
+            }
+
+            $percentile_calculation1 = (
+                    ($scores[$scale_number]-$record_1b['score_raw'])/
+                    ($record_1a['score_raw']-$record_1b['score_raw'])
+                    )*($record_1a['score_percentile']-$record_1b['score_percentile'])+$record_1b['score_percentile'];
+
+            $scores[$scale_percentile]=round($percentile_calculation1);
+
+        }
+    }
+
+    function score() {
+        if($this->_determineDataEntryCompletionStatus() == "Incomplete") {
+            return;
+        }
 
         //null scores
-		$this->_nullScores($this->scoreLabels);
-		
+        $this->_nullScores($this->scoreLabels);
+
         //get the saved scores
-    	$db =& Database::singleton();
-    	if(PEAR::isError($db)) {
-			return PEAR::raiseError ("Could not connect to database".$db->getMessage());
-    	}
-  	
-	
-    	$query = "SELECT * FROM $this->table WHERE CommentID = '$this->commentID'";
-    	$record = array();
-    	$db->selectRow($query, $record);
-    	if (PEAR::isError($record)) {
-    		return PEAR::raiseError("Could not retrieve scores: " . $record->getMessage());
-    	}
+        $db =& Database::singleton();
+        if(PEAR::isError($db)) {
+            return PEAR::raiseError ("Could not connect to database".$db->getMessage());
+        }
 
-	// Get gender   
-	$query_gender = "SELECT Gender FROM candidate as c, session as s, flag as f, $this->table as t WHERE t.CommentID = '$this->commentID' AND f.CommentID=t.CommentID AND s.ID=f.SessionID AND s.CandID=c.CandID";
-    	$record_gender = array();
-    	$db->selectRow($query_gender, $record_gender);
-    	if (PEAR::isError($record_gender)) {
-    		return PEAR::raiseError("Could not retrieve scores: " . $record_gender->getMessage());
-    	}
- 	$gender=strtolower($record_gender['Gender']);
 
-       // Get the subject age in months for scoring
+        $query = "SELECT * FROM $this->table WHERE CommentID = '$this->commentID'";
+        $record = array();
+        $db->selectRow($query, $record);
+        if (PEAR::isError($record)) {
+            return PEAR::raiseError("Could not retrieve scores: " . $record->getMessage());
+        }
+
+        // Get gender   
+        $query_gender = "SELECT Gender FROM candidate as c, session as s, flag as f, $this->table as t WHERE t.CommentID = '$this->commentID' AND f.CommentID=t.CommentID AND s.ID=f.SessionID AND s.CandID=c.CandID";
+        $record_gender = array();
+        $db->selectRow($query_gender, $record_gender);
+        if (PEAR::isError($record_gender)) {
+            return PEAR::raiseError("Could not retrieve scores: " . $record_gender->getMessage());
+        }
+        $gender=strtolower($record_gender['Gender']);
+
+        // Get the subject age in months for scoring
         $timepoint =& TimePoint::singleton($this->getSessionID());
         $dob = $timepoint->getEffectiveDateOfBirth();
-        
-		$age = Utility::calculateAge($dob, $record["Date_taken"]);
-       		$age_months = $age['year'] * 12 + $age['mon'];
+
+        $age = Utility::calculateAge($dob, $record["Date_taken"]);
+        $age_months = $age['year'] * 12 + $age['mon'];
         if($this->isError($age)) {
             return $this->raiseError("Could not compute age");
-        }  
+        }
 
 
-  	//calculate Section B (28): Phrases Understood
-        
+        //calculate Section B (28): Phrases Understood
         $questionArray = array("Are you hungry?","Are you tired/sleepy?", "Be careful.", "Be quiet.", "Clap your hands.", "Change diaper.", "Come here/come on.", "Daddy's/mommy's home.", "Do you want 	more?", "Don't do that.", "Don't touch.", "Get up.", "Give it to mommy.", "Give me a hug.", "Give me a kiss.", "Go get __.", "Good girl/boy.", "Hold still.", "Let's go bye bye.", "Look/look here.", 		"Open your mouth.", "Sit down.", "Spit it out.", "Stop it.", "Time to go night night.", "Throw the ball.", "This little piggy.", "Want to go for a ride?");
 
-	$phrases_number = 0;
-	$qNum = 1;
-
+        $phrases_number = 0;
+        $qNum = 1;
         foreach($questionArray as $label) {
             if($record["I_B_" . $qNum] == "understands"){
-               $phrases_number++;
+                $phrases_number++;
             }
-	    $qNum++;
-         }
+            $qNum++;
+        }
 
         $scores["phrases_understood_number"] = $phrases_number;
 
-	//Section C: Starting to Talk
+        //Section C: Starting to Talk
 
-	if($record["I_C_1"] == "sometimes" || $record["I_C_1"] == "often"){
+        if($record["I_C_1"] == "sometimes" || $record["I_C_1"] == "often"){
             $scores["I_C_1_score"] = "yes";
-         }
-	 else if ($record["I_C_1"] == "never" ){
+        }
+        else if ($record["I_C_1"] == "never" ){
             $scores["I_C_1_score"] = "no";
-         }
-	
+        }
 
-	if($record["I_C_2"] == "sometimes" || $record["I_C_2"] == "often"){
+
+        if($record["I_C_2"] == "sometimes" || $record["I_C_2"] == "often"){
             $scores["I_C_2_score"] = "yes";
-         }
-	 else if ($record["I_C_2"] == "never" ){
+        }
+        else if ($record["I_C_2"] == "never" ){
             $scores["I_C_2_score"] = "no";
-         }
+        }
+
+
+        //calculate Section D: Vocabulary Checklist 
+        //Sound Effects and Animal Sounds
+        $SectionQuestions = array(
+                1 => array("baa baa", "choo choo","cockadoodledoo", "grrr", "meow", "moo", "ouch", "quack quack", "uh oh", "vroom", "woof woof", "yum yum"),
+                2 => array("animal", "bear", "bee", "bird", "bug", "bunny", "butterfly", "cat", "chicken", "cow", "deer", "dog", "donkey", "duck", "elephant", "fish", "frog", "giraffe", "goose", 		"horse", "kitty", "lamb", "lion", "monkey", "mouse", "owl", "penguin", "pig", "pony", "puppy", "sheep", "squirrel", "teddy bear", "tiger", "turkey", "turtle"),
+                3 => array("airplane", "bicycle", "bus", "car", "firetruck", "motorcycle", "stroller", "train", "truck"),
+                4 => array("ball", "balloon", "block", "book", "bubbles", "doll", "pen", "toy"),
+                5 => array("apple", "banana", "bread", "butter", "cake", "candy", "carrots", "cereal", "cheerios", "cheese", "chicken", "coffee", "cookie", "cracker", "drink", "egg", "fish", "food", "ice cream", "juice", "meat", "milk", "noodles", "orange", "peas", "pizza", "raisin", "spaghetti", "toast", "water"),
+                6 => array("beads", "bib", "boots", "button", "coat", "diaper", "dress", "hat", "jacket", "jeans", "necklace", "pajamas", "pants", "shirt", "shoe", "shorts", "sock", "sweater", "zipper"),
+                7 => array("arm", "belly button", "cheek", "ear", "eye", "face", "foot", "finger", "hair", "hand", "head", "knee", "leg", "mouth", "nose", "owie/boo boo", "tooth", "toe", "tongue", "tummy"),
+                8 => array("bathroom", "bathtub", "bed", "bedroom", "chair", "couch", "crib", "door", "drawer", "garage", "high chair", "kitchen", "living room", "oven", "play pen", "potty", "refrigerator", "rocking chair", "sink", "stairs", "stove", "table", "TV", "window"),
+                9 => array("blanket", "bottle", "bowl", "box", "broom", "brush", "clock", "comb", "cup", "dish", "fork", "glass", "glasses", "hammer", "keys", "lamp", "light", "medicine", "money", "paper", "penny", "picture", "pillow", "plant", "plate", "purse", "radio", "scissors", "soap", "spoon", "telephone", "toothbrush", "towel", "trash", "vacuum", "watch"),
+                10 => array("backyard", "beach", "church*", "flower", "garden", "home", "house", "moon", "outside", "park", "party", "pool", "rain", "rock", "school", "shovel", "sky", "slide", "snow", "star", "store", "sun", "swing", "tree", "water", "work", "zoo"),
+                11 => array("aunt", "baby", "babysitter", "babysitter's name", "boy", "brother", "child", "daddy*", "girl", "grandma", "grandpa", "lady", "man", "mommy*", "child's own name", "people", "person", "sister", "teacher", "uncle"),
+                12 => array("bath", "breakfast", "bye or bye bye", "dinner", "don't please", "hello", "hi", "lunch", "nap", "night night", "no", "patty cake", "peekaboo", "please", "shh/shush/hush", "thank you", "wait", "wanna/want to", "yes"),
+                13 => array("bite", "blow", "break", "bring", "bump", "clean", "close", "cry", "dance", "draw", "drink", "drive", "eat", "fall", "feed", "finish", "get", "give", "go", "help", "hit", "hug", "hurry", "jump", "kick", "kiss", "look", "love", "open", "play", "pull", "push", "put", "read", "ride", "run", "say", "see", "show", "sing", "sleep", "smile", "splash", "stop", "swim", 	"swing", "take", "throw", "tickle", "touch", "watch", "walk", "wash", "wipe", "write"),
+                14 => array("day", "later", "morning", "night", "now", "today", "tomorrow", "tonight"),
+                15 => array("all gone", "asleep", "bad", "big", "blue", "broken", "careful", "clean", "cold", "cute", "dark", "dirty", "dry", "empty", "fast", "fine", "gentle", "good", "happy", "hard", "hot", "hungry", "hurt", "little", "naughty", "nice", "old", "pretty", "red", "scared", "sick", "sleepy", "soft", "thirsty", "tired", "wet", "yucky"),
+                16 => array("his", "her", "I", "it", "me", "mine", "my", "that", "this", "you", "your"),
+                17 => array("how", "what", "when", "where", "who", "why"),
+                18 => array("away", "back", "down", "in", "inside", "off", "on", "out", "there", "under", "up"),
+                19 => array("all", "another", "more", "none", "not", "other", "same", "some")
+        );
+
+        foreach($SectionQuestions as $section => $words) {
+            $this->SumWords($words, $record, "I_D_" . $section . "_", &$understands[$section], &$says_and_understands[$section]);
+        }
+        $scores["words_produced_number"] = array_sum($says_and_understands);
+        $scores["words_understood_number"] = array_sum($understands) + $scores["words_produced_number"];
+
+
+        //Section II: Action and Gestures
+        //Part A: First Communicative Gestures
 
-
-	//calculate Section D: Vocabulary Checklist 
-	//Sound Effects and Animal Sounds
-
-        $questionArray = array("baa baa", "choo choo","cockadoodledoo", "grrr", "meow", "moo", "ouch", "quack quack", "uh oh", "vroom", "woof woof", "yum yum");
-	
-	$sound_effects_animal_sounds_understands = 0;
-	$sound_effects_animal_sounds_says_and_understands = 0;
-	$qNum = 1;
-
-        foreach($questionArray as $label) {
-            if($record["I_D_1_" . $qNum] == "understands"){
-               $sound_effects_animal_sounds_understands++;
-            }
-	    else if($record["I_D_1_" . $qNum] == "says_and_understands"){
-               $sound_effects_animal_sounds_says_and_understands++;
-	    }
-	    $qNum++;
-         }
-	
-
-	//Animal Names (Real or Toy)
-
-        $questionArray = array("animal", "bear", "bee", "bird", "bug", "bunny", "butterfly", "cat", "chicken", "cow", "deer", "dog", "donkey", "duck", "elephant", "fish", "frog", "giraffe", "goose", 		"horse", "kitty", "lamb", "lion", "monkey", "mouse", "owl", "penguin", "pig", "pony", "puppy", "sheep", "squirrel", "teddy bear", "tiger", "turkey", "turtle");	
-
-	$animal_names_understands = 0;
-	$animal_names_says_and_understands = 0;
-	$qNum = 1;
-
-        foreach($questionArray as $label) {
-            if($record["I_D_2_" . $qNum] == "understands"){
-               $animal_names_understands++;
-            }
-	    else if($record["I_D_2_" . $qNum] == "says_and_understands"){
-               $animal_names_says_and_understands++;
-	    }
-	    $qNum++;
-         }
-
-	//Vehicles (Real or Toy)
-
-        $questionArray = array("airplane", "bicycle", "bus", "car", "firetruck", "motorcycle", "stroller", "train", "truck");
-
-	$vehicles_understands = 0;
-	$vehicles_says_and_understands = 0;
-	$qNum = 1;
-
-        foreach($questionArray as $label) {
-            if($record["I_D_3_" . $qNum] == "understands"){
-               $vehicles_understands++;
-            }
-	    else if($record["I_D_3_" . $qNum] == "says_and_understands"){
-               $vehicles_says_and_understands++;
-	    }
-	    $qNum++;
-         }
-
-	
-	//Toys
-        $questionArray = array("ball", "balloon", "block", "book", "bubbles", "doll", "pen", "toy");
-
-	$toys_understands = 0;
-	$toys_says_and_understands = 0;
-	$qNum = 1;
-
-        foreach($questionArray as $label) {
-            if($record["I_D_4_" . $qNum] == "understands"){
-               $toys_understands++;
-            }
-	    else if($record["I_D_4_" . $qNum] == "says_and_understands"){
-               $toys_says_and_understands++;
-	    }
-	    $qNum++;
-         }
-
-
-	//Food and Drink
-
-        $questionArray = array("apple", "banana", "bread", "butter", "cake", "candy", "carrots", "cereal", "cheerios", "cheese", "chicken", "coffee", "cookie", "cracker", "drink", "egg", "fish",
-        "food", "ice cream", "juice", "meat", "milk", "noodles", "orange", "peas", "pizza", "raisin", "spaghetti", "toast", "water");
-
-	$food_and_drink_understands = 0;
-	$food_and_drink_says_and_understands = 0;
-	$qNum = 1;
-
-        foreach($questionArray as $label) {
-            if($record["I_D_5_" . $qNum] == "understands"){
-               $food_and_drink_understands++;
-            }
-	    else if($record["I_D_5_" . $qNum] == "says_and_understands"){
-               $food_and_drink_says_and_understands++;
-	    }
-	    $qNum++;
-         }
-
-
-	//Clothing
-
-       $questionArray = array("beads", "bib", "boots", "button", "coat", "diaper", "dress", "hat", "jacket", "jeans", "necklace", "pajamas", "pants", "shirt", "shoe", "shorts", "sock", "sweater", 		"zipper"); 
-
-	$clothing_understands = 0;
-	$clothing_says_and_understands = 0;
-	$qNum = 1;
-
-        foreach($questionArray as $label) {
-            if($record["I_D_6_" . $qNum] == "understands"){
-               $clothing_understands++;
-            }
-	    else if($record["I_D_6_" . $qNum] == "says_and_understands"){
-               $clothing_says_and_understands++;
-	    }
-	    $qNum++;
-         }
-
-	//Body Parts
-
-        $questionArray = array("arm", "belly button", "cheek", "ear", "eye", "face", "foot", "finger", "hair", "hand", "head", "knee", "leg", "mouth", "nose", "owie/boo boo", "tooth", "toe", "tongue", 	"tummy");
-
-	$body_parts_understands = 0;
-	$body_parts_says_and_understands = 0;
-	$qNum = 1;
-
-        foreach($questionArray as $label) {
-            if($record["I_D_7_" . $qNum] == "understands"){
-               $body_parts_understands++;
-            }
-	    else if($record["I_D_7_" . $qNum] == "says_and_understands"){
-               $body_parts_says_and_understands++;
-	    }
-	    $qNum++;
-         }
-
-	//Furniture and Rooms
-
-        $questionArray = array("bathroom", "bathtub", "bed", "bedroom", "chair", "couch", "crib", "door", "drawer", "garage", "high chair", "kitchen", "living room", "oven", "play pen", "potty", 		"refrigerator", "rocking chair", "sink", "stairs", "stove", "table", "TV", "window");
-
-	$furniture_and_rooms_understands = 0;
-	$furniture_and_rooms_says_and_understands = 0;
-	$qNum = 1;
-
-        foreach($questionArray as $label) {
-            if($record["I_D_8_" . $qNum] == "understands"){
-               $furniture_and_rooms_understands++;
-            }
-	    else if($record["I_D_8_" . $qNum] == "says_and_understands"){
-               $furniture_and_rooms_says_and_understands++;
-	    }
-	    $qNum++;
-         }
-
-	//Small Household Items
-
-        $questionArray = array("blanket", "bottle", "bowl", "box", "broom", "brush", "clock", "comb", "cup", "dish", "fork", "glass", "glasses", "hammer", "keys", "lamp", "light", "medicine", "money", 		"paper", "penny", "picture", "pillow", "plant", "plate", "purse", "radio", "scissors", "soap", "spoon", "telephone", "toothbrush", "towel", "trash", "vacuum", "watch");
-
-	$small_household_items_understands = 0;
-	$small_household_items_says_and_understands = 0;
-	$qNum = 1;
-
-        foreach($questionArray as $label) {
-            if($record["I_D_9_" . $qNum] == "understands"){
-               $small_household_items_understands++;
-            }
-	    else if($record["I_D_9_" . $qNum] == "says_and_understands"){
-               $small_household_items_says_and_understands++;
-	    }
-	    $qNum++;
-         }
-
-	//Outside Things and Places to Go
-
-        $questionArray = array("backyard", "beach", "church*", "flower", "garden", "home", "house", "moon", "outside", "park", "party", "pool", "rain", "rock", "school", "shovel", "sky", "slide", "snow", 
-        "star", "store", "sun", "swing", "tree", "water", "work", "zoo");
-
-	$outside_things_understands = 0;
-	$outside_things_says_and_understands = 0;
-	$qNum = 1;
-
-        foreach($questionArray as $label) {
-            if($record["I_D_10_" . $qNum] == "understands"){
-               $outside_things_understands++;
-            }
-	    else if($record["I_D_10_" . $qNum] == "says_and_understands"){
-               $outside_things_says_and_understands++;
-	    }
-	    $qNum++;
-         }
-
-	//People
-        $questionArray = array("aunt", "baby", "babysitter", "babysitter's name", "boy", "brother", "child", "daddy*", "girl", "grandma", "grandpa", "lady", "man", "mommy*", "child's own name", "people", 		"person", "sister", "teacher", "uncle");
-
-	$people_understands = 0;
-	$people_says_and_understands = 0;
-	$qNum = 1;
-
-        foreach($questionArray as $label) {
-            if($record["I_D_11_" . $qNum] == "understands"){
-               $people_understands++;
-            }
-	    else if($record["I_D_11_" . $qNum] == "says_and_understands"){
-               $people_says_and_understands++;
-	    }
-	    $qNum++;
-         }
-
-	//Games and Routines
-
-        $questionArray = array("bath", "breakfast", "bye or bye bye", "dinner", "don't please", "hello", "hi", "lunch", "nap", "night night", "no", "patty cake", "peekaboo", "please", "shh/shush/hush", 
-        "thank you", "wait", "wanna/want to", "yes");
-
-	$games_routines_understands = 0;
-	$games_routines_says_and_understands = 0;
-	$qNum = 1;
-
-        foreach($questionArray as $label) {
-            if($record["I_D_12_" . $qNum] == "understands"){
-               $games_routines_understands++;
-            }
-	    else if($record["I_D_12_" . $qNum] == "says_and_understands"){
-               $games_routines_says_and_understands++;
-	    }
-	    $qNum++;
-         }
-
-	//Action Words
-
-        $questionArray = array("bite", "blow", "break", "bring", "bump", "clean", "close", "cry", "dance", "draw", "drink", "drive", "eat", "fall", "feed", "finish", "get", "give", "go", "help", "hit",
-        "hug", "hurry", "jump", "kick", "kiss", "look", "love", "open", "play", "pull", "push", "put", "read", "ride", "run", "say", "see", "show", "sing", "sleep", "smile", "splash", "stop", "swim", 	"swing", "take", "throw", "tickle", "touch", "watch", "walk", "wash", "wipe", "write");
-
-	$action_words_understands = 0;
-	$action_words_says_and_understands = 0;
-	$qNum = 1;
-
-        foreach($questionArray as $label) {
-            if($record["I_D_13_" . $qNum] == "understands"){
-               $action_words_understands++;
-            }
-	    else if($record["I_D_13_" . $qNum] == "says_and_understands"){
-               $action_words_says_and_understands++;
-	    }
-	    $qNum++;
-         }
-
-	//Words About Time
-
-	$questionArray = array("day", "later", "morning", "night", "now", "today", "tomorrow", "tonight");
-
-	$words_about_time_understands = 0;
-	$words_about_time_says_and_understands = 0;
-	$qNum = 1;
-
-        foreach($questionArray as $label) {
-            if($record["I_D_14_" . $qNum] == "understands"){
-               $words_about_time_understands++;
-            }
-	    else if($record["I_D_14_" . $qNum] == "says_and_understands"){
-               $words_about_time_says_and_understands++;
-	    }
-	    $qNum++;
-         }
-
-	//Descriptive Words
-
-        $questionArray = array("all gone", "asleep", "bad", "big", "blue", "broken", "careful", "clean", "cold", "cute", "dark", "dirty", "dry", "empty", "fast", "fine", "gentle", "good", "happy", "hard",
-        "hot", "hungry", "hurt", "little", "naughty", "nice", "old", "pretty", "red", "scared", "sick", "sleepy", "soft", "thirsty", "tired", "wet", "yucky");
-
-	$descriptive_words_understands = 0;
-	$descriptive_words_says_and_understands = 0;
-	$qNum = 1;
-
-        foreach($questionArray as $label) {
-            if($record["I_D_15_" . $qNum] == "understands"){
-               $descriptive_words_understands++;
-            }
-	    else if($record["I_D_15_" . $qNum] == "says_and_understands"){
-               $descriptive_words_says_and_understands++;
-	    }
-	    $qNum++;
-         }
-
-	//Pronouns
-
-        $questionArray = array("his", "her", "I", "it", "me", "mine", "my", "that", "this", "you", "your");
-
-	$pronouns_understands = 0;
-	$pronouns_says_and_understands = 0;
-	$qNum = 1;
-
-        foreach($questionArray as $label) {
-            if($record["I_D_16_" . $qNum] == "understands"){
-               $pronouns_understands++;
-            }
-	    else if($record["I_D_16_" . $qNum] == "says_and_understands"){
-               $pronouns_says_and_understands++;
-	    }
-	    $qNum++;
-         }
-
-	//Question Words
-
-        $questionArray = array("how", "what", "when", "where", "who", "why");
-
-	$question_words_understands = 0;
-	$question_words_says_and_understands = 0;
-	$qNum = 1;
-
-        foreach($questionArray as $label) {
-            if($record["I_D_17_" . $qNum] == "understands"){
-               $question_words_understands++;
-            }
-	    else if($record["I_D_17_" . $qNum] == "says_and_understands"){
-               $question_words_says_and_understands++;
-	    }
-	    $qNum++;
-         }
-
-	//Prepositions and Locations
-
-        $questionArray = array("away", "back", "down", "in", "inside", "off", "on", "out", "there", "under", "up");
-
-	$prepositions_locations_understands = 0;
-	$prepositions_locations_says_and_understands = 0;
-	$qNum = 1;
-
-        foreach($questionArray as $label) {
-            if($record["I_D_18_" . $qNum] == "understands"){
-               $prepositions_locations_understands++;
-            }
-	    else if($record["I_D_18_" . $qNum] == "says_and_understands"){
-               $prepositions_locations_says_and_understands++;
-	    }
-	    $qNum++;
-         }
-
-	//Quantifiers
-
-        $questionArray = array("all", "another", "more", "none", "not", "other", "same", "some");
-
-	$quantifiers_understands = 0;
-	$quantifiers_says_and_understands = 0;
-	$qNum = 1;
-
-        foreach($questionArray as $label) {
-            if($record["I_D_19_" . $qNum] == "understands"){
-               $quantifiers_understands++;
-            }
-	    else if($record["I_D_19_" . $qNum] == "says_and_understands"){
-               $quantifiers_says_and_understands++;
-	    }
-	    $qNum++;
-         }
-
-	//calculation vocabulary checklist summary scores
-
-        $scores["words_produced_number"] = $sound_effects_animal_sounds_says_and_understands + $animal_names_says_and_understands + $vehicles_says_and_understands + $toys_says_and_understands + 					           $food_and_drink_says_and_understands + $clothing_says_and_understands + $body_parts_says_and_understands + $furniture_and_rooms_says_and_understands +            					           $small_household_items_says_and_understands + $outside_things_says_and_understands + $people_says_and_understands + $games_routines_says_and_understands +  					           $action_words_says_and_understands + $words_about_time_says_and_understands + $descriptive_words_says_and_understands + $pronouns_says_and_understands +  					           $question_words_says_and_understands + $prepositions_locations_says_and_understands + $quantifiers_says_and_understands;
-
-	$scores["words_understood_number"] = $sound_effects_animal_sounds_says_and_understands + $animal_names_says_and_understands + $vehicles_says_and_understands + $toys_says_and_understands + 					           $food_and_drink_says_and_understands + $clothing_says_and_understands + $body_parts_says_and_understands + $furniture_and_rooms_says_and_understands +            					           $small_household_items_says_and_understands + $outside_things_says_and_understands + $people_says_and_understands + $games_routines_says_and_understands +  					           $action_words_says_and_understands + $words_about_time_says_and_understands + $descriptive_words_says_and_understands + $pronouns_says_and_understands +  					           $question_words_says_and_understands + $prepositions_locations_says_and_understands + $quantifiers_says_and_understands + $sound_effects_animal_sounds_understands 						   + $animal_names_understands + $vehicles_understands + $toys_understands + $food_and_drink_understands + $clothing_understands + $body_parts_understands + 						   $furniture_and_rooms_understands + $small_household_items_understands + $outside_things_understands + $people_understands + $games_routines_understands +  						   $action_words_understands + $words_about_time_understands + $descriptive_words_understands + $pronouns_understands + $question_words_understands + 						   $prepositions_locations_understands + $quantifiers_understands;
-
-
-	//Section II: Action and Gestures
-	//Part A: First Communicative Gestures
 
         $questionArray = array("1. Extends arm to show you something he/she is holding.", "2. Reaches out and gives you a toy or some object that he/she is holding.", "3. Points (with arm and index finger 		extended) at some interesting object or event.", "4. Waves bye-bye on his/her own when someone leaves.", "5. Extends his/her arm upward to signal a wish to be picked up.", "6. Shakes head `no`.",
-        "7. Nods head `yes`.", "8. Gestures `hush` by placing finger to lips.", "9. Requests something by extending arm and opening and closing hand.", "10. Blows kisses from a distance.", 
-        "11. Smacks lips in a `yum yum` gesture to indicate that something taste good.", "12. Shrugs to indicate `all gone` or `where'd it go`.");
+                "7. Nods head `yes`.", "8. Gestures `hush` by placing finger to lips.", "9. Requests something by extending arm and opening and closing hand.", "10. Blows kisses from a distance.", 
+                "11. Smacks lips in a `yum yum` gesture to indicate that something taste good.", "12. Shrugs to indicate `all gone` or `where'd it go`.");
 
-	$first_communicative_gestures_sometimes = 0;
-	$first_communicative_gestures_often = 0;
-	$qNum = 1;
+        $first_communicative_gestures_sometimes = 0;
+        $first_communicative_gestures_often = 0;
+        $qNum = 1;
 
         foreach($questionArray as $label) {
             if($record["II_A_" . $qNum] == "sometimes"){
-               $first_communicative_gestures_sometimes++;
+                $first_communicative_gestures_sometimes++;
             }
-	    else if($record["II_A_" . $qNum] == "often"){
-               $first_communicative_gestures_often++;
-	    }
-	    $qNum++;
-         }
-
-	//Part B: Games and Routines
-
-        $questionArray = array("1. Play peekaboo.", "2. Play patty cake.", "3. Play `so big`.", "4. Play chasing games.", "5. Sing.", "6. Dance.");
-
-	$games_routines_yes = 0;
-	$games_routines_no = 0;
-	$qNum = 1;
-
-        foreach($questionArray as $label) {
-            if($record["II_B_" . $qNum] == "yes"){
-               $games_routines_yes++;
+            else if($record["II_A_" . $qNum] == "often"){
+                $first_communicative_gestures_often++;
             }
-	    else if($record["II_B_" . $qNum] == "no"){
-               $games_routines_no++;
-	    }
-	    $qNum++;
-         }
+            $qNum++;
+        }
 
-	//Part C: Actions with Objects
+        //Part B: Games and Routines
+        $ActionsGestures = array(
+            'B' => array("1. Play peekaboo.", "2. Play patty cake.", "3. Play `so big`.", "4. Play chasing games.", "5. Sing.", "6. Dance."),
+            'C' => array("1. Eat with a spoon or fork.", "2. Drink from a cup containing liquid.", "3. Comb or brush own hair.", "4. Brush teeth.", "5. Wipe face or hands with a towel or cloth.", 
+                "6. Put on hat.", "7. Put on a shoe or sock.", "8. Put on a necklace, bracelet, or watch.", "9. Lay head on hands and squeeze eyes shut as if sleeping.", "10. Blow to indicate something is hot.",
+                "11. Hold plane and make it `fly`.", "12. Put telephone to ear.", "13. Sniff flowers.", "14. Push toy car or truck.", "15. Throw a ball.", "16. Pour pretend liquid from one container to another.",
+                "17. Stir pretend liquid in a cup or pan with a spoon."),
+            'D' => array("1. Put to bed.", "2. Cover with blanket.", "3. Feed with bottle.", "4. Feed with spoon.", "5. Brush/comb its hair.", "6. Pat or burp it.", "7. Push in stroller/buggy.",
+                "8. Rock it.", "9. Kiss or hug it.", "10. Try to put shoe or sock or hat on it.", "11. Wipe its face or hands.", "12. Talk to it.", "13. Try to put diaper on it."),
+            'E' => array("1. Sweep with broom or mop.", "2. Put key in door or lock.", "3. Pound with hammer or mallet.", "4. Attempt to use saw.", "5. `Type` at a typewriter or computer keyboard.",
+                "6. `Read` (opens book, turns page).", "7. Vacuum.", "8. Water plants.", "9. Play musical instrument (e.g., piano, trumpet).", "10. `Drive` car by turning steering wheel.", "11. Wash dishes.",
+                "12. Clean with cloth or duster.", "13. Write with a pen, pencil, or marker.", "14. Dig with a shovel.", "15. Put on glasses.")
+        );
+        foreach($ActionsGestures as $section => $actions) {
+            $this->SumYesNo($actions, $record, "II_" . $section . "_", $YesActions[$section], $NoActions[$section]);
+        }
 
-        $questionArray = array("1. Eat with a spoon or fork.", "2. Drink from a cup containing liquid.", "3. Comb or brush own hair.", "4. Brush teeth.", "5. Wipe face or hands with a towel or cloth.", 
-        "6. Put on hat.", "7. Put on a shoe or sock.", "8. Put on a necklace, bracelet, or watch.", "9. Lay head on hands and squeeze eyes shut as if sleeping.", "10. Blow to indicate something is hot.",
-        "11. Hold plane and make it `fly`.", "12. Put telephone to ear.", "13. Sniff flowers.", "14. Push toy car or truck.", "15. Throw a ball.", "16. Pour pretend liquid from one container to another.",
-        "17. Stir pretend liquid in a cup or pan with a spoon.");
 
-	$actions_objects_yes = 0;
-	$actions_objects_no = 0;
-	$qNum = 1;
+        $scores["total_gestures_number"] = $first_communicative_gestures_sometimes + $first_communicative_gestures_often + array_sum($YesActions);
+        $scores["early_gestures_number"] = $first_communicative_gestures_sometimes + $first_communicative_gestures_often + $YesActions['B'];
+        $scores["later_gestures_number"] = $YesActions['C'] + $YesActions['D'] + $YesActions['E'];
 
-        foreach($questionArray as $label) {
-            if($record["II_C_" . $qNum] == "yes"){
-               $actions_objects_yes++;
+
+        //establish standard scores and percentile rank for subscales
+        // This only has data for the ages 8-18 months. After that, percentile ranks only exist for Macarthur Words and Sentences scale, but we still use words and gestures in v24
+        // to compare the subject against him/herself.
+        if($age_months >= 8 && $age_months <= 18) {
+            $Scales = array("phrases_understood", "words_understood", "words_produced", "early_gestures", "later_gestures", "total_gestures");
+            foreach($Scales as $scale) {
+                $this->CalculatePercentile($scale, $age_months, $gender, $scores);
             }
-	    else if($record["II_C_" . $qNum] == "no"){
-               $actions_objects_no++;
-	    }
-	    $qNum++;
-         }
+        } // end percentiles calculation
 
-	//Part D: Pretending to be a Parent
-
-        $questionArray = array("1. Put to bed.", "2. Cover with blanket.", "3. Feed with bottle.", "4. Feed with spoon.", "5. Brush/comb its hair.", "6. Pat or burp it.", "7. Push in stroller/buggy.",
-        "8. Rock it.", "9. Kiss or hug it.", "10. Try to put shoe or sock or hat on it.", "11. Wipe its face or hands.", "12. Talk to it.", "13. Try to put diaper on it.");
-
-	$pretending_parent_yes = 0;
-	$pretending_parent_no = 0;
-	$qNum = 1;
-
-        foreach($questionArray as $label) {
-            if($record["II_D_" . $qNum] == "yes"){
-               $pretending_parent_yes++;
-            }
-	    else if($record["II_D_" . $qNum] == "no"){
-               $pretending_parent_no++;
-	    }
-	    $qNum++;
-         }
-
-
-	//Part E: Imitating Other Adult Actions
-
-        $questionArray = array("1. Sweep with broom or mop.", "2. Put key in door or lock.", "3. Pound with hammer or mallet.", "4. Attempt to use saw.", "5. `Type` at a typewriter or computer keyboard.",
-        "6. `Read` (opens book, turns page).", "7. Vacuum.", "8. Water plants.", "9. Play musical instrument (e.g., piano, trumpet).", "10. `Drive` car by turning steering wheel.", "11. Wash dishes.",
-        "12. Clean with cloth or duster.", "13. Write with a pen, pencil, or marker.", "14. Dig with a shovel.", "15. Put on glasses.");
-
-	$imitating_adult_yes = 0;
-	$imitating_adult_no = 0;
-	$qNum = 1;
-
-        foreach($questionArray as $label) {
-            if($record["II_E_" . $qNum] == "yes"){
-               $imitating_adult_yes++;
-            }
-	    else if($record["II_E_" . $qNum] == "no"){
-               $imitating_adult_no++;
-	    }
-	    $qNum++;
-         }
-
-
-	$scores["total_gestures_number"] = $first_communicative_gestures_sometimes + $first_communicative_gestures_often + $games_routines_yes + $actions_objects_yes +  $pretending_parent_yes + 						   $imitating_adult_yes;
-
-
-	$scores["early_gestures_number"] = $first_communicative_gestures_sometimes + $first_communicative_gestures_often + $games_routines_yes;
-
-
-	$scores["later_gestures_number"] = $actions_objects_yes +  $pretending_parent_yes + $imitating_adult_yes;
-
-
-	//establish standard scores and percentile rank for subscales
-	// PHRASES UNDERSTOOD
-	$query_scores1 = "SELECT * FROM macarthur_lookup WHERE age_months=".$age_months. " AND sex='$gender' AND score_raw=".$scores['phrases_understood_number']." AND 					subscale='phrases_understood_number'";
-    	$record_1 = array();
-	$db->selectRow($query_scores1, $record_1);
-    	if (PEAR::isError($record_1)) {
-    		return PEAR::raiseError("Could not retrieve scores: " . $record_1->getMessage());
-    	}
-
-	$scores['phrases_understood_percentile']=($record_1['score_percentile']);
- 
-	if ($record_1 == NULL){
-	$score_holder = $scores['phrases_understood_number'];
-	$query_scores1a = "SELECT * FROM macarthur_lookup WHERE age_months=".$age_months. " AND sex='$gender' AND subscale='phrases_understood_number' AND score_raw>$score_holder ORDER BY score_raw ASC LIMIT 1";
-    	$record_1a = array();
-	$db->selectRow($query_scores1a, $record_1a);
-    	if (PEAR::isError($record_1a)) {
-    		return PEAR::raiseError("Could not retrieve scores: " . $record_1a->getMessage());
-    	}
-
-	$query_scores1b = "SELECT * FROM macarthur_lookup WHERE age_months=".$age_months. " AND sex='$gender' AND subscale='phrases_understood_number' AND score_raw<$score_holder ORDER BY score_raw DESC LIMIT 1";
-    	$record_1b = array();
-	$db->selectRow($query_scores1b, $record_1b);
-    	if (PEAR::isError($record_1b)) {
-    		return PEAR::raiseError("Could not retrieve scores: " . $record_1b->getMessage());
-    	}
-
-	$percentile_calculation1 = (($scores['phrases_understood_number']-$record_1b['score_raw'])/($record_1a['score_raw']-$record_1b['score_raw']))*($record_1a['score_percentile']-$record_1b['score_percentile'])+$record_1b['score_percentile'];
-
-	$scores['phrases_understood_percentile']=round($percentile_calculation1);
-
-	}
+        // save scores
+        $result = $db->update($this->table, $scores, array("CommentID"=>$this->getCommentID()));
+        if($db->isError($result)) {
+            return PEAR::raiseError("Could not save total score: ". $result->getMessage());
+        }
 
 
 
-	// WORDS UNDERSTOOD
-	$query_scores2 = "SELECT * FROM macarthur_lookup WHERE age_months=".$age_months. " AND sex='$gender' AND score_raw=".$scores['words_understood_number']." AND subscale='words_understood_number'";
-    	$record_2 = array();
-	$db->selectRow($query_scores2, $record_2);
-    	if (PEAR::isError($record_2)) {
-    		return PEAR::raiseError("Could not retrieve scores: " . $record_2->getMessage());
-    	}
-
-	$scores['words_understood_percentile']=($record_2['score_percentile']);
- 
-	if ($record_2 == NULL){
-	$score_holder = $scores['words_understood_number'];
-	$query_scores2a = "SELECT * FROM macarthur_lookup WHERE age_months=".$age_months. " AND sex='$gender' AND subscale='words_understood_number' AND score_raw>$score_holder ORDER BY score_raw ASC LIMIT 1";
-    	$record_2a = array();
-	$db->selectRow($query_scores2a, $record_2a);
-    	if (PEAR::isError($record_2a)) {
-    		return PEAR::raiseError("Could not retrieve scores: " . $record_2a->getMessage());
-    	}
-
-	$query_scores2b = "SELECT * FROM macarthur_lookup WHERE age_months=".$age_months. " AND sex='$gender' AND subscale='words_understood_number' AND score_raw<$score_holder ORDER BY score_raw DESC LIMIT 1";
-    	$record_2b = array();
-	$db->selectRow($query_scores2b, $record_2b);
-    	if (PEAR::isError($record_2b)) {
-    		return PEAR::raiseError("Could not retrieve scores: " . $record_2b->getMessage());
-    	}
-
-	$percentile_calculation2 = (($scores['words_understood_number']-$record_2b['score_raw'])/($record_2a['score_raw']-$record_2b['score_raw']))*($record_2a['score_percentile']-$record_2b['score_percentile'])+$record_2b['score_percentile'];
-
-	$scores['words_understood_percentile']=round($percentile_calculation2);
-
-	}
-	
-
-	// WORDS PRODUCED
-	$query_scores3 = "SELECT * FROM macarthur_lookup WHERE age_months=".$age_months. " AND sex='$gender' AND score_raw=".$scores['words_produced_number']." AND subscale='words_produced_number'";
-    	$record_3 = array();
-	$db->selectRow($query_scores3, $record_3);
-    	if (PEAR::isError($record_3)) {
-    		return PEAR::raiseError("Could not retrieve scores: " . $record_3->getMessage());
-    	}
-
-	$scores['words_produced_percentile']=($record_3['score_percentile']);
- 
-	if ($record_3 == NULL){
-	$score_holder = $scores['words_produced_number'];
-	$query_scores3a = "SELECT * FROM macarthur_lookup WHERE age_months=".$age_months. " AND sex='$gender' AND subscale='words_produced_number' AND score_raw>$score_holder ORDER BY score_raw ASC LIMIT 1";
-    	$record_3a = array();
-	$db->selectRow($query_scores3a, $record_3a);
-    	if (PEAR::isError($record_3a)) {
-    		return PEAR::raiseError("Could not retrieve scores: " . $record_3a->getMessage());
-    	}
-
-	$query_scores3b = "SELECT * FROM macarthur_lookup WHERE age_months=".$age_months. " AND sex='$gender' AND subscale='words_produced_number' AND score_raw<$score_holder ORDER BY score_raw DESC LIMIT 1";
-    	$record_3b = array();
-	$db->selectRow($query_scores3b, $record_3b);
-    	if (PEAR::isError($record_3b)) {
-    		return PEAR::raiseError("Could not retrieve scores: " . $record_3b->getMessage());
-    	}
-
-	$percentile_calculation3 = (($scores['words_produced_number']-$record_3b['score_raw'])/($record_3a['score_raw']-$record_3b['score_raw']))*($record_3a['score_percentile']-$record_3b['score_percentile'])+$record_3b['score_percentile'];
-
-	$scores['words_produced_percentile']=round($percentile_calculation3);
-
-	}
-	
-
-	// EARLY GESTURES
-	$query_scores4 = "SELECT * FROM macarthur_lookup WHERE age_months=".$age_months. " AND sex='$gender' AND score_raw=".$scores['early_gestures_number']." AND subscale='early_gestures_number'";
-    	$record_4 = array();
-	$db->selectRow($query_scores4, $record_4);
-    	if (PEAR::isError($record_4)) {
-    		return PEAR::raiseError("Could not retrieve scores: " . $record_4->getMessage());
-    	}
-
-	$scores['early_gestures_percentile']=($record_4['score_percentile']);
- 
-	if ($record_4 == NULL){
-	$score_holder = $scores['early_gestures_number'];
-	$query_scores4a = "SELECT * FROM macarthur_lookup WHERE age_months=".$age_months. " AND sex='$gender' AND subscale='early_gestures_number' AND score_raw>$score_holder ORDER BY score_raw ASC LIMIT 1";
-    	$record_4a = array();
-	$db->selectRow($query_scores4a, $record_4a);
-    	if (PEAR::isError($record_4a)) {
-    		return PEAR::raiseError("Could not retrieve scores: " . $record_4a->getMessage());
-    	}
-
-	$query_scores4b = "SELECT * FROM macarthur_lookup WHERE age_months=".$age_months. " AND sex='$gender' AND subscale='early_gestures_number' AND score_raw<$score_holder ORDER BY score_raw DESC LIMIT 1";
-    	$record_4b = array();
-	$db->selectRow($query_scores4b, $record_4b);
-    	if (PEAR::isError($record_4b)) {
-    		return PEAR::raiseError("Could not retrieve scores: " . $record_4b->getMessage());
-    	}
-
-	$percentile_calculation4 = (($scores['early_gestures_number']-$record_4b['score_raw'])/($record_4a['score_raw']-$record_4b['score_raw']))*($record_4a['score_percentile']-$record_4b['score_percentile'])+$record_4b['score_percentile'];
-
-	$scores['early_gestures_percentile']=round($percentile_calculation4);
-
-	}
-
-
-
-	// LATER GESTURES
-	$query_scores5 = "SELECT * FROM macarthur_lookup WHERE age_months=".$age_months. " AND sex='$gender' AND score_raw=".$scores['later_gestures_number']." AND subscale='later_gestures_number'";
-    	$record_5 = array();
-	$db->selectRow($query_scores5, $record_5);
-    	if (PEAR::isError($record_5)) {
-    		return PEAR::raiseError("Could not retrieve scores: " . $record_5->getMessage());
-    	}
-
-	$scores['later_gestures_percentile']=($record_5['score_percentile']);
- 
-	if ($record_5 == NULL){
-	$score_holder = $scores['later_gestures_number'];
-	$query_scores5a = "SELECT * FROM macarthur_lookup WHERE age_months=".$age_months. " AND sex='$gender' AND subscale='later_gestures_number' AND score_raw>$score_holder ORDER BY score_raw ASC LIMIT 1";
-    	$record_5a = array();
-	$db->selectRow($query_scores5a, $record_5a);
-    	if (PEAR::isError($record_5a)) {
-    		return PEAR::raiseError("Could not retrieve scores: " . $record_5a->getMessage());
-    	}
-
-	$query_scores5b = "SELECT * FROM macarthur_lookup WHERE age_months=".$age_months. " AND sex='$gender' AND subscale='later_gestures_number' AND score_raw<$score_holder ORDER BY score_raw DESC LIMIT 1";
-    	$record_5b = array();
-	$db->selectRow($query_scores5b, $record_5b);
-    	if (PEAR::isError($record_5b)) {
-    		return PEAR::raiseError("Could not retrieve scores: " . $record_5b->getMessage());
-    	}
-
-	$percentile_calculation5 = (($scores['later_gestures_number']-$record_5b['score_raw'])/($record_5a['score_raw']-$record_5b['score_raw']))*($record_5a['score_percentile']-$record_5b['score_percentile'])+$record_5b['score_percentile'];
-
-	$scores['later_gestures_percentile']=round($percentile_calculation5);
-
-	}
-
-
-
-	// TOTAL GESTURES
-	$query_scores6 = "SELECT * FROM macarthur_lookup WHERE age_months=".$age_months. " AND sex='$gender' AND score_raw=".$scores['total_gestures_number']." AND subscale='total_gestures_number'";
-    	$record_6 = array();
-	$db->selectRow($query_scores6, $record_6);
-    	if (PEAR::isError($record_6)) {
-    		return PEAR::raiseError("Could not retrieve scores: " . $record_6->getMessage());
-    	}
-
-	$scores['total_gestures_percentile']=($record_6['score_percentile']);
- 
-	if ($record_6 == NULL){
-	$score_holder = $scores['total_gestures_number'];
-	$query_scores6a = "SELECT * FROM macarthur_lookup WHERE age_months=".$age_months. " AND sex='$gender' AND subscale='total_gestures_number' AND score_raw>$score_holder ORDER BY score_raw ASC LIMIT 1";
-    	$record_6a = array();
-	$db->selectRow($query_scores6a, $record_6a);
-    	if (PEAR::isError($record_6a)) {
-    		return PEAR::raiseError("Could not retrieve scores: " . $record_6a->getMessage());
-    	}
-
-	$query_scores6b = "SELECT * FROM macarthur_lookup WHERE age_months=".$age_months. " AND sex='$gender' AND subscale='total_gestures_number' AND score_raw<$score_holder ORDER BY score_raw DESC LIMIT 1";
-    	$record_6b = array();
-	$db->selectRow($query_scores6b, $record_6b);
-    	if (PEAR::isError($record_6b)) {
-    		return PEAR::raiseError("Could not retrieve scores: " . $record_6b->getMessage());
-    	}
-
-	$percentile_calculation6 = (($scores['total_gestures_number']-$record_6b['score_raw'])/($record_6a['score_raw']-$record_6b['score_raw']))*($record_6a['score_percentile']-$record_6b['score_percentile'])+$record_6b['score_percentile'];
-
-	$scores['total_gestures_percentile']=round($percentile_calculation6);
-
-print_r($scores['total_gestures_percentile']);
-
-	}
-
-	// save scores
-	$result = $db->update($this->table, $scores, array("CommentID"=>$this->getCommentID()));
-	if($db->isError($result)) {
-		return PEAR::raiseError("Could not save total score: ". $result->getMessage());
-	}
-
-	
-
-}
+    }
 
 
 
