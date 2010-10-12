@@ -21,6 +21,12 @@ class NDB_BVL_Instrument_mullen extends NDB_BVL_Instrument
 
     */
 
+    // This is not yet used. Need to add all the scored columns into it,
+    // then fix the nullscores portion of the scoring function to use it.
+    // See ticket #1260 on Redmine.
+    // - Dave
+    var $scoreLabels = array("gross_motor_raw", "visual_reception_raw", "fine_motor_raw", "receptive_language_raw", "expressive_language_raw", "gross_motor_t", "visual_reception_t", "fine_motor_t", "receptive_language_t", "expressive_language_t", "gross_motor_percentile", "visual_reception_percentile", "fine_motor_percentile", "receptive_language_percentile", "expressive_language_percentile", "gross_motor_description", "visual_reception_description", "fine_motor_description", "receptive_language_description", "expressive_language_description", "gross_motor_age_equivalent", "visual_reception_age_equivalent", "fine_motor_age_equivalent", "receptive_language_age_equivalent", "expressive_language_age_equivalent", "cognitive_t_score_sum", "composite_standard_score", "composite_percentile", "composite_description");
+
     var $yesNo = array(""=>null, "no"=>"No", "yes"=>"Yes", "not_answered"=>"Not Answered");
 
     var $ageEquivalents = array(
@@ -1089,7 +1095,6 @@ class NDB_BVL_Instrument_mullen extends NDB_BVL_Instrument
          }
 
 
-
    		$query = "SELECT * FROM ".$this->table." WHERE CommentID='".$this->getCommentID()."'";
          $db->selectRow($query, $score_record);
 
@@ -1170,12 +1175,13 @@ class NDB_BVL_Instrument_mullen extends NDB_BVL_Instrument
              		return PEAR::raiseError("Could not retrieve scores: " . $record->getMessage());
              	}
 
+
             $calculatedScores["composite_standard_score"] = $record['composite_standard_score'];
             $calculatedScores["composite_percentile"] = $record['percentile'];
             $calculatedScores["composite_description"] = $this->composite_descriptor($calculatedScores['cognitive_t_score_sum']);
          }
 
-         $this->_nullScores(array_keys($calculatedScores));
+         $this->_nullScores($this->scoreLabels);
 
          // save the resultant total
          $result = $db->update($this->table, $calculatedScores, array('CommentID'=>$this->getCommentID()));
