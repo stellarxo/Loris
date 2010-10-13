@@ -202,7 +202,7 @@ class NDB_Menu_Filter_reliability extends NDB_Menu_Filter
                 if ($key == 'CommentID') continue;
                 if ($key == 'Current_stage') continue;
                 if ($key == 'invalid') continue;
-                if ($key == 'Manual_swap') continue;
+                if ($key == 'Manual_Swap') continue;
                 // {
                 //                    $this->tpl_data['items'][$x][$i]['CommentID'] = $item['CommentID'];
                 //               $this->tpl_data['items'][$x][$i]['Instrument'] = $item['Instrument'];
