@@ -47,7 +47,7 @@
         </thead>
         <tbody>
             <tr>
-                <td>Number of registered candidates</td>
+                <td>Registered candidates</td>
                 <td>{$registered[NULL].total}</td>
                 {foreach from=$Subprojects item=proj key=keyid}
                 <td>{$registered[$keyid].total}</td>
@@ -55,21 +55,21 @@
                 <td class="total">{$registered.total}{if $registered.total-$Total_candidates neq 0} ({$registered.total-$Total_candidates} require DCC review){/if}</td>
             </tr>
             <tr>
-                <td colspan="2">Total number of timepoints that have begun</td>
+                <td colspan="2">Registered candidates currently in or passed screening</td>
                 {foreach from=$Subprojects item=proj key=keyid}
                 <td>{$registered[$keyid].visit}</td>
                 {/foreach}
                 <td class="total">{$registered.visittotal}</td>
             </tr>
             <tr>
-                <td colspan="2">Number of visits</td>
+                <td colspan="2">Registered candidates who have come in for a visit</td>
                 {foreach from=$Subprojects item=proj key=keyid}
                 <td>{$edi[$keyid].complete}</td>
                 {/foreach}
                 <td class="total">{$edi.complete}</td>
             </tr>
             <tr>
-                <td colspan="2">Number of candidates scanned</td>
+                <td colspan="2">Registered candidates with T1 acquired</td>
                 {foreach from=$Subprojects item=proj key=keyid}
                 <td>{$scanned[$keyid].complete}</td>
                 {/foreach}
