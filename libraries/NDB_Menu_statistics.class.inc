@@ -77,6 +77,8 @@ class NDB_Menu_statistics extends NDB_Menu
                      WHERE s.active='Y' and s.Cancelled='N' AND s.CenterID <> '1'        
                         AND c.Active='Y' AND c.Cancelled='N'
                         AND (s.Current_stage IN ('Visit', 'Screening')) 
+        AND COALESCE(s.Screening,'') NOT IN ('Failure', 'Withdrawal')
+        AND COALESCE(s.Visit,'') NOT IN ('Failure', 'Withdrawal')
                         $ExtraSite_Criteria
                      GROUP BY s.subprojectid", $result);
         foreach($result as $row) {
@@ -84,14 +86,16 @@ class NDB_Menu_statistics extends NDB_Menu
             $this->tpl_data['registered']['visittotal'] += $row['val'];
         }
 
-        $DB->select("SELECT s.subprojectid as rowid, count(DISTINCT(c.PSCID)) as val from candidate as c left join session s ON (s.CandID=c.CandID) WHERE coalesce(s.active, 'Y')='Y' and coalesce(s.Cancelled,'N')='N' AND c.CenterID <> '1' and c.PSCID <> 'scanner' and coalesce(s.visit_label, 'v06') in ('v06', 'v12', 'v18', 'v24', 'v36') AND c.Active='Y' AND c.Cancelled='N' $ExtraSite_Criteria group by s.subprojectid", $result);
+        $DB->select("SELECT s.subprojectid as rowid, count(DISTINCT(c.PSCID)) as val from candidate as c left join session s ON (s.CandID=c.CandID) WHERE coalesce(s.active, 'Y')='Y' and coalesce(s.Cancelled,'N')='N' AND c.CenterID <> '1' and c.PSCID <> 'scanner' and coalesce(s.visit_label, 'v06') in ('v06', 'v12', 'v18', 'v24', 'v36') AND c.Active='Y' AND c.Cancelled='N'
+        $ExtraSite_Criteria group by s.subprojectid", $result);
         foreach($result as $row) {
             $this->tpl_data['registered'][$row['rowid']]['total'] = $row['val'];
             $this->tpl_data['registered']['total'] += $row['val'];
         }
 
 	// Total, explicitly calculated instead of added in the loop to ensure there's no one double registered in 2 different cohorts
-        $DB->select("SELECT count(distinct(c.PSCID)) from candidate as c WHERE c.PSCID<>'scanner' AND c.CenterID<>'1' AND c.Active='Y' AND c.Cancelled='N' $ExtraSite_Criteria", $total);
+        $DB->select("SELECT count(distinct(c.PSCID)) from candidate as c WHERE c.PSCID<>'scanner' AND c.CenterID<>'1' AND c.Active='Y' AND c.Cancelled='N' 
+        $ExtraSite_Criteria", $total);
         if (PEAR::isError($total)) {
             return PEAR::raiseError("DB Error: ".$total->getMessage());
         }
@@ -104,7 +108,8 @@ class NDB_Menu_statistics extends NDB_Menu
         // is done by every cohort at every visit
         $DB->select("SELECT count(DISTINCT c.PSCID) as val, s.SubprojectID as rowid FROM flag f join session s ON (s.ID=f.SessionID) join candidate c ON (c.CandID=s.CandID)  where f.Test_name IN 
             ('edi', 'mri_parameter_form', 'vineland_subject') 
-            -- ('edi')
+        AND COALESCE(s.Screening,'') NOT IN ('Failure', 'Withdrawal')
+        AND COALESCE(s.Visit,'') NOT IN ('Failure', 'Withdrawal')
                 AND s.Active='Y' and s.Cancelled='N'
                 AND c.Active='Y' and c.Cancelled='N'
                 AND f.Administration <> 'None'
@@ -118,6 +123,8 @@ class NDB_Menu_statistics extends NDB_Menu
 
         // Number of T1 candidates scanned
         $DB->select("SELECT count(DISTINCT c.PSCID) as val, s.SubprojectID as rowid FROM flag f JOIN mri_parameter_form mp USING(CommentID) join session s ON (s.ID=f.SessionID) join candidate c ON (c.CandID=s.CandID) WHERE f.Test_name='mri_parameter_form'
+        AND COALESCE(s.Screening,'') NOT IN ('Failure', 'Withdrawal')
+        AND COALESCE(s.Visit,'') NOT IN ('Failure', 'Withdrawal')
                 AND s.Active='Y' and s.Cancelled='N'
                 AND c.Active='Y' and c.Cancelled='N'
                 AND f.Administration <> 'None'
