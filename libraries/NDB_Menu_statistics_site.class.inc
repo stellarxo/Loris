@@ -64,6 +64,7 @@ class NDB_Menu_statistics_site extends NDB_Menu
                 AND s.CandID=c.CandID  
                 AND s.Cancelled='N' AND s.Active='Y' 
                 AND s.CenterID={$id} AND f.Data_entry='Complete' 
+                AND s.Current_stage <> 'Recycling Bin'
                 AND f.Administration='All' 
                 AND i.CommentID NOT LIKE 'DDE%';");
         if (PEAR::isError($result)) {
@@ -81,6 +82,7 @@ class NDB_Menu_statistics_site extends NDB_Menu
                 WHERE s.ID=f.SessionID AND f.CommentID=i.CommentID 
                 AND s.CandID=c.CandID  
                 AND s.Cancelled='N' AND s.Active='Y' 
+                AND s.Current_stage <> 'Recycling Bin'
                 AND s.CenterID={$id} 
                 AND (f.Data_entry is NULL OR f.Data_entry<>'Complete') 
                 AND i.CommentID NOT LIKE 'DDE%' ORDER BY s.Visit_label, c.PSCID;", $result);

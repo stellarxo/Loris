@@ -62,7 +62,13 @@ class NDB_Menu_statistics extends NDB_Menu
             return PEAR::raiseError("Could not connect to database: ".$DB->getMessage());
         }
 
-        $subprojects = array('1' => '6 Month Recruit', '2' => '12 Month Recruit', '3' => 'Control');
+        $subprojects = Utility::getSubprojectList(); //array('1' => '6 Month Recruit', '2' => '12 Month Recruit', '3' => 'Control');
+        if(isset($_REQUEST['site']) && $_REQUEST['site'] != '') {
+            $ExtraSite_Criteria = 'AND (c.CenterID IS NULL OR c.CenterID=' . $_REQUEST['site'] . ')';
+        }
+        else {
+            $ExtraSite_Criteria = '';
+        }
         $this->tpl_data['Subprojects'] = $subprojects;
         $DB->select("SELECT s.subprojectid as rowid, 
                             COUNT(DISTINCT(c.PSCID)) as val 
@@ -70,20 +76,21 @@ class NDB_Menu_statistics extends NDB_Menu
                      WHERE s.active='Y' and s.Cancelled='N' AND s.CenterID <> '1'        
                         AND c.Active='Y' AND c.Cancelled='N'
                         AND (s.Current_stage IN ('Visit', 'Screening')) 
+                        $ExtraSite_Criteria
                      GROUP BY s.subprojectid", $result);
         foreach($result as $row) {
             $this->tpl_data['registered'][$row['rowid']]['visit'] = $row['val'];
             $this->tpl_data['registered']['visittotal'] += $row['val'];
         }
 
-        $DB->select("SELECT s.subprojectid as rowid, count(DISTINCT(c.PSCID)) as val from candidate as c left join session s ON (s.CandID=c.CandID) WHERE coalesce(s.active, 'Y')='Y' and coalesce(s.Cancelled,'N')='N' AND c.CenterID <> '1' and c.PSCID <> 'scanner' and coalesce(s.visit_label, 'v06') in ('v06', 'v12', 'v18', 'v24', 'v36') AND c.Active='Y' AND c.Cancelled='N' group by s.subprojectid", $result);
+        $DB->select("SELECT s.subprojectid as rowid, count(DISTINCT(c.PSCID)) as val from candidate as c left join session s ON (s.CandID=c.CandID) WHERE coalesce(s.active, 'Y')='Y' and coalesce(s.Cancelled,'N')='N' AND c.CenterID <> '1' and c.PSCID <> 'scanner' and coalesce(s.visit_label, 'v06') in ('v06', 'v12', 'v18', 'v24', 'v36') AND c.Active='Y' AND c.Cancelled='N' $ExtraSite_Criteria group by s.subprojectid", $result);
         foreach($result as $row) {
             $this->tpl_data['registered'][$row['rowid']]['total'] = $row['val'];
             $this->tpl_data['registered']['total'] += $row['val'];
         }
 
 	// Total, explicitly calculated instead of added in the loop to ensure there's no one double registered in 2 different cohorts
-        $DB->select("SELECT count(distinct(c.PSCID)) from candidate as c WHERE c.PSCID<>'scanner' AND c.CenterID<>'1' AND c.Active='Y' AND c.Cancelled='N'", $total);
+        $DB->select("SELECT count(distinct(c.PSCID)) from candidate as c WHERE c.PSCID<>'scanner' AND c.CenterID<>'1' AND c.Active='Y' AND c.Cancelled='N' $ExtraSite_Criteria", $total);
         if (PEAR::isError($total)) {
             return PEAR::raiseError("DB Error: ".$total->getMessage());
         }
@@ -91,7 +98,33 @@ class NDB_Menu_statistics extends NDB_Menu
         $Total_candidates = $total;
         $this->tpl_data['Total_candidates'] = $Total_candidates;
 
+        // Number of visits.
+        // This is based on the EDI completion status, since the EDI
+        // is done by every cohort at every visit
+        $DB->select("SELECT count(DISTINCT c.PSCID) as val, s.SubprojectID as rowid FROM flag f join session s ON (s.ID=f.SessionID) join candidate c ON (c.CandID=s.CandID)  where f.Test_name='edi' 
+                AND s.Active='Y' and s.Cancelled='N'
+                AND c.Active='Y' and c.Cancelled='N'
+                AND f.Administration <> 'None'
+                $ExtraSite_Criteria
+        GROUP BY s.SubprojectID", $result);
+        foreach($result as $row) {
+            $this->tpl_data['edi'][$row['rowid']]['complete'] = $row['val'];
+            $this->tpl_data['edi']['complete'] += $row['val'];
+        }
 
+        // Number of T1 candidates scanned
+        $DB->select("SELECT count(DISTINCT c.PSCID) as val, s.SubprojectID as rowid FROM flag f JOIN mri_parameter_form mp USING(CommentID) join session s ON (s.ID=f.SessionID) join candidate c ON (c.CandID=s.CandID) WHERE f.Test_name='mri_parameter_form'
+                AND s.Active='Y' and s.Cancelled='N'
+                AND c.Active='Y' and c.Cancelled='N'
+                AND f.Administration <> 'None'
+                AND mp.T1_Scan_done='Complete'
+                $ExtraSite_Criteria
+             GROUP BY s.SubprojectID", $result);
+        foreach($result as $row) {
+            $this->tpl_data['scanned'][$row['rowid']]['complete'] = $row['val'];
+            $this->tpl_data['scanned']['complete'] += $row['val'];
+        }
+        
         // NUMBER OF CANDIDATES STATS TABLE
 
         
@@ -102,7 +135,14 @@ class NDB_Menu_statistics extends NDB_Menu
             return PEAR::raiseError("DB Error: ".$centers->getMessage());
         }
         $this->tpl_data['Centers'] = $centers;
-        $this->tpl_data['Subprojects'] = array('1' => '6 Month Recruit', '2' => '12 Month Recruit', '3' => 'Control');
+        $this->tpl_data['Sites'] = array('' => 'All Sites');
+        foreach ($centers as $row) {
+            $this->tpl_data['Sites'][$row['NumericID']] = $row['LongName'];
+            if($_REQUEST['site'] == $row['NumericID']) {
+                $this->tpl_data['CurrentSite'] = array('ID' => $row['NumericID'], 'Name' => $row['LongName']);
+            }
+        }
+        $this->tpl_data['Subprojects'] = Utility::getSubprojectList(); //array('1' => '6 Month Recruit', '2' => '12 Month Recruit', '3' => 'Control');
         $Visits = array ('6 Month' => 'v06', '12 Month' => 'v12', '18 Month' => 'v18', '24 Month' => 'v24', '36 Month' => 'v36');
         $this->tpl_data['Visits'] = $Visits;
 
