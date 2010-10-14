@@ -7,6 +7,14 @@ require_once 'NDB_Menu.class.inc';
  */
 class NDB_Menu_statistics extends NDB_Menu
 {
+        function _inCenter($centerID, $Centres) {
+            foreach ($Centres as $Centre) {
+                if($Centre['NumericID'] == $centerID) {
+                    return TRUE;
+                }
+            }
+            return FALSE;
+        }
     function render_stats_table($header, $subcats, $visits, $dropdown_name, $dropdown_opt, $dropdown_selected, $centres, $data, $Subsection="") {
         $tpl_data = array();
         $tpl_data['test_name'] = $_REQUEST['test_name'];
@@ -25,27 +33,20 @@ class NDB_Menu_statistics extends NDB_Menu
             $vl = $row['VLabel'];
             $subcat = $row['Subcat'];
             $center = $row['CenterID'];
-            $tpl_data['data'][$subproj]['C' . $center][$vl][$subcat] = $row['val'];
 
-            // Keep a running tally so that we can avoid calculating things
-            // in the template
-            $tpl_data['data'][$subproj][$vl][$subcat] += $row['val'];
-            $tpl_data['data'][$subproj][$vl]['total'] += $row['val'];
-            $tpl_data['data'][$subproj][$subcat] += $row['val'];
-            if(array_search($vl, $visits) !== FALSE) {
+
+            if(array_search($vl, $visits) !== FALSE && array_search($subcat, $subcats) !== FALSE && $this->_inCenter($center, $centres) !== FALSE) {
+                $tpl_data['data'][$subproj][$vl][$subcat] += $row['val'];
+                $tpl_data['data'][$subproj][$vl]['total'] += $row['val'];
+                $tpl_data['data'][$subproj][$subcat] += $row['val'];
                 $tpl_data['data'][$vl][$subcat] += $row['val'];
                 $tpl_data['data'][$vl]['total'] += $row['val'];
-            }
-            if(array_search($subcat, $subcats) !== FALSE) {
+                $tpl_data['data'][$subproj]['C' . $center][$vl][$subcat] = $row['val'];
                 $tpl_data['data']['Cat' . $subcat] += $row['val'];
                 $tpl_data['data'][$subproj]['C' . $center][$subcat] += $row['val'];
+                $tpl_data['data']['C' . $center][$vl][$subcat] += $row['val'];
+                $tpl_data['data'][$subproj]['total'] += $row['val'];
                 $tpl_data['data']['C' . $center][$subcat] += $row['val'];
-            }
-            $tpl_data['data'][$subproj]['total'] += $row['val'];
-
-            $tpl_data['data']['C' . $center][$vl][$subcat] += $row['val'];
-
-            if(array_search($vl, $visits) !== FALSE && array_search($subcat, $subcats) !== FALSE) {
                 $tpl_data['data']['total'] += $row['val'];
             }
 
@@ -101,10 +102,13 @@ class NDB_Menu_statistics extends NDB_Menu
         // Number of visits.
         // This is based on the EDI completion status, since the EDI
         // is done by every cohort at every visit
-        $DB->select("SELECT count(DISTINCT c.PSCID) as val, s.SubprojectID as rowid FROM flag f join session s ON (s.ID=f.SessionID) join candidate c ON (c.CandID=s.CandID)  where f.Test_name='edi' 
+        $DB->select("SELECT count(DISTINCT c.PSCID) as val, s.SubprojectID as rowid FROM flag f join session s ON (s.ID=f.SessionID) join candidate c ON (c.CandID=s.CandID)  where f.Test_name IN 
+            ('edi', 'mri_parameter_form', 'vineland_subject') 
+            -- ('edi')
                 AND s.Active='Y' and s.Cancelled='N'
                 AND c.Active='Y' and c.Cancelled='N'
                 AND f.Administration <> 'None'
+                AND s.Current_stage <> 'Recycling Bin'
                 $ExtraSite_Criteria
         GROUP BY s.SubprojectID", $result);
         foreach($result as $row) {
@@ -118,6 +122,7 @@ class NDB_Menu_statistics extends NDB_Menu
                 AND c.Active='Y' and c.Cancelled='N'
                 AND f.Administration <> 'None'
                 AND mp.T1_Scan_done='Complete'
+                AND s.Current_stage <> 'Recycling Bin'
                 $ExtraSite_Criteria
              GROUP BY s.SubprojectID", $result);
         foreach($result as $row) {
@@ -228,7 +233,10 @@ class NDB_Menu_statistics extends NDB_Menu
                             COUNT(s.CandID) as val
                         FROM session s JOIN candidate c ON (s.CandID=c.CandID)
                             JOIN flag f ON (f.SessionID=s.ID)
-                        WHERE s.Cancelled='N' AND s.Active='Y' 
+                        WHERE 
+                        s.Cancelled='N' AND s.Active='Y' 
+                        AND c.Cancelled='N' AND c.Active='Y' 
+                        AND s.Current_stage <> 'Recycling Bin'
                             AND f.CommentID NOT LIKE 'DDE%' 
                         GROUP by s.CenterID, VLabel, f.Data_Entry", 
         $result);
@@ -269,7 +277,9 @@ class NDB_Menu_statistics extends NDB_Menu
                             COUNT(s.CandID) as val
                     FROM session as s JOIN candidate as c ON (s.CandID=c.CandID) JOIN flag as f ON (f.SessionID=s.ID) 
                     WHERE s.Cancelled='N' AND s.Active='Y' 
+                        AND s.Current_stage <> 'Recycling Bin'
                         AND f.CommentID LIKE 'DDE%' 
+                        AND c.Cancelled='N' AND c.Active='Y' 
                         AND (f.Test_name NOT LIKE '%parameter%' 
                                 AND f.Test_name NOT LIKE '%radiological%' 
                                 AND f.Test_name NOT LIKE '%vineland%')
