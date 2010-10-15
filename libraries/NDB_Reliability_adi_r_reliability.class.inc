@@ -357,7 +357,7 @@ class NDB_Reliability_adi_r_reliability extends NDB_Reliability
                }
                $age_months = $age['year'] * 12 + $age['mon'];
 
-               if(false){#$age_months < 48 ){
+               if($age_months < 48 ){
 //echo("Less than 4 years<BR>");
                  $algorithm_questions =  array( "q_2_age_first_noticed_code",
                                                 "q_9_first_single_words_code",
