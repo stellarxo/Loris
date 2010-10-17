@@ -1,0 +1,110 @@
+
+insert into instrument_subtests values('', 'EARLI_interview_PART_1', 'EARLI_interview_page1', 'Section 1: Demographic Information', '1');
+
+insert into instrument_subtests values('', 'EARLI_interview_PART_1', 'EARLI_interview_page2', 'Section 2: Maternal Medical History (1 of 2)', '2');
+
+insert into instrument_subtests values('', 'EARLI_interview_PART_1', 'EARLI_interview_page3', 'Section 2: Maternal Medical History (2 of 2)', '3');
+
+insert into instrument_subtests values('', 'EARLI_interview_PART_1', 'EARLI_interview_page4', 'Section 3: Pregnancy and Reproductive History', '4');
+
+insert into instrument_subtests values('', 'EARLI_interview_PART_1', 'EARLI_interview_page5', 'Section 4: Proband Pregnancy (1 of 4)', '5');
+
+insert into instrument_subtests values('', 'EARLI_interview_PART_1', 'EARLI_interview_page6', 'Section 4: Proband Pregnancy (2 of 4)', '6');
+
+insert into instrument_subtests values('', 'EARLI_interview_PART_1', 'EARLI_interview_page7', 'Section 4: Proband Pregnancy (3 of 4)', '7');
+
+insert into instrument_subtests values('', 'EARLI_interview_PART_1', 'EARLI_interview_page8', 'Section 4: Proband Pregnancy (4 of 4)', '8');
+
+
+insert into instrument_subtests values('', 'EARLI_interview_PART_2', 'EARLI_interview_page9', 'Section 5: Sibling Pregnancy (1 of 9)', '9');
+
+insert into instrument_subtests values('', 'EARLI_interview_PART_2', 'EARLI_interview_page10', 'Section 5: Sibling Pregnancy (2 of 9)', '10');
+
+insert into instrument_subtests values('', 'EARLI_interview_PART_2', 'EARLI_interview_page11', 'Section 5: Sibling Pregnancy (3 of 9)', '11');
+
+insert into instrument_subtests values('', 'EARLI_interview_PART_2', 'EARLI_interview_page12', 'Section 5: Sibling Pregnancy (4 of 9)', '12');
+
+insert into instrument_subtests values('', 'EARLI_interview_PART_2', 'EARLI_interview_page13', 'Section 5: Sibling Pregnancy (5 of 9)', '13');
+
+insert into instrument_subtests values('', 'EARLI_interview_PART_2', 'EARLI_interview_page14', 'Section 5: Sibling Pregnancy (6 of 9)', '14');
+
+insert into instrument_subtests values('', 'EARLI_interview_PART_2', 'EARLI_interview_page15', 'Section 5: Sibling Pregnancy (7 of 9)', '15');
+
+insert into instrument_subtests values('', 'EARLI_interview_PART_2', 'EARLI_interview_page16', 'Section 5: Sibling Pregnancy (8 of 9)', '16');
+
+insert into instrument_subtests values('', 'EARLI_interview_PART_2', 'EARLI_interview_page17', 'Section 5: Sibling Pregnancy (9 of 9)', '17');
+
+insert into instrument_subtests values('', 'EARLI_interview_PART_2', 'EARLI_interview_page18', 'Section 6: Diet (1 of 2)', '18');
+
+insert into instrument_subtests values('', 'EARLI_interview_PART_2', 'EARLI_interview_page19', 'Section 6: Diet (2 of 2)', '19');
+
+insert into instrument_subtests values('', 'EARLI_interview_PART_2', 'EARLI_interview_page20', 'Section 7: Home Env. Exposures (1 of 3)', '20');
+
+insert into instrument_subtests values('', 'EARLI_interview_PART_2', 'EARLI_interview_page21', 'Section 7: Home Env. Exposures (2 of 3)', '21');
+
+insert into instrument_subtests values('', 'EARLI_interview_PART_2', 'EARLI_interview_page22', 'Section 7: Home Env. Exposures (3 of 3)', '22');
+
+
+insert into instrument_subtests values('', 'EARLI_interview_PART_3', 'EARLI_interview_page23', 'Section 8: Occ/Hobby Exposures (Sibling Preg) (1 of 4)', '23');
+
+insert into instrument_subtests values('', 'EARLI_interview_PART_3', 'EARLI_interview_page24', 'Section 8: Occ/Hobby Exposures (Sibling Preg) (2 of 4)', '24');
+
+insert into instrument_subtests values('', 'EARLI_interview_PART_3', 'EARLI_interview_page25', 'Section 8: Occ/Hobby Exposures (Sibling Preg) (3 of 4)', '25');
+
+insert into instrument_subtests values('', 'EARLI_interview_PART_3', 'EARLI_interview_page26', 'Section 8: Occ/Hobby Exposures (Sibling Preg) (4 of 4)', '26');
+
+insert into instrument_subtests values('', 'EARLI_interview_PART_3', 'EARLI_interview_page27', 'Section 8. Occupation Module: Generic Exposure Module', '27');
+
+insert into instrument_subtests values('', 'EARLI_interview_PART_3', 'EARLI_interview_page28', 'Section 8. Occupation Module: Health Professional', '28');
+
+insert into instrument_subtests values('', 'EARLI_interview_PART_3', 'EARLI_interview_page29', 'Section 8. Occupation Module: Teacher', '29');
+
+
+insert into instrument_subtests values('', 'EARLI_interview_PART_4', 'EARLI_interview_page30', 'Section 8: Occupation Module: Restaurant Worker', '30');
+
+insert into instrument_subtests values('', 'EARLI_interview_PART_4', 'EARLI_interview_page31', 'Section 8: Occupation Module: Cleaners/Building Maint Worker', '31');
+
+insert into instrument_subtests values('', 'EARLI_interview_PART_4', 'EARLI_interview_page32', 'Section 8: Occupation Module: Childcare Worker', '32');
+
+insert into instrument_subtests values('', 'EARLI_interview_PART_4', 'EARLI_interview_page33', 'Section 8: Occupation Module: Driver', '33');
+
+insert into instrument_subtests values('', 'EARLI_interview_PART_4', 'EARLI_interview_page34', 'Section 8: Occupation Module: Agricultural Worker (1 of 3)', '34');
+
+insert into instrument_subtests values('', 'EARLI_interview_PART_4', 'EARLI_interview_page35', 'Section 8: Occupation Module: Agricultural Worker (2 of 3)', '35');
+
+insert into instrument_subtests values('', 'EARLI_interview_PART_4', 'EARLI_interview_page36', 'Section 8: Occupation Module: Agricultural Worker (3 of 3)', '36');
+
+insert into instrument_subtests values('', 'EARLI_interview_PART_4', 'EARLI_interview_page37', 'End of Interview', '37');
+
+
+insert into instrument_subtests values('', 'EARLI_interview_revised', 'EARLI_interview_page23_revised', 'Section 8. Occ/Hobby Exposures (Sibling Preg) (1 of 3)', '1');
+
+insert into instrument_subtests values('', 'EARLI_interview_revised', 'EARLI_interview_page24_revised', 'Section 8. Occ/Hobby Exposures (Sibling Preg) (2 of 3)', '2');
+
+insert into instrument_subtests values('', 'EARLI_interview_revised', 'EARLI_interview_page25_revised', 'Section 8. Occ/Hobby Exposures (Sibling Preg) (3 of 3)', '3');
+
+insert into instrument_subtests values('', 'EARLI_interview_revised', 'EARLI_interview_page26_revised', 'End of Interview)', '4');
+
+
+insert into test_names values ('', 'EARLI_interview_PART_1', 'EARLI interview Sections 1-4', '0', '1');
+insert into test_names values ('', 'EARLI_interview_PART_2', 'EARLI interview Sections 5-7', '0', '1');
+insert into test_names values ('', 'EARLI_interview_PART_3', 'EARLI interview Section 8 long (1)', '0', '1');
+insert into test_names values ('', 'EARLI_interview_PART_4', 'EARLI interview Section 8 long (2)', '0', '1');
+insert into test_names values ('', 'EARLI_interview_revised', 'EARLI interview Section 8 revised', '0', '1');
+
+
+insert into test_battery values('', 'EARLI_interview_PART_1', '660', '780', 'Y', 'Visit', '1');
+
+insert into test_battery values('', 'EARLI_interview_PART_2', '660', '780', 'Y', 'Visit', '1');
+
+insert into test_battery values('', 'EARLI_interview_PART_3', '660', '780', 'Y', 'Visit', '1');
+
+insert into test_battery values('', 'EARLI_interview_PART_4', '660', '780', 'Y', 'Visit', '1');
+
+insert into test_battery values('', 'EARLI_interview_revised', '660', '780', 'Y', 'Visit', '1');
+
+
+ 
+
+
+ 
