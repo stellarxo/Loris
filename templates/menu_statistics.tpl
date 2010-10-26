@@ -16,6 +16,7 @@
         <li><a href="#general">General Description</a></li>
         <li><a href="#demographics">Demographic Statistics</a></li>
         <li><a href="#data_entry">Behavioural Statistics</a></li>
+        <li><a href="#reliability">Reliability Statistics</a></li>
         <li><a href="#mri">MRI Statistics</a></li>
     </ul>
 
@@ -28,13 +29,13 @@
     </div>
 
     <div id="demographics">
-        <h2 class="statsH2">General statistics{if $CurrentSite} for {$CurrentSite.Name}{/if}:</h2>
-        <table class="data generalStats">
+        <h2 class="statsH2">General statistics{if $CurrentSite} for {$CurrentSite.Name}{/if}</h2>
         <form action="#demographics">
             {html_options options=$Sites name="site" selected=$CurrentSite.ID}
             <input type="hidden" name="test_name" value="statistics" />
             <input type="submit" />
         </form>
+        <table class="data generalStats">
         <thead>
             <tr>
                 <th></th>
@@ -157,6 +158,34 @@
          {/foreach}
       </table>
 <br />
+</div>
+<div id="reliability">
+<h2 class="statsH2">Reliability Statistics{if $CurrentSite} for {$CurrentSite.Name}{/if}</h2>
+        <form action="#reliability">
+            {html_options options=$Sites name="site" selected=$CurrentSite.ID}
+            <input type="hidden" name="test_name" value="statistics" />
+            <input type="submit" />
+        </form>
+<table class="data">
+<tr>
+    <th>Reliablity Module</th>
+    <th>Total Reliable</th>
+    <th>Total Complete</th>
+    <th>Total Flagged</th>
+    <th>Percent Reliable</th>
+    <th>Percent Complete</th>
+</tr>
+{section name=item loop=$reliability_completion}
+<tr>
+    <td>{$reliability_completion[item].name}</td>
+    <td>{$reliability_completion[item].reliable}</td>
+    <td>{$reliability_completion[item].complete}</td>
+    <td>{$reliability_completion[item].total}</td>
+    <td>{$reliability_completion[item].percent_reliable}%</td>
+    <td>{$reliability_completion[item].percent_complete}%</td>
+</tr>
+{/section}
+</table>
 </div>
 <div id="mri">
 

@@ -174,10 +174,14 @@ class NDB_Menu_Filter_reliability extends NDB_Menu_Filter
         return true;
     }
 
+    // This is used both by setDataTableRows, and reliability statistics
+    function getThreadholds() {
+        return array("adi_r_proband" => 90, "adi_r_subject" => 90, "adi_r" => 90, 'aosi' => 78.9, 'csbs' => 80, 'ados_module1' => 80, 'ados_module2' => 80);
+    }
     function _setDataTableRows($count)
     {
 
-        $threshold = array("adi_r_proband" => 90, "adi_r_subject" => 90, "adi_r" => 90, 'aosi' => 78.9, 'csbs' => 80, 'ados_module1' => 80, 'ados_module2' => 80);
+        $threshold = $this->getThreadholds();
         // print out
         $x = 0;
         foreach ($this->list as $item) {

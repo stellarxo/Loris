@@ -1,5 +1,6 @@
 <?php
 require_once 'NDB_Menu.class.inc';
+require_once 'NDB_Menu_Filter_reliability.class.inc';
 
 /**
  * The welcome menu
@@ -484,6 +485,96 @@ class NDB_Menu_statistics extends NDB_Menu
         }
 
         $this->tpl_data['mri_data'] = $mri_data;
+        $this->tpl_data['reliability_completion'] = $this->getReliabilityData();
+
     } // End function
+
+
+    function _getCrossSiteReliabilityData($name, $inst_name, $cutoff, $extra_where="") {
+        $data = $this->_getSingleReliabilityData($name, $inst_name, $cutoff,
+            " $extra_where AND CommentID NOT LIKE CONCAT('%', CASE reliability_center_id WHEN 1 THEN 'dcc' WHEN 2 THEN 'SEA' WHEN 3 THEN 'PHI' WHEN 4 THEN 'STL' WHEN 5 THEN 'UNC' WHEN 6 THEN 'UofA' END, '%')");
+        $data['name'] = $name . ' (Cross Site)';
+        return $data;
+    }
+    function _getWithinSiteReliabilityData($name, $inst_name, $cutoff, $extra_where = "") {
+        $data = $this->_getSingleReliabilityData($name, $inst_name, $cutoff,
+            " $extra_where AND CommentID like CONCAT('%', CASE reliability_center_id WHEN 1 THEN 'dcc' WHEN 2 THEN 'SEA' WHEN 3 THEN 'PHI' WHEN 4 THEN 'STL' WHEN 5 THEN 'UNC' WHEN 6 THEN 'UofA' END, '%')");
+        $data['name'] = $name . ' (Within Site)';
+        return $data;
+    }
+    function _getSingleReliabilityData($name, $inst_name, $cutoff, $extra_where = '') {
+        if(isset($_REQUEST['site']) && $_REQUEST['site'] != '') {
+            $extra_where .= ' AND r.reliability_center_id=' . $_REQUEST['site'];
+        }
+        $db = Database::singleton();
+        $ret = array();
+        $ret['name'] = $name;
+        $ret['complete'] = $db->selectOne("SELECT count(*) from reliability r where Instrument='$inst_name' and Invalid <> 'yes' and Reliability_score IS NOT NULL $extra_where");
+        $ret['reliable'] = $db->selectOne("SELECT count(*) from reliability r where Instrument='$inst_name' and Invalid <> 'yes' and Reliability_score IS NOT NULL and Reliability_score > $cutoff $extra_where");
+        $ret['total'] = $db->selectOne("SELECT count(*) from reliability r where Instrument='$inst_name' and Invalid <> 'yes' $extra_where");
+        if($ret['total'] == 0) {
+            // These should probably be indeterminate instead of 0, but 0
+            // looks cleaner.
+            $ret['percent_complete'] = '0';
+            $ret['percent_reliable'] = '0';
+        } else {
+            $ret['percent_complete'] = round($ret['complete'] / $ret['total'] * 100);
+            $ret['percent_reliable'] = round($ret['reliable'] / $ret['total'] * 100);
+        }
+        return $ret;
+    }
+    function getReliabilityData() {
+        // Whether something is reliable or not isn't stored in the database,
+        // but calculated on the fly. 
+        // As a result, we need to manually calculate it and maintain for each
+        // type of thing Tanya wants stats for here separately
+
+        // Thresholds was copy/pasted from 
+        $thresholds = NDB_Menu_Filter_Reliability::getThreadholds();
+        $tests = array(
+            'adi_r_proband' => 'ADI-R (Proband)',
+            'adi_r_subject' => 'ADI-R (Subject)',
+            'ados_module1' => 'ADOS (Module 1)',
+            'ados_module2' => 'ADOS (Module 2)',
+            'aosi' => 'AOSI',
+            'csbs' => 'CSBS'
+
+        );
+        $within_cross = array('adi_r_subject', 'ados_module1', 'ados_module2', 'aosi', 'csbs');
+
+        $reliable = array();
+        foreach($tests as $inst => $name) {
+            if(in_array($inst, $within_cross)) {
+                if($inst == 'aosi') {
+                    $reliable[] = $this->_getWithinSiteReliabilityData(
+                            $name . " v06", 
+                            $inst, $thresholds[$inst], 
+                            " AND EXISTS (SELECT 'x' FROM flag f JOIN session s ON (s.ID=f.SessionID) WHERE f.CommentID=r.CommentID and lower(s.Visit_label)='v06')");
+                    $reliable[] = $this->_getCrossSiteReliabilityData(
+                            $name . " v06", 
+                            $inst, $thresholds[$inst], 
+                            " AND EXISTS (SELECT 'x' FROM flag f JOIN session s ON (s.ID=f.SessionID) WHERE f.CommentID=r.CommentID and lower(s.Visit_label)='v06')");
+                    $reliable[] = $this->_getWithinSiteReliabilityData(
+                            $name . " v12", 
+                            $inst, $thresholds[$inst], 
+                            " AND EXISTS (SELECT 'x' FROM flag f JOIN session s ON (s.ID=f.SessionID) WHERE f.CommentID=r.CommentID and lower(s.Visit_label)='v12')");
+                    $reliable[] = $this->_getCrossSiteReliabilityData(
+                            $name . " v12", 
+                            $inst, $thresholds[$inst], 
+                            " AND EXISTS (SELECT 'x' FROM flag f JOIN session s ON (s.ID=f.SessionID) WHERE f.CommentID=r.CommentID and lower(s.Visit_label)='v12')");
+                } else {
+                    $reliable[] = $this->_getWithinSiteReliabilityData($name, 
+                            $inst, $thresholds[$inst]);
+                    $reliable[] = $this->_getCrossSiteReliabilityData($name, 
+                            $inst, $thresholds[$inst]);
+                }
+            } else {
+                $reliable[] = $this->_getSingleReliabilityData($name, 
+                    $inst, $thresholds[$inst]);
+            }
+        }
+
+        return $reliable;
+    }
 } // End class
 ?>
