@@ -479,13 +479,14 @@ INSERT INTO instrument_subtests VALUES('', 'aosi', 'aosi_page2', 'General Observ
         );        
 
         $this->scores["number_of_markers"] = 0;  //initialize
+        $this->scores["number_of_markers_override"] = 0;  //initialize
         foreach($scorables as $key =>$value) {
             //change 8's to 0's for scoring purposes
 
             if($value == 8) $value = 0;
             //Calculate final score values
             if(in_array($key, $overrideables)) {
-                $ov = $this->scores[$key . "_override"];
+                $ov = $score_record[$key . "_override"];
                 if($ov == 8) {
                     $ov = 0;
                 }
