@@ -440,6 +440,7 @@ class NDB_BVL_Instrument extends PEAR
             $this->dateTimeFields=array("Date_taken");
         }
         
+
         //Convert date/time fields into database dates/times
         if (is_array($this->dateTimeFields) && count($this->dateTimeFields) > 0) {
             foreach($this->dateTimeFields as $field){
@@ -449,6 +450,25 @@ class NDB_BVL_Instrument extends PEAR
             }
         }
         
+        if(!empty($values['Date_taken'])) {
+            $DB = Database::singleton();
+            $age = $this->getCandidateAge($values['Date_taken']);
+            $agedays = $age['year']*365 + $age['mon']*30 + $age['day'];
+            $agemonths = $age['year']*12 + $age['mon'] + ($age['day']/30);
+            if(!empty($age)) {
+                $DB->selectRow("SELECT MIN(AgeMinDays) as Min, MAX(AgeMaxDays) as Max FROM test_battery WHERE Active='Y' and Test_name='" . $this->testName . "'", $minmax);
+                $errorage = false;
+                if(($agedays < $minmax['Min'] || $agedays > $minmax['Max'])) {
+                    $errorage = true;
+                }
+                if($errorage) {
+                    $values['Candidate_Age'] = '<span class="error">' . $agemonths . '</span>';
+                } else {
+                    $values['Candidate_Age'] = $agemonths;
+                }
+            }
+
+        }
         //Convert select multiple elements into database storable values
         if(!empty($this->_selectMultipleElements)){
             foreach($this->_selectMultipleElements AS $elname){
@@ -497,7 +517,9 @@ class NDB_BVL_Instrument extends PEAR
         }
         $db =& Database::singleton();
         $result = $db->update($this->table, $values, array('CommentID'=>$this->getCommentID()));
-        if($this->isError($result)) {
+print_r($values);       
+
+ if($this->isError($result)) {
             print "Error saving data: ".$result->getMessage()."<br>\n";
             return $this->raiseError('Could not save to database' . $result->getMessage());
         }
@@ -525,8 +547,13 @@ class NDB_BVL_Instrument extends PEAR
                              'emptyOptionValue' => null
                              );
 
+        /*
+        Perhaps this would make more sense in the flag table?
+        $this->form->addElement('select', 'Validity', 'Validity of Instrument', array('' => '', 'valid' => 'Valid', 'unclear' => 'Validity Unclear', 'invalid' => 'Invalid'));
+        */
         $this->form->addElement('date', 'Date_taken', 'Date of Administration', $dateOptions);
         
+        $this->form->addElement('static', 'Candidate_Age', 'Candidate Age (Months)', 'Please enter date of administration and press Save');
         $examiners = $this->_getExaminerNames();
         $this->form->addElement('select', 'Examiner', 'Examiner', $examiners);
         
@@ -958,7 +985,6 @@ print "<!-- \n"; print "DDE: $doubleDataEntry\n"; print_r($_SESSION['State']); p
         $query = "SELECT ".join(',', $this->_requiredElements)." FROM $this->table WHERE CommentID='".$this->getCommentID()."'";
         $success = $db->selectRow($query, $dataFields);
         if(PEAR::isError($success)) return PEAR::raiseError("Could not select required elements from database: ".$success->getMessage()."<br>\n");
-
         foreach($dataFields as $field) {
             // this shouldn't be just empty() b/c 0 is a valid value for some required fields
             if(is_null($field) || $field === "") return 'Incomplete';
@@ -1038,12 +1064,10 @@ print "<!-- \n"; print "DDE: $doubleDataEntry\n"; print_r($_SESSION['State']); p
         $rules_array=array_merge(array($field.'_status{@}=={@}'), $rules);
         $this->XINRegisterRule($field, $rules_array, $rule_message, $field.'_group');
     }
-   
-
-  /**
-    * Wrapper to create a text field for questions that require Refused and Don't know options
-    */
-
+    /**
+      * Wrapper to create a text field for questions that require Refused and Don't know options
+      */
+     
     function addTextElementRD($field, $label, $rules=array(), $rule_message='You must specify or select from the drop-down', $refusals=array(''=>'', "88_refused"=>"88 Refused", "99_do_not_know"=>"99 Do not know", 'not_answered'=>'Not Answered')){
         $group[]=&$this->form->createElement("text", $field);
         $group[]=&$this->form->createElement("select", $field."_status", "", $refusals);
@@ -1052,12 +1076,11 @@ print "<!-- \n"; print "DDE: $doubleDataEntry\n"; print_r($_SESSION['State']); p
         $rules_array=array_merge(array($field.'_status{@}=={@}'), $rules);
         $this->XINRegisterRule($field, $rules_array, $rule_message, $field.'_group');
     }
-
-
-   /**
-    * Wrapper to create a text area field for questions that require Refused and Don't know options
-    */
-
+     
+    /**
+     * Wrapper to create a text area field for questions that require Refused and Don't know options
+     */
+     
     function addTextAreaElementRD($field, $label, $rules=array(), $rule_message='You must specify or select from the drop-down'){
         $group[]=&$this->form->createElement("textarea", $field, null, array('cols'=>25, 'rows'=>4));
         $group[]=&$this->form->createElement("select", $field."_status", "", array(NULL=>'',"88_refused"=>"88 Refused", "99_do_not_know"=>"99 Do not know", 'not_answered'=>'Not Answered'));
@@ -1066,37 +1089,7 @@ print "<!-- \n"; print "DDE: $doubleDataEntry\n"; print_r($_SESSION['State']); p
         $rules_array=array_merge(array($field.'_status{@}=={@}'),$rules);
         $this->XINRegisterRule($field, $rules_array, $rule_message, $field.'_group');
     }
-
-
-   /**
-    * Wrapper with a user-created date group, a status box and appropriate rule
-    */
-    function addCustomDateElement($name, $label, $dateArray){
-        $group [] = $this->form->createElement("date", $name . "_date", null, $dateArray);
-        $this->dateTimeFields[] = $name . "_date"; //add to array of dates and times.
-        $group [] = $this->form->createElement("select", $name . "_date_status", null, array(NULL=>"", '88_refused'=>"88 Refused", '99_do_not_know'=>"99 Do not know", 'not_answered'=>"Not Answered"));
-        $this->form->addGroup($group, $name . "_date_group", $label, $this->_GUIDelimiter, FALSE);
-        unset($group);
-        $this->XINRegisterRule($name . "_date", array($name . "_date_status{@}=={@}"), "You must specify or select from the drop-down", $name . "_date_group");
-        $this->XINRegisterRule($name . "_date_status", array($name . "_date{@}=={@}"), "You must specify or select from the drop-down", $name . "_date_group");
-
-    }
-
-    /**
-    * Wrapper to create a field that only accepts a number, for questions that require refused and don't know options
-    *
-    */
-
-    function addNumericElementRD($field, $label) {
-        $group [] = $this->form->createElement("text", $field, $label);
-        $group [] = $this->form->createElement("select", $field . "_status", null, array(NULL=>"", "88_refused"=>"88 Refused", "99_do_not_know"=>"99 Do not know", 'not_answered'=>"Not Answered"));
-        $this->form->addGroup($group, $field . "_group", $label, null, false);
-        unset($group);
-        $this->form->addGroupRule($field . "_group", array(array(array("Numbers only, please", 'numeric'))));
-        $this->XINRegisterRule($field, array($field . '_status{@}=={@}'), 'This field is required', $field . '_group');
-    }
-
- 
+    
     /**
     * Wrapper to create a text area field, with an accompanying status field.
     * @param    string    $field    The database field in which the response will be stored
@@ -1104,6 +1097,8 @@ print "<!-- \n"; print "DDE: $doubleDataEntry\n"; print_r($_SESSION['State']); p
     * @param    array    $rules    {@} delimited rules
     * @param    string    $rule_message    rule message to display upon rule violation
     */
+    
+
     function addTextAreaElement($field, $label, $rules=array(), $rule_message='This field is required.'){
         $group[]=&$this->form->createElement("textarea", $field, null, array('cols'=>25, 'rows'=>4));
         $group[]=&$this->form->createElement("select", $field."_status", "", array(NULL=>'', 'not_answered'=>'Not Answered'));
@@ -1141,8 +1136,23 @@ print "<!-- \n"; print "DDE: $doubleDataEntry\n"; print_r($_SESSION['State']); p
         $this->form->addGroup($group, $name . "_date_group", $label, $this->_GUIDelimiter, FALSE);
         unset($group);
         $this->XINRegisterRule($name . "_date", array($name . "_date_status{@}=={@}"), "A Date, or Not Answered is required.", $name . "_date_group");
-        $this->XINRegisterRule($name . "_date_status", array($name . "_date{@}=={@}"), "A Date, or Not Answered is required.", $name . "_date_group");
+        
     }
+
+    /** 
+    * Wrapper with a user-created date group, a status box and appropriate rule
+    */
+    function addCustomDateElement($name, $label, $dateArray){
+        $group [] = $this->form->createElement("date", $name . "_date", null, $dateArray);
+        $this->dateTimeFields[] = $name . "_date"; //add to array of dates and times.
+        $group [] = $this->form->createElement("select", $name . "_date_status", null, array(NULL=>"", '88_refused'=>"88 Refused", '99_do_not_know'=>"99 Do not know", 'not_answered'=>"Not Answered"));
+        $this->form->addGroup($group, $name . "_date_group", $label, $this->_GUIDelimiter, FALSE);
+        unset($group);
+        $this->XINRegisterRule($name . "_date", array($name . "_date_status{@}=={@}"), "You must specify or select from the drop-down", $name . "_date_group");
+        $this->XINRegisterRule($name . "_date_status", array($name . "_date{@}=={@}"), "You must specify or select from the drop-down", $name . "_date_group");
+
+    }
+
 
 
     /**
@@ -1153,6 +1163,20 @@ print "<!-- \n"; print "DDE: $doubleDataEntry\n"; print_r($_SESSION['State']); p
     function addNumericElement($field, $label) {
         $group [] = $this->form->createElement("text", $field, $label);
         $group [] = $this->form->createElement("select", $field . "_status", null, array(NULL=>"", 'not_answered'=>"Not Answered"));
+        $this->form->addGroup($group, $field . "_group", $label, null, false);
+        unset($group);
+        $this->form->addGroupRule($field . "_group", array(array(array("Numbers only, please", 'numeric'))));
+        $this->XINRegisterRule($field, array($field . '_status{@}=={@}'), 'This field is required', $field . '_group');
+    }
+
+    /**
+    * Wrapper to create a field that only accepts a number, for questions that require refused and don't know options
+    *
+    */
+    
+    function addNumericElementRD($field, $label) {
+        $group [] = $this->form->createElement("text", $field, $label);
+        $group [] = $this->form->createElement("select", $field . "_status", null, array(NULL=>"", "88_refused"=>"88 Refused", "99_do_not_know"=>"99 Do not know", 'not_answered'=>"Not Answered"));    
         $this->form->addGroup($group, $field . "_group", $label, null, false);
         unset($group);
         $this->form->addGroupRule($field . "_group", array(array(array("Numbers only, please", 'numeric'))));
@@ -1227,6 +1251,25 @@ print "<!-- \n"; print "DDE: $doubleDataEntry\n"; print_r($_SESSION['State']); p
         }
         
         return $defaults[0];
+    }
+
+    // The Date_taken can be manually passed in. This is the case when
+    // calculating the age while updating the Date_taken in _saveValues, 
+    //since we want to use the new value, not the old value
+    function getCandidateAge($Date_taken=FALSE) {
+        $db =& Database::singleton();
+        $CommentID = $this->getCommentID();
+        $db->selectRow("SELECT i.Date_taken, c.DoB FROM $this->testName i JOIN flag f USING (CommentID) JOIN session s ON (f.SessionID=s.ID) JOIN candidate c USING (CandID) WHERE f.CommentID='$CommentID'", &$dates);
+
+        if($Date_taken==FALSE) {
+            $age = Utility::calculateAge($dates['DoB'], $dates['Date_taken']);
+        } else {
+            $age = Utility::calculateAge($dates['DoB'], $Date_taken);
+        }
+        if(!empty($age)) {
+            return $age; //$age['year'] + ($age['mon'] / 12) + ($age['day'] / 30);
+        }
+        return;
     }
     
 
