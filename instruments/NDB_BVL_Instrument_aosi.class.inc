@@ -385,7 +385,7 @@ INSERT INTO instrument_subtests VALUES('', 'aosi', 'aosi_page2', 'General Observ
         //Question 3
         //calculate
             //2
-            if($score_record[TrialName(1,1)] == "not_answered" &&
+            if($score_record[TrialName(1,1)] == "not_answered" ||
                 $score_record[TrialName(2,1)] == "not_answered") {
                 $this->scores["3_orients_to_name_score"] = "Unable to score";
             } elseif($score_record["3_orients_to_name_press_1_trial_1"] != "orients_with_eye_contact" && 
