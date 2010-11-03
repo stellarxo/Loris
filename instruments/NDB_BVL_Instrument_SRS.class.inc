@@ -21,7 +21,7 @@ class NDB_BVL_Instrument_SRS extends NDB_BVL_Instrument
                 'q1_fidgety_social_situations'      => 'Seems much more fidgety in social situation than when alone',
                 'q2_expressions_dont_match'         => "Expressions on his/her face don't match what he/she is saying",
                 'q3_seems_self_confident'           => 'Seems self confident when interacting with others',
-                'q4_auto-pilot_under_stress'        => 'When under stress, child seems to go on "auto-pilot"',
+                'q4_auto_pilot_under_stress'        => 'When under stress, child seems to go on "auto-pilot"',
                 'q5_no_recognize_take_advantage'    => "Doesn't recognize when others are trying to take advantage of him/her",
                 'q6_rather_be_alone'                => 'Would rather be alone than with others',
                 'q7_aware_others_feeling'           => 'Is aware of what others are thinking or feeling',
