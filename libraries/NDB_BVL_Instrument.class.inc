@@ -517,9 +517,8 @@ class NDB_BVL_Instrument extends PEAR
         }
         $db =& Database::singleton();
         $result = $db->update($this->table, $values, array('CommentID'=>$this->getCommentID()));
-print_r($values);       
 
- if($this->isError($result)) {
+	 if($this->isError($result)) {
             print "Error saving data: ".$result->getMessage()."<br>\n";
             return $this->raiseError('Could not save to database' . $result->getMessage());
         }
