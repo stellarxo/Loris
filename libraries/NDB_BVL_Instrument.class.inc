@@ -455,6 +455,8 @@ class NDB_BVL_Instrument extends PEAR
             $age = $this->getCandidateAge($values['Date_taken']);
             $agedays = $age['year']*365 + $age['mon']*30 + $age['day'];
             $agemonths = $age['year']*12 + $age['mon'] + ($age['day']/30);
+            // 1 Decimal.
+            $agemonths = (round($agemonths*10) / 10.0);
             if(!empty($age)) {
                 $DB->selectRow("SELECT MIN(AgeMinDays) as Min, MAX(AgeMaxDays) as Max FROM test_battery WHERE Active='Y' and Test_name='" . $this->testName . "'", $minmax);
                 $errorage = false;
