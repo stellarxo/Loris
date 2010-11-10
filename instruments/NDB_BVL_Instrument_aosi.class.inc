@@ -197,7 +197,7 @@ INSERT INTO instrument_subtests VALUES('', 'aosi', 'aosi_page2', 'General Observ
         //Question 1
         $this->form->addElement("static", null, "1. Visual Tracking");
         for($press = 1; $press <=3; $press++) {
-            $this->form->addElement('select', "1_visual_tracking_press_$press", "Press #$press", array(null=>"", 0=>"0 = Pass", 1=>"1 = Delayed/Interupted", 2=>"2 = Partial or No Tracking", 8=>"8 = Not Applicable", "not_answered"=>"Not Answered"));
+            $this->form->addElement('select', "1_visual_tracking_press_$press", "Press #$press", array(null=>"", 0=>"0 = Pass", 1=>"1 = Delayed/Interupted", 2=>"2 = Partial or No Tracking", "not_answered"=>"Not Answered"));
         }
 
         $this->form->addElement("select", "1_visual_tracking_score_override", "Override score (required):", array(null=>'', 0=>"0 = Smoothly tracks", 1=>"1 = Delayed or interrupted", 2=>"2 = Partial", 8=>"8 = Not applicable"));
@@ -210,7 +210,7 @@ INSERT INTO instrument_subtests VALUES('', 'aosi', 'aosi_page2', 'General Observ
         //Question 2
         $this->form->addElement("static", null, "2. Disengagement of Attention");
         for($press = 1; $press <= 3; $press++) {
-            $this->form->addElement('select', "2_disengagement_of_attention_press_$press", "Press #$press", array(null=>"", 0=>"0 = Pass (<1 sec)", 1=>"1 = Delayed (1-2 sec)", 2=>"2 = Stuck (>2 sec)", 8=>"8 = Not Applicable", "not_answered"=>"Not Answered"));
+            $this->form->addElement('select', "2_disengagement_of_attention_press_$press", "Press #$press", array(null=>"", 0=>"0 = Pass (<1 sec)", 1=>"1 = Delayed (1-2 sec)", 2=>"2 = Stuck (>2 sec)", "not_answered"=>"Not Answered"));
         }
         
         $this->form->addElement("select", "2_disengagement_of_attention_score_override", "Override score (required):", array(null=>'', 0=>"0 = Immediately moves attention", 1=>"1 = Delayed movement of attention", 2=>"2 = Fails to move attention", 8=>"8 = Not applicable"));
@@ -226,7 +226,7 @@ INSERT INTO instrument_subtests VALUES('', 'aosi', 'aosi_page2', 'General Observ
         for($press = 1; $press <= 3; $press++) {
             for($trial = 1; $trial <= 2; $trial++) {
                 $parents = $press != 3 ? "" : " (parents)";
-            $this->form->addElement('select', "3_orients_to_name_press_{$press}_trial_{$trial}", "Press #$press, Trial #$trial $parents", array(null=>"", "orients_with_eye_contact"=>"Orients with eye contact", "orients_without_eye_contact"=>"Orients without eye contact", "fail_to_orient"=>"Fail to orient", "not_applicable"=>"Not Applicable", "not_answered"=>"Not Answered"));
+            $this->form->addElement('select', "3_orients_to_name_press_{$press}_trial_{$trial}", "Press #$press, Trial #$trial $parents", array(null=>"", "orients_with_eye_contact"=>"Orients with eye contact", "orients_without_eye_contact"=>"Orients without eye contact", "fail_to_orient"=>"Fail to orient", "not_answered"=>"Not Answered"));
             }
         }
         $this->form->addElement("select", "3_orients_to_name_score_override", "Override score (required):", array(null=>'', 0=>"0 = Orients", 1=>"1 = Inconsistent orienting", 2=>"2 = Does not orient", 8=>"8 = Not applicable"));
@@ -252,8 +252,9 @@ INSERT INTO instrument_subtests VALUES('', 'aosi', 'aosi_page2', 'General Observ
         for($activity = 1; $activity <= 3; $activity++) {
             $group[] = $this->form->createElement("text", "6_imitation_of_actions_activity_{$activity}", null);
             for($attempt = 1; $attempt <= 3; $attempt++) {
-                $group[] = $this->form->createElement('select', "6_imitation_of_actions_act_{$activity}_att_{$attempt}", "", array(null=>"", 0=>"0 = Clear imitation", 1=>"1 = Equivocal imitation", 2=>"2 = Does not imitate", 8=>"8 = Not Applicable", "not_answered"=>"Not Answered"));
+                $group[] = $this->form->createElement('select', "6_imitation_of_actions_act_{$activity}_att_{$attempt}", "", array(null=>"", 0=>"0 = Clear imitation", 1=>"1 = Equivocal imitation", 2=>"2 = Does not imitate", "not_answered"=>"Not Answered"));
                 $this->XINRegisterRule("6_imitation_of_actions_act_{$activity}_att_{$attempt}", array("6_imitation_of_actions_act_{$activity}_att_{$attempt}{@}=={@}"), "An outcome is required.", "6_imitation_of_actions_activity_{$activity}_group");
+//		$this->XINRegisterRule("6_imitation_of_actions_act_{$activity}_att_{$attempt}", array("6_imitation_of_actions_act_{$activity}_att_{$attempt}{@}=={@}
             }
             $this->form->addGroup($group, "6_imitation_of_actions_activity_{$activity}_group", "Activity $activity", null, false);
             unset($group);
@@ -430,7 +431,7 @@ INSERT INTO instrument_subtests VALUES('', 'aosi', 'aosi_page2', 'General Observ
                 $field = "6_imitation_of_actions_act_{$activity}_att_{$attempt}";
 
                 //Ignore if not_answered
-                if($this->scores[$field] == "not_answered") {
+                if($score_record[$field] == "not_answered") {
                     continue;
                 }
                 // If it's lower, or haven't been set yet, take this one
