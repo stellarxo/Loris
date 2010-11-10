@@ -158,7 +158,7 @@ function _page2(){
            
              $this->form->addElement("select", "4_criteria_autistic_disorder", "<BR><strong> Does he or she meet the DSM-IV Criteria for Autistic Disorder: </strong> <BR> Total of at least 6 symptoms: <BR> $this->indent -At least 2 from category 1 <BR> $this->indent  -At least 1 from category 2 <BR> $this->indent -At least 1 from category 3 <BR> $this->indent -Onset before age 3 <BR> $this->indent -No other explanation<BR>", $this->yesNo);
         
-            $this->form->addElement("select", "4_criteria_ASD", "<BR> <strong> Does he/she meet DSM-IV Criteria for Pervasive Developmental Disorder-Not Otherwise Specified? </strong> <BR> Total of at least 3 symptoms: <BR> $this->indent -At least 1 from category 1 <BR> $this->indent  (\"Failure to develop peer relationships..\" may NOT be the only category 1 item) <BR> $this->indent -No other explanation <BR>", array(NULL=>"", "yes"=>"Yes", "no"=>"No or Meets criteria for Autism"));
+            $this->form->addElement("select", "4_criteria_PDD", "<BR> <strong> Does he/she meet DSM-IV Criteria for Pervasive Developmental Disorder-Not Otherwise Specified? </strong> <BR> Total of at least 3 symptoms: <BR> $this->indent -At least 1 from category 1 <BR> $this->indent  (\"Failure to develop peer relationships..\" may NOT be the only category 1 item) <BR> $this->indent -No other explanation <BR>", array(NULL=>"", "yes"=>"Yes", "no"=>"No or Meets criteria for Autism"));
             
             $this->form->addElement('text', "4b_not_ASD_specify", "Note: If the child does <strong>NOT</strong> meet criteria for an ASD, specify other dx/comment:"); 
             
