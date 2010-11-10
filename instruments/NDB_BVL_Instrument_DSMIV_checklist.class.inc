@@ -7,15 +7,13 @@ require_once 'HTML/QuickForm.php';
 class NDB_BVL_Instrument_DSMIV_checklist extends NDB_BVL_Instrument
 {
    
-    var $yesNo = array(null=>"", 'yes'=>"Yes", 'no'=>"No", 'not_applicable'=>"Not applicable to candidate", 'not_answered' => "Not Answered");
-    var $yesNoNa = array(null=>"", 'yes'=>"Yes", 'no'=>"No", 'not_answered' => "Not Answered");
-    var $confidence = array(null=>"", 'very_confident'=>"Very Confident", 'somewhat_confident'=>"Somewhat Confident", 'not_confident'=>"Not Confident", 'not_answered'=>"Not Answered");
+    var $yesNo = array(null=>"", 'yes'=>"Yes", 'no'=>"No");
+    var $confidence = array(null=>"", 'very_confident'=>"Very Confident", 'somewhat_confident'=>"Somewhat Confident", 'not_confident'=>"Not Confident");
 
 
     /**
     * sets up basic data, such as the HTML_Quickform object, and so on.
     *
-    * @param string $commentID  the CommentID identifying the data to load
     * @param string $page       if a multipage form, the page to show
     * @return void
     * @access public
@@ -124,7 +122,7 @@ function _page1()
                 
         $this->form->addElement("select", "2a_development_spoken_language", "<BR> a. Delay in, or total lack of, the development of spoken language (not accompanied by an attempt to compensate through alternative modes of communication such as gesture).", $this->yesNo);
         
-          $this->form->addElement("select", "2b_impairment_conversation", "<BR> b. In individuals with adequate speech, marked impairment in the ability to initiate or sustain a conversation with others. (For infants/toddlers, reciprocal babble with parent/others that has a conversational feel can be counted.)", $this->yesNo);
+          $this->form->addElement("select", "2b_impairment_conversation", "<BR> b. In individuals with adequate speech, marked impairment in the ability to initiate or sustain a conversation with others. (For infants/toddlers, reciprocal babble with parent/others that has a conversational feel can be counted.)", array(null=>"", 'yes'=>"Yes", 'no'=>"No", "not_applicable"=>"Not Applicable"));
           
           $this->form->addElement("select", "2c_use_language", "<BR> c. Stereotyped and repetitive use of language or idiosyncratic language.", $this->yesNo);
         
@@ -139,6 +137,8 @@ function _page1()
           $this->form->addElement("select", "3c_motor_mannerisms", "<BR> c. Stereotyped and repetitive motor mannerisms (e.g., hand or finger flapping, complex whole-body movements).", $this->yesNo);
         
          $this->form->addElement("select", "3c_preoccupation_objects", "<BR> d. Persistent preoccupation with parts of objects or sensory qualities of objects.", $this->yesNo);
+
+         $this->form->addElement("static", null, "<BR>"); //line space
     }
         
 function _page2(){
@@ -156,13 +156,13 @@ function _page2(){
             $this->form->addElement('header', null, "Autistic Disorder Criteria Continued");
              $this->form->addElement("static", null, "<BR>"); //line space
            
-             $this->form->addElement("select", "4_criteria_autistic_disorder", "<BR><strong> Does he or she meet the DSM-IV Criteria for Autistic Disorder: </strong> <BR> Total of at least 6 symptoms: <BR> $this->indent -At least 2 from category 1 <BR> $this->indent  -At least 1 from category 2 <BR> $this->indent -At least 1 from category 3 <BR> $this->indent -Onset before age 3 <BR> $this->indent -No other explanation<BR>", $this->yesNoNa);
+             $this->form->addElement("select", "4_criteria_autistic_disorder", "<BR><strong> Does he or she meet the DSM-IV Criteria for Autistic Disorder: </strong> <BR> Total of at least 6 symptoms: <BR> $this->indent -At least 2 from category 1 <BR> $this->indent  -At least 1 from category 2 <BR> $this->indent -At least 1 from category 3 <BR> $this->indent -Onset before age 3 <BR> $this->indent -No other explanation<BR>", $this->yesNo);
         
-            $this->form->addElement("select", "4_criteria_ASD", "<BR> <strong> Does he/she meet DSM-IV Criteria for Pervasive Developmental Disorder-Not Otherwise Specified? </strong> <BR> Total of at least 3 symptoms: <BR> $this->indent -At least 1 from category 1 <BR> $this->indent  (\"Failure to develop peer relationships..\" may NOT be the only category 1 item) <BR> $this->indent -No other explanation <BR>", $this->yesNoNa);
+            $this->form->addElement("select", "4_criteria_ASD", "<BR> <strong> Does he/she meet DSM-IV Criteria for Pervasive Developmental Disorder-Not Otherwise Specified? </strong> <BR> Total of at least 3 symptoms: <BR> $this->indent -At least 1 from category 1 <BR> $this->indent  (\"Failure to develop peer relationships..\" may NOT be the only category 1 item) <BR> $this->indent -No other explanation <BR>", array(NULL=>"", "yes"=>"Yes", "no"=>"No or Meets criteria for Autism"));
             
-            $this->form->addElement('text', "4b_not_ASD_specify", "Note: If the child does <strong>NOT</strong> meet criteria for an ASD, specify other dx/comment:", array("4_criteria_ASD{@}=={@}no"), "This field is required.");
+            $this->form->addElement('text', "4b_not_ASD_specify", "Note: If the child does <strong>NOT</strong> meet criteria for an ASD, specify other dx/comment:"); 
             
-            $this->XINRegisterRule("4b_not_ASD_specify", array("4_criteria_ASD{@}=={@}no"), "This field is required.");          	
+           $this->XINRegisterRule("4b_not_ASD_specify", array("4_criteria_autistic_disorder{@}=={@}yes"), "This field is required.");          	
             
             
             $this->form->addElement("static", null, "<BR>"); //line space
@@ -181,11 +181,11 @@ function _page2(){
              $this->form->addElement("static", null, "<strong> Diagnostic Consensus </strong> <BR> This form confirms that this participant, based on clinical judgment and ADOS scores has been evaluated for an autism spectrum disorder.");
          
          	$this->form->addElement('text', "name_assessor", "<BR> Name of Diagnostic Assessor:");
-         
-         	$this->form->addElement('date', "date_taken_assessor", "<BR> Date:", $dateOptions);
+                 
+    	    $this->addDateElement('date_taken_assessor', "Date:");
         
                      
- $this->form->addElement("select", "confirmed_diagnosis", "<BR>A clinician, through live observation or video review confirms the status of the participant stated above. The clinician agrees with the assessor's diagnostic decision.", $this->yesNoNa);
+ $this->form->addElement("select", "confirmed_diagnosis", "<BR>A clinician, through live observation or video review confirms the status of the participant stated above. The clinician agrees with the assessor's diagnostic decision.", $this->yesNo);
 
            	$this->form->addElement('text', "name_confirming_clinician", "Name of Confirming Clinician:");
 
@@ -194,6 +194,8 @@ function _page2(){
             $this->XINRegisterRule("name_confirming_clinician", array("confirmed_diagnosis{@}=={@}yes|no"), "Please enter the name of the confirming clinician and the date confirmed.");          	
           	
           	 $this->XINRegisterRule("date_taken_confirming_clinician", array("confirmed_diagnosis{@}=={@}yes|no"), "Please enter the date");          	
+
+             $this->form->addElement("static", null, "<BR>"); //line space
             
 }
 }
