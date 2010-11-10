@@ -1127,18 +1127,16 @@ class NDB_BVL_Instrument_mullen extends NDB_BVL_Instrument
          $all_complete = true;
 
          foreach($scale_list as $scale_name){
-            if($calculatedScores[$scale_name . '_raw'] == null){
-               if(! ($scale_name == "gross_motor" && $age_months > 33)){
-                  $all_complete = false;
-               }
-               continue;
-            }
 
-            $query = "SELECT * FROM mullen_lookup WHERE age_months=".$age_months. " AND raw_score=".$calculatedScores[$scale_name . '_raw'];
-            $record = array();
-         	$db->selectRow($query, $record);
-            if (PEAR::isError($record)) {
-                return PEAR::raiseError("Could not retrieve scores: " . $record->getMessage());
+            if($calculatedScores[$scale_name . '_raw']) {
+                $query = "SELECT * FROM mullen_lookup WHERE age_months=".$age_months. " AND raw_score=".$calculatedScores[$scale_name . '_raw'];
+                $record = array();
+                $db->selectRow($query, $record);
+                if (PEAR::isError($record)) {
+                    return PEAR::raiseError("Could not retrieve scores: " . $record->getMessage());
+                }
+            } else {
+                $record = array();
             }
 
             // If the score is above or below the highest score in the table,
