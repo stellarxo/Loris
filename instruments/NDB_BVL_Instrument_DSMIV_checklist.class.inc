@@ -162,7 +162,7 @@ function _page2(){
             
             $this->form->addElement('text', "4b_not_ASD_specify", "Note: If the child does <strong>NOT</strong> meet criteria for an ASD, specify other dx/comment:"); 
             
-           $this->XINRegisterRule("4b_not_ASD_specify", array("4_criteria_autistic_disorder{@}=={@}yes"), "This field is required.");          	
+           $this->XINRegisterRule("4b_not_ASD_specify", array("4_criteria_autistic_disorder{@}=={@}no"), "This field is required.");          	
             
             
             $this->form->addElement("static", null, "<BR>"); //line space
