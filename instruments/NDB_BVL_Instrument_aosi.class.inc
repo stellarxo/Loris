@@ -1,4 +1,5 @@
 <?php
+		    
 function TrialName($press, $trial) {
 	return "3_orients_to_name_press_" . $press . 
 	"_trial_" . $trial;
@@ -23,6 +24,7 @@ INSERT INTO instrument_subtests VALUES('', 'aosi', 'aosi_page2', 'General Observ
                         "5_anticipatory_response_score"=>"",
                         "6_imitation_of_actions_score"=>"");
 
+     var $questions = array("1_visual_tracking_score", "2_disengagement_of_attention_score", "3_orients_to_name_score",                      "6_imitation_of_actions_score");
 
     /**
     * sets up basic data, such as the HTML_Quickform object, and so on.
@@ -178,7 +180,9 @@ INSERT INTO instrument_subtests VALUES('', 'aosi', 'aosi_page2', 'General Observ
         
         // automatically adds examiner & date of administration
         $this->_addMetadataFields();
-        
+       
+
+
         $this->form->addElement('select', "examiner_location", "(Circle One)", array(null=>'', 'examiner'=>'Examiner', "in_room_observer"=>"In-Room Observer", "behind_mirror"=>"Behind Mirror", "videotape"=>"Videotape", "not_answered"=>"Not Answered"));
         $this->form->addElement('static', "total_score_1_18", "Total Score (Calculated) (items 1-18)");
         $this->form->addElement('static', "total_score_1_18_override", "Total Score (Using Overrides) (items 1-18)");
@@ -254,8 +258,8 @@ INSERT INTO instrument_subtests VALUES('', 'aosi', 'aosi_page2', 'General Observ
             for($attempt = 1; $attempt <= 3; $attempt++) {
                 $group[] = $this->form->createElement('select', "6_imitation_of_actions_act_{$activity}_att_{$attempt}", "", array(null=>"", 0=>"0 = Clear imitation", 1=>"1 = Equivocal imitation", 2=>"2 = Does not imitate", "not_answered"=>"Not Answered"));
                 $this->XINRegisterRule("6_imitation_of_actions_act_{$activity}_att_{$attempt}", array("6_imitation_of_actions_act_{$activity}_att_{$attempt}{@}=={@}"), "An outcome is required.", "6_imitation_of_actions_activity_{$activity}_group");
-//		$this->XINRegisterRule("6_imitation_of_actions_act_{$activity}_att_{$attempt}", array("6_imitation_of_actions_act_{$activity}_att_{$attempt}{@}=={@}
             }
+
             $this->form->addGroup($group, "6_imitation_of_actions_activity_{$activity}_group", "Activity $activity", null, false);
             unset($group);
             $this->XINRegisterRule("6_imitation_of_actions_activity_{$activity}", array("6_imitation_of_actions_activity_{$activity}{@}=={@}"), "An activity name is required.", "6_imitation_of_actions_activity_{$activity}_group");
@@ -425,6 +429,11 @@ INSERT INTO instrument_subtests VALUES('', 'aosi', 'aosi_page2', 'General Observ
         //Question 6
         //calculate
         $this->scores["6_imitation_of_actions_score"] = "Unable to score"; //start with worst score possible
+
+	$nulls = 0;
+	$nonNulls = 0;
+	$na = 0; 
+
         for($activity = 1; $activity <= 3; $activity++) {
             for($attempt = 1; $attempt <= 3; $attempt++) {
                 //take the lowest/best score possible.
@@ -432,15 +441,31 @@ INSERT INTO instrument_subtests VALUES('', 'aosi', 'aosi_page2', 'General Observ
 
                 //Ignore if not_answered
                 if($score_record[$field] == "not_answered") {
-                    continue;
+                	$na++;
+			continue;
                 }
-                // If it's lower, or haven't been set yet, take this one
-                if(($score_record[$field] < $this->scores["6_imitation_of_actions_score"]) || ($this->scores["6_imitation_of_actions_score"] == "Unable to score")) {
-                    $this->scores["6_imitation_of_actions_score"] = $score_record[$field];
-                }
-            }
-        }
-    
+
+		//Take the lowest score possible
+		if($score_record[$field] == '1' || $score_record[$field] == '2')
+		{
+			if ($score_record[$field] < $this->scores["6_imitation_of_actions_score"])
+				$this->scores["6_imitation_of_actions_score"] = $score_record[$field];
+			$nonNulls++;
+		}
+
+                // If it's 0, set to 0
+                if($score_record[$field] == '0'){
+			$this->scores["6_imitation_of_actions_score"] = '0';
+			$nulls++;
+			break;
+		}
+	     }
+	}
+	
+	if ($nonNulls>0 && $na>0 && $nulls==0)
+		$this->scores["6_imitation_of_actions_score"] = "Unable to score";
+
+
         //Summary scores
         //build array of all scorable fields
         $overrideables = array("1_visual_tracking_score",
@@ -537,6 +562,6 @@ INSERT INTO instrument_subtests VALUES('', 'aosi', 'aosi_page2', 'General Observ
         }
         return;
     }    
-    
+
 }
 ?>
