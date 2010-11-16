@@ -113,7 +113,7 @@ class NDB_Menu_statistics extends NDB_Menu
         AND COALESCE(s.Visit,'') NOT IN ('Failure', 'Withdrawal')
                 AND s.Active='Y' and s.Cancelled='N'
                 AND c.Active='Y' and c.Cancelled='N'
-                AND f.Administration <> 'None'
+                AND (f.Administration = 'All' OR f.Administration='Partial')
                 AND s.Current_stage <> 'Recycling Bin'
                 $ExtraSite_Criteria
         GROUP BY s.SubprojectID", $result);
@@ -219,6 +219,8 @@ class NDB_Menu_statistics extends NDB_Menu
                  WHERE s.Cancelled='N'  AND s.active='Y' AND s.CenterID <> '1'
                     AND ((s.Current_stage IN ('Visit', 'Screening')
                     AND s.SubprojectID IN (1, 2)) OR s.SubprojectID=3) 
+       AND COALESCE(s.Screening,'') NOT IN ('Failure', 'Withdrawal')
+        AND COALESCE(s.Visit,'') NOT IN ('Failure', 'Withdrawal')
                  GROUP BY c.CenterID, SubprojectID, VLabel, Subcat", &$result);
             if (PEAR::isError($result)) {
                 return PEAR::raiseError("DB Error: ".$result->getMessage());
