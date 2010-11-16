@@ -163,6 +163,7 @@ class NDB_Menu_statistics extends NDB_Menu
             array( '' => 'Recruit Gender Breakdown'),
                 Utility::getAllInstruments()
         );
+        $this->tpl_data['scored_instruments'] = Utility::getScoredInstruments(); 
         if(isset($_REQUEST['instrument']) && $_REQUEST['instrument'] != '') {
             $Subcategories = array('Complete', 'Incomplete'); 
             $DB->select("SELECT count(*) as val, 
@@ -530,7 +531,7 @@ class NDB_Menu_statistics extends NDB_Menu
         // type of thing Tanya wants stats for here separately
 
         // Thresholds was copy/pasted from 
-        $thresholds = NDB_Menu_Filter_Reliability::getThreadholds();
+        $thresholds = NDB_Menu_Filter_Reliability::getThreshholds();
         $tests = array(
             'adi_r_proband' => 'ADI-R (Proband)',
             'adi_r_subject' => 'ADI-R (Subject)',
