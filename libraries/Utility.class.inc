@@ -63,7 +63,64 @@ class Utility extends PEAR
         return (!empty($a)) ? "$a`$b" : $b;
     }
 
+    function _daysInPrevMonth($month, $year) {
+        if($month == 1) {
+            return Utility::_daysInMonth(12, $year-1);
+        }
+        return Utility::_daysInMonth($month-1, $year);
+    }
 
+    function _daysInMonth($month, $year, $calcLeapYear = true) {
+        /* Thirty days has September (9), April (4), June (6), and November (11)
+           all the rest have 31 except February, etc etc */
+        $thirty_days = array(4, 6, 9, 11);
+        if($month == 2) {
+            if($calcLeapYear == false) {
+                return 28;
+            }
+            if(Utility::_IsLeapYear($year)) {
+                return 29;
+            }
+            return 28;
+        }
+        if(!in_array($month, $thirty_days)) {
+            return 31;
+        }
+        return 30;
+    }
+
+    function _IsLeapYear($year) {
+        if($year % 400 == 0)
+            return true;
+        if($year % 100 == 0)
+            return false;
+        if($year % 4 == 0 )
+            return true;
+        return false;
+    }
+
+    function _ExtraLeapDays($testdate, $dob) {
+        $extra = 0;
+        foreach(range($dob['year'], $testdate['year']) as $year) {
+            if(Utility::_IsLeapYear($year) ) {
+                if($year == $testdate['year']) {
+                    if(($testdate['mon'] > 2) || 
+                           ($testdate['mon'] == 2 && $testdate['day'] == 29))
+                    {
+                        $extra++;
+                    }
+                } elseif($year == $dob['year']) {
+                    if($dob['mon'] <= 2)
+                    {
+                        $extra++;
+                    }
+                } else {
+                    $extra++;
+                }
+            }
+        }
+        return $extra;
+    }
     /**
      * computes an age in years:months:days (assumes 30 days per months)
      *
@@ -85,8 +142,15 @@ class Utility extends PEAR
         }
         $testdate = array('year'=>$matches[1], 'mon'=>$matches[2], 'day'=>$matches[3]);
 
-        if($testdate['day'] < $dob['day']) { $testdate['day']+= 30; $testdate['mon']--; }
-        if($testdate['mon'] < $dob['mon']) { $testdate['mon']+= 12; $testdate['year']--; }
+        //$testdate['day'] += Utility::_extraLeapDays($testdate, $dob);
+        if($testdate['day'] < $dob['day']) { 
+            $testdate['day']+= Utility::_daysInPrevMonth($testdate['mon'], $testdate['year']); 
+            $testdate['mon']--; 
+        }
+        if($testdate['mon'] < $dob['mon']) { 
+            $testdate['mon']+= 12; 
+            $testdate['year']--; 
+        }
 
         $age = array('year'=>$testdate['year'] - $dob['year'],
                      'mon' =>$testdate['mon'] - $dob['mon'],
@@ -469,13 +533,43 @@ class Utility extends PEAR
         // trick to get an array of the form array( 'test_name' => 'test_name')
         // which can be used by quickforms for the dropdown. The array_merge
         // call after that just adds an Any/All Instruments option.
-        function Flatten($Arr) {
-            return $Arr['Test_name'];
-        }
         $in = array_map('Flatten', $instruments_q);
         $instruments = array_combine($in, $in);
         return $instruments;
 
    }
+   function getScoredInstruments() {
+       $All = Utility::getAllInstruments();
+       $Scored = array();
+       $Nothing = array();
+       foreach($All as $Instrument) {
+           if(Utility::getScoreColsForInstrument($Instrument) != $Nothing) {
+               $Scored[] = $Instrument;
+           }
+       }
+       return $Scored;
+   }
+   function getScoreColsForInstrument($inst) {
+        require_once "NDB_BVL_Instrument.class.inc";
+        $i = NDB_BVL_Instrument::factory($inst, '', '', true);
+        if(isset($i->scoreLabels)) {
+            $score = $i->scoreLabels;
+        } elseif(isset($i->scoreCols)) {
+            $score = $i->scoreCols;
+        } elseif(isset($i->scores)) {
+            $score = $i->scores;
+        }
+        if(isset($score[0])) {
+            return $score;
+        } else {
+            if($score != null) {
+                return array_keys($score);
+            }
+        }
+        return array();
+   }
 }
+function Flatten($Arr) {
+    return $Arr['Test_name'];
+    }
 ?>
