@@ -1,4 +1,5 @@
 <?php
+require_once "Utility.class.inc";
 require_once "NDB_Form.class.inc";
 
 /**
@@ -128,10 +129,7 @@ class NDB_Form_conflicts_resolve extends NDB_Form
         // which can be used by quickforms for the dropdown. The array_merge
         // call after that just adds an Any/All Instruments option.
 
-        function Flatten($Arr) {
-            return $Arr['Test_name'];
-        }
-        $in = array_map('Flatten', $instruments_q); 
+        $in = array_map(array('Utility', 'Flatten'), $instruments_q); 
         $instruments = array_combine($in, $in);
         $instruments = array_merge(array('' => 'All Instruments'), $instruments);
         
