@@ -9,6 +9,8 @@ class NDB_BVL_Instrument_RSMS extends NDB_BVL_Instrument{
 	var $yesNo = array(null=>"", "Yes" =>"Yes", "No" =>"No", 333 => "Unknown", 999 =>"NA");	
 	var $rate_rsm_array = array(null => "", 0 => "0", 1=>"1", 2 => "2", 3 =>"3+", "NA" => "NA");
     
+    var $scoreCols = array ( 'q1_score', 'q2_score', 'q1_2_score', 'q3_score', 'q4_score', 'q3_4_score');
+
 	/*
 	INSERT INTO test_names VALUES ('', 'RSMS', 'Repetitive and Stereotyped Movement Scales: Scoring Worksheet', '0', '1');
 	INSERT INTO instrument_subtests VALUES('', 'RSMS', 'RSMS_page1', 'Repetitive and Stereotyped Movement Scales', 1);
@@ -317,6 +319,11 @@ class NDB_BVL_Instrument_RSMS extends NDB_BVL_Instrument{
     
         
         function score() {
+            if($this->_determineDataEntryCompletionStatus() == "Incomplete") {
+                return;
+            }
+            $this->_nullScores($this->scoreCols);
+
    
             // Get the item scores
             $array_of_conversion=array();
