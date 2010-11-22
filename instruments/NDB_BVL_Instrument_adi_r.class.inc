@@ -593,7 +593,7 @@ class NDB_BVL_Instrument_adi_r extends NDB_BVL_Instrument
 		$this->form->addElement("select", "q_30_overall_level_of_language", "30. Overall level of language", $answerArray);
 		$this->form->addElement('static', null, "<br />");
 		
-		$answerArray = array(""=>NULL, "0_no_use"=>"0. No use", "1_occasional_point"=>"1. Occasional to point", "2_occasional_for"=>"2. Occasional 'for'", "3_regular_for"=>"3. Regular 'for'", "8_little"=>"8. Little", "9_not_asked"=>"9. Not asked", "not_answered"=>"Not Answered");
+		$answerArray = array(""=>NULL, "0_no_use"=>"0. No use", "1_occasional_point"=>"1. Occasional to point", "2_occasional_for"=>"2. Occasional 'for'", "3_regular"=>"3. Regular 'for'", "8_little"=>"8. Little", "9_not_asked"=>"9. Not asked", "not_answered"=>"Not Answered");
 		$this->form->addElement("static", null, "31. Use of other's body to communicate");
 		$this->form->addElement("select", "q_31_use_of_others_body_current_code", $this->indent . "Current:", $answerArray);
 		$this->form->addElement("select", "q_31_use_of_others_body_ever_code", $this->indent . "Ever:", $answerArray);
