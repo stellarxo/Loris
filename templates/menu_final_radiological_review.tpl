@@ -5,6 +5,12 @@
         <th nowrap="nowrap" colspan="4">Selection Filter</th>
     </tr>
     <tr>
+        <td nowrap="nowrap">{$form.site.label}</td>
+        <td nowrap="nowrap">{$form.site.html}</td>
+        <td nowrap="nowrap">&nbsp;</td>
+        <td nowrap="nowrap">&nbsp;</td>
+    </tr>
+    <tr>
         <td nowrap="nowrap">{$form.folder.label}</td>
         <td nowrap="nowrap">{$form.folder.html}</td>
         <td nowrap="nowrap">{$form.Conflict.label}</td>
