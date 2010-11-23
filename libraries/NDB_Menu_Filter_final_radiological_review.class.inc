@@ -53,7 +53,12 @@ class NDB_Menu_Filter_final_radiological_review extends NDB_Menu_Filter
 
     function _setupVariables()
     {
-        $conflict_condition = "(case when orig.review_results <> r.final_review_results then True when orig.abnormal_atypical_exculsionary <>  r.final_exclusionary THEN True WHEN r.Final_Review_Results <> r.Final_Review_Results2 THEN True WHEN r.Final_Exclusionary <> r.Final_Exclusionary2 THEN True WHEN r.SAS <> r.SAS2 THEN True WHEN r.PVS <> r.PVS2 THEN True ELSE False end)";
+        print "$_REQUEST[Conflict]";
+        if($_REQUEST['Conflict'] == 'prim_second') {
+            $conflict_condition = "(case when r.Final_Review_Results <> r.Final_Review_Results2 THEN 'prim_second' WHEN r.Final_Exclusionary <> r.Final_Exclusionary2 THEN 'prim_second' WHEN r.SAS <> r.SAS2 THEN 'prim_second' WHEN r.PVS <> r.PVS2 THEN 'prim_second' ELSE False end)";
+        } else {
+            $conflict_condition = "(case when orig.review_results <> r.final_review_results then True when orig.abnormal_atypical_exculsionary <>  r.final_exclusionary THEN True WHEN r.Final_Review_Results <> r.Final_Review_Results2 THEN True WHEN r.Final_Exclusionary <> r.Final_Exclusionary2 THEN True WHEN r.SAS <> r.SAS2 THEN True WHEN r.PVS <> r.PVS2 THEN True ELSE False end)";
+        }
 
         $this->query = " FROM radiology_review orig LEFT JOIN final_radiological_review r ON (r.CommentID=orig.CommentID) JOIN flag f on (f.CommentID=orig.CommentID) JOIN session s on (s.ID=f.SessionID) JOIN candidate c ON (c.CandID=s.CandID) JOIN tarchive t ON (upper(t.PatientName)=CONCAT(upper(c.PSCID), '_', upper(s.CandID), '_', upper(s.visit_label))) WHERE orig.commentid NOT LIKE 'DDE_%' AND orig.commentid IS NOT NULL AND s.active='Y' AND s.Cancelled='N' AND NOT (f.Administration='None' AND f.Data_entry='Complete' )";
         $this->columns = array('substring_index(t.sourcelocation, \'/\', -1) as DICOM_Folder_Name', 'c.PSCID as PSCID', 'c.CandID as DCCID', 's.visit_label as Visit_Label', 'c.CenterID as Site', 't.DateAcquired as Scan_Date ', 'c.DOB as Birth_Date', 'COALESCE(r.Review_Done, False) as Review_Done', 'r.Final_Review_Results as Results_Of_Radiology_Review', 'r.Final_Exclusionary as Exclusionary_Status', 'r.sas as SAS', 'r.pvs as PVS', 'orig.CommentID as CommentID', "$conflict_condition as Conflict", 'r.Finalized as Finalized', 'r.Final_Incidental_Findings as Comments' );
@@ -89,6 +94,7 @@ class NDB_Menu_Filter_final_radiological_review extends NDB_Menu_Filter
     {
         $list_of_visit_labels = array(null => 'Any', 'V06' => 'V06', 'V12' => 'V12', 'V24' => 'V24');
         $options_boolean= array(null => 'Any', True => 'Yes', False => 'No');
+        $conflict_options = array(null => 'Any', True => 'Yes', False => 'No', 'prim_second' => 'Final and Extra Review');
         $comment_options = array(null => 'Any', 'True' => 'Yes', 'False' => 'No');
         $bob_score = array(null => 'Any', '0' => 'None', '1' => 'Minimal', '2' => 'Mild', '3' => 'Moderate', '4' => 'Marked');
         $abnormal_atypical = array(null => 'Any', 'abnormal' => 'Abnormal', 'atypical' => 'Atypical', 'normal' => 'Normal');
@@ -101,7 +107,7 @@ class NDB_Menu_Filter_final_radiological_review extends NDB_Menu_Filter
         $this->form->addElement('select', 'Visit_label', 'Visit Label:', $list_of_visit_labels);
         $this->form->addElement('select', 'site', 'Site', array('' => 'Any', '2' => 'SEA', '3' => 'PHI', '4' => 'STL', '5' => 'UNC'));
         $this->form->addElement('select', 'Review_done', 'Review Done:', $options_boolean);
-        $this->form->addElement('select', 'Conflict', 'Conflict between reviews:', $options_boolean);
+        $this->form->addElement('select', 'Conflict', 'Conflict between reviews:', $conflict_options);
 
         $this->form->addElement('select', 'SAS', 'SAS (Subarachnoid Spaces):', $bob_score);
         $this->form->addElement('select', 'PVS', 'PVS (Perivascular Spaces):', $bob_score);
