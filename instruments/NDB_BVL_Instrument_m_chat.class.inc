@@ -12,43 +12,6 @@ class NDB_BVL_Instrument_m_chat extends NDB_BVL_Instrument
 
 	var $scoreCols = array("score", "critical_fails", "item_fails");
 
-	/**
-    * sets up basic data, such as the HTML_Quickform object, and so on.
-    *
-    * @param string $commentID  the CommentID identifying the data to load
-    * @param string $page       if a multipage form, the page to show
-    * @return void
-    * @access public
-    */
-	function setup($commentID, $page){
-		$this->formType="XIN";
-		$this->form = new HTML_Quickform('test_form');
-		$this->page = $page;            // page label (number or
-		// string - used by
-		// user-defined child classes)
-
-		// set the object properties
-		$this->testName = "m_chat";           // test_names.Test_name
-		$this->table = 'm_chat';              // name of database table corresponding to instrument
-		// data keyed by commentID
-		$this->commentID = $commentID;
-
-		//The array of dates/timestamps to convert to database dates/timestamps
-		//Any HTML_Quickform date elements must be listed here
-		$this->dateTimeFields=array("Date_taken");
-
-		//The array of selects with multiple answers allowed
-		//Any HTML_Quickform multiple selects must be listed here
-		$this->_selectMultipleElements = array();
-
-		// required fields for data entry completion status
-		$this->_requiredElements = array('Examiner', "1_swung_on_knee");
-
-		// setup the form
-		$this->_setupForm();
-
-	}
-
 	//If the instrument is not paged, remove the switch from the _setupForm method and add all the form Elements in this function.
 
 	/**
@@ -89,29 +52,29 @@ class NDB_BVL_Instrument_m_chat extends NDB_BVL_Instrument
 		$this->form->addElement('header', null, "Does your child...");
 
 		//        $this->form->addElement();
-		$questionArray = array("1_swung_on_knee"=>"1. Does your child enjoy being swung, bounced on your knee, etc.?",
-		"2_interest_other_children"=>"2. Does your child take an interest in other children?",
-		"3_climbing"=>"3. Does your child like climbing on things, such as up stairs?",
-		"4_peek_a_boo"=>"4. Does your child enjoy playing peek-a-boo/hide-and-seek?",
-		"5_pretends"=>"5. Does your child ever pretend, for example, to talk on the phone or take care of a doll or pretend other things?",
-		"6_index_point"=>"6. Does your child ever use his/her index finger to point, to ask for something?",
-		"7_index_interest"=>"7. Does your child ever use his/her index finger to point, to indicate interest in something?",
-		"8_play_properly"=>"8. Can your child play properly with small toys (e.g. cars or bricks) without just mouthing, fiddling, or dropping them?",
-		"9_bring_objects"=>"9. Does your child ever bring objects over to you (parent) to show you something?",
-		"10_look_eye"=>"10. Does your child look you in the eye for more than a second or two?",
-		"11_oversensitive"=>"11. Does your child ever seem oversensitive to noise? (e.g., plugging ears)",
-		"12_smile_to_face"=>"12. Does your child smile in response to your face or your smile?",
-		"13_imitate_you"=>"13. Does your child imitate you? (e.g., you make a face-will your child imitate it?)",
-		"14_respond_to_name"=>"14. Does your child respond to his/her name when you call?",
-		"15_point_and_look"=>"15. If you point at a toy across the room, does your child look at it?",
-		"16_walk"=>"16. Does your child walk?",
-		"17_look_at_similar"=>"17. Does your child look at things you are looking at?",
-		"18_unusual_finger"=>"18. Does your child make unusual finger movements near his/her face?",
-		"19_try_to_attract"=>"19. Does your child try to attract your attention to his/her own activity?",
-		"20_wondered_deaf"=>"20. Have you ever wondered if your child is deaf?",
-		"21_understand_speach"=>"21. Does your child understand what people say?",
-		"22_stare_no_purpose"=>"22. Does your child sometimes stare at nothing or wander with no purpose?",
-		"23_look_at_face"=>"23. Does your child look at your face to check your reaction when faced with something unfamiliar?");
+		$questionArray = array("q1_swung_on_knee"=>"1. Does your child enjoy being swung, bounced on your knee, etc.?",
+		"q2_interest_other_children"=>"2. Does your child take an interest in other children?",
+		"q3_climbing"=>"3. Does your child like climbing on things, such as up stairs?",
+		"q4_peek_a_boo"=>"4. Does your child enjoy playing peek-a-boo/hide-and-seek?",
+		"q5_pretends"=>"5. Does your child ever pretend, for example, to talk on the phone or take care of a doll or pretend other things?",
+		"q6_index_point"=>"6. Does your child ever use his/her index finger to point, to ask for something?",
+		"q7_index_interest"=>"7. Does your child ever use his/her index finger to point, to indicate interest in something?",
+		"q8_play_properly"=>"8. Can your child play properly with small toys (e.g. cars or bricks) without just mouthing, fiddling, or dropping them?",
+		"q9_bring_objects"=>"9. Does your child ever bring objects over to you (parent) to show you something?",
+		"q10_look_eye"=>"10. Does your child look you in the eye for more than a second or two?",
+		"q11_oversensitive"=>"11. Does your child ever seem oversensitive to noise? (e.g., plugging ears)",
+		"q12_smile_to_face"=>"12. Does your child smile in response to your face or your smile?",
+		"q13_imitate_you"=>"13. Does your child imitate you? (e.g., you make a face-will your child imitate it?)",
+		"q14_respond_to_name"=>"14. Does your child respond to his/her name when you call?",
+		"q15_point_and_look"=>"15. If you point at a toy across the room, does your child look at it?",
+		"q16_walk"=>"16. Does your child walk?",
+		"q17_look_at_similar"=>"17. Does your child look at things you are looking at?",
+		"q18_unusual_finger"=>"18. Does your child make unusual finger movements near his/her face?",
+		"q19_try_to_attract"=>"19. Does your child try to attract your attention to his/her own activity?",
+		"q20_wondered_deaf"=>"20. Have you ever wondered if your child is deaf?",
+		"q21_understand_speach"=>"21. Does your child understand what people say?",
+		"q22_stare_no_purpose"=>"22. Does your child sometimes stare at nothing or wander with no purpose?",
+		"q23_look_at_face"=>"23. Does your child look at your face to check your reaction when faced with something unfamiliar?");
 		foreach ($questionArray as $field=>$label) {
 			$this->form->addElement("select", $field, $label, array(null=>"", "yes"=>"Yes", "no"=>"No", "not_answered"=>"Not Answered"));
 		}
@@ -140,8 +103,11 @@ class NDB_BVL_Instrument_m_chat extends NDB_BVL_Instrument
 		}
 
 		//take only question fields, not metadata
+        $scores = array();
 		foreach ($record as $field=>$value) {
-			if (intval($field) == 0) {
+			//if (intval(substr($field, 1)) == 0) {
+            // This is a better way of checking, now that the fields are named properly..
+            if($field[0] !== 'q') {
 				continue;  //not a question field
 			} else {
 				$scores[$field] = $value;
@@ -149,18 +115,18 @@ class NDB_BVL_Instrument_m_chat extends NDB_BVL_Instrument
 		}
 
 		//Questions deemed as critical
-		$critical = array("2_interest_other_children",
-		"7_index_interest",
-		"9_bring_objects",
-		"13_imitate_you",
-		"14_respond_to_name",
-		"15_point_and_look");
+		$critical = array("q2_interest_other_children",
+		"q7_index_interest",
+		"q9_bring_objects",
+		"q13_imitate_you",
+		"q14_respond_to_name",
+		"q15_point_and_look");
 
 		//Questions that take a "no" response to pass
-		$noQuestions = array("11_oversensitive",
-		"18_unusual_finger",
-		"20_wondered_deaf",
-		"22_stare_no_purpose");
+		$noQuestions = array("q11_oversensitive",
+		"q18_unusual_finger",
+		"q20_wondered_deaf",
+		"q22_stare_no_purpose");
 
 		//Check correctness of all questions
 		//"not_answered" questions are, for now, considered as passes.
