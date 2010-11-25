@@ -60,11 +60,11 @@ class NDB_Menu_Filter_final_radiological_review extends NDB_Menu_Filter
             $conflict_condition = "(case when orig.review_results <> r.final_review_results then True when orig.abnormal_atypical_exculsionary <>  r.final_exclusionary THEN True WHEN r.Final_Review_Results <> r.Final_Review_Results2 THEN True WHEN r.Final_Exclusionary <> r.Final_Exclusionary2 THEN True WHEN r.SAS <> r.SAS2 THEN True WHEN r.PVS <> r.PVS2 THEN True ELSE False end)";
         }
 
-        $this->query = " FROM radiology_review orig LEFT JOIN final_radiological_review r ON (r.CommentID=orig.CommentID) JOIN flag f on (f.CommentID=orig.CommentID) JOIN session s on (s.ID=f.SessionID) JOIN candidate c ON (c.CandID=s.CandID) JOIN tarchive t ON (upper(t.PatientName)=CONCAT(upper(c.PSCID), '_', upper(s.CandID), '_', upper(s.visit_label))) WHERE orig.commentid NOT LIKE 'DDE_%' AND orig.commentid IS NOT NULL AND s.active='Y' AND s.Cancelled='N' AND NOT (f.Administration='None' AND f.Data_entry='Complete' )";
-        $this->columns = array('substring_index(t.sourcelocation, \'/\', -1) as DICOM_Folder_Name', 'c.PSCID as PSCID', 'c.CandID as DCCID', 's.visit_label as Visit_Label', 'c.CenterID as Site', 't.DateAcquired as Scan_Date ', 'c.DOB as Birth_Date', 'COALESCE(r.Review_Done, False) as Review_Done', 'r.Final_Review_Results as Results_Of_Radiology_Review', 'r.Final_Exclusionary as Exclusionary_Status', 'r.sas as SAS', 'r.pvs as PVS', 'orig.CommentID as CommentID', "$conflict_condition as Conflict", 'r.Finalized as Finalized', 'r.Final_Incidental_Findings as Comments' );
+        $this->query = " FROM radiology_review orig LEFT JOIN final_radiological_review r ON (r.CommentID=orig.CommentID) JOIN flag f on (f.CommentID=orig.CommentID) JOIN session s on (s.ID=f.SessionID) JOIN candidate c ON (c.CandID=s.CandID) WHERE orig.commentid NOT LIKE 'DDE_%' AND orig.commentid IS NOT NULL AND s.active='Y' AND s.Cancelled='N' AND NOT (f.Administration='None' AND f.Data_entry='Complete' )";
+        $this->columns = array('c.PSCID as PSCID', 'c.CandID as DCCID', 's.visit_label as Visit_Label', 'c.CenterID as Site', 'c.DOB as Birth_Date', 'COALESCE(r.Review_Done, False) as Review_Done', 'r.Final_Review_Results as Results_Of_Radiology_Review', 'r.Final_Exclusionary as Exclusionary_Status', 'r.sas as SAS', 'r.pvs as PVS', 'orig.CommentID as CommentID', "$conflict_condition as Conflict", 'r.Finalized as Finalized', 'r.Final_Incidental_Findings as Comments' );
         $this->order_by = 'PSCID';
-        $this->headers = array('DICOM_Folder_Name', 'PSCID',
-                               'DCCID', 'Visit_Label', 'Scan_Date', 
+        $this->headers = array('PSCID',
+                               'DCCID', 'Visit_Label', 
                                'Birth_Date', 'Review_Done', 
                                'Results_Of_Radiology_Review', 
                                'Exclusionary_Status', 'SAS', 'PVS', 
@@ -72,9 +72,9 @@ class NDB_Menu_Filter_final_radiological_review extends NDB_Menu_Filter
                                'Finalized',
                                'Comments'
         );
-        $this->validFilters = array('substring_index(t.sourcelocation, \'/\', -1)', 'c.CandID', 'r.DICOM_ID', 's.visit_label', 'c.PSCID', 'r.Final_Review_Results', 'COALESCE(r.Review_Done, False)', 'r.sas', 'r.pvs', 'r.Final_Exclusionary', $conflict_condition, 'r.Finalized', 'c.CenterID');
+        $this->validFilters = array('c.CandID', 'r.DICOM_ID', 's.visit_label', 'c.PSCID', 'r.Final_Review_Results', 'COALESCE(r.Review_Done, False)', 'r.sas', 'r.pvs', 'r.Final_Exclusionary', $conflict_condition, 'r.Finalized', 'c.CenterID');
         $this->formToFilter = array (
-                                    'folder' => 'substring_index(t.sourcelocation, \'/\', -1)',
+                                    //'folder' => 'substring_index(t.sourcelocation, \'/\', -1)',
                                     'dccid' => 'c.CandID',
                                     'site' => 'c.CenterID',
                                     'Visit_label' => 's.visit_label',
@@ -100,7 +100,7 @@ class NDB_Menu_Filter_final_radiological_review extends NDB_Menu_Filter
         $abnormal_atypical = array(null => 'Any', 'abnormal' => 'Abnormal', 'atypical' => 'Atypical', 'normal' => 'Normal');
         $exclude = array(null => 'Any', 'exclusionary' => 'Exclusionary', 'non_exclusionary' => 'Non Exclusionary');
 
-        $this->form->addElement('text', 'folder', 'DICOM Folder Name:', array("size"=>20, "maxlength"=>30));
+        //$this->form->addElement('text', 'folder', 'DICOM Folder Name:', array("size"=>20, "maxlength"=>30));
         $this->form->addElement('text', 'dicomid', 'DICOM ID:', array("size"=>9, "maxlength"=>20));
         $this->form->addElement('text', 'pscid', 'PSCID:', array("size"=>9, "maxlength"=>11));
         $this->form->addElement('text', 'dccid', 'DCCID:', array("size"=>9, "maxlength"=>6));
@@ -137,6 +137,7 @@ class NDB_Menu_Filter_final_radiological_review extends NDB_Menu_Filter
                 // it collapses DICOM_Folder_Names with the same CommentID into the same row, and
                 // comma separates them
                 
+                /*
                 if ($key == 'DICOM_Folder_Name') {
                     foreach ($this->tpl_data['items'] as $OtherRow => $OtherItems) {
                         // OtherItems is an array of the form:
@@ -163,7 +164,7 @@ class NDB_Menu_Filter_final_radiological_review extends NDB_Menu_Filter
                         // Skip the whole row, since a row has already been added for this CommentID
                         continue 3;
                     }
-                }
+                } */
                 
 
                 $this->tpl_data['items'][$x][$i]['value'] = _makePretty($key, $val);

@@ -77,7 +77,7 @@
     <!-- print out data rows -->
     {section name=piece loop=$items[item]}
     <td nowrap="nowrap">
-        {if $items[item][piece].name == "DICOM_Folder_Name"}
+        {if $items[item][piece].name == "PSCID"}
             <a href="main.php?test_name=final_radiological_review&subtest=final_radiological_review&identifier={$items[item][piece].CommentID}">{$items[item][piece].value}</a>
         {else}
             {$items[item][piece].value}
