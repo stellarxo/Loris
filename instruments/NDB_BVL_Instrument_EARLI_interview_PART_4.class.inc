@@ -3939,10 +3939,16 @@ class NDB_BVL_Instrument_EARLI_interview_PART_4 extends NDB_BVL_Instrument {
                 $this->form->addGroup($group, "interview_end_time_headers", "", $this->_GUIDelimiter, false);
                 unset($group);
 
-		$group[] = &$this->form->createElement('select', 'interview_end_time', "interview_end_time{@}=={@}NEVER_REQUIRED", array(NULL=>"") + ($timeOptions) + array("not_answered"=>"Not Answered"));
-		$group[] = &$this->form->createElement('select', 'AMPM_bottom', "AMPM_bottom{@}=={@}NEVER_REQUIRED", array(NULL=>"", "AM"=>"AM", "PM"=>"PM", "not_answered"=>"Not Answered"));
+		$group[] = &$this->form->createElement('select', 'interview_end_time', "", array(NULL=>"") + ($timeOptions) + array("not_answered"=>"Not Answered"));
+		$group[] = &$this->form->createElement('select', 'AMPM_bottom', "", array(NULL=>"", "AM"=>"AM", "PM"=>"PM", "not_answered"=>"Not Answered"));
 		$this->form->addGroup($group, "interview_end_time_group", "Interview end time:", $this->_GUIDelimiter, false);
 		$this->form->addElement('static', null, "<br/>");
+
+                unset($group);
+                $this->form->addElement('static', null, "<br/>");
+
+                $this->XINRegisterRule("interview_end_time", array("interivew_end_date{@}!={@}NULL"), "Required", "interview_end_time_group");
+                $this->XINRegisterRule("AMPM_bottom", array("interivew_end_date{@}!={@}NULL"), "Required", "interview_start_time_group");
 
 
 		//interviewer notes
