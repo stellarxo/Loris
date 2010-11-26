@@ -149,7 +149,7 @@ class NDB_BVL_Instrument_EARLI_interview_revised extends NDB_BVL_Instrument {
 		$this->form->addElement('static', null, "<b>Now I am going to ask you about jobs you have had starting 6 months before your new baby was conceived until today.");
 		$this->form->addElement('static', null, "<br/>");
 		$this->form->addElement('static', null, "<br/>");
-		$this->form->addElement('static', null, "8-1 To the best of your ability, please tell us about each job or occupation you held for at least 1 month in the US or elsewhere while you were pregnant with [SIBLING]. Include full-time, seasonal work, part-time, volunteer work and military service if you worked the cumulative equivalent of 1 month or more. Also include your current job, even if you have had this for less than 1 month. Begin with your most recent job and continue back. Please estimate the time period if you cannot remember exact dates. (Attach additional pages if needed.)");
+		$this->form->addElement('static', null, "8-1 To the best of your ability, please tell us about each job or occupation you held for at least 1 month in the US or elsewhere while you were pregnant with [SIBLING]. Include full-time, seasonal work, part-time, volunteer work and military service if you worked the cumulative equivalent of 1 month or more. Include the last job that you held while pregnant with [SIBLING], even if you have had this for less than 1 month; begin with that job and continue back. Please estimate the time period if you cannot remember exact dates. (Attach additional pages if needed.)");
 		
 		$years = array(NULL=>"") + array_combine(range(1970,2012), range(1970, 2012)) + array("88_refused"=>"88 Refused", "99_Do_not_know"=>"99 Do not know", "not_answered"=>"Not Answered");
 
