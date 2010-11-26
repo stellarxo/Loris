@@ -1082,6 +1082,7 @@ class NDB_BVL_Instrument_mullen extends NDB_BVL_Instrument
 
 
     function score() {
+         $this->_nullScores($this->scoreLabels);
          if($this->_determineDataEntryCompletionStatus() == "Incomplete") {
             return;
          }
@@ -1128,16 +1129,16 @@ class NDB_BVL_Instrument_mullen extends NDB_BVL_Instrument
 
          foreach($scale_list as $scale_name){
 
-            if($calculatedScores[$scale_name . '_raw']) {
+            // Make sure there's a score of some kind.
+            if($calculatedScores[$scale_name . '_raw'] ||
+                // Make sure the value isn't 0, which evaluates to false, because if it is we still need to calculate t-scores
+                $calculatedScores[$scale_name . '_raw'] === 0 || $calculatedScores[$scale_name . '_raw'] === '0' ) {
                 $query = "SELECT * FROM mullen_lookup WHERE age_months=".$age_months. " AND raw_score=".$calculatedScores[$scale_name . '_raw'];
                 $record = array();
                 $db->selectRow($query, $record);
                 if (PEAR::isError($record)) {
                     return PEAR::raiseError("Could not retrieve scores: " . $record->getMessage());
                 }
-            } else {
-                $record = array();
-            }
 
             // If the score is above or below the highest score in the table,
             // get the closest score
@@ -1161,6 +1162,10 @@ class NDB_BVL_Instrument_mullen extends NDB_BVL_Instrument
          	$calculatedScores[$scale_name . '_percentile'] = $percentile['percentile'];
          	$calculatedScores[$scale_name . '_description'] = $percentile['description'];
          	$calculatedScores[$scale_name . '_age_equivalent'] = $this->ageEquivalents[$scale_name][$calculatedScores[$scale_name . '_raw']];
+            } else {
+                $record = array();
+                $all_complete = false;
+            }
          }
 
          if($all_complete){
@@ -1179,7 +1184,6 @@ class NDB_BVL_Instrument_mullen extends NDB_BVL_Instrument
             $calculatedScores["composite_description"] = $this->composite_descriptor($calculatedScores['cognitive_t_score_sum']);
          }
 
-         $this->_nullScores($this->scoreLabels);
 
          // save the resultant total
          $result = $db->update($this->table, $calculatedScores, array('CommentID'=>$this->getCommentID()));
