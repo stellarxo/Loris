@@ -173,7 +173,7 @@ function _page2(){
             $this->form->addElement("select", "confidence_rating", "Given all the data that you have on this child, how confident are you about the classification of this child?", $this->confidence);
             
                       
-            $this->addTextElement("confidence_rating_specify", "Please comment for a rating of <strong>Somewhat Confident</strong> or <strong>Not Confident</strong>", array("confidence_rating{@}=={@}somewhat_confident|not_confident"), "This field is required or specify not answered."); 
+            $this->addTextAreaElement("confidence_rating_specify", "Please comment for a rating of <strong>Somewhat Confident</strong> or <strong>Not Confident</strong>", array("confidence_rating{@}=={@}somewhat_confident|not_confident"), "This field is required or specify not answered."); 
             
             $this->form->addElement("static", null, "<BR>"); //line space
             
