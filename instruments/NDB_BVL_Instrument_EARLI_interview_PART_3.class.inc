@@ -499,7 +499,7 @@ class NDB_BVL_Instrument_EARLI_interview_PART_3 extends NDB_BVL_Instrument {
 
 
                 //q8_22
-                $this->form->addElement('static', "8-22 Could you please tell me what those hobbies are?");
+                $this->form->addElement('static', null, "8-22 Could you please tell me what those hobbies are?");
 
                 $oneToFive = array("1"=>"#1", "2"=>"#2", "3"=>"#3", "4"=>"#4", "5"=>"#5");
         //      reset($oneToFive);
