@@ -329,18 +329,18 @@ class NDB_BVL_Instrument_neuro_screen extends NDB_BVL_Instrument
         $this->form->addElement("static", null, "22. Measurements");
         $this->form->addElement("static", null, "(Sometimes this is erroneously called #21)");
         $this->form->addElement("static", null, "Head Circumferences (cm):");
-        $this->addTextElement("22_child_hc_cm", $this->indent . "a) Child:");
-        $this->addTextElement("22_mother_hc_cm", $this->indent . "b) Mother:");
-        $this->addTextElement("22_father_hc_cm", $this->indent . "c) Father:");
+        $this->addNumericElement("22_child_hc_cm", $this->indent . "a) Child:");
+        $this->addNumericElement("22_mother_hc_cm", $this->indent . "b) Mother:");
+        $this->addNumericElement("22_father_hc_cm", $this->indent . "c) Father:");
         
         //Some fields were added later on...
         $this->form->addElement("static", null, "Parental Height (cm):");
-        $this->addTextElement("22_mother_height_cm", $this->indent . "d) Mother:");
-        $this->addTextElement("22_father_height_cm", $this->indent . "e) Father:");
+        $this->addNumericElement("22_mother_height_cm", $this->indent . "d) Mother:");
+        $this->addNumericElement("22_father_height_cm", $this->indent . "e) Father:");
         
         $this->form->addElement("static", null, "Parental Weight (kg):");
-        $this->addTextElement("22_mother_weight_kg", $this->indent . "f) Mother:");
-        $this->addTextElement("22_father_weight_kg", $this->indent . "g) Father:");
+        $this->addNumericElement("22_mother_weight_kg", $this->indent . "f) Mother:");
+        $this->addNumericElement("22_father_weight_kg", $this->indent . "g) Father:");
 
         $this->form->addElement("select", "23_adenoma_sebaceum", "23. Adenoma Sebaceum", array(null=>"",
         "0_absent"=>"0 absent",
