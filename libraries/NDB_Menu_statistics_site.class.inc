@@ -9,7 +9,7 @@ class NDB_Menu_statistics_site extends NDB_Menu
 {
     var $instruments = array(
             //      "EARLI_interview",
-            "ace_medical_history",
+            //"ace_medical_history",
             "adi_r_proband",
             "adi_r_subject",
             "ados_module1",
