@@ -164,6 +164,7 @@ class NDB_Menu_statistics extends NDB_Menu
                 Utility::getAllInstruments()
         );
         $this->tpl_data['scored_instruments'] = Utility::getScoredInstruments(); 
+        $this->tpl_data['all_instruments'] = Utility::getAllInstruments();
         if(isset($_REQUEST['instrument']) && $_REQUEST['instrument'] != '') {
             $Subcategories = array('Complete', 'Incomplete'); 
             $DB->select("SELECT count(*) as val, 
@@ -507,14 +508,14 @@ class NDB_Menu_statistics extends NDB_Menu
     }
     function _getSingleReliabilityData($name, $inst_name, $cutoff, $extra_where = '') {
         if(isset($_REQUEST['site']) && $_REQUEST['site'] != '') {
-            $extra_where .= ' AND r.reliability_center_id=' . $_REQUEST['site'];
+            $extra_where .= ' AND c.CenterID=' . $_REQUEST['site'];
         }
         $db = Database::singleton();
         $ret = array();
         $ret['name'] = $name;
-        $ret['complete'] = $db->selectOne("SELECT count(*) from reliability r where Instrument='$inst_name' and Invalid <> 'yes' and Reliability_score IS NOT NULL $extra_where");
-        $ret['reliable'] = $db->selectOne("SELECT count(*) from reliability r where Instrument='$inst_name' and Invalid <> 'yes' and Reliability_score IS NOT NULL and Reliability_score > $cutoff $extra_where");
-        $ret['total'] = $db->selectOne("SELECT count(*) from reliability r where Instrument='$inst_name' and Invalid <> 'yes' $extra_where");
+        $ret['complete'] = $db->selectOne("SELECT count(*) from reliability r JOIN flag f USING(CommentID) JOIN session s ON (s.ID=f.SessionID) JOIN candidate c ON (c.CandID=s.CandID) where Instrument='$inst_name' and Invalid <> 'yes' and Reliability_score IS NOT NULL $extra_where");
+        $ret['reliable'] = $db->selectOne("SELECT count(*) from reliability r JOIN flag f USING(CommentID) JOIN session s ON (s.ID=f.SessionID) JOIN candidate c ON (c.CandID=s.CandID)where Instrument='$inst_name' and Invalid <> 'yes' and Reliability_score IS NOT NULL and Reliability_score > $cutoff $extra_where");
+        $ret['total'] = $db->selectOne("SELECT count(*) from reliability r JOIN flag f USING(CommentID) JOIN session s ON (s.ID=f.SessionID) JOIN candidate c ON (c.CandID=s.CandID) where Instrument='$inst_name' and Invalid <> 'yes' $extra_where");
         if($ret['total'] == 0) {
             // These should probably be indeterminate instead of 0, but 0
             // looks cleaner.

@@ -3,8 +3,24 @@
 
 <script language="javascript" type="text/javascript">
 
+function changeFieldOptions() {
+    dropdown = document.getElementById("field");
+    instrument = document.getElementById("instrument");
+    dropdown.options.length = 0;
+    $.get("GetScoreLabels.php?instrument=" + instrument.value, function(data) {
+        options = data.split("\n");
+        dropdown.options.length = 0;
+        for(i = 0; i < options.length; i++) {
+            if(options[i] != '') {
+                dropdown.options[i] = new Option(options[i], options[i]);
+            }
+        }
+    });
+}
+
   $(document).ready(function() {
     $(".tabs").tabs();
+    changeFieldOptions();
   });
 
 </script>
@@ -18,6 +34,7 @@
         <li><a href="#data_entry">Behavioural Statistics</a></li>
         <li><a href="#reliability">Reliability Statistics</a></li>
         <li><a href="#mri">MRI Statistics</a></li>
+        <li><a href="#scatter">Scatterplots</a></li>
     </ul>
 
     <div id="general">
@@ -236,4 +253,29 @@
       {/foreach}
 	</tbody>
 </table>
+</div>
+<div id="scatter">
+<form action="ScatterPlot-SVG.php" target="_blank">
+Instrument: 
+<select name="Instrument" onChange="changeFieldOptions()" id="instrument">
+{foreach from=$all_instruments item=name key=val}
+    <option value="{$name}">{$name}</option>
+{/foreach}
+</select>
+Field: <select name="Field" id="field">
+</select>
+Site: {html_options options=$Sites name="site" selected=$CurrentSite.ID}
+Administration: <select name="Administration">
+<option value="All">All</option>
+<option value="Partial">Partial</option>
+<option value="None">None</option>
+</select>
+Visit Label: <select name="Visit_label">
+    <option value="">All</option>
+{foreach from=$Visits item=name key=val}
+    <option value="{$name}">{$name}</option>
+{/foreach}
+</select>
+<input type="submit" />
+</form>
 </div>
