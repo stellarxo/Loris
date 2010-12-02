@@ -359,11 +359,14 @@ INSERT INTO test_battery VALUES ('', 'edi', '1050', '1140', 'Y', 'Visit', '2');
             elseif($subProjectID == 2) {
                 $this->_requiredElements = array_merge($this->_requiredElements, array("EDI1", "EDI9", "EDI20", "EDI34", "bir_0_6months", "sei_0_6months", "inj", "bir_7_12months", "sei_7_12months"));
             }
+        } 
+        // 18 month visit
+        elseif($ageDays >= 510 && $ageDays <= 570) {
+            $this->_requiredElements = array_merge($this->_requiredElements, array("EDI46", "EDI59", "bir_13_18months", "sei_13_18months"));
         }
-        
         // 24month visit
         elseif($ageDays >= 660 && $ageDays <= 780) {
-            $this->_requiredElements = array_merge($this->_requiredElements, array("EDI46", "EDI59", "EDI71", "EDI83", "bir_13_24months", "sei_13_24months"));
+            $this->_requiredElements = array_merge($this->_requiredElements, array("EDI71", "EDI83", "bir_19_24months", "sei_19_24months"));
         }            
     }
     
