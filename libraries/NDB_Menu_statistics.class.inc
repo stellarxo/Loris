@@ -409,18 +409,26 @@ class NDB_Menu_statistics extends NDB_Menu
 
         }
 
-        // MRI Browser populated, but no MRI parameter form completed.
-        $DB->select("SELECT s.CenterID as CenterID, COUNT(distinct s.ID) as val
-                        FROM files LEFT JOIN session s ON (files.SessionID=s.ID)
-                        LEFT JOIN flag f on (f.SessionID=s.ID
+        // MRI INTEGRITY STATS 
+        // MRI parameter form is completed, but nothing in tarchive
+        $DB->select("SELECT COUNT(distinct f.CommentID) as val, 
+                            s.CenterID as CenterID
+                     FROM flag f JOIN session s ON (f.SessionID=s.ID) 
+                     LEFT JOIN mri_parameter_form m ON (m.CommentID=f.CommentID)
+                     LEFT JOIN tarchive t ON (s.CandID=MID(t.PatientName, 9, 6))
+                     LEFT JOIN candidate c ON (s.CandID=c.CandID)
+                     WHERE f.CommentID NOT LIKE 'DDE%' 
                             AND f.Test_name='mri_parameter_form' 
-                            AND f.CommentID NOT LIKE 'DDE%') 
-                        LEFT JOIN mri_parameter_form mpf ON (mpf.CommentID=f.CommentID)
-                        WHERE s.Active='Y' and s.Cancelled='N' 
-                            AND (f.ID IS NULL OR f.Data_entry <> 'Complete')
-                        GROUP BY s.CenterID", $result);
+                            and f.Administration <> 'None'
+                            and t.TarchiveID IS NULL
+                            AND s.Active='Y' 
+                            AND s.Cancelled='N' 
+                            AND t.TarchiveID IS NULL 
+                            AND f.Data_entry='Complete'
+                            AND (m.T1_Scan_done IS NULL OR m.T1_Scan_done <> 'No')
+                     GROUP BY s.CenterID;", $result);
         foreach($result as $row) {
-            $this->tpl_data['mri_errors'][$row['CenterID']]['no_parameter'] = $row['val'];
+            $this->tpl_data['mri_errors'][$row['CenterID']]['no_tarchive'] = $row['val'];
         }
 
         // MRI parameter form completed, but nothing in browser
@@ -434,26 +442,26 @@ class NDB_Menu_statistics extends NDB_Menu
                             OR m.T1_Scan_done <> 'No') 
                            AND fi.FileID IS NULL 
                            AND f.Data_entry = 'Complete'
+                           AND s.Active='Y' AND s.Cancelled = 'N'
                      GROUP by s.CenterID;", $result);
         foreach($result as $row) {
             $this->tpl_data['mri_errors'][$row['CenterID']]['no_browser'] = $row['val'];
         }
 
-        // MRI parameter form is completed, but nothing in tarchive
-        $DB->select("SELECT COUNT(distinct f.CommentID) as val, 
-                            s.CenterID as CenterID
-                     FROM flag f JOIN session s ON (f.SessionID=s.ID) 
-                     LEFT JOIN mri_parameter_form m ON (m.CommentID=f.CommentID)
-                     LEFT JOIN tarchive t ON (s.CandID=MID(t.PatientName, 9, 6))
-                     WHERE f.CommentID NOT LIKE 'DDE%' 
+        // MRI Browser populated, but no MRI parameter form completed.
+        $DB->select("SELECT s.CenterID as CenterID, COUNT(distinct s.ID) as val
+                        FROM files LEFT JOIN session s ON (files.SessionID=s.ID)
+                        LEFT JOIN flag f on (f.SessionID=s.ID
                             AND f.Test_name='mri_parameter_form' 
-                            AND s.Active='Y' 
-                            AND s.Cancelled='N' 
-                            AND t.TarchiveID IS NULL 
-                            AND f.Data_entry='Complete'
-                     GROUP BY s.CenterID;", $result);
+                            AND f.CommentID NOT LIKE 'DDE%') 
+                        LEFT JOIN mri_parameter_form mpf ON (mpf.CommentID=f.CommentID)
+                        LEFT JOIN candidate c ON (c.CandID=s.CandID)
+                        WHERE s.Active='Y' and s.Cancelled='N' 
+                            AND (f.ID IS NULL OR f.Data_entry <> 'Complete') 
+                            AND c.PSCID <> 'scanner'
+                        GROUP BY s.CenterID", $result);
         foreach($result as $row) {
-            $this->tpl_data['mri_errors'][$row['CenterID']]['no_tarchive'] = $row['val'];
+            $this->tpl_data['mri_errors'][$row['CenterID']]['no_parameter'] = $row['val'];
         }
 
 
