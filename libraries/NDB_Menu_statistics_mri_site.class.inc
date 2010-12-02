@@ -39,7 +39,9 @@ class NDB_Menu_statistics_mri_site extends NDB_Menu_statistics_site
                             AND s.Active='Y'
                             AND s.Cancelled='N'
                             AND f.Data_entry='Complete'
-                            AND s.CenterID=" . $DB->quote($_REQUEST['CenterID']) . " ORDER BY c.PSCID";
+                            AND s.CenterID=" . $DB->quote($_REQUEST['CenterID']) . "
+                            AND (m.T1_Scan_done IS NULL OR m.T1_Scan_done <> 'No')
+                        ORDER BY c.PSCID";
                 break;
             case 'Files_Missing':
                 $query = "SELECT DISTINCT f.CommentID as CommentID, s.ID as SessionID, c.PSCID, s.CandID, lower(s.Visit_label) as Visit_label
