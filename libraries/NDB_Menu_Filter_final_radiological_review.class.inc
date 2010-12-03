@@ -5,7 +5,7 @@ require_once 'NDB_Menu_Filter.class.inc';
 // This is used both below and in the history on the NDB_Form
 function _makePretty($key, $val)
 {
-    if($key == 'Review_Done' || $key=='Conflict' || $key=="Finalized")
+    if($key == 'Review_Done' || $key=='Conflict1' || $key=="Finalized")
     {
         // The table was created with a boolean, which mysql turns into a tinyint.
         // Print 'Yes' or 'No' instead of 1 or 0.
@@ -53,15 +53,11 @@ class NDB_Menu_Filter_final_radiological_review extends NDB_Menu_Filter
 
     function _setupVariables()
     {
-        print "$_REQUEST[Conflict]";
-        if($_REQUEST['Conflict'] == 'prim_second') {
-            $conflict_condition = "(case when r.Final_Review_Results <> r.Final_Review_Results2 THEN 'prim_second' WHEN r.Final_Exclusionary <> r.Final_Exclusionary2 THEN 'prim_second' WHEN r.SAS <> r.SAS2 THEN 'prim_second' WHEN r.PVS <> r.PVS2 THEN 'prim_second' ELSE False end)";
-        } else {
-            $conflict_condition = "(case when orig.review_results <> r.final_review_results then True when orig.abnormal_atypical_exculsionary <>  r.final_exclusionary THEN True WHEN r.Final_Review_Results <> r.Final_Review_Results2 THEN True WHEN r.Final_Exclusionary <> r.Final_Exclusionary2 THEN True WHEN r.SAS <> r.SAS2 THEN True WHEN r.PVS <> r.PVS2 THEN True ELSE False end)";
-        }
+        $conflict_condition1 = "(case when orig.review_results <> r.final_review_results then True when orig.abnormal_atypical_exculsionary <>  r.final_exclusionary THEN True WHEN r.Final_Review_Results <> r.Final_Review_Results2 THEN True WHEN r.Final_Exclusionary <> r.Final_Exclusionary2 THEN True WHEN r.SAS <> r.SAS2 THEN True WHEN r.PVS <> r.PVS2 THEN True ELSE False end)";
+        $conflict_condition2 = "(case when r.Final_Review_Results <> r.Final_Review_Results2 THEN 'prim_second' WHEN r.Final_Exclusionary <> r.Final_Exclusionary2 THEN 'prim_second' WHEN r.SAS <> r.SAS2 THEN 'prim_second' WHEN r.PVS <> r.PVS2 THEN 'prim_second' ELSE False end)";
 
         $this->query = " FROM radiology_review orig LEFT JOIN final_radiological_review r ON (r.CommentID=orig.CommentID) JOIN flag f on (f.CommentID=orig.CommentID) JOIN session s on (s.ID=f.SessionID) JOIN candidate c ON (c.CandID=s.CandID) WHERE orig.commentid NOT LIKE 'DDE_%' AND orig.commentid IS NOT NULL AND s.active='Y' AND s.Cancelled='N' AND NOT (f.Administration='None' AND f.Data_entry='Complete' )";
-        $this->columns = array('c.PSCID as PSCID', 'c.CandID as DCCID', 's.visit_label as Visit_Label', 'c.CenterID as Site', 'c.DOB as Birth_Date', 'COALESCE(r.Review_Done, False) as Review_Done', 'r.Final_Review_Results as Results_Of_Radiology_Review', 'r.Final_Exclusionary as Exclusionary_Status', 'r.sas as SAS', 'r.pvs as PVS', 'orig.CommentID as CommentID', "$conflict_condition as Conflict", 'r.Finalized as Finalized', 'r.Final_Incidental_Findings as Comments' );
+        $this->columns = array('c.PSCID as PSCID', 'c.CandID as DCCID', 's.visit_label as Visit_Label', 'c.CenterID as Site', 'c.DOB as Birth_Date', 'COALESCE(r.Review_Done, False) as Review_Done', 'r.Final_Review_Results as Results_Of_Radiology_Review', 'r.Final_Exclusionary as Exclusionary_Status', 'r.sas as SAS', 'r.pvs as PVS', 'orig.CommentID as CommentID', "$conflict_condition1 as Conflict1, $conflict_condition2 as Conflict2", 'r.Finalized as Finalized', 'r.Final_Incidental_Findings as Comments' );
         $this->order_by = 'PSCID';
         $this->headers = array('PSCID',
                                'DCCID', 'Visit_Label', 
@@ -72,7 +68,7 @@ class NDB_Menu_Filter_final_radiological_review extends NDB_Menu_Filter
                                'Finalized',
                                'Comments'
         );
-        $this->validFilters = array('c.CandID', 'r.DICOM_ID', 's.visit_label', 'c.PSCID', 'r.Final_Review_Results', 'COALESCE(r.Review_Done, False)', 'r.sas', 'r.pvs', 'r.Final_Exclusionary', $conflict_condition, 'r.Finalized', 'c.CenterID');
+        $this->validFilters = array('c.CandID', 'r.DICOM_ID', 's.visit_label', 'c.PSCID', 'r.Final_Review_Results', 'COALESCE(r.Review_Done, False)', 'r.sas', 'r.pvs', 'r.Final_Exclusionary', $conflict_condition1, $conflict_condition2, 'r.Finalized', 'c.CenterID');
         $this->formToFilter = array (
                                     //'folder' => 'substring_index(t.sourcelocation, \'/\', -1)',
                                     'dccid' => 'c.CandID',
@@ -85,7 +81,8 @@ class NDB_Menu_Filter_final_radiological_review extends NDB_Menu_Filter
                                     'Exclusionary_Status' => 'r.Final_Exclusionary',
                                     'PVS' => 'r.pvs',
                                     'SAS' => 'r.sas',
-                                    'Conflict' => $conflict_condition,
+                                    'Conflict1' => $conflict_condition1,
+                                    'Conflict2' => $conflict_condition2,
                                     'Finalized' =>  'r.Finalized'
         );
     }
@@ -94,7 +91,8 @@ class NDB_Menu_Filter_final_radiological_review extends NDB_Menu_Filter
     {
         $list_of_visit_labels = array(null => 'Any', 'V06' => 'V06', 'V12' => 'V12', 'V24' => 'V24');
         $options_boolean= array(null => 'Any', True => 'Yes', False => 'No');
-        $conflict_options = array(null => 'Any', True => 'Yes', False => 'No', 'prim_second' => 'Final and Extra Review');
+        $conflict_options1 = array(null => 'Any', True => 'Yes', False => 'No', );
+        $conflict_options2 = array(null => 'Any', 'prim_second' => 'Yes', False => 'No');
         $comment_options = array(null => 'Any', 'True' => 'Yes', 'False' => 'No');
         $bob_score = array(null => 'Any', '0' => 'None', '1' => 'Minimal', '2' => 'Mild', '3' => 'Moderate', '4' => 'Marked');
         $abnormal_atypical = array(null => 'Any', 'abnormal' => 'Abnormal', 'atypical' => 'Atypical', 'normal' => 'Normal');
@@ -107,7 +105,8 @@ class NDB_Menu_Filter_final_radiological_review extends NDB_Menu_Filter
         $this->form->addElement('select', 'Visit_label', 'Visit Label:', $list_of_visit_labels);
         $this->form->addElement('select', 'site', 'Site', array('' => 'Any', '2' => 'SEA', '3' => 'PHI', '4' => 'STL', '5' => 'UNC'));
         $this->form->addElement('select', 'Review_done', 'Review Done:', $options_boolean);
-        $this->form->addElement('select', 'Conflict', 'Conflict between reviews:', $conflict_options);
+        $this->form->addElement('select', 'Conflict1', 'Conflict between any reviews:', $conflict_options1);
+        $this->form->addElement('select', 'Conflict2', 'Conflict between primary and secondary reviews:', $conflict_options2);
 
         $this->form->addElement('select', 'SAS', 'SAS (Subarachnoid Spaces):', $bob_score);
         $this->form->addElement('select', 'PVS', 'PVS (Perivascular Spaces):', $bob_score);
@@ -132,40 +131,8 @@ class NDB_Menu_Filter_final_radiological_review extends NDB_Menu_Filter
                 if ($key == 'CommentID') continue;
                 if ($key == 'SessionID') continue;
                 if ($key == 'Site') continue;
+                if ($key == 'Conflict2') continue;
 
-                // This is a bit of a hack to make sure that each CommentID only shows up once,
-                // it collapses DICOM_Folder_Names with the same CommentID into the same row, and
-                // comma separates them
-                
-                /*
-                if ($key == 'DICOM_Folder_Name') {
-                    foreach ($this->tpl_data['items'] as $OtherRow => $OtherItems) {
-                        // OtherItems is an array of the form:
-                        // array (rownumber => array(
-                        //              colnumber => array(
-                        //                  name => colname
-                        //                  value => colvalue
-                        //                  session => x
-                        //                  CommentID => x
-                        //                ),
-                        //              colnumber2 => array(
-                        //                  name => colname2, ...
-                        //              )
-                        //        )
-                        //));
-                        // We happen to know that the second column
-                        // is DICOM_Folder_Name, which is what we're interested in
-                        // so we look directly at index 1.
-                        if($OtherItems[1]['CommentID'] != $item['CommentID']) {
-                            continue;
-                        }
-                        // Add this DICOM Folder Name
-                        $this->tpl_data['items'][$OtherRow]['1']['value'] .= ", $item[DICOM_Folder_Name]";
-                        // Skip the whole row, since a row has already been added for this CommentID
-                        continue 3;
-                    }
-                } */
-                
 
                 $this->tpl_data['items'][$x][$i]['value'] = _makePretty($key, $val);
 

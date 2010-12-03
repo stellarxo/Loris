@@ -11,10 +11,10 @@
         <td nowrap="nowrap">&nbsp;</td>
     </tr>
     <tr>
-        <td nowrap="nowrap">{$form.folder.label}</td>
-        <td nowrap="nowrap">{$form.folder.html}</td>
-        <td nowrap="nowrap">{$form.Conflict.label}</td>
-        <td nowrap="nowrap">{$form.Conflict.html}</td>
+        <td nowrap="nowrap">{$form.Conflict1.label}</td>
+        <td nowrap="nowrap">{$form.Conflict1.html}</td>
+        <td nowrap="nowrap">{$form.Conflict2.label}</td>
+        <td nowrap="nowrap">{$form.Conflict2.html}</td>
     </tr>
     <tr>
         <td nowrap="nowrap">{$form.pscid.label}</td>
