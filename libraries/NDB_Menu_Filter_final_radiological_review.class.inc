@@ -106,7 +106,7 @@ class NDB_Menu_Filter_final_radiological_review extends NDB_Menu_Filter
         $this->form->addElement('select', 'site', 'Site', array('' => 'Any', '2' => 'SEA', '3' => 'PHI', '4' => 'STL', '5' => 'UNC'));
         $this->form->addElement('select', 'Review_done', 'Review Done:', $options_boolean);
         $this->form->addElement('select', 'Conflict1', 'Conflict between any reviews:', $conflict_options1);
-        $this->form->addElement('select', 'Conflict2', 'Conflict between primary and secondary reviews:', $conflict_options2);
+        $this->form->addElement('select', 'Conflict2', 'Conflict between final and extra reviews:', $conflict_options2);
 
         $this->form->addElement('select', 'SAS', 'SAS (Subarachnoid Spaces):', $bob_score);
         $this->form->addElement('select', 'PVS', 'PVS (Perivascular Spaces):', $bob_score);
