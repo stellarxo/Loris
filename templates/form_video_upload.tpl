@@ -41,6 +41,10 @@
 		<td nowrap="nowrap">{$form.multipart.html}</td>
   </tr>
   <tr>
+    <td nowrap="nowrap">{$form.EARLI.label}</td>
+		<td nowrap="nowrap">{$form.EARLI.html}</td>
+  </tr>
+  <tr>
     <td nowrap="nowrap">{$form.comments.label}</td>
 		<td nowrap="nowrap">{$form.comments.html}</td>
   </tr>

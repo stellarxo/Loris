@@ -29,10 +29,17 @@ class NDB_Form_video_upload extends NDB_Form
         if (PEAR::isError($site)) {
             return PEAR::raiseError("Unable to construct the list_of_sites array: ".$site->getMessage());
         }
+        if ($user->hasPermission('earli_videos')) {
+            return true;
+        }
         if ($site->isStudySite()) {
             return $user->hasPermission('data_entry');
         }
         return false;
+    }
+    function _isEARLIUser() {
+        $user =& User::singleton();
+        return $user->hasPermission('earli_videos') && !$user->hasPermission('data_entry');
     }
 
     function _process($values)
@@ -73,6 +80,17 @@ class NDB_Form_video_upload extends NDB_Form
          
          
         $instruments = hash_it($instruments, "test_name");
+        unset($instruments['EARLI_interview_PART_1']);
+        unset($instruments['EARLI_interview_PART_2']);
+        unset($instruments['EARLI_interview_PART_3']);
+        unset($instruments['EARLI_interview_PART_4']);
+        unset($instruments['EARLI_interview_revised']);
+        if($this->_isEARLIUser()) {
+            $instruments = array ('aosi' => 'AOSI'); // add others here
+        }
+        if($user->hasPermission('earli_videos')) {
+            $instruments = array_merge($instruments, array('EARLI' => 'EARLI Questionaire'));
+        }
          
         $db->select("SELECT PSCID FROM candidate WHERE PSCID LIKE '{$site->getCenterName()}%' ORDER BY PSCID", $candidates);
         $db->select("SELECT PSCID FROM candidate WHERE PSCID NOT LIKE '{$site->getCenterName()}%' ORDER BY PSCID", $candidates2);
@@ -94,6 +112,7 @@ class NDB_Form_video_upload extends NDB_Form
         $this->form->addElement('date', 'Date_taken', 'Date of Administration', $dateOptions);
         $this->form->addElement("select", "For_site", "Site This File is Being Uploaded For (optional)", array(null, "DCC", "SEA", "PHI", "STL", "UNC"));
         $this->form->addElement("select", "multipart", "Is this upload split into multiple parts?", array("Yes" => "Yes", "No" => "No"));
+        $this->form->addElement("select", "EARLI", "Is this an EARLI collaboration video?", array("1" => "Yes", "0" => "No"));
         $this->form->addElement("textarea", "comments", "Comments (optional)", array ('rows' => 5, 'cols' => 50));
         if($this->identifier){
           $this->form->addElement('static', 'File_name', 'File name');
@@ -206,7 +225,7 @@ class NDB_Form_video_upload extends NDB_Form
       {
           // Default to "No" for multipart, so that the behaviour doesn't
           // change
-          $defaults = array('multipart' => 'No');
+          $defaults = array('multipart' => 'No', 'EARLI' => 'No');
 
           if (!empty($this->identifier)) {
             $db=& Database::singleton();
@@ -259,6 +278,7 @@ class NDB_Form_video_upload extends NDB_Form
             'visitLabel' => $args['values']['visitLabel'],
             'Date_taken' => $args['values']['Date_taken'],
             'comments' => $args['values']['comments']
+            //'EARLI' => $args['values']['EARLI']
         );
         
         $db=& Database::singleton();

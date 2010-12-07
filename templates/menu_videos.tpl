@@ -48,11 +48,26 @@
 <!--  title table with pagination -->
 <table border="0" valign="bottom" width="100%">
 <tr>
+    <td class="controlPanelSection">
+      {if $Normal_Perm}
+        <a href="main.php?test_name=videos&showEARLI=">IBIS Videos</a> 
+      {/if}
+      {if $Normal_Perm && $EARLI_Perm}
+      |
+      {/if}
+      {if $EARLI_Perm}
+        <a href="main.php?test_name=videos&showEARLI=1">EARLI Videos</a>
+      {/if}
+    </td>
+</tr>
+<tr>
     <!-- title -->
+  
     <td class="controlPanelSection">
       <a href="main.php?test_name=video_upload">
         Upload a New Video
       </a>
+
     </td>
 </tr>
 </table>

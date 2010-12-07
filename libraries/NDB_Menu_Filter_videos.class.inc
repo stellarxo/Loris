@@ -36,9 +36,16 @@ class NDB_Menu_Filter_videos extends NDB_Menu_Filter
     		
     		return PEAR::raiseError("User error: " . $user->getMessage());
     	}
-    	
+        if($user->hasPermission('earli_videos')) {
+            return true;
+        }
     	return $user->hasPermission('video_upload');
     	    	
+    }
+
+    function _isEARLIUser() {
+        $user =& User::singleton();
+        return $user->hasPermission('earli_videos') && !$user->hasPermission('data_entry');
     }
 
 
@@ -59,7 +66,12 @@ class NDB_Menu_Filter_videos extends NDB_Menu_Filter
         }
         
         // the base query
-        $query = " FROM videos join candidate using(pscid) ";
+        $query = " FROM videos v join candidate c using(pscid) ";
+        if($this->_isEARLIUser() || (isset($_REQUEST['showEARLI']) && !empty($_REQUEST['showEARLI']) && $user->hasPermission('earli_videos'))) {
+            $query .= " WHERE v.EARLI=True";
+        } else {
+            $query .= " WHERE (v.EARLI IS NULL OR v.EARLI = False)";
+        }
 
         // only view their own profiles, unless they have permission to see all
         /*
@@ -68,23 +80,23 @@ class NDB_Menu_Filter_videos extends NDB_Menu_Filter
         }*/
 
         // set the class variables
-        $this->columns = array('videos.record_id', 'videos.File_name', 'videos.File_size', 'videos.uploaded_by', 'videos.Instrument', 'videos.PSCID', 'videos.visitLabel', 'videos.Date_taken', 'videos.For_site', 'substring(videos.comments, 1, 50) as comments', 'videos.Data_dir', 'videos.Date_uploaded');
+        $this->columns = array('v.record_id', 'v.File_name', 'v.File_size', 'v.uploaded_by', 'v.Instrument', 'v.PSCID', 'v.visitLabel', 'v.Date_taken', 'v.For_site', 'substring(v.comments, 1, 50) as comments', 'v.Data_dir', 'v.Date_uploaded');
 
         $this->query = $query;
         $this->group_by = '';
-        $this->order_by = 'videos.Instrument';
+        $this->order_by = 'v.Instrument';
         $this->headers = array('File_name','uploaded_by', 'Instrument', 'PSCID', 'visitLabel', 'Date_Taken', 'For_site', 'comments', 'Date_uploaded', 'Edit Metadata');
-        $this->validFilters = array('videos.PSCID', 'videos.Instrument', 'videos.Data_dir', 'videos.For_site', 'videos.visitLabel');
+        $this->validFilters = array('v.PSCID', 'v.Instrument', 'v.Data_dir', 'v.For_site', 'v.visitLabel');
 
         $this->formToFilter = array(
-                                    'File_name' => 'videos.File_name',
-                                    'Data_dir'  => 'videos.Data_dir',
-                                    'Instrument' => 'videos.Instrument',
-                                    'PSCID' => 'videos.PSCID',
-                                    'For_site' => 'videos.For_site',
-                                    'uploaded_by' => 'videos.uploaded_by',
-                                    'visitLabel' => 'videos.visitLabel',
-                                    'Date_uploaded' => 'videos.Date_uploaded',
+                                    'File_name' => 'v.File_name',
+                                    'Data_dir'  => 'v.Data_dir',
+                                    'Instrument' => 'v.Instrument',
+                                    'PSCID' => 'v.PSCID',
+                                    'For_site' => 'v.For_site',
+                                    'uploaded_by' => 'v.uploaded_by',
+                                    'visitLabel' => 'v.visitLabel',
+                                    'Date_uploaded' => 'v.Date_uploaded',
                                     'comments' => 'comments'
                                     // 'Lock_record' => 'session.Lock_record'
                                     );
@@ -138,6 +150,12 @@ class NDB_Menu_Filter_videos extends NDB_Menu_Filter
 
     function _setDataTableRows($count)
     {
+        // This is a hack. It shouldn't be required, and it certainly shouldn't be here.
+    	$user =& User::singleton();
+        $this->tpl_data['Normal_Perm'] = ($user->hasPermission('video_upload') || $user->hasPermission('data_entry'));
+        $this->tpl_data['EARLI_Perm'] = $user->hasPermission('earli_videos');
+        // end hack
+
         $site_names =array(null, "DCC", "SEA", "PHI", "STL", "UNC");
         // print out
         $x = 0;
@@ -184,7 +202,6 @@ class NDB_Menu_Filter_videos extends NDB_Menu_Filter
             }
             $x++;
         }
-
         return true;
     }
     
