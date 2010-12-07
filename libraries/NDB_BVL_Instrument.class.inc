@@ -571,10 +571,6 @@ class NDB_BVL_Instrument extends PEAR
                              'emptyOptionValue' => null
                              );
 
-        /*
-        Perhaps this would make more sense in the flag table?
-        $this->form->addElement('select', 'Validity', 'Validity of Instrument', array('' => '', 'valid' => 'Valid', 'unclear' => 'Validity Unclear', 'invalid' => 'Invalid'));
-        */
         $this->form->addElement('date', 'Date_taken', 'Date of Administration', $dateOptions);
         
         if(strrpos($this->testName, '_proband') === FALSE) {
