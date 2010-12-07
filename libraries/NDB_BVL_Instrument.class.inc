@@ -347,6 +347,9 @@ class NDB_BVL_Instrument extends PEAR
             $defaults[$field]=$this->_getQuickformDate($defaults[$field]);
         }
         
+        if($defaults['Window_Difference'] != 0) {
+            $defaults['Candidate_Age'] = '<span class="error">' . $defaults['Candidate_Age'] . '</span>'; //if($defaults['Window_Difference'] != 0) {
+        }
         //Convert select multiple elements into a quickform array
         if(!empty($this->_selectMultipleElements)){
             foreach($this->_selectMultipleElements AS $elname){
@@ -454,27 +457,43 @@ class NDB_BVL_Instrument extends PEAR
             $DB = Database::singleton();
             $age = $this->getCandidateAge($values['Date_taken']);
             if(!PEAR::isError($age)) {
-            $agedays = $age['year']*365 + $age['mon']*30 + $age['day'];
-            $agemonths = $age['year']*12 + $age['mon'] + ($age['day']/30);
-            // 1 Decimal.
-            $agemonths = (round($agemonths*10) / 10.0);
-            if(!empty($age)) {
-                $validage = $DB->selectOne("SELECT MAX($agedays BETWEEN AgeMinDays AND AgeMaxDays) FROM test_battery tb JOIN flag f USING(Test_name) JOIN session s ON (s.ID=f.SessionID)  WHERE tb.Active='Y' and tb.Test_name='" . $this->testName . "' AND tb.SubprojectID=s.SubprojectID and f.CommentID='" . $this->getCommentID() . "'");
-                //$DB->selectRow("SELECT MIN(AgeMinDays) as Min, MAX(AgeMaxDays) as Max FROM test_battery WHERE Active='Y' and Test_name='" . $this->testName . "'", $minmax);
-                /*
-                $errorage = false;
-                if(($agedays < $minmax['Min'] || $agedays > $minmax['Max'])) {
-                    $errorage = true;
-                }
-                */
-                if($validage == 0) {
-                    $values['Candidate_Age'] = '<span class="error">' . $agemonths . '</span>';
-                } else {
+                $agedays = $age['year']*365 + $age['mon']*30 + $age['day'];
+                $agemonths = $age['year']*12 + $age['mon'] + ($age['day']/30);
+                // 1 Decimal.
+                $agemonths = (round($agemonths*10) / 10.0);
+                if(!empty($age)) {
+                    $validage = $DB->selectOne("SELECT MAX($agedays BETWEEN AgeMinDays AND AgeMaxDays) FROM test_battery tb JOIN flag f USING(Test_name) JOIN session s ON (s.ID=f.SessionID)  WHERE tb.Active='Y' and tb.Test_name='" . $this->testName . "' AND tb.SubprojectID=s.SubprojectID and f.CommentID='" . $this->getCommentID() . "'");
+                    //$DB->selectRow("SELECT MIN(AgeMinDays) as Min, MAX(AgeMaxDays) as Max FROM test_battery WHERE Active='Y' and Test_name='" . $this->testName . "'", $minmax);
+                    /*
+                    $errorage = false;
+                    if(($agedays < $minmax['Min'] || $agedays > $minmax['Max'])) {
+                        $errorage = true;
+                    }
+                    */
                     $values['Candidate_Age'] = $agemonths;
+                    $values['Window_Difference'] = 0;
+
+                    // Age isn't valid, so find out how far out it is
+
+                    if($validage == 0) {
+                        $DB->select("SELECT AgeMinDays, AgeMaxDays FROM test_battery tb JOIN flag f USING(Test_name) JOIN session s ON (s.ID=f.SessionID)  WHERE tb.Active='Y' and tb.Test_name='" . $this->testName . "' AND tb.SubprojectID=s.SubprojectID and f.CommentID='" . $this->getCommentID() . "'", $Windows);
+                        foreach ($Windows as $window) {
+                            if($agedays < $window['AgeMinDays']) {
+                                $delta = $window['AgeMinDays'] - $agedays;
+                                if(abs($delta) < abs($values['Window_Difference']) || $values['Window_Difference'] == 0) {
+                                    $values['Window_Difference'] = 0-abs($delta);
+                                }
+                            }
+                            if($agedays > $window['AgeMaxDays']) {
+                                $delta = $agedays - $window['AgeMaxDays'];
+                                if(abs($delta) < abs($values['Window_Difference']) || $values['Window_Difference'] == 0) {
+                                    $values['Window_Difference'] = abs($delta);
+                                }
+                            }
+                        }
+                    }
                 }
             }
-            }
-
         }
         //Convert select multiple elements into database storable values
         if(!empty($this->_selectMultipleElements)){
@@ -560,6 +579,7 @@ class NDB_BVL_Instrument extends PEAR
         
         if(strrpos($this->testName, '_proband') === FALSE) {
             $this->form->addElement('static', 'Candidate_Age', 'Candidate Age (Months)', 'Please enter date of administration and press Save');
+            $this->form->addElement('static', 'Window_Difference', 'Window Difference (+/- Days)', 'Please enter date of administration and press Save');
         }
         $examiners = $this->_getExaminerNames();
         $this->form->addElement('select', 'Examiner', 'Examiner', $examiners);
@@ -788,52 +808,6 @@ class NDB_BVL_Instrument extends PEAR
         if(!empty($errors)){
             return $errors;
         }
-            /*
-        } else {
-            // run double-data entry test if appropriate
-            $config =& NDB_Config::singleton();
-            $doubleDataEntry = $config->getSetting('doubleDataEntry');
-            if($doubleDataEntry) {
-                // check for first save in session
-                $stateProperty = 'savedData'.$this->getCommentID().$this->page;
-                $oldData = $_SESSION['State']->getProperty($stateProperty);
-                if(!empty($oldData)) {
-                    // compare new data to old data
-                    $diff = array_diff_assoc($oldData, $elements);
-print "<!--\n DIFF \n"; print_r($diff); print "\n-->";
-                    
-                    if(empty($diff)) {
-                        $_SESSION['State']->setProperty($stateProperty, null);
-                        $_SESSION['State']->setProperty($stateProperty."_showData", true);
-                        return true;
-                    } else {
-                        $_SESSION['State']->setProperty($stateProperty, $elements);
-                        foreach($diff AS $elname=>$elvalue) {
-                            $errors[$elname] = "Doesn't match previous entry ($elvalue)";
-                        }
-                        return $errors;
-                    }
-                } else {
-                    // set old data in state
-                    $_SESSION['State']->setProperty($stateProperty, $elements);
-                    $_SESSION['State']->setProperty($stateProperty."_showData", false);
-
-print "<!-- \n"; print "DDE: $doubleDataEntry\n"; print_r($_SESSION['State']); print "\n-->";
-                    // mark data for reentry
-                    foreach($elements AS $elname=>$elvalue) {
-                        $errors[$elname] = "Please re-enter data";
-                    }
-                    return $errors;
-                }
-            } else {
-                // no double data entry required
-                
-                }
-                
-                }
-                */
-           
-            
         return true;
     }
     
