@@ -410,8 +410,12 @@ class NDB_BVL_Instrument_vineland extends NDB_BVL_Instrument
           $file->setFileHandler("vineland_file", &$this);
                     
           //Set the target directory that you want files moved into once they are validated and processed.
-          
-          $file->setBaseUploadDirectory("/export-01/nihace/behavioural_uploads/vineland/");
+          $config = NDB_Config::singleton();
+          $dir = $config->getSetting("UploadDir");
+          if(empty($dir)) {
+            $dir = ".";
+          };
+          $file->setBaseUploadDirectory($dir . "/vineland/");
 
           //Set the prefix to prepend to the filenames
           //$file->setFilenamePrefix($timepoint->getVisitLabel()."-".$this->testName."-");
