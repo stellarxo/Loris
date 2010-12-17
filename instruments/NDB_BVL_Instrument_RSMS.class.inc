@@ -6,6 +6,9 @@ require_once('RequiredIf.inc');
 require_once 'HTML/QuickForm.php';
 
 class NDB_BVL_Instrument_RSMS extends NDB_BVL_Instrument{
+    var $ValidityEnabled = false;
+    var $ValidityRequired = false;
+
 	var $yesNo = array(null=>"", "Yes" =>"Yes", "No" =>"No", 333 => "Unknown", 999 =>"NA");	
 	var $rate_rsm_array = array(null => "", 0 => "0", 1=>"1", 2 => "2", 3 =>"3+", "NA" => "NA");
     

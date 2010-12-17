@@ -1,6 +1,9 @@
 <?php
 class NDB_BVL_Instrument_mri_parameter_form extends NDB_BVL_Instrument
 {
+    var $ValidityEnabled = false;
+    var $ValidityRequired = false;
+
     /**
     * sets up basic data, such as the HTML_Quickform object, and so on.
     *

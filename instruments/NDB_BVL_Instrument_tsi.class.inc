@@ -6,7 +6,11 @@ require_once('RequiredIf.inc');
 
 class NDB_BVL_Instrument_tsi extends NDB_BVL_Instrument
 {
+    var $ValidityEnabled = false;
+    var $ValidityRequired = false;
+
 	var $yesNo = array(null=>"", "yes"=>"Yes", "no"=>"No", "not_answered"=>"Not Answered");
+
 	var $education_choices = array(null => "", "not_answered" => "Not Answered", "j_high" => "Junior High", "some_hs" => "Some Highschool", "some_college_12yr_degree" => "Some College 12yr Degree", "college_degree" => "College Degree", "some_grad_level" => "Some Graduate Level", "grad_degree" => "Graduate Degree");
 	
 	/*

@@ -8,6 +8,9 @@ INSERT INTO test_battery VALUES ('', 'audiology', '660', '780', 'Y', 'Visit', '1
 INSERT INTO test_battery VALUES ('', 'audiology', '660', '780', 'Y', 'Visit', '2');
 */
 
+    var $ValidityEnabled = false;
+    var $ValidityRequired = false;
+
 
     /**
     * sets up basic data, such as the HTML_Quickform object, and so on.

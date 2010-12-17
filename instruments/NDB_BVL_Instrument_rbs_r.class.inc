@@ -1,6 +1,9 @@
 <?php
 class NDB_BVL_Instrument_rbs_r extends NDB_BVL_Instrument
 {
+    var $ValidityEnabled = false;
+    var $ValidityRequired = false;
+
 /*
 INSERT INTO test_names VALUES ('', 'rbs_r', 'Repetitive Behaviour Scale - Revised', '0', '1');
 INSERT INTO instrument_subtests VALUES('', 'rbs_r', 'rbs_r_page1', 'Subscales', 1);

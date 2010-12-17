@@ -11,6 +11,9 @@ class NDB_BVL_Instrument_med_psych_hist extends NDB_BVL_Instrument
     INSERT INTO test_battery VALUES ('', 'med_psych_hist', '1050', '1140', 'Y', 'Visit', '3');
     */
 
+    var $ValidityEnabled = false;
+    var $ValidityRequired = false;
+
     var $columnHeaders = array("presence_header",
     "relative_header",
     "other_relative_header");

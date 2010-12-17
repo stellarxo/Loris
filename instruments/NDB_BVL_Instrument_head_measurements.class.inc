@@ -5,6 +5,9 @@ class NDB_BVL_Instrument_head_measurements extends NDB_BVL_Instrument
 INSERT INTO test_names VALUES ('', 'head_measurements', 'Measurements Data Sheet', '0', '1');
 INSERT INTO test_battery VALUES ('', 'head_measurements', '1050', '1140', 'Y', 'Visit', '3');
 */
+    var $ValidityEnabled = false;
+    var $ValidityRequired = false;
+
     /**
     * sets up basic data, such as the HTML_Quickform object, and so on.
     *

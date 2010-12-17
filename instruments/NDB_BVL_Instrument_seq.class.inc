@@ -1,6 +1,9 @@
 <?php
 class NDB_BVL_Instrument_seq extends NDB_BVL_Instrument
 {
+    var $ValidityEnabled = false;
+    var $ValidityRequired = false;
+
 /*
 INSERT INTO test_names VALUES ('', 'seq', 'Sensory Experiences Questionnaire', '0', '1');
 INSERT INTO instrument_subtests VALUES('', 'seq', 'seq_page1', 'Sound & Sight', 1);

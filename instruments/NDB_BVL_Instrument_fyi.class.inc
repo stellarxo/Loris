@@ -7,6 +7,9 @@ INSERT INTO instrument_subtests VALUES('', 'fyi', 'fyi_page1', '#1-#46', 1);
 INSERT INTO instrument_subtests VALUES('', 'fyi', 'fyi_page2', '#47-#63', 2);
 */
 
+    var $ValidityEnabled = false;
+    var $ValidityRequired = false;
+
    var $scoreCols = array('risk_score' => "Risk Score",
    'percentile' => "Percentile", 
    'soc_com_risk'=>"Social-Communication domain",

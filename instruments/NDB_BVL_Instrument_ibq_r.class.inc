@@ -1,6 +1,9 @@
 <?php
 class NDB_BVL_Instrument_ibq_r extends NDB_BVL_Instrument
 {
+    var $ValidityEnabled = false;
+    var $ValidityRequired = false;
+
 	var $scoreLabels = array("activity_level"=>"Activity Level",
 							"distress_to_limitations"=>"Distress to Limitations",
 							"fear"=>"Fear",

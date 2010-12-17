@@ -1,7 +1,9 @@
 <?php
 
 class NDB_BVL_Instrument_med_records extends NDB_BVL_Instrument {
-	
+    var $ValidityEnabled = false;
+    var $ValidityRequired = false;
+
 	var $yesNo = array (null => "", 'yes' => "Yes", 'no' => "No", 'not_specified' => "Not Specified in records", 'not_answered' => "Not Answered" );
 	var $normal_abnormal_FX = array (null => "", 'normal' => "NORMAL (no FX)", 'abnormal' => "ABNORMAL (has FX)", 'not_answered' => "Not Answered" );
 	var $normal_abnormal_TS = array (null => "", 'normal' => "NORMAL (no TS)", 'abnormal' => "ABNORMAL (has TS)", 'not_answered' => "Not Answered" );

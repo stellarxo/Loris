@@ -4,6 +4,9 @@ require_once('NDB_BVL_Instrument_scq.class.inc');
 
 class NDB_BVL_Instrument_scq_proband extends NDB_BVL_Instrument_scq
 {
+    var $ValidityEnabled = false;
+    var $ValidityRequired = false;
+
 /*
 INSERT INTO test_names VALUES ('', 'scq_proband', 'SCQ (Proband)', '0', '1');
 

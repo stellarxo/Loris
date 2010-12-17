@@ -1,6 +1,9 @@
 <?php
 class NDB_BVL_Instrument_m_chat extends NDB_BVL_Instrument
 {
+    var $ValidityEnabled = false;
+    var $ValidityRequired = false;
+
 	/*
 	INSERT INTO test_names VALUES ('', 'm_chat', 'M-CHAT', '0', '1');
 

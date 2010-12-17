@@ -13,6 +13,9 @@ class NDB_BVL_Instrument_macarthur_words_gestures extends NDB_BVL_Instrument
     INSERT INTO test_battery VALUES ('', 'macarthur_words_gestures', '1050', '1140', 'Y', 'Visit', '2');
     */
 
+    var $ValidityEnabled = false;
+    var $ValidityRequired = false;
+
     var $scoreLabels = array("phrases_understood_number",
         "words_understood_number",
         "words_produced_number",

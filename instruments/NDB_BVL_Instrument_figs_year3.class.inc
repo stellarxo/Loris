@@ -7,6 +7,8 @@ class NDB_BVL_Instrument_figs_year3 extends NDB_BVL_Instrument
     var $scoreCols = array('ADHD','Alcohol','ASP','Depression','Drug_substance','Nicotine','Mania','OCD','Paranoid','Psychosis','Tic');
     var $scoreColsRelative = array('Score_adhd_combined','Score_adhd_inattentive','Score_adhd_hyperactive','Score_alcohol_abuse','Score_alcohol_dependence','Score_alcohol_nicotine','Score_alcohol_drug_substance','Score_asp','Score_depression','Score_chronic_depression','Score_recurrent_depression','Score_mania','Score_ocd','Score_paranoid_personality','Score_pervasive_development','Score_schizoid','Score_schizotypal','Score_psychosis_schizophrenia','Score_psychosis_depression','Score_psychosis_mania','Score_tic_tourettes','Score_tic_motor_c','Score_tic_vocal_c','Score_tic_motor_t','Score_tic_vocal_t');
     
+    var $ValidityEnabled = false;
+    var $ValidityRequired= false;
     /**
      * Array of column names to be ignored by the double data entry conflict detector.
      */
@@ -39,7 +41,7 @@ class NDB_BVL_Instrument_figs_year3 extends NDB_BVL_Instrument
         // data keyed by commentID
         $this->commentID = $commentID;
 
-	$this->_doubleDataEntryDiffIgnoreColumns = array('CommentID', 'UserID', 'Testdate',
+	$this->_doubleDataEntryDiffIgnoreColumns = array('CommentID', 'UserID', 'Testdate', 'RelativeID',
 							 'Face_CauseOfDeath',
 							 'Face_Comments',
 							 'Other_Narrative',
@@ -81,6 +83,46 @@ class NDB_BVL_Instrument_figs_year3 extends NDB_BVL_Instrument
         $this->_setupForm();
     }
     
+    // Computes the difference between two instances of an instrument
+    function diff($otherInstrument) {
+        $db =& Database::singleton();
+
+        // Load this instance data
+        $thisData = NDB_BVL_Instrument::loadInstanceData($this);
+        // Load other instance data
+        $otherData = NDB_BVL_Instrument::loadInstanceData($otherInstrument);
+        // Create the return object data structure
+        $diff = array();
+
+        // Loop over this instance data
+        foreach($thisData AS $key=>$value) {
+            if(!in_array($key, $this->_doubleDataEntryDiffIgnoreColumns)) {
+                if($otherData[$key] != $value) {
+                    $diff[] = array('TableName'=>$this->table, 'ExtraKeyColumn'=>null, 'ExtraKey1'=>' ', 'ExtraKey2'=>' ', 'FieldName'=>$key, 'CommentId1'=>$this->getCommentID(), 'Value1'=>$value, 'CommentId2'=>$otherInstrument->getCommentID(), 'Value2'=>$otherData[$key]);
+                }
+            }
+        }
+
+        $db->select("SELECT * FROM figs_year3_relatives WHERE CommentID='" . $this->getCommentID() . "'", &$this_RelatedData);
+        foreach($this_RelatedData as $relative) {
+            foreach ($relative as $key=>$value) {
+            $db->selectRow("SELECT * FROM figs_year3_relatives WHERE CommentID='" . $otherInstrument->getCommentID() . "' AND RelativeCode='" . $relative['RelativeCode'] . "'", $other_RelatedData);
+            if(!in_array($key, $this->_doubleDataEntryDiffIgnoreColumns)) {
+                if($other_RelatedData[$key] != $value) {
+                    $RCode = $relative['RelativeCode'] == null ? ' ' : $relative['RelativeCode'];
+                    $Rel_RCode = $other_RelatedData['RelativeCode'] == null ? ' ' : $other_RelatedData['RelativeCode'];
+
+                    $diff[] = array('TableName'=> "figs_year3_relatives", 'ExtraKeyColumn'=>'RelativeCode', 'ExtraKey1'=> $RCode, 'ExtraKey2'=> $Rel_RCode, 'FieldName'=>$key, 'CommentId1'=>$this->getCommentID(), 'Value1'=>$value, 'CommentId2'=>$otherInstrument->getCommentID(), 'Value2'=>$other_RelatedData[$key]);
+                }
+            }
+            }
+        }
+
+
+        // Return the diffs
+        return $diff;
+    }
+
     /**
     * method to build the HTML_Quickform object into a complete FIGS Relatives form
     *
@@ -193,7 +235,6 @@ class NDB_BVL_Instrument_figs_year3 extends NDB_BVL_Instrument
         if(!empty($this->relativeID)) $relativeWhere = "AND RelativeID='".$this->relativeID."'";
         $GLOBALS['DB']->select("SELECT * FROM $this->table WHERE CommentID='".$this->getCommentID()."' $relativeWhere", $defaults);
         if($this->isError($defaults)) {
-            print $defaults->getMessage();
             return $this->raiseError('Could not get default values for form');
         }
         

@@ -1,6 +1,9 @@
 <?php
 class NDB_BVL_Instrument_SRS extends NDB_BVL_Instrument
 {
+    var $ValidityEnabled = false;
+    var $ValidityRequired = false;
+
 
     /*
     INSERT INTO test_names (Test_name, Full_name, LimitAge, Sub_Group)

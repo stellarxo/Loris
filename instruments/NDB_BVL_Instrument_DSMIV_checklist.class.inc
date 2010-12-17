@@ -10,6 +10,9 @@ class NDB_BVL_Instrument_DSMIV_checklist extends NDB_BVL_Instrument
     var $yesNo = array(null=>"", 'yes'=>"Yes", 'no'=>"No");
     var $confidence = array(null=>"", 'very_confident'=>"Very Confident", 'somewhat_confident'=>"Somewhat Confident", 'not_confident'=>"Not Confident");
 
+    var $ValidityEnabled = false;
+    var $ValidityRequired = false;
+
 
     /**
     * sets up basic data, such as the HTML_Quickform object, and so on.
