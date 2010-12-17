@@ -37,12 +37,14 @@ $(document).ready(function() {
         <td nowrap="nowrap">{$form.Objective.html}</td> *}
         <td>&nbsp;</td>
         <td>&nbsp;</td>
-        <td nowrap="nowrap">Site:</td>
+        <td nowrap="nowrap">{$form.CenterID.label}</td>
         <td nowrap="nowrap">{$form.CenterID.html}</td>
-        <td nowrap="nowrap">Instrument:</td>
+        <td nowrap="nowrap">{$form.Instrument.label}</td>
         <td nowrap="nowrap">{$form.Instrument.html}</td>
+        <td nowrap="nowrap">{$form.reliability_center_id.label}</td>
+        <td nowrap="nowrap">{$form.reliability_center_id.html}</td>
       </tr>
-<tr>
+    <tr>
         <td nowrap="nowrap">DCCID:</td>
         <td nowrap="nowrap">{$form.DCCID.html}</td>
         <td nowrap="nowrap">PSCID:</td>

@@ -141,6 +141,7 @@ class NDB_Menu_Filter_reliability extends NDB_Menu_Filter
         $this->form->addElement('select', 'CommentID', 'CommentID:', $subproject_options);
         $this->form->addElement('select', 'Objective', 'Objective:', $subproject_options);
         $this->form->addElement('select', 'CenterID', 'Site:', $list_of_sites);
+        $this->form->addElement('select', 'reliability_center_id', 'Site of Reliability:', $list_of_sites);
         $this->form->addElement('text', 'DCCID', 'DCCID::', array("size"=>9, "maxlength"=>6));
         $this->form->addElement('text', 'PSCID', 'PSCID:', array("size"=>9, "maxlength"=>7));
         $this->form->addElement('select', 'Gender', 'Gender:', $gender_options);
