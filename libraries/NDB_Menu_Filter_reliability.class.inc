@@ -435,9 +435,23 @@ class NDB_Menu_Filter_reliability extends NDB_Menu_Filter
     }
 
     function _addCandidate() {
-        $DB = Database::singleton();
+        $user =& User::singleton();
+        $DB =& Database::singleton();
+        if(PEAR::isError($user)) {
+            return PEAR::raiseError("User Error: ".$user->getMessage());
+        }
+        if (!($user->hasPermission('EARLI_Reliability'))) {
+            return array("error" => "You do not have permission to add EARLI candidates");
+        }
         $Instrument = $_POST['AddInstrument'];
         $CenterID = $_POST['AddReliabilityCenter'];
+
+        if(!$Instrument) {
+            return array("error" => "You must specify an instrument");
+        } 
+        if(!$CenterID) {
+            return array("error" => "You must specify a center for reliability testing");
+        }
 
         $PSCID = $_POST['AddPSCID'];
         $Visit_label= $_POST['AddVisit_label'];
