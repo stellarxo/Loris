@@ -4,13 +4,30 @@
 
 <script language="javascript" type="text/javascript">
 $(document).ready(function() {
-    function toggleTable() {
-            $('table#swapcandidates') .children('tbody') .toggle();
+    function _swapWrapper() {
+        return toggleTable('swapcandidates');
+    }
+    function _addWrapper() {
+        return toggleTable('addcandidate');
+    }
+    function toggleTable(table) {
+        if(table) {
+            t = $('table#' + table);
+            body = t.children('tbody');
+            body.toggle();
+            if(body.css("display") == 'none') {
+                t.css("border", "none");
+            } else {
+                t.css("border", "2px solid #08245B");
+            }
+        }
     }
 
-    $('table#swapcandidates th') .click(toggleTable);
+    $('table#swapcandidates th').click(_swapWrapper);
+    $('table#addcandidate th').click(_addWrapper);
     // Hide the tab by default
-    toggleTable();
+    toggleTable('swapcandidates');
+    toggleTable('addcandidate');
 });
 </script>
 {/literal}
@@ -70,15 +87,13 @@ $(document).ready(function() {
 </table>
 </form>
 
-{if $form.Cand2PSCID}
-{* Determine if we have permission by checking the existance of Cand2PSCID. If we didn't,
-   the field wouldn't have been added to $form *}
+{if $reliability_swap_candidates}
 <form method="post" action="main.php?test_name=reliability">
     <input type="hidden" name="swap" value="swap" />
     <table border="0" valign="top" class="std" id="swapcandidates">
     <thead>
     <tr>
-        <th colspan="4">Swap Candidates</th>
+        <th colspan="4" class="button">Swap Candidates</th>
     </tr>
     </thead>
     <tbody>
@@ -106,6 +121,40 @@ $(document).ready(function() {
     </tr>
     <tr>
         <td colspan="4" align="right"><input type="submit" name="swap" value="Swap Candidates" class="button" /></td>
+    </tr>
+    </tbody>
+    </table>
+</form>
+{/if}
+{if $EARLI_Reliability}
+<form method="post" action="main.php?test_name=reliability">
+    <table border="0" valign="top" class="std" id="addcandidate">
+    <thead>
+    <tr>
+        <th colspan="4" class="button">Add EARLI Candidate</th>
+    </tr>
+    </thead>
+    <tbody>
+    <!--tr colspan="4">
+        <td>Candidate</td>
+    </tr-->
+    <tr>
+        <td>{$form.AddPSCID.label}</td>
+        <td>{$form.AddPSCID.html}</td>
+        <td>{$form.AddVisit_label.label}</td>
+        <td>{$form.AddVisit_label.html}</td>
+    </tr>
+    <!--tr colspan="4">
+        <td>Instrument</td>
+    </tr-->
+    <tr>
+        <td>{$form.AddInstrument.label}</td>
+        <td>{$form.AddInstrument.html}</td>
+        <td>{$form.AddReliabilityCenter.label}</td>
+        <td>{$form.AddReliabilityCenter.html}</td>
+    </tr>
+    <tr>
+        <td colspan="4" align="right"><input type="submit" name="swap" value="Add Candidate" class="button" /></td>
     </tr>
     </tbody>
     </table>

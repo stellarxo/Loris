@@ -65,7 +65,12 @@ class NDB_Menu_Filter_reliability extends NDB_Menu_Filter
         $this->_populate_reliability_table();
 
         // the base query
-        $query = " FROM candidate, session, flag, reliability WHERE reliability.CommentID=flag.CommentID AND candidate.CandID=session.CandID AND session.ID=flag.SessionID";
+        if($_REQUEST['EARLI'] == 1) {
+            $extra_where = " AND EARLI_Candidate='yes'";
+        } else {
+            $extra_where = " AND EARLI_Candidate='no'";
+        }
+        $query = " FROM candidate, session, flag, reliability WHERE reliability.CommentID=flag.CommentID AND candidate.CandID=session.CandID AND session.ID=flag.SessionID $extra_where";
 
         // only view their own profiles, unless they have permission to see all
         if (!($user->hasPermission('reliability_edit_all') || $user->hasPermission('access_all_profiles'))) {
@@ -151,11 +156,24 @@ class NDB_Menu_Filter_reliability extends NDB_Menu_Filter
        
        // For swapping candidates
         if ($user->hasPermission('reliability_swap_candidates')) {
+            $this->tpl_data['reliability_swap_candidates'] = true;
             $this->form->addElement('select', 'Cand1Visit_label', 'Visit Label:', $list_of_visit_labels_only);
             $this->form->addElement('text', 'Cand1PSCID', 'PSCID:');
             $this->form->addElement('select', 'Cand2Visit_label', 'Visit Label:', $list_of_visit_labels_only);
             $this->form->addElement('text', 'Cand2PSCID', 'PSCID:');
             $this->form->addElement('select', 'SwapInstrument', 'Instrument:', $list_of_instruments_only);
+        } else {
+            $this->tpl_data['reliability_swap_candidates'] = false;
+        }
+
+        if ($user->hasPermission('EARLI_Reliability')) {
+            $this->tpl_data['EARLI_Reliability'] = true;
+            $this->form->addElement('text', 'AddPSCID', 'PSCID:');
+            $this->form->addElement('select', 'AddVisit_label', 'Visit Label:', $list_of_visit_labels_only);
+            $this->form->addElement('select', 'AddReliabilityCenter', 'Site of Reliability:', $list_of_sites);
+            $this->form->addElement('select', 'AddInstrument', 'Instrument:', $list_of_instruments_only);
+        } else {
+            $this->tpl_data['EARLI_Reliability'] = false;
         }
 
         // Doing this here is a hack. Since this is a menu filter and not a Form, there's no 
@@ -165,6 +183,14 @@ class NDB_Menu_Filter_reliability extends NDB_Menu_Filter
         // or rewrite/imitate the Menu_Filter in an NDB_Form. -- Dave
         if($_POST['swap'] == 'Swap Candidates' || $_POST['swap'] == 'swap') {
             $message = $this->_swap_candidates();
+            if(isset($message['error'])) {
+                $this->form->addElement('static', 'error', $message['error']);
+            }
+            if(isset($message['message'])) {
+                $this->form->addElement('static', 'message', $message['message']);
+            }
+        } else if($_POST['swap'] == "Add Candidate" || $_POST['swap'] == 'addnew') {
+            $message = $this->_addCandidate();
             if(isset($message['error'])) {
                 $this->form->addElement('static', 'error', $message['error']);
             }
@@ -370,7 +396,7 @@ class NDB_Menu_Filter_reliability extends NDB_Menu_Filter
         $PSCID_Replace_V = $_POST['Cand2Visit_label'];
         $Instrument = $_POST['SwapInstrument'];
 
-        $query="SELECT reliability.CommentID as OldID, reliability.reliability_center_id as CenterID, reliability.Reliability_score as Score, candidate.CenterID as OldCenterID  FROM candidate, session, flag, reliability WHERE reliability.CommentID=flag.CommentID AND candidate.CandID=session.CandID AND session.ID=flag.SessionID AND candidate.PSCID='$PSCID' AND reliability.Instrument='$Instrument' and session.Visit_label='$PSCID_V'";
+        $query="SELECT reliability.CommentID as OldID, reliability.reliability_center_id as CenterID, reliability.Reliability_score as Score, candidate.CenterID as OldCenterID, reliability.EARLI_Candidate AS EARLI_Candidate  FROM candidate, session, flag, reliability WHERE reliability.CommentID=flag.CommentID AND candidate.CandID=session.CandID AND session.ID=flag.SessionID AND candidate.PSCID='$PSCID' AND reliability.Instrument='$Instrument' and session.Visit_label='$PSCID_V'";
 
         $DB->selectRow($query, $CommentID);
         if(!$CommentID) {
@@ -398,13 +424,30 @@ class NDB_Menu_Filter_reliability extends NDB_Menu_Filter
         }
 
         $CenterID = $CommentID['CenterID'];
+        $EARLI_Cand= $CommentID['EARLI_Candidate'];
         if(!empty($CommentID['Score'])) {
             return array( "error" => "Reliability score already exists for $PSCID/$PSCID_V. Can not swap candidate.");
         }
         $DB->run("UPDATE reliability SET invalid='yes', manual_swap='yes' WHERE CommentID='$CommentID[OldID]' AND Instrument='$Instrument'");
-        $DB->run("INSERT INTO reliability (CommentID, reliability_center_id, Instrument, Manual_Swap) VALUES ('$newCommentID[NewID]', $CenterID, '$Instrument', 'yes')");
+        $DB->run("INSERT INTO reliability (CommentID, reliability_center_id, Instrument, Manual_Swap, EARLI_Candidate) VALUES ('$newCommentID[NewID]', $CenterID, '$Instrument', 'yes', $EARLI_Cand)");
 
         return array("message" => "Swapped candidate $PSCID for $PSCID_Replace");
+    }
+
+    function _addCandidate() {
+        $DB = Database::singleton();
+        $Instrument = $_POST['AddInstrument'];
+        $CenterID = $_POST['AddReliabilityCenter'];
+
+        $PSCID = $_POST['AddPSCID'];
+        $Visit_label= $_POST['AddVisit_label'];
+        $CommentID = $DB->selectOne("SELECT CommentID FROM flag f JOIN session s ON (s.ID=f.SessionID) JOIN candidate c USING (CandID) WHERE f.Test_name='$Instrument' AND c.PSCID='$PSCID' AND s.Visit_label='$Visit_label'");
+        if(!$CommentID) {
+            return array("error" => "$PSCID/$Visit_label does not have data entered for $Instrument");
+
+        }
+        $DB->run("INSERT INTO reliability (CommentID, reliability_center_id, Instrument, Manual_Swap, EARLI_Candidate) VALUES ('$CommentID', $CenterID, '$Instrument', 'no', 'yes')");
+        return array("message" => "Inserted new reliability candidate $PSCID/$Visit_label for EARLI collaboration");
     }
 }
 ?>
