@@ -66,7 +66,7 @@ class NDB_Menu_Filter_videos extends NDB_Menu_Filter
         }
         
         // the base query
-        $query = " FROM videos v join candidate c using(pscid) ";
+        $query = " FROM videos v"; // left join candidate c using(pscid) ";
         if($this->_isEARLIUser() || (isset($_REQUEST['showEARLI']) && !empty($_REQUEST['showEARLI']) && $user->hasPermission('earli_videos'))) {
             $query .= " WHERE v.EARLI=True";
         } else {
@@ -156,7 +156,7 @@ class NDB_Menu_Filter_videos extends NDB_Menu_Filter
         $this->tpl_data['EARLI_Perm'] = $user->hasPermission('earli_videos');
         // end hack
 
-        $site_names =array(null, "DCC", "SEA", "PHI", "STL", "UNC");
+        $site_names =array(null, "DCC", "SEA", "PHI", "STL", "UNC", "UofA");
         // print out
         $x = 0;
         foreach ($this->list as $item) {
