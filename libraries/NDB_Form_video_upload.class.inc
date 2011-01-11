@@ -98,7 +98,11 @@ class NDB_Form_video_upload extends NDB_Form
         $candidates = hash_it($candidates + $candidates2, "PSCID");
         
         $this->form->addElement("select", "Instrument", "Instrument", $instruments);
-        $this->form->addElement("select", "PSCID", "PSCID", $candidates);
+        if($this->_isEARLIUser()) {
+            $this->form->addElement("text", "PSCID", "PSCID");
+        } else {
+            $this->form->addElement("select", "PSCID", "PSCID", $candidates);
+        }
         $this->form->addElement("select", "visitLabel", "Visit Label", array("v06" => "v06", "v12" => "v12", "v18" => "v18", "v24" => "v24", "v36" => "v36"));
         $dateOptions = array(
                              'language' => 'en',
