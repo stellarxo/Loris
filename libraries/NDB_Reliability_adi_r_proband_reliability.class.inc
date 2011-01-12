@@ -9,6 +9,15 @@ require_once "NDB_Reliability_adi_r_reliability.class.inc";
  */
 class NDB_Reliability_adi_r_proband_reliability extends NDB_Reliability_adi_r_reliability
 {
+    function _getAgeInMonths($instrument_record, $reliability_record) {
+        $age = Utility::calculateAge($instrument_record['DoB_proband'], $instrument_record["Date_taken"]);
+        if(PEAR::isError($age)) {
+            return PEAR::raiseError("Could not calculate age: ".$age->getMessage());
+        }
+        $age_months = $age['year'] * 12 + $age['mon'];
+        return $age_months;
+    }
+
   function adi_r_proband_reliability()
   {
     $this->create_form();

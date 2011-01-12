@@ -36,6 +36,9 @@ class NDB_Reliability_adi_r_reliability extends NDB_Reliability
 //         }
 //     }
 
+    function _getAgeInMonths() {
+        return PEAR::raiseError("Could not calculate age because don't know if subject or proband");
+    }
     function _getDefaults()
     {
           
@@ -346,20 +349,15 @@ class NDB_Reliability_adi_r_reliability extends NDB_Reliability
         } // end else
         
         
-               $mismatches  = 0;            
-               $denominator = 0;
-               $algorithm_mismatches  = 0;
-               $algorithm_denominator = 0;
-
-               $age = Utility::calculateAge($instrument_record['DoB_proband'], $instrument_record["Date_taken"]);
-               if(PEAR::isError($age)) {
-                 return PEAR::raiseError("Could not calculate age: ".$age->getMessage());
-               }
-               $age_months = $age['year'] * 12 + $age['mon'];
-
-               if($age_months < 48 ){
+        $mismatches  = 0;            
+        $denominator = 0;
+        $algorithm_mismatches  = 0;
+        $algorithm_denominator = 0;
+        $age_months = $this->_getAgeInMonths($instrument_record, $reliability_record);
+        print $age_months;
+        if($age_months < 48 ) {
 //echo("Less than 4 years<BR>");
-                 $algorithm_questions =  array( "q_2_age_first_noticed_code",
+            $algorithm_questions =  array( "q_2_age_first_noticed_code",
                                                 "q_9_first_single_words_code",
                                                     "q_10_first_phrases_code",
                                           "q_31_use_of_others_body_ever_code",
@@ -561,7 +559,9 @@ class NDB_Reliability_adi_r_reliability extends NDB_Reliability
         'emptyOptionValue' => null
         );
 
-        $this->form->addElement('date', 'DoB_proband', 'DoB Proband', $dateOptions);
+        if(preg_match('/proband/', $this->name)) {
+            $this->form->addElement('date', 'DoB_proband', 'DoB Proband', $dateOptions);
+        }
        
         // Form stuff (page 2)
         $this->form->addElement("header", null, "EARLY DEVELOPMENT");
