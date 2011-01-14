@@ -162,7 +162,11 @@ $(document).ready(function() {
 {/if}
 <br>
 <a href='main.php?test_name=reliability_phase_one'>Phase 1 Reliability</a> |
-<a href='main.php?test_name=reliability_diagnostic_calls'>Diagnostic Behavioural Call Cases</a> 
+<a href='main.php?test_name=reliability_diagnostic_calls'>Diagnostic Behavioural Call Cases</a> | 
+<a href="main.php?test_name=reliability&EARLI=0">IBIS Reliability Candidates</a>
+{if $EARLI_Reliability} |
+<a href="main.php?test_name=reliability&EARLI=1">EARLI Reliability Candidates</a>
+{/if}
 <br>
 <br>
 <!-- <h2><font color="red">Note: Phase 2 reliability forms are unavailable at the moment as the system is being upgraded.</font></h2> -->
