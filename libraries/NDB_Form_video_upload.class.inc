@@ -281,8 +281,8 @@ class NDB_Form_video_upload extends NDB_Form
             'For_site' => $args['values']['For_site'],
             'visitLabel' => $args['values']['visitLabel'],
             'Date_taken' => $args['values']['Date_taken'],
-            'comments' => $args['values']['comments']
-            //'EARLI' => $args['values']['EARLI']
+            'comments' => $args['values']['comments'],
+            'EARLI' => $args['values']['EARLI']
         );
         
         $db=& Database::singleton();
