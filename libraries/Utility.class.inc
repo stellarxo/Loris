@@ -237,6 +237,7 @@ class Utility extends PEAR
         if ($study_site) {
             $query .= "WHERE Study_site='Y'";
         }
+        $query .= " ORDER BY CenterID";
 
 
         $DB->select($query, $result);

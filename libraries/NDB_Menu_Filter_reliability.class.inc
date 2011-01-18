@@ -115,7 +115,7 @@ class NDB_Menu_Filter_reliability extends NDB_Menu_Filter
            // allow to view all sites data through filter
         if ($user->hasPermission('access_all_profiles') || $user->hasPermission('reliability_edit_all')) {
             // get the list of study sites - to be replaced by the Site object
-            $list_of_sites = Utility::getSiteList();
+            $list_of_sites = Utility::getSiteList(false);
             if(PEAR::isError($list_of_sites)) {
                 return PEAR::raiseError("DB Error: ".$list_of_sites->getMessage());
             }
