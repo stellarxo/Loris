@@ -169,9 +169,9 @@ class NDB_Menu_Filter_reliability extends NDB_Menu_Filter
         if ($user->hasPermission('EARLI_Reliability')) {
             $this->tpl_data['EARLI_Reliability'] = true;
             $this->form->addElement('text', 'AddPSCID', 'PSCID:');
-            $this->form->addElement('select', 'AddVisit_label', 'Visit Label:', $list_of_visit_labels_only);
+            $this->form->addElement('select', 'AddVisit_label', 'Visit Label:', array_merge(array('' => 'Any'), $list_of_visit_labels_only));
             $this->form->addElement('select', 'AddReliabilityCenter', 'Site of Reliability:', $list_of_sites);
-            $this->form->addElement('select', 'AddInstrument', 'Instrument:', $list_of_instruments_only);
+            $this->form->addElement('select', 'AddInstrument', 'Instrument:', array_merge(array('' => 'Any'), $list_of_instruments_only));
         } else {
             $this->tpl_data['EARLI_Reliability'] = false;
         }
@@ -445,6 +445,10 @@ class NDB_Menu_Filter_reliability extends NDB_Menu_Filter
         }
         $Instrument = $_POST['AddInstrument'];
         $CenterID = $_POST['AddReliabilityCenter'];
+        $Visit_label= $_POST['AddVisit_label'];
+        if(!$Visit_label) {
+            return array("error" => "You must specify a visit label");
+        }
 
         if(!$Instrument) {
             return array("error" => "You must specify an instrument");
@@ -454,7 +458,6 @@ class NDB_Menu_Filter_reliability extends NDB_Menu_Filter
         }
 
         $PSCID = $_POST['AddPSCID'];
-        $Visit_label= $_POST['AddVisit_label'];
         $CommentID = $DB->selectOne("SELECT CommentID FROM flag f JOIN session s ON (s.ID=f.SessionID) JOIN candidate c USING (CandID) WHERE f.Test_name='$Instrument' AND c.PSCID='$PSCID' AND s.Visit_label='$Visit_label'");
         if(!$CommentID) {
             return array("error" => "$PSCID/$Visit_label does not have data entered for $Instrument");
