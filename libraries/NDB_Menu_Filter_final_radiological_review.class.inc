@@ -17,7 +17,7 @@ function _makePretty($key, $val)
             return '';
     }
 
-    if($key == 'Final_Review_Results' || $key == 'Exclusionary_Status' || $key=="Final_Exclusionary" || $key == "Results_Of_Radiology_Review")
+    if($key == 'Final_Review_Results' || $key == 'Exclusionary_Status' || $key=="Final_Exclusionary" || $key == "Results")
     {
         // Make the enum columns prettier by changing _ into a space and capitalizing
         return ucwords(str_replace('_', ' ', $val));
@@ -57,12 +57,12 @@ class NDB_Menu_Filter_final_radiological_review extends NDB_Menu_Filter
         $conflict_condition2 = "(case when r.Final_Review_Results <> r.Final_Review_Results2 THEN 'prim_second' WHEN r.Final_Exclusionary <> r.Final_Exclusionary2 THEN 'prim_second' WHEN r.SAS <> r.SAS2 THEN 'prim_second' WHEN r.PVS <> r.PVS2 THEN 'prim_second' ELSE False end)";
 
         $this->query = " FROM radiology_review orig LEFT JOIN final_radiological_review r ON (r.CommentID=orig.CommentID) JOIN flag f on (f.CommentID=orig.CommentID) JOIN session s on (s.ID=f.SessionID) JOIN candidate c ON (c.CandID=s.CandID) WHERE orig.commentid NOT LIKE 'DDE_%' AND orig.commentid IS NOT NULL AND s.active='Y' AND s.Cancelled='N' AND NOT (f.Administration='None' AND f.Data_entry='Complete' )";
-        $this->columns = array('c.PSCID as PSCID', 'c.CandID as DCCID', 's.visit_label as Visit_Label', 'c.CenterID as Site', 'c.DOB as Birth_Date', 'COALESCE(r.Review_Done, False) as Review_Done', 'r.Final_Review_Results as Results_Of_Radiology_Review', 'r.Final_Exclusionary as Exclusionary_Status', 'r.sas as SAS', 'r.pvs as PVS', 'orig.CommentID as CommentID', "$conflict_condition1 as Conflict1, $conflict_condition2 as Conflict2", 'r.Finalized as Finalized', 'r.Final_Incidental_Findings as Comments' );
+        $this->columns = array('c.PSCID as PSCID', 'c.CandID as DCCID', 's.visit_label as Visit_Label', 'c.CenterID as Site', 'c.DOB as Birth_Date', 'COALESCE(r.Review_Done, False) as Review_Done', 'r.Final_Review_Results as Results', 'r.Final_Exclusionary as Exclusionary_Status', 'r.sas as SAS', 'r.pvs as PVS', 'orig.CommentID as CommentID', "$conflict_condition1 as Conflict1, $conflict_condition2 as Conflict2", 'r.Finalized as Finalized', 'r.Final_Incidental_Findings as Comments' );
         $this->order_by = 'PSCID';
         $this->headers = array('PSCID',
                                'DCCID', 'Visit_Label', 
                                'Birth_Date', 'Review_Done', 
-                               'Results_Of_Radiology_Review', 
+                               'Results', 
                                'Exclusionary_Status', 'SAS', 'PVS', 
                                'Conflict',
                                'Finalized',
@@ -76,7 +76,7 @@ class NDB_Menu_Filter_final_radiological_review extends NDB_Menu_Filter
                                     'Visit_label' => 's.visit_label',
                                     'pscid' => 'c.PSCID',
                                     'Review_done' => 'COALESCE(r.Review_Done, False)',
-                                    'Results_Of_Radiology_Review' => 'r.Final_Review_Results',
+                                    'Results' => 'r.Final_Review_Results',
                                     'Final_Review_Results' => 'r.Final_Review_Results',
                                     'Exclusionary_Status' => 'r.Final_Exclusionary',
                                     'PVS' => 'r.pvs',
@@ -111,7 +111,7 @@ class NDB_Menu_Filter_final_radiological_review extends NDB_Menu_Filter
         $this->form->addElement('select', 'SAS', 'SAS (Subarachnoid Spaces):', $bob_score);
         $this->form->addElement('select', 'PVS', 'PVS (Perivascular Spaces):', $bob_score);
 
-        $this->form->addElement('select', 'Final_Review_Results', 'Results of Radiological Review', $abnormal_atypical);
+        $this->form->addElement('select', 'Final_Review_Results', 'Results', $abnormal_atypical);
         $this->form->addElement('select', 'Exclusionary_Status', 'Exclusionary Status', $exclude);
 
 
