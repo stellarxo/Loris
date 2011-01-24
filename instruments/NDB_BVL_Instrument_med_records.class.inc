@@ -33,7 +33,7 @@ class NDB_BVL_Instrument_med_records extends NDB_BVL_Instrument {
 		//Any HTML_Quickform date elements must be listed here
 		$this->dateTimeFields = array ("Date_taken"); //Other date fields are added automatically through $this->addDateElement();
 		
-		$this->_requiredElements = array ('Examiner', 'Date_taken', 'first_chart', 'eighteenth_chart');
+		$this->_requiredElements = array ('Examiner', 'Date_taken', 'first_chart');
 		/*
 		'first_chart', '', 'first_date_taken', 'second_date_taken', 'third_date_taken','fourth_date_taken', 'fifth_date_taken', 'sixth_date_taken', 'seventh_date_taken', 'eighth_date_taken', 'ninth_date_taken', 'tenth_date_taken', 'eleventh_date_taken', 'twelfth_date_taken', 'thirteenth_date_taken', 'fourteenth_date_taken', 'fifteenth_date_taken', 
 		'sixteenth_date_taken', 'seventeeth_date_taken', 'eighteenth_date_taken', 'nineteenth_date_taken', 'twenty_date_taken', 'twentyone_date_taken', 'twentytwo_date_taken', 'twentythree_date_taken', 'twentyfour_date_taken', 'twentyfive_date_taken', 'twentysix_date_taken', 'twentyseven_date_taken', 'twentyeight_date_taken', 'twentynine_date_taken', 'thirty_date_taken', 'thirtyone_date_taken', 'thirtytwo_date_taken', 'thirtythree_date_taken', 'thirtyfour_date_taken', 'thirtyfive_date_taken');
