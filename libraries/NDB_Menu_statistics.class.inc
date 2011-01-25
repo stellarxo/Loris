@@ -415,7 +415,8 @@ class NDB_Menu_statistics extends NDB_Menu
                             s.CenterID as CenterID
                      FROM flag f JOIN session s ON (f.SessionID=s.ID) 
                      LEFT JOIN mri_parameter_form m ON (m.CommentID=f.CommentID)
-                     LEFT JOIN tarchive t ON (s.CandID=MID(t.PatientName, 9, 6))
+                     -- LEFT JOIN tarchive t ON (s.CandID=MID(t.PatientName, 9, 6))
+                     LEFT JOIN tarchive t ON (s.CandID=MID(t.PatientName, 9, 6) AND MID(t.PatientName, 16, 3)=s.Visit_label)
                      LEFT JOIN candidate c ON (s.CandID=c.CandID)
                      WHERE f.CommentID NOT LIKE 'DDE%' 
                             AND f.Test_name='mri_parameter_form' 
