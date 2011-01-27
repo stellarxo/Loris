@@ -73,12 +73,6 @@ class NDB_Menu_Filter_videos extends NDB_Menu_Filter
             $query .= " WHERE (v.EARLI IS NULL OR v.EARLI = False)";
         }
 
-        // only view their own profiles, unless they have permission to see all
-        /*
-        if (!($user->hasPermission('reliability_edit_all') || $user->hasPermission('access_all_profiles'))) {
-            $query .= " WHERE candidate.centerID = '" . $user->getData('CenterID') . "' "; 
-        }*/
-
         // set the class variables
         $this->columns = array('v.record_id', 'v.File_name', 'v.File_size', 'v.uploaded_by', 'v.Instrument', 'v.PSCID', 'v.visitLabel', 'v.Date_taken', 'v.For_site', 'substring(v.comments, 1, 50) as comments', 'v.Data_dir', 'v.Date_uploaded');
 
@@ -112,10 +106,10 @@ class NDB_Menu_Filter_videos extends NDB_Menu_Filter
             return PEAR::raiseError("User Error: ".$user->getMessage());
         }
 
+        $list_of_sites = Utility::getSiteList(false);
            // allow to view all sites data through filter
         if ($user->hasPermission('access_all_profiles') || $user->hasPermission('reliability_edit_all')) {
             // get the list of study sites - to be replaced by the Site object
-            $list_of_sites = Utility::getSiteList();
             if(PEAR::isError($list_of_sites)) {
                 return PEAR::raiseError("DB Error: ".$list_of_sites->getMessage());
             }
@@ -136,13 +130,14 @@ class NDB_Menu_Filter_videos extends NDB_Menu_Filter
         $list_of_visit_labels = array(null=>'Any','V06'=>'V06','V12'=>'V12','V24'=>'V24','V36'=>'V36');
         $subproject_options = Utility::getSubprojectList();
         $subproject_options = array(null=>'Any') + $subproject_options;
-        $gender_options = array(null=>'All', 'Male'=>'Male', 'Female'=>'Female');
         $list_of_instruments = array(null=>'Any', 'csbs'=>'CSBS', 'adi_r'=>'ADI-R', 'ados'=>'ADOS');
         $lock_options = array(null=>'','Locked'=>'Locked','Unlocked'=>'Unlocked');
 
         // Form Elements
         $this->form->addElement('text', 'PSCID', 'PSCID:', array("size"=>9, "maxlength"=>7));
         $this->form->addElement('select', 'Instrument', 'Instrument:', $list_of_instruments);
+        $this->form->addElement('select', 'visitLabel', 'Visit Label:', $list_of_visit_labels);
+        $this->form->addElement('select', 'For_site', 'For Site:', $list_of_sites);
 	 // $this->form->addElement('select', 'Lock_record', 'Lock_record:', $lock_options);
        
         return true;
