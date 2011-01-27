@@ -1,6 +1,9 @@
 <?php
 class NDB_BVL_Instrument_prefrontal_task extends NDB_BVL_Instrument
 {
+    var $ValidityEnabled = false;
+    var $ValidityRequired = false;
+
 /*
 INSERT INTO test_names VALUES ('', 'prefrontal_task', 'Prefrontal Task', '0', '1');
 INSERT INTO instrument_subtests VALUES('', 'prefrontal_task', 'prefrontal_task_page1', 'Responses', 1);
