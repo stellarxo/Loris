@@ -177,6 +177,7 @@ class NDB_BVL_Instrument_mri_parameter_form extends NDB_BVL_Instrument
               if(isset($values['Date_taken'])) {
                   $date = $values['Date_taken'];
                   $values['Date_taken'] = sprintf("%04d-%02d-%02d", $date['Y'], $date['M'], $date['d']);
+                  $this->_saveCandidateAge(&$values);
               }
               
               if(isset($values['T1_Scan_done_date'])) {
