@@ -141,6 +141,10 @@ INSERT INTO instrument_subtests VALUES('', 'rbs_r', 'rbs_r_page1', 'Subscales', 
 
 		// automatically adds examiner & date of administration
 		$this->_addMetadataFields();
+        $this->form->addElement('select', 'respondent', 'Respondent',array('' => '', 'mother' => 'Mother', 'father' => 'Father', 'other' => 'Other'));
+        $this->form->addElement('text', 'respondent_specify', 'If other, specify:');
+        
+        $this->XINRegisterRule('respondent_specify', array('respondent{@}=={@}other'), 'Required if other');
 
 		//Overall scores...
 		$this->form->addElement('header', null, "Total scores");
