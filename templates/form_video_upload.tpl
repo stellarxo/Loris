@@ -66,6 +66,11 @@
   		<td nowrap="nowrap">{$form.File_name.label}</td>
   		<td nowrap="nowrap">{$form.File_name.html}</td>
   	</tr>  
+    <tr>
+  		<td nowrap="nowrap">{$form.hide_video.label} (check both to confirm)</td>
+  		<td nowrap="nowrap">{$form.hide_video.html} {$form.hide_video_confirm.html}</td>
+    </tr>
+
   {/if}
 
   {if empty($success)}

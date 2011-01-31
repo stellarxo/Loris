@@ -44,11 +44,18 @@ class NDB_Form_video_upload extends NDB_Form
 
     function _process($values)
     {
+        if($values['hide_video'] || $values['hide_video_confirm']) {
+            // Validate should have already checked this, but double check
+            if($values['hide_video'] && $values['hide_video_confirm']) {
+                $DB =& Database::singleton();
+                $DB->update("videos", array('hide_video' => true), array('record_id' => $this->identifier));
+            }
+        }
         // set up the arguments to Candidate::createNew
          
         //------------------------------------------------------------
         
-        if($this->_saveFile($values)){
+        elseif($this->_saveFile($values)){
           $this->tpl_data['success'] = true; 
 
           // freeze it, just in case
@@ -129,6 +136,9 @@ class NDB_Form_video_upload extends NDB_Form
         $this->form->addRule('PSCID', 'PSCID required.', 'required');
         $this->form->addRule('Instrument', 'Instrument is required.', 'required');
         $this->form->addRule('visitLabel', 'Visit Label is required.', 'required');
+
+        $this->form->addElement("checkbox", "hide_video", "Delete video");
+        $this->form->addElement("checkbox", "hide_video_confirm", "Delete video (Confirmation)");
         
        
         $this->form->addFormRule(array(&$this, '_validate'));
@@ -137,6 +147,11 @@ class NDB_Form_video_upload extends NDB_Form
     function _validate($values)
     {
         $errors = array();
+        if($values['hide_video'] || $values['hide_video_confirm']) {
+            if(empty($values['hide_video']) || empty($values['hide_video_confirm'])) {
+                $errors['hide_video'] = "Must check BOTH boxes to delete";
+            }
+        }
 
 
         // if (empty($values['gender'])) {

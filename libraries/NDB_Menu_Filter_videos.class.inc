@@ -72,6 +72,7 @@ class NDB_Menu_Filter_videos extends NDB_Menu_Filter
         } else {
             $query .= " WHERE (v.EARLI IS NULL OR v.EARLI = False)";
         }
+        $query .= " AND (v.hide_video=false OR v.hide_video IS NULL)";
 
         // set the class variables
         $this->columns = array('v.record_id', 'v.File_name', 'v.File_size', 'v.uploaded_by', 'v.Instrument', 'v.PSCID', 'v.visitLabel', 'v.Date_taken', 'v.For_site', 'substring(v.comments, 1, 50) as comments', 'v.Data_dir', 'v.Date_uploaded');
