@@ -3,9 +3,9 @@
 
 <script language="javascript" type="text/javascript">
 
-function changeFieldOptions() {
-    dropdown = document.getElementById("field");
-    instrument = document.getElementById("instrument");
+function changeFieldOptions(axis) {
+    dropdown = document.getElementById("field" + axis);
+    instrument = document.getElementById("instrument" + axis);
     dropdown.options.length = 0;
     $.get("GetScoreLabels.php?instrument=" + instrument.value, function(data) {
         options = data.split("\n");
@@ -256,14 +256,8 @@ function changeFieldOptions() {
 </div>
 <div id="scatter">
 <form action="ScatterPlot-SVG.php" target="_blank">
-Instrument: 
-<select name="Instrument" onChange="changeFieldOptions()" id="instrument">
-{foreach from=$all_instruments item=name key=val}
-    <option value="{$name}">{$name}</option>
-{/foreach}
-</select>
-Field: <select name="Field" id="field">
-</select>
+<div>
+<h2 class="statsH2">General Filters</h2>
 Site: {html_options options=$Sites name="site" selected=$CurrentSite.ID}
 Administration: <select name="Administration">
 <option value="All">All</option>
@@ -276,6 +270,28 @@ Visit Label: <select name="Visit_label">
     <option value="{$name}">{$name}</option>
 {/foreach}
 </select>
-<input type="submit" />
+</div>
+<div>
+<h2 class="statsH2">Y-Axis:</h2>
+Instrument: 
+<select name="InstrumentY" onChange="changeFieldOptions('Y')" id="instrumentY">
+{foreach from=$all_instruments item=name key=val}
+    <option value="{$name}">{$name}</option>
+{/foreach}
+</select>
+Field: <select name="FieldY" id="fieldY">
+</select>
+</div>
+<div>
+<h2 class="statsH2">X-Axis</h2>
+Instrument: 
+<select name="InstrumentX" onChange="changeFieldOptions('X')" id="instrumentX">
+{foreach from=$all_instruments item=name key=val}
+    <option value="{$name}">{$name}</option>
+{/foreach}
+</select>
+Field: <select name="FieldX" id="fieldX">
+</div>
+<input type="submit" value="View Scatterplot"/>
 </form>
 </div>
