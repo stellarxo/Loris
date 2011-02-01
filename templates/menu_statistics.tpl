@@ -213,6 +213,7 @@ function changeFieldOptions() {
             <th>Site</th>
             <th>Scans on the Workstations</th>
             <th>Scans Claimed</th>
+            <th>v06, v12 and v24 Scans All Claimed</th>
             <th>Parameter Forms Completed</th>
          </tr>
 	</thead>
@@ -223,6 +224,8 @@ function changeFieldOptions() {
             <td>{$mri_data[item].work_station_count}</td>
             <td>{$mri_data[item].claimed_count}</td>
             <td>{$mri_data[item].forms_count}</td>
+            <td>{$mri_data[item].all_three_scans}</td>
+
          </tr>
          {/section}
 	</tbody>

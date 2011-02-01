@@ -466,6 +466,7 @@ class NDB_Menu_statistics extends NDB_Menu
         }
 
 
+        // TOP MRI TABLE
 
         // Below this has not been optimized. It's kind of ugly.
           foreach($centers as $center) {
@@ -492,8 +493,17 @@ class NDB_Menu_statistics extends NDB_Menu
                   }
                   list(,$result25)=each($result25[0]);
                   $forms_count = $result25;
+                $three_scans = $DB->selectOne("SELECT count(distinct CandID) FROM session v06 
+                        WHERE v06.Scan_done='Y' AND v06.Active='Y' AND v06.Cancelled='N' AND v06.Visit_label='v06' 
+                            AND EXISTS (SELECT 'x' FROM session v12 
+                                            WHERE v12.Scan_done='Y' AND v12.Active='Y' AND v12.Cancelled='N' AND v12.Visit_label='v12' AND v06.CANDID=v12.CandID) 
+                            AND EXISTS (SELECT 'x' FROM session v24
+                                            WHERE v24.Scan_done='Y' AND v24.Active='Y' AND v24.Cancelled='N' AND v24.Visit_label='v24' AND v06.CANDID=v24.CandID) 
+                            AND v06.CenterID='{$id}'");
+                print "$id";
+                print "asdf $three_scans";
               
-              $mri_data[] = array('name' => $name,  'work_station_count' => $work_station_count, 'claimed_count' => $claimed_count, 'forms_count' => $forms_count);
+              $mri_data[] = array('name' => $name,  'work_station_count' => $work_station_count, 'claimed_count' => $claimed_count, 'forms_count' => $forms_count, 'all_three_scans' => $three_scans);
               
         }
 
