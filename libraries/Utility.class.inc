@@ -572,5 +572,67 @@ class Utility extends PEAR
     function Flatten($Arr) {
         return $Arr['Test_name'];
     }
+
+    /* This needs to be in Utilities, since it depends on both FYI and 
+     * ADI-R, both need to use it. 
+     */
+    function GetSupplementalGrantStatus($sessionID) {
+        $timePoint =& TimePoint::singleton($sessionID);
+
+        if(PEAR::isError($timePoint)) {
+            return PEAR::raiseError("Timepoint Error ".$timePoint->getMessage());
+        }
+
+        $tpd = $timePoint->getData();
+        if($tpd['Visit_label'] == 'v06' || $tpd['Visit_label'] == 'V06') {
+            return 'Parent Grant';
+        }
+        $CommentStart = $tpd['CandID'] . $tpd['PSC'] . '%';
+        $DB =& Database::singleton();
+        $fyi_risk_score = $DB->pselectOne("SELECT risk_score FROM fyi WHERE CommentID LIKE :CommentStart", 
+            array('CommentStart' => $CommentStart));
+        if(is_null($fyi_risk_score)) {
+            return 'N/A';
+        } else if ($fyi_risk_score < 10) {
+            return 'Supplemental Grant';
+        } else {
+            if($tpd['Visit_label'] == 'v12' || $tpd['Visit_label'] == 'V12') {
+                return 'Parent Grant';
+            } else if($tpd['Visit_label'] == 'v24' || $tpd['Visit_label'] == 'V24') {
+                $adi_r_diagnosis = $DB->pselectOne('SELECT summary_diagnosis FROM adi_r_subject WHERE CommentID LIKE :CommentStart', 
+                    array('CommentStart' => $CommentStart));
+                if($adi_r_diagnosis == 'ASD+') {
+                    return 'Parent Grant';
+                } else if ($adi_r_diagnosis == 'ASD-') {
+                    return 'Supplemental Grant';
+                } else {
+                    return 'N/A';
+                }
+            }
+        }
+        return '';
+    }
+    /* Set the session_status for the Grant Status field for anything that
+     * Depends on this SessionID. Note that multiple sessions of the same
+     * candidate may be affected by this session, so we just get all
+     * sessions for the candidate, and reset them all.
+     */
+    function SetSupplementalGrantStatus($SessionID) {
+        $DB =& Database::singleton();
+        $IDs = $DB->pselect("SELECT ID FROM session WHERE CandID=(SELECT CandID FROM session WHERE ID=:SessionID)", array(":SessionID"=>$SessionID));
+        print_r($IDs);
+        $getID = function($value) {
+            return $value['ID'];
+        };
+        $IDs_string = join(',', array_map($getID,$IDs));
+        $DB->run("delete from session_status WHERE ID IN ($IDs_string) AND Name='Grant Status'");
+        foreach($IDs as $ID ) {
+            $DB->insert("session_status", array(
+                'SessionID' => $ID['ID'],
+                'Name' => "Grant Status", 
+                'Value' => Utility::GetSupplementalGrantStatus($ID['ID'])));
+        }
+        //$DB->run("delete from session_status WHERE SessionID IN ($IDs_string) AND Name='Grant Status'");
+    }
 }
 ?>
