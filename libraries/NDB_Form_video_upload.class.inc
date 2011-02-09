@@ -49,6 +49,7 @@ class NDB_Form_video_upload extends NDB_Form
             if($values['hide_video'] && $values['hide_video_confirm']) {
                 $DB =& Database::singleton();
                 $DB->update("videos", array('hide_video' => true), array('record_id' => $this->identifier));
+                $this->tpl_data['message'] = "Video successfully deleted";
             }
         }
         // set up the arguments to Candidate::createNew
@@ -140,6 +141,11 @@ class NDB_Form_video_upload extends NDB_Form
         $this->form->addElement("checkbox", "hide_video", "Delete video");
         $this->form->addElement("checkbox", "hide_video_confirm", "Delete video (Confirmation)");
         
+
+        $uploaded_by = $db->pselectOne("SELECT uploaded_by FROM videos WHERE record_id=:identifier", array(':identifier' => $this->identifier));
+        if($uploaded_by == $user->getUsername()) {
+            $this->tpl_data['has_delete_permission'] = true;
+        }
        
         $this->form->addFormRule(array(&$this, '_validate'));
     }
