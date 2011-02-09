@@ -70,7 +70,8 @@ class NDB_Menu_statistics_mri_site extends NDB_Menu_statistics_site
                         WHERE s.Active='Y' and s.Cancelled='N'
                            AND c.PSCID <> 'scanner'
                            AND (f.ID IS NULL OR
-                           f.Data_entry <> 'Complete')
+                           f.Data_entry <> 'Complete' OR
+                           f.Data_entry IS NULL)
                            AND s.CenterID=" .
                            $DB->quote($_REQUEST['CenterID'])
                            . "ORDER BY c.PSCID";

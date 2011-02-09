@@ -458,7 +458,7 @@ class NDB_Menu_statistics extends NDB_Menu
                         LEFT JOIN mri_parameter_form mpf ON (mpf.CommentID=f.CommentID)
                         LEFT JOIN candidate c ON (c.CandID=s.CandID)
                         WHERE s.Active='Y' and s.Cancelled='N' 
-                            AND (f.ID IS NULL OR f.Data_entry <> 'Complete') 
+                            AND (f.ID IS NULL OR f.Data_entry <> 'Complete' OR f.Data_entry IS NULL) 
                             AND c.PSCID <> 'scanner'
                         GROUP BY s.CenterID", $result);
         foreach($result as $row) {
