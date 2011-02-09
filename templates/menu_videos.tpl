@@ -1,19 +1,25 @@
 <form method="post" action="main.php?test_name=videos">
 <table border="0" class="std">
     <tr>
-        <th nowrap="nowrap" colspan="4">Selection Filter</th>
+        <th nowrap="nowrap" colspan="6">Selection Filter</th>
     </tr>
     <tr>
         <td>{$form.PSCID.label}</td>
         <td>{$form.PSCID.html}</td>
-        <td>{$form.Instrument.label}</td>
-        <td>{$form.Instrument.html}</td>
+        <td>{$form.uploaded_by.label}</td>
+        <td>{$form.uploaded_by.html}</td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
     </tr>
     <tr>
+        <td>{$form.Instrument.label}</td>
+        <td>{$form.Instrument.html}</td>
         <td>{$form.visitLabel.label}</td>
         <td>{$form.visitLabel.html}</td>
         <td>{$form.For_site.label}</td>
         <td>{$form.For_site.html}</td>
+    </tr>
+    <tr>
     </tr>
     <tr>
         <td nowrap="nowrap" width='10%'>Actions:</td>
