@@ -145,7 +145,12 @@ class NDB_Menu_Filter_videos extends NDB_Menu_Filter
         $list_of_visit_labels = array(null=>'Any','V06'=>'V06','V12'=>'V12','V24'=>'V24','V36'=>'V36');
         $subproject_options = Utility::getSubprojectList();
         $subproject_options = array(null=>'Any') + $subproject_options;
-        $list_of_instruments = array(null=>'Any', 'csbs'=>'CSBS', 'adi_r'=>'ADI-R', 'ados'=>'ADOS');
+        $DB = Database::singleton();
+        $list_of_instruments_q = $DB->pselect("SELECT DISTINCT Instrument FROM videos", array());
+        $list_of_instruments = array(null => 'Any');
+        foreach ($list_of_instruments_q as $instrument) {
+            $list_of_instruments[$instrument['Instrument']] = $instrument['Instrument'];
+        }
         $lock_options = array(null=>'','Locked'=>'Locked','Unlocked'=>'Unlocked');
 
         // Form Elements
@@ -154,7 +159,6 @@ class NDB_Menu_Filter_videos extends NDB_Menu_Filter
         $this->form->addElement('select', 'visitLabel', 'Visit Label:', $list_of_visit_labels);
         $this->form->addElement('select', 'For_site', 'For Site:', $list_of_sites);
         $this->form->addElement('text', 'uploaded_by', 'Uploaded By');
-	 // $this->form->addElement('select', 'Lock_record', 'Lock_record:', $lock_options);
        
         return true;
     }
