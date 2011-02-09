@@ -576,6 +576,9 @@ class Utility extends PEAR
     /* This needs to be in Utilities, since it depends on both FYI and 
      * ADI-R, both need to use it. 
      */
+    function FlattenID($arr) {
+        return $arr['ID'];
+    }
     function GetSupplementalGrantStatus($sessionID) {
         $timePoint =& TimePoint::singleton($sessionID);
 
@@ -617,14 +620,12 @@ class Utility extends PEAR
      * candidate may be affected by this session, so we just get all
      * sessions for the candidate, and reset them all.
      */
+
     function SetSupplementalGrantStatus($SessionID) {
         $DB =& Database::singleton();
         $IDs = $DB->pselect("SELECT ID FROM session WHERE CandID=(SELECT CandID FROM session WHERE ID=:SessionID)", array(":SessionID"=>$SessionID));
         print_r($IDs);
-        $getID = function($value) {
-            return $value['ID'];
-        };
-        $IDs_string = join(',', array_map($getID,$IDs));
+        $IDs_string = join(',', array_map(array('Utility', 'FlattenID'),$IDs));
         $DB->run("delete from session_status WHERE ID IN ($IDs_string) AND Name='Grant Status'");
         foreach($IDs as $ID ) {
             $DB->insert("session_status", array(
