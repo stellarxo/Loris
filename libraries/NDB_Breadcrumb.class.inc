@@ -53,7 +53,9 @@ class NDB_Breadcrumb extends PEAR
                                    'ados_module1_reliability' => 'ADOS (Module 1) Reliability Module',
                                    'ados_module2_reliability' => 'ADOS (Module 2) Reliability Module',
                                    'aosi_reliability' => 'AOSI Reliability Module',
-                                   'csbs_reliability' => 'CSBS Reliability Module'
+                                   'csbs_reliability' => 'CSBS Reliability Module',
+                                   'videos' => 'Videos',
+                                   'video_upload' => 'Video Uploader'
                                    );
 
     /**
@@ -214,7 +216,9 @@ class NDB_Breadcrumb extends PEAR
                             'ados_module2_reliability' => array('next' => 'reliability'),
                             'aosi_reliability' => array('next' => 'reliability'),
                             'csbs_reliability' => array('next' => 'reliability'),
-                            'reliability'       => array('next' => '')
+                            'reliability'       => array('next' => ''),
+                            'video_upload'            => array('next' => 'videos'),
+                            'videos'            => array('next' => ''),
                             );
 
         // loop through the crumbs according to the order above, or just make one crumb
