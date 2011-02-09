@@ -500,8 +500,6 @@ class NDB_Menu_statistics extends NDB_Menu
                             AND EXISTS (SELECT 'x' FROM session v24
                                             WHERE v24.Scan_done='Y' AND v24.Active='Y' AND v24.Cancelled='N' AND v24.Visit_label='v24' AND v06.CANDID=v24.CandID) 
                             AND v06.CenterID='{$id}'");
-                print "$id";
-                print "asdf $three_scans";
               
               $mri_data[] = array('name' => $name,  'work_station_count' => $work_station_count, 'claimed_count' => $claimed_count, 'forms_count' => $forms_count, 'all_three_scans' => $three_scans);
               
