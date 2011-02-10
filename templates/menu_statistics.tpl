@@ -1,8 +1,13 @@
 
 {literal}
+<!-- jQuery CSV parser plugin, which handles escaping/quotes -->
+<script type="text/javascript" src="JS/jquery.csv.js"></script>
+<!-- highcharts graphing library -->
+<script type="text/javascript" src="JS/Highcharts/js/highcharts.src.js"></script>
+<script type="text/javascript" src="JS/LorisGraph.js"></script>
 
 <script language="javascript" type="text/javascript">
-
+var graph;
 function changeFieldOptions(axis) {
     dropdown = document.getElementById("field" + axis);
     instrument = document.getElementById("instrument" + axis);
@@ -17,10 +22,35 @@ function changeFieldOptions(axis) {
         }
     });
 }
+function CreateScatterplot() {
+    var GetCSVUrl = function() {
+        return 'GetCSV.php?InstrumentY=' + jQuery("#instrumenty").val() +
+            '&InstrumentX=' + jQuery("#instrumentx").val() +
+            '&FieldY=' + jQuery("#fieldy").val() + 
+            '&FieldX=' + jQuery("#fieldx").val() + 
+            '&Administration=' + jQuery('#Administration').val();
+    };
+    graph = new ACES_Scatterplot();
+    graph.CSVUrl = GetCSVUrl();
+    graph.RenderChart();
+    jQuery("#fieldx").change(function() {
+        graph.CSVUrl = GetCSVUrl();
+        graph.UpdateXField($(this).val());
+        graph.RenderChart()
+    });
+    jQuery("#fieldy").change(function() {
+        graph.CSVUrl = GetCSVUrl();
+        graph.UpdateYField($(this).val());
+        graph.RenderChart()
+    });
+}
 
   $(document).ready(function() {
     $(".tabs").tabs();
-    changeFieldOptions();
+    changeFieldOptions('y');
+    changeFieldOptions('x');
+
+    CreateScatterplot();
   });
 
 </script>
@@ -213,6 +243,7 @@ function changeFieldOptions(axis) {
             <th>Site</th>
             <th>Scans on the Workstations</th>
             <th>Scans Claimed</th>
+            <th>v06, v12 and v24 Scans All Claimed</th>
             <th>Parameter Forms Completed</th>
          </tr>
 	</thead>
@@ -223,6 +254,8 @@ function changeFieldOptions(axis) {
             <td>{$mri_data[item].work_station_count}</td>
             <td>{$mri_data[item].claimed_count}</td>
             <td>{$mri_data[item].forms_count}</td>
+            <td>{$mri_data[item].all_three_scans}</td>
+
          </tr>
          {/section}
 	</tbody>
@@ -255,43 +288,57 @@ function changeFieldOptions(axis) {
 </table>
 </div>
 <div id="scatter">
-<form action="ScatterPlot-SVG.php" target="_blank">
-<div>
-<h2 class="statsH2">General Filters</h2>
-Site: {html_options options=$Sites name="site" selected=$CurrentSite.ID}
-Administration: <select name="Administration">
-<option value="All">All</option>
-<option value="Partial">Partial</option>
-<option value="None">None</option>
-</select>
-Visit Label: <select name="Visit_label">
-    <option value="">All</option>
-{foreach from=$Visits item=name key=val}
-    <option value="{$name}">{$name}</option>
-{/foreach}
-</select>
-</div>
-<div>
-<h2 class="statsH2">Y-Axis:</h2>
-Instrument: 
-<select name="InstrumentY" onChange="changeFieldOptions('Y')" id="instrumentY">
-{foreach from=$all_instruments item=name key=val}
-    <option value="{$name}">{$name}</option>
-{/foreach}
-</select>
-Field: <select name="FieldY" id="fieldY">
-</select>
-</div>
-<div>
-<h2 class="statsH2">X-Axis</h2>
-Instrument: 
-<select name="InstrumentX" onChange="changeFieldOptions('X')" id="instrumentX">
-{foreach from=$all_instruments item=name key=val}
-    <option value="{$name}">{$name}</option>
-{/foreach}
-</select>
-Field: <select name="FieldX" id="fieldX">
-</div>
-<input type="submit" value="View Scatterplot"/>
+<form>
+<fieldset>
+    <legend>Candidate Filters</legend>
+    <div>
+        Site: {html_options options=$Sites name="site" selected=$CurrentSite.ID}
+        Administration: 
+            <select name="Administration" id="Administration">
+                <option value="">Any</option>
+                <option value="All">All</option>
+                <option value="Partial">Partial</option>
+                <option value="None">None</option>
+            </select>
+        Visit Label: 
+            <select name="Visit_label" id="Visit_label">
+                <option value="">All</option>
+                {foreach from=$Visits item=name key=val}
+                <option value="{$name}">{$name}</option>
+                {/foreach}
+            </select>
+    </div>
+</fieldset>
+<fieldset>
+    <legend>Y Axis</legend>
+    <div>
+        Instrument: 
+            <select name="InstrumentY" onChange="changeFieldOptions('y')" id="instrumenty">
+            {foreach from=$all_instruments item=name key=val}
+                <option value="{$name}">{$name}</option>
+            {/foreach}
+            </select>
+        Field: 
+            <select name="FieldY" id="fieldy"></select>
+    </div>
+</fieldset>
+<fieldset>
+    <legend>X Axis</legend>
+    <div>
+        Instrument: 
+            <select name="InstrumentX" onChange="changeFieldOptions('x')" id="instrumentx">
+            {foreach from=$all_instruments item=name key=val}
+                <option value="{$name}">{$name}</option>
+            {/foreach}
+            </select>
+        Field: <select name="FieldX" id="fieldx"></select>
+    </div>
+</fieldset>
+<fieldset>
+    <legend>Scatterplot</legend>
+    <input type="button" onClick="graph.RenderChart();" />
+    <div id="scatterplot" style="width: 800px; height: 600px; margin: 0 auto"></div>
+
+</fieldset>
 </form>
 </div>
