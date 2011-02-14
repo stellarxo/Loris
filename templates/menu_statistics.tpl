@@ -20,6 +20,7 @@ function changeFieldOptions(axis) {
                 dropdown.options[i] = new Option(options[i], options[i]);
             }
         }
+        jQuery('#field' + axis).change();
     });
 }
 function CreateScatterplot() {
@@ -33,6 +34,11 @@ function CreateScatterplot() {
     graph = new ACES_Scatterplot();
     graph.CSVUrl = GetCSVUrl();
     graph.RenderChart();
+    FormatLink = function(url, val) {
+        return '<a href="main.php?test_name=' + url + '">' + val + '</a><br />';
+    }
+    graph.XFormat = function(val) { return FormatLink(jQuery("#instrumentx").val(), val); };
+    graph.YFormat = function(val) { return FormatLink(jQuery("#instrumenty").val(), val); };
     jQuery("#fieldx").change(function() {
         graph.CSVUrl = GetCSVUrl();
         graph.UpdateXField($(this).val());
@@ -336,7 +342,7 @@ function CreateScatterplot() {
 </fieldset>
 <fieldset>
     <legend>Scatterplot</legend>
-    <input type="button" onClick="graph.RenderChart();" />
+    <input type="button" value="Update chart" onClick="graph.RenderChart();" />
     <div id="scatterplot" style="width: 800px; height: 600px; margin: 0 auto"></div>
 
 </fieldset>
