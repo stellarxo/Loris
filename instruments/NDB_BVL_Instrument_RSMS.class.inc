@@ -76,6 +76,23 @@ class NDB_BVL_Instrument_RSMS extends NDB_BVL_Instrument{
     
 	}
 
+    /**
+    * generates an array of numbers from min to max, with 
+    * a blank and an N/A option suitable for passing to a 
+    * quickform select dropdown
+    *
+    * @return array
+    * @access private
+    */
+    function _generateNumbers($min, $max) {
+        $options = array('' => null);
+        foreach (range($min, $max) as $i) {
+            $options[$i] = $i;
+        }
+        $options['NA'] = 'NA';
+        return $options;
+
+    }
 	/**
     * generates the main page of the form.
     *
@@ -100,8 +117,12 @@ class NDB_BVL_Instrument_RSMS extends NDB_BVL_Instrument{
             'addEmptyOption' => true,
             'emptyOptionValue' => null
     	);
+
+        $this->form->addElement('select', 'total_time_assessment', 'Total time of assessment in minutes', $this->_generateNumbers(5, 60));
+        $this->form->addElement('select', 'total_play_time', 'Total play time (item 6) in minutes', $this->_generateNumbers(1, 15));
+        $this->form->addElement('select', 'toys_displayed', 'Toys displayed during play time (item 6)', array(null => '', 'half' => 'Half set of toys', 'full' => 'Full set of toys'));
    
-}
+    }
         
     function _page1(){
     
@@ -144,17 +165,19 @@ class NDB_BVL_Instrument_RSMS extends NDB_BVL_Instrument{
         unset($group);
         
  
-        
-        $group[]=&$this->form->createElement("select", "q1_rate_body_1", null,  array(null => "", 0 => "0", 1=>"1", 2 => "2", 3 =>"3+", "NA" => "NA"));
-        $group[]=&$this->form->createElement("select", "q1_rate_body_2", null,  array(null => "", 0 => "0", 1=>"1", 2 => "2", 3 =>"3+", "NA" => "NA"));
+        // Generate array of 0-20
+        $options = $this->_generateNumbers(0, 20);
+
+        $group[]=&$this->form->createElement("select", "q1_rate_body_1", null, $options);
+        $group[]=&$this->form->createElement("select", "q1_rate_body_2", null, $options);
         $group[] = $this->form->createElement("static", null, $this->indent);
-        $group[]=&$this->form->createElement("select", "q1_rate_body_3", null,  array(null => "", 0 => "0", 1=>"1", 2 => "2", 3 =>"3+", "NA" => "NA"));
+        $group[]=&$this->form->createElement("select", "q1_rate_body_3", null, $options);
         $group[] = $this->form->createElement("static", null, $this->indent);
-        $group[]=&$this->form->createElement("select", "q1_rate_body_4", null,  array(null => "", 0 => "0", 1=>"1", 2 => "2", 3 =>"3+", "NA" => "NA"));
+        $group[]=&$this->form->createElement("select", "q1_rate_body_4", null, $options);
         $group[] = $this->form->createElement("static", null, $this->indent);
-        $group[]=&$this->form->createElement("select", "q1_rate_body_5", null,  array(null => "", 0 => "0", 1=>"1", 2 => "2", 3 =>"3+", "NA" => "NA"));
+        $group[]=&$this->form->createElement("select", "q1_rate_body_5", null, $options);
         $group[] = $this->form->createElement("static", null, $this->indent);
-        $group[]=&$this->form->createElement("select", "q1_rate_body_6", null,  array(null => "", 0 => "0", 1=>"1", 2 => "2", 3 =>"3+", "NA" => "NA"));
+        $group[]=&$this->form->createElement("select", "q1_rate_body_6", null, $options);
                
         $this->form->addGroup($group, "1_rate_body_group", "1. Rate of RSM with Body", $this->_GUIDelimiter, false);
                
@@ -233,16 +256,16 @@ class NDB_BVL_Instrument_RSMS extends NDB_BVL_Instrument{
         $rate_object = "q3_rate_object_";
         $int= 1;
           
-        $group[]=&$this->form->createElement("select", "q3_rate_object_1", null,  array(null => "", 0 => "0", 1=>"1", 2 => "2", 3 =>"3+", "NA" => "NA"));
-        $group[]=&$this->form->createElement("select", "q3_rate_object_2", null,  array(null => "", 0 => "0", 1=>"1", 2 => "2", 3 =>"3+", "NA" => "NA"));
+        $group[]=&$this->form->createElement("select", "q3_rate_object_1", null,$options);
+        $group[]=&$this->form->createElement("select", "q3_rate_object_2", null, $options);
         $group[] = $this->form->createElement("static", null, $this->indent);
-        $group[]=&$this->form->createElement("select", "q3_rate_object_3", null,  array(null => "", 0 => "0", 1=>"1", 2 => "2", 3 =>"3+", "NA" => "NA"));
+        $group[]=&$this->form->createElement("select", "q3_rate_object_3", null,$options);
         $group[] = $this->form->createElement("static", null, $this->indent);
-        $group[]=&$this->form->createElement("select", "q3_rate_object_4", null,  array(null => "", 0 => "0", 1=>"1", 2 => "2", 3 =>"3+", "NA" => "NA"));
+        $group[]=&$this->form->createElement("select", "q3_rate_object_4", null,$options);
         $group[] = $this->form->createElement("static", null, $this->indent);
-        $group[]=&$this->form->createElement("select", "q3_rate_object_5", null,  array(null => "", 0 => "0", 1=>"1", 2 => "2", 3 =>"3+", "NA" => "NA"));
+        $group[]=&$this->form->createElement("select", "q3_rate_object_5", null,$options);
         $group[] = $this->form->createElement("static", null, $this->indent);
-        $group[]=&$this->form->createElement("select", "q3_rate_object_6", null,  array(null => "", 0 => "0", 1=>"1", 2 => "2", 3 =>"3+", "NA" => "NA"));
+        $group[]=&$this->form->createElement("select", "q3_rate_object_6", null,$options);
 
         $this->form->addGroup($group, "3_rate_object_group", "3. Rate of RSM with Objects", $this->_GUIDelimiter, false); 
         $this->XINRegisterRule("q3_rate_object_1", array("q3_rate_object_1{@}=={@}"), "Required", '3_rate_object_group');               
