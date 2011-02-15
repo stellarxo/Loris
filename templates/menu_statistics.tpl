@@ -231,7 +231,7 @@ function changeFieldOptions() {
 	</tbody>
 </table>
 
-<h2 class="statsH2">Candidates Scanned at All Three Timepoints (V06, V12, and V24):</h2>
+<h2 class="statsH2">Candidates That Have Completed Scans at All Three Timepoints (V06, V12, and V24):</h2>
 <table class="data generalStats">
 	<thead>
         <tr>
