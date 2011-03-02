@@ -339,17 +339,49 @@ INSERT INTO instrument_subtests VALUES('', 'csbs', 'csbs_page2', 'Symbolic Behav
         $scores["q_13_words_raw_score"] = $this->_countWords($record, "q_13_words_");
         $scores["q_14_word_combos_raw_score"] = $this->_countChecked($record, "q_14_word_combos_");
         $scores["q_15_word_combos_raw_score"] = $this->_countWords($record, "q_15_word_combos_");
-        $scores["q_16_language_comp_raw_score"] = $this->_countWords($record, "q_16_language_");
 
         $scores["q_17_action_schemes_raw_score"] = $this->_countChecked($record, "q_17_action_schemes_");
-        $scores["q_18_actions_towards_other_raw_score"] = $this->_countWords($record, "q_18_actions_towards_other_");
-        $scores["q_19_sequence_action_schemes_raw_score"] = $this->_countWords($record, "q_19_sequence_action_schemes_");
-        if (is_int(intval(substr($record["q_20_stacks_tower"], 0, 1)))) {
+        $scores["q_18_actions_towards_other_raw_score"] = $this->_countActionTowardsOther($record, 6);
+        $scores["q_19_sequence_action_schemes_raw_score"] = $this->_countAction1($record, 6);
+        if (is_numeric(intval(substr($record["q_20_stacks_tower"], 0, 1)))) {
             $scores["q_20_stacks_tower_raw_score"] = intval(substr($record["q_20_stacks_tower"], 0, 1));
         } else {
             $scores["q_20_stacks_tower_raw_score"] = 0;
         }
     	
+        // Do q16 specially
+        // If 2 scores in a category are 0, the rest should be 0 too.
+        // Minimum of 2 scores required. Otherwise, "Unable to score"
+        // Otherwise, score is: best 3 objects*3 + best 2 persons * 3 + best 3 body * 3
+        $q_16_BestObject = null;
+        $q_16_BestPerson = null;
+        $q_16_BestBody = null;
+        if($this->_countTableZeros($record, "objects", 4) >= 2) {
+            $q_16_BestObject = 0;
+        } else {
+            $q_16_BestObject = $this->_sumBestRows($record, "objects", 3, 4);
+        }
+        if($this->_countTableZeros($record, "person", 3) >= 2) {
+            $q_16_BestPerson = 0;
+        } else {
+            $q_16_BestPerson = $this->_sumBestRows($record, "person", 2, 3);
+        }
+        if($this->_countTableZeros($record, "body_parts", 4) >= 2) {
+            $q_16_BestBody= 0;
+        } else {
+            $q_16_BestBody= $this->_sumBestRows($record, "body_parts", 3, 4);
+        }
+
+        $scores["understanding_weighted"] = ($q_16_BestObject + $q_16_BestPerson + $q_16_BestBody) * 3;
+        // At least two answers are required. The >= is different for person because there's
+        // only 3 opportunities for that table column
+        if($this->_countUnanswered($record, "objects", 4) >= 3 ||
+            $this->_countUnanswered($record, "person", 3) >= 2 ||
+            $this->_countUnanswered($record, "body_parts", 4) >= 3) {
+            $scores["understanding_weighted"] = "Unable to score";
+
+        }
+
     	//calculate subscales
         $scores["emotion_eye_gaze_weighted"] = $scores["q_1_gaze_shifts_raw_score"] +
         $scores["q_2_shared_positive_affect_raw_score"] +
@@ -370,24 +402,10 @@ INSERT INTO instrument_subtests VALUES('', 'csbs', 'csbs_page2', 'Symbolic Behav
         $scores["q_14_word_combos_raw_score"] +
         $scores["q_15_word_combos_raw_score"];
 
-        $q_16_language_comp_objects = $this->_countWords($record, "q_16_language_comp_objects_");
-        $q_16_language_comp_person = $this->_countWords($record, "q_16_language_comp_person_");
-        $q_16_language_comp_body_parts = $this->_countWords($record, "q_16_language_comp_body_parts_");
-        
-        //enforce cutoffs
-        if ($q_16_language_comp_objects > 3) $q_16_language_comp_objects = 3;
-        if ($q_16_language_comp_person > 2) $q_16_language_comp_person = 2;
-        if ($q_16_language_comp_body_parts > 3) $q_16_language_comp_body_parts = 3;
-
-        $scores["understanding_weighted"] = $q_16_language_comp_objects * 3 +
-        $q_16_language_comp_person * 3 +
-        $q_16_language_comp_body_parts * 3;
-        
         $scores["object_use_weighted"] = $scores["q_17_action_schemes_raw_score"] +
         $scores["q_18_actions_towards_other_raw_score"] +
         $scores["q_19_sequence_action_schemes_raw_score"] +
         $scores["q_20_stacks_tower_raw_score"];
-
 
 	//calculate weighted raw composite scores
 	$scores["social_composite_score"] = $scores["emotion_eye_gaze_weighted"] +
@@ -461,14 +479,19 @@ INSERT INTO instrument_subtests VALUES('', 'csbs', 'csbs_page2', 'Symbolic Behav
 
 
 
-	$query_scores6 = "SELECT * FROM csbs_lookup WHERE age_months=".$age_months. " AND score_weighted=".$scores['understanding_weighted']." AND subscale='understanding_weighted'";
-    	$record_6 = array();
-	$db->selectRow($query_scores6, $record_6);
-    	if (PEAR::isError($record_6)) {
-    		return PEAR::raiseError("Could not retrieve scores: " . $record_6->getMessage());
-    	}
-	$scores['understanding_standard']=($record_6['score_standard']);
-	$scores['understanding_percentile']=($record_6['score_percentile']);
+    if($scores['understanding_weighted'] !== "Unable to score") {
+        $query_scores6 = "SELECT * FROM csbs_lookup WHERE age_months=".$age_months. " AND score_weighted=".$scores['understanding_weighted']." AND subscale='understanding_weighted'";
+            $record_6 = array();
+        $db->selectRow($query_scores6, $record_6);
+            if (PEAR::isError($record_6)) {
+                return PEAR::raiseError("Could not retrieve scores: " . $record_6->getMessage());
+            }
+        $scores['understanding_standard']=($record_6['score_standard']);
+        $scores['understanding_percentile']=($record_6['score_percentile']);
+    } else {
+        $scores['understanding_standard']= null;
+        $scores['understanding_percentile']=null;
+    }
 
 
 
@@ -619,6 +642,7 @@ INSERT INTO instrument_subtests VALUES('', 'csbs', 'csbs_page2', 'Symbolic Behav
         $group[] = &$this->form->addElement('static', null);
         $group[] = &$this->form->createElement("advcheckbox", "q_8_conventional_gestures_shakes_head", null, "shakes head", null, array("unchecked", "checked"));
         $this->form->addGroup($group, null, null, $this->_GUIDelimiter, false);
+        $this->form->addElement('static', '', '<br />');
         unset($group);
 
         for($int = 1; $int <=6; $int++) {
@@ -648,6 +672,7 @@ INSERT INTO instrument_subtests VALUES('', 'csbs', 'csbs_page2', 'Symbolic Behav
         $group[] = &$this->form->createElement("advcheckbox", "q_11_inventory_of_consonants_g_k", null, "/g|k/", null, array("unchecked", "checked"));
         $group[] = &$this->form->createElement("static", null, null);
         $group[] = &$this->form->createElement("static", "q_11_inventory_of_consonants_raw_score");
+        $this->form->addElement('static', '', '<br />');
         $this->form->addGroup($group, null, "11. Inventory of consonants", $this->_GUIDelimiter, false);
         unset($group);
         
@@ -717,6 +742,102 @@ INSERT INTO instrument_subtests VALUES('', 'csbs', 'csbs_page2', 'Symbolic Behav
 
     }
     
+    function _sumBestRows($values, $name, $bestrows, $numrows) {
+        $BestSoFar = array();
+        for($row = 1; $row <= $numrows; $row++) {
+            if(!is_numeric($values["q_16_language_comp_{$name}_{$row}"])) {
+                continue;
+            }
+
+            if(count($BestSoFar) == $bestrows) {
+                // If we've already found n numbers, check if this one's better than
+                // one of the previous ones
+                for($i = 0; $i < count($BestSoFar); $i++) {
+                    if($BestSoFar[$i] < $values["q_16_language_comp_{$name}_{$row}"]) {
+                        $BestSoFar[$i] = $values["q_16_language_comp_{$name}_{$row}"];
+                        break;
+                    }
+                }
+            } else {
+                // Otherwise, just take this row since we haven't even found n
+                // yet
+                $BestSoFar[] = $values["q_16_language_comp_{$name}_{$row}"];
+            }
+        }
+        return array_sum($BestSoFar);
+    }
+
+    // For scoring q_16
+    function _countUnanswered($values, $name, $rows) {
+        $number = 0;
+        for($row = 1; $row <= $rows; $row++) {
+            if($values["q_16_language_comp_{$name}_{$row}"] === null || $values["q_16_language_comp_{$name}_{$row}"] === '' ||
+                $values["q_16_language_comp_{$name}_{$row}"] === 'NA') {
+                $number++;
+            }
+        }
+        return $number;
+    }
+    // For scoring q_18
+    function _countActionTowardsOther($values, $rows) {
+        $number = 0;
+        for($row = 1; $row <= $rows; $row++) {
+            if($values["q_18_action_towards_other_{$row}"] !== '' && 
+                    $values["q_18_action_towards_other_{$row}"] !== 'none' && !is_null($values["q_18_action_towards_other_{$row}"])) {
+                $number++;
+            }
+        }
+        return $number;
+    }
+    // For scoring q_19
+    function _countAction1($values, $rows) {
+        $number = 0;
+        for($row = 1; $row <= $rows; $row++) {
+            if($values["q_19_sequence_action_schemes_{$row}_action1"] !== '' && 
+                    $values["q_19_sequence_action_schemes_{$row}_action1"] !== 'none' && !is_null($values["q_19_sequence_action_schemes_{$row}_action1"])) {
+                $number++;
+            }
+        }
+        return $number;
+    }
+
+    function _countTableZeros($values, $name, $rows) {
+        $number = 0;
+        for($row = 1; $row <= $rows; $row++) {
+            // Use === to ensure that null isn't interpreted as 0.
+            // Always getting a string, since we're getting values from a form.
+            // But add or === to 0 too, just in case somehow the data gets converted
+            // to an int (ie when pulling from the database)
+            if($values["q_16_language_comp_{$name}_{$row}"] === "0" || $values["q_16_language_comp_{$name}_{$row}"] === 0) {
+                $number++;
+            }
+        }
+        return $number;
+    }
+
+    function _addTableRow($desc, $name, $rows) {
+        for($row = 1; $row <= $rows; $row++) {
+            $groupname = "q_16_language_comp_" . $name . "_" . $row . "_group";
+            $elname = "q_16_language_comp_{$name}_{$row}_name";
+            $scorename = "q_16_language_comp_{$name}_{$row}";
+           
+            $group[] =& $this->form->createElement('static', null, null, "$desc #$row");
+            $group[] =& $this->form->createElement("text", $elname);
+            $group[] =& $this->form->createElement("select", $scorename, null, array('' => '', 0 => 0, 1 => 1, 'NA' => 'NA'));
+            // Require score
+            $this->XINRegisterRule($scorename, array("$elname{@}!={@}NULL", "$elname{@}!={@}"), "Score required.", $groupname);
+            $this->XINRegisterRule($elname, array("$scorename{@}!={@}NULL", "$scorename{@}!={@}"), "Name required.", $groupname);
+            $this->form->addGroup($group, $groupname, null, $this->_GUIDelimiter, false);
+            unset($group);
+        }
+    }
+
+    function _addNoActionsPerformed($element, $actions_array, $row=1) {
+        if($row == 1) {
+            return $this->form->createElement("select", $element, null, array_merge($actions_array, array('none' => "No actions performed")));
+        }
+        return $this->form->createElement("select", $element, null, array_merge($actions_array, array('none' => "No more actions performed")));
+    }
     function _page2() {
         // Setting up the 6 column grid
         for($int = 1; $int <= 6; $int++) {
@@ -729,35 +850,25 @@ INSERT INTO instrument_subtests VALUES('', 'csbs', 'csbs_page2', 'Symbolic Behav
         
         //Understanding
         $this->form->addElement("header", null, "Understanding");
-        $group[] = &$this->form->createElement("static", "object_names", null);
-        for($col = 1; $col <= 4; $col++) {
-            $group[] = &$this->form->createElement("text", "q_16_language_comp_objects_" . $col);
-            $this->XINRegisterRule("q_16_language_comp_objects_" . $col, array("q_16_language_comp_objects_" . $col . "{@}=={@}NEVER_REQUIRED"), null, "q_16_language_comp_objects_group");
-        }
-        $group[] = &$this->form->createElement("static", null, null);
-        $group[] = &$this->form->createElement("static", null, null);
-        $group[] = &$this->form->createElement("static", "q_16_language_comp_raw_score");
-        $this->form->addGroup($group, "q_16_language_comp_objects_group", "16. Language comprehension" . $this->indent, $this->_GUIDelimiter, false);
+
+        $group[] = &$this->form->createElement("static", null, null, "Item");
+        $group[] = &$this->form->createElement("static", null, null, "Name");
+        $group[] = &$this->form->createElement("static", null, null, "Score");
+
+        $this->form->addGroup($group, "q_16_language_comp_objects_headers", "16. Language comprehension" . $this->indent, $this->_GUIDelimiter, false);
         unset($group);
+
+        $this->_addTableRow("Object", "objects", 4);
+        $group[] =& $this->form->createElement('static', null, null, "&nbsp;");
+        $this->form->addGroup($group, null, null, $this->_GUIDelimiter, false);
+        unset($group);
+        $this->_addTableRow("Person Name", "person", 3);
+        $group[] =& $this->form->createElement('static', null, null, "&nbsp;");
+        $this->form->addGroup($group, null, null, $this->_GUIDelimiter, false);
+        unset($group);
+        $this->_addTableRow("Body Parts", "body_parts", 4);
         
-        $group[] = &$this->form->createElement("static", "person_names", null);
-        for($col = 1; $col <= 3; $col++) {
-            $group[] = &$this->form->createElement("text", "q_16_language_comp_person_" . $col);
-            $this->XINRegisterRule("q_16_language_comp_person_" . $col, array("q_16_language_comp_person_" . $col . "{@}=={@}NEVER_REQUIRED"), null, "q_16_language_comp_person_group");
-        }
-        $this->form->addGroup($group, "q_16_language_comp_person_group", null, $this->_GUIDelimiter, false);
-        unset($group);
-
-        $group[] = &$this->form->createElement("static", "body_parts", null);
-        for($col = 1; $col <= 4; $col++) {
-            $group[] = &$this->form->createElement("text", "q_16_language_comp_body_parts_" . $col);
-            $this->XINRegisterRule("q_16_language_comp_body_parts_" . $col, array("q_16_language_comp_body_parts_" . $col . "{@}=={@}NEVER_REQUIRED"), null, "q_16_language_comp_body_parts_group");
-        }
-        $group[] = &$this->form->createElement("static", "q_16_language_comp_body_parts_raw_score");
-        $this->form->addGroup($group, "q_16_language_comp_body_parts_group", null, $this->_GUIDelimiter, false);
-        unset($group);
-
-        $this->form->addElement("static", "understanding_weighted", "Understanding Weighted:");
+        $this->form->addElement("static", "understanding_weighted", "Weighted Raw Score for Scale 16 - Understanding:");
         
         //Object Use
         $this->form->addElement("header", null, "Object Use");
@@ -767,7 +878,8 @@ INSERT INTO instrument_subtests VALUES('', 'csbs', 'csbs_page2', 'Symbolic Behav
         $group[] = &$this->form->createElement("advcheckbox", "q_17_action_schemes_drinks_with_cup", null, "drinks with cup(4)", null, array("unchecked", "checked"));
         $group[] = &$this->form->createElement("advcheckbox", "q_17_action_schemes_hugs", null, "hugs(5)", null, array("unchecked", "checked"));
         $group[] = &$this->form->createElement("advcheckbox", "q_17_action_schemes_kisses", null, "kisses(6)", null, array("unchecked", "checked"));
-        $group[] = &$this->form->createElement("static", null, null);
+        //$group[] = &$this->form->createElement("static", null, null);
+        $group[] =& $this->form->createElement("advcheckbox", "q_17_action_schemes_none", null, "none", null, array("unchecked", "checked"));
         $group[] = &$this->form->createElement("static", "q_17_action_schemes_raw_score");
         $this->form->addGroup($group, null, "17. Inventory of action schemes", $this->_GUIDelimiter, false);
         unset($group);
@@ -779,34 +891,84 @@ INSERT INTO instrument_subtests VALUES('', 'csbs', 'csbs_page2', 'Symbolic Behav
         $group[] = &$this->form->createElement("advcheckbox", "q_17_action_schemes_pours", null, "pours(11)", null, array("unchecked", "checked"));
         $group[] = &$this->form->createElement("advcheckbox", "q_17_action_schemes_other", null, "other(12)", null, array("unchecked", "checked"));
         $group[] = &$this->form->createElement("text", "q_17_action_schemes_other_specify");
+        $this->XINRegisterRule("q_17_action_schemes_other_specify", array("q_17_action_schemes_other{@}=={@}checked"), "Must specify other", "q_17_action_schemes_group_2");
         $this->form->addGroup($group, "q_17_action_schemes_group_2", null, $this->_GUIDelimiter, false);
-        $this->XINRegisterRule("q_17_action_schemes_other_specify", array("q_17_action_schemes_other_specify{@}=={@}NEVER_REQUIRED"), null, "q_17_action_schemes_group_2");
         unset($group);
         
         //Action schemes towards other
-        for($int = 1; $int <= 6; $int++) {
-            $group[] = &$this->form->createElement("text", "q_18_actions_towards_other_" . $int, null);
-        }
-        $group[] = &$this->form->createElement("static", null, null);
-        $group[] = &$this->form->createElement("static", "q_18_actions_towards_other_raw_score");
-        $this->form->addGroup($group, "q_18_actions_towards_other_group", "18. Action schemes towards other", $this->_GUIDelimiter, false);
+        $this->form->addElement('static', '', '<br />');
+
+        $group[] = &$this->form->createElement("static", null, null, "Action");
+        $group[] = &$this->form->createElement("static", null, null, "Agent");
+        $group[] = &$this->form->createElement("static", null, null, "Other Agent");
+
+        $this->form->addGroup($group, "q_18_actions_towards_other_headers", "18. Action schemes towards other" . $this->indent, $this->_GUIDelimiter, false);
         unset($group);
-        for($int = 1; $int <= 6; $int++) {
-            $this->XINRegisterRule("q_18_actions_towards_other_" . $int, array("q_18_actions_towards_other_" . $int . "{@}=={@}NEVER_REQUIRED"), null, "q_18_actions_towards_other_group");
+        $actions_array = array(
+            '' => '',
+            'puts_in' => 'Puts in',
+            'puts_on' => 'Puts on',
+            'drinks_with_bottle' => 'Drinks with bottle',
+            'drinks_with_cup' => 'Drinks with cup',
+            'hugs' => 'Hugs',
+            'kisses' => 'Kisses',
+            'feeds_with_utensil' => 'Feeds with utensil',
+            'feeds_with_bowl' => 'Feeds with bowl',
+            'stirs' => 'Stirs',
+            'scoops' => 'Scoops',
+            'pours' => 'Pours',
+            'other' => 'Other'
+        );
+        for($i = 1; $i <= 6; $i++) {
+            $group[] =& $this->_addNoActionsPerformed("q_18_action_towards_other_{$i}", $actions_array, $i);
+            $group[] =& $this->form->createElement("select", "q_18_action_towards_other_{$i}_agent", null, array(
+                '' => '',
+                'parent' => 'Parent',
+                'clinician' => 'Clinician',
+                'toy' => 'Toy',
+                'other' => 'Other (Specify)'
+            ));
+            $group[] =& $this->form->createElement("text", "q_18_action_towards_other_{$i}_agent_specify");
+            $this->XINRegisterRule("q_18_action_towards_other_{$i}_agent_specify", array("q_18_action_towards_other_{$i}_agent{@}=={@}other"), "Specify agent required.", "q_18_action_towards_other_group{$i}");
+            // Require the first dropdown. Even though XIN rules requires things by default, we explicitly require it
+            // to make sure the error message shows up, since it's part of a group.
+            if($i == 1) {
+                $this->XINRegisterRule("q_18_action_towards_other_{$i}", array("q_18_action_towards_other_{$i}{@}=={@}"), "Required.", "q_18_action_towards_other_group{$i}");
+            } else {
+                // Require dropdown n if n-1 is answered and not 'No (more) actions performed'
+                $this->XINRegisterRule("q_18_action_towards_other_{$i}", array("q_18_action_towards_other_" . ($i-1) . "{@}!={@}none", "q_18_action_towards_other_" . ($i-1) . "{@}!={@}"), "Required.", "q_18_action_towards_other_group{$i}");
+            }
+            // Require the second dropdown if the first one is answered
+            $this->XINRegisterRule("q_18_action_towards_other_{$i}_agent", array("q_18_action_towards_other_{$i}{@}!={@}", "q_18_action_towards_other_{$i}{@}!={@}none"), "Agent required.", "q_18_action_towards_other_group{$i}");
+            $this->form->addGroup($group, "q_18_action_towards_other_group{$i}", null, $this->_GUIDelimiter, false);
+            unset($group);
         }
         
+        $this->form->addElement('static', '', '<br />');
+
+        $group[] = &$this->form->createElement("static", null, null, "1st Action");
+        $group[] = &$this->form->createElement("static", null, null, "2nd Action");
+
         //Sequence action schemes
-        for($int = 1; $int <= 6; $int++) {
-            $group[] = &$this->form->createElement("text", "q_19_sequence_action_schemes_" . $int, null);
-        }
-        $group[] = &$this->form->createElement("static", null, null);
-        $group[] = &$this->form->createElement("static", "q_19_sequence_action_schemes_raw_score");
-        $this->form->addGroup($group, "q_19_sequence_action_schemes_group", "19. Sequence action schemes", $this->_GUIDelimiter, false);
+        $this->form->addGroup($group, "q_19_sequence_action_schemes_headers", "19. Sequence action schemes" . $this->indent, $this->_GUIDelimiter, false);
         unset($group);
-        for($int = 1; $int <= 6; $int++) {
-            $this->XINRegisterRule("q_19_sequence_action_schemes_" . $int, array("q_19_sequence_action_schemes_" . $int . "{@}=={@}NEVER_REQUIRED"), null, "q_19_sequence_action_schemes_group");
+        for($i = 1; $i <= 6; $i++) {
+            $group[] =& $this->_addNoActionsPerformed("q_19_sequence_action_schemes_{$i}_action1", $actions_array, $i);
+            $group[] =& $this->form->createElement("select", "q_19_sequence_action_schemes_$i" . "_action2", null, $actions_array);
+            // Require the first dropdown. Even though XIN rules requires things by default, we explicitly require it
+            // to make sure the error message shows up, since it's part of a group.
+            if($i == 1) {
+                $this->XINRegisterRule("q_19_sequence_action_schemes_{$i}_action1", array("q_19_sequence_action_schemes_{$i}_action1{@}=={@}"), "Required.", "q_19_sequence_action_schemes_group{$i}");
+            } else {
+                // Require dropdown n if n-1 is answered and not 'No (more) actions performed'
+                $this->XINRegisterRule("q_19_sequence_action_schemes_{$i}_action1", array("q_19_sequence_action_schemes_" . ($i-1) . "_action1{@}!={@}none", "q_19_sequence_action_schemes_" . ($i-1) . "_action1{@}!={@}"), "Required.", "q_19_sequence_action_schemes_group{$i}");
+            }
+            $this->XINRegisterRule("q_19_sequence_action_schemes_{$i}_action2", array("q_19_sequence_action_schemes_{$i}_action1{@}!={@}none", "q_19_sequence_action_schemes_{$i}_action1{@}!={@}"), "Action 2 Required.", "q_19_sequence_action_schemes_group{$i}");
+            $this->form->addGroup($group, "q_19_sequence_action_schemes_group{$i}", null, $this->_GUIDelimiter, false);
+            unset($group);
         }
-        
+        $this->form->addElement('static', '', '<br />');
+
         //Stacks tower of blocks
         $group[] = &$this->form->createElement("select", "q_20_stacks_tower", "20. Stacks tower of blocks", array(null=>"", "0_refuses"=>"0 - Refuses",
                                 "1_tries_but_fails"=>"1 - Tries but fails",
@@ -815,17 +977,13 @@ INSERT INTO instrument_subtests VALUES('', 'csbs', 'csbs_page2', 'Symbolic Behav
                                 "4_stacks"=>"Stacks 4",
                                 "5_stacks"=>"Stacks 5",
                                 "not_answered"=>"Not Answered"));
-        $group[] = &$this->form->createElement("static", null, null);
-        $group[] = &$this->form->createElement("static", null, null);
-        $group[] = &$this->form->createElement("static", null, null);
-        $group[] = &$this->form->createElement("static", null, null);
-        $group[] = &$this->form->createElement("static", null, null);
-        $group[] = &$this->form->createElement("static", null, null);
-        $group[] = &$this->form->createElement("static", "q_20_stacks_tower_raw_score");
+        $group[] =& $this->form->createElement("static", "q_20_stacks_tower_raw_score", "Q20 Raw Score: ");
+        $this->XINRegisterRule("q_20_stacks_tower", array("q_20_stacks_tower{@}=={@}"), "Required.", "q_20_stacks_tower_group");
         $this->form->addGroup($group, "q_20_stacks_tower_group", "20. Stacks tower of blocks", $this->_GUIDelimiter, false);
         unset($group); 
 
-        $this->form->addElement("static", "object_use_weighted", "Object Use Weighted:");
+        $this->form->addElement("static", null, "<br />");
+        $this->form->addElement("static", "object_use_weighted", "Weighted Raw Scores for Scales 17, 18, 19, and 20 - Object Use:");
 
     }
     
@@ -838,10 +996,12 @@ INSERT INTO instrument_subtests VALUES('', 'csbs', 'csbs_page2', 'Symbolic Behav
         return $score;
     }
 
-    function _countWords($record, $genericLabel) {
+    function _countWords($record, $genericLabel, $excludedWords = array()) {
         foreach($record as $field=>$value) {
-            if(ereg($genericLabel, $field) && !is_null($value)) {
-                $score++; 
+            if(ereg($genericLabel, $field) && !is_null($value) && $value !== '') {
+                if(!in_array($value, $excludedWords)) {
+                    $score++; 
+                }
             }
         }
         return $score;
