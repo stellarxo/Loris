@@ -125,7 +125,7 @@ class NDB_Form_video_upload extends NDB_Form
         //$this->form->addElement("select", "For_site", "Site This File is Being Uploaded For", array(null, "DCC", "SEA", "PHI", "STL", "UNC", "UofA"));
         $this->form->addElement("select", "For_site", "Site This File is Being Uploaded For", Utility::getSiteList(false));
         $this->form->addElement("select", "multipart", "Is this upload split into multiple parts?", array("Yes" => "Yes", "No" => "No"));
-        $this->form->addElement("select", "EARLI", "Is this an EARLI collaboration video?", array("1" => "Yes", "0" => "No"));
+        $this->form->addElement("select", "EARLI", "Is this an EARLI collaboration video?", array('' => '', "1" => "Yes", "0" => "No"));
         $this->form->addElement("textarea", "comments", "Comments (optional)", array ('rows' => 5, 'cols' => 50));
         if($this->identifier){
           $this->form->addElement('static', 'File_name', 'File name');
@@ -157,6 +157,9 @@ class NDB_Form_video_upload extends NDB_Form
             if(empty($values['hide_video']) || empty($values['hide_video_confirm'])) {
                 $errors['hide_video'] = "Must check BOTH boxes to delete";
             }
+        }
+        if($values['EARLI'] == '' || !isset($values['EARLI'])) {
+                $errors['EARLI'] = "EARLI collaboration video flag required.";
         }
 
 
