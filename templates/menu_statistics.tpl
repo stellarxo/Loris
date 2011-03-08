@@ -33,21 +33,31 @@ function CreateScatterplot() {
     };
     graph = new ACES_Scatterplot();
     graph.CSVUrl = GetCSVUrl();
+    graph.CSVExtraFields = ['candID', 'sessionID', 'commentID']
     graph.RenderChart();
-    FormatLink = function(url, val) {
-        return '<a href="main.php?test_name=' + url + '">' + val + '</a><br />';
+    FormatLink = function(url, val, extras) {
+        base = '<a href="main.php?test_name=' + url;
+        if(extras) {
+            for(exval in extras) {
+                if(exval != 'x' && exval != 'y' && exval != 'name') {
+                    base += '&' + exval + '=' + extras[exval];
+                }
+            }
+        }
+        base += '">' + val + '</a><br />';
+        return base;
     }
-    graph.XFormat = function(val) { return FormatLink(jQuery("#instrumentx").val(), val); };
-    graph.YFormat = function(val) { return FormatLink(jQuery("#instrumenty").val(), val); };
+    graph.XFormat = function(val, pt) { return FormatLink(jQuery("#instrumenty").val(), jQuery("#fieldx").val() + ':' + val, pt.config); };
+    graph.YFormat = function(val, pt) { return FormatLink(jQuery("#instrumenty").val(), jQuery("#fieldy").val() + ':' + val, pt.config); };
     jQuery("#fieldx").change(function() {
         graph.CSVUrl = GetCSVUrl();
         graph.UpdateXField($(this).val());
-        graph.RenderChart()
+        graph.RenderChart();
     });
     jQuery("#fieldy").change(function() {
         graph.CSVUrl = GetCSVUrl();
         graph.UpdateYField($(this).val());
-        graph.RenderChart()
+        graph.RenderChart();
     });
 }
 
