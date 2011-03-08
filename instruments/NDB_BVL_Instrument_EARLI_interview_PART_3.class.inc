@@ -239,7 +239,7 @@ class NDB_BVL_Instrument_EARLI_interview_PART_3 extends NDB_BVL_Instrument {
 
 
 		//q8_6_6
-		$this->form->addElement("select", "q8_6_6", "BEAUTICIAN/BARBER",  array(NULL=>"", "26 Barber shop", "27 Beauty shop", "28 Nail salon", "29_other"=>"29 Other beauty services", "88_Refused" => "88 Refused",  "99_Do_not_know"=>"99 Do not know", "Not_Answered"=>"Not Answered"));
+		$this->form->addElement("select", "q8_6_6", "BEAUTICIAN/BARBER",  array(NULL=>"", "26"=>"26 Barber shop", "27"=>"27 Beauty shop", "28"=>"28 Nail salon", "29_other"=>"29 Other beauty services", "88_Refused" => "88 Refused",  "99_Do_not_know"=>"99 Do not know", "Not_Answered"=>"Not Answered"));
 		$this->XINRegisterRule("q8_6_6", array("q8_5{@}=={@}06"), "Required if selected 06 above");
 		$this->addTextAreaElementRD('q8_6_6other', $this->indent . 'If you selected [Other beauty services], please specify:');
 		$this->XINRegisterRule("q8_6_6other", array("q8_6_6{@}=={@}29_other"), "You must specify other", "q8_6_6other_group");
