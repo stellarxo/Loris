@@ -3,7 +3,6 @@ ALTER TABLE EARLI_interview_PART_1 CHANGE COLUMN q1_8 `q1_8` enum('01','02','03'
 ALTER TABLE EARLI_interview_PART_1 CHANGE COLUMN q1_10 `q1_10` enum('01','02 ','03 ','04','05','06','07','08','09','10','11','12','13','14','15','16','17','88_refused','99_dont_know','not_answered') default NULL;
 ALTER TABLE EARLI_interview_PART_1 CHANGE COLUMN q1_11 `q1_11` enum('01','02','03','04','05','06','07','08','88_Refused','99_Do_not_know','Not_Answered') default NULL;
 ALTER TABLE EARLI_interview_PART_1 CHANGE COLUMN q1_13 `q1_13` enum('01','02','03','04','05','06','07','08','88_Refused','99_Do_not_know','Not_Answered') default NULL;
--`q1_25` enum('01','02','03','04','05','06','0','08','09','10','11','12','13','14','15','16','17','88_Refused','99_Do_not_know','Not_Answered') default NULL;
 ALTER TABLE EARLI_interview_PART_1 CHANGE COLUMN q1_25 `q1_25` enum('01','02','03','04','05','06','07','08','09','10','11','12','13','14','15','16','17','88_Refused','99_Do_not_know','Not_Answered') default NULL;
 ALTER TABLE EARLI_interview_PART_1 CHANGE COLUMN q2_4 `q2_4` enum('01','02','88_refused','99_dont_know','not_answered') default NULL;
 ALTER TABLE EARLI_interview_PART_1 CHANGE COLUMN q2_6 `q2_6` enum('01_yes','02_no','88_refused','99_dont_know','not_answered') default NULL;
