@@ -48,6 +48,20 @@ class NDB_Menu_Filter_videos extends NDB_Menu_Filter
         return $user->hasPermission('earli_videos') && !$user->hasPermission('data_entry');
     }
 
+    // Function to check if the user is working with EARLI videos or not. Save into a cookie,
+    // so that filters work properly.
+    function _viewingEARLI() {
+        if(isset($_REQUEST['showEARLI'])) {
+            $_SESSION['showEARLI'] = $_REQUEST['showEARLI'];
+            $earli = $_REQUEST['showEARLI'];
+        } else if(isset($_SESSION['showEARLI'])) {
+            $earli = $_SESSION['showEARLI'];
+        } else {
+            $earli = '';
+        }
+        return !empty($earli);
+    }
+
 
 
     function _setupVariables()
@@ -67,7 +81,7 @@ class NDB_Menu_Filter_videos extends NDB_Menu_Filter
         
         // the base query
         $query = " FROM videos v"; // left join candidate c using(pscid) ";
-        if($this->_isEARLIUser() || (isset($_REQUEST['showEARLI']) && !empty($_REQUEST['showEARLI']) && $user->hasPermission('earli_videos'))) {
+        if($this->_isEARLIUser() || ($this->_viewingEARLI() && $user->hasPermission('earli_videos'))) {
             $query .= " WHERE v.EARLI=True";
         } else {
             $query .= " WHERE (v.EARLI IS NULL OR v.EARLI = False)";
@@ -81,7 +95,7 @@ class NDB_Menu_Filter_videos extends NDB_Menu_Filter
         $this->group_by = '';
         $this->order_by = 'v.Instrument';
         $this->headers = array('File_name','uploaded_by', 'Instrument', 'PSCID', 'visitLabel', 'Date_Taken', 'For_site', 'comments', 'Date_uploaded', 'Edit Metadata');
-        $this->validFilters = array('v.PSCID', 'v.Instrument', 'v.Data_dir', 'v.For_site', 'v.visitLabel');
+        $this->validFilters = array('v.PSCID', 'v.Instrument', 'v.Data_dir', 'v.For_site', 'v.visitLabel', 'v.uploaded_by');
 
         $this->formToFilter = array(
                                     'File_name' => 'v.File_name',
@@ -131,7 +145,12 @@ class NDB_Menu_Filter_videos extends NDB_Menu_Filter
         $list_of_visit_labels = array(null=>'Any','V06'=>'V06','V12'=>'V12','V24'=>'V24','V36'=>'V36');
         $subproject_options = Utility::getSubprojectList();
         $subproject_options = array(null=>'Any') + $subproject_options;
-        $list_of_instruments = array(null=>'Any', 'csbs'=>'CSBS', 'adi_r'=>'ADI-R', 'ados'=>'ADOS');
+        $DB = Database::singleton();
+        $list_of_instruments_q = $DB->pselect("SELECT DISTINCT Instrument FROM videos", array());
+        $list_of_instruments = array(null => 'Any');
+        foreach ($list_of_instruments_q as $instrument) {
+            $list_of_instruments[$instrument['Instrument']] = $instrument['Instrument'];
+        }
         $lock_options = array(null=>'','Locked'=>'Locked','Unlocked'=>'Unlocked');
 
         // Form Elements
@@ -139,7 +158,7 @@ class NDB_Menu_Filter_videos extends NDB_Menu_Filter
         $this->form->addElement('select', 'Instrument', 'Instrument:', $list_of_instruments);
         $this->form->addElement('select', 'visitLabel', 'Visit Label:', $list_of_visit_labels);
         $this->form->addElement('select', 'For_site', 'For Site:', $list_of_sites);
-	 // $this->form->addElement('select', 'Lock_record', 'Lock_record:', $lock_options);
+        $this->form->addElement('text', 'uploaded_by', 'Uploaded By');
        
         return true;
     }

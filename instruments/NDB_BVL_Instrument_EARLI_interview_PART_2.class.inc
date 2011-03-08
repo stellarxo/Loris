@@ -119,9 +119,9 @@ class NDB_BVL_Instrument_EARLI_interview_PART_2 extends NDB_BVL_Instrument {
                 $this->years1950 = array(NULL=>"") + ($years) + array("88_Refused" => "88 Refused", "99_Do_not_know" => "99 Do not know", "not_answered" => "Not Answered");
 
 		//number arrays
-		$this->negThreeToNine = array(NULL=>"", "-3" => "-3", "-2"=>"-2", "-1"=>"-1", "01"=>"01", "02"=>"02", "03"=>"03", "04"=>"04", "05"=>"05", "06"=>"06", "07"=>"07", "08"=>"08", "09"=>"09", "88"=>"88 Refused", "99"=>"99 Don't Know", "NA"=>"Not Answered");
+		$this->negThreeToNine = array(NULL=>"", "-03" => "-3", "-02"=>"-2", "-01"=>"-1", "01"=>"01", "02"=>"02", "03"=>"03", "04"=>"04", "05"=>"05", "06"=>"06", "07"=>"07", "08"=>"08", "09"=>"09", "88"=>"88 Refused", "99"=>"99 Don't Know", "NA"=>"Not Answered");
 
-		$this->negThreeToTen = array(NULL=>"", "-3" => "-3", "-2"=>"-2", "-1"=>"-1", "01"=>"01", "02"=>"02", "03"=>"03", "04"=>"04", "05"=>"05", "06"=>"06", "07"=>"07", "08"=>"08", "09"=>"09", "10"=>"10", "88"=>"88 Refused", "99"=>"99 Don't Know", "NA"=>"Not Answered");
+		$this->negThreeToTen = array(NULL=>"", "-03" => "-3", "-02"=>"-2", "-01"=>"-1", "01"=>"01", "02"=>"02", "03"=>"03", "04"=>"04", "05"=>"05", "06"=>"06", "07"=>"07", "08"=>"08", "09"=>"09", "10"=>"10", "88"=>"88 Refused", "99"=>"99 Don't Know", "NA"=>"Not Answered");
 		
 	        $oneToSeventy = array_combine(range(1, 70), range(1, 70));
 		$this->oneToSeventyComplete = array(null=>"") + ($oneToSeventy) + array("88_Refused" => "88 Refused", "99_Do_not_know" => "99 Do not know", "not_answered" => "Not Answered");
@@ -334,7 +334,7 @@ class NDB_BVL_Instrument_EARLI_interview_PART_2 extends NDB_BVL_Instrument {
 
 		for ($i=1; $i<6; $i++)
 		{
-			$this->form->addElement("select", "q5_10_m{$i}", $this->indent .  "METHOD #{$i}:",  array(NULL=>"", "01" => "01 Condoms (male or female)", "02" => "02 Depo-Provera", "03" => "03  Diaphram/cervical cap", "04" => "04 Intrauterine device (IUD)", "05" => "05 Norplant", "06" => "06 Spermicide", "07" => "07 Sponge", "08_other" => "08 Other", "88 Refused", "99" => "99 Do not know", "not_answered"=>"Not Answered"));
+			$this->form->addElement("select", "q5_10_m{$i}", $this->indent .  "METHOD #{$i}:",  array(NULL=>"", "01" => "01 Condoms (male or female)", "02" => "02 Depo-Provera", "03" => "03  Diaphram/cervical cap", "04" => "04 Intrauterine device (IUD)", "05" => "05 Norplant", "06" => "06 Spermicide", "07" => "07 Sponge", "08_other" => "08 Other", "88_refused"=>"88 Refused", "99" => "99 Do not know", "not_answered"=>"Not Answered"));
 			$this->addTextAreaElementRD("q5_10_m{$i}_other", $this->indent . "If you selected [Other], please specify:");
 			$this->XINRegisterRule("q5_10_m{$i}_other", array("q5_10_m{$i}{@}=={@}08_other"), "You must specify other", "q5_10_m{$i}_other_group");
 		}
@@ -511,12 +511,11 @@ class NDB_BVL_Instrument_EARLI_interview_PART_2 extends NDB_BVL_Instrument {
 		$this->form->addElement('static', null, "5-20. What medications did you take?");
 		$this->form->addElement('static', null,  $this->indent . "<i>Probe: Are there any more medications?<br/> $this->indent If can't recall, ask them to refer to <b>List 5</b> in prep guide and choose from the following list:</i><br/>");     
 		
-		$medicationOptions = array(NULL=>"", "01" => "01 Bromocriptine", "02" => "02 Clomid", "03" => "03  Chorionic gonadotropin", "04" => "04 Clomiphene citrate", "05" => "05 Danazol", "05" => "05 Danocrine", "06" => "06 Dostinex", "07" => "07 Factrel", "08" => "08 Fertinex", "09" => "09 Follistim", "10" => "10 Gonadorelin", "11" => "11 Gonal-F", "12" => "12 Humegon", "13" => "13 Lupron", "14" => "14 Lutrepulse", "16" => "16 Metrodin", "17" => "17 Novarel", "18" => "18 Parlodel", "19" => "19 Pergonal", "20" => "20 Pregnyl", "21" => "21 Profasi HP", "22" => "22 Provera", "23" => "23 Repronex", "24 Serophene", "25 Synarel", "26_other" => "26 Other", "88 Refused", "99" => "99 Do not know", "Not_answered" => "Not Answered");
+		$medicationOptions = array(NULL=>"", "01" => "01 Bromocriptine", "02" => "02 Clomid", "03" => "03  Chorionic gonadotropin", "04" => "04 Clomiphene citrate", "05" => "05 Danazol", "05" => "05 Danocrine", "06" => "06 Dostinex", "07" => "07 Factrel", "08" => "08 Fertinex", "09" => "09 Follistim", "10" => "10 Gonadorelin", "11" => "11 Gonal-F", "12" => "12 Humegon", "13" => "13 Lupron", "14" => "14 Lutrepulse", "16" => "16 Metrodin", "17" => "17 Novarel", "18" => "18 Parlodel", "19" => "19 Pergonal", "20" => "20 Pregnyl", "21" => "21 Profasi HP", "22" => "22 Provera", "23" => "23 Repronex", "24 Serophene", "25 Synarel", "26_other" => "26 Other", "88_refused"=>"88 Refused", "99" => "99 Do not know", "Not_answered" => "Not Answered");
 			
 
 		for ($i=1; $i<6; $i++)
 		{
-
 			$this->form->addElement("select", "q5_20_{$i}", $this->indent . $this->indent . " Med #{$i}", $medicationOptions); 
 			$this->addTextAreaElementRD("q5_20_{$i}_other", $this->indent . $this->indent . " If you selected [Other], please specify:");
 			$this->XINRegisterRule("q5_20_{$i}_other", array("q5_20_{$i}{@}=={@}26_other"), "You must specify other", "q5_20_{$i}_other_group");
@@ -810,7 +809,7 @@ class NDB_BVL_Instrument_EARLI_interview_PART_2 extends NDB_BVL_Instrument {
 		$aToF = array("a", "b", "c", "d", "e", "f");
 		foreach($aToF as $label) {
 			$group[] =&$this->form->createElement ( "select", "q5_34_m_{$label}", null, array (NULL => "") + $this->negThreeToTen );
-			$group[] =&$this->form->createElement ( "select", "q5_34_f_{$label}", null, array (NULL => "", "01" => "01 Less than once a week", "02" => "02 Once a week", "03" => "03  A few times a week", "04" => "04 Every day", "88 Refused", "99" => "99 Do not know", "not_answered"=>"Not Answered") );
+			$group[] =&$this->form->createElement ( "select", "q5_34_f_{$label}", null, array (NULL => "", "01" => "01 Less than once a week", "02" => "02 Once a week", "03" => "03  A few times a week", "04" => "04 Every day", "88_refused"=>"88 Refused", "99" => "99 Do not know", "not_answered"=>"Not Answered") );
 			$this->form->addGroup($group, "q5_34_{$label}_group", "{$label})", $this->_GUIDelimiter, false);
 			unset($group);
 			//Don't require all these questions, but allow them to be filled in, if desired.
@@ -844,7 +843,7 @@ class NDB_BVL_Instrument_EARLI_interview_PART_2 extends NDB_BVL_Instrument {
 		unset($negThreeToTen[10]); //only want to go up to 9
 		foreach($aToF as $label) {
 			$group[] = &$this->form->createElement( "select", "q5_37_m_{$label}", null, array (NULL => "") + $this->negThreeToTen);
-			$group[] = &$this->form->createElement ( "select", "q5_37_f_{$label}", null, array (NULL => "", "01" => "01 Less than once a week", "02" => "02 Once a week", "03" => "03  A few times a week", "04" => "04 Every day", "88 Refused", "99" => "99 Do not know", "not_answered"=>"Not Answered" ) );
+			$group[] = &$this->form->createElement ( "select", "q5_37_f_{$label}", null, array (NULL => "", "01" => "01 Less than once a week", "02" => "02 Once a week", "03" => "03  A few times a week", "04" => "04 Every day", "88_refused"=>"88 Refused", "99" => "99 Do not know", "not_answered"=>"Not Answered" ) );
 			$this->form->addGroup($group, "q5_37_{$label}_group", "{$label})", $this->_GUIDelimiter, false);
 			unset($group);
 			//Don't require all questions, but allow them to be filled in, if desired.
@@ -1107,7 +1106,7 @@ class NDB_BVL_Instrument_EARLI_interview_PART_2 extends NDB_BVL_Instrument {
 		$aToF = array("a", "b", "c", "d", "e", "f");
 		foreach($aToF as $label) {
 			$group[] = &$this->form->createElement( "select", "q5_60_m_{$label}", null, $this->negThreeToTen);
-			$group[] = &$this->form->createElement ( "select", "q5_60_f_{$label}", null, array (NULL => "", "01" => "01 Less than once a week", "02" => "02 Once a week", "03" => "03  A few times a week", "04" => "04 Every day", "88 Refused", "99" => "99 Do not know", "not_answered"=>"Not Answered") );
+			$group[] = &$this->form->createElement ( "select", "q5_60_f_{$label}", null, array (NULL => "", "01" => "01 Less than once a week", "02" => "02 Once a week", "03" => "03  A few times a week", "04" => "04 Every day", "88_refused"=>"88 Refused", "99" => "99 Do not know", "not_answered"=>"Not Answered") );
 			$this->form->addGroup($group, "q5_60_{$label}_group", "{$label})", $this->_GUIDelimiter, false);
 			unset($group);
 			//Don't require all questions, but allow them to be filled in, if desired.
@@ -1134,7 +1133,7 @@ class NDB_BVL_Instrument_EARLI_interview_PART_2 extends NDB_BVL_Instrument {
 		//q5-62
 		$this->form->addElement("select", "q5_62", "5-62. Did you take any medicine for preeclampsia or toxemia?", array(NULL=>"", "01_yes" => "01 Yes", "02_no" => "02 No", "88_Refused" => "88 Refused",  "99_Do_not_know"=>"99 Do not know", "Not_Answered"=>"Not Answered"));
 		$this->form->addElement('static', null, $this->indent . "If you selected [No], [Refused] or [Don't Know] skip to question 5-64");
-		$this->XINRegisterrule("q5_62", array("q5_61{@}=={@}01_yes"), "Required if had preeclampsia or toxemia");
+		$this->XINRegisterRule("q5_62", array("q5_61{@}=={@}01_yes"), "Required if had preeclampsia or toxemia");
 		$this->form->addElement('static', null, "<br/>");
 
 
@@ -1155,7 +1154,7 @@ class NDB_BVL_Instrument_EARLI_interview_PART_2 extends NDB_BVL_Instrument {
 		while(list($field, $label) = each($questionArray)) {
 
 			$this->form->addElement('static', null, "{$label}"); 
-			$this->form->addElement("select", "q5_63_{$field}_month",  $this->indent .  "Month medication taken:",  array(NULL=>"","1", "2", "3", "4", "5", "6", "7", "8", "9", "Refused", "Do not know", "Not_Answered" => "Not Answered"));
+			$this->form->addElement("select", "q5_63_{$field}_month",  $this->indent .  "Month medication taken:",  array(NULL=>"","1", "2", "3", "4", "5", "6", "7", "8", "9", "refused"=>"Refused", "dont_know"=>"Do not know", "Not_Answered" => "Not Answered"));
 			$this->XINRegisterRule("q5_63_{$field}_month", array("q5_63{@}=={@}{$field}"), "Required if taken {$label}");
 			$this->form->addElement("select", "q5_63_{$field}_admin",  $this->indent .  "Route of Administration:",  array(NULL=>"", "01_oral" => "Oral", "02_infusion" => "Infusion", "03_rectal" => "Rectal", "04_injection" => "Injection", "05_infusion" => "Infusion", "88_refused" =>"Refused", "99_Do_not_know" => "Don't know", "Not_Answered" => "Not Answered"));
 			$this->XINRegisterRule("q5_63_{$field}_admin", array("q5_63{@}=={@}{$field}"), "Required if taken {$label}");
@@ -1167,7 +1166,7 @@ class NDB_BVL_Instrument_EARLI_interview_PART_2 extends NDB_BVL_Instrument {
 			"tab_week"=>"(#)_____tabs or caps/week", 
 			"tab_month"=>"(#)_____tabs or caps/month", 
 			"tab_everyday"=>"(#)_____tabs or caps everyday", 
-			"other" => "Other", "Refused", "Do not know", "Not_Answered" => "Not Answered");
+			"other" => "Other", "refused"=>"Refused", "dont_know"=>"Do not know", "Not_Answered" => "Not Answered");
 			
 			//var_dump($answerOptions);
 			//        array('key'=>"value");
@@ -1229,13 +1228,13 @@ class NDB_BVL_Instrument_EARLI_interview_PART_2 extends NDB_BVL_Instrument {
 
 			$this->form->addElement('static', null, "<br/>");
 			$this->form->addElement('static', null, "{$label}");
-			$this->form->addElement("select", "q5_67_{$field}_month", $this->indent . "Month medication taken:", array(NULL=>"","1", "2", "3", "4", "5", "6", "7", "8", "9", "Refused", "Do not know", "Not_Answered" => "Not Answered"));
+			$this->form->addElement("select", "q5_67_{$field}_month", $this->indent . "Month medication taken:", array(NULL=>"","1", "2", "3", "4", "5", "6", "7", "8", "9", "refused"=>"Refused", "dont_know"=>"Do not know", "Not_Answered" => "Not Answered"));
 			$this->XINRegisterRule("q5_67_{$field}_month", array("q5_67{@}=={@}{$field}"), "Required if taken {$label}");
 
 			$this->form->addElement("select", "q5_67_{$field}_admin", $this->indent . "Route of Administration:",  array(NULL=>"","Oral", "Infusion", "Rectal", "Injection", "Infusion", "Not_Answered" => "Not Answered"));
 			$this->XINRegisterRule("q5_67_{$field}_admin", array("q5_67{@}=={@}{$field}"), "Required if taken {$label}");
 
-			$this->form->addElement("select", "q5_67_{$field}_freq", $this->indent . "How often/number of capsules",  array(NULL=>"", "tab_day" => "(#)_____tabs or caps/day, for (#) ____days", "tab_week"=>"(#)_____tabs or caps/week", "tab_month"=>"(#)_____tabs or caps/month", "tab_everyday"=>"(#)_____tabs or caps everyday", "other" => "Other", "Refused", "Do not know", "Not_Answered" => "Not Answered"));
+			$this->form->addElement("select", "q5_67_{$field}_freq", $this->indent . "How often/number of capsules",  array(NULL=>"", "tab_day" => "(#)_____tabs or caps/day, for (#) ____days", "tab_week"=>"(#)_____tabs or caps/week", "tab_month"=>"(#)_____tabs or caps/month", "tab_everyday"=>"(#)_____tabs or caps everyday", "other" => "Other", "refused"=>"Refused", "dont_know"=>"Do not know", "Not_Answered" => "Not Answered"));
 			$this->XINRegisterRule("q5_67_{$field}_freq", array("q5_67{@}=={@}{$field}"), "Required if taken {$label}");
 
 			$this->addNumericElementRD("q5_67_{$field}_tabs", $this->indent . $this->indent . "Enter the number of tabs or caps:");
@@ -1328,13 +1327,13 @@ class NDB_BVL_Instrument_EARLI_interview_PART_2 extends NDB_BVL_Instrument {
 		{
 			$this->form->addElement('static', null, "<br/>");
 			$this->form->addElement('static', null, "{$label}");
-			$this->form->addElement("select", "q5_71_{$field}_month",  $this->indent .  "Month medication taken:",  array(NULL=>"","1", "2", "3", "4", "5", "6", "7", "8", "9", "Refused", "Do not know", "Not_Answered" => "Not Answered"));
+			$this->form->addElement("select", "q5_71_{$field}_month",  $this->indent .  "Month medication taken:",  array(NULL=>"","1", "2", "3", "4", "5", "6", "7", "8", "9", "refused"=>"Refused", "dont_know"=>"Do not know", "Not_Answered" => "Not Answered"));
 			$this->XINRegisterRule("q5_71_{$field}_month", array("q5_71{@}=={@}{$field}"), "Required if took {$label}");
 
-			$this->form->addElement("select", "q5_71_{$field}_admin",  $this->indent .  "Route of Administration:",  array(NULL=>"","Oral", "Infusion", "Rectal", "Injection", "Infusion", "Refused" => "Refused", "Don_not_know" => "Don't know", "Not_Answered" => "Not Answered"));
+			$this->form->addElement("select", "q5_71_{$field}_admin",  $this->indent .  "Route of Administration:",  array(NULL=>"","Oral", "Infusion", "Rectal", "Injection", "Infusion", "Refused" => "Refused", "Do_not_know" => "Don't know", "Not_Answered" => "Not Answered"));
 			$this->XINRegisterRule("q5_71_{$field}_admin", array("q5_71{@}=={@}{$field}"), "Required if took {$label}");
 
-			$this->form->addElement("select", "q5_71_{$field}_freq",  $this->indent . "How often/number of capsules",  array(NULL=>"", "tab_day" => "(#)_____tabs or caps/day, for (#)____days", "tab_week"=>"(#)_____tabs or caps/week", "tab_month"=>"(#)_____tabs or caps/month", "tab_everyday"=>"(#)_____tabs or caps everyday", "other" => "Other", "Refused", "Do not know", "Not_Answered" => "Not Answered"));
+			$this->form->addElement("select", "q5_71_{$field}_freq",  $this->indent . "How often/number of capsules",  array(NULL=>"", "tab_day" => "(#)_____tabs or caps/day, for (#)____days", "tab_week"=>"(#)_____tabs or caps/week", "tab_month"=>"(#)_____tabs or caps/month", "tab_everyday"=>"(#)_____tabs or caps everyday", "other" => "Other", "refused"=>"Refused", "dont_know"=>"Do not know", "Not_Answered" => "Not Answered"));
 			$this->XINRegisterRule("q5_71_{$field}_freq", array("q5_71{@}=={@}{$field}"), "Required if took {$label}");
 
 			$this->addNumericElementRD("q5_71_{$field}_tabs", $this->indent . $this->indent . "Enter the number of tabs or caps:");
@@ -1390,13 +1389,13 @@ class NDB_BVL_Instrument_EARLI_interview_PART_2 extends NDB_BVL_Instrument {
 
 			$this->form->addElement('static', null, "<br/>");
 			$this->form->addElement('static', null, "{$label}");
-			$this->form->addElement("select", "q5_75_{$field}_month",  $this->indent .  "Month medication taken:",  array(NULL=>"","1", "2", "3", "4", "5", "6", "7", "8", "9", "Refused", "Do not know", "Not_Answered" => "Not Answered"));
+			$this->form->addElement("select", "q5_75_{$field}_month",  $this->indent .  "Month medication taken:",  array(NULL=>"","1", "2", "3", "4", "5", "6", "7", "8", "9", "refused"=>"Refused", "dont_know"=>"Do not know", "Not_Answered" => "Not Answered"));
 			$this->XINRegisterRule("q5_75_{$field}_month", array("q5_75{@}=={@}{$field}"), "Required if took {$label}");
 
 			$this->form->addElement("select", "q5_75_{$field}_admin",  $this->indent .  "Route of Administration:",  array(NULL=>"","Oral", "Infusion", "Rectal", "Injection", "Infusion", "Refused" => "Refused", "Do_not_know" => "Don't know", "Not_Answered" => "Not Answered"));
 			$this->XINRegisterRule("q5_75_{$field}_admin", array("q5_75{@}=={@}{$field}"), "Required if took {$label}");
 
-			$this->form->addElement("select", "q5_75_{$field}_freq",  $this->indent . "How often/number of capsules",  array(NULL=>"", "tab_day" => "(#)_____tabs or caps/day, for (#)____days", "tab_wek"=>"(#)_____tabs or caps/week", "tab_month"=>"(#)_____tabs or caps/month", "tab_everyday"=>"(#)_____tabs or caps everyday", "Other" => "Other", "Refused", "Do not know", "Not_Answered" => "Not Answered"));
+			$this->form->addElement("select", "q5_75_{$field}_freq",  $this->indent . "How often/number of capsules",  array(NULL=>"", "tab_day" => "(#)_____tabs or caps/day, for (#)____days", "tab_wek"=>"(#)_____tabs or caps/week", "tab_month"=>"(#)_____tabs or caps/month", "tab_everyday"=>"(#)_____tabs or caps everyday", "Other" => "Other", "refused"=>"Refused", "dont_know"=>"Do not know", "Not_Answered" => "Not Answered"));
 			$this->XINRegisterRule("q5_75_{$field}_freq", array("q5_75{@}=={@}{$field}"), "Required if took {$label}");
 
 			$this->addNumericElementRD("q5_75_{$field}_tabs", $this->indent . $this->indent . "Enter the number of tabs or caps:");
@@ -1766,7 +1765,7 @@ class NDB_BVL_Instrument_EARLI_interview_PART_2 extends NDB_BVL_Instrument {
 		foreach ($this->oneToThree as $field=>$label){
 
 			$this->form->addElement('static', null, "<br/>");
-			$this->form->addElement("select", "q5_90_med_{$field}", $this->indent . "MED {$label}:", array(NULL=>"", "13" => "13 Clindamycin", "16" => "16 Doxycycline", "24 Metronidazole", "25 Minocyline", "29 Penicillin", "97_other"=>"97 Other", "88_Refused" => "88 Refused",  "99_Do_not_know"=>"99 Do not know", "Not_Answered"=>"Not Answered"));
+			$this->form->addElement("select", "q5_90_med_{$field}", $this->indent . "MED {$label}:", array(NULL=>"", "13_c" => "13 Clindamycin", "16_d" => "16 Doxycycline", "24_m"=>"24 Metronidazole", "25_m"=>"25 Minocyline", "29_p"=>"29 Penicillin", "97_other"=>"97 Other", "88_Refused" => "88 Refused",  "99_Do_not_know"=>"99 Do not know", "Not_Answered"=>"Not Answered"));
 			$this->addTextAreaElementRD("q5_90_other_{$field}", $this->indent . "If you selected [Other], please specify. OTHER MED {$label}:");
 			$this->XINRegisterRule("q5_90_other_{$field}", array("q5_90_med_{$field}{@}=={@}97_other"), "You must specify other", "q5_90_other_{$field}_group");
 		}
@@ -2846,7 +2845,7 @@ class NDB_BVL_Instrument_EARLI_interview_PART_2 extends NDB_BVL_Instrument {
                 {
                         $this->addTextAreaElementRD("q7_24_product{$i}", $this->indent . "Product #{$i}:"); 
                         $this->addTextAreaElementRD("q7_24_product{$i}_how", $this->indent . $this->indent . 'How it was used?');
-                        $this->form->addElement("select", "q7_24_product{$i}_who", $this->indent . $this->indent . "Who used the product?", array(NULL=>"", "Mother", "Father", "Other", "Not_Answered" => "Not Answered"));
+                        $this->form->addElement("select", "q7_24_product{$i}_who", $this->indent . $this->indent . "Who used the product?", array(NULL=>"", "mother"=>"Mother", "father"=>"Father", "other"=>"Other", "Not_Answered" => "Not Answered"));
                         $this->form->addElement('static', null, "<br/>");
 
 			if ($i>1)
@@ -2904,7 +2903,7 @@ class NDB_BVL_Instrument_EARLI_interview_PART_2 extends NDB_BVL_Instrument {
 
 			$this->addTextAreaElementRD("q7_28_product{$i}", $this->indent . "Product #{$i}:");
 			$this->addTextAreaElementRD("q7_28_product{$i}_how", $this->indent . $this->indent . 'How it was used?');
-			$this->form->addElement("select", "q7_28_product{$i}_who", $this->indent . $this->indent . "Who used the product?", array(NULL=>"", "Mother", "Father", "Other", "Not_Answered" => "Not Answered"));
+			$this->form->addElement("select", "q7_28_product{$i}_who", $this->indent . $this->indent . "Who used the product?", array(NULL=>"", "mother"=>"Mother", "father"=>"Father", "other"=>"Other", "Not_Answered" => "Not Answered"));
 
 			if ($i>1)
                         {

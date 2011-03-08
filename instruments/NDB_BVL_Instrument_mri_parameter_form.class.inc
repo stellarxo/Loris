@@ -173,6 +173,7 @@ class NDB_BVL_Instrument_mri_parameter_form extends NDB_BVL_Instrument
           {
               $timepoint =& TimePoint::singleton($this->getSessionID());
               $candidate =& Candidate::singleton($timepoint->getCandID());
+              $this->_nullStatus(&$values);
 
               if(isset($values['Date_taken'])) {
                   $date = $values['Date_taken'];

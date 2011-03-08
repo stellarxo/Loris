@@ -405,17 +405,17 @@ class NDB_Menu_Filter_reliability extends NDB_Menu_Filter
         $PSCID_Replace_V = $_POST['Cand2Visit_label'];
         $Instrument = $_POST['SwapInstrument'];
 
-        $query="SELECT reliability.CommentID as OldID, reliability.reliability_center_id as CenterID, reliability.Reliability_score as Score, candidate.CenterID as OldCenterID, reliability.EARLI_Candidate AS EARLI_Candidate  FROM candidate, session, flag, reliability WHERE reliability.CommentID=flag.CommentID AND candidate.CandID=session.CandID AND session.ID=flag.SessionID AND candidate.PSCID='$PSCID' AND reliability.Instrument='$Instrument' and session.Visit_label='$PSCID_V'";
+        $query="SELECT reliability.CommentID as OldID, reliability.reliability_center_id as CenterID, reliability.Reliability_score as Score, candidate.CenterID as OldCenterID, reliability.EARLI_Candidate AS EARLI_Candidate  FROM candidate, session, flag, reliability WHERE reliability.CommentID=flag.CommentID AND candidate.CandID=session.CandID AND session.ID=flag.SessionID AND candidate.PSCID='$PSCID' AND reliability.Instrument='$Instrument' and session.Visit_label='$PSCID_V' and flag.Data_entry IS NOT NULL and flag.Data_entry <> 'None' ";
 
         $DB->selectRow($query, $CommentID);
         if(!$CommentID) {
             return array("error" => "$PSCID/$PSCID_V is not in reliability coding for $Instrument. Cannot swap candidates.");
         }
 
-        $query="SELECT f.CommentID as NewID, c.CenterID as NewCenterID FROM session s join flag f ON (f.SessionID=s.ID) JOIN candidate c ON (c.CandID=s.CandID)  WHERE f.Test_name='$Instrument' and c.PSCID='$PSCID_Replace' AND s.Visit_label='$PSCID_Replace_V'";
+        $query="SELECT f.CommentID as NewID, c.CenterID as NewCenterID FROM session s join flag f ON (f.SessionID=s.ID) JOIN candidate c ON (c.CandID=s.CandID)  WHERE f.Test_name='$Instrument' and c.PSCID='$PSCID_Replace' AND s.Visit_label='$PSCID_Replace_V' AND f.Data_entry IS NOT NULL and f.Data_entry <> 'None'";
         $DB->selectRow($query, $newCommentID);
         if(!$newCommentID) {
-            return array('error' => "$PSCID_Replace/$PSCID_Replace_V did not complete $Instrument. Cannot swap candidates.");
+            return array('error' => "$PSCID_Replace/$PSCID_Replace_V did not complete $Instrument or data not entered. Cannot swap candidates.");
         }
         if($newCommentID['NewCenterID'] !== $CommentID['OldCenterID']) {
             return array('error' => "Candidates are not from the same site. Cannot swap candidates across sites.");

@@ -232,20 +232,20 @@ function CreateScatterplot() {
 <table class="data">
 <tr>
     <th>Reliablity Module</th>
-    <th>Total Reliable</th>
-    <th>Total Complete</th>
     <th>Total Flagged</th>
-    <th>Percent Reliable</th>
+    <th>Total Complete</th>
+    <th>Total Reliable</th>
     <th>Percent Complete</th>
+    <th>Percent Reliable</th>
 </tr>
 {section name=item loop=$reliability_completion}
 <tr>
     <td>{$reliability_completion[item].name}</td>
-    <td>{$reliability_completion[item].reliable}</td>
-    <td>{$reliability_completion[item].complete}</td>
     <td>{$reliability_completion[item].total}</td>
-    <td>{$reliability_completion[item].percent_reliable}%</td>
+    <td>{$reliability_completion[item].complete}</td>
+    <td>{$reliability_completion[item].reliable}</td>
     <td>{$reliability_completion[item].percent_complete}%</td>
+    <td>{$reliability_completion[item].percent_reliable}%</td>
 </tr>
 {/section}
 </table>
@@ -253,6 +253,8 @@ function CreateScatterplot() {
 <div id="mri">
 
 <h2 class = "statsH2">MRI Statistics:</h2>
+
+<h2 class="statsH2">General MRI Statistics</h2>
 <table class="data generalStats">
 	<thead>
          <tr>
@@ -270,11 +272,35 @@ function CreateScatterplot() {
             <td>{$mri_data[item].work_station_count}</td>
             <td>{$mri_data[item].claimed_count}</td>
             <td>{$mri_data[item].forms_count}</td>
-            <td>{$mri_data[item].all_three_scans}</td>
 
          </tr>
          {/section}
 	</tbody>
+</table>
+
+<h2 class="statsH2">Candidates That Have Completed Scans at All Three Timepoints (V06, V12, and V24):</h2>
+<table class="data generalStats">
+	<thead>
+        <tr>
+            <th>Site</th>
+            <th>T1 Complete</th>
+            <th>T2 Complete</th>
+            <th>DTI Complete</th>
+            <th>T1, T2, and DTI all Complete</th>
+        </tr>
+    </thead>
+    <tbody>
+        {section name=item loop=$mri_all_scans_done}
+        <tr>
+            <td>{$mri_all_scans_done[item].Name}</td>
+            <td>{$mri_all_scans_done[item].T1}</td>
+            <td>{$mri_all_scans_done[item].T2}</td>
+            <td>{$mri_all_scans_done[item].DTI}</td>
+            <td>{$mri_all_scans_done[item].All}</td>
+
+        </tr>
+        {/section}
+    </tbody>
 </table>
 
 {$MRI_Done_Table}

@@ -119,9 +119,9 @@ class NDB_BVL_Instrument_EARLI_interview_PART_1 extends NDB_BVL_Instrument {
                 $this->years1950 = array(NULL=>"") + ($years) + array("88_Refused" => "88 Refused", "99_Do_not_know" => "99 Do not know", "not_answered" => "Not Answered");
 
 		//number arrays
-		$this->negThreeToNine = array(NULL=>"", "-3" => "-3", "-2"=>"-2", "-1"=>"-1", "01"=>"01", "02"=>"02", "03"=>"03", "04"=>"04", "05"=>"05", "06"=>"06", "07"=>"07", "08"=>"08", "09"=>"09", "88"=>"88 Refused", "99"=>"99 Don't Know", "NA"=>"Not Answered");
+		$this->negThreeToNine = array(NULL=>"", "-03" => "-3", "-02"=>"-2", "-01"=>"-1", "01"=>"01", "02"=>"02", "03"=>"03", "04"=>"04", "05"=>"05", "06"=>"06", "07"=>"07", "08"=>"08", "09"=>"09", "88_refused"=>"88 Refused", "99"=>"99 Don't Know", "NA"=>"Not Answered");
 
-		$this->negThreeToTen = array(NULL=>"", "-3" => "-3", "-2"=>"-2", "-1"=>"-1", "01"=>"01", "02"=>"02", "03"=>"03", "04"=>"04", "05"=>"05", "06"=>"06", "07"=>"07", "08"=>"08", "09"=>"09", "10"=>"10", "88"=>"88 Refused", "99"=>"99 Don't Know", "NA"=>"Not Answered");
+		$this->negThreeToTen = array(NULL=>"", "-03" => "-3", "-02"=>"-2", "-01"=>"-1", "01"=>"01", "02"=>"02", "03"=>"03", "04"=>"04", "05"=>"05", "06"=>"06", "07"=>"07", "08"=>"08", "09"=>"09", "10"=>"10", "88_refused"=>"88 Refused", "99"=>"99 Don't Know", "NA"=>"Not Answered");
 		
 	        $oneToSeventy = array_combine(range(1, 70), range(1, 70));
 		$this->oneToSeventyComplete = array(null=>"") + ($oneToSeventy) + array("88_Refused" => "88 Refused", "99_Do_not_know" => "99 Do not know", "not_answered" => "Not Answered");
@@ -139,7 +139,7 @@ class NDB_BVL_Instrument_EARLI_interview_PART_1 extends NDB_BVL_Instrument {
 		//Any HTML_Quickform multiple selects must be listed here
 		//Usually this appears at the beginning of the file in the setup() function
 
-		$this->_selectMultipleElements = array_merge($this->_selectMultipleElements, array("q3_32_1","q3_32_2","q3_32_3","q3_32_4", "q3_32_5", "q3_32_6", "q4_10_p1", "q4_10_p2", "q4_10_p3", "q4_10_p4", "q4_10_p5", "q4_12_m1", "q4_12_m2", "q4_12_m3", "q4_13_m1", "q4_13_m2", "q4_13_m3", "q4_13_m4", "q4_13_,5", "q4_32", "q4_35", "q4_52", "q4_57", "q4_60", "q4_63", "q4_66", "q4_67", "q4_68_select_1", "q4_68_select_2", "q4_68_select_3", "q4_71_select_1", "q4_71_select_2", "q4_71_select_3", "q4_76_m_1", "q4_76_m_2", "q4_76_m_3", "q4_98_month_a.", "q4_98_month_b.", "q4_98_month_c.", "q4_98_month_c.", "q4_98_month_d.", "q4_98_month_e."));
+		$this->_selectMultipleElements = array_merge($this->_selectMultipleElements, array("q3_32_1","q3_32_2","q3_32_3","q3_32_4", "q3_32_5", "q3_32_6", "q4_10_p1", "q4_10_p2", "q4_10_p3", "q4_10_p4", "q4_10_p5", "q4_12_m1", "q4_12_m2", "q4_12_m3", "q4_13_m1", "q4_13_m2", "q4_13_m3", "q4_13_m4", "q4_13_,5", "q4_32", "q4_35", "q4_52", "q4_57", "q4_60", "q4_63", "q4_66", "q4_67", "q4_68_select_1", "q4_68_select_2", "q4_68_select_3", "q4_71_select_1", "q4_71_select_2", "q4_71_select_3", "q4_76_m_1", "q4_76_m_2", "q4_76_m_3", "q4_98_1_month", "q4_98_2_month", "q4_98_3_month", "q4_98_4_month", "q4_98_5_month", "q4_98_6_month", "q4_98_7_month", "q4_98_8_month"));
 
 
 		//column headers
@@ -260,7 +260,7 @@ class NDB_BVL_Instrument_EARLI_interview_PART_1 extends NDB_BVL_Instrument {
 		$this->form->addElement('static', null, "<br/>");
 
 		//q1-6
-		$this->form->addElement("select", "q1_6", "1-6) How well do you speak English?", array(NULL=>"", "01" => "01 Very well", "02" => "02  Well", "03" => "03  Not well", "04" => "04 Not at all", "88 Refused", "99" => "99 Do not know", "not_answered"=>"Not Answered"));
+		$this->form->addElement("select", "q1_6", "1-6) How well do you speak English?", array(NULL=>"", "01" => "01 Very well", "02" => "02  Well", "03" => "03  Not well", "04" => "04 Not at all", "88_refused"=>"88 Refused", "99" => "99 Do not know", "not_answered"=>"Not Answered"));
 		$this->XINRegisterRule("q1_6", array("q1_5{@}=={@}02_other"), "Required if don't speak English at home");
 		$this->form->addElement('static', null, "<br/>");
 
@@ -270,7 +270,7 @@ class NDB_BVL_Instrument_EARLI_interview_PART_1 extends NDB_BVL_Instrument {
 		$this->form->addElement('static', null, "<br/>");
 
 		//q1-8
-		$this->form->addElement('select', 'q1_8', "1-8) Of which Hispanic or Spanish group do you consider yourself a member? ", array(NULL=>"", "01" => "01 Mexican, Mexican American, Chicano", "02" => "02  Puerto Rican ", "03" => "03  Cuban", "04" => "04 Other Spanish / Hispanic/Latino ", "88 Refused", "99" => "99 Do not know", "not_answered"=>"Not Answered"));
+		$this->form->addElement('select', 'q1_8', "1-8) Of which Hispanic or Spanish group do you consider yourself a member? ", array(NULL=>"", "01" => "01 Mexican, Mexican American, Chicano", "02" => "02  Puerto Rican ", "03" => "03  Cuban", "04" => "04 Other Spanish / Hispanic/Latino ", "88_refused"=>"88 Refused", "99" => "99 Do not know", "not_answered"=>"Not Answered"));
 		$this->XINRegisterRule("q1_8", array("q1_7{@}=={@}01"), "Required if Hispanic or Latino");
 		$this->form->addElement('static', null, "<br/>");
 
@@ -281,11 +281,11 @@ class NDB_BVL_Instrument_EARLI_interview_PART_1 extends NDB_BVL_Instrument {
 		$this->form->addElement('static', null, "<br/>");
 
 		//q1-10
-		$this->form->addElement("select", "q1_10", "1-10 What is the highest degree or level of education you have completed?", array(NULL=>"", "01" => "01 No formal schooling completed", "02 " => "02 Nursery school to 4th grade", "03 " => "03 5th grade or 6th grade", "04" => "04 7th grade or 8th grade", "05" => "05 9th grade", "06" => "06 10th grade", "07" => "07 11th grade", "08" => "08 12th grade, no diploma", "09" => "09 High school graduate - high school diploma or equivalent (e.g., GED)", "10" => "10 Some college credit, but less than 1 year", "11" => "11 One or more years of college, no degree", "12" => "12 Technical college / vocational school", "13" => "13 Associate degree (e.g., AA, AS)", "14" => "14 Bachelor's degree (e.g., BA, AB, BS)", "15" => "15 Master's degree (e.g., MA, MS, MEng, Med, MSW, MBA)", "16" => "16 Professional degree (e.g., MD, DDS, DVM, LLB, JD)", "17" => "17 Doctorate degree (e.g., PhD, EdD)", "88" => "88 Refused", "99" => "99 Do not know", "not_answered"=>"Not Answered"));
+		$this->form->addElement("select", "q1_10", "1-10 What is the highest degree or level of education you have completed?", array(NULL=>"", "01" => "01 No formal schooling completed", "02 " => "02 Nursery school to 4th grade", "03 " => "03 5th grade or 6th grade", "04" => "04 7th grade or 8th grade", "05" => "05 9th grade", "06" => "06 10th grade", "07" => "07 11th grade", "08" => "08 12th grade, no diploma", "09" => "09 High school graduate - high school diploma or equivalent (e.g., GED)", "10" => "10 Some college credit, but less than 1 year", "11" => "11 One or more years of college, no degree", "12" => "12 Technical college / vocational school", "13" => "13 Associate degree (e.g., AA, AS)", "14" => "14 Bachelor's degree (e.g., BA, AB, BS)", "15" => "15 Master's degree (e.g., MA, MS, MEng, Med, MSW, MBA)", "16" => "16 Professional degree (e.g., MD, DDS, DVM, LLB, JD)", "17" => "17 Doctorate degree (e.g., PhD, EdD)", "88_refused" => "88 Refused", "99_dont_know" => "99 Do not know", "not_answered"=>"Not Answered"));
 		$this->form->addElement('static', null, "<br/>");
 
 		//q1-11
-		$this->form->addElement("select", "q1_11", "1-11) In the year you were pregnant with your child with ASD, what was your estimated total household income before taxes? Would you say it was...", array(NULL=>"", "01" => "01 Below $10,000", "02" => "02 $10,000 to $19,999", "03" => "03 $20,000 to $29,999", "04" => "04 $30,000 to $49,000", "05" => "05 $50,000 to $74,999", "06" => "06 $75,000 to $99,999", "07 $100,000 to $199,999", "08 $200,000 or more ", "88_Refused" => "88 Refused",  "99_Do_not_know"=>"99 Do not know", "Not_Answered"=>"Not Answered"));
+		$this->form->addElement("select", "q1_11", "1-11) In the year you were pregnant with your child with ASD, what was your estimated total household income before taxes? Would you say it was...", array(NULL=>"", "01" => "01 Below $10,000", "02" => "02 $10,000 to $19,999", "03" => "03 $20,000 to $29,999", "04" => "04 $30,000 to $49,000", "05" => "05 $50,000 to $74,999", "06" => "06 $75,000 to $99,999", "07"=>"07 $100,000 to $199,999", "08"=>"08 $200,000 or more ", "88_Refused" => "88 Refused",  "99_Do_not_know"=>"99 Do not know", "Not_Answered"=>"Not Answered"));
 		$this->form->addElement('static', null, "<br/>");
 
 		//q1-12
@@ -293,11 +293,11 @@ class NDB_BVL_Instrument_EARLI_interview_PART_1 extends NDB_BVL_Instrument {
 		$this->form->addElement('static', null, "<br/>");
 
 		//q1-13
-		$this->form->addElement("select", "q1_13", "1-13) What was your estimated total household income for the last 12 months before taxes? Would you say it was...", array(NULL=>"", "01" => "01 less than $10,000", "02 $10,000 to $19,999", "03" => "03 $20,000 to $29,999", "04" => "04 30,000 to $49,000", "05" => "05 $50,000 to $74,999", "06" => "06 $75,000 to $99,999", "07" => "07 100,000 to $199,999", "08" => "08 $200,000 or more ", "88_Refused" => "88 Refused",  "99_Do_not_know"=>"99 Do not know", "Not_Answered"=>"Not Answered"));
+		$this->form->addElement("select", "q1_13", "1-13) What was your estimated total household income for the last 12 months before taxes? Would you say it was...", array(NULL=>"", "01" => "01 less than $10,000", "02"=>"02 $10,000 to $19,999", "03" => "03 $20,000 to $29,999", "04" => "04 30,000 to $49,000", "05" => "05 $50,000 to $74,999", "06" => "06 $75,000 to $99,999", "07" => "07 100,000 to $199,999", "08" => "08 $200,000 or more ", "88_Refused" => "88 Refused",  "99_Do_not_know"=>"99 Do not know", "Not_Answered"=>"Not Answered"));
 		$this->form->addElement('static', null, "<br/>");
 
 		//q1-14
-		$this->form->addElement("select", "q1_14", "1-14) How many people are supported by this income, including both adults and children?", array(NULL=>"", "0","1", "2", "3", "4", "5", "6", "7", "8", "9","10", "11", "12", "13", "14", "15", "88_Refused" => "88 Refused",  "99_Do_not_know"=>"99 Do not know", "Not_Answered"=>"Not Answered"));
+		$this->form->addElement("select", "q1_14", "1-14) How many people are supported by this income, including both adults and children?", array(NULL=>"", "0"=>"0","1"=>"1", "2"=>"2", "3"=>"3", "4"=>"4", "5"=>"5", "6"=>"6", "7"=>"7", "8"=>"8", "9"=>"9","10"=>"10", "11"=>"11", "12"=>"12", "13"=>"13", "14"=>"14", "15"=>"15", "88_Refused" => "88 Refused",  "99_Do_not_know"=>"99 Do not know", "Not_Answered"=>"Not Answered"));
 		$this->form->addElement('static', null, "<br/>");
 
 		//q1-15
@@ -370,7 +370,7 @@ class NDB_BVL_Instrument_EARLI_interview_PART_1 extends NDB_BVL_Instrument {
 		$this->form->addElement('static', null, "<br/>");
 
 		//q1-25
-		$this->form->addElement("select", "q1_25", "1-25) What is the highest degree or level of education he has completed?", array(NULL=>"", "01" => "01 No formal schooling completed", "02" => "02 Nursery school to 4th grade", "03" => "03  5th grade or 6th grade", "04" => "04 7th grade or 8th grade", "05" => "05 9th grade", "06" => "06 10th grade", "07 11th grade", "08" => "08 12th grade, no diploma", "09" => "09 High school graduate - high school diploma or equivalent (e.g., GED)", "10" => "10 Some college credit, but less than 1 year", "11" => "11 One or more years of college, no degree", "12" => "12 Technical college / vocational school", "13" => "13 Associate degree (e.g., AA, AS)", "14" => "14 Bachelor's degree (e.g., BA, AB, BS)", "15" => "15 Master's degree (e.g., MA, MS, MEng, Med, MSW, MBA)", "16 Professional degree (e.g., MD, DDS, DVM, LLB, JD)", "17 Doctorate degree (e.g., PhD, EdD) ", "88_Refused" => "88 Refused",  "99_Do_not_know"=>"99 Do not know", "Not_Answered"=>"Not Answered"));
+		$this->form->addElement("select", "q1_25", "1-25) What is the highest degree or level of education he has completed?", array(NULL=>"", "01" => "01 No formal schooling completed", "02" => "02 Nursery school to 4th grade", "03" => "03  5th grade or 6th grade", "04" => "04 7th grade or 8th grade", "05" => "05 9th grade", "06" => "06 10th grade", "07"=>"07 11th grade", "08" => "08 12th grade, no diploma", "09" => "09 High school graduate - high school diploma or equivalent (e.g., GED)", "10" => "10 Some college credit, but less than 1 year", "11" => "11 One or more years of college, no degree", "12" => "12 Technical college / vocational school", "13" => "13 Associate degree (e.g., AA, AS)", "14" => "14 Bachelor's degree (e.g., BA, AB, BS)", "15" => "15 Master's degree (e.g., MA, MS, MEng, Med, MSW, MBA)", "16 Professional degree (e.g., MD, DDS, DVM, LLB, JD)", "17 Doctorate degree (e.g., PhD, EdD) ", "88_Refused" => "88 Refused",  "99_Do_not_know"=>"99 Do not know", "Not_Answered"=>"Not Answered"));
 		$this->XINRegisterRule("q1_25", array("father_known{@}=={@}01_yes"), "Required if biological father of sibling is known");
 		$this->form->addElement('static', null, "<br/>");
 		$this->form->addElement('static', null, "<br/>");
@@ -463,7 +463,7 @@ class NDB_BVL_Instrument_EARLI_interview_PART_1 extends NDB_BVL_Instrument {
 
 
 		//q2-4
-		$this->form->addElement("select", "q2_4", "2-4) Was it less than 5 pounds, 8 ounces (2500 grams) or 5 pounds, 8 ounces (2500 grams) or more?", array(NULL=>"", "01" => "01 Less than 5 pounds, 8 ounces (2500 g)", "02" => "02 5 pounds, 8 ounces (2500 g) or more ", "88 Refused", "99" => "99 Do not know", "not_answered"=>"Not Answered") );
+		$this->form->addElement("select", "q2_4", "2-4) Was it less than 5 pounds, 8 ounces (2500 grams) or 5 pounds, 8 ounces (2500 grams) or more?", array(NULL=>"", "01" => "01 Less than 5 pounds, 8 ounces (2500 g)", "02" => "02 5 pounds, 8 ounces (2500 g) or more ", "88_refused"=>"88 Refused", "99_dont_know" => "99 Do not know", "not_answered"=>"Not Answered") );
 		$this->XINRegisterRule("q2_4", array("q2_3{@}=={@}99_Do_not_know"), "Required if do not know exact weight");
 
 		//q2-6
@@ -479,7 +479,7 @@ class NDB_BVL_Instrument_EARLI_interview_PART_1 extends NDB_BVL_Instrument {
 		$this->form->addElement('static', null, "<br/>");
 
 		//q2-6
-		$this->form->addElement("select", "q2_6", "2-6) Before your pregnancy with [SIBLING], were you ever told by a doctor that you had diabetes, including gestational diabetes that happens only while you're pregnant?", array(NULL=>"", "01_yes" => "01 Yes", "02_no" => "02 No", "88 Refused", "99" => "99 Do not know", "not_answered"=>"Not Answered"));
+		$this->form->addElement("select", "q2_6", "2-6) Before your pregnancy with [SIBLING], were you ever told by a doctor that you had diabetes, including gestational diabetes that happens only while you're pregnant?", array(NULL=>"", "01_yes" => "01 Yes", "02_no" => "02 No", "88_refused" => "88 Refused", "99_dont_know" => "99 Do not know", "not_answered"=>"Not Answered"));
 		$this->form->addElement('static', null, $this->indent . "If you selected [Yes], go to question 2-7");
 		$this->form->addElement('static', null, $this->indent . "If you selected [No], [Refused] or [Don't Know] skip to question 2-13");
 
@@ -910,7 +910,7 @@ class NDB_BVL_Instrument_EARLI_interview_PART_1 extends NDB_BVL_Instrument {
 		$this->form->addElement('static', null, "<br/>");
 
 		//q2-40
-		$this->form->addElement("select", "q2_40", "2-40) How many amalgam fillings did you have in your mouth at the time you became pregnant with your current pregnancy?", array(NULL=>"","01 None", "02" => "02 1-4", "03" => "03  5-10", "04" => "04 > 10", "88_Refused" => "88 Refused",  "99_Do_not_know"=>"99 Do not know", "Not_Answered"=>"Not Answered"));
+		$this->form->addElement("select", "q2_40", "2-40) How many amalgam fillings did you have in your mouth at the time you became pregnant with your current pregnancy?", array(NULL=>"", "01"=>"01 None", "02" => "02 1-4", "03" => "03  5-10", "04" => "04 > 10", "88_Refused" => "88 Refused",  "99_Do_not_know"=>"99 Do not know", "Not_Answered"=>"Not Answered"));
 		$this->XINRegisterRule('q2_40', array("q2_38{@}=={@}01_yes"), "Required if had amalgam fillings");
 		$this->form->addElement('static', null, "<br/>");
 		$this->form->addElement('header', null, "END Section 2");
@@ -940,22 +940,22 @@ class NDB_BVL_Instrument_EARLI_interview_PART_1 extends NDB_BVL_Instrument {
 
 
 		//q3-1
-		$this->form->addElement("select", "q3_1", "3-1) How old (in years) were you when you had your first menstrual period?" ,array(NULL=>"","6", "7", "8", "9","10", "11", "12", "13", "14", "15", "16", "17", "18", "19","88_Refused" => "88 Refused",  "99_Do_not_know" => "99 Do not know", "Not_Answered"=>"Not Answered"));
+		$this->form->addElement("select", "q3_1", "3-1) How old (in years) were you when you had your first menstrual period?" ,array(NULL=>"","6"=>"6", "7"=>"7", "8"=>"8", "9"=>"9","10"=>"10", "11"=>"11", "12"=>"12", "13"=>"13", "14"=>"14", "15"=>"15", "16"=>"16", "17"=>"17", "18"=>"18", "19"=>"19","88_Refused" => "88 Refused",  "99_Do_not_know" => "99 Do not know", "Not_Answered"=>"Not Answered"));
 		$this->form->addElement('static', null, $this->indent . " If the age is entered or [Refused], go to question 3-3");
 		$this->form->addElement('static', null, $this->indent . " If you selected [Do not know], go to question 3-2");
 		$this->form->addElement('static', null, "<br/>");
 
 		//q3-2
-		$this->form->addElement("select", "q3_2", "3-2)  What grade were you in when you had your first menstrual period?", array(NULL=>"", "1", "2", "3", "4", "5", "6", "7", "8", "9","10", "11", "12", "88_Refused" => "88 Refused",  "99_Do_not_know"=>"99 Do not know", "Not_Answered"=>"Not Answered"));
+		$this->form->addElement("select", "q3_2", "3-2)  What grade were you in when you had your first menstrual period?", array(NULL=>"", "1"=>"1", "2"=>"2", "3"=>"3", "4"=>"4", "5"=>"5", "6"=>"6", "7"=>"7", "8"=>"8", "9"=>"9","10"=>"10", "11"=>"11", "12"=>"12", "88_Refused" => "88 Refused",  "99_Do_not_know"=>"99 Do not know", "Not_Answered"=>"Not Answered"));
 		$this->XINRegisterRule("q3_2", array("q3_1{@}=={@}99_Do_not_know"), "Required if don't know age");
 		$this->form->addElement('static', null, "<br/>");
 
 		//q3-3
-		$this->form->addElement("select", "q3_3", "3-3)  What was the average or typical number of days of your cycle between the first day of one menstrual period and the first day of the next menstrual period? Please think back to a time when you were not using birth control pills or other hormonal contraceptives.", array(NULL=>"", "21" => "21", "22", "23" => "23", "24", "25", "26", "27", "28", "29", "30", "31", "32", "33", "34", "35", "90 Irregular period", "88_Refused" => "88 Refused",  "99_Do_not_know"=>"99 Do not know", "Not_Answered"=>"Not Answered"));
+		$this->form->addElement("select", "q3_3", "3-3)  What was the average or typical number of days of your cycle between the first day of one menstrual period and the first day of the next menstrual period? Please think back to a time when you were not using birth control pills or other hormonal contraceptives.", array(NULL=>"", "21" => "21", "22"=>"22", "23" => "23", "24"=>"24", "25"=>"25", "26"=>"26", "27"=>"27", "28"=>"28", "29"=>"29", "30"=>"30", "31"=>"31", "32"=>"32", "33"=>"33", "34"=>"34", "35"=>"35", "90"=>"90 Irregular period", "88_Refused" => "88 Refused",  "99_Do_not_know"=>"99 Do not know", "Not_Answered"=>"Not Answered"));
 		$this->form->addElement('static', null, "<br/>");
 
 		//q3-4
-		$this->form->addElement("select", "q3_4", "3-4) How many times have you been pregnant? Please count all pregnancies, including those that ended in live birth, stillbirth, miscarriage, abortion, or a tubal, ectopic, or molar pregnancy. Include children from other relationships, your pregnancy with [PROBAND] and your last pregnancy with the sibling of the child with ASD.", array(NULL=>"", "1", "2", "3", "4", "5", "6", "7", "8", "9","10", "11", "12",  "88_Refused" => "88 Refused",  "99_Do_not_know"=>"99 Do not know", "Not_Answered"=>"Not Answered"));
+		$this->form->addElement("select", "q3_4", "3-4) How many times have you been pregnant? Please count all pregnancies, including those that ended in live birth, stillbirth, miscarriage, abortion, or a tubal, ectopic, or molar pregnancy. Include children from other relationships, your pregnancy with [PROBAND] and your last pregnancy with the sibling of the child with ASD.", array(NULL=>"", "1"=>"1", "2"=>"2", "3"=>"3", "4"=>"4", "5"=>"5", "6"=>"6", "7"=>"7", "8"=>"8", "9"=>"9","10"=>"10", "11"=>"11", "12"=>"12", "88_Refused" => "88 Refused",  "99_Do_not_know"=>"99 Do not know", "Not_Answered"=>"Not Answered"));
 		$this->form->addElement('static', null, "<br/>");
 		$this->form->addElement('static', null, "<br/>");
 
@@ -1075,7 +1075,7 @@ class NDB_BVL_Instrument_EARLI_interview_PART_1 extends NDB_BVL_Instrument {
 		$this->form->addElement('static', null, "<br/>");
 
 		//q3-16
-		$this->form->addElement("select", "q3_16", "3-16) What was the gender of the baby born from your 1st pregnancy? ",  array(NULL=>"", "01" => "01 Boy", "02" => "02 Girl ", "88_Refused" => "88 Refused",  "99_Do_not_know"=>"99 Do not know", "Not_Answered"=>"Not Answered"));
+		$this->form->addElement("select", "q3_16", "3-16) What was the gender of the baby born from your 1st pregnancy? ",  array(NULL=>"", "01" => "01 Boy", "02" => "02 Girl", "88_Refused" => "88 Refused",  "99_Do_not_know"=>"99 Do not know", "Not_Answered"=>"Not Answered"));
 		$this->XINRegisterRule("q3_16", array("q3_16{@}=={@}NEVER_REQUIRED"));
 		$this->form->addElement('static', null, " $this->indent <b>Record answer, then go to question 3-18 (If Proband, automatic fill)</b>");
 		$this->form->addElement('static', null, "<br/>");
@@ -1286,7 +1286,7 @@ class NDB_BVL_Instrument_EARLI_interview_PART_1 extends NDB_BVL_Instrument {
 		//q3-32
 		$this->form->addElement('static', null, "3-32) Have you ever received a diagnosis from a health care provider that your child/any of your children from your 1st pregnancy had or has...");
 		$this->form->addElement('static', null, "<br/>");
-		$list1 = array(NULL=>"", "01" => "01 Asperger's Syndrome", "02" => "02 Attention Deficit Hyperactivity Disorder (ADHD) or ADD", "03" => "03  Autism", "04" => "04 Behavioral problem (SPECIFY) (for each pregnancy that it applies to)add line JH", "05" => "05 Bipolar disorder", "06" => "06 Birth Defects (SPECIFY) (for each pregnancy that it applies to) add line JH", "07" => "07 Cerebral palsy", "08" => "08 Childhood Disintegrative Disorder", "09" => "09 Childhood onset schizophrenia", "10" => "10 Developmental delay", "11" => "11 Down Syndrome", "12" => "12 Fragile X Syndrome", "13" => "13 Hearing problems", "14" => "14 Learning disabilities", "15" => "15 Intellectual disability or mental retardation", "16 Movement or coordination problems", "17 Neurofibromatosis", "18" => "18 Obsessive compulsive disorder", "19 Other developmental problem (SPECIFY) add line JH", "20" => "20 Pervasive Developmental Disorder not otherwise specified", "21" => "21 Reactive attachment disorder of infancy or early childhood", "22" => "22 Reading difficulty", "23" => "23 Rett's Syndrome", "24 Seizure disorder or Epilepsy", "25 Self-injuring behavior", "26 Sensory integration disorder", "27 Sleep disorder", "28 Speech delays", "29 Tourette's Disorder or tic disorder", "30 Tuberous sclerosis", "31 Vision problems that cannot be corrected with glasses or contact lenses", "88_other"=>"88 Other", "97 Not applicable (SKIP)", "98" => "98 Refused", "99" => "99 Do not know", "00 None", "not_answered"=>"Not Answered");
+		$list1 = array(NULL=>"", "01" => "01 Asperger's Syndrome", "02" => "02 Attention Deficit Hyperactivity Disorder (ADHD) or ADD", "03" => "03  Autism", "04" => "04 Behavioral problem (SPECIFY) (for each pregnancy that it applies to)add line JH", "05" => "05 Bipolar disorder", "06" => "06 Birth Defects (SPECIFY) (for each pregnancy that it applies to) add line JH", "07" => "07 Cerebral palsy", "08" => "08 Childhood Disintegrative Disorder", "09" => "09 Childhood onset schizophrenia", "10" => "10 Developmental delay", "11" => "11 Down Syndrome", "12" => "12 Fragile X Syndrome", "13" => "13 Hearing problems", "14" => "14 Learning disabilities", "15" => "15 Intellectual disability or mental retardation", "16 Movement or coordination problems", "17 Neurofibromatosis", "18" => "18 Obsessive compulsive disorder", "19 Other developmental problem (SPECIFY) add line JH", "20" => "20 Pervasive Developmental Disorder not otherwise specified", "21" => "21 Reactive attachment disorder of infancy or early childhood", "22" => "22 Reading difficulty", "23" => "23 Rett's Syndrome", "24"=>"24 Seizure disorder or Epilepsy", "25"=>"25 Self-injuring behavior", "26"=>"26 Sensory integration disorder", "27"=>"27 Sleep disorder", "28"=>"28 Speech delays", "29"=>"29 Tourette's Disorder or tic disorder", "30"=>"30 Tuberous sclerosis", "31"=>"31 Vision problems that cannot be corrected with glasses or contact lenses", "88_other"=>"88 Other", "97"=>"97 Not applicable (SKIP)", "98" => "98 Refused", "99" => "99 Do not know", "00"=>"00 None", "not_answered"=>"Not Answered");
 		
 
 		for ($i=1; $i<6; $i++)
@@ -1306,7 +1306,7 @@ class NDB_BVL_Instrument_EARLI_interview_PART_1 extends NDB_BVL_Instrument {
 
 
 		//q3-33
-		$this->form->addElement("select", "q3_33", "3-33) We are also interested in any reproductive hormonal medications you might have taken <u>during your lifetime</u> for any reason other than to prevent pregnancy or to help you become pregnant. Did a doctor or other medical provider ever prescribe reproductive hormonal medications? ",  array(NULL=>"", "01_yes" => "01 Yes", "02" => "02 No ", "88_refused" => "88 Refused",  "99_Do_not_know"=>"99 Do not know", "Not_Answered"=>"Not Answered"));
+		$this->form->addElement("select", "q3_33", "3-33) We are also interested in any reproductive hormonal medications you might have taken <u>during your lifetime</u> for any reason other than to prevent pregnancy or to help you become pregnant. Did a doctor or other medical provider ever prescribe reproductive hormonal medications?",  array(NULL=>"", "01_yes" => "01 Yes", "02" => "02 No ", "88_refused" => "88 Refused",  "99_Do_not_know"=>"99 Do not know", "Not_Answered"=>"Not Answered"));
 		$this->form->addElement('static', null, $this->indent . " If you selected [No], [Refused] or [Don't Know] skip to question 4a-1");
 		$this->form->addElement('static', null, "<br/>");
 
@@ -1562,7 +1562,7 @@ class NDB_BVL_Instrument_EARLI_interview_PART_1 extends NDB_BVL_Instrument {
 		$this->form->addElement('static', null, "<br/>");
 
 		//q4a-7
-		$this->form->addElement("select", "q4a_7", "4a-7 How well does he speak English?", array(NULL=>"","01 Very well", "02" => "02 Well", "03" => "03  Not well", "04" => "04 Not at all", "88 Refused", "99" => "99 Do not know", "Not_Answered"=>"Not Answered"));
+		$this->form->addElement("select", "q4a_7", "4a-7 How well does he speak English?", array(NULL=>"", "01"=>"01 Very well", "02" => "02 Well", "03" => "03  Not well", "04" => "04 Not at all", "88_refused"=>"88 Refused", "99_dont_know" => "99 Do not know", "Not_Answered"=>"Not Answered"));
 		$this->XINRegisterRule("q4a_7", array("q4a_6{@}=={@}02_other"), "Required if doesn't usually speak English at home");
 		$this->form->addElement('static', null, "<br/>");
 
@@ -1573,12 +1573,12 @@ class NDB_BVL_Instrument_EARLI_interview_PART_1 extends NDB_BVL_Instrument {
 		$this->form->addElement('static', null, "<br/>");
 
 		//q4a-9
-		$this->form->addElement("select", "q4a_9", "4a-9. Of which Hispanic or Spanish group does he consider himself a member?", array(NULL=>"","01 Mexican, Mexican American, Chicano", "02" => "02 Puerto Rican ", "03" => "03  Cuban", "04" => "04 Other Spanish/Hispanic/Latino ", "88 Refused", "99" => "99 Do not know", "Not_answered"=>"Not Answered"));
+		$this->form->addElement("select", "q4a_9", "4a-9. Of which Hispanic or Spanish group does he consider himself a member?", array(NULL=>"", "01"=>"01 Mexican, Mexican American, Chicano", "02" => "02 Puerto Rican ", "03" => "03 Cuban", "04" => "04 Other Spanish/Hispanic/Latino ", "88_refused"=>"88 Refused", "99_dont_know" => "99 Do not know", "Not_answered"=>"Not Answered"));
 		$this->XINRegisterRule("q4a_9", array("q4a_8{@}=={@}01_Hispanic/Latino"), "Required if Hispanic or Latino");
 		$this->form->addElement('static', null, "<br/>");
 		
 		//q4a-10
-		$this->form->addElement("select", "q4a_10", "4a-10. What is his race?", array(NULL=>"","01 White", "02 Black, African American ", "03" => "03 American Indian / Alaskan Native Asian", "04" => "04 Asian Indian", "05" => "05 Chinese", "06" => "06 Filipino", "07" => "07 Japanese", "08" => "08 Korean", "09" => "09 Vietnamese", " 10 Thai / Cambodian", " 11 Other Asian Native Hawaiian and other Pacific Islander", " 12 Native Hawaiian", " 13 Guamanian or Chamorro" , " 14 Samoan", " 15 Other Pacific Islander", "16_other"=>"16 Other race", "88_Refused" => "88 Refused",  "99_Do_not_know"=>"99 Do not know", "Not_Answered"=>"Not Answered"));
+		$this->form->addElement("select", "q4a_10", "4a-10. What is his race?", array(NULL=>"", "01"=>"01 White", "02"=>"02 Black, African American ", "03" => "03 American Indian / Alaskan Native Asian", "04" => "04 Asian Indian", "05" => "05 Chinese", "06" => "06 Filipino", "07" => "07 Japanese", "08" => "08 Korean", "09" => "09 Vietnamese", "10"=>"10 Thai / Cambodian", "11"=>"11 Other Asian Native Hawaiian and other Pacific Islander", "12"=>"12 Native Hawaiian", "13"=>"13 Guamanian or Chamorro" , "14"=>"14 Samoan", "15"=>"15 Other Pacific Islander", "16_other"=>"16 Other race", "88_Refused" => "88 Refused",  "99_Do_not_know"=>"99 Do not know", "Not_Answered"=>"Not Answered"));
 		$this->XINRegisterRule("q4a_10", array("q4a_1{@}!={@}01_yes"), "You must specify");
 		$this->addTextAreaElementRD('q4a_10_other', $this->indent . "If you selected [Other race], please specify:");
 		$this->XINRegisterRule('q4a_10_other', array("q4a_10{@}=={@}16_other"), "You must specify other", "q4a_10_other_group");
@@ -1606,14 +1606,14 @@ class NDB_BVL_Instrument_EARLI_interview_PART_1 extends NDB_BVL_Instrument {
 	
 		//q4-6
 		$this->form->addElement('static', null, "4-6. What was your height without shoes?");
-		$this->form->addElement("select", "q4_6_f", $this->indent .  "Feet:",  array(NULL=>"",  "1" => "1", "2" => "2", "3" => "3", "4", "5", "6", "7", "88_Refused" => "88 Refused", "99_Do_not_know"=>"99 Do not know", "Not_Answered"=>"Not Answered"));
-		$this->form->addElement("select", "q4_6_i", $this->indent .  "Inches:",  array(NULL=>"",  "0", "1" => "1", "2" => "2", "3" => "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "88_Refused" => "88 Refused", "99_Do_not_know"=>"99 Do not know", "Not_Answered"=>"Not Answered"));
+		$this->form->addElement("select", "q4_6_f", $this->indent .  "Feet:",  array(NULL=>"",  "1" => "1", "2" => "2", "3" => "3", "4"=>"4", "5"=>"5", "6"=>"6", "7"=>"7", "88_Refused" => "88 Refused", "99_Do_not_know"=>"99 Do not know", "Not_Answered"=>"Not Answered"));
+		$this->form->addElement("select", "q4_6_i", $this->indent .  "Inches:",  array(NULL=>"", "0"=>"0", "1" => "1", "2" => "2", "3" => "3", "4"=>"4", "5"=>"5", "6"=>"6", "7"=>"7", "8"=>"8", "9"=>"9", "10"=>"10", "11"=>"11", "12"=>"12", "88_Refused" => "88 Refused", "99_Do_not_know"=>"99 Do not know", "Not_Answered"=>"Not Answered"));
 		$this->form->addElement('static', null, "<br/>");
 
 		//q4-7
 		$this->form->addElement("static", null, "4-7. How far along were you when you found out you were pregnant with [PROBAND]?"); 
-		$this->form->addElement("select", "q4_7_w", $this->indent .  "Weeks:",  array(NULL=>"",  "0", "1" => "1", "2" => "2", "3" => "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18" => "18", "19", "20" => "20", "21" => "21", "22" => "22", "23" => "23", "24", "25", "26", "27", "28", "29", "30", "31", "32", "33", "34", "35", "36", "37", "38","88_Refused" => "88 Refused", "99_Do_not_know"=>"99 Do not know", "Not_Answered"=>"Not Answered"));
-		$this->form->addElement("select", "q4_7_m", $this->indent .  "Months:",  array(NULL=>"",  "0", "1" => "1", "2" => "2", "3" => "3", "4", "5", "6", "7", "8", "9", "88_Refused" => "88 Refused", "99_Do_not_know"=>"99 Do not know", "Not_Answered"=>"Not Answered"));
+		$this->form->addElement("select", "q4_7_w", $this->indent .  "Weeks:",  array(NULL=>"", "0"=>"0", "1" => "1", "2" => "2", "3" => "3", "4"=>"4", "5"=>"5", "6"=>"6", "7"=>"7", "8"=>"8", "9"=>"9", "10"=>"10", "11"=>"11", "12"=>"12", "13"=>"13", "14"=>"14", "15"=>"15", "16"=>"16", "17"=>"17", "18" => "18", "19"=>"19", "20" => "20", "21" => "21", "22" => "22", "23" => "23", "24"=>"24", "25"=>"25", "26"=>"26", "27"=>"27", "28"=>"28", "29"=>"29", "30"=>"30", "31"=>"31", "32"=>"32", "33"=>"33", "34"=>"34", "35"=>"35", "36"=>"36", "37"=>"37", "38"=>"38","88_Refused" => "88 Refused", "99_Do_not_know"=>"99 Do not know", "Not_Answered"=>"Not Answered"));
+		$this->form->addElement("select", "q4_7_m", $this->indent .  "Months:",  array(NULL=>"", "0"=>"0", "1" => "1", "2" => "2", "3" => "3", "4"=>"4", "5"=>"5", "6"=>"6", "7"=>"7", "8"=>"8", "9"=>"9", "88_Refused" => "88 Refused", "99_Do_not_know"=>"99 Do not know", "Not_Answered"=>"Not Answered"));
 		$this->form->addElement('static', null, "<br/>");
 			
 		$this->form->addElement('static', null, $this->indent .  "<b><i>Refer to the Pregnancy Calendar.</i></b>");
@@ -1629,7 +1629,7 @@ class NDB_BVL_Instrument_EARLI_interview_PART_1 extends NDB_BVL_Instrument {
 		$this->form->addElement('static', null, "<b><i>May be too difficult to remember. If can't recall, ask to refer to <u>List 2</u> in prep guide and choose from the following list:</i></b>");
 		$this->form->addElement('static', null, "<br/>");
 
-		$pillOptions = array(NULL=>"", "01" => "01 Alesse", "02" => "02 Brevicon", "03" => "03  Demulen", "04" => "04 Desogen", "05" => "05 Estrostep", "06" => "06 Levlen", "07" => "07 Levlite", "08" => "08 Levora", "09" => "09 Loestrin", "10" => "10 Lo/Ovral", "11" => "11 Micronor", "12" => "12 Mircette", "13" => "13 Modicon", "14" => "14 Necon", "15" => "15 Nordette", "16" => "16 Norinyl", "17" => "17 Nor-Q.D", "18" => "18 Ortho-Cept", "19 OrthoCyclen", "20" => "20 Ortho-Novum", "21" => "21 Ortho Tri-Cyclen", "22" => "22 Ovcon", "23" => "23 Ovral", "24 Tri-Levlen", "25 Tri-Norinyl", "26 Triphasil", "27 Trivora", "28 Zovia",  "29_other" => "29 Other", "88 Refused", "99" => "99 Do not know", "not_answered"=>"Not Answered");
+		$pillOptions = array(NULL=>"", "01" => "01 Alesse", "02" => "02 Brevicon", "03" => "03  Demulen", "04" => "04 Desogen", "05" => "05 Estrostep", "06" => "06 Levlen", "07" => "07 Levlite", "08" => "08 Levora", "09" => "09 Loestrin", "10" => "10 Lo/Ovral", "11" => "11 Micronor", "12" => "12 Mircette", "13" => "13 Modicon", "14" => "14 Necon", "15" => "15 Nordette", "16" => "16 Norinyl", "17" => "17 Nor-Q.D", "18" => "18 Ortho-Cept", "19 OrthoCyclen", "20" => "20 Ortho-Novum", "21" => "21 Ortho Tri-Cyclen", "22" => "22 Ovcon", "23" => "23 Ovral", "24"=>"24 Tri-Levlen", "25"=>"25 Tri-Norinyl", "26"=>"26 Triphasil", "27"=>"27 Trivora", "28"=>"28 Zovia",  "29_other" => "29 Other", "88_refused"=>"88 Refused", "99_dont_know" => "99 Do not know", "not_answered"=>"Not Answered");
 
 		for ($i=1; $i<6; $i++)
 		{
@@ -1675,7 +1675,7 @@ class NDB_BVL_Instrument_EARLI_interview_PART_1 extends NDB_BVL_Instrument {
 		$this->form->addElement('static', null, "4-12. What method of contraception were you using?");
 		$this->form->addElement('static', null, $this->indent . "<b><i> If can't recall, ask to refer to <u>List 3</u> in prep guide and choose from the following list:</i></b>");
 
-		$contraceptionOptions = array(NULL=>"", "01" => "01 Condoms (male or female)", "02" => "02 Depo-Provera", "03" => "03  Diaphram/cervical cap", "04" => "04 Intrauterine device (IUD)", "05" => "05 Norplant", "06" => "06 Spermicide", "07" => "07 Sponge", "08_other" => "08 Other", "88 Refused", "99" => "99 Do not know", "not_answered"=>"Not Answered");
+		$contraceptionOptions = array(NULL=>"", "01" => "01 Condoms (male or female)", "02" => "02 Depo-Provera", "03" => "03  Diaphram/cervical cap", "04" => "04 Intrauterine device (IUD)", "05" => "05 Norplant", "06" => "06 Spermicide", "07" => "07 Sponge", "08_other" => "08 Other", "88_refused"=>"88 Refused", "99_dont_know" => "99 Do not know", "not_answered"=>"Not Answered");
 		$this->form->addElement('static', null, "<br />");
 
 
@@ -1793,7 +1793,7 @@ class NDB_BVL_Instrument_EARLI_interview_PART_1 extends NDB_BVL_Instrument {
 //		for ($i=1; $i<6; $i++)
   //              {
 
-		$this->form->addElement("select", "q4_22", $this->indent . "Select all that apply:",  array(NULL=>"", "01" => "01 Bromocriptine", "02" => "02 Clomid", "03" => "03  Chorionic gonadotropin", "04" => "04 Clomiphene citrate", "05" => "05 Danazol", "05" => "05 Danocrine", "06" => "06 Dostinex", "07" => "07 Factrel", "08" => "08 Fertinex", "09" => "09 Follistim", "10" => "10 Gonadorelin", "11" => "11 Gonal-F", "12" => "12 Humegon", "13" => "13 Lupron", "14" => "14 Lutrepulse", "16" => "16 Metrodin", "17" => "17 Novarel", "18" => "18 Parlodel", "19" => "19 Pergonal", "20" => "20 Pregnyl", "21" => "21 Profasi HP", "22" => "22 Provera", "23" => "23 Repronex", "24 Serophene", "25 Synarel", "26_other" => "26 Other", "88 Refused", "99" => "99 Do not know", "not_answered"=>"Not Answered"), 'multiple size = "5"');
+		$this->form->addElement("select", "q4_22", $this->indent . "Select all that apply:",  array(NULL=>"", "01" => "01 Bromocriptine", "02" => "02 Clomid", "03" => "03  Chorionic gonadotropin", "04" => "04 Clomiphene citrate", "05" => "05 Danazol", "05" => "05 Danocrine", "06" => "06 Dostinex", "07" => "07 Factrel", "08" => "08 Fertinex", "09" => "09 Follistim", "10" => "10 Gonadorelin", "11" => "11 Gonal-F", "12" => "12 Humegon", "13" => "13 Lupron", "14" => "14 Lutrepulse", "16" => "16 Metrodin", "17" => "17 Novarel", "18" => "18 Parlodel", "19" => "19 Pergonal", "20" => "20 Pregnyl", "21" => "21 Profasi HP", "22" => "22 Provera", "23" => "23 Repronex", "24"=>"24 Serophene", "25"=>"25 Synarel", "26_other" => "26 Other", "88_refused"=>"88 Refused", "99" => "99 Do not know", "not_answered"=>"Not Answered"), 'multiple size = "5"');
 		$this->addTextAreaElementRD("q4_22_specify", $this->indent . "If you selected [Other], please specify:");
                 $this->XINRegisterRule("q4_22_specify", array("q4_22{@}=={@}26_other"), "You must specify", "q4_22_specify_group");
     //            }
@@ -1851,7 +1851,6 @@ class NDB_BVL_Instrument_EARLI_interview_PART_1 extends NDB_BVL_Instrument {
 			$this->form->addElement('static', null, "<br/>");
 			$this->form->addElement('static', null, $this->indent . "PROC #{$i}:");
 
-
 			foreach ($oneToThree as $key=>$value)
 			{
 				$this->form->addElement("select", "q4_25_{$value}_{$i}", $this->indent . $this->indent . "{$value}:", $this->yesNo);
@@ -1889,7 +1888,7 @@ class NDB_BVL_Instrument_EARLI_interview_PART_1 extends NDB_BVL_Instrument {
 
 
 		//q4-27
-		$this->form->addElement("select", "q4_27", "4-27. Did [PROBAND]'s father take any medications to help you become pregnant?",  array(NULL=>"", "01_yes" => "01 Yes", "02" => "02 No ", "88_refused" => "88 Refused",  "99_Do_not_know"=>"99 Do not know", "Not_Answered"=>"Not Answered"));
+		$this->form->addElement("select", "q4_27", "4-27. Did [PROBAND]'s father take any medications to help you become pregnant?",  array(NULL=>"", "01_yes" => "01 Yes", "02" => "02 No", "88_refused" => "88 Refused",  "99_Do_not_know"=>"99 Do not know", "Not_Answered"=>"Not Answered"));
 		$this->XINRegisterRule("q4_27", array("q4_27{@}=={@}NEVER_REQUIRED"));
 		$this->form->addElement('static', null, $this->indent . "If you selected [No], [Refused] or [Don't Know] skip to question 4-29");
 		$this->form->addElement('static', null, "<br/>");
@@ -2078,11 +2077,10 @@ class NDB_BVL_Instrument_EARLI_interview_PART_1 extends NDB_BVL_Instrument {
 		$this->form->addGroup($group, "q4_33_headers", "Would you say it was...", $this->_GUIDelimiter, false);
 		unset($group);
 
-		unset($negThreeToTen[10]); //only want to go up to 9
 		$aToF = array("a", "b", "c", "d", "e", "f");
 		foreach($aToF as $label) {
-			$group[] = &$this->form->createElement( "select", "q4_33_m_{$label}", null, array_merge((array (NULL => "")) , $this->negThreeToTen));
-			$group[] = &$this->form->createElement ( "select", "q4_33_f_{$label}", null, array (NULL => "", "01" => "01 Less than once a week", "02" => "02 Once a week", "03" => "03  A few times a week", "04" => "04 Every day", "88 Refused", "99" => "99 Do not know", "not_answered"=>"Not Answered" ) );
+			$group[] = &$this->form->createElement( "select", "q4_33_m_{$label}", null, $this->negThreeToTen);
+			$group[] = &$this->form->createElement ( "select", "q4_33_f_{$label}", null, array (NULL => "", "01" => "01 Less than once a week", "02" => "02 Once a week", "03" => "03  A few times a week", "04" => "04 Every day", "88_refused"=>"88 Refused", "99_dont_know" => "99 Do not know", "not_answered"=>"Not Answered" ) );
 			$this->form->addGroup($group, "q4_33_{$label}_group", "{$label})", $this->_GUIDelimiter, false);
 			unset($group);
 			//Don't require all questions, but allow them to be filled in, if desired.
@@ -2121,7 +2119,7 @@ class NDB_BVL_Instrument_EARLI_interview_PART_1 extends NDB_BVL_Instrument {
 		$aToF = array("a", "b", "c", "d", "e", "f");
 		foreach($aToF as $label) {
 			$group[] = &$this->form->createElement( "select", "q4_36_m_{$label}", null, $this->negThreeToTen);
-			$group[] = &$this->form->createElement ( "select", "q4_36_f_{$label}", null, array (NULL => "", "01" => "01 Less than once a week", "02" => "02 Once a week", "03" => "03  A few times a week", "04" => "04 Every day", "88 Refused", "99" => "99 Do not know", "not_answered"=>"Not Answered" ) );
+			$group[] = &$this->form->createElement ( "select", "q4_36_f_{$label}", null, array (NULL => "", "01" => "01 Less than once a week", "02" => "02 Once a week", "03" => "03  A few times a week", "04" => "04 Every day", "88_refused"=>"88 Refused", "99" => "99 Do not know", "not_answered"=>"Not Answered" ) );
 			$this->form->addGroup($group, "q4_36_{$label}_group", "{$label})", $this->_GUIDelimiter, false);
 			unset($group);
 			//Don't require all questions, but allow them to be filled in, if desired.
@@ -2284,7 +2282,7 @@ class NDB_BVL_Instrument_EARLI_interview_PART_1 extends NDB_BVL_Instrument {
 		$aToF = array("a", "b", "c", "d", "e", "f");
 		foreach($aToF as $label) {
 			$group[] = &$this->form->createElement( "select", "q4_53_m_{$label}", null, $this->negThreeToTen);
-			$group[] = &$this->form->createElement ( "select", "q4_53_f_{$label}", null, array (NULL => "", "01" => "01 Less than once a week", "02" => "02 Once a week", "03" => "03 A few times a week", "04" => "04 Every day", "88 Refused", "99" => "99 Do not know", "not_answered"=>"Not Answered" ) );
+			$group[] = &$this->form->createElement ( "select", "q4_53_f_{$label}", null, array (NULL => "", "01" => "01 Less than once a week", "02" => "02 Once a week", "03" => "03 A few times a week", "04" => "04 Every day", "88_refused"=>"88 Refused", "99" => "99 Do not know", "not_answered"=>"Not Answered" ));
 			$this->form->addGroup($group, "q4_53_{$label}_group", "{$label})", $this->_GUIDelimiter, false);
 			unset($group);
 			//Don't require all questions, but allow them to be filled in, if desired.
@@ -2367,7 +2365,7 @@ class NDB_BVL_Instrument_EARLI_interview_PART_1 extends NDB_BVL_Instrument {
 		$this->form->addElement("select", "q4_56", "4-56. During your pregnancy with [PROBAND] were you ever told by a physician or nurse that you had premature labor?",  array(NULL=>"", "01_yes" => "01 Yes", "02" => "02 No ", "88_refused" => "88 Refused",  "99_Do_not_know"=>"99 Do not know", "Not_Answered"=>"Not Answered"));
 		$this->form->addElement('static', null, $this->indent . "If you selected [No], [Refused] or [Don't Know] skip to question 4-59");
 
-		$OneToNine = array("1"=>"01", "2"=>"02", "3"=>"03", "4"=>"04", "5"=>"05", "6"=>"06", "7"=>"07", "8"=>"08", "9"=>"09");
+		$OneToNine = array("01"=>"01", "02"=>"02", "03"=>"03", "04"=>"04", "05"=>"05", "06"=>"06", "07"=>"07", "08"=>"08", "09"=>"09");
 		$answerOptions = array(null=>"") + ($OneToNine) + array("88_Refused" => "88 Refused", "99_Do_not_know" => "99 Do not know", "not_answered" => "Not Answered");
 
 		//q4-57
@@ -2476,7 +2474,7 @@ class NDB_BVL_Instrument_EARLI_interview_PART_1 extends NDB_BVL_Instrument {
 
 
 		//q4-69
-		$this->form->addElement("select", "q4_69", "4-69. Was medication taken for the infection?",  array(NULL=>"", "01_yes" => "01 Yes", "02" => "02 No ", "88_refused" => "88 Refused",  "99_Do_not_know"=>"99 Do not know", "Not_Answered"=>"Not Answered"));
+		$this->form->addElement("select", "q4_69", "4-69. Was medication taken for the infection?",  array(NULL=>"", "01_yes" => "01 Yes", "02" => "02 No ", "88_refused" => "88 Refused", "99_Do_not_know"=>"99 Do not know", "Not_Answered"=>"Not Answered"));
 		$this->XINRegisterRule("q4_69", array("q4_69{@}=={@}NEVER_REQUIRED"));
 		$this->form->addElement('static', null, $this->indent . "If you selected [No], [Refused] or [Don't Know] skip to question 4-70");
 
@@ -2644,7 +2642,7 @@ class NDB_BVL_Instrument_EARLI_interview_PART_1 extends NDB_BVL_Instrument {
 		{
 			$this->form->addElement('static', null, "<br/>");
 
-			$this->form->addElement("select", "q4_75_{$i}", $this->indent . "MED #{$i}:", array(NULL=>"", "13" => "13 Clindamycin", "16" => "16 Doxycycline", "24 Metronidazole", "25 Minocyline", "29 Penicillin", "97_other" =>"97 Other", "88_Refused" => "88 Refused",  "99_Do_not_know"=>"99 Do not know", "Not_Answered"=>"Not Answered"));
+			$this->form->addElement("select", "q4_75_{$i}", $this->indent . "MED #{$i}:", array(NULL=>"", "13_c" => "13 Clindamycin", "16_D" => "16 Doxycycline", "24_m"=>"24 Metronidazole", "25_m"=>"25 Minocyline", "29_p"=>"29 Penicillin", "97_other" =>"97 Other", "88_Refused" => "88 Refused",  "99_Do_not_know"=>"99 Do not know", "Not_Answered"=>"Not Answered"));
 
 			$this->addTextAreaElementRD("q4_75_other{$i}", $this->indent . "If you selected [Other], please specify:");
 			$this->XINRegisterRule("q4_75_other{$i}", array("q4_75_{$i}{@}=={@}97_other"), "You must specify other", "q4_75_other{$i}_group");
@@ -2722,7 +2720,7 @@ class NDB_BVL_Instrument_EARLI_interview_PART_1 extends NDB_BVL_Instrument {
 
 
 		//q4-82
-		$this->form->addElement("select", "q4_82", "4-82 Between [-3] and [DOPB], during which month did this injury happen?", $this->negThreeToTen);
+		$this->form->addElement("select", "q4_82", "4-82. Between [-3] and [DOPB], during which month did this injury happen?", $this->negThreeToTen);
 		$this->XINRegisterRule("q4_82", array("q4_80{@}=={@}01_yes"), "Required if had injury");
 		$this->form->addElement('static', null, "<br/>");
 
