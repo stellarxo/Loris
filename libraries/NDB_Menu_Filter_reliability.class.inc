@@ -438,7 +438,7 @@ class NDB_Menu_Filter_reliability extends NDB_Menu_Filter
             return array( "error" => "Reliability score already exists for $PSCID/$PSCID_V. Can not swap candidate.");
         }
         $DB->run("UPDATE reliability SET invalid='yes', manual_swap='yes' WHERE CommentID='$CommentID[OldID]' AND Instrument='$Instrument'");
-        $DB->run("INSERT INTO reliability (CommentID, reliability_center_id, Instrument, Manual_Swap, EARLI_Candidate) VALUES ('$newCommentID[NewID]', $CenterID, '$Instrument', 'yes', $EARLI_Cand)");
+        $DB->run("INSERT INTO reliability (CommentID, reliability_center_id, Instrument, Manual_Swap, EARLI_Candidate) VALUES ('$newCommentID[NewID]', $CenterID, '$Instrument', 'yes', '$EARLI_Cand')");
 
         return array("message" => "Swapped candidate $PSCID for $PSCID_Replace");
     }
