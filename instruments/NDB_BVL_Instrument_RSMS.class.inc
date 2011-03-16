@@ -221,7 +221,7 @@ class NDB_BVL_Instrument_RSMS extends NDB_BVL_Instrument{
             ///fix me!
             $group[] = $this->form->createElement("static", null, "q3_rate_object_static" . $int, $label); 
             if($int > 1){
-                $group[] = $this->form->createElement("static", "null", $this->indent);
+                $group[] = $this->form->createElement("static", null, $this->indent);
             }
             $int++;
         }
@@ -257,7 +257,7 @@ class NDB_BVL_Instrument_RSMS extends NDB_BVL_Instrument{
 
         $this->form->addElement("static", null, "4. Inventory of RSM with Objects<br> (check all that apply)");
         
-        $this->form->addElement("static", "null", "<br/>4a. Restricted: Preoccupation in Intensity <br/> or Focus with Restricted Interest<br/>");
+        $this->form->addElement("static", null, "<br/>4a. Restricted: Preoccupation in Intensity <br/> or Focus with Restricted Interest<br/>");
        
         $group[] = &$this->form->createElement("advcheckbox", "q4a_inv_object_swipes", null, null, null, array("no", "yes"));
         $this->XINRegisterRule ("q4a_inv_object_swipes", array ("q4a_inv_object_swipes{@}=={@}never_required"), "Not required" );  
@@ -284,7 +284,7 @@ class NDB_BVL_Instrument_RSMS extends NDB_BVL_Instrument{
         $this->form->addGroup($group, null, "Spins or wobbles object", $this->_GUIDelimiter, false);
         unset($group);
          
-        $this->form->addElement("static", "null", "<br/>4b. Sameness: Insistence on Sameness <br/> or Difficulty with Change in Activity<br/>");
+        $this->form->addElement("static", null, "<br/>4b. Sameness: Insistence on Sameness <br/> or Difficulty with Change in Activity<br/>");
         
         $group[] = &$this->form->createElement("advcheckbox", "q4b_inv_object_collects", null, null, null, array("no", "yes"));
         $this->XINRegisterRule ("q4b_inv_object_collects", array ("q4b_inv_object_collects{@}=={@}never_required"), "Not required" );  
