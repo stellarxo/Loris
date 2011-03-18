@@ -182,8 +182,11 @@ INSERT INTO instrument_subtests VALUES('', 'csbs', 'csbs_page2', 'Symbolic Behav
         $this->form->addElement("static", null, "Circle the response that comes closest to your observations.");
         
         $this->form->addElement("select", "q_1_alertness", "1. Alertness", array(null=>"", "1_less_than_usual"=>"1. less than usual/sleepy", "2_typical"=>"2. typical", "3_very_alert_greater"=>"3. very alert / greater than usual", "not_answered"=>"Not Answered"));
+        $this->XINRegisterRule("q_1_alertness", array("q_1_alertness{@}=={@}NEVER_REQUIRED"));
         $this->form->addElement("select", "q_2_emotional_reaction", "2. Emotional reaction", array(null=>"", "1_more_negative"=>"1. more negative than usual", "2_typical"=>"2. typical", "3_more_positive"=>"3. more positive than usual", "not_answered"=>"Not Answered"));
+        $this->XINRegisterRule("q_2_emotional_reaction", array("q_2_emotional_reaction{@}=={@}NEVER_REQUIRED"));
         $this->form->addElement("select", "q_3_level_of_interest", "3. Level of interest and attention", array(null=>"", "1_less_interest"=>"1. less interest than usual", "2_typical"=>"2. typical", "3_greater"=>"3. greater interest / greater attention", "not_answered"=>"Not Answered"));
+        $this->XINRegisterRule("q_3_level_of_interest", array("q_3_level_of_interest{@}=={@}NEVER_REQUIRED"));
         $this->form->addElement("select", "q_4_comfort_level", "4. Comfort level", array(null=>"", "1_more_cautious"=>"1. more cautious", "2_typical"=>"2. typical", "3_more_comfortable"=>"3. more confortable", "not_answered"=>"Not Answered"));
         $this->form->addElement("select", "q_5_level_of_activity", "5. Level of activity", array(null=>"", "1_less_active"=>"1. less active than usual", "2_typical"=>"2. typical", "3_more_active"=>"3. more active than usual", "not_answered"=>"Not Answered"));
         $this->form->addElement("select", "q_6_level_of_communication", "6. Overall level of communication", array(null=>"", "1_less_than_usual"=>"1. less than usual", "2_typical"=>"2. typical", "3_greater_than_usual"=>"3. greater than usual", "not_answered"=>"Not Answered"));
@@ -356,17 +359,21 @@ INSERT INTO instrument_subtests VALUES('', 'csbs', 'csbs_page2', 'Symbolic Behav
         $q_16_BestObject = null;
         $q_16_BestPerson = null;
         $q_16_BestBody = null;
-        if($this->_countTableZeros($record, "objects", 4) >= 2) {
+
+        if( ($values["q_16_language_comp_objects_1"] === "0" || $values["q_16_language_comp_objects_1"] === 0) &&
+            ($values["q_16_language_comp_objects_2"] === "0" || $values["q_16_language_comp_objects_2"] === 0) ) {
             $q_16_BestObject = 0;
         } else {
             $q_16_BestObject = $this->_sumBestRows($record, "objects", 3, 4);
         }
-        if($this->_countTableZeros($record, "person", 3) >= 2) {
+        if( ($values["q_16_language_comp_person_1"] === "0" || $values["q_16_language_comp_person_1"] === 0) &&
+            ($values["q_16_language_comp_person_2"] === "0" || $values["q_16_language_comp_person_2"] === 0) ) {
             $q_16_BestPerson = 0;
         } else {
             $q_16_BestPerson = $this->_sumBestRows($record, "person", 2, 3);
         }
-        if($this->_countTableZeros($record, "body_parts", 4) >= 2) {
+        if( ($values["q_16_language_comp_body_parts_1"] === "0" || $values["q_16_language_comp_body_parts_1"] === 0) &&
+            ($values["q_16_language_comp_body_parts_2"] === "0" || $values["q_16_language_comp_body_parts_2"] === 0) ) {
             $q_16_BestBody= 0;
         } else {
             $q_16_BestBody= $this->_sumBestRows($record, "body_parts", 3, 4);
@@ -906,18 +913,18 @@ INSERT INTO instrument_subtests VALUES('', 'csbs', 'csbs_page2', 'Symbolic Behav
         unset($group);
         $actions_array = array(
             '' => '',
-            'puts_in' => 'Puts in',
-            'puts_on' => 'Puts on',
-            'drinks_with_bottle' => 'Drinks with bottle',
-            'drinks_with_cup' => 'Drinks with cup',
-            'hugs' => 'Hugs',
-            'kisses' => 'Kisses',
-            'feeds_with_utensil' => 'Feeds with utensil',
-            'feeds_with_bowl' => 'Feeds with bowl',
-            'stirs' => 'Stirs',
-            'scoops' => 'Scoops',
-            'pours' => 'Pours',
-            'other' => 'Other'
+            'puts_in' => '1. Puts in',
+            'puts_on' => '2. Puts on',
+            'drinks_with_bottle' => '3. Drinks with bottle',
+            'drinks_with_cup' => '4. Drinks with cup',
+            'hugs' => '5. Hugs',
+            'kisses' => '6. Kisses',
+            'feeds_with_utensil' => '7. Feeds with utensil',
+            'feeds_with_bowl' => '8. Feeds with bowl',
+            'stirs' => '9. Stirs',
+            'scoops' => '10. Scoops',
+            'pours' => '11. Pours',
+            'other' => '12. Other'
         );
         for($i = 1; $i <= 6; $i++) {
             $group[] =& $this->_addNoActionsPerformed("q_18_action_towards_other_{$i}", $actions_array, $i);
