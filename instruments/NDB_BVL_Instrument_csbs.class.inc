@@ -66,6 +66,7 @@ INSERT INTO instrument_subtests VALUES('', 'csbs', 'csbs_page2', 'Symbolic Behav
         // required fields for data entry completion status
         $this->_requiredElements = array('Examiner', "q_4_rate_of_communicating_1", "q_20_stacks_tower");
 
+
         //Column headers
         $this->localDefaults = array_merge($this->localDefaults, array("h_1"=>"1", "h_2"=>"2", "h_3"=>"3", "h_4"=>"4", "h_5"=>"5", "h_6"=>"6", "raw_score"=>"Raw Score",
                                             "wind_up_toy"=>"Wind-up toy", "balloon"=>"Balloon", "bubbles"=>"Bubbles", "jar"=>"Jar",
@@ -176,6 +177,14 @@ INSERT INTO instrument_subtests VALUES('', 'csbs', 'csbs_page2', 'Symbolic Behav
         // automatically adds examiner & date of administration
         $this->_addMetadataFields();
 
+        $this->form->addElement("static", null, "<br/>");
+
+        $this->form->addElement('static', null, "The following two fields refer to Date and Coder for the CSBS");
+        $this->addDateElement("date_coded", "Date of Coding:");
+        $this->addTextElement("coder", "Coder:");
+
+        $this->form->addElement("static", null, "<br/>");
+
 //        $this->addTextElement("filled_out_by", "Filled out by:");
         $this->addTextElement("relationship_to_child", "Relationship to child:");
         
@@ -188,9 +197,13 @@ INSERT INTO instrument_subtests VALUES('', 'csbs', 'csbs_page2', 'Symbolic Behav
         $this->form->addElement("select", "q_3_level_of_interest", "3. Level of interest and attention", array(null=>"", "1_less_interest"=>"1. less interest than usual", "2_typical"=>"2. typical", "3_greater"=>"3. greater interest / greater attention", "not_answered"=>"Not Answered"));
         $this->XINRegisterRule("q_3_level_of_interest", array("q_3_level_of_interest{@}=={@}NEVER_REQUIRED"));
         $this->form->addElement("select", "q_4_comfort_level", "4. Comfort level", array(null=>"", "1_more_cautious"=>"1. more cautious", "2_typical"=>"2. typical", "3_more_comfortable"=>"3. more confortable", "not_answered"=>"Not Answered"));
+        $this->XINRegisterRule("q_4_comfort_level", array("q_4_comfort_level{@}=={@}NEVER_REQUIRED"));
         $this->form->addElement("select", "q_5_level_of_activity", "5. Level of activity", array(null=>"", "1_less_active"=>"1. less active than usual", "2_typical"=>"2. typical", "3_more_active"=>"3. more active than usual", "not_answered"=>"Not Answered"));
+        $this->XINRegisterRule("q_5_level_of_activity", array("q_5_level_of_activity{@}=={@}NEVER_REQUIRED"));
         $this->form->addElement("select", "q_6_level_of_communication", "6. Overall level of communication", array(null=>"", "1_less_than_usual"=>"1. less than usual", "2_typical"=>"2. typical", "3_greater_than_usual"=>"3. greater than usual", "not_answered"=>"Not Answered"));
+        $this->XINRegisterRule("q_6_level_of_communication", array("q_6_level_of_communication{@}=={@}NEVER_REQUIRED"));
         $this->form->addElement("select", "q_7_play_behaviour", "7. Play behavior", array(null=>"", "1_less_organized"=>"1. less organized", "2_typical"=>"2. typical", "3_more_organized"=>"3. more organized", "not_answered"=>"Not Answered"));
+        $this->XINRegisterRule("q_7_play_behaviour", array("q_7_play_behaviour{@}=={@}NEVER_REQUIRED"));
 //        $this->form->addElement("select", "q_", "", array(null=>"", "1_"=>"1. ", "2_typical"=>"2. typical", "3_"=>"3. ", "not_answered"=>"Not Answered"));
 
         $this->addTextAreaElement("comments", "Comments:");    

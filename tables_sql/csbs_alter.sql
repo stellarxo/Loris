@@ -46,3 +46,9 @@ ALTER TABLE csbs ADD COLUMN q_19_sequence_action_schemes_5_action1 enum('puts_in
 ALTER TABLE csbs ADD COLUMN q_19_sequence_action_schemes_5_action2 enum('puts_in', 'puts_on', 'drinks_with_bottle', 'drinks_with_cup', 'hugs', 'kisses', 'feeds_with_utensil', 'feeds_with_bowl', 'stirs', 'scoops', 'pours', 'other', 'none') AFTER q_19_sequence_action_schemes_5_action1;
 ALTER TABLE csbs ADD COLUMN q_19_sequence_action_schemes_6_action1 enum('puts_in', 'puts_on', 'drinks_with_bottle', 'drinks_with_cup', 'hugs', 'kisses', 'feeds_with_utensil', 'feeds_with_bowl', 'stirs', 'scoops', 'pours', 'other', 'none') AFTER q_19_sequence_action_schemes_6;
 ALTER TABLE csbs ADD COLUMN q_19_sequence_action_schemes_6_action2 enum('puts_in', 'puts_on', 'drinks_with_bottle', 'drinks_with_cup', 'hugs', 'kisses', 'feeds_with_utensil', 'feeds_with_bowl', 'stirs', 'scoops', 'pours', 'other', 'none') AFTER q_19_sequence_action_schemes_6_action1;
+
+
+ALTER TABLE csbs ADD COLUMN date_coded_date date AFTER Window_Difference;
+ALTER TABLE csbs ADD COLUMN date_coded_date_status enum('not_answered') AFTER date_coded_date;
+ALTER TABLE csbs ADD COLUMN coder varchar(255) AFTER date_coded_date_status;
+ALTER TABLE csbs ADD COLUMN coder_status varchar(255) AFTER coder;
