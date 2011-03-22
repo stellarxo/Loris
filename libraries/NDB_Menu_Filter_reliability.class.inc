@@ -343,6 +343,9 @@ class NDB_Menu_Filter_reliability extends NDB_Menu_Filter
     function cross_site_flagging($instrument, $current_site, $reliability_sites, $db){
         $ratio = 0.1;
         $reliability_site_index = 0; 
+        // We want the site to be random, starting from 0 causes a bias towards the first entry
+        // in $reliability_sites.. so shuffle the array to eliminate the bias
+        shuffle($reliability_sites);
         
         if($instrument == "adi_r_subject"){
           $query_extra = " AND (s.visit_label='v24' OR s.visit_label='v36')";
