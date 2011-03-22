@@ -84,7 +84,7 @@ class NDB_Menu_Filter_reliability extends NDB_Menu_Filter
         $this->group_by = '';
         $this->order_by = 'reliability.Instrument, session.CandID, session.Visit_label';
         $this->headers = array('PSCID', 'reliability_center_id','Cohort', 'DCCID', 'Gender', 'Visit_label', 'Instrument', 'reliability_score', 'Reliable');
-        $this->validFilters = array('reliability.CommentID', 'reliability.reliability_center_id', 'session.SubprojectID', 'candidate.CenterID', 'session.CandID', 'candidate.PSCID', 'candidate.Gender', 'session.Visit_label', 'reliability.Instrument', 'reliability.Reliability_score', 'session.Current_stage');
+        $this->validFilters = array('reliability.CommentID', 'reliability.reliability_center_id', 'session.SubprojectID', 'candidate.CenterID', 'session.CandID', 'candidate.PSCID', 'candidate.Gender', 'session.Visit_label', 'reliability.Instrument', 'reliability.Reliability_score', 'session.Current_stage', 'reliability.invalid');
 
         $this->formToFilter = array(
                                     'CommentID' => 'reliability.CommentID',
@@ -98,6 +98,7 @@ class NDB_Menu_Filter_reliability extends NDB_Menu_Filter
 				                    'Instrument' => 'reliability.Instrument',
                                     'reliability_score'=>'reliability.Reliability_score',
                                     'Current_stage'=>'session.Current_stage',
+                                    'Invalid' => 'reliability.invalid'
                                     // 'Lock_record' => 'session.Lock_record'
                                     );
         return true;
@@ -152,6 +153,7 @@ class NDB_Menu_Filter_reliability extends NDB_Menu_Filter
         $this->form->addElement('select', 'Gender', 'Gender:', $gender_options);
         $this->form->addElement('select', 'Visit_label', 'Visit Label:', $list_of_visit_labels);
         $this->form->addElement('select', 'Instrument', 'Instrument:', $list_of_instruments);
+        $this->form->addElement('select', 'Invalid', 'Invalid Candidate:', array('' => '', 'yes' => 'Yes', 'no' => 'No'));
 	 // $this->form->addElement('select', 'Lock_record', 'Lock_record:', $lock_options);
        
        // For swapping candidates
