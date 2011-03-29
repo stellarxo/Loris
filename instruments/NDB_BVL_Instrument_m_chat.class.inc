@@ -48,8 +48,8 @@ class NDB_BVL_Instrument_m_chat extends NDB_BVL_Instrument
 		// automatically adds examiner & date of administration
 		$this->_addMetadataFields();
 
-		$this->form->addElement('static', "item_fails", "Total Number of Fails: ");
-		$this->form->addElement('static', "critical_fails", "Critical Fails: ");
+		$this->form->addElement('static', "total_item_fails", "Total Number of Fails: ");
+		$this->form->addElement('static', "total_critical_fails", "Critical Fails: ");
 		$this->form->addElement('static', "score", "Score: ");
 
 		$this->form->addElement('header', null, "Does your child...");
@@ -148,19 +148,19 @@ class NDB_BVL_Instrument_m_chat extends NDB_BVL_Instrument
 			}
 			else {
 				//count total item failures
-				$calculatedScores["item_fails"]++;
+				$calculatedScores["total_item_fails"]++;
 				if (in_array($question, $critical)) {
 					//count critical failures
-					$calculatedScores["critical_fails"]++;
+					$calculatedScores["total_critical_fails"]++;
 				}
 			}
 		}
 
 		//enforce failure cutoffs
-		$calculatedScores["score"] = ($calculatedScores["critical_fails"] >= 2 || $calculatedScores["item_fails"] >=3) ? "Fail" : "Pass";
+		$calculatedScores["score"] = ($calculatedScores["total_critical_fails"] >= 2 || $calculatedScores["total_item_fails"] >=3) ? "Fail" : "Pass";
         // Need confirmation on if this should be done or not. According to Redmine ticket #1512 "we might" need to change the scoring to not be valid if 
         // 2 critical failures or three total are unanswered
-		$calculatedScores["score"] = ($notAnswered["critical_unanswered"] >= 2 || $notAnswered["total_unanswered"] >=3) ? "Invalid" : $calculatedScores["score"];
+		$calculatedScores["score"] .= ($notAnswered["critical_unanswered"] >= 2 || $notAnswered["total_unanswered"] >=3) ? "-Invalid" : '';
         
 
 		// save the resultant total
