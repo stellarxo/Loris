@@ -415,7 +415,8 @@ class NDB_Menu_statistics extends NDB_Menu
                             s.CenterID as CenterID
                      FROM flag f JOIN session s ON (f.SessionID=s.ID) 
                      LEFT JOIN mri_parameter_form m ON (m.CommentID=f.CommentID)
-                     LEFT JOIN tarchive t ON (s.CandID=MID(t.PatientName, 9, 6))
+                     -- LEFT JOIN tarchive t ON (s.CandID=MID(t.PatientName, 9, 6))
+                     LEFT JOIN tarchive t ON (s.CandID=MID(t.PatientName, 9, 6) AND MID(t.PatientName, 16, 3)=s.Visit_label)
                      LEFT JOIN candidate c ON (s.CandID=c.CandID)
                      WHERE f.CommentID NOT LIKE 'DDE%' 
                             AND f.Test_name='mri_parameter_form' 
@@ -457,7 +458,7 @@ class NDB_Menu_statistics extends NDB_Menu
                         LEFT JOIN mri_parameter_form mpf ON (mpf.CommentID=f.CommentID)
                         LEFT JOIN candidate c ON (c.CandID=s.CandID)
                         WHERE s.Active='Y' and s.Cancelled='N' 
-                            AND (f.ID IS NULL OR f.Data_entry <> 'Complete') 
+                            AND (f.ID IS NULL OR f.Data_entry <> 'Complete' OR f.Data_entry IS NULL) 
                             AND c.PSCID <> 'scanner'
                         GROUP BY s.CenterID", $result);
         foreach($result as $row) {
@@ -465,6 +466,7 @@ class NDB_Menu_statistics extends NDB_Menu
         }
 
 
+        // TOP MRI TABLE
 
         // Below this has not been optimized. It's kind of ugly.
           foreach($centers as $center) {
@@ -491,10 +493,67 @@ class NDB_Menu_statistics extends NDB_Menu
                   }
                   list(,$result25)=each($result25[0]);
                   $forms_count = $result25;
+                $three_scans = $DB->selectOne("SELECT count(distinct CandID) FROM session v06 
+                        WHERE v06.Scan_done='Y' AND v06.Active='Y' AND v06.Cancelled='N' AND v06.Visit_label='v06' 
+                            AND EXISTS (SELECT 'x' FROM session v12 
+                                            WHERE v12.Scan_done='Y' AND v12.Active='Y' AND v12.Cancelled='N' AND v12.Visit_label='v12' AND v06.CandID=v12.CandID) 
+                            AND EXISTS (SELECT 'x' FROM session v24
+                                            WHERE v24.Scan_done='Y' AND v24.Active='Y' AND v24.Cancelled='N' AND v24.Visit_label='v24' AND v06.CandID=v24.CandID) 
+                            AND v06.CenterID='{$id}'");
               
-              $mri_data[] = array('name' => $name,  'work_station_count' => $work_station_count, 'claimed_count' => $claimed_count, 'forms_count' => $forms_count);
+              $mri_data[] = array('name' => $name,  'work_station_count' => $work_station_count, 'claimed_count' => $claimed_count, 'forms_count' => $forms_count, 'all_three_scans' => $three_scans);
               
         }
+
+        $MultiTimepoint = $DB->pselect("SELECT psc.PSCArea as Center, SUM(Three_done) as T1, SUM(Three_T2_Done) as T2 , SUM(Three_DTI_Done) as DTI, SUM(Three_All_done) as Three_All_done FROM 
+                            (SELECT c.CenterID, COUNT(DISTINCT c.CandID)," .
+                                    /* This essentially does COUNT(T1_Scan_done='Complete'), but because of the way COUNT(expr) works, 
+                                     * we need to make sure that anything that isn't 'Complete' is evaluated as NULL (not false), hence
+                                     * the crazy CASE statement. The different count statements Do v06, v06+v12, v06+v12+v24, all 3 for T2, all
+                                     * three for DTI, and all three for T1+T2+DTI. The outer select statement sums up all the groupings, to get
+                                     * a final scalar value.
+                                     */
+                                    "COUNT(DISTINCT CASE (COALESCE(mpf06.T1_Scan_done, 'No')='Complete') WHEN true THEN c.CandID ELSE null END) as v06_Done, 
+                                    COUNT(DISTINCT CASE (COALESCE(mpf12.T1_Scan_done, 'No')='Complete' AND COALESCE(mpf06.T1_Scan_done, 'No')='Complete' ) WHEN true THEN c.CandID ELSE null END) as Two_Done, 
+                                    COUNT(DISTINCT CASE (COALESCE(mpf12.T1_Scan_done, 'No')='Complete' AND COALESCE(mpf06.T1_Scan_done, 'No')='Complete' 
+                                                AND COALESCE(mpf24.T1_Scan_done, 'No')='Complete') WHEN true THEN c.CandID ELSE null END) as Three_done, 
+                                    COUNT(DISTINCT CASE (COALESCE(mpf12.T2_Scan_done, 'No')='Complete' AND COALESCE(mpf06.T2_Scan_done, 'No')='Complete' 
+                                                AND COALESCE(mpf24.T2_Scan_done, 'No')='Complete') WHEN true THEN c.CandID ELSE null END) as Three_T2_done, 
+                                    COUNT(DISTINCT CASE (COALESCE(mpf12.DTI_Scan_done, 'No')='Complete' AND COALESCE(mpf06.DTI_Scan_done, 'No')='Complete' 
+                                                AND COALESCE(mpf24.DTI_Scan_done, 'No')='Complete') WHEN true THEN c.CandID ELSE null END) as Three_DTI_done,
+                                    COUNT(DISTINCT 
+                                            CASE (COALESCE(mpf12.T1_Scan_done, 'No')='Complete' AND COALESCE(mpf06.T1_Scan_done, 'No')='Complete' 
+                                                AND COALESCE(mpf24.T1_Scan_done, 'No')='Complete' 
+                                                AND COALESCE(mpf12.T2_Scan_done, 'No')='Complete' AND COALESCE(mpf06.T2_Scan_done, 'No')='Complete' 
+                                                AND COALESCE(mpf24.T2_Scan_done, 'No')='Complete' 
+                                                AND COALESCE(mpf12.DTI_Scan_done, 'No')='Complete' AND COALESCE(mpf06.DTI_Scan_done, 'No')='Complete' 
+                                                AND COALESCE(mpf24.DTI_Scan_done, 'No')='Complete') WHEN true THEN c.CandID ELSE null END) as Three_All_done
+                                FROM candidate c JOIN session v06 ON (c.CandID=v06.CandID AND v06.Visit_label='v06' and v06.Active='Y' and v06.Current_stage <> 'Recycling Bin') 
+                                    JOIN flag f06 ON (f06.SessionID=v06.ID and f06.Test_name='mri_parameter_form' AND f06.CommentID NOT LIKE 'DDE%') 
+                                    JOIN mri_parameter_form mpf06 ON (f06.CommentID=mpf06.CommentID) 
+                                    LEFT JOIN session v12 ON (c.CandID=v12.CandID and v12.Visit_label='v12' and v12.Current_stage <> 'Recycling Bin') 
+                                    LEFT JOIN flag f12 ON (f12.SessionID=v12.ID AND f12.Test_name='mri_parameter_form' AND f12.CommentID NOT LIKE 'DDE%') 
+                                    LEFT JOIN mri_parameter_form mpf12 ON (mpf12.CommentID=f12.CommentID) 
+                                    LEFT JOIN session v24 ON (v24.CandID=c.CandID and v24.Visit_label='v24' and v24.Current_stage <> 'Recycling Bin' and v24.Active='Y') 
+                                    LEFT JOIN flag f24 ON (f24.SessionID=v24.ID AND f24.Test_name='mri_parameter_form' AND f24.CommentID NOT LIKE 'DDE%') 
+                                    LEFT JOIN mri_parameter_form mpf24 ON (mpf24.CommentID=f24.CommentID) WHERE 
+                                            c.Active='Y' and c.Cancelled='N' AND c.PSCID  not like 'dcc%'  and c.PSCID <> 'scanner' 
+                            GROUP BY c.CenterID) breakdown JOIN psc ON (breakdown.CenterID=psc.CenterID) WHERE psc.CenterID <> 1 GROUP BY psc.Name ORDER BY psc.CenterID", array());
+        $total = array('Name' => 'Total', 'T1' => 0, 'T2' => 0, 'DTI' => 0, 'All' => 0);
+        foreach ($MultiTimepoint as $row) {
+            $this->tpl_data['mri_all_scans_done'][] = array(
+                'Name' => $row['Center'],
+                'T1' => $row['T1'],
+                'T2' => $row['T2'],
+                'DTI' => $row['DTI'],
+                'All' => $row['Three_All_done']
+            );
+            $total['T1'] += $row['T1'];
+            $total['T2'] += $row['T2'];
+            $total['DTI'] += $row['DTI'];
+            $total['All'] += $row['Three_All_done'];
+        }
+        $this->tpl_data['mri_all_scans_done'][] = $total;
 
         $this->tpl_data['mri_data'] = $mri_data;
         $this->tpl_data['reliability_completion'] = $this->getReliabilityData();
@@ -546,47 +605,50 @@ class NDB_Menu_statistics extends NDB_Menu
         $tests = array(
             'adi_r_proband' => 'ADI-R (Proband)',
             'adi_r_subject' => 'ADI-R (Subject)',
+            'aosi' => 'AOSI',
             'ados_module1' => 'ADOS (Module 1)',
             'ados_module2' => 'ADOS (Module 2)',
-            'aosi' => 'AOSI',
             'csbs' => 'CSBS'
 
         );
         $within_cross = array('adi_r_subject', 'ados_module1', 'ados_module2', 'aosi', 'csbs');
 
+
         $reliable = array();
+        $within_reliable = array();
+        $across_reliable = array();
         foreach($tests as $inst => $name) {
             if(in_array($inst, $within_cross)) {
                 if($inst == 'aosi') {
-                    $reliable[] = $this->_getWithinSiteReliabilityData(
+                    $within_reliable[] = $this->_getWithinSiteReliabilityData(
                             $name . " v06", 
                             $inst, $thresholds[$inst], 
                             " AND EXISTS (SELECT 'x' FROM flag f JOIN session s ON (s.ID=f.SessionID) WHERE f.CommentID=r.CommentID and lower(s.Visit_label)='v06')");
-                    $reliable[] = $this->_getCrossSiteReliabilityData(
+                    $across_reliable[] = $this->_getCrossSiteReliabilityData(
                             $name . " v06", 
                             $inst, $thresholds[$inst], 
                             " AND EXISTS (SELECT 'x' FROM flag f JOIN session s ON (s.ID=f.SessionID) WHERE f.CommentID=r.CommentID and lower(s.Visit_label)='v06')");
-                    $reliable[] = $this->_getWithinSiteReliabilityData(
+                    $within_reliable[] = $this->_getWithinSiteReliabilityData(
                             $name . " v12", 
                             $inst, $thresholds[$inst], 
                             " AND EXISTS (SELECT 'x' FROM flag f JOIN session s ON (s.ID=f.SessionID) WHERE f.CommentID=r.CommentID and lower(s.Visit_label)='v12')");
-                    $reliable[] = $this->_getCrossSiteReliabilityData(
+                    $across_reliable[] = $this->_getCrossSiteReliabilityData(
                             $name . " v12", 
                             $inst, $thresholds[$inst], 
                             " AND EXISTS (SELECT 'x' FROM flag f JOIN session s ON (s.ID=f.SessionID) WHERE f.CommentID=r.CommentID and lower(s.Visit_label)='v12')");
                 } else {
-                    $reliable[] = $this->_getWithinSiteReliabilityData($name, 
+                    $within_reliable[] = $this->_getWithinSiteReliabilityData($name, 
                             $inst, $thresholds[$inst]);
-                    $reliable[] = $this->_getCrossSiteReliabilityData($name, 
+                    $across_reliable[] = $this->_getCrossSiteReliabilityData($name, 
                             $inst, $thresholds[$inst]);
                 }
             } else {
-                $reliable[] = $this->_getSingleReliabilityData($name, 
+                $within_reliable[] = $this->_getSingleReliabilityData($name, 
                     $inst, $thresholds[$inst]);
             }
         }
 
-        return $reliable;
+        return array_merge($across_reliable, $within_reliable);
     }
 } // End class
 ?>

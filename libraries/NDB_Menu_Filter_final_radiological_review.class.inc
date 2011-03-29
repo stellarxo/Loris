@@ -5,7 +5,7 @@ require_once 'NDB_Menu_Filter.class.inc';
 // This is used both below and in the history on the NDB_Form
 function _makePretty($key, $val)
 {
-    if($key == 'Review_Done' || $key=='Conflict1' || $key=="Finalized")
+    if($key == 'Review_Done' || $key=='Conflict1' || $key=="Finalized" || $key=="Conflict2" || $key=="Conflict")
     {
         // The table was created with a boolean, which mysql turns into a tinyint.
         // Print 'Yes' or 'No' instead of 1 or 0.
@@ -56,8 +56,8 @@ class NDB_Menu_Filter_final_radiological_review extends NDB_Menu_Filter
         $conflict_condition1 = "(case when orig.review_results <> r.final_review_results then True when orig.abnormal_atypical_exculsionary <>  r.final_exclusionary THEN True WHEN r.Final_Review_Results <> r.Final_Review_Results2 THEN True WHEN r.Final_Exclusionary <> r.Final_Exclusionary2 THEN True WHEN r.SAS <> r.SAS2 THEN True WHEN r.PVS <> r.PVS2 THEN True ELSE False end)";
         $conflict_condition2 = "(case when r.Final_Review_Results <> r.Final_Review_Results2 THEN 'prim_second' WHEN r.Final_Exclusionary <> r.Final_Exclusionary2 THEN 'prim_second' WHEN r.SAS <> r.SAS2 THEN 'prim_second' WHEN r.PVS <> r.PVS2 THEN 'prim_second' ELSE False end)";
 
-        $this->query = " FROM radiology_review orig LEFT JOIN final_radiological_review r ON (r.CommentID=orig.CommentID) JOIN flag f on (f.CommentID=orig.CommentID) JOIN session s on (s.ID=f.SessionID) JOIN candidate c ON (c.CandID=s.CandID) WHERE orig.commentid NOT LIKE 'DDE_%' AND orig.commentid IS NOT NULL AND s.active='Y' AND s.Cancelled='N' AND NOT (f.Administration='None' AND f.Data_entry='Complete' )";
-        $this->columns = array('c.PSCID as PSCID', 'c.CandID as DCCID', 's.visit_label as Visit_Label', 'c.CenterID as Site', 'c.DOB as Birth_Date', 'COALESCE(r.Review_Done, False) as Review_Done', 'r.Final_Review_Results as Results', 'r.Final_Exclusionary as Exclusionary_Status', 'r.sas as SAS', 'r.pvs as PVS', 'orig.CommentID as CommentID', "$conflict_condition1 as Conflict1, $conflict_condition2 as Conflict2", 'r.Finalized as Finalized', 'r.Final_Incidental_Findings as Comments' );
+        $this->query = " FROM radiology_review orig LEFT JOIN final_radiological_review r ON (r.CommentID=orig.CommentID) JOIN flag f on (f.CommentID=orig.CommentID) JOIN session s on (s.ID=f.SessionID) JOIN candidate c ON (c.CandID=s.CandID) WHERE orig.commentid NOT LIKE 'DDE_%' AND orig.commentid IS NOT NULL AND s.active='Y' AND s.Cancelled='N' AND NOT (f.Administration='None') AND f.Data_entry='Complete' AND (orig.Scan_done IS NULL OR orig.Scan_done <> 'no')";
+        $this->columns = array('c.PSCID as PSCID', 'c.CandID as DCCID', 's.visit_label as Visit_Label', 'c.CenterID as Site', 'c.DOB as Birth_Date', 'COALESCE(r.Review_Done, False) as Review_Done', 'r.Final_Review_Results as Results', 'r.Final_Exclusionary as Exclusionary_Status', 'r.sas as SAS', 'r.pvs as PVS', 'orig.CommentID as CommentID', "$conflict_condition1 as Conflict, $conflict_condition2 as Conflict2", 'r.Finalized as Finalized', 'r.Final_Incidental_Findings as Comments' );
         $this->order_by = 'PSCID';
         $this->headers = array('PSCID',
                                'DCCID', 'Visit_Label', 
@@ -81,7 +81,7 @@ class NDB_Menu_Filter_final_radiological_review extends NDB_Menu_Filter
                                     'Exclusionary_Status' => 'r.Final_Exclusionary',
                                     'PVS' => 'r.pvs',
                                     'SAS' => 'r.sas',
-                                    'Conflict1' => $conflict_condition1,
+                                    'Conflict' => $conflict_condition1,
                                     'Conflict2' => $conflict_condition2,
                                     'Finalized' =>  'r.Finalized'
         );

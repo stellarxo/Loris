@@ -30,7 +30,7 @@ class NDB_Menu_statistics_mri_site extends NDB_Menu_statistics_site
                             lower(Visit_label) as Visit_label
                     FROM flag f JOIN session s ON (f.SessionID=s.ID)
                         LEFT JOIN mri_parameter_form m ON (m.CommentID=f.CommentID)
-                        LEFT JOIN tarchive t ON (s.CandID=MID(t.PatientName, 9, 6))
+                        LEFT JOIN tarchive t ON (s.CandID=MID(t.PatientName, 9, 6) AND MID(t.PatientName, 16, 3)=s.Visit_label)
                         LEFT JOIN candidate c ON (s.CandID=c.CandID)
                         WHERE f.CommentID NOT LIKE 'DDE%'
                             AND f.Test_name='mri_parameter_form'
@@ -70,7 +70,8 @@ class NDB_Menu_statistics_mri_site extends NDB_Menu_statistics_site
                         WHERE s.Active='Y' and s.Cancelled='N'
                            AND c.PSCID <> 'scanner'
                            AND (f.ID IS NULL OR
-                           f.Data_entry <> 'Complete')
+                           f.Data_entry <> 'Complete' OR
+                           f.Data_entry IS NULL)
                            AND s.CenterID=" .
                            $DB->quote($_REQUEST['CenterID'])
                            . "ORDER BY c.PSCID";

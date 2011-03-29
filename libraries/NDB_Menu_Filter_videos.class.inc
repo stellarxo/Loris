@@ -48,6 +48,20 @@ class NDB_Menu_Filter_videos extends NDB_Menu_Filter
         return $user->hasPermission('earli_videos') && !$user->hasPermission('data_entry');
     }
 
+    // Function to check if the user is working with EARLI videos or not. Save into a cookie,
+    // so that filters work properly.
+    function _viewingEARLI() {
+        if(isset($_REQUEST['showEARLI'])) {
+            $_SESSION['showEARLI'] = $_REQUEST['showEARLI'];
+            $earli = $_REQUEST['showEARLI'];
+        } else if(isset($_SESSION['showEARLI'])) {
+            $earli = $_SESSION['showEARLI'];
+        } else {
+            $earli = '';
+        }
+        return !empty($earli);
+    }
+
 
 
     function _setupVariables()
@@ -67,17 +81,12 @@ class NDB_Menu_Filter_videos extends NDB_Menu_Filter
         
         // the base query
         $query = " FROM videos v"; // left join candidate c using(pscid) ";
-        if($this->_isEARLIUser() || (isset($_REQUEST['showEARLI']) && !empty($_REQUEST['showEARLI']) && $user->hasPermission('earli_videos'))) {
+        if($this->_isEARLIUser() || ($this->_viewingEARLI() && $user->hasPermission('earli_videos'))) {
             $query .= " WHERE v.EARLI=True";
         } else {
             $query .= " WHERE (v.EARLI IS NULL OR v.EARLI = False)";
         }
-
-        // only view their own profiles, unless they have permission to see all
-        /*
-        if (!($user->hasPermission('reliability_edit_all') || $user->hasPermission('access_all_profiles'))) {
-            $query .= " WHERE candidate.centerID = '" . $user->getData('CenterID') . "' "; 
-        }*/
+        $query .= " AND (v.hide_video=false OR v.hide_video IS NULL)";
 
         // set the class variables
         $this->columns = array('v.record_id', 'v.File_name', 'v.File_size', 'v.uploaded_by', 'v.Instrument', 'v.PSCID', 'v.visitLabel', 'v.Date_taken', 'v.For_site', 'substring(v.comments, 1, 50) as comments', 'v.Data_dir', 'v.Date_uploaded');
@@ -86,7 +95,7 @@ class NDB_Menu_Filter_videos extends NDB_Menu_Filter
         $this->group_by = '';
         $this->order_by = 'v.Instrument';
         $this->headers = array('File_name','uploaded_by', 'Instrument', 'PSCID', 'visitLabel', 'Date_Taken', 'For_site', 'comments', 'Date_uploaded', 'Edit Metadata');
-        $this->validFilters = array('v.PSCID', 'v.Instrument', 'v.Data_dir', 'v.For_site', 'v.visitLabel');
+        $this->validFilters = array('v.PSCID', 'v.Instrument', 'v.Data_dir', 'v.For_site', 'v.visitLabel', 'v.uploaded_by');
 
         $this->formToFilter = array(
                                     'File_name' => 'v.File_name',
@@ -112,10 +121,10 @@ class NDB_Menu_Filter_videos extends NDB_Menu_Filter
             return PEAR::raiseError("User Error: ".$user->getMessage());
         }
 
+        $list_of_sites = Utility::getSiteList(false);
            // allow to view all sites data through filter
         if ($user->hasPermission('access_all_profiles') || $user->hasPermission('reliability_edit_all')) {
             // get the list of study sites - to be replaced by the Site object
-            $list_of_sites = Utility::getSiteList();
             if(PEAR::isError($list_of_sites)) {
                 return PEAR::raiseError("DB Error: ".$list_of_sites->getMessage());
             }
@@ -136,14 +145,20 @@ class NDB_Menu_Filter_videos extends NDB_Menu_Filter
         $list_of_visit_labels = array(null=>'Any','V06'=>'V06','V12'=>'V12','V24'=>'V24','V36'=>'V36');
         $subproject_options = Utility::getSubprojectList();
         $subproject_options = array(null=>'Any') + $subproject_options;
-        $gender_options = array(null=>'All', 'Male'=>'Male', 'Female'=>'Female');
-        $list_of_instruments = array(null=>'Any', 'csbs'=>'CSBS', 'adi_r'=>'ADI-R', 'ados'=>'ADOS');
+        $DB = Database::singleton();
+        $list_of_instruments_q = $DB->pselect("SELECT DISTINCT Instrument FROM videos", array());
+        $list_of_instruments = array(null => 'Any');
+        foreach ($list_of_instruments_q as $instrument) {
+            $list_of_instruments[$instrument['Instrument']] = $instrument['Instrument'];
+        }
         $lock_options = array(null=>'','Locked'=>'Locked','Unlocked'=>'Unlocked');
 
         // Form Elements
         $this->form->addElement('text', 'PSCID', 'PSCID:', array("size"=>9, "maxlength"=>7));
         $this->form->addElement('select', 'Instrument', 'Instrument:', $list_of_instruments);
-	 // $this->form->addElement('select', 'Lock_record', 'Lock_record:', $lock_options);
+        $this->form->addElement('select', 'visitLabel', 'Visit Label:', $list_of_visit_labels);
+        $this->form->addElement('select', 'For_site', 'For Site:', $list_of_sites);
+        $this->form->addElement('text', 'uploaded_by', 'Uploaded By');
        
         return true;
     }

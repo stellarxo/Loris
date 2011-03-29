@@ -62,6 +62,7 @@ DoB subject should be somewhere in the candidate table.  For now, we'll just mak
         
 		// call the subclass scoring method
         $this->_score();
+        Utility::SetSupplementalGrantStatus($this->getSessionID());
     }
     
     function _getAge() {
@@ -80,7 +81,11 @@ DoB subject should be somewhere in the candidate table.  For now, we'll just mak
         $query = "SELECT Date_taken from $this->testName WHERE CommentID = '".$this->getCommentID()."'";
         $Date_taken = $db->selectOne($query);
 
-		$age = Utility::calculateAge($dob, $Date_taken);
+        if(empty($dob) || empty($Date_taken)) {
+            $age = -1;
+        } else { 
+            $age = Utility::calculateAge($dob, $Date_taken); 
+        }
         if($this->isError($age)) {
             return $this->raiseError("Could not compute age");
         }

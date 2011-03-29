@@ -1,50 +1,35 @@
-<!--<form method="post" action="main.php?test_name=reliability">
-<table border="0" valign="top" class="std" width="75%">
+<form method="post" action="main.php?test_name=videos">
+<table border="0" class="std">
     <tr>
-        <th nowrap="nowrap" colspan="15">Selection Filter</th>
+        <th nowrap="nowrap" colspan="6">Selection Filter</th>
     </tr>
     <tr>
-	<td colspan = 15>
-	<table border="0">
-<tr>
-{* OBJECTIVE IS NIHPD SPECIFIC - BUT WE ARE TOO LAZY TO CHANGE THIS TODAY *}
-	<td nowrap="nowrap" align="right">CommentID:</td>
-	<td nowrap="nowrap">{$form.CommentID.html}</td>
-	<td nowrap="nowrap">Objective:</td>
-        <td nowrap="nowrap">{$form.Objective.html}</td>
-        <td nowrap="nowrap">Site:</td>
-        <td nowrap="nowrap">{$form.CenterID.html}</td>
-        <td nowrap="nowrap">Instrument:</td>
-        <td nowrap="nowrap">{$form.Instrument.html}</td>
-      </tr>
-<tr>
-        <td nowrap="nowrap">DCCID:</td>
-        <td nowrap="nowrap">{$form.DCCID.html}</td>
-        <td nowrap="nowrap">PSCID:</td>
-        <td nowrap="nowrap">{$form.PSCID.html}</td>
- 	<td nowrap="nowrap">Gender:</td>
-        <td nowrap="nowrap">{$form.Gender.html}</td>
-        <td nowrap="nowrap">Visit label:</td>
-        <td nowrap="nowrap">{$form.Visit_label.html}</td>
-</tr>
-
-</table>
-</td>
-   </tr>
-	<tr>  
-	 <td colspan = 15 nowrap="nowrap"><b>Scans Done:</b></td>
-	 </tr>
- 
-   <tr>
+        <td>{$form.PSCID.label}</td>
+        <td>{$form.PSCID.html}</td>
+        <td>{$form.uploaded_by.label}</td>
+        <td>{$form.uploaded_by.html}</td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+    </tr>
+    <tr>
+        <td>{$form.Instrument.label}</td>
+        <td>{$form.Instrument.html}</td>
+        <td>{$form.visitLabel.label}</td>
+        <td>{$form.visitLabel.html}</td>
+        <td>{$form.For_site.label}</td>
+        <td>{$form.For_site.html}</td>
+    </tr>
+    <tr>
+    </tr>
+    <tr>
         <td nowrap="nowrap" width='10%'>Actions:</td>
-        <td colspan="14" align="right"><input type="submit" name="filter" value="Show Data" class="button" />&nbsp;<input type="button" name="reset" value="Clear Form" class="button" onclick="location.href='main.php?test_name=reliability&reset=true'" /></td>
+        <td colspan="14" align="right"><input type="submit" name="filter" value="Show Data" class="button" />&nbsp;<input type="button" name="reset" value="Clear Form" class="button" onclick="location.href='main.php?test_name=videos&reset=true'" /> <input type="button" class="button" value="Upload a New Video" onclick="location.href='main.php?test_name=video_upload'" />
+        </td>
     </tr>
 </table>
-</form>-->
+</form>
 
 <br>
-<!-- <h2><font color="red">Note: Phase 2 reliability forms are unavailable at the moment as the system is being upgraded.</font></h2> -->
-
 <!--  title table with pagination -->
 <table border="0" valign="bottom" width="100%">
 <tr>
@@ -64,9 +49,6 @@
     <!-- title -->
   
     <td class="controlPanelSection">
-      <a href="main.php?test_name=video_upload">
-        Upload a New Video
-      </a>
 
     </td>
 </tr>
@@ -90,9 +72,13 @@
     <!-- print out column headings - quick & dirty hack -->
     {section name=header loop=$headers}
         <th nowrap="nowrap">
+          {if $headers[header].displayName == 'Edit Metadata'}
+            Edit Metadata
+          {else}
           <a href="main.php?test_name=videos&filter[order][field]={$headers[header].name}&filter[order][fieldOrder]={$headers[header].fieldOrder}">
             {$headers[header].displayName}
           </a>
+          {/if}
         </th>
     {/section}
 </tr>

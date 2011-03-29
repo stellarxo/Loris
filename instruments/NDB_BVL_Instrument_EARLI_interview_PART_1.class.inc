@@ -139,7 +139,7 @@ class NDB_BVL_Instrument_EARLI_interview_PART_1 extends NDB_BVL_Instrument {
 		//Any HTML_Quickform multiple selects must be listed here
 		//Usually this appears at the beginning of the file in the setup() function
 
-		$this->_selectMultipleElements = array_merge($this->_selectMultipleElements, array("q3_32_1","q3_32_2","q3_32_3","q3_32_4", "q3_32_5", "q3_32_6", "q4_10_p1", "q4_10_p2", "q4_10_p3", "q4_10_p4", "q4_10_p5", "q4_12_m1", "q4_12_m2", "q4_12_m3", "q4_13_m1", "q4_13_m2", "q4_13_m3", "q4_13_m4", "q4_13_,5", "q4_32", "q4_35", "q4_52", "q4_57", "q4_60", "q4_63", "q4_66", "q4_67", "q4_68_select_1", "q4_68_select_2", "q4_68_select_3", "q4_71_select_1", "q4_71_select_2", "q4_71_select_3", "q4_76_m_1", "q4_76_m_2", "q4_76_m_3", "q4_98_month_a.", "q4_98_month_b.", "q4_98_month_c.", "q4_98_month_c.", "q4_98_month_d.", "q4_98_month_e."));
+		$this->_selectMultipleElements = array_merge($this->_selectMultipleElements, array("q3_32_1","q3_32_2","q3_32_3","q3_32_4", "q3_32_5", "q4_10_p1", "q4_10_p2", "q4_10_p3", "q4_10_p4", "q4_10_p5", "q4_13_m1", "q4_13_m2", "q4_13_m3", "q4_13_m4", "q4_13_m5", "q4_20_m", "q4_24", "q4_28", "q4_32", "q4_35", "q4_52", "q4_57", "q4_60", "q4_63", "q4_66", "q4_67", "q4_68_select_1", "q4_68_select_2", "q4_68_select_3", "q4_71_select_1", "q4_71_select_2", "q4_71_select_3", "q4_76_m_1", "q4_76_m_2", "q4_76_m_3", "q4_76_m1", "q4_76_m2", "q4_76_m3", "q4_79", "q4_92", "q4_95_month_1", "q4_95_month_2", "q4_95_month_3", "q4_98_1_month", "q4_98_2_month", "q4_98_3_month", "q4_98_4_month", "q4_98_5_month", "q4_98_6_month", "q4_98_7_month", "q4_98_8_month"));
 
 
 		//column headers
@@ -479,7 +479,7 @@ class NDB_BVL_Instrument_EARLI_interview_PART_1 extends NDB_BVL_Instrument {
 		$this->form->addElement('static', null, "<br/>");
 
 		//q2-6
-		$this->form->addElement("select", "q2_6", "2-6) Before your pregnancy with [SIBLING], were you ever told by a doctor that you had diabetes, including gestational diabetes that happens only while you're pregnant?", array(NULL=>"", "01_yes" => "01 Yes", "02_no" => "02 No", "88 Refused", "99" => "99 Do not know", "not_answered"=>"Not Answered"));
+		$this->form->addElement("select", "q2_6", "2-6) Before your pregnancy with [SIBLING], were you ever told by a doctor that you had diabetes, including gestational diabetes that happens only while you're pregnant?", array(NULL=>"", "01_yes" => "01 Yes", "02_no" => "02 No", "88_refused"=>"88 Refused", "99" => "99 Do not know", "not_answered"=>"Not Answered"));
 		$this->form->addElement('static', null, $this->indent . "If you selected [Yes], go to question 2-7");
 		$this->form->addElement('static', null, $this->indent . "If you selected [No], [Refused] or [Don't Know] skip to question 2-13");
 

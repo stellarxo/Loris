@@ -1,6 +1,5 @@
 <?php
 
-
 require_once('RequiredIf.inc');
 
 
@@ -68,7 +67,7 @@ class NDB_BVL_Instrument_tsi extends NDB_BVL_Instrument
 		$this->_selectMultipleElements = array('candidate_race', 'mother_race', 'father_race');
 
 		// required fields for data entry completion status
-		$this->_requiredElements = array('Examiner', "ses_income", "typical_or_asd_subject");
+		$this->_requiredElements = array('Examiner', "ses_income", "neurological_problems_proband", "med_his_q_1_med_surgical_problems", "exc_inc_meets_criteria");
 		$this->_doubleDataEntryDiffIgnoreColumns = array('CommentID', 'UserID', 'Testdate', 
 								 'in_utero_substance_proband',
 								 'in_utero_substance_proband_status',
@@ -137,14 +136,14 @@ class NDB_BVL_Instrument_tsi extends NDB_BVL_Instrument
 		
 		$config =& NDB_Config::singleton();
 
-        $this->dateOptions = array(
-        'language' => 'en',
-        'format'   => 'YMd',
-        'minYear'  => $config->getSetting('startYear') - 20, //allows for siblings up to 20 years older than candidate
-        'maxYear'  => $config->getSetting('endYear'),
-        'addEmptyOption' => true,
-        'emptyOptionValue' => null
-	    );
+	        $this->dateOptions = array(
+        	'language' => 'en',
+        	'format'   => 'YMd',
+        	'minYear'  => $config->getSetting('startYear') - 20, //allows for siblings up to 20 years older than candidate
+        	'maxYear'  => $config->getSetting('endYear'),
+        	'addEmptyOption' => true,
+        	'emptyOptionValue' => null
+	    	);
         
 		$nonAskedQuestions = array("Subject's Name",
 		"Subject ID:",
@@ -167,20 +166,23 @@ class NDB_BVL_Instrument_tsi extends NDB_BVL_Instrument
 		}
 		
 		//Ethnicity
-		$this->form->addElement("select", "child_ethnicity", "Ethnicity:", array(null=>"", "hispanic"=>"Hispanic", "non_hispanic"=>"Non-Hispanic", "not_answered"=>"Not Answered"));
+		$this->form->addElement("select", "child_ethnicity", "Candidate Ethnicity:", array(null=>"", "hispanic"=>"Hispanic", "non_hispanic"=>"Non-Hispanic", "not_answered"=>"Not Answered"));
+
+		$this->form->addElement("select", "mother_ethnicity", "Mother Ethnicity:", array(null=>"", "hispanic"=>"Hispanic", "non_hispanic"=>"Non-Hispanic", "not_answered"=>"Not Answered"));
+
+		$this->form->addElement("select", "father_ethnicity", "Father Ethnicity:", array(null=>"", "hispanic"=>"Hispanic", "non_hispanic"=>"Non-Hispanic", "not_answered"=>"Not Answered"));
 		
-		$this->form->addElement("static", "child_race", "Child Race (Deprecated):", array(null=>"", "white"=>"White", "black_african_american"=>"Black or African American", "asian"=>"Asian", "unknown_not_reported"=>"Unknown or not Reported", "more_than_one_race"=>"More than one race", "american_indian_alaska_native"=>"American Indian / Alaska Native", "native_hawaiian_pacific_islander"=>"Native Hawaiian / Other Pacific Islander"));
 
 		//RACES
 		$this->form->addElement("select", "candidate_race", "Candidate Race:", array("white"=>"White", "black_african_american"=>"Black or African American", "asian"=>"Asian", "unknown_not_reported"=>"Unknown or not Reported", "american_indian_alaska_native"=>"American Indian / Alaska Native", "native_hawaiian_pacific_islander"=>"Native Hawaiian / Other Pacific Islander", "more_than_one_race"=>"More than one race (select all applicable)"), "multiple");
-        $this->form->addRule("candidate_race", "Must answer this race question", 'required');
+        	$this->form->addRule("candidate_race", "Must answer this race question", 'required');
 		
 		$this->form->addElement("select", "mother_race", "Mother Race:", array("white"=>"White", "black_african_american"=>"Black or African American", "asian"=>"Asian", "unknown_not_reported"=>"Unknown or not Reported", "american_indian_alaska_native"=>"American Indian / Alaska Native", "native_hawaiian_pacific_islander"=>"Native Hawaiian / Other Pacific Islander", "more_than_one_race"=>"More than one race (select all applicable)"), "multiple");
-        $this->form->addRule("mother_race", "Must answer this race question", 'required');
+        	$this->form->addRule("mother_race", "Must answer this race question", 'required');
 
-        $this->form->addElement("select", "father_race", "Father Race:", array("white"=>"White", "black_african_american"=>"Black or African American", "asian"=>"Asian", "unknown_not_reported"=>"Unknown or not Reported", "american_indian_alaska_native"=>"American Indian / Alaska Native", "native_hawaiian_pacific_islander"=>"Native Hawaiian / Other Pacific Islander", "more_than_one_race"=>"More than one race (select all applicable)"), "multiple");
+        	$this->form->addElement("select", "father_race", "Father Race:", array("white"=>"White", "black_african_american"=>"Black or African American", "asian"=>"Asian", "unknown_not_reported"=>"Unknown or not Reported", "american_indian_alaska_native"=>"American Indian / Alaska Native", "native_hawaiian_pacific_islander"=>"Native Hawaiian / Other Pacific Islander", "more_than_one_race"=>"More than one race (select all applicable)"), "multiple");
        
-        $this->form->addRule("father_race", "Must answer this race question", 'required');
+        	$this->form->addRule("father_race", "Must answer this race question", 'required');
 		
 		$this->form->addElement("static", null, "<b>Parent's Information:</b><br><br>");
 		
@@ -241,11 +243,11 @@ class NDB_BVL_Instrument_tsi extends NDB_BVL_Instrument
 
     	$config =& NDB_Config::singleton();
 
-	    $this->addDateElement('father_dob', "Date of Birth:");
+	$this->addDateElement('father_dob', "Date of Birth:");
       		
       	$this->form->addElement("static", null, "<br><br>");
       	
-		$this->form->addElement("select", "ses_income", "SES:", array(null=>"", "less_than_25K"=>"less than $24,999", "25K-35K"=>"$25,000 - 34,999", "35K-50K"=>"$35,000 - 49,999", "50K-75K"=>"$50,000 - 74,999", "75K-100K"=>"$75,000 - 99,999", "100K-150K"=>"$100,000 - 149,999", "150K-200K"=>"$150,000 - 199,000", "over_200K"=>"over $200,000", "not_answered"=>"Not Answered"));
+	$this->form->addElement("select", "ses_income", "SES:", array(null=>"", "less_than_25K"=>"less than $24,999", "25K-35K"=>"$25,000 - 34,999", "35K-50K"=>"$35,000 - 49,999", "50K-75K"=>"$50,000 - 74,999", "75K-100K"=>"$75,000 - 99,999", "100K-150K"=>"$100,000 - 149,999", "150K-200K"=>"$150,000 - 199,000", "over_200K"=>"over $200,000", "not_answered"=>"Not Answered"));
 
         $nonAskedQuestions = array("<br>Parent's Telephone:",
 		"Parent's Address:",
@@ -256,12 +258,9 @@ class NDB_BVL_Instrument_tsi extends NDB_BVL_Instrument
 		foreach ($nonAskedQuestions as $field) {
 			$this->form->addElement('static', null, $field);
 		}
-
 	}
 
 	function _page1(){
-		//typical or ASD subject?
-		$this->form->addElement("select", "typical_or_asd_subject", "Typical or ASD subject?", array(null=>"", "typical"=>"Typical", "asd"=>"ASD", "not_answered"=>"Not Answered"));
 
 		$this->form->addElement('header', null, "Exclusionary Factors - ASD PROBANDs only");
 
@@ -273,7 +272,6 @@ class NDB_BVL_Instrument_tsi extends NDB_BVL_Instrument
 		"tested_for_fragile_x"=>"Tested for Fragile X syndrome?");
 		foreach($questionArray as $field=>$label) {
 			$this->form->addElement("select", $field, $label, $this->yesNo);
-			$this->XINRegisterRule($field, array("typical_or_asd_subject{@}=={@}asd"), "This field is required for an ASD subject");
 		}
 
 		$this->form->addElement('select', "in_utero_exposure_proband", "Exposure in-utero to meds, alcohol, or drugs (Rx or non)?", $this->yesNo);
@@ -288,7 +286,7 @@ class NDB_BVL_Instrument_tsi extends NDB_BVL_Instrument
 		$this->addTextAreaElement("asd_further_information", "If yes to any of the above, obtain further information.", array("typical_or_asd_subject{@}=={@}asd"));
 
 		$this->form->addElement("header", null, "Exclusionary Factors - Infant subjects");
-		$questionArray = array("relative_with_asd"=>"1st or 2nd relative with ASD?",
+		$questionArray = array(
 		"neurological_problems_subject"=>"Any neurological problems in SUBJECT?",
 		"genetic_conditions_subject"=>"Diagnosed/suspected genetic conditions or syndromes?",
 		"seizures_or_neuro_disorder"=>"Seizures or other neurological disorder?",

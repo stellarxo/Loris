@@ -66,10 +66,12 @@ $(document).ready(function() {
         <td nowrap="nowrap">{$form.DCCID.html}</td>
         <td nowrap="nowrap">PSCID:</td>
         <td nowrap="nowrap">{$form.PSCID.html}</td>
- 	<td nowrap="nowrap">Gender:</td>
+ 	    <td nowrap="nowrap">Gender:</td>
         <td nowrap="nowrap">{$form.Gender.html}</td>
         <td nowrap="nowrap">Visit label:</td>
         <td nowrap="nowrap">{$form.Visit_label.html}</td>
+        <td nowrap="nowrap">{$form.Invalid.label}</td>
+        <td nowrap="nowrap">{$form.Invalid.html}</td>
 </tr>
 
 </table>

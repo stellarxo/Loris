@@ -288,9 +288,12 @@ class NDB_BVL_Instrument_figs_year3 extends NDB_BVL_Instrument
     */
     function _saveValues($values)
     {
+        $this->_nullStatus(&$values);
         if(isset($values['Date_taken'])) {
             $Date_taken = $values['Date_taken'];
             $values['Date_taken'] = "$Date_taken[Y]-$Date_taken[M]-$Date_taken[d]";
+            $this->_saveCandidateAge(&$values);
+
         }
         
         if(isset($values['Face_BirthDate'])) {
@@ -341,7 +344,7 @@ class NDB_BVL_Instrument_figs_year3 extends NDB_BVL_Instrument
             $db =& Database::singleton();
             if($this->isError($db)) die($db->getMessage());
             
-            $setArray = array('Date_taken'=>$values['Date_taken'], 'Examiner'=>$values['Examiner'], 'Informant'=>$values['Informant'], 'Informant_other'=>$values['Informant_other']); 
+            $setArray = array('Date_taken'=>$values['Date_taken'], 'Examiner'=>$values['Examiner'], 'Informant'=>$values['Informant'], 'Informant_other'=>$values['Informant_other'], 'Candidate_Age' => $values['Candidate_Age'], 'Window_Difference' => $values['Window_Difference']); 
             $whereArray = array('CommentID'=>$this->getCommentID());
             $ok = $db->update('figs_year3', $setArray, $whereArray);
             if($this->isError($ok)) die($db->getMessage());
