@@ -13,8 +13,6 @@ class NDB_Menu_Filter_blind_coding extends NDB_Menu_Filter
     var $centerIDMap;
     
     var $site_id = array('SEA' => 2, 'PHI' => 3, 'STL' => 4, 'UNC' => 5, 'UofA' => 6);
-    
-    var $reliability_table;
 
     function _setupVariables()
     {
@@ -31,8 +29,6 @@ class NDB_Menu_Filter_blind_coding extends NDB_Menu_Filter
             $this->centerIDMap[$row['CenterID']] = $row['Name'];
         }
         
-        $this->_populate_reliability_table();
-
         // the base query
         $query = " FROM candidate c JOIN session s ON (s.CandID=c.CandID) JOIN flag f ON (f.SessionID=s.ID) JOIN blind_coding b ON (b.CommentID=f.CommentID)";
 
@@ -42,12 +38,12 @@ class NDB_Menu_Filter_blind_coding extends NDB_Menu_Filter
         }
 
         // set the class variables
-        $this->columns = array('b.CommentID', 'c.PSCID', 'b.CodingCenterID AS Site', 's.SubprojectID as Cohort', 's.CandID AS DCCID', 'c.Gender', 's.Visit_label', 'b.Instrument', 'b.Blind_score', 's.Current_stage', 'b.Invalid';
+        $this->columns = array('b.CommentID', 'c.PSCID', 'b.CodingCenterID AS Site', 's.SubprojectID as Cohort', 's.CandID AS DCCID', 'c.Gender', 's.Visit_label', 'b.Instrument', 'b.Blind_score', 's.Current_stage', 'b.Invalid');
 
         $this->query = $query;
         $this->group_by = '';
         $this->order_by = 'b.Instrument, s.CandID, s.Visit_label';
-        $this->headers = array('PSCID', 'reliability_center_id','Cohort', 'DCCID', 'Gender', 'Visit_label', 'Instrument', 'Blind_score', 'Reliable');
+        $this->headers = array('PSCID', 'CodingCenterID','Cohort', 'DCCID', 'Gender', 'Visit_label', 'Instrument', 'Blind_score', 'Reliable');
         $this->validFilters = array('b.CommentID', 'b.CodingCenterID', 's.SubprojectID', 'c.CenterID', 's.CandID', 'c.PSCID', 'c.Gender', 's.Visit_label', 'b.Instrument', 'b.Blind_score', 's.Current_stage', 'b.invalid');
 
         $this->formToFilter = array(
@@ -110,7 +106,7 @@ class NDB_Menu_Filter_blind_coding extends NDB_Menu_Filter
         $this->form->addElement('select', 'CommentID', 'CommentID:', $subproject_options);
         $this->form->addElement('select', 'Objective', 'Objective:', $subproject_options);
         $this->form->addElement('select', 'CenterID', 'Site:', $list_of_sites);
-        $this->form->addElement('select', 'CodingCenterID', 'Site of Reliability:', $list_of_sites);
+        $this->form->addElement('select', 'CodingCenterID', 'Site of Coding:', $list_of_sites);
         $this->form->addElement('text', 'DCCID', 'DCCID::', array("size"=>9, "maxlength"=>6));
         $this->form->addElement('text', 'PSCID', 'PSCID:', array("size"=>9, "maxlength"=>7));
         $this->form->addElement('select', 'Gender', 'Gender:', $gender_options);
@@ -120,29 +116,28 @@ class NDB_Menu_Filter_blind_coding extends NDB_Menu_Filter
 	 // $this->form->addElement('select', 'Lock_record', 'Lock_record:', $lock_options);
        
        // For swapping candidates
-       /*
-        if ($user->hasPermission('reliability_swap_candidates')) {
-            $this->tpl_data['reliability_swap_candidates'] = true;
+        if ($user->hasPermission('blind_swap_candidates')) {
+            $this->tpl_data['blind_swap_candidates'] = true;
             $this->form->addElement('select', 'Cand1Visit_label', 'Visit Label:', $list_of_visit_labels_only);
             $this->form->addElement('text', 'Cand1PSCID', 'PSCID:');
             $this->form->addElement('select', 'Cand2Visit_label', 'Visit Label:', $list_of_visit_labels_only);
             $this->form->addElement('text', 'Cand2PSCID', 'PSCID:');
             $this->form->addElement('select', 'SwapInstrument', 'Instrument:', $list_of_instruments_only);
         } else {
-            $this->tpl_data['reliability_swap_candidates'] = false;
+            $this->tpl_data['blind_swap_candidates'] = false;
         }
 
-        if ($user->hasPermission('EARLI_Reliability')) {
-            $this->tpl_data['EARLI_Reliability'] = true;
+        if($user->hasPermission('blind_add_candidates')) {
             $this->form->addElement('text', 'AddPSCID', 'PSCID:');
             $this->form->addElement('select', 'AddVisit_label', 'Visit Label:', array_merge(array('' => 'Any'), $list_of_visit_labels_only));
-            $this->form->addElement('select', 'AddReliabilityCenter', 'Site of Reliability:', $list_of_sites);
+            $this->form->addElement('select', 'AddBlindCenter', 'Site of Coding:', $list_of_sites);
             $this->form->addElement('select', 'AddInstrument', 'Instrument:', array_merge(array('' => 'Any'), $list_of_instruments_only));
+            $this->tpl_data['blind_add_candidates'] = true;
         } else {
-            $this->tpl_data['EARLI_Reliability'] = false;
+            $this->tpl_data['blind_add_candidates'] = false;
         }
 
-        // Doing this here is a hack. Since this is a menu filter and not a Form, there's no 
+        // Since this is a menu filter and not a Form, there's no 
         // _process/_save functions automagically called. There should probably be something like
         // a Menu_Filter_Form base class for instances like this or the conflict resolver, but as
         // things stand you either need to work with the $_POST array/DB directly in a Menu_Filter,
@@ -164,7 +159,7 @@ class NDB_Menu_Filter_blind_coding extends NDB_Menu_Filter
                 $this->form->addElement('static', 'message', $message['message']);
             }
         }
-        */
+       
         return true;
     }
 
@@ -244,7 +239,7 @@ class NDB_Menu_Filter_blind_coding extends NDB_Menu_Filter
         if(PEAR::isError($user)) {
             return PEAR::raiseError("User Error: ".$user->getMessage());
         }
-        if (!($user->hasPermission('reliability_swap_candidates'))) {
+        if (!($user->hasPermission('blind_swap_candidates'))) {
             return array("error" => "You do not have permission to swap candidates");
         }
         $DB =& Database::singleton();
@@ -254,11 +249,18 @@ class NDB_Menu_Filter_blind_coding extends NDB_Menu_Filter
         $PSCID_Replace_V = $_POST['Cand2Visit_label'];
         $Instrument = $_POST['SwapInstrument'];
 
-        $query="SELECT reliability.CommentID as OldID, reliability.reliability_center_id as CenterID, reliability.Reliability_score as Score, candidate.CenterID as OldCenterID, reliability.EARLI_Candidate AS EARLI_Candidate  FROM candidate, session, flag, reliability WHERE reliability.CommentID=flag.CommentID AND candidate.CandID=session.CandID AND session.ID=flag.SessionID AND candidate.PSCID='$PSCID' AND reliability.Instrument='$Instrument' and session.Visit_label='$PSCID_V' and flag.Data_entry IS NOT NULL and flag.Data_entry <> 'None' ";
+        $query="SELECT b.CommentID as OldID, b.CodingCenterID as CenterID, b.Blind_score as Score, c.CenterID as OldCenterID 
+                        FROM candidate c JOIN session s ON (c.CandID=s.CandID) 
+                            JOIN flag f ON (s.ID=f.SessionID) 
+                            JOIN blind_coding b ON (b.CommentID=f.CommentID) 
+                 WHERE c.PSCID='$PSCID' AND b.Instrument='$Instrument' 
+                        AND s.Visit_label='$PSCID_V' 
+                        AND f.Data_entry IS NOT NULL 
+                        AND f.Data_entry <> 'None' ";
 
         $DB->selectRow($query, $CommentID);
         if(!$CommentID) {
-            return array("error" => "$PSCID/$PSCID_V is not in reliability coding for $Instrument. Cannot swap candidates.");
+            return array("error" => "$PSCID/$PSCID_V is not in blind coding for $Instrument. Cannot swap candidates.");
         }
 
         $query="SELECT f.CommentID as NewID, c.CenterID as NewCenterID FROM session s join flag f ON (f.SessionID=s.ID) JOIN candidate c ON (c.CandID=s.CandID)  WHERE f.Test_name='$Instrument' and c.PSCID='$PSCID_Replace' AND s.Visit_label='$PSCID_Replace_V' AND f.Data_entry IS NOT NULL and f.Data_entry <> 'None'";
@@ -276,18 +278,17 @@ class NDB_Menu_Filter_blind_coding extends NDB_Menu_Filter
             return array('error' => "$PSCID/$PSCID_V is from a different site than you. Can only swap candidates from the same site.");
         }
         $NewID = $newCommentID['NewID'];
-        $DB->selectRow("SELECT CommentID FROM reliability WHERE CommentID='$NewID'", $replacementCheck);
+        $DB->selectRow("SELECT CommentID FROM blind_coding WHERE CommentID='$NewID'", $replacementCheck);
         if(!empty($replacementCheck)) {
-            return array("error" => "$PSCID_Replace/$PSCID_Replace_V already in reliability. Cannot swap $PSCID/$PSCID_V for it.");
+            return array("error" => "$PSCID_Replace/$PSCID_Replace_V already in blind coding. Cannot swap $PSCID/$PSCID_V for it.");
         }
 
         $CenterID = $CommentID['CenterID'];
-        $EARLI_Cand= $CommentID['EARLI_Candidate'];
         if(!empty($CommentID['Score'])) {
-            return array( "error" => "Reliability score already exists for $PSCID/$PSCID_V. Can not swap candidate.");
+            return array( "error" => "Blind score already exists for $PSCID/$PSCID_V. Can not swap candidate.");
         }
-        $DB->run("UPDATE reliability SET invalid='yes', manual_swap='yes' WHERE CommentID='$CommentID[OldID]' AND Instrument='$Instrument'");
-        $DB->run("INSERT INTO reliability (CommentID, reliability_center_id, Instrument, Manual_Swap, EARLI_Candidate) VALUES ('$newCommentID[NewID]', $CenterID, '$Instrument', 'yes', '$EARLI_Cand')");
+        $DB->run("UPDATE blind_coding SET invalid='yes', manual_swap='yes' WHERE CommentID='$CommentID[OldID]' AND Instrument='$Instrument'");
+        $DB->run("INSERT INTO blind_coding (CommentID, CodingCenterID, Instrument, Manual_Swap) VALUES ('$newCommentID[NewID]', $CenterID, '$Instrument', 'yes')");
 
         return array("message" => "Swapped candidate $PSCID for $PSCID_Replace");
     }
@@ -298,11 +299,11 @@ class NDB_Menu_Filter_blind_coding extends NDB_Menu_Filter
         if(PEAR::isError($user)) {
             return PEAR::raiseError("User Error: ".$user->getMessage());
         }
-        if (!($user->hasPermission('EARLI_Reliability'))) {
-            return array("error" => "You do not have permission to add EARLI candidates");
+        if (!($user->hasPermission('blind_add_candidates'))) {
+            return array("error" => "You do not have permission to add blind coding candidates");
         }
         $Instrument = $_POST['AddInstrument'];
-        $CenterID = $_POST['AddReliabilityCenter'];
+        $CenterID = $_POST['AddBlindCenter'];
         $Visit_label= $_POST['AddVisit_label'];
         if(!$Visit_label) {
             return array("error" => "You must specify a visit label");
@@ -312,7 +313,7 @@ class NDB_Menu_Filter_blind_coding extends NDB_Menu_Filter
             return array("error" => "You must specify an instrument");
         } 
         if(!$CenterID) {
-            return array("error" => "You must specify a center for reliability testing");
+            return array("error" => "You must specify a center for blind coding testing");
         }
 
         $PSCID = $_POST['AddPSCID'];
@@ -321,8 +322,8 @@ class NDB_Menu_Filter_blind_coding extends NDB_Menu_Filter
             return array("error" => "$PSCID/$Visit_label does not have data entered for $Instrument");
 
         }
-        $DB->run("INSERT INTO reliability (CommentID, reliability_center_id, Instrument, Manual_Swap, EARLI_Candidate) VALUES ('$CommentID', $CenterID, '$Instrument', 'no', 'yes')");
-        return array("message" => "Inserted new reliability candidate $PSCID/$Visit_label for EARLI collaboration");
+        $DB->run("INSERT INTO blind_coding (CommentID, CodingCenterID, Instrument, Manual_Swap) VALUES ('$CommentID', $CenterID, '$Instrument', 'no')");
+        return array("message" => "Inserted new blind coding candidate $PSCID/$Visit_label");
     }
 }
 ?>
