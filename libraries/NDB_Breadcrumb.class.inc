@@ -55,7 +55,8 @@ class NDB_Breadcrumb extends PEAR
                                    'aosi_reliability' => 'AOSI Reliability Module',
                                    'csbs_reliability' => 'CSBS Reliability Module',
                                    'videos' => 'Videos',
-                                   'video_upload' => 'Video Uploader'
+                                   'video_upload' => 'Video Uploader',
+                                   'blind_coding' => 'Blind Coding'
                                    );
 
     /**
@@ -132,6 +133,9 @@ class NDB_Breadcrumb extends PEAR
         }
         if(isset($_REQUEST['reliability_center_id'])) {
             $this->_parameters['reliability_center_id'] = $_REQUEST['reliability_center_id'];
+        }
+        if(isset($_REQUEST['blind'])) {
+            $this->_parameters['blind'] = $_REQUEST['blind'];
         }
 
         // check if test name is empty
@@ -219,12 +223,18 @@ class NDB_Breadcrumb extends PEAR
                             'reliability'       => array('next' => ''),
                             'video_upload'            => array('next' => 'videos'),
                             'videos'            => array('next' => ''),
+                            'blind_coding' => array('next' => '')
+
                             );
 
         // loop through the crumbs according to the order above, or just make one crumb
         if (array_key_exists($this->_parameters['test_name'], $crumbOrder)) {
             while (!empty($this->_parameters['test_name'])) {
-                $this->_addCrumb($crumbOrder[$this->_parameters['test_name']]['next'], $crumbOrder[$this->_parameters['test_name']]['unset']);
+                if($this->_parameters['test_name'] == 'aosi_reliability' && $this->_parameters['blind']) {
+                    $this->_addCrumb('blind_coding', $crumbOrder[$this->_parameters['test_name']]['unset']);
+                } else {
+                    $this->_addCrumb($crumbOrder[$this->_parameters['test_name']]['next'], $crumbOrder[$this->_parameters['test_name']]['unset']);
+                }
             }
         } else {
             $this->_addCrumb(null, null, null, 'test_name');

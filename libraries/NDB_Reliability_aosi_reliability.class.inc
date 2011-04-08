@@ -10,6 +10,10 @@ require_once "NDB_Reliability.class.inc";
 class NDB_Reliability_aosi_reliability extends NDB_Reliability
 
 {
+    // Can be either "reliability" or "blind_coding".. this is the suffix
+    // attached to the table name
+    var $codingtype = "reliability";
+
 // function _hasAccess()
 //     {
 //         // create user object
@@ -47,7 +51,7 @@ class NDB_Reliability_aosi_reliability extends NDB_Reliability
        
             
             // set the aosi_reliability values 
-            $DB->selectRow("SELECT * FROM aosi_reliability WHERE CommentID = '$this->identifier' AND reliability_center_id = '$this->reliability_center_id'", $row);
+            $DB->selectRow("SELECT * FROM aosi_$this->codingtype WHERE CommentID = '$this->identifier' AND reliability_center_id = '$this->reliability_center_id'", $row);
             if (PEAR::isError($row)) {
                 return PEAR::raiseError("DB Error: ".$row->getMessage());
             }
@@ -97,7 +101,7 @@ class NDB_Reliability_aosi_reliability extends NDB_Reliability
             return PEAR::raiseError("Could not get scores: ".$candidate_record->getMessage());
         }
         
-        $db->selectRow("SELECT * FROM aosi_reliability WHERE CommentID='{$this->identifier}' AND reliability_center_id = '$this->reliability_center_id'", $reliability_record);
+        $db->selectRow("SELECT * FROM aosi_$this->codingtype WHERE CommentID='{$this->identifier}' AND reliability_center_id = '$this->reliability_center_id'", $reliability_record);
           if (PEAR::isError($reliability_record)) {
               return PEAR::raiseError("Could not get scores: ".$reliability_record->getMessage());
           }
@@ -121,7 +125,6 @@ class NDB_Reliability_aosi_reliability extends NDB_Reliability
                  $reliability_count_raw++;
               }
            }
-               
 
             // Score the reliability
             $reliability['Reliability_score']= (($denominator-$reliability_count_raw)/$denominator*100);
@@ -131,12 +134,12 @@ class NDB_Reliability_aosi_reliability extends NDB_Reliability
          // print_r($this->identifier);
       
         // Do the update here for the relibaility scores - saving the scores
-		$result = $db->update("aosi_reliability", $reliability, array("CommentID"=>$this->identifier, "reliability_center_id" => $this->reliability_center_id));
+		$result = $db->update("aosi_$this->codingtype", $reliability, array("CommentID"=>$this->identifier, "reliability_center_id" => $this->reliability_center_id));
 		if($db->isError($result)) {
 			return PEAR::raiseError("Could not save total score: ". $result->getMessage());
 		}
 		
-		$result = $db->update("reliability", $reliability, array("CommentID"=>$this->identifier, "Instrument" => 'aosi', "reliability_center_id" => $this->reliability_center_id));
+		$result = $db->update($this->codingtype, $reliability, array("CommentID"=>$this->identifier, "Instrument" => 'aosi', "reliability_center_id" => $this->reliability_center_id));
 		if($db->isError($result)) {
 			return PEAR::raiseError("Could not save total score: ". $result->getMessage());
 		}
@@ -163,7 +166,7 @@ class NDB_Reliability_aosi_reliability extends NDB_Reliability
         }
 
         // update the scores
-        $success = $db->update("aosi_reliability",$scores,array("CommentID"=>$this->identifier, "reliability_center_id"=>$this->reliability_center_id));
+        $success = $db->update("aosi_$this->codingtype",$scores,array("CommentID"=>$this->identifier, "reliability_center_id"=>$this->reliability_center_id));
         if (PEAR::isError($success)) {
             return PEAR::raiseError("DB Error, fail null the scores:\n".$success->getMessage()."\n");
         }
@@ -174,6 +177,10 @@ class NDB_Reliability_aosi_reliability extends NDB_Reliability
     function aosi_reliability()
     {
        $this->_addMetadataFields();
+       if($_REQUEST['blind'] == 1) {
+           $this->codingtype = "blind_coding";
+           $this->tpl_data['blind'] = 1;
+       }
        $this->form->addElement("static", "reliability_center", "Site of Reliability Test:");
        
          //Scoring header
@@ -491,13 +498,13 @@ class NDB_Reliability_aosi_reliability extends NDB_Reliability
             }
         }
            
-        $DB->selectRow("SELECT * FROM aosi_reliability WHERE CommentID = '$this->identifier' AND reliability_center_id = $this->reliability_center_id", $row);
+        $DB->selectRow("SELECT * FROM aosi_$this->codingtype WHERE CommentID = '$this->identifier' AND reliability_center_id = $this->reliability_center_id", $row);
           if (PEAR::isError($row)) {
               return PEAR::raiseError("DB Error: ".$row->getMessage());
           }
           
           $invalid = $values['invalid'];
-          $DB->update("reliability", array('invalid' => $invalid), array("CommentID"=>$this->identifier, "Instrument" => 'aosi', "reliability_center_id" => $this->reliability_center_id));
+          $DB->update("$this->codingtype", array('invalid' => $invalid), array("CommentID"=>$this->identifier, "Instrument" => 'aosi', "reliability_center_id" => $this->reliability_center_id));
           unset($values['invalid']);
           
           if($invalid == "yes"){
@@ -510,13 +517,13 @@ class NDB_Reliability_aosi_reliability extends NDB_Reliability
             
             // insert the event
             $values['CommentID'] = $this->identifier;
-            $success = $DB->insert('aosi_reliability', $values);
+            $success = $DB->insert("aosi_$this->codingtype", $values);
             if (PEAR::isError($success)) {
                 return PEAR::raiseError("DB Error: ".$success->getMessage());
             }
         } else {
             // update the event
-            $success = $DB->update('aosi_reliability', $values,          
+            $success = $DB->update("aosi_$this->codingtype", $values,          
                                    array('CommentID'=>$this->identifier, "reliability_center_id"=>$this->reliability_center_id)
                                    ); 
             if (PEAR::isError($success)) {
@@ -548,44 +555,39 @@ class NDB_Reliability_aosi_reliability extends NDB_Reliability
      return $errors;
  }   
  
- function display()
- {
-     if(!$this->form->isFrozen()) {
-         // hidden values
-         $this->form->addElement('hidden', 'test_name', $this->name);
-         $this->form->addElement('hidden', 'subtest', $this->page);
-         $this->form->addElement('hidden', 'identifier', $this->identifier);
-         $this->form->addElement('hidden', 'reliability_center_id', $this->reliability_center_id);
-         $this->form->addElement('submit', 'fire_away', 'Save Data', 'class=button');
-     }
-     
-     // get the defaults
-     $localDefaults = $this->_getDefaults();
-     if (PEAR::isError($localDefaults)) {
-         return PEAR::raiseError("NDB_Form::display(): ".$localDefaults->getMessage());
-     }
-     if(!is_array($localDefaults)) { $localDefaults = array(); }
-     // set the quickform object defaults
-     $this->form->setDefaults(array_merge($this->defaults, $localDefaults));
-     
-     // trim all values
-     $this->form->applyFilter('__ALL__', 'trim');
-     
-     // display the HTML_Quickform object
-     $smarty = new Smarty_neurodb;
-     
-     // display the HTML_Quickform object
-     return $this->form->toHTML();
-     
-     $renderer =& new HTML_QuickForm_Renderer_Default();
-     $renderer->setFormTemplate("<form{attributes}><table class=\"instrument\">{content}</table></form>");
-     $renderer->setElementTemplate("<tr><td class=\"lab\"><!-- BEGIN required --><span style=\"color: #ff0000\">*</span><!-- END required -->{label}</td><td class=\"ele\"><!-- BEGIN error --><span style=\"color: #ff0000\">{error}</span><br /><!-- END error -->{element}</td></tr>");
-     $renderer->setElementTemplate("<tr><td class=\"lab\"><i>{label}</i></td><td class=\"ele\">\t<i>{element}</i></td></tr>", "static");
-     $renderer->setHeaderTemplate("<tr><th colspan=\"2\"><br><b>{header}</b></th></tr>");
-     $this->form->accept($renderer);
-     return $renderer->toHtml();
-     
- } // end function display
+    function display()
+    {
+        if($_REQUEST['blind'] == '1') {
+            $this->form->addElement('hidden', 'blind', $_REQUEST['blind']);
+        }
+        if(!$this->form->isFrozen()) {
+            // hidden values
+            $this->form->addElement('hidden', 'test_name', $this->name);
+            $this->form->addElement('hidden', 'subtest', $this->page);
+            $this->form->addElement('hidden', 'identifier', $this->identifier);
+            $this->form->addElement('hidden', 'reliability_center_id', $this->reliability_center_id);
+            $this->form->addElement('submit', 'fire_away', 'Save Data', 'class=button');
+        }
+        
+        // get the defaults
+        $localDefaults = $this->_getDefaults();
+        if (PEAR::isError($localDefaults)) {
+            return PEAR::raiseError("NDB_Form::display(): ".$localDefaults->getMessage());
+        }
+        if(!is_array($localDefaults)) { $localDefaults = array(); }
+        // set the quickform object defaults
+        $this->form->setDefaults(array_merge($this->defaults, $localDefaults));
+        
+        // trim all values
+        $this->form->applyFilter('__ALL__', 'trim');
+        
+        // display the HTML_Quickform object
+        $smarty = new Smarty_neurodb;
+        
+        // display the HTML_Quickform object
+        return $this->form->toHTML();
+        
+    } // end function display
  
 
 }

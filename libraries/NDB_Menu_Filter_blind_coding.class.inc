@@ -38,19 +38,19 @@ class NDB_Menu_Filter_blind_coding extends NDB_Menu_Filter
         }
 
         // set the class variables
-        $this->columns = array('b.CommentID', 'c.PSCID', 'b.CodingCenterID AS Site', 's.SubprojectID as Cohort', 's.CandID AS DCCID', 'c.Gender', 's.Visit_label', 'b.Instrument', 'b.Blind_score', 's.Current_stage', 'b.Invalid');
+        $this->columns = array('b.CommentID', 'c.PSCID', 'b.reliability_center_id AS Site', 's.SubprojectID as Cohort', 's.CandID AS DCCID', 'c.Gender', 's.Visit_label', 'b.Instrument', 'b.Reliability_score', 's.Current_stage', 'b.Invalid');
 
         $this->query = $query;
         $this->group_by = '';
         $this->order_by = 'b.Instrument, s.CandID, s.Visit_label';
-        $this->headers = array('PSCID', 'CodingCenterID','Cohort', 'DCCID', 'Gender', 'Visit_label', 'Instrument', 'Blind_score', 'Reliable');
-        $this->validFilters = array('b.CommentID', 'b.CodingCenterID', 's.SubprojectID', 'c.CenterID', 's.CandID', 'c.PSCID', 'c.Gender', 's.Visit_label', 'b.Instrument', 'b.Blind_score', 's.Current_stage', 'b.invalid');
+        $this->headers = array('PSCID', 'reliability_center_id','Cohort', 'DCCID', 'Gender', 'Visit_label', 'Instrument', 'Blind_score', 'Reliable');
+        $this->validFilters = array('b.CommentID', 'b.reliability_center_id', 's.SubprojectID', 'c.CenterID', 's.CandID', 'c.PSCID', 'c.Gender', 's.Visit_label', 'b.Instrument', 'b.Reliability_score', 's.Current_stage', 'b.invalid');
 
         $this->formToFilter = array(
                                     'CommentID' => 'b.CommentID',
                                     'Cohort' => 's.SubprojectID',
                                     'CenterID' => 'c.CenterID',
-                                    'CodingCenterID'=> 'b.CodingCenterID',
+                                    'reliability_center_id'=> 'b.reliability_center_id',
                                     'DCCID' => 'c.CandID',
                                     'PSCID' => 'c.PSCID',
                                     'Gender' => 'c.Gender',
@@ -98,15 +98,15 @@ class NDB_Menu_Filter_blind_coding extends NDB_Menu_Filter
         $subproject_options = Utility::getSubprojectList();
         $subproject_options = array(null=>'Any') + $subproject_options;
         $gender_options = array(null=>'Any', 'Male'=>'Male', 'Female'=>'Female');
-        $list_of_instruments = array(null=>'Any', 'csbs'=>'CSBS', 'adi_r'=>'ADI-R', 'ados'=>'ADOS', 'aosi' => 'AOSI');
-        $list_of_instruments_only = array('csbs'=>'CSBS', 'adi_r_proband'=>'ADI-R (Proband)', 'adi_r_subject' => 'ADI-R (Subject)', 'ados_module1'=>'ADOS (Module 1)', 'ados_module2' => 'ADOS (Module 2)', 'aosi' => 'AOSI');
+        $list_of_instruments = array(null => 'Any', 'aosi' => 'AOSI');
+        $list_of_instruments_only = array('aosi' => 'AOSI');
         $lock_options = array(null=>'','Locked'=>'Locked','Unlocked'=>'Unlocked');
 
         // Form Elements
         $this->form->addElement('select', 'CommentID', 'CommentID:', $subproject_options);
         $this->form->addElement('select', 'Objective', 'Objective:', $subproject_options);
         $this->form->addElement('select', 'CenterID', 'Site:', $list_of_sites);
-        $this->form->addElement('select', 'CodingCenterID', 'Site of Coding:', $list_of_sites);
+        $this->form->addElement('select', 'reliability_center_id', 'Site of Coding:', $list_of_sites);
         $this->form->addElement('text', 'DCCID', 'DCCID::', array("size"=>9, "maxlength"=>6));
         $this->form->addElement('text', 'PSCID', 'PSCID:', array("size"=>9, "maxlength"=>7));
         $this->form->addElement('select', 'Gender', 'Gender:', $gender_options);
@@ -249,7 +249,7 @@ class NDB_Menu_Filter_blind_coding extends NDB_Menu_Filter
         $PSCID_Replace_V = $_POST['Cand2Visit_label'];
         $Instrument = $_POST['SwapInstrument'];
 
-        $query="SELECT b.CommentID as OldID, b.CodingCenterID as CenterID, b.Blind_score as Score, c.CenterID as OldCenterID 
+        $query="SELECT b.CommentID as OldID, b.reliability_center_id as CenterID, b.Blind_score as Score, c.CenterID as OldCenterID 
                         FROM candidate c JOIN session s ON (c.CandID=s.CandID) 
                             JOIN flag f ON (s.ID=f.SessionID) 
                             JOIN blind_coding b ON (b.CommentID=f.CommentID) 
@@ -288,7 +288,7 @@ class NDB_Menu_Filter_blind_coding extends NDB_Menu_Filter
             return array( "error" => "Blind score already exists for $PSCID/$PSCID_V. Can not swap candidate.");
         }
         $DB->run("UPDATE blind_coding SET invalid='yes', manual_swap='yes' WHERE CommentID='$CommentID[OldID]' AND Instrument='$Instrument'");
-        $DB->run("INSERT INTO blind_coding (CommentID, CodingCenterID, Instrument, Manual_Swap) VALUES ('$newCommentID[NewID]', $CenterID, '$Instrument', 'yes')");
+        $DB->run("INSERT INTO blind_coding (CommentID, reliability_center_id, Instrument, Manual_Swap) VALUES ('$newCommentID[NewID]', $CenterID, '$Instrument', 'yes')");
 
         return array("message" => "Swapped candidate $PSCID for $PSCID_Replace");
     }
@@ -322,7 +322,7 @@ class NDB_Menu_Filter_blind_coding extends NDB_Menu_Filter
             return array("error" => "$PSCID/$Visit_label does not have data entered for $Instrument");
 
         }
-        $DB->run("INSERT INTO blind_coding (CommentID, CodingCenterID, Instrument, Manual_Swap) VALUES ('$CommentID', $CenterID, '$Instrument', 'no')");
+        $DB->run("INSERT INTO blind_coding (CommentID, reliability_center_id, Instrument, Manual_Swap) VALUES ('$CommentID', $CenterID, '$Instrument', 'no')");
         return array("message" => "Inserted new blind coding candidate $PSCID/$Visit_label");
     }
 }
