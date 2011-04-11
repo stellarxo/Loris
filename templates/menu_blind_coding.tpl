@@ -223,7 +223,7 @@ $(document).ready(function() {
       	{elseif $items[item][piece].value== "3"}
       					Control
       		{/if}</td>
-  	{elseif  $items[item][piece].name == "Reliability"}
+  	{elseif  $items[item][piece].name == "Reliable"}
   	  {if $items[item][piece].value== "Yes"}
   	  <td nowrap="nowrap" style="background-color:#55FF55;">{$items[item][piece].value}</td>
   	  {elseif $items[item][piece].value== "No"}

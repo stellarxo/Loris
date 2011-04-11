@@ -43,7 +43,7 @@ class NDB_Menu_Filter_blind_coding extends NDB_Menu_Filter
         $this->query = $query;
         $this->group_by = '';
         $this->order_by = 'b.Instrument, s.CandID, s.Visit_label';
-        $this->headers = array('PSCID', 'reliability_center_id','Cohort', 'DCCID', 'Gender', 'Visit_label', 'Instrument', 'Blind_score', 'Reliable');
+        $this->headers = array('PSCID', 'reliability_center_id','Cohort', 'DCCID', 'Gender', 'Visit_label', 'Instrument', 'Reliability_score', 'Reliable');
         $this->validFilters = array('b.CommentID', 'b.reliability_center_id', 's.SubprojectID', 'c.CenterID', 's.CandID', 'c.PSCID', 'c.Gender', 's.Visit_label', 'b.Instrument', 'b.Reliability_score', 's.Current_stage', 'b.invalid');
 
         $this->formToFilter = array(
@@ -56,7 +56,7 @@ class NDB_Menu_Filter_blind_coding extends NDB_Menu_Filter
                                     'Gender' => 'c.Gender',
                                     'Visit_label' => 's.Visit_label',
 				                    'Instrument' => 'b.Instrument',
-                                    'Blind_score'=>'b.Blind_score',
+                                    'Reliability_score'=>'b.Reliability_score',
                                     'Current_stage'=>'s.Current_stage',
                                     'Invalid' => 'b.invalid'
                                     );
@@ -196,7 +196,9 @@ class NDB_Menu_Filter_blind_coding extends NDB_Menu_Filter
                 if ($key == 'CommentID') continue;
                 if ($key == 'Current_stage') continue;
                 if ($key == 'invalid') continue;
+                if ($key == 'Invalid') continue;
                 if ($key == 'Manual_Swap') continue;
+                if ($key == 'EARLI_Candidate') continue;
                 // {
                 //                    $this->tpl_data['items'][$x][$i]['CommentID'] = $item['CommentID'];
                 //               $this->tpl_data['items'][$x][$i]['Instrument'] = $item['Instrument'];
@@ -215,19 +217,23 @@ class NDB_Menu_Filter_blind_coding extends NDB_Menu_Filter
                 {
                    $this->tpl_data['items'][$x][$i]['value'] = $this->centerIDMap[$item['Site']];
                 }
-                if($key == 'Blind_score'){
-                  $this->tpl_data['items'][$x][$i+1]['name'] = 'score';
+                if($key == 'Reliability_score'){
+                  $this->tpl_data['items'][$x][$i+1]['name'] = 'Reliable';
                   if(is_null($val))
                     $reliable = null;
                   else if($val >= $threshold[$item['Instrument']])
                     $reliable = 'Yes';
                   else
+                  {
+                      print "xxxxx";
                     $reliable = 'No';
+                  }
                   $this->tpl_data['items'][$x][$i+1]['value'] = $reliable;
                 }
                 
                $i++;
             }
+            print_r($this->tpl_data['items'][$x]);
             $x++;
         }
 
@@ -249,7 +255,7 @@ class NDB_Menu_Filter_blind_coding extends NDB_Menu_Filter
         $PSCID_Replace_V = $_POST['Cand2Visit_label'];
         $Instrument = $_POST['SwapInstrument'];
 
-        $query="SELECT b.CommentID as OldID, b.reliability_center_id as CenterID, b.Blind_score as Score, c.CenterID as OldCenterID 
+        $query="SELECT b.CommentID as OldID, b.reliability_center_id as CenterID, b.Reliability_score as Score, c.CenterID as OldCenterID 
                         FROM candidate c JOIN session s ON (c.CandID=s.CandID) 
                             JOIN flag f ON (s.ID=f.SessionID) 
                             JOIN blind_coding b ON (b.CommentID=f.CommentID) 
