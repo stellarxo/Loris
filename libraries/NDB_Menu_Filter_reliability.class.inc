@@ -84,7 +84,7 @@ class NDB_Menu_Filter_reliability extends NDB_Menu_Filter
         $this->group_by = '';
         $this->order_by = 'reliability.Instrument, session.CandID, session.Visit_label';
         $this->headers = array('PSCID', 'reliability_center_id','Cohort', 'DCCID', 'Gender', 'Visit_label', 'Instrument', 'reliability_score', 'Reliable');
-        $this->validFilters = array('reliability.CommentID', 'reliability.reliability_center_id', 'session.SubprojectID', 'candidate.CenterID', 'session.CandID', 'candidate.PSCID', 'candidate.Gender', 'session.Visit_label', 'reliability.Instrument', 'reliability.Reliability_score', 'session.Current_stage');
+        $this->validFilters = array('reliability.CommentID', 'reliability.reliability_center_id', 'session.SubprojectID', 'candidate.CenterID', 'session.CandID', 'candidate.PSCID', 'candidate.Gender', 'session.Visit_label', 'reliability.Instrument', 'reliability.Reliability_score', 'session.Current_stage', 'reliability.invalid');
 
         $this->formToFilter = array(
                                     'CommentID' => 'reliability.CommentID',
@@ -98,6 +98,7 @@ class NDB_Menu_Filter_reliability extends NDB_Menu_Filter
 				                    'Instrument' => 'reliability.Instrument',
                                     'reliability_score'=>'reliability.Reliability_score',
                                     'Current_stage'=>'session.Current_stage',
+                                    'Invalid' => 'reliability.invalid'
                                     // 'Lock_record' => 'session.Lock_record'
                                     );
         return true;
@@ -152,6 +153,7 @@ class NDB_Menu_Filter_reliability extends NDB_Menu_Filter
         $this->form->addElement('select', 'Gender', 'Gender:', $gender_options);
         $this->form->addElement('select', 'Visit_label', 'Visit Label:', $list_of_visit_labels);
         $this->form->addElement('select', 'Instrument', 'Instrument:', $list_of_instruments);
+        $this->form->addElement('select', 'Invalid', 'Invalid Candidate:', array('' => '', 'yes' => 'Yes', 'no' => 'No'));
 	 // $this->form->addElement('select', 'Lock_record', 'Lock_record:', $lock_options);
        
        // For swapping candidates
@@ -341,6 +343,9 @@ class NDB_Menu_Filter_reliability extends NDB_Menu_Filter
     function cross_site_flagging($instrument, $current_site, $reliability_sites, $db){
         $ratio = 0.1;
         $reliability_site_index = 0; 
+        // We want the site to be random, starting from 0 causes a bias towards the first entry
+        // in $reliability_sites.. so shuffle the array to eliminate the bias
+        shuffle($reliability_sites);
         
         if($instrument == "adi_r_subject"){
           $query_extra = " AND (s.visit_label='v24' OR s.visit_label='v36')";
@@ -438,7 +443,7 @@ class NDB_Menu_Filter_reliability extends NDB_Menu_Filter
             return array( "error" => "Reliability score already exists for $PSCID/$PSCID_V. Can not swap candidate.");
         }
         $DB->run("UPDATE reliability SET invalid='yes', manual_swap='yes' WHERE CommentID='$CommentID[OldID]' AND Instrument='$Instrument'");
-        $DB->run("INSERT INTO reliability (CommentID, reliability_center_id, Instrument, Manual_Swap, EARLI_Candidate) VALUES ('$newCommentID[NewID]', $CenterID, '$Instrument', 'yes', $EARLI_Cand)");
+        $DB->run("INSERT INTO reliability (CommentID, reliability_center_id, Instrument, Manual_Swap, EARLI_Candidate) VALUES ('$newCommentID[NewID]', $CenterID, '$Instrument', 'yes', '$EARLI_Cand')");
 
         return array("message" => "Swapped candidate $PSCID for $PSCID_Replace");
     }

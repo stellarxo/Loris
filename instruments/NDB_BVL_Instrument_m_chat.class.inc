@@ -48,8 +48,8 @@ class NDB_BVL_Instrument_m_chat extends NDB_BVL_Instrument
 		// automatically adds examiner & date of administration
 		$this->_addMetadataFields();
 
-		$this->form->addElement('static', "item_fails", "Item Fails: ");
-		$this->form->addElement('static', "critical_fails", "Critical Fails: ");
+		$this->form->addElement('static', "total_item_fails", "Total Number of Fails: ");
+		$this->form->addElement('static', "total_critical_fails", "Critical Fails: ");
 		$this->form->addElement('static', "score", "Score: ");
 
 		$this->form->addElement('header', null, "Does your child...");
@@ -91,7 +91,7 @@ class NDB_BVL_Instrument_m_chat extends NDB_BVL_Instrument
 
 		$db =& Database::singleton();
 		if(PEAR::isError($db)) {
-			return PEAR::raiseError ("Could not connect to database: ".$db->getMessage());
+			return PEAR::raiseError ("Could not connect to : ".$db->getMessage());
 		}
 
 		// null scores
@@ -133,24 +133,35 @@ class NDB_BVL_Instrument_m_chat extends NDB_BVL_Instrument
 
 		//Check correctness of all questions
 		//"not_answered" questions are, for now, considered as passes.
+        $notAnswered = array('total_unanswered' => 0, 'critical_unanswered' => 0);
 		foreach ($scores as $question=>$answer) {
 			$correctAnswer = in_array($question, $noQuestions) ? "no" : "yes";
+            if($answer == 'not_answered') {
+                $notAnswered['total_unanswered']++;
+                if(in_array($question, $critical)) {
+                    $notAnswered['critical_unanswered']++;
+                }
+            }
+
 			if ($answer == $correctAnswer) {
 				continue;
 			}
 			else {
+				//count total item failures
+				$calculatedScores["total_item_fails"]++;
 				if (in_array($question, $critical)) {
 					//count critical failures
-					$calculatedScores["critical_fails"]++;
-				} else {
-					//count item failures
-					$calculatedScores["item_fails"]++;
+					$calculatedScores["total_critical_fails"]++;
 				}
 			}
 		}
 
 		//enforce failure cutoffs
-		$calculatedScores["score"] = ($calculatedScores["critical_fails"] >= 2 || $calculatedScores["item_fails"] >=3) ? "Fail" : "Pass";
+		$calculatedScores["score"] = ($calculatedScores["total_critical_fails"] >= 2 || $calculatedScores["total_item_fails"] >=3) ? "Fail" : "Pass";
+        // Need confirmation on if this should be done or not. According to Redmine ticket #1512 "we might" need to change the scoring to not be valid if 
+        // 2 critical failures or three total are unanswered
+		$calculatedScores["score"] .= ($notAnswered["critical_unanswered"] >= 2 || $notAnswered["total_unanswered"] >=3) ? "-Invalid" : '';
+        
 
 		// save the resultant total
 		$result = $db->update($this->table, $calculatedScores, array('CommentID'=>$this->getCommentID()));
