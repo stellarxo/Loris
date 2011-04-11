@@ -225,7 +225,6 @@ class NDB_Menu_Filter_blind_coding extends NDB_Menu_Filter
                     $reliable = 'Yes';
                   else
                   {
-                      print "xxxxx";
                     $reliable = 'No';
                   }
                   $this->tpl_data['items'][$x][$i+1]['value'] = $reliable;
@@ -233,7 +232,6 @@ class NDB_Menu_Filter_blind_coding extends NDB_Menu_Filter
                 
                $i++;
             }
-            print_r($this->tpl_data['items'][$x]);
             $x++;
         }
 
