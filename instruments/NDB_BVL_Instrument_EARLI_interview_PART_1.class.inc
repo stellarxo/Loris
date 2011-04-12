@@ -940,22 +940,22 @@ class NDB_BVL_Instrument_EARLI_interview_PART_1 extends NDB_BVL_Instrument {
 
 
 		//q3-1
-		$this->form->addElement("select", "q3_1", "3-1) How old (in years) were you when you had your first menstrual period?" ,array(NULL=>"","6", "7", "8", "9","10", "11", "12", "13", "14", "15", "16", "17", "18", "19","88_Refused" => "88 Refused",  "99_Do_not_know" => "99 Do not know", "Not_Answered"=>"Not Answered"));
+		$this->form->addElement("select", "q3_1_0", "3-1) How old (in years) were you when you had your first menstrual period?" ,array(NULL=>"","6", "7", "8", "9","10", "11", "12", "13", "14", "15", "16", "17", "18", "19","88_Refused" => "88 Refused",  "99_Do_not_know" => "99 Do not know", "Not_Answered"=>"Not Answered"));
 		$this->form->addElement('static', null, $this->indent . " If the age is entered or [Refused], go to question 3-3");
 		$this->form->addElement('static', null, $this->indent . " If you selected [Do not know], go to question 3-2");
 		$this->form->addElement('static', null, "<br/>");
 
 		//q3-2
-		$this->form->addElement("select", "q3_2", "3-2)  What grade were you in when you had your first menstrual period?", array(NULL=>"", "1", "2", "3", "4", "5", "6", "7", "8", "9","10", "11", "12", "88_Refused" => "88 Refused",  "99_Do_not_know"=>"99 Do not know", "Not_Answered"=>"Not Answered"));
-		$this->XINRegisterRule("q3_2", array("q3_1{@}=={@}99_Do_not_know"), "Required if don't know age");
+		$this->form->addElement("select", "q3_2_0", "3-2)  What grade were you in when you had your first menstrual period?", array(NULL=>"", "1", "2", "3", "4", "5", "6", "7", "8", "9","10", "11", "12", "88_Refused" => "88 Refused",  "99_Do_not_know"=>"99 Do not know", "Not_Answered"=>"Not Answered"));
+		$this->XINRegisterRule("q3_2_0", array("q3_1_0{@}=={@}99_Do_not_know"), "Required if don't know age");
 		$this->form->addElement('static', null, "<br/>");
 
 		//q3-3
-		$this->form->addElement("select", "q3_3", "3-3)  What was the average or typical number of days of your cycle between the first day of one menstrual period and the first day of the next menstrual period? Please think back to a time when you were not using birth control pills or other hormonal contraceptives.", array(NULL=>"", "21" => "21", "22", "23" => "23", "24", "25", "26", "27", "28", "29", "30", "31", "32", "33", "34", "35", "90 Irregular period", "88_Refused" => "88 Refused",  "99_Do_not_know"=>"99 Do not know", "Not_Answered"=>"Not Answered"));
+		$this->form->addElement("select", "q3_3_0", "3-3)  What was the average or typical number of days of your cycle between the first day of one menstrual period and the first day of the next menstrual period? Please think back to a time when you were not using birth control pills or other hormonal contraceptives.", array(NULL=>"", "21" => "21", "22", "23" => "23", "24", "25", "26", "27", "28", "29", "30", "31", "32", "33", "34", "35", "90 Irregular period", "88_Refused" => "88 Refused",  "99_Do_not_know"=>"99 Do not know", "Not_Answered"=>"Not Answered"));
 		$this->form->addElement('static', null, "<br/>");
 
 		//q3-4
-		$this->form->addElement("select", "q3_4", "3-4) How many times have you been pregnant? Please count all pregnancies, including those that ended in live birth, stillbirth, miscarriage, abortion, or a tubal, ectopic, or molar pregnancy. Include children from other relationships, your pregnancy with [PROBAND] and your last pregnancy with the sibling of the child with ASD.", array(NULL=>"", "1", "2", "3", "4", "5", "6", "7", "8", "9","10", "11", "12",  "88_Refused" => "88 Refused",  "99_Do_not_know"=>"99 Do not know", "Not_Answered"=>"Not Answered"));
+		$this->form->addElement("select", "q3_4_0", "3-4) How many times have you been pregnant? Please count all pregnancies, including those that ended in live birth, stillbirth, miscarriage, abortion, or a tubal, ectopic, or molar pregnancy. Include children from other relationships, your pregnancy with [PROBAND] and your last pregnancy with the sibling of the child with ASD.", array(NULL=>"", "1", "2", "3", "4", "5", "6", "7", "8", "9","10", "11", "12",  "88_Refused" => "88 Refused",  "99_Do_not_know"=>"99 Do not know", "Not_Answered"=>"Not Answered"));
 		$this->form->addElement('static', null, "<br/>");
 		$this->form->addElement('static', null, "<br/>");
 
@@ -968,18 +968,18 @@ class NDB_BVL_Instrument_EARLI_interview_PART_1 extends NDB_BVL_Instrument {
 		$this->form->addElement('static', null, "<br/>");
 
 		//q3-5
-		$this->form->addElement("select", "q3_5", "3-5) How many babies were you carrying during your 1st pregnancy?", array(NULL=>"", "1"=>"1 (Single baby)", "2"=>"2 (Twins)", "3"=>"3", "4"=>"4", "5"=>"5", "88_Refused" => "88 Refused", "99_Do_not_know"=>"99 Do not know", "Not_Answered"=>"Not Answered"));
+		$this->form->addElement("select", "q3_5_0", "3-5) How many babies were you carrying during your 1st pregnancy?", array(NULL=>"", "1"=>"1 (Single baby)", "2"=>"2 (Twins)", "3"=>"3", "4"=>"4", "5"=>"5", "88_Refused" => "88 Refused", "99_Do_not_know"=>"99 Do not know", "Not_Answered"=>"Not Answered"));
 		$this->form->addElement('static', null, $this->indent . " If you selected [single baby], go to question 3-6");
 		$this->form->addElement('static', null, $this->indent . " If you selected [multiple babies],go to question 3-7");
 		$this->form->addElement('static', null, "<br/>");
 
 		//q3-6
-		$this->form->addElement("select", "q3_6", "3-6) Did your 1st pregnancy end with a/an...? ",  array(NULL=>"", "01" => "01 Live birth", "02" => "02 Stillbirth", "03" => "03  Induced abortion", "04" => "04 Miscarriage", "05" => "05 Tubal pregnancy", "06" => "06 Molar pregnancy", "07_other" => "07 Other", "88_Refused" => "88 Refused",  "99_Do_not_know"=>"99 Do not know", "Not_Answered"=>"Not Answered"));
+		$this->form->addElement("select", "q3_6_0", "3-6) Did your 1st pregnancy end with a/an...? ",  array(NULL=>"", "01" => "01 Live birth", "02" => "02 Stillbirth", "03" => "03  Induced abortion", "04" => "04 Miscarriage", "05" => "05 Tubal pregnancy", "06" => "06 Molar pregnancy", "07_other" => "07 Other", "88_Refused" => "88 Refused",  "99_Do_not_know"=>"99 Do not know", "Not_Answered"=>"Not Answered"));
 		$this->form->addElement('static', null, $this->indent . " If you selected [Live birth], [Refused], or [Don't know], go to question 3-10");
 		$this->form->addElement('static', null, $this->indent . " If you selected [Stillbirth], [Induced abortion], [Miscarriage], [Tubal pregnancy], [Molar pregnancy] or, go to question 3-12");
-		$this->addTextAreaElementRD('q3_6_text', $this->indent . " If you selected [Other], please specify and go to question 3-12.");
-		$this->XINRegisterRule("q3_6", array("q3_5{@}=={@}1"), "Required if carried single baby during 1st pregnancy");
-		$this->XINRegisterRule('q3_6_text', array("q3_6{@}=={@}07_other"), "You must specify other", "q3_6_text_group");
+		$this->addTextAreaElementRD('q3_6_text_0', $this->indent . " If you selected [Other], please specify and go to question 3-12.");
+		$this->XINRegisterRule("q3_6_0", array("q3_5_0{@}=={@}1"), "Required if carried single baby during 1st pregnancy");
+		$this->XINRegisterRule('q3_6_text_0', array("q3_6_0{@}=={@}07_other"), "You must specify other", "q3_6_text_0_group");
 
 
 		//q3-7
@@ -987,16 +987,16 @@ class NDB_BVL_Instrument_EARLI_interview_PART_1 extends NDB_BVL_Instrument {
 		for ($i = 1; $i <=5; $i++)
 		{
 
-			$this->form->addElement("select", "q3_7_{$i}", "<br/>$this->indent BABY # {$i}",  array(NULL=>"", "01" => "01 Live birth", "02" => "02 Stillbirth", "03" => "03  Induced abortion", "04" => "04 Miscarriage", "05" => "05 Tubal pregnancy", "06" => "06 Molar pregnancy", "07_other" => "07 Other ", "88_Refused" => "88 Refused",  "99_Do_not_know"=>"99 Do not know", "Not_Answered"=>"Not Answered"));
+			$this->form->addElement("select", "q3_7_{$i}_0", "<br/>$this->indent BABY # {$i}",  array(NULL=>"", "01" => "01 Live birth", "02" => "02 Stillbirth", "03" => "03  Induced abortion", "04" => "04 Miscarriage", "05" => "05 Tubal pregnancy", "06" => "06 Molar pregnancy", "07_other" => "07 Other ", "88_Refused" => "88 Refused",  "99_Do_not_know"=>"99 Do not know", "Not_Answered"=>"Not Answered"));
 			if ($i<3)
-				$this->XINRegisterRule("q3_7_{$i}", array("q3_5{@}!={@}1"), "Required if had multiple babies");
-			$this->addTextAreaElementRD("q3_7_{$i}_text", $this->indent . " If you selected [Other], please specify.");
-			$this->XINRegisterRule("q3_7_{$i}_text", array("q3_7_{$i}{@}=={@}07_other"), "You must specify other", "q3_7_{$i}_text_group");
+				$this->XINRegisterRule("q3_7_{$i}_0", array("q3_5_0{@}!={@}1"), "Required if had multiple babies");
+			$this->addTextAreaElementRD("q3_7_{$i}_text_0", $this->indent . " If you selected [Other], please specify.");
+			$this->XINRegisterRule("q3_7_{$i}_text_0", array("q3_7_{$i}_0{@}=={@}07_other"), "You must specify other", "q3_7_{$i}_text_0_group");
 		}
 
-		$this->XINRegisterRule('q3_7_3', array("q3_7_3{@}=={@}NEVER_REQUIRED"));
-		$this->XINRegisterRule('q3_7_4', array("q3_7_4{@}=={@}NEVER_REQUIRED"));
-		$this->XINRegisterRule('q3_7_5', array("q3_7_5{@}=={@}NEVER_REQUIRED"));
+		$this->XINRegisterRule('q3_7_3_0', array("q3_7_3_0{@}=={@}NEVER_REQUIRED"));
+		$this->XINRegisterRule('q3_7_4_0', array("q3_7_4_0{@}=={@}NEVER_REQUIRED"));
+		$this->XINRegisterRule('q3_7_5_0', array("q3_7_5_0{@}=={@}NEVER_REQUIRED"));
 
 		$this->form->addElement('static', null, "<br/>");
 		$this->form->addElement('static', null, $this->indent . " If [01 Live birth], go to question 3-10");
@@ -1005,40 +1005,40 @@ class NDB_BVL_Instrument_EARLI_interview_PART_1 extends NDB_BVL_Instrument {
 		$this->form->addElement('static', null, "<br/>");
 
 		//q3-8
-		$this->form->addElement("select", "q3_8", "3-8) Were the babies identical?",  array(NULL=>"", "01_yes" => "01 Yes", "02_no" => "02 No", "88_Refused" => "88 Refused",  "99_Do_not_know"=>"99 Do not know", "Not_Answered"=>"Not Answered"));
+		$this->form->addElement("select", "q3_8_0", "3-8) Were the babies identical?",  array(NULL=>"", "01_yes" => "01 Yes", "02_no" => "02 No", "88_Refused" => "88 Refused",  "99_Do_not_know"=>"99 Do not know", "Not_Answered"=>"Not Answered"));
 		//Rule is taken care of in rulesPage4 function
-		$this->XINRegisterRule("q3_8", array("q3_8{@}=={@}NEVER_REQUIRED"));
+		$this->XINRegisterRule("q3_8_0", array("q3_8_0{@}=={@}NEVER_REQUIRED"));
 		$this->form->addElement('static', null, $this->indent . " If you selected [Yes], go to question 3-9");
 		$this->form->addElement('static', null, $this->indent . " If you selected [No], [Refused] or [Don't Know], skip to question 3-10");
 		$this->form->addElement('static', null, "<br/>");
 		
 
 		//3-9
-		$this->form->addElement("select", "q3_9", "3-9) How do you know they are identical twins?",  array(NULL=>"", "01" => "01 Doctor told you", "02" => "02 Genetic tests", "03" => "03  They are as alike as two peas in a pod", "88_Refused" => "88 Refused",  "99_Do_not_know"=>"99 Do not know", "Not_Answered"=>"Not Answered"));
-		$this->XINRegisterRule("q3_9", array("q3_8{@}=={@}01_yes"), "Required if babies identical");
+		$this->form->addElement("select", "q3_9_0", "3-9) How do you know they are identical twins?",  array(NULL=>"", "01" => "01 Doctor told you", "02" => "02 Genetic tests", "03" => "03  They are as alike as two peas in a pod", "88_Refused" => "88 Refused",  "99_Do_not_know"=>"99 Do not know", "Not_Answered"=>"Not Answered"));
+		$this->XINRegisterRule("q3_9_0", array("q3_8_0{@}=={@}01_yes"), "Required if babies identical");
 		$this->form->addElement('static', null, "<br/>");
 
 		//q3-10
-		$this->form->addElement("select", "q3_10", "3-10) Was this pregnancy with [PROBAND]?",  array(NULL=>"", "01_yes" => "01 Yes", "02" => "02 No ", "88_Refused" => "88 Refused",  "99_Do_not_know"=>"99 Do not know", "Not_Answered"=>"Not Answered"));
+		$this->form->addElement("select", "q3_10_0", "3-10) Was this pregnancy with [PROBAND]?",  array(NULL=>"", "01_yes" => "01 Yes", "02" => "02 No ", "88_Refused" => "88 Refused",  "99_Do_not_know"=>"99 Do not know", "Not_Answered"=>"Not Answered"));
 		
 		//Rule is taken care of in rulesPage4 function
-		$this->XINRegisterRule("q3_10", array("q3_6{@}=={@}NEVER_REQUIRED"));
+		$this->XINRegisterRule("q3_10_0", array("q3_6_0{@}=={@}NEVER_REQUIRED"));
 		$this->form->addElement('static', null, $this->indent . " If you selected [Yes], go to question 3-13");
 		$this->form->addElement('static', null, $this->indent . " If you selected [No], go to question 3-11");
 		$this->form->addElement('static', null, "<br/>");
 
 		
 		//q3-11
-		$this->form->addElement("select", "q3_11", "3-11) Does the baby from your 1st pregnancy have the same biological father as [PROBAND]?",  array(NULL=>"", "01_yes" => "01 Yes", "02_no" => "02 No", "88_Refused" => "88 Refused",  "99_Do_not_know"=>"99 Do not know", "Not_Answered"=>"Not Answered"));
+		$this->form->addElement("select", "q3_11_0", "3-11) Does the baby from your 1st pregnancy have the same biological father as [PROBAND]?",  array(NULL=>"", "01_yes" => "01 Yes", "02_no" => "02 No", "88_Refused" => "88 Refused",  "99_Do_not_know"=>"99 Do not know", "Not_Answered"=>"Not Answered"));
 		$this->form->addElement('static', null, $this->indent . "<b>Record answer, then go to question 3-14</b>");
-		$this->XINRegisterRule("q3_11", array("q3_10{@}=={@}02"), "Required if not pregnancy with [PROBAND]");
+		$this->XINRegisterRule("q3_11_0", array("q3_10_0{@}=={@}02"), "Required if not pregnancy with [PROBAND]");
 		$this->form->addElement('static', null, "<br/>");
 
 
 		//q3-12
-		$this->form->addElement("select", "q3_12", "3-12) Did the [OUTCOME] have the same biological father as [PROBAND]",  array(NULL=>"", "01_yes" => "01 Yes", "02" => "02 No ", "88_refused" => "88 Refused",  "99_Do_not_know"=>"99 Do not know", "Not_Answered"=>"Not Answered"));
+		$this->form->addElement("select", "q3_12_0", "3-12) Did the [OUTCOME] have the same biological father as [PROBAND]",  array(NULL=>"", "01_yes" => "01 Yes", "02" => "02 No ", "88_refused" => "88 Refused",  "99_Do_not_know"=>"99 Do not know", "Not_Answered"=>"Not Answered"));
                 //Rule is taken care of in rulesPage4 function
-                $this->XINRegisterRule("q3_12", array("q3_12{@}=={@}NEVER_REQUIRED"));
+                $this->XINRegisterRule("q3_12_0", array("q3_12_0{@}=={@}NEVER_REQUIRED"));
 		$this->form->addElement('static', null, " $this->indent <b>Record answer, then go to question 3-20</b>");
 		$this->form->addElement('static', null, "<br/>");
 
@@ -1051,9 +1051,9 @@ class NDB_BVL_Instrument_EARLI_interview_PART_1 extends NDB_BVL_Instrument {
 
 		//q3-14
 		$this->form->addElement('static', null, "3-14) What is the first name of the baby from your 1st pregnancy?"); 
-		$this->addTextAreaElementRD('q3_14', $this->indent . "FIRST NAME:");
+		$this->addTextAreaElementRD('q3_14_0', $this->indent . "FIRST NAME:");
 		$this->form->addElement('static', null, $this->indent . "<b>Record answer, then go to question 3-16 (If Proband, automatic fill)</b>");
-		$this->XINRegisterRule("q3_14", array("q3_14{@}=={@}NEVER_REQUIRED"), "q3_14_group");
+		$this->XINRegisterRule("q3_14_0", array("q3_14_0{@}=={@}NEVER_REQUIRED"), "q3_14_0_group");
 		$this->form->addElement('static', null, "<br/>");
 
 		//q3-15
@@ -1063,10 +1063,10 @@ class NDB_BVL_Instrument_EARLI_interview_PART_1 extends NDB_BVL_Instrument {
 
 		for ($i=1; $i<6; $i++)
 		{
-			$this->addTextAreaElementRD("q3_15_name{$i}", $this->indent . "BABY #{$i}:");
+			$this->addTextAreaElementRD("q3_15_name{$i}_0", $this->indent . "BABY #{$i}:");
 		
 //			if ($i>2)
-				$this->XINRegisterRule("q3_15_name{$i}", array("q3_15_name{$i}{@}=={@}NEVER_REQUIRED"), "q3_15_name{$i}_group");
+				$this->XINRegisterRule("q3_15_name{$i}_0", array("q3_15_name{$i}_0{@}=={@}NEVER_REQUIRED"), "q3_15_name{$i}_0_group");
 //				$this->XINRegisterRule("q3_15_name{$i}", array("q3_15{@}=={@}00_specify"), "You must specify a name");
 		}
 		
@@ -1075,8 +1075,8 @@ class NDB_BVL_Instrument_EARLI_interview_PART_1 extends NDB_BVL_Instrument {
 		$this->form->addElement('static', null, "<br/>");
 
 		//q3-16
-		$this->form->addElement("select", "q3_16", "3-16) What was the gender of the baby born from your 1st pregnancy? ",  array(NULL=>"", "01" => "01 Boy", "02" => "02 Girl ", "88_Refused" => "88 Refused",  "99_Do_not_know"=>"99 Do not know", "Not_Answered"=>"Not Answered"));
-		$this->XINRegisterRule("q3_16", array("q3_16{@}=={@}NEVER_REQUIRED"));
+		$this->form->addElement("select", "q3_16_0", "3-16) What was the gender of the baby born from your 1st pregnancy? ",  array(NULL=>"", "01" => "01 Boy", "02" => "02 Girl", "88_Refused" => "88 Refused", "99_Do_not_know"=>"99 Do not know", "Not_Answered"=>"Not Answered"));
+		$this->XINRegisterRule("q3_16_0", array("q3_16_0{@}=={@}NEVER_REQUIRED"));
 		$this->form->addElement('static', null, " $this->indent <b>Record answer, then go to question 3-18 (If Proband, automatic fill)</b>");
 		$this->form->addElement('static', null, "<br/>");
 
@@ -1085,12 +1085,12 @@ class NDB_BVL_Instrument_EARLI_interview_PART_1 extends NDB_BVL_Instrument {
 
 		for ($i=1; $i<6; $i++)
 		{
-			$this->form->addElement("select", "q3_17_{$i}", "$this->indent BABY #{$i}:",  array(NULL=>"", "01" => "01 Boy", "02" => "02 Girl", "88_Refused" => "88 Refused",  "99_Do_not_know"=>"99 Do not know", "Not_Answered"=>"Not Answered"));	
+			$this->form->addElement("select", "q3_17_{$i}_0", "$this->indent BABY #{$i}:",  array(NULL=>"", "01" => "01 Boy", "02" => "02 Girl", "88_Refused" => "88 Refused",  "99_Do_not_know"=>"99 Do not know", "Not_Answered"=>"Not Answered"));	
 			
 //			if ($i>2)
 			//	$this->XINRegisterRule("q3_17_{$i}", array("q3_17{@}=={@}00_specify"), "You must specify genders");
 		//	else
-				$this->XINRegisterRule("q3_17_{$i}", array("q3_17_{$i}{@}=={@}NEVER_REQUIRED"));
+				$this->XINRegisterRule("q3_17_{$i}_0", array("q3_17_{$i}_0{@}=={@}NEVER_REQUIRED"));
 		}
 
 
@@ -1099,10 +1099,10 @@ class NDB_BVL_Instrument_EARLI_interview_PART_1 extends NDB_BVL_Instrument {
 		$this->form->addElement('static', null, "<br/>");
 
 		//q3-18
-		$this->addCustomDateElement('q3_18', $this->indent . "3-18) What is the birth date of the baby from your 1st pregnancy?", $this->dateOptions1960);
+		$this->addCustomDateElement('q3_18_0', $this->indent . "3-18) What is the birth date of the baby from your 1st pregnancy?", $this->dateOptions1960);
 		$this->form->addElement('static', null, " $this->indent<b> Record answer, then go to question 3-30</b>");
-		$this->XINRegisterRule('q3_18_date', array("q3_18_date{@}=={@}NEVER_REQUIRED"), "q3_18_date_group");
-		$this->XINRegisterRule('q3_18_date_status', array("q3_18_date_status{@}=={@}NEVER_REQUIRED"), "q3_18_date_group");
+		$this->XINRegisterRule('q3_18_0_date', array("q3_18_0_date{@}=={@}NEVER_REQUIRED"), "q3_18_0_date_group");
+		$this->XINRegisterRule('q3_18_0_date_status', array("q3_18_0_date_status{@}=={@}NEVER_REQUIRED"), "q3_18_0_date_group");
 		$this->form->addElement('static', null, " $this->indent <b>If proband pregnancy (YES to 3-10), record on pregnancy calendar as DOPB.</b>");
 		$this->form->addElement('static', null, "<br/>");
 
@@ -1112,11 +1112,11 @@ class NDB_BVL_Instrument_EARLI_interview_PART_1 extends NDB_BVL_Instrument {
 
 		for ($i=1; $i<6; $i++)
 		{
-			$this->addCustomDateElement("q3_19_{$i}", $this->indent . "BABY #{$i}:", $this->dateOptions1960);
+			$this->addCustomDateElement("q3_19_{$i}_0", $this->indent . "BABY #{$i}:", $this->dateOptions1960);
 
 	//		if ($i>2)
-				$this->XINRegisterRule("q3_19_{$i}_date", array("q3_19_{$i}_date{@}=={@}NEVER_REQUIRED"), "q3_19_{$i}_date_group");
-				$this->XINRegisterRule("q3_19_{$i}_date_status", array("q3_19_{$i}_date_status{@}=={@}NEVER_REQUIRED"), "q3_19_{$i}_date_group");
+				$this->XINRegisterRule("q3_19_{$i}_0_date", array("q3_19_{$i}_0_date{@}=={@}NEVER_REQUIRED"), "q3_19_{$i}_0_date_group");
+				$this->XINRegisterRule("q3_19_{$i}_0_date_status", array("q3_19_{$i}_0_date_status{@}=={@}NEVER_REQUIRED"), "q3_19_{$i}_0_date_group");
 		}
 
 		
@@ -1125,9 +1125,9 @@ class NDB_BVL_Instrument_EARLI_interview_PART_1 extends NDB_BVL_Instrument {
 		$this->form->addElement('static', null, "<br/>");
 
 		//q3-20
-		$this->addCustomDateElement('q3_20', $this->indent . "3-20) On what date did your 1st pregnancy end?", $this->dateOptions1960);
-		$this->XINRegisterRule("q3_20_date", array("q3_20_date{@}=={@}NEVER_REQUIRED"), "q3_20_date_group");
-		$this->XINRegisterRule("q3_20_date_status", array("q3_20_date_status{@}=={@}NEVER_REQUIRED"), "q3_20_date_group");
+		$this->addCustomDateElement('q3_20_0', $this->indent . "3-20) On what date did your 1st pregnancy end?", $this->dateOptions1960);
+		$this->XINRegisterRule("q3_20_0_date", array("q3_20_0_date{@}=={@}NEVER_REQUIRED"), "q3_20_0_date_group");
+		$this->XINRegisterRule("q3_20_0_date_status", array("q3_20_0_date_status{@}=={@}NEVER_REQUIRED"), "q3_20_0_date_group");
 		$this->form->addElement('static', null, " $this->indent<b> Record answer, then go to question 3-33</b>");
 		$this->form->addElement('static', null, "<br/>");
 		$this->form->addElement('static', null, "<br/>");
@@ -1136,17 +1136,17 @@ class NDB_BVL_Instrument_EARLI_interview_PART_1 extends NDB_BVL_Instrument {
 
 		//q3-21 ***
 		$this->form->addElement('static', null, " 3-21) How long had you been pregnant when the 1st pregnancy ended?");
-		$this->addNumericElementRD('q3_21weeks', $this->indent . "Weeks");
-		$this->addNumericElementRD('q3_21months', $this->indent . "Months");
+		$this->addNumericElementRD('q3_21weeks_0', $this->indent . "Weeks");
+		$this->addNumericElementRD('q3_21months_0', $this->indent . "Months");
 		$this->form->addElement('static', null, "<br/>");
 		$this->form->addElement('static', null, "<br/>");
 
 		//q3-22
 		$this->form->addElement("static", null, "3-22) How many pounds and ounces did [BABY] weigh?");
-		$this->addNumericElementRD('q3_22pounds', $this->indent . $this->indent . " Pounds");
-		$this->XINRegisterRule("q3_22pounds", array("q3_22pounds{@}=={@}NEVER_REQUIRED"), "q3_22pounds_group");
-		$this->addNumericElementRD('q3_22ounces', $this->indent . $this->indent . " Ounces");
-		$this->XINRegisterRule("q3_22ounces", array("q3_22ounces{@}=={@}NEVER_REQUIRED"), "q3_22ounces_group");
+		$this->addNumericElementRD('q3_22pounds_0', $this->indent . $this->indent . " Pounds");
+		$this->XINRegisterRule("q3_22pounds_0", array("q3_22pounds_0{@}=={@}NEVER_REQUIRED"), "q3_22pounds_0_group");
+		$this->addNumericElementRD('q3_22ounces_0', $this->indent . $this->indent . " Ounces");
+		$this->XINRegisterRule("q3_22ounces_0", array("q3_22ounces_0{@}=={@}NEVER_REQUIRED"), "q3_22ounces_0_group");
 		$this->form->addElement("static", null, "$this->indent <b>Record answer, then go to question 3-24</b>");
 		$this->form->addElement('static', null, "<br/>");
 		$this->form->addElement('static', null, "<br/>");
@@ -1158,12 +1158,12 @@ class NDB_BVL_Instrument_EARLI_interview_PART_1 extends NDB_BVL_Instrument {
 		for ($i=1; $i<6; $i++)
 		{
 	                $this->form->addElement('static', null, "BABY #{$i}:");
-			$this->addNumericElementRD("q3_23pounds{$i}", $this->indent . $this->indent . " Pounds"); 
-			$this->addNumericElementRD("q3_23ounces{$i}", $this->indent . $this->indent . " Ounces");
+			$this->addNumericElementRD("q3_23pounds{$i}_0", $this->indent . $this->indent . " Pounds"); 
+			$this->addNumericElementRD("q3_23ounces{$i}_0", $this->indent . $this->indent . " Ounces");
 
 
-			$this->XINRegisterRule("q3_23pounds{$i}", array("q3_23pounds{$i}{@}=={@}NEVER_REQUIRED"), "q3_23pounds{$i}_group");
-			$this->XINRegisterRule("q3_23ounces{$i}", array("q3_23ounces{$i}{@}=={@}NEVER_REQUIRED"), "q3_23ounces{$i}_group");
+			$this->XINRegisterRule("q3_23pounds{$i}_0", array("q3_23pounds{$i}_0{@}=={@}NEVER_REQUIRED"), "q3_23pounds{$i}_0_group");
+			$this->XINRegisterRule("q3_23ounces{$i}_0", array("q3_23ounces{$i}_0{@}=={@}NEVER_REQUIRED"), "q3_23ounces{$i}_0_group");
 		}
 
 		$this->form->addElement('static', null, "$this->indent <b>Record answer, then go to question 3-24</b>");
@@ -1172,8 +1172,8 @@ class NDB_BVL_Instrument_EARLI_interview_PART_1 extends NDB_BVL_Instrument {
 
 
 		//q3-24
-		$this->form->addElement("select", "q3_24", "3-24) Is [BABY] still living?", $this->yesNo); 
-		$this->XINRegisterRule("q3_24", array("q3_24{@}=={@}NEVER_REQUIRED"));
+		$this->form->addElement("select", "q3_24_0", "3-24) Is [BABY] still living?", $this->yesNo); 
+		$this->XINRegisterRule("q3_24_0", array("q3_24_0{@}=={@}NEVER_REQUIRED"));
 		$this->form->addElement('static', null, $this->indent . " If you selected [Yes], go to question 3-30");
 		$this->form->addElement('static', null, $this->indent . " If you selected [No], go to question 3-26");
 		$this->form->addElement('static', null, $this->indent . " If you selected [Refused] or [Don't Know], skip to question 3-32");
@@ -1187,9 +1187,9 @@ class NDB_BVL_Instrument_EARLI_interview_PART_1 extends NDB_BVL_Instrument {
 
 		for ($i=1; $i<6; $i++)
 		{
-			$this->form->addElement("select", "q3_25_{$i}", "$this->indent BABY #{$i}:", $this->yesNo);
+			$this->form->addElement("select", "q3_25_{$i}_0", "$this->indent BABY #{$i}:", $this->yesNo);
 
-			$this->XINRegisterRule("q3_25_{$i}", array("q3_25_{$i}{@}=={@}NEVER_REQUIRED"), "q3_25_{$i}_group");
+			$this->XINRegisterRule("q3_25_{$i}_0", array("q3_25_{$i}_0{@}=={@}NEVER_REQUIRED"), "q3_25_{$i}_0_group");
 		}
 
 
@@ -1202,8 +1202,8 @@ class NDB_BVL_Instrument_EARLI_interview_PART_1 extends NDB_BVL_Instrument {
 		$this->form->addElement('static', null, "<br/>");
 
 		//q3-26
-		$this->addTextAreaElementRD('q3_26', "3-26) What did [BABY] die of?");
-		$this->XINRegisterRule("q3_26", array("q3_24{@}=={@}02", "q3_26_status{@}=={@}"), "You must specify", "q3_26_group");
+		$this->addTextAreaElementRD('q3_26_0', "3-26) What did [BABY] die of?");
+		$this->XINRegisterRule("q3_26_0", array("q3_24_0{@}=={@}02", "q3_26_0_status{@}=={@}"), "You must specify", "q3_26_0_group");
 		$this->form->addElement('static', null, " $this->indent If you selected [Refused] or [Don't Know], skip to question 3-32");
 		$this->form->addElement('static', null, " $this->indent <b>Record answer, then go to question 3-28</b>");
 		$this->form->addElement('static', null, "<br/>");
@@ -1216,8 +1216,8 @@ class NDB_BVL_Instrument_EARLI_interview_PART_1 extends NDB_BVL_Instrument {
 
 		for ($i=1; $i<6; $i++)
 		{		
-			$this->addTextAreaElementRD("q3_27_specify{$i}", $this->indent . "BABY #{$i}");
-			$this->XINRegisterRule("q3_27_specify{$i}", array("q3_27_specify{$i}{@}=={@}NEVER_REQUIRED"), "q3_27_specify{$i}_group");
+			$this->addTextAreaElementRD("q3_27_specify{$i}_0", $this->indent . "BABY #{$i}");
+			$this->XINRegisterRule("q3_27_specify{$i}_0", array("q3_27_specify{$i}_0{@}=={@}NEVER_REQUIRED"), "q3_27_specify{$i}_0_group");
 						
 		}
 
@@ -1228,17 +1228,17 @@ class NDB_BVL_Instrument_EARLI_interview_PART_1 extends NDB_BVL_Instrument {
 
 		//q3-28
 		$this->form->addElement('static', null, "3-28) How old was [BABY] when he/she died?");
-		$this->addNumericElementRD('q3_28_years', $this->indent . $this->indent . " Years");
-		$this->XINRegisterRule("q3_28_years", array("q3_24{@}=={@}02_no", "q3_26_status{@}=={@}"), "You must specify years", "q3_28_years_group");
-		$this->addNumericElementRD('q3_28_months', $this->indent . $this->indent . " Months");
-		$this->XINRegisterRule("q3_28_months", array("q3_24{@}=={@}02_no", "q3_26_status{@}=={@}"), "You must specify month(s)", "q3_28_months_group");
+		$this->addNumericElementRD('q3_28_years_0', $this->indent . $this->indent . " Years");
+		$this->XINRegisterRule("q3_28_years_0", array("q3_24_0{@}=={@}02_no", "q3_26_0_status{@}=={@}"), "You must specify years", "q3_28_years_0_group");
+		$this->addNumericElementRD('q3_28_months_0', $this->indent . $this->indent . " Months");
+		$this->XINRegisterRule("q3_28_months_0", array("q3_24_0{@}=={@}02_no", "q3_26_0_status{@}=={@}"), "You must specify month(s)", "q3_28_months_0_group");
 			
 	// SPECIFY ONE OR BOTH???	
 		$this->form->addElement('static', null, $this->indent . "<i>If don't know, ask:</i>");
 		
-		$this->addCustomDateElement("q3_28_2date", $this->indent . "What was the date of [BABY]'s death?", $this->dateOptions1960);
-		$this->XINRegisterRule('q3_28_2date_date', array("q3_24{@}=={@}02_no", "q3_26_status{@}=={@}", "q3_28_2date_date_status{@}=={@}"), "You must specify a date or select from the drop-down", "q3_28_2date_date_group");
-		$this->XINRegisterRule('q3_28_2date_date_status', array("q3_24{@}=={@}02_no", "q3_26_status{@}=={@}", "q3_28_2date_date{@}=={@}"), "You must specify a date or select from the drop-down", "q3_28_2date_date_group");
+		$this->addCustomDateElement("q3_28_2date_0", $this->indent . "What was the date of [BABY]'s death?", $this->dateOptions1960);
+		$this->XINRegisterRule('q3_28_2date_0_date', array("q3_24_0{@}=={@}02_no", "q3_26_0_status{@}=={@}", "q3_28_2date_0_date_status{@}=={@}"), "You must specify a date or select from the drop-down", "q3_28_2date_0_date_group");
+		$this->XINRegisterRule('q3_28_2date_0_date_status', array("q3_24_0{@}=={@}02_no", "q3_26_0_status{@}=={@}", "q3_28_2date_0_date{@}=={@}"), "You must specify a date or select from the drop-down", "q3_28_2date_0_date_group");
 		$this->form->addElement('static', null, " $this->indent <b>Record answer, then go to question 3-32</b>");
 		$this->form->addElement('static', null, "<br/>");
 		$this->form->addElement('static', null, "<br/>");
@@ -1251,14 +1251,14 @@ class NDB_BVL_Instrument_EARLI_interview_PART_1 extends NDB_BVL_Instrument {
 		for ($i=1; $i<6; $i++)
 		{	
 			$this->form->addElement('static', null, "BABY #{$i}:");
-			$this->addNumericElementRD("q3_29_years{$i}", $this->indent . $this->indent . " Years");
-			$this->addNumericElementRD("q3_29_months{$i}", $this->indent . $this->indent . " Months");
+			$this->addNumericElementRD("q3_29_years{$i}_0", $this->indent . $this->indent . " Years");
+			$this->addNumericElementRD("q3_29_months{$i}_0", $this->indent . $this->indent . " Months");
 			$this->form->addElement('static', null, $this->indent . "<i>If don't know, ask:</i>");
-			$this->XINRegisterRule("q3_29_years{$i}", array("q3_29_years{$i}{@}=={@}NEVER_REQUIRED"), "q3_29_years{$i}_group");
-			$this->XINRegisterRule("q3_29_months{$i}", array("q3_29_months{$i}{@}=={@}NEVER_REQUIRED"), "q3_29_months{$i}");
-			$this->addCustomDateElement("q3_29_d{$i}", $this->indent . " What was the date of [BABY]'s death?", $this->dateOptions1960);
-			$this->XINRegisterRule("q3_29_d{$i}_date", array("q3_29_d{$i}_date{@}=={@}NEVER_REQUIRED"), "q3_29_d{$i}_date_group");
-			$this->XINRegisterRule("q3_29_d{$i}_date_status", array("q3_29_d{$i}_date_status{@}=={@}NEVER_REQUIRED"), "q3_29_d{$i}_date_group");
+			$this->XINRegisterRule("q3_29_years{$i}_0", array("q3_29_years{$i}_0{@}=={@}NEVER_REQUIRED"), "q3_29_years{$i}_0_group");
+			$this->XINRegisterRule("q3_29_months{$i}_0", array("q3_29_months{$i}_0{@}=={@}NEVER_REQUIRED"), "q3_29_months{$i}_0_group");
+			$this->addCustomDateElement("q3_29_d{$i}_0", $this->indent . " What was the date of [BABY]'s death?", $this->dateOptions1960);
+			$this->XINRegisterRule("q3_29_d{$i}_0_date", array("q3_29_d{$i}_0_date{@}=={@}NEVER_REQUIRED"), "q3_29_d{$i}_0_date_group");
+			$this->XINRegisterRule("q3_29_d{$i}_0_date_status", array("q3_29_d{$i}_0_date_status{@}=={@}NEVER_REQUIRED"), "q3_29_d{$i}_0_date_group");
 			$this->form->addElement('static', null, "<br/>");
 		}
 
@@ -1266,8 +1266,8 @@ class NDB_BVL_Instrument_EARLI_interview_PART_1 extends NDB_BVL_Instrument {
 
 
 		//q3-30
-		$this->form->addElement("select", "q3_30", "3-30)  Did you ever breastfeed or pump breast milk to feed [BABY]?", $this->yesNo); 
-		$this->XINRegisterRule("q3_30", array("q3_30{@}=={@}NEVER_REQUIRED"));
+		$this->form->addElement("select", "q3_30_0", "3-30)  Did you ever breastfeed or pump breast milk to feed [BABY]?", $this->yesNo); 
+		$this->XINRegisterRule("q3_30_0", array("q3_30_0{@}=={@}NEVER_REQUIRED"));
 		$this->form->addElement('static', null, $this->indent . " If you selected [Yes], go to question 3-31");
 		$this->form->addElement('static', null, $this->indent . "If you selected [No], [Refused] or [Don't Know] skip to question 3-32");
 		$this->form->addElement('static', null,"<br/>");
@@ -1275,11 +1275,10 @@ class NDB_BVL_Instrument_EARLI_interview_PART_1 extends NDB_BVL_Instrument {
 
 		//q3-31
 		$this->form->addElement("static", null, "3-31) How long did you breastfeed [BABY]?");
-		$this->XINRegisterRule("q3_31", array("q3_30{@}=={@}01_yes"), "Required if breastfed baby");
-		$this->addTextElementRD("q3_31_weeks",  $this->indent . "Enter weeks:");
-		$this->addTextElementRD("q3_31_months", $this->indent . "or months:");
-		$this->XINRegisterRule("q3_31_weeks", array("q3_30{@}=={@}01_yes", "q3_31_months{@}=={@}"), "You must specify weeks or months", "q3_31_weeks_group");
-                $this->XINRegisterRule("q3_31_months", array("q3_30{@}=={@}01_yes", "q3_31_weeks{@}=={@}"), "You must specify weeks or months", "q3_31_months_group");
+		$this->addTextElementRD("q3_31_weeks_0",  $this->indent . "Enter weeks:");
+		$this->addTextElementRD("q3_31_months_0", $this->indent . "or months:");
+		$this->XINRegisterRule("q3_31_weeks_0", array("q3_30_0{@}=={@}01_yes", "q3_31_months_0{@}=={@}"), "You must specify weeks or months", "q3_31_weeks_0_group");
+                $this->XINRegisterRule("q3_31_months_0", array("q3_30_0{@}=={@}01_yes", "q3_31_weeks_0{@}=={@}"), "You must specify weeks or months", "q3_31_months_0_group");
 		$this->form->addElement('static', null, "<br/>");
 		$this->form->addElement('static', null, "<br/>");
 
@@ -1291,11 +1290,11 @@ class NDB_BVL_Instrument_EARLI_interview_PART_1 extends NDB_BVL_Instrument {
 
 		for ($i=1; $i<6; $i++)
 		{	
-			$this->form->addElement("select", "q3_32_{$i}",  "$this->indent BABY #{$i} (select all that apply):", $list1, "multiple size = '5'");
-			$this->addTextAreaElementRD("q3_32_other{$i}", $this->indent . $this->indent . "  If you selected [88 Other], please specify:");
+			$this->form->addElement("select", "q3_32_{$i}_0",  "$this->indent BABY #{$i} (select all that apply):", $list1, "multiple size = '5'");
+			$this->addTextAreaElementRD("q3_32_other{$i}_0", $this->indent . $this->indent . "  If you selected [88 Other], please specify:");
 			$this->form->addElement('static', null, "<br/>");
-			$this->XINRegisterRule("q3_32_other{$i}", array("q3_32_{$i}{@}=={@}88_other"), "You must specify other", "q3_32_other{$i}_group");
-			$this->XINRegisterRule("q3_32_{$i}", array("q3_32_{$i}{@}=={@}NEVER_REQUIRED"));
+			$this->XINRegisterRule("q3_32_other{$i}_0", array("q3_32_{$i}_0{@}=={@}88_other"), "You must specify other", "q3_32_other{$i}_0_group");
+			$this->XINRegisterRule("q3_32_{$i}_0", array("q3_32_{$i}_0{@}=={@}NEVER_REQUIRED"));
 		}
 
 
@@ -1306,14 +1305,14 @@ class NDB_BVL_Instrument_EARLI_interview_PART_1 extends NDB_BVL_Instrument {
 
 
 		//q3-33
-		$this->form->addElement("select", "q3_33", "3-33) We are also interested in any reproductive hormonal medications you might have taken <u>during your lifetime</u> for any reason other than to prevent pregnancy or to help you become pregnant. Did a doctor or other medical provider ever prescribe reproductive hormonal medications? ",  array(NULL=>"", "01_yes" => "01 Yes", "02" => "02 No ", "88_refused" => "88 Refused",  "99_Do_not_know"=>"99 Do not know", "Not_Answered"=>"Not Answered"));
+		$this->form->addElement("select", "q3_33_0", "3-33) We are also interested in any reproductive hormonal medications you might have taken <u>during your lifetime</u> for any reason other than to prevent pregnancy or to help you become pregnant. Did a doctor or other medical provider ever prescribe reproductive hormonal medications? ",  array(NULL=>"", "01_yes" => "01 Yes", "02" => "02 No ", "88_refused" => "88 Refused",  "99_Do_not_know"=>"99 Do not know", "Not_Answered"=>"Not Answered"));
 		$this->form->addElement('static', null, $this->indent . " If you selected [No], [Refused] or [Don't Know] skip to question 4a-1");
 		$this->form->addElement('static', null, "<br/>");
 
 
 		//q3-34
-		$this->form->addElement("select", "q3_34", "3-34) What was the reason that the hormonal medication was prescribed?",  array(NULL=>"", "01" => "01 To regulate your cycle", "02" => "02 To jump-start puberty", "03" => "03  Growth regulation", "04" => "04 Acne", "05" => "05 Other", "88_Refused" => "88 Refused",  "99_Do_not_know"=>"99 Do not know", "Not_Answered"=>"Not Answered"));
-		$this->XINRegisterRule("q3_34", array("q3_33{@}=={@}01_yes"), "You must specify a reason");
+		$this->form->addElement("select", "q3_34_0", "3-34) What was the reason that the hormonal medication was prescribed?",  array(NULL=>"", "01" => "01 To regulate your cycle", "02" => "02 To jump-start puberty", "03" => "03  Growth regulation", "04" => "04 Acne", "05" => "05 Other", "88_Refused" => "88 Refused",  "99_Do_not_know"=>"99 Do not know", "Not_Answered"=>"Not Answered"));
+		$this->XINRegisterRule("q3_34_0", array("q3_33_0{@}=={@}01_yes"), "You must specify a reason");
                 $this->form->addElement('static', null, "<br/>");
 		$this->form->addElement('header', null, "<b>END Section 3");
                 $this->form->addElement('static', null, "<br/>");
@@ -1345,7 +1344,7 @@ class NDB_BVL_Instrument_EARLI_interview_PART_1 extends NDB_BVL_Instrument {
 		$liveBirths = 0;
 	
 		//results from q3_6	
-		if ($fields["q3_6"] == "01")
+		if ($fields["q3_6_0"] == "01")
 			$liveBirths = 1;
 
 		//results from q3_7
@@ -1353,95 +1352,95 @@ class NDB_BVL_Instrument_EARLI_interview_PART_1 extends NDB_BVL_Instrument {
 		{
 			for ($i=1; $i<6; $i++)
 			{
-				if ($fields["q3_7_$i"] == "01")
+				if ($fields["q3_7_{$i}_0"] == "01")
 					$liveBirths++;
 			}
 		}
 
 
 		//for q3_8
-		if (empty($fields["q3_8"]) && ($liveBirths > 1))
-			$errors["q3_8"] = "Required if more than 1 live birth";
+		if (empty($fields["q3_8_0"]) && ($liveBirths > 1))
+			$errors["q3_8_0"] = "Required if more than 1 live birth";
 
 
 		//for q3_10
-		if (empty($fields["q3_10"]) && (($liveBirths >= 1) || answer8899($fields, "q3_6") || (answer8899($fields, "q3_7_1") && answer8899($fields, "q3_7_2"))))
-			$errors["q3_10"] = "You must specify";
+		if (empty($fields["q3_10_0"]) && (($liveBirths >= 1) || answer8899($fields, "q3_6_0") || (answer8899($fields, "q3_7_1_0") && answer8899($fields, "q3_7_2_0"))))
+			$errors["q3_10_0"] = "You must specify";
 		
 
 //		if (empty($fields["q3_12"]) && (($liveBirths < 1) || !answer8899($fields, "q3_6") || (!answer8899($fields, "q3_7_1") && !answer8899($fields, "q3_7_2"))))
 		//for q3_12
-		if (empty($fields["q3_12"]) && $liveBirths<1)
-			$errors["q3_12"] = "You must specify";
+		if (empty($fields["q3_12_0"]) && $liveBirths<1)
+			$errors["q3_12_0"] = "You must specify";
 
 
 		//for q3_14 and q3_15
-		if (empty($fields["q3_14"]) && ($liveBirths==1) && (empty($fields["q3_14_status"])))
+		if (empty($fields["q3_14_0"]) && ($liveBirths==1) && (empty($fields["q3_14_0_status"])))
 		{
-			$errors["q3_14_group"] = "You must specify a name";
+			$errors["q3_14_0_group"] = "You must specify a name";
 		}
-		if (empty($fields["q3_15_name1"]) && ($liveBirths>1) && (empty($fields["q3_15_name1_status"])))
+		if (empty($fields["q3_15_name1_0"]) && ($liveBirths>1) && (empty($fields["q3_15_name1_0_status"])))
 		{
-			print "this is working..but the error message isn't";
-			$errors["q3_15_name1_group"] = "You must specify name";
+			//print "this is working..but the error message isn't";
+			$errors["q3_15_name1_0_group"] = "You must specify name";
 		}
 
-                if (empty($fields["q3_15_name2"]) && ($liveBirths>1) && (empty($fields["q3_15_name2_status"])))
+                if (empty($fields["q3_15_name2_0"]) && ($liveBirths>1) && (empty($fields["q3_15_name2_0_status"])))
 		{
-                        $errors["q3_15_name2_group"] = "You must specify name";
+                        $errors["q3_15_name2_0_group"] = "You must specify name";
 		}
 		
 		//for q3_16 and q3_17
-		if (empty($fields["q3_16"]) && ($liveBirths == 1))
-			$errors["q3_16"] = "You must specify a gender";
-		if (empty($fields["q3_17_1"]) && ($liveBirths > 1))
-			$errors["q3_17_1"] = "You must specify a gender";
-		if (empty($fields["q3_17_2"]) && ($liveBirths > 1))
-			$errors["q3_17_2"] = "You must specify a gender";
+		if (empty($fields["q3_16_0"]) && ($liveBirths == 1))
+			$errors["q3_16_0"] = "You must specify a gender";
+		if (empty($fields["q3_17_1_0"]) && ($liveBirths > 1))
+			$errors["q3_17_1_0"] = "You must specify a gender";
+		if (empty($fields["q3_17_2_0"]) && ($liveBirths > 1))
+			$errors["q3_17_2_0"] = "You must specify a gender";
 
 		
 		//for q3_18 and q3_19	
-		if (empty($fields["q3_18_date"]) && (empty($fields["q3_18_date_status"])) && ($liveBirths == 1))
-                        $errors["q3_18_date_group"] = "You must specify a birth date";
-                if ((empty($fields["q3_19_1_date"]) && empty($fields["q3_19_1_date_status"])) && ($liveBirths > 1))
-                        $errors["q3_19_1_date_group"] = "You must specify a birth date";
-                if ((empty($fields["q3_19_2_date"]) && empty($fields["q3_19_2_date_status"])) && ($liveBirths > 1))
-                        $errors["q3_19_2_date_group"] = "You must specify a birth date";
+		if (empty($fields["q3_18_0_date"]) && (empty($fields["q3_18_0_date_status"])) && ($liveBirths == 1))
+                        $errors["q3_18_0_date_group"] = "You must specify a birth date";
+                if ((empty($fields["q3_19_1_0_date"]) && empty($fields["q3_19_1_0_date_status"])) && ($liveBirths > 1))
+                        $errors["q3_19_1_0_date_group"] = "You must specify a birth date";
+                if ((empty($fields["q3_19_2_0_date"]) && empty($fields["q3_19_2_0_date_status"])) && ($liveBirths > 1))
+                        $errors["q3_19_2_0_date_group"] = "You must specify a birth date";
 
 		//for q3_20
-		if (empty($fields["q3_20_date"]) && empty($fields["q3_20_date_status"]) && ($liveBirths < 1))
-			$errors["q3_20_date_group"] = "You must specify";			
+		if (empty($fields["q3_20_0_date"]) && empty($fields["q3_20_0_date_status"]) && ($liveBirths < 1))
+			$errors["q3_20_0_date_group"] = "You must specify";			
 
 		//UNSURE ABOUT q3_21
 
 		//for q3_22
-                if (empty($fields["q3_22pounds"]) && ($liveBirths == 1) && empty($fields["q3_22pounds_status"]))
-                        $errors["q3_22pounds_group"] = "You must specify pounds or select from the drop-down";
-                if (empty($fields["q3_22ounces"]) && ($liveBirths == 1) && empty($fields["q3_22ounces_status"]))
-                        $errors["q3_22ounces_group"] = "You must specify ounces or select from the drop-down";
+                if (empty($fields["q3_22pounds_0"]) && ($liveBirths == 1) && empty($fields["q3_22pounds_0_status"]))
+                        $errors["q3_22pounds_0_group"] = "You must specify pounds or select from the drop-down";
+                if (empty($fields["q3_22ounces_0"]) && ($liveBirths == 1) && empty($fields["q3_22ounces_0_status"]))
+                        $errors["q3_22ounces_0_group"] = "You must specify ounces or select from the drop-down";
 
 
 		//for q3_23
-                if (empty($fields["q3_23pounds1"]) && ($liveBirths > 1) && empty($fields["q3_23pounds1_status"]))
-                        $errors["q3_23pounds1_group"] = "You must specify pounds";
-                if (empty($fields["q3_23ounces1"]) && ($liveBirths > 1) && empty($fields["q3_23ounces1_status"]))
-                        $errors["q3_23ounces1_group"] = "You must specify ounces";
-                if (empty($fields["q3_23pounds2"]) && ($liveBirths > 1) && empty($fields["q3_23pounds2_status"]))
-                        $errors["q3_23pounds2_group"] = "You must specify pounds";
-                if (empty($fields["q3_23ounces2"]) && ($liveBirths > 1) && empty($fields["q3_23ounces2_status"]))
-                        $errors["q3_23ounces2_group"] = "You must specify ounces";
+                if (empty($fields["q3_23pounds1_0"]) && ($liveBirths > 1) && empty($fields["q3_23pounds1_0_status"]))
+                        $errors["q3_23pounds1_0_group"] = "You must specify pounds";
+                if (empty($fields["q3_23ounces1_0"]) && ($liveBirths > 1) && empty($fields["q3_23ounces1_0_status"]))
+                        $errors["q3_23ounces1_0_group"] = "You must specify ounces";
+                if (empty($fields["q3_23pounds2_0"]) && ($liveBirths > 1) && empty($fields["q3_23pounds2_0_status"]))
+                        $errors["q3_23pounds2_0_group"] = "You must specify pounds";
+                if (empty($fields["q3_23ounces2_0"]) && ($liveBirths > 1) && empty($fields["q3_23ounces2_0_status"]))
+                        $errors["q3_23ounces2_0_group"] = "You must specify ounces";
 
 
 		//for q3_24
-                if (empty($fields["q3_24"]) && ($liveBirths == 1))
-                        $errors["q3_24"] = "You must specify";
+                if (empty($fields["q3_24_0"]) && ($liveBirths == 1))
+                        $errors["q3_24_0"] = "You must specify";
 
 
 		//for q3_25
-                if (empty($fields["q3_25_1"]) && ($liveBirths > 1)) 
-                        $errors["q3_25_1"] = "You must specify";
-                if (empty($fields["q3_25_2"]) && ($liveBirths > 1))
-                        $errors["q3_25_2"] = "You must specify";
+                if (empty($fields["q3_25_1_0"]) && ($liveBirths > 1)) 
+                        $errors["q3_25_1_0"] = "You must specify";
+                if (empty($fields["q3_25_2_0"]) && ($liveBirths > 1))
+                        $errors["q3_25_2_0"] = "You must specify";
 
 
 		//for q3_27
@@ -1449,10 +1448,10 @@ class NDB_BVL_Instrument_EARLI_interview_PART_1 extends NDB_BVL_Instrument {
 //		{
 			for ($i=1; $i<6; $i++)
 			{
-				if($fields["q3_25_$i"] == "02" && $liveBirths>1)
+				if($fields["q3_25_{$i}_0"] == "02" && $liveBirths>1)
 				{
-					if (empty($fields["q3_27_specify$i"]) && empty($fields["q3_27_specify{$i}_status"])) 
-						$errors["q3_27_specify{$i}_group"] = "You must specify";
+					if (empty($fields["q3_27_specify{$i}_0"]) && empty($fields["q3_27_specify{$i}_0_status"])) 
+						$errors["q3_27_specify{$i}_0_group"] = "You must specify";
 				}
 			}
 
@@ -1460,30 +1459,31 @@ class NDB_BVL_Instrument_EARLI_interview_PART_1 extends NDB_BVL_Instrument {
 		//for q3_29
                 for ($i=1; $i<6; $i++)
                 {
-	                if($fields["q3_25_$i"] == "02")
+	                if($fields["q3_25_{$i}_0"] == "02")
                         {
-		 		if (empty($fields["q3_29_years$i"]) && empty($fields["q3_29_years{$i}_status"])) 
-					$errors["q3_29_years{$i}_group"] = "You must specify";
-		 		if (empty($fields["q3_29_months$i"]) && empty($fields["q3_29_months{$i}_status"]))
-					$errors["q3_29_months{$i}_group"] = "You must specify";
-				if (empty($fields["q3_29_d{$i}_date"]) && empty($fields["q3_29_d{$i}_date_status"]))
+		 		if (empty($fields["q3_29_years{$i}_0"]) && empty($fields["q3_29_years{$i}_0_status"])) 
+					$errors["q3_29_years{$i}_0_group"] = "You must specify";
+		 		if (empty($fields["q3_29_months{$i}_0"]) && empty($fields["q3_29_months{$i}_0_status"]))
+					$errors["q3_29_months{$i}_0_group"] = "You must specify";
+				if (empty($fields["q3_29_d{$i}_0_date"]) && empty($fields["q3_29_d{$i}_0_date_status"]))
 				{
-				        $errors["q3_29_d{$i}_date_group"] = "You must specify";
+				        $errors["q3_29_d{$i}_0_date_group"] = "You must specify";
 				}
                         }
                 }
 
 		
 		//for q3_30
-		if ($fields["q3_24"] == "01_yes" && (empty($fields["q3_30"])))
-			$errors["q3_30"] = "You must specify";
+		if ($fields["q3_24_0"] == "01_yes" && (empty($fields["q3_30_0"])))
+			$errors["q3_30_0"] = "You must specify";
+
 		else
 		{
 			for ($i=1; $i<6; $i++)
 			{
-				if ($fields["q3_25_$i"] == "01_yes" && (empty($fields["q3_30"])))
+				if ($fields["q3_25_{$i}_0"] == "01_yes" && (empty($fields["q3_30_0"])))
 				{
-					$errors["q3_30"] = "You must specify";
+					$errors["q3_30_0"] = "You must specify";
 					break;
 				}
 			}
@@ -1494,16 +1494,16 @@ class NDB_BVL_Instrument_EARLI_interview_PART_1 extends NDB_BVL_Instrument {
 //		if (empty($fields["q3_32"]) && $liveBirths >= 1)
 //			$errors["q3_32"] = "You must specify";
 
-		if (multSelect($fields, "q3_32_1") && $liveBirths == 1)
-			$errors["q3_32_1"] = "Required if 01 live birth";
+		if (multSelect($fields, "q3_32_1_0") && $liveBirths == 1)
+			$errors["q3_32_1_0"] = "Required if 01 live birth";
 
 		if ($liveBirths > 1)
 		{
-			if (multSelect($fields, "q3_32_1"))
-				$errors["q3_32_1"] = "Required if >01 live births";
+			if (multSelect($fields, "q3_32_1_0"))
+				$errors["q3_32_1_0"] = "Required if >01 live births";
 
-			if (multSelect($fields, "q3_32_2"))
-				$errors["q3_32_2"] = "Required if >01 live births";
+			if (multSelect($fields, "q3_32_2_0"))
+				$errors["q3_32_2_0"] = "Required if >01 live births";
 		}
 
 		return $errors;
