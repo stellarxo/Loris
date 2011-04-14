@@ -92,7 +92,7 @@ class NDB_BVL_Instrument_EARLI_interview_PART_1 extends NDB_BVL_Instrument {
 
 
 		//The array of dates/timestamps to convert to database dates/timestamps
-		$this->dateTimeFields=array("interview_date", "q1_1", "q1_16", "q2_39_date_1", "q2_39_date_2", "q3_18_date", "q3_19_1", "q3_19_2", "q3_19_3", "q3_19_4", "q3_19_5", "q3_20", "q3_28_2date", "q3_29_d1", "q3_29_d2", "q3_29_d3", "q3_29_d4", "q3_29_d5", "q4a_2", "q4_41_date", "q4_44_date");
+		$this->dateTimeFields=array("interview_date_date", "q1_1_date", "q1_16_date", "q2_39_date_1_date", "q2_39_date_2_date", "q3_18_0_date", "q3_19_1_0_date", "q3_19_2_0_date", "q3_19_3_0_date", "q3_19_4_0_date", "q3_19_5_0_date", "q3_20_0_date", "q3_28_2date_0_date", "q3_29_d1_0_date", "q3_29_d2_0_date", "q3_29_d3_0_date", "q3_29_d4_0_date", "q3_29_d5_0_date", "q4a_2_date", "q4_41_date_date", "q4_44_date_date");
 
 		//GLOBAL DEFINITIONS
 
@@ -227,7 +227,7 @@ class NDB_BVL_Instrument_EARLI_interview_PART_1 extends NDB_BVL_Instrument {
 		$this->form->addElement('static', null, "<br/>");
 
 		//q1-1
-		$this->form->addElement('date', 'q1_1', "1-1) What is your date of birth?", $this->dateOptionsOld);
+		$this->addCustomDateElement('q1_1', "1-1) What is your date of birth?", $this->dateOptionsOld);
 		$this->form->addElement('static', null, "<br/>");
 
 		//q1-2
@@ -1057,7 +1057,7 @@ class NDB_BVL_Instrument_EARLI_interview_PART_1 extends NDB_BVL_Instrument {
 		$this->form->addElement('static', null, "<br/>");
 
 		//q3-15
-		$this->form->addElement('static', "null", "3-15) What are the first names of each of the babies born from your 1st pregnancy?"); //, array(NULL=>"", "00_specify"=>"00 Specify", "88_Refused" => "88 Refused",  "99_Do_not_know"=>"99 Do not know", "Not_Answered"=>"Not Answered"));       
+		$this->form->addElement('static', null, "3-15) What are the first names of each of the babies born from your 1st pregnancy?"); //, array(NULL=>"", "00_specify"=>"00 Specify", "88_Refused" => "88 Refused",  "99_Do_not_know"=>"99 Do not know", "Not_Answered"=>"Not Answered"));       
 	//	$this->XINRegisterRule("q3_15", array("q3_15{@}=={@}NEVER_REQUIRED"));
 
 
@@ -1229,16 +1229,16 @@ class NDB_BVL_Instrument_EARLI_interview_PART_1 extends NDB_BVL_Instrument {
 		//q3-28
 		$this->form->addElement('static', null, "3-28) How old was [BABY] when he/she died?");
 		$this->addNumericElementRD('q3_28_years_0', $this->indent . $this->indent . " Years");
-		$this->XINRegisterRule("q3_28_years_0", array("q3_24_0{@}=={@}02_no", "q3_26_0_status{@}=={@}"), "You must specify years", "q3_28_years_0_group");
+		$this->XINRegisterRule("q3_28_years_0", array("q3_24_0{@}=={@}02"), "You must specify years", "q3_28_years_0_group");
 		$this->addNumericElementRD('q3_28_months_0', $this->indent . $this->indent . " Months");
-		$this->XINRegisterRule("q3_28_months_0", array("q3_24_0{@}=={@}02_no", "q3_26_0_status{@}=={@}"), "You must specify month(s)", "q3_28_months_0_group");
+		$this->XINRegisterRule("q3_28_months_0", array("q3_24_0{@}=={@}02"), "You must specify month(s)", "q3_28_months_0_group");
 			
 	// SPECIFY ONE OR BOTH???	
 		$this->form->addElement('static', null, $this->indent . "<i>If don't know, ask:</i>");
 		
 		$this->addCustomDateElement("q3_28_2date_0", $this->indent . "What was the date of [BABY]'s death?", $this->dateOptions1960);
-		$this->XINRegisterRule('q3_28_2date_0_date', array("q3_24_0{@}=={@}02_no", "q3_26_0_status{@}=={@}", "q3_28_2date_0_date_status{@}=={@}"), "You must specify a date or select from the drop-down", "q3_28_2date_0_date_group");
-		$this->XINRegisterRule('q3_28_2date_0_date_status', array("q3_24_0{@}=={@}02_no", "q3_26_0_status{@}=={@}", "q3_28_2date_0_date{@}=={@}"), "You must specify a date or select from the drop-down", "q3_28_2date_0_date_group");
+		$this->XINRegisterRule('q3_28_2date_0_date', array("q3_28_2date_0_date{@}=={@}NEVER_REQUIRED"));
+		$this->XINRegisterRule('q3_28_2date_0_date_status', array("q3_28_2date_0_date_status{@}=={@}NEVER_REQUIRED"));
 		$this->form->addElement('static', null, " $this->indent <b>Record answer, then go to question 3-32</b>");
 		$this->form->addElement('static', null, "<br/>");
 		$this->form->addElement('static', null, "<br/>");
@@ -1339,6 +1339,13 @@ class NDB_BVL_Instrument_EARLI_interview_PART_1 extends NDB_BVL_Instrument {
 		}
 
 
+                function dateEmpty($fields, $question)
+                {
+
+                        return (empty($fields[$question]['Y']) || empty($fields[$question]['M']) || empty($fields[$question]['d']) || empty($fields[$question]));
+                }
+
+
 		$errors = array();		
 
 		$liveBirths = 0;
@@ -1400,15 +1407,15 @@ class NDB_BVL_Instrument_EARLI_interview_PART_1 extends NDB_BVL_Instrument {
 
 		
 		//for q3_18 and q3_19	
-		if (empty($fields["q3_18_0_date"]) && (empty($fields["q3_18_0_date_status"])) && ($liveBirths == 1))
+		if (dateEmpty($fields, "q3_18_0_date") && empty($fields["q3_18_0_date_status"]) && ($liveBirths == 1))
                         $errors["q3_18_0_date_group"] = "You must specify a birth date";
-                if ((empty($fields["q3_19_1_0_date"]) && empty($fields["q3_19_1_0_date_status"])) && ($liveBirths > 1))
+                if (dateEmpty($fields, "q3_19_1_0_date") && empty($fields["q3_19_1_0_date_status"]) && ($liveBirths > 1))
                         $errors["q3_19_1_0_date_group"] = "You must specify a birth date";
-                if ((empty($fields["q3_19_2_0_date"]) && empty($fields["q3_19_2_0_date_status"])) && ($liveBirths > 1))
+                if (dateEmpty($fields, "q3_19_2_0_date") && empty($fields["q3_19_2_0_date_status"]) && ($liveBirths > 1))
                         $errors["q3_19_2_0_date_group"] = "You must specify a birth date";
 
 		//for q3_20
-		if (empty($fields["q3_20_0_date"]) && empty($fields["q3_20_0_date_status"]) && ($liveBirths < 1))
+		if (dateEmpty($fields, "q3_20_0_date") && empty($fields["q3_20_0_date_status"]) && ($liveBirths < 1))
 			$errors["q3_20_0_date_group"] = "You must specify";			
 
 		//UNSURE ABOUT q3_21
@@ -1456,6 +1463,11 @@ class NDB_BVL_Instrument_EARLI_interview_PART_1 extends NDB_BVL_Instrument {
 			}
 
 
+		//for q3_28
+		if (dateEmpty($fields, "q3_28_2date_0_date") && empty($fields["q3_28_2date_0_date_status"]) && $fields["q3_24_0"] == "02")
+			$errors["q3_28_2date_0_date_group"] = "You must specify";
+
+
 		//for q3_29
                 for ($i=1; $i<6; $i++)
                 {
@@ -1465,7 +1477,7 @@ class NDB_BVL_Instrument_EARLI_interview_PART_1 extends NDB_BVL_Instrument {
 					$errors["q3_29_years{$i}_0_group"] = "You must specify";
 		 		if (empty($fields["q3_29_months{$i}_0"]) && empty($fields["q3_29_months{$i}_0_status"]))
 					$errors["q3_29_months{$i}_0_group"] = "You must specify";
-				if (empty($fields["q3_29_d{$i}_0_date"]) && empty($fields["q3_29_d{$i}_0_date_status"]))
+				if (dateEmpty($fields, "q3_29_d{$i}_0_date") && empty($fields["q3_29_d{$i}_0_date_status"]))
 				{
 				        $errors["q3_29_d{$i}_0_date_group"] = "You must specify";
 				}

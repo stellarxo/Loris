@@ -38,7 +38,7 @@ class NDB_BVL_Instrument_EARLI_interview_revised extends NDB_BVL_Instrument {
 		$this->requiredElements = array('interviewer', 'q8_1_1_job', 'q8_2_a', 'q8_3_a_company', 'interview_end_date'); 
 
 		//The array of dates/timestamps to convert to database dates/timestamps
-		$this->dateTimeFields=array("interview_date", "interview_end_date");
+		$this->dateTimeFields=array("interview_date_date", "interview_end_date_date");
 
 		//GLOBAL DEFINITIONS
 

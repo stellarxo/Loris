@@ -92,7 +92,7 @@ class NDB_BVL_Instrument_EARLI_interview_PART_2 extends NDB_BVL_Instrument {
 
 
 		//The array of dates/timestamps to convert to database dates/timestamps
-		$this->dateTimeFields=array("interview_date", "q5_1", "q5_42_date", "q5_45_date", "q5_49_date", "q5_52_date", "q5_57_date");
+		$this->dateTimeFields=array("interview_date_date", "q5_1_date", "q5_42_date_date", "q5_45_date_date", "q5_49_date_date", "q5_52_date_date", "q5_57_date_date");
 
 		//GLOBAL DEFINITIONS
 
@@ -139,7 +139,7 @@ class NDB_BVL_Instrument_EARLI_interview_PART_2 extends NDB_BVL_Instrument {
 		//Any HTML_Quickform multiple selects must be listed here
 		//Usually this appears at the beginning of the file in the setup() function
 
-		$this->_selectMultipleElements = array_merge($this->_selectMultipleElements, array("q5_8_1", "q5_8_2", "q5_8_3", "q5_8_4", "q5_8_5", "q5_11_1", "q5_11_2", "q5_11_3", "q5_11_4", "q5_11_5", 'q5_33', "q5_36", "q5_39", "q5_59", "q5_65", "q5_69", "q5_73", "q5_77", "q5_78", "q5_79_m_1", "q5_79_m_2", "q5_79_m_3", "q5_82_1_med1", "q5_82_1_med2", "q5_82_1_med3", "q5_82_2_med1", "q5_82_2_med2", "q5_82_2_med3", "q5_82_3_med1", "q5_82_3_med2", "q5_82_3_med3", "q5_84_1_m", "q5_84_2_m", "q5_84_3_m", "q5_87_1_med1", "q5_87_1_med2", "q5_87_1_med3", "q5_87_2_med1", "q5_87_2_med2", "q5_87_2_med3", "q5_87_3_med1", "q5_87_3_med2", "q5_87_3_med3", "q5_91_1", "q5_91_2", "q5_91_3", "q5_94", "q5_97", "q5_101_1", "q5_101_2", "q5_101_3", "q5_104", "q5_109", "q5_112_month1", "q5_112_month2", "q5_112_month3", "q5_115_months1", "q5_115_months2", "q5_!15_months3", "q5_115_months4", "q5_115_months5", "q5_115_months6", "q6_3", "q6_7", "q6_11", "q6_15", "q6_19", "q6_23", "q6_27", "q6_31", "q6_35", "q6_39", "q6_43", "q6_47", "q6_51", "q6_55", "q6_59", "q6_63", "q6_67", "q6_71", "q6_75", "q6_79", "q6_107", "q7_16", "q7_18", "q7_25_p1", "q7_25_p2", "q7_25_p3", "q7_29_p1", "q7_29_p2", "q7_29_p3", "q7_32", "q7_34", "q7_36", "q7_38_1", "q7_38_2", "q7_38_3","q7_38_4", "q7_38_5", "q7_40_1", "q7_40_2", "q7_40_3", "q7_40_4", "q7_40_5", "q7_40_6"));
+		$this->_selectMultipleElements = array_merge($this->_selectMultipleElements, array("q5_8_1", "q5_8_2", "q5_8_3", "q5_8_4", "q5_8_5", "q5_11_1", "q5_11_2", "q5_11_3", "q5_11_4", "q5_11_5", 'q5_33', "q5_36", "q5_39", "q5_59", "q5_65", "q5_69", "q5_73", "q5_77", "q5_78", "q5_79_m_1", "q5_79_m_2", "q5_79_m_3", "q5_82_1_med1", "q5_82_1_med2", "q5_82_1_med3", "q5_82_2_med1", "q5_82_2_med2", "q5_82_2_med3", "q5_82_3_med1", "q5_82_3_med2", "q5_82_3_med3", "q5_84_1_m", "q5_84_2_m", "q5_84_3_m", "q5_87_1_med1", "q5_87_1_med2", "q5_87_1_med3", "q5_87_2_med1", "q5_87_2_med2", "q5_87_2_med3", "q5_87_3_med1", "q5_87_3_med2", "q5_87_3_med3", "q5_91_1", "q5_91_2", "q5_91_3", "q5_94", "q5_97", "q5_101_1", "q5_101_2", "q5_101_3", "q5_104", "q5_109", "q5_112_month1", "q5_112_month2", "q5_112_month3", "q5_115_months1", "q5_115_months2", "q5_115_months3", "q5_115_months4", "q5_115_months5", "q5_115_months6", "q6_3", "q6_7", "q6_11", "q6_15", "q6_19", "q6_23", "q6_27", "q6_31", "q6_35", "q6_39", "q6_43", "q6_47", "q6_51", "q6_55", "q6_59", "q6_63", "q6_67", "q6_71", "q6_75", "q6_79", "q6_107", "q7_16", "q7_18", "q7_25_p1", "q7_25_p2", "q7_25_p3", "q7_29_p1", "q7_29_p2", "q7_29_p3", "q7_32", "q7_34", "q7_36", "q7_38_1", "q7_38_2", "q7_38_3","q7_38_4", "q7_38_5", "q7_40_1", "q7_40_2", "q7_40_3", "q7_40_4", "q7_40_5", "q7_40_6"));
 
 		//column headers
 		//Usually this appears at the beginning of the file in the setup() function
