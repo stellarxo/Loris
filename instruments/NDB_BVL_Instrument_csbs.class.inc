@@ -373,20 +373,20 @@ INSERT INTO instrument_subtests VALUES('', 'csbs', 'csbs_page2', 'Symbolic Behav
         $q_16_BestPerson = null;
         $q_16_BestBody = null;
 
-        if( ($values["q_16_language_comp_objects_1"] == "0" || $values["q_16_language_comp_objects_1"] == 0) &&
-            ($values["q_16_language_comp_objects_2"] == "0" || $values["q_16_language_comp_objects_2"] == 0) ) {
+        if( ($record["q_16_language_comp_objects_1"] === "0" || $record["q_16_language_comp_objects_1"] === 0) &&
+            ($record["q_16_language_comp_objects_2"] === "0" || $record["q_16_language_comp_objects_2"] === 0) ) {
             $q_16_BestObject = 0;
         } else {
             $q_16_BestObject = $this->_sumBestRows($record, "objects", 3, 4);
         }
-        if( ($values["q_16_language_comp_person_1"] == "0" || $values["q_16_language_comp_person_1"] == 0) &&
-            ($values["q_16_language_comp_person_2"] == "0" || $values["q_16_language_comp_person_2"] == 0) ) {
+        if( ($record["q_16_language_comp_person_1"] === "0" || $record["q_16_language_comp_person_1"] === 0) &&
+            ($record["q_16_language_comp_person_2"] === "0" || $record["q_16_language_comp_person_2"] === 0) ) {
             $q_16_BestPerson = 0;
         } else {
             $q_16_BestPerson = $this->_sumBestRows($record, "person", 2, 3);
         }
-        if( ($values["q_16_language_comp_body_parts_1"] == "0" || $values["q_16_language_comp_body_parts_1"] == 0) &&
-            ($values["q_16_language_comp_body_parts_2"] == "0" || $values["q_16_language_comp_body_parts_2"] == 0) ) {
+        if( ($record["q_16_language_comp_body_parts_1"] === "0" || $record["q_16_language_comp_body_parts_1"] === 0) &&
+            ($record["q_16_language_comp_body_parts_2"] === "0" || $record["q_16_language_comp_body_parts_2"] === 0) ) {
             $q_16_BestBody= 0;
         } else {
             $q_16_BestBody= $this->_sumBestRows($record, "body_parts", 3, 4);
