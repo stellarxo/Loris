@@ -315,7 +315,8 @@ class NDB_BVL_Instrument_EARLI_interview_PART_1 extends NDB_BVL_Instrument {
 		//q1-16
 		$this->addCustomDateElement("q1_16", "1-16)  What is the biological father's birth date?", $this->dateOptions1940); 
 		$this->form->addElement('static', null, "<br/>");
-		$this->XINRegisterRule("q1_16_date", array("father_known{@}=={@}01_yes", "q1_16_status{@}=={@}"), "Required if biological father of sibling is known", "q1_16_date_group");
+		$this->XINRegisterRule("q1_16_date", array("father_known{@}=={@}01_yes", "q1_16_date_status{@}=={@}"), "Required if biological father of sibling is known", "q1_16_date_group");
+		$this->XINRegisterRule("q1_16_date_status", array("father_known{@}=={@}01_yes", "q1_16_date{@}=={@}"), "Required if biological father of sibling is known", "q1_16_date_group");
 
 		//q1-17
 		$this->form->addElement("select", "q1_17", "1-17) How old is he today? (years)" , $this->ageOptions);
@@ -820,9 +821,9 @@ class NDB_BVL_Instrument_EARLI_interview_PART_1 extends NDB_BVL_Instrument {
 
 			if ($i>=2)
 			{
-				$this->XINRegisterRule("q2_32_illness{$i}", array("q2_32_illness{$i}{@}=={@}NEVER_REQUIRED"));
-				$this->XINRegisterRule("q2_32_age{$i}", array("q2_32{@}=={@}NEVER_REQUIRED"));
-				$this->XINRegisterRule("q2_32_meds{$i}", array("q2_32{@}=={@}NEVER_REQUIRED"));
+				$this->XINRegisterRule("q2_32_illness{$i}", array("q2_32_illness{$i}{@}=={@}NEVER_REQUIRED"), "q2_32_illness{$i}_group");
+				$this->XINRegisterRule("q2_32_age{$i}", array("q2_32_age{$i}{@}=={@}NEVER_REQUIRED"));
+				$this->XINRegisterRule("q2_32_meds{$i}", array("q2_32_meds{$i}{@}=={@}NEVER_REQUIRED"));
 			}
 		}
 		
@@ -862,8 +863,8 @@ class NDB_BVL_Instrument_EARLI_interview_PART_1 extends NDB_BVL_Instrument {
 		$this->addTextAreaElementRD('q2_37_text_02', $this->indent . $this->indent . "PROCEDURE #2:");
 		$this->addTextAreaElementRD('q2_37_text_03', $this->indent . $this->indent . "PROCEDURE #3:");
 		$this->XINRegisterRule('q2_37_text_01', array("q2_37{@}=={@}05_other"), "You must specify a procedure", "q2_37_text_01_group");
-		$this->XINRegisterRule('q2_37_text_02', array("q2_37_text_02{@}=={@}NEVER_REQUIRED"));
-		$this->XINRegisterRule('q2_37_text_03', array("q2_37_text_03{@}=={@}NEVER_REQUIRED"));
+		$this->XINRegisterRule('q2_37_text_02', array("q2_37_text_02{@}=={@}NEVER_REQUIRED"), "q2_37_text_02_group");
+		$this->XINRegisterRule('q2_37_text_03', array("q2_37_text_03{@}=={@}NEVER_REQUIRED"), "q2_37_text_03_group");
 
 		$this->form->addElement('static', null, "<br/>");
 		$this->form->addElement('static', null, "<br/>");
@@ -878,29 +879,34 @@ class NDB_BVL_Instrument_EARLI_interview_PART_1 extends NDB_BVL_Instrument {
 		//q2-39
 		$this->form->addElement("select", "q2_39", "2-39) When were these fillings put into place and how many did you have?", $this->dateAge);
 		$this->addCustomDateElement('q2_39_date_1', 'If you selected [01 Date], please specify date 1:', $this->dateOptions1950);
-		$this->XINRegisterRule("q2_39_date_1_date", array("q2_38{@}=={@}01_yes"), "Required if had amalgam fillings", "q2_39_date_1"); 
-		$this->XINRegisterRule("q2_39_date_1_date_status", array("q2_38{@}=={@}01_yes"), "Required if had amalgam fillings", "q2_39_date_1"); 
+//		$this->XINRegisterRule("q2_39_date_1_date", array("q2_38{@}=={@}01_yes"), "Required if had amalgam fillings", "q2_39_date_1_date_group"); 
+//		$this->XINRegisterRule("q2_39_date_1_date_status", array("q2_38{@}=={@}01_yes"), "Required if had amalgam fillings", "q2_39_date_1_date_group"); 
+		$this->XINRegisterRule('q2_39_date_1_date', array("q2_39{@}=={@}01_date", "q2_39_date_1_date_status{@}=={@}"), "You must specify a date", "q2_39_date_1_date_group");
+		$this->XINRegisterRule('q2_39_date_1_date_status', array("q2_39{@}=={@}01_date", "q2_39_date_1_date{@}=={@}"), "You must specify a date", "q2_39_date_1_date_group");
 		$this->form->addElement("select", "q2_39_num_1", $this->indent ."and the number of fillings:", array(NULL=>"",  "0","1", "2", "3", "4", "5", "6", "7", "8", "9","10", "11", "12", "88_Refused" => "88 Refused",  "99_Do_not_know"=>"99 Do not know", "Not_Answered"=>"Not Answered"));
 
+
 		$this->addCustomDateElement('q2_39_date_2', 'If you selected [01 Date], please specify date 2 (if applicable):', $this->dateOptions1950);
-		$this->XINRegisterRule("q2_39_date_2_date", array("q2_38{@}=={@}01_yes"), "Required if had amalgam fillings", "q2_39_date_2"); 
-		$this->XINRegisterRule("q2_39_date_2_date_status", array("q2_38{@}=={@}01_yes"), "Required if had amalgam fillings", "q2_39_date_2"); 
+		$this->XINRegisterRule('q2_39_date_2_date', array("q2_39_date_2_date{@}=={@}NEVER_REQUIRED"), "q2_39_date_2_date_group");
+		$this->XINRegisterRule('q2_39_date_2_date_status', array("q2_39_date_2_date_status{@}=={@}NEVER_REQUIRED"), "q2_39_date_2_date_group");
+	//	$this->XINRegisterRule("q2_39_date_2_date", array("q2_38{@}=={@}01_yes"), "Required if had amalgam fillings", "q2_39_date_2_date_group"); 
+	//	$this->XINRegisterRule("q2_39_date_2_date_status", array("q2_38{@}=={@}01_yes"), "Required if had amalgam fillings", "q2_39_date_2_date_group"); 
 		$this->form->addElement("select", "q2_39_num_2", $this->indent . "and the number of fillings:", array(NULL=>"",  "0","1", "2", "3", "4", "5", "6", "7", "8", "9","10", "11", "12", "88_Refused" => "88 Refused",  "99_Do_not_know"=>"99 Do not know", "Not_Answered"=>"Not Answered"));
 		$this->form->addElement('static', null, "<br/>");
 
+
 		$this->form->addElement("select", "q2_39_age_1", "If you selected [02 Age], please specify age 1:" , $this->ageOptions );
 		$this->form->addElement("select", "q2_39_num_3", $this->indent . "and the number of fillings:", array(NULL=>"",  "0","1", "2", "3", "4", "5", "6", "7", "8", "9","10", "11", "12", "88_Refused" => "88 Refused",  "99_Do_not_know"=>"99 Do not know", "Not_Answered"=>"Not Answered"));
+
 
 		$this->form->addElement("select", "q2_39_age_2", "If you selected [02 Age], please specify the age 2 (if applicable):", $this->ageOptions);
 		$this->form->addElement("select", "q2_39_num_4", $this->indent . "and the number of fillings:", array(NULL=>"",  "0","1", "2", "3", "4", "5", "6", "7", "8", "9","10", "11", "12", "88_Refused" => "88 Refused",  "99_Do_not_know"=>"99 Do not know", "Not_Answered"=>"Not Answered"));
 
 		$this->XINRegisterRule('q2_39', array("q2_38{@}=={@}01_yes"), "You must specify");
-		$this->XINRegisterRule('q2_39_date_1_date', array("q2_39{@}=={@}01_date", "q2_39_date_status{@}=={@}"), "You must specify a date", "q2_39_date_1_date_group");
 		$this->XINRegisterRule('q2_39_num_1', array("q2_39{@}=={@}01_date"), "You must specify number of fillings");
 		$this->XINRegisterRule('q2_39_age_1', array("q2_39{@}=={@}02_age"), "You must specify an age");
 		$this->XINRegisterRule('q2_39_num_3', array("q2_39{@}=={@}02_age"), "You must specify number of fillings");
 		
-		$this->XINRegisterRule('q2_39_date_2_date', array("q2_39_date_2{@}=={@}NEVER_REQUIRED"), "q2_39_date_2_date_group");
 		$this->XINRegisterRule('q2_39_num_2', array("q2_39_num_2{@}=={@}NEVER_REQUIRED"));
 		$this->XINRegisterRule('q2_39_age_2', array("q2_39_age_2{@}=={@}NEVER_REQUIRED"));
 		$this->XINRegisterRule('q2_39_num_4', array("q2_39_num_4{@}=={@}NEVER_REQUIRED"));
@@ -1057,8 +1063,7 @@ class NDB_BVL_Instrument_EARLI_interview_PART_1 extends NDB_BVL_Instrument {
 		$this->form->addElement('static', null, "<br/>");
 
 		//q3-15
-		$this->form->addElement('static', null, "3-15) What are the first names of each of the babies born from your 1st pregnancy?"); //, array(NULL=>"", "00_specify"=>"00 Specify", "88_Refused" => "88 Refused",  "99_Do_not_know"=>"99 Do not know", "Not_Answered"=>"Not Answered"));       
-	//	$this->XINRegisterRule("q3_15", array("q3_15{@}=={@}NEVER_REQUIRED"));
+		$this->form->addElement('static', null, "3-15) What are the first names of each of the babies born from your 1st pregnancy?"); 
 
 
 		for ($i=1; $i<6; $i++)
@@ -1233,9 +1238,8 @@ class NDB_BVL_Instrument_EARLI_interview_PART_1 extends NDB_BVL_Instrument {
 		$this->addNumericElementRD('q3_28_months_0', $this->indent . $this->indent . " Months");
 		$this->XINRegisterRule("q3_28_months_0", array("q3_24_0{@}=={@}02"), "You must specify month(s)", "q3_28_months_0_group");
 			
-	// SPECIFY ONE OR BOTH???	
+		// SPECIFY ONE OR BOTH???	
 		$this->form->addElement('static', null, $this->indent . "<i>If don't know, ask:</i>");
-		
 		$this->addCustomDateElement("q3_28_2date_0", $this->indent . "What was the date of [BABY]'s death?", $this->dateOptions1960);
 		$this->XINRegisterRule('q3_28_2date_0_date', array("q3_28_2date_0_date{@}=={@}NEVER_REQUIRED"));
 		$this->XINRegisterRule('q3_28_2date_0_date_status', array("q3_28_2date_0_date_status{@}=={@}NEVER_REQUIRED"));
@@ -1950,7 +1954,7 @@ class NDB_BVL_Instrument_EARLI_interview_PART_1 extends NDB_BVL_Instrument {
 
 
 		$this->addTextAreaElementRD('q4_30_additional', $this->indent . "Additional procedures: ");
-                $this->XINRegisterRule("q4_30_additional", array("q4_30_additional{@}=={@}NEVER_REQUIRED"));
+                $this->XINRegisterRule("q4_30_additional", array("q4_30_additional{@}=={@}NEVER_REQUIRED"), "q4_30_additional_group");
 		$this->form->addElement('static', null, "<br/>");	
 		$this->form->addElement('static', null, "<br/>");
 
@@ -2099,8 +2103,8 @@ class NDB_BVL_Instrument_EARLI_interview_PART_1 extends NDB_BVL_Instrument {
 			unset($group);
 			//Don't require all questions, but allow them to be filled in, if desired.
 			if ($label=="a") continue; //Special rules apply to the first month
-			$this->XINRegisterRule("q4_33_m_{$label}", array("q4_31{@}=={@}NEVER_REQUIRED"));
-			$this->XINRegisterRule("q4_33_f_{$label}", array("q4_31{@}=={@}NEVER_REQUIRED"));
+			$this->XINRegisterRule("q4_33_m_{$label}", array("q4_33_m_{$label}{@}=={@}NEVER_REQUIRED"), "q4_33_{$label}_group");
+			$this->XINRegisterRule("q4_33_f_{$label}", array("q4_31_f_{$label}{@}=={@}NEVER_REQUIRED"), "q4_33_{$label}_group");
 		}
 		//Only require the first month to be answered, if there was nausea.  Trust that the rest will be filled in as needed.
 		$this->XINRegisterRule("q4_33_m_a", array("q4_31{@}=={@}01_yes"), "Required if there was nausea", "q4_33_a_group");
@@ -2117,7 +2121,7 @@ class NDB_BVL_Instrument_EARLI_interview_PART_1 extends NDB_BVL_Instrument {
 
 	
 		//q4-35
-		$this->form->addElement ( "select", "q4_35", "4-35. During which months did you vomit? Select all that apply:", $this->negThreeToTen, "multiple size = '5'");
+		$this->form->addElement ("select", "q4_35", "4-35. During which months did you vomit? Select all that apply:", $this->negThreeToTen, "multiple size = '5'");
 		$this->XINRegisterRule('q4_35', array("q4_35{@}=={@}NEVER_REQUIRED"));
 		$this->form->addElement('static', null, "<br/>");
 
@@ -2138,8 +2142,8 @@ class NDB_BVL_Instrument_EARLI_interview_PART_1 extends NDB_BVL_Instrument {
 			unset($group);
 			//Don't require all questions, but allow them to be filled in, if desired.
 			if ($label=="a") continue; //Special rules apply to the first month
-			$this->XINRegisterRule("q4_36_m_{$label}", array("q4_34{@}=={@}NEVER_REQUIRED"));
-			$this->XINRegisterRule("q4_36_f_{$label}", array("q4_34{@}=={@}NEVER_REQUIRED"));
+			$this->XINRegisterRule("q4_36_m_{$label}", array("q4_36_m_{$label}{@}=={@}NEVER_REQUIRED"), "q4_36_{$label}_group");
+			$this->XINRegisterRule("q4_36_f_{$label}", array("q4_36_f_{$label}{@}=={@}NEVER_REQUIRED"), "q4_36_{$label}_group");
 		}
 		//Only require the first month to be answered, if there was vomiting.  Trust that the rest will be filled in as needed.
 		$this->XINRegisterRule("q4_36_m_a", array("q4_34{@}=={@}01_yes"), "Required if there was vomiting", "q4_36_a_group");
@@ -2301,8 +2305,8 @@ class NDB_BVL_Instrument_EARLI_interview_PART_1 extends NDB_BVL_Instrument {
 			unset($group);
 			//Don't require all questions, but allow them to be filled in, if desired.
 			if ($label=="a") continue; //Special rules apply to the first month
-			$this->XINRegisterRule("q4_53_m_{$label}", array("q4_51{@}=={@}NEVER_REQUIRED"));
-			$this->XINRegisterRule("q4_53_f_{$label}", array("q4_51{@}=={@}NEVER_REQUIRED"));
+			$this->XINRegisterRule("q4_53_m_{$label}", array("q4_53_m_{$label}{@}=={@}NEVER_REQUIRED"), "q4_53_{$label}_group");
+			$this->XINRegisterRule("q4_53_f_{$label}", array("q4_53_f_{$label}{@}=={@}NEVER_REQUIRED"), "q4_53_{$label}_group");
 		}
 		//Only require the first month to be answered, if there was douching.  Trust that the rest will be filled in as needed.
 		$this->XINRegisterRule("q4_53_m_a", array("q4_51{@}=={@}01_yes"), "Required if there was douching", "q4_53_a_group");
@@ -2856,7 +2860,6 @@ class NDB_BVL_Instrument_EARLI_interview_PART_1 extends NDB_BVL_Instrument {
 	                $this->addTextAreaElementRD("q4_94_{$i}_other", $this->indent . $this->indent . "If you selected [Other], please specify:");
                         $this->XINRegisterRule("q4_94_{$i}_other", array("q4_94_{$i}{@}=={@}g"), "You must specify other", "q4_94_{$i}_other_group");
                         $this->addTextAreaElementRD("q4_94_{$i}_body", $this->indent . $this->indent . "Body Part Tested:");
-
 			$this->XINRegisterRule("q4_94_{$i}", array("q4_94_{$i}{@}=={@}NEVER_REQUIRED"));	
 			$this->XINRegisterRule("q4_94_{$i}_body", array("q4_94_{$i}_body{@}=={@}NEVER_REQUIRED"), "q4_94_{$i}_body_group"); 
 
