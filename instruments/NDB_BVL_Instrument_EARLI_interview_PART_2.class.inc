@@ -1112,7 +1112,7 @@ class NDB_BVL_Instrument_EARLI_interview_PART_2 extends NDB_BVL_Instrument {
 			unset($group);
 			//Don't require all questions, but allow them to be filled in, if desired.
 			if ($label=="a") continue; //Special rules apply to the first month
-			$this->XINRegisterRule("q5_60_m_{$label}", array("q5_60_m_{$label}{@}=={@}NEVER_REQUIRED"), "q5_60_{$label}_group")
+			$this->XINRegisterRule("q5_60_m_{$label}", array("q5_60_m_{$label}{@}=={@}NEVER_REQUIRED"), "q5_60_{$label}_group");
 			$this->XINRegisterRule("q5_60_f_{$label}", array("q5_60_f_{$label}{@}=={@}NEVER_REQUIRED"), "q5_60_{$label}_group");
 		}
 
