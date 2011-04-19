@@ -69,6 +69,23 @@ class NDB_BVL_Instrument_EARLI_interview_PART_1 extends NDB_BVL_Instrument {
 
 	var $columnHeaders = array("month_names_header", "year_header", "month_header", "freq_header");
 
+        function getSession()
+        {
+                $db =& Database::singleton();
+
+                $sessionid = $db->selectOne("SELECT ID FROM session WHERE CandID='".$_REQUEST['candID']."' and Visit_label LIKE 'Vsupplement'");
+                return $sessionid;
+        }
+
+        function getComment($sessionid)
+        {
+                $db =& Database::singleton();
+
+                $commentid = $db->selectOne("SELECT CommentID FROM flag WHERE SessionID='$sessionid' and Test_name = 'EARLI_interview_S3_inserts' and CommentID NOT LIKE 'DDE%'");
+
+                return $commentid;
+        }
+
 
 	/**
     * sets up basic data, such as  *
@@ -1303,8 +1320,12 @@ class NDB_BVL_Instrument_EARLI_interview_PART_1 extends NDB_BVL_Instrument {
 
 
 		$this->form->addElement('static', null, "<br/>");
-		$this->form->addElement('header', null, $this->indent . "<b>If more than one pregnancy, continue with pregnancy insert form(s) as needed for next pregnancy(s) ending with the pregnancy that gave rise to the baby sib.</b>");
-		$this->form->addElement('header', null, "<b>Insert completed forms behind this page.</b>");
+//		$this->form->addElement('header', null, $this->indent . "<b>If more than one pregnancy, continue with pregnancy insert form(s) as needed for next pregnancy(s) ending with the pregnancy that gave rise to the baby sib.</b>");
+	        $sessionid = $this->getSession();
+                $commentid = $this->getComment($sessionid);
+                $url = "main.php?test_name=EARLI_interview_S3_inserts&candID=".$_REQUEST['candID']."&sessionID=".$sessionid."&commentID=".$commentid;                
+		$this->form->addElement("link", null, "<b>If more than one pregnancy (your answer was 2 or more for question 3-4):</b>", $url, 'Click here to enter data from the pregnancy insert forms');
+		$this->form->addElement('static', null, "<br/>");
 		$this->form->addElement('static', null, "<br/>");
 
 
