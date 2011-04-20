@@ -7,6 +7,20 @@ require_once 'NDB_Menu_statistics_site.class.inc';
  */
 class NDB_Menu_statistics_dd_site extends NDB_Menu_statistics_site
 {
+
+    function notexcluded($var) {
+        switch($var) {
+            case "mri_parameter_form":
+            case "vineland_subject":
+            case "vineland_proband":
+            case "radiological_review":
+                return false;
+            default: return true;
+        }
+    }
+    function __construct() {
+        $this->instruments = array_filter($this->instruments, array(&$this, 'notexcluded'));
+    }
     function _CompleteCount($id, $instrument) {
         $DB =& Database::singleton();
         return $DB->selectOne("SELECT count(s.CandID)  FROM session as s, candidate as c, flag as f, {$instrument} as i WHERE 
