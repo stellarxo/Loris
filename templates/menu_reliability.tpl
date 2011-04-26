@@ -163,10 +163,13 @@ $(document).ready(function() {
 </form>
 {/if}
 <br>
+{if $IBIS_Access}
 <a href='main.php?test_name=reliability_phase_one'>Phase 1 Reliability</a> |
 <a href='main.php?test_name=reliability_diagnostic_calls'>Diagnostic Behavioural Call Cases</a> | 
 <a href="main.php?test_name=reliability&EARLI=0">IBIS Reliability Candidates</a>
-{if $EARLI_Reliability} |
+{/if}
+{if $IBIS_Access and $EARLI_Reliability} | {/if}
+{if $EARLI_Reliability}
 <a href="main.php?test_name=reliability&EARLI=1">EARLI Reliability Candidates</a>
 {/if}
 <br>

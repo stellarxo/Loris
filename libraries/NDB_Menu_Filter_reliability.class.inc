@@ -120,7 +120,10 @@ class NDB_Menu_Filter_reliability extends NDB_Menu_Filter
             if(PEAR::isError($list_of_sites)) {
                 return PEAR::raiseError("DB Error: ".$list_of_sites->getMessage());
             }
-            if(is_array($list_of_sites)) $list_of_sites = array('' => 'Any') + $list_of_sites;
+            if(is_array($list_of_sites)) 
+            {
+                $list_of_sites = array_merge(array('' => 'Any'), $list_of_sites);
+            }
         }
         else {
             // allow only to view own site data
@@ -128,9 +131,9 @@ class NDB_Menu_Filter_reliability extends NDB_Menu_Filter
             if (PEAR::isError($site)) {
                 return PEAR::raiseError("DB Error: ".$site->getMessage());
             }
-            if ($site->isStudySite()) {
+            //if ($site->isStudySite()) {
                 $list_of_sites = array($user->getData('CenterID') => $user->getData('Site'));
-            }
+            //}
         }
         
         /// hack for Visit Labels... maybe get all the real visit labels from DB?
@@ -168,6 +171,11 @@ class NDB_Menu_Filter_reliability extends NDB_Menu_Filter
             $this->tpl_data['reliability_swap_candidates'] = false;
         }
 
+        if ($user->hasPermission('data_entry')) {
+            $this->tpl_data['IBIS_Access'] = true;
+        } else {
+            $this->tpl_data['IBIS_Access'] = false;
+        }
         if ($user->hasPermission('EARLI_Reliability')) {
             $this->tpl_data['EARLI_Reliability'] = true;
             $this->form->addElement('text', 'AddPSCID', 'PSCID:');
