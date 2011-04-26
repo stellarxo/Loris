@@ -171,7 +171,7 @@ class NDB_Menu_Filter_videos extends NDB_Menu_Filter
         $this->tpl_data['EARLI_Perm'] = $user->hasPermission('earli_videos');
         // end hack
 
-        $site_names =array(null, "DCC", "SEA", "PHI", "STL", "UNC", "UofA");
+        $site_names = Utility::getSiteList(false); //array(null, "DCC", "SEA", "PHI", "STL", "UNC", "UofA");
         // print out
         $x = 0;
         foreach ($this->list as $item) {
