@@ -49,7 +49,7 @@ class NDB_BVL_Instrument_EARLI_interview_PART_3 extends NDB_BVL_Instrument {
 
 
 		//The array of dates/timestamps to convert to database dates/timestamps
-		$this->dateTimeFields=array("interview_date_date");
+		$this->dateTimeFields=array("interview_date");
 
 		//GLOBAL DEFINITIONS
 		
