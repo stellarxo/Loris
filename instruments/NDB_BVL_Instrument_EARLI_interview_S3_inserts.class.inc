@@ -94,7 +94,7 @@ class NDB_BVL_Instrument_EARLI_interview_S3_inserts extends NDB_BVL_Instrument {
 
 
                 //The array of dates/timestamps to convert to database dates/timestamps
-                $this->dateTimeFields=array("interview_date", "q3_18_1_date", "q3_18_2_date", "q3_18_3_date", "q3_18_4_date", "q3_18_5_date", "q3_18_6_date", "q3_18_7_date", "q3_18_8_date", "q3_18_8_date", "q3_18_10_date", "q3_19_1_1_date", "q3_19_2_1_date", "q3_19_3_1_date", "q3_19_4_1_date", "q3_19_5_1_date",  "q3_19_1_2_date",  "q3_19_2_2_date",  "q3_19_3_2_date",  "q3_19_4_2_date",  "q3_19_5_2_date",  "q3_19_1_3_date",  "q3_19_2_3_date",  "q3_19_3_3_date",  "q3_19_4_3_date",  "q3_19_5_3_date",  "q3_19_1_4_date",  "q3_19_2_4_date",  "q3_19_3_4_date",  "q3_19_4_4_date",  "q3_19_5_4_date",  "q3_19_1_5_date",  "q3_19_2_5_date",  "q3_19_3_5_date",  "q3_19_4_5_date",  "q3_19_1_6_date",  "q3_19_2_6_date",  "q3_19_3_6_date",  "q3_19_4_6_date",  "q3_19_5_6_date",  "q3_19_1_7_date",  "q3_19_2_7_date",  "q3_19_3_7_date",  "q3_19_4_7_date",  "q3_19_5_7_date",  "q3_19_1_8_date",  "q3_19_2_8_date",  "q3_19_3_8_date",  "q3_19_4_8_date",  "q3_19_5_8_date",  "q3_19_1_9_date",  "q3_19_2_9_date",  "q3_19_3_9_date",  "q3_19_4_9_date",  "q3_19_5_9_date",  "q3_19_1_10_date",  "q3_19_2_10_date",  "q3_19_3_10_date",  "q3_19_4_10_date",  "q3_19_5_10_date", "q3_20_1", "q3_20_2", "q3_20_3", "q3_20_4", "q3_20_5", "q3_20_6", "q3_20_7", "q3_20_8", "q3_20_9", "q3_20_10", "q3_28_2date_1_date", "q3_28_2date_2_date", "q3_28_2date_3_date", "q3_28_2date_4_date", "q3_28_2date_5_date", "q3_28_2date_6_date", "q3_28_2date_7_date", "q3_28_2date_8_date", "q3_28_2date_9_date", "q3_28_2date_10_date", "q3_29_d1_1_date", "q3_29_d2_1_date", "q3_29_d3_1_date", "q3_29_d4_1_date", "q3_29_d5_1_date", "q3_29_d1_2_date", "q3_29_d2_2_date", "q3_29_d3_2_date", "q3_29_d4_3_date", "q3_29_d5_2_date","q3_29_d1_3_date", "q3_29_d2_3_date", "q3_29_d3_3_date", "q3_29_d4_3_date", "q3_29_d5_3_date","q3_29_d1_4_date", "q3_29_d2_4_date", "q3_29_d3_4_date", "q3_29_d4_4_date", "q3_29_d5_5_date","q3_29_d1_5_date", "q3_29_d2_5_date", "q3_29_d3_5_date", "q3_29_d4_5_date", "q3_29_d5_5_date","q3_29_d1_6_date", "q3_29_d2_6_date", "q3_29_d3_6_date", "q3_29_d4_6_date", "q3_29_d5_6_date","q3_29_d1_7_date", "q3_29_d2_7_date", "q3_29_d3_7_date", "q3_29_d4_7_date", "q3_29_d5_7_date","q3_29_d1_8_date", "q3_29_d2_8_date", "q3_29_d3_8_date", "q3_29_d4_8_date", "q3_29_d5_8_date","q3_29_d1_9_date", "q3_29_d2_9_date", "q3_29_d3_9_date", "q3_29_d4_9_date", "q3_29_d5_9_date","q3_29_d1_10_date", "q3_29_d2_10_date", "q3_29_d3_10_date", "q3_29_d4_10_date", "q3_29_d5_10_date");
+                $this->dateTimeFields=array("interview_date", "q3_18_1", "q3_18_2", "q3_18_3", "q3_18_4", "q3_18_5", "q3_18_6", "q3_18_7", "q3_18_8", "q3_18_9", "q3_18_10", "q3_19_1_1", "q3_19_2_1", "q3_19_3_1", "q3_19_4_1", "q3_19_5_1",  "q3_19_1_2",  "q3_19_2_2",  "q3_19_3_2",  "q3_19_4_2",  "q3_19_5_2",  "q3_19_1_3",  "q3_19_2_3",  "q3_19_3_3",  "q3_19_4_3",  "q3_19_5_3",  "q3_19_1_4",  "q3_19_2_4",  "q3_19_3_4",  "q3_19_4_4",  "q3_19_5_4",  "q3_19_1_5",  "q3_19_2_5",  "q3_19_3_5",  "q3_19_4_5",  "q3_19_1_6",  "q3_19_2_6",  "q3_19_3_6",  "q3_19_4_6",  "q3_19_5_6",  "q3_19_1_7",  "q3_19_2_7",  "q3_19_3_7",  "q3_19_4_7",  "q3_19_5_7",  "q3_19_1_8",  "q3_19_2_8",  "q3_19_3_8",  "q3_19_4_8",  "q3_19_5_8",  "q3_19_1_9",  "q3_19_2_9",  "q3_19_3_9",  "q3_19_4_9",  "q3_19_5_9",  "q3_19_1_10",  "q3_19_2_10",  "q3_19_3_10",  "q3_19_4_10",  "q3_19_5_10", "q3_20_1", "q3_20_2", "q3_20_3", "q3_20_4", "q3_20_5", "q3_20_6", "q3_20_7", "q3_20_8", "q3_20_9", "q3_20_10", "q3_28_2date_1", "q3_28_2date_2", "q3_28_2date_3", "q3_28_2date_4", "q3_28_2date_5", "q3_28_2date_6", "q3_28_2date_7", "q3_28_2date_8", "q3_28_2date_9", "q3_28_2date_10", "q3_29_d1_1", "q3_29_d2_1", "q3_29_d3_1", "q3_29_d4_1", "q3_29_d5_1", "q3_29_d1_2", "q3_29_d2_2", "q3_29_d3_2", "q3_29_d4_3", "q3_29_d5_2","q3_29_d1_3", "q3_29_d2_3", "q3_29_d3_3", "q3_29_d4_3", "q3_29_d5_3","q3_29_d1_4", "q3_29_d2_4", "q3_29_d3_4", "q3_29_d4_4", "q3_29_d5_5","q3_29_d1_5", "q3_29_d2_5", "q3_29_d3_5", "q3_29_d4_5", "q3_29_d5_5","q3_29_d1_6", "q3_29_d2_6", "q3_29_d3_6", "q3_29_d4_6", "q3_29_d5_6","q3_29_d1_7", "q3_29_d2_7", "q3_29_d3_7", "q3_29_d4_7", "q3_29_d5_7","q3_29_d1_8", "q3_29_d2_8", "q3_29_d3_8", "q3_29_d4_8", "q3_29_d5_8","q3_29_d1_9", "q3_29_d2_9", "q3_29_d3_9", "q3_29_d4_9", "q3_29_d5_9","q3_29_d1_10", "q3_29_d2_10", "q3_29_d3_10", "q3_29_d4_10", "q3_29_d5_10");
 
                 //GLOBAL DEFINITIONS
 
@@ -219,13 +219,16 @@ class NDB_BVL_Instrument_EARLI_interview_S3_inserts extends NDB_BVL_Instrument {
 	
         } //end function _main()
 
+	var $x;
 
 	function _page1(){
 		$this->createPages(1);
+		$x = 1;
 	}
 
 	function _page2(){ 
 		$this->createPages(2);
+		$x = 2;
 	}
 
 	function _page3(){ 
@@ -264,11 +267,12 @@ class NDB_BVL_Instrument_EARLI_interview_S3_inserts extends NDB_BVL_Instrument {
 	function createPages($i)   // ========================================================
 	{
                 $this->form->addElement('static', null, "<br/>");
+		$x = $i;
 		$k = $i + 1;
-                $this->form->addElement('header', null, "Section 3. PREGNANCY AND REPRODUCTIVE HISTORY INSERT PREGNANCY $j");
+                $this->form->addElement('header', null, "Section 3. PREGNANCY AND REPRODUCTIVE HISTORY INSERT PREGNANCY $k");
                 $this->form->addElement('static', null, "<br/>");
                 $this->form->addElement('static', null, "<br/>");
-                $this->form->addElement('static', null, "<b><i>Now I'm going to ask you some questions about your reproductive and pregnancy experiences.");
+            //    $this->form->addElement('static', null, "<b><i>Now I'm going to ask you some questions about your reproductive and pregnancy experiences.");
                 $this->form->addElement('static', null, "<br/>");
 
 
@@ -291,12 +295,14 @@ class NDB_BVL_Instrument_EARLI_interview_S3_inserts extends NDB_BVL_Instrument {
                 $this->form->addElement("select", "q3_3_$i", "3-3-$i)  What was the average or typical number of days of your cycle between the first day of one menstrual period and the first day of the next menstrual period? Please think back to a time when you were not using birth control pills or other hormonal contraceptives.", array(NULL=>"", "21" => "21", "22"=>"22", "23" => "23", "24"=>"24", "25"=>"25", "26"=>"26", "27"=>"27", "28"=>"28", "29"=>"29", "30"=>"30", "31"=>"31", "32"=>"32", "33"=>"33", "34"=>"34", "35"=>"35", "90 Irregular period", "88_Refused" => "88 Refused",  "99_Do_not_know"=>"99 Do not know", "Not_Answered"=>"Not Answered"));
                 $this->form->addElement('static', null, "<br/>");
 
+
                 //q3-4
                 $this->form->addElement('static', null, "<b><i>The remainder of the questions in Section 3 (Pregnancy and Reproductive History) should be asked for <u>each</u> pregnancy <u> except the pregnancy with the [SIBLING</u>].</i></b>");
-            
+/*            
 		  $this->form->addElement('static', null, "<i>If more than one previous pregnancy, use <b>Pregnancy Insert forms</b> and label as PREGNANCY 2, PREGNANCY 3, PREGNANCY 4, etc.</i>");
                 $this->form->addElement('static', null, "<i>All questions pertaining to PREGNANCY 1 should be asked first, then PREGNANCY 2, then PREGNANCY 3, etc.</i>");
 */
+
                 $this->form->addElement('static', null, "<br/>");
 		
 		if ($i == 1)
@@ -347,7 +353,7 @@ class NDB_BVL_Instrument_EARLI_interview_S3_inserts extends NDB_BVL_Instrument {
 
                 //q3-8
                 $this->form->addElement("select", "q3_8_$i", "3-8-$i) Were the babies identical?",  array(NULL=>"", "01_yes" => "01 Yes", "02_no" => "02 No", "88_Refused" => "88 Refused",  "99_Do_not_know"=>"99 Do not know", "Not_Answered"=>"Not Answered"));
-                //Rule is taken care of in rulesPage4 function
+                //Rule is in rulesPage1 function
                 $this->XINRegisterRule("q3_8_$i", array("q3_8_$i{@}=={@}NEVER_REQUIRED"));
                 $this->form->addElement('static', null, $this->indent . " If you selected [Yes], go to question 3-9");
                 $this->form->addElement('static', null, $this->indent . " If you selected [No], [Refused] or [Don't Know], skip to question 3-10");
@@ -362,8 +368,7 @@ class NDB_BVL_Instrument_EARLI_interview_S3_inserts extends NDB_BVL_Instrument {
                 //q3-10
                 $this->form->addElement("select", "q3_10_$i", "3-10-$i) Was this pregnancy with [PROBAND]?",  array(NULL=>"", "01_yes" => "01 Yes", "02" => "02 No ", "88_Refused" => "88 Refused",  "99_Do_not_know"=>"99 Do not know", "Not_Answered"=>"Not Answered"));
 
-                //Rule is taken care of in rulesPage4 function
-                $this->XINRegisterRule("q3_10_$i", array("q3_6_$i{@}=={@}NEVER_REQUIRED"));
+                $this->XINRegisterRule("q3_10_$i", array("q3_10_$i{@}=={@}NEVER_REQUIRED"));
                 $this->form->addElement('static', null, $this->indent . " If you selected [Yes], go to question 3-13");
                 $this->form->addElement('static', null, $this->indent . " If you selected [No], go to question 3-11");
                 $this->form->addElement('static', null, "<br/>");
@@ -378,7 +383,6 @@ class NDB_BVL_Instrument_EARLI_interview_S3_inserts extends NDB_BVL_Instrument {
 
                 //q3-12
                 $this->form->addElement("select", "q3_12_$i", "3-12-$i) Did the [OUTCOME] have the same biological father as [PROBAND]",  array(NULL=>"", "01_yes" => "01 Yes", "02" => "02 No ", "88_refused" => "88 Refused",  "99_Do_not_know"=>"99 Do not know", "Not_Answered"=>"Not Answered"));
-                //Rule is taken care of in rulesPage4 function
                 $this->XINRegisterRule("q3_12_$i", array("q3_12_$i{@}=={@}NEVER_REQUIRED"));
                 $this->form->addElement('static', null, " $this->indent <b>Record answer, then go to question 3-20</b>");
                 $this->form->addElement('static', null, "<br/>");
@@ -416,6 +420,7 @@ class NDB_BVL_Instrument_EARLI_interview_S3_inserts extends NDB_BVL_Instrument {
                 $this->form->addElement('static', null, " $this->indent <b>Record answer, then go to question 3-17</b>");
                 $this->form->addElement('static', null, "<br/>");
 
+
                 //q3-16
                 $this->form->addElement("select", "q3_16_$i", "3-16-$i) What was the gender of the baby born from this pregnancy? ",  array(NULL=>"", "01" => "01 Boy", "02" => "02 Girl ", "88_Refused" => "88 Refused",  "99_Do_not_know"=>"99 Do not know", "Not_Answered"=>"Not Answered"));
                 $this->XINRegisterRule("q3_16_$i", array("q3_16_$i{@}=={@}NEVER_REQUIRED"));
@@ -440,13 +445,15 @@ class NDB_BVL_Instrument_EARLI_interview_S3_inserts extends NDB_BVL_Instrument {
                 $this->form->addElement('static', null, " $this->indent<b> Record answer, then go to question 3-19</b>");
                 $this->form->addElement('static', null, "<br/>");
 
+
                 //q3-18
-                $this->addCustomDateElement("q3_18_$i", $this->indent . "3-18-$i) What is the birth date of the baby from this pregnancy?", $this->dateOptions1960);
+                $this->addCustomDateElement("q3_18_$i", "3-18-$i) What is the birth date of the baby from this pregnancy?", $this->dateOptions1960);
                 $this->form->addElement('static', null, " $this->indent<b> Record answer, then go to question 3-30</b>");
                 $this->XINRegisterRule("q3_18_{$i}_date", array("q3_18_{$i}_date{@}=={@}NEVER_REQUIRED"), "q3_18_{$i}_date_group");
                 $this->XINRegisterRule("q3_18_{$i}_date_status", array("q3_18_{$i}_date_status{@}=={@}NEVER_REQUIRED"), "q3_18_{$i}_date_group");
                 $this->form->addElement('static', null, " $this->indent <b>If proband pregnancy (YES to 3-10), record on pregnancy calendar as DOPB.</b>");
                 $this->form->addElement('static', null, "<br/>");
+
 
                 //q3-19
                 $this->form->addElement("static", null, "3-19-$i) What are the birth dates of each baby born from this pregnancy?");
@@ -466,8 +473,9 @@ class NDB_BVL_Instrument_EARLI_interview_S3_inserts extends NDB_BVL_Instrument {
                 $this->form->addElement('static', null, $this->indent . "<b> If proband pregnancy (YES to 3-10), record on pregnancy calendar as DOPB.</b>");
                 $this->form->addElement('static', null, "<br/>");
 
+
                 //q3-20
-                $this->addCustomDateElement("q3_20_$i", $this->indent . "3-20-$i) On what date did this pregnancy end?", $this->dateOptions1960);
+                $this->addCustomDateElement("q3_20_$i", "3-20-$i) On what date did this pregnancy end?", $this->dateOptions1960);
                 $this->XINRegisterRule("q3_20_{$i}_date", array("q3_20_{$i}_date{@}=={@}NEVER_REQUIRED"), "q3_20_{$i}_date_group");
                 $this->XINRegisterRule("q3_20_{$i}_date_status", array("q3_20_{$i}_date_status{@}=={@}NEVER_REQUIRED"), "q3_20_{$i}_date_group");
                 $this->form->addElement('static', null, " $this->indent<b> Record answer, then go to question 3-33</b>");
@@ -530,7 +538,7 @@ class NDB_BVL_Instrument_EARLI_interview_S3_inserts extends NDB_BVL_Instrument {
                 {
                         $this->form->addElement("select", "q3_25_{$j}_{$i}", "$this->indent BABY #{$j}:", $this->yesNo);
 
-                        $this->XINRegisterRule("q3_25_{$j}_{$i}", array("q3_25_{$j}_{$i}{@}=={@}NEVER_REQUIRED"), "q3_25_{$j}_{$i}_group");
+                        $this->XINRegisterRule("q3_25_{$j}_{$i}", array("q3_25_{$j}_{$i}{@}=={@}NEVER_REQUIRED"));
                 }
 
                 $this->form->addElement('static', null, "");
@@ -544,7 +552,8 @@ class NDB_BVL_Instrument_EARLI_interview_S3_inserts extends NDB_BVL_Instrument {
 
                 //q3-26
                 $this->addTextAreaElementRD("q3_26_$i", "3-26-$i) What did [BABY] die of?");
-                $this->XINRegisterRule("q3_26_$i", array("q3_24_$i{@}=={@}02", "q3_26_{$i}_status{@}=={@}"), "You must specify", "q3_26_{$i}_group");
+                $this->XINRegisterRule("q3_26_$i", array("q3_24_$i{@}=={@}02"), "You must specify", "q3_26_{$i}_group");
+
                 $this->form->addElement('static', null, " $this->indent If you selected [Refused] or [Don't Know], skip to question 3-32");
                 $this->form->addElement('static', null, " $this->indent <b>Record answer, then go to question 3-28</b>");
                 $this->form->addElement('static', null, "<br/>");
@@ -593,7 +602,7 @@ class NDB_BVL_Instrument_EARLI_interview_S3_inserts extends NDB_BVL_Instrument {
                         $this->addNumericElementRD("q3_29_months{$j}_{$i}", $this->indent . $this->indent . " Months");
                         $this->form->addElement('static', null, $this->indent . "<i>If don't know, ask:</i>");
                         $this->XINRegisterRule("q3_29_years{$j}_{$i}", array("q3_29_years{$j}_{$i}{@}=={@}NEVER_REQUIRED"), "q3_29_years{$j}_{$i}_group");
-                        $this->XINRegisterRule("q3_29_months{$j}_{$i}", array("q3_29_months{$i}{@}=={@}NEVER_REQUIRED"), "q3_29_months{$j}_{$i}");
+                        $this->XINRegisterRule("q3_29_months{$j}_{$i}", array("q3_29_months{$j}_{$i}{@}=={@}NEVER_REQUIRED"), "q3_29_months{$j}_{$i}");
                         $this->addCustomDateElement("q3_29_d{$j}_{$i}", $this->indent . " What was the date of [BABY]'s death?", $this->dateOptions1960);
                         $this->XINRegisterRule("q3_29_d{$j}_{$i}_date", array("q3_29_d{$j}_{$i}_date{@}=={@}NEVER_REQUIRED"), "q3_29_d{$j}_{$i}_date_group");
                         $this->XINRegisterRule("q3_29_d{$j}_{$i}_date_status", array("q3_29_d{$j}_{$i}_date_status{@}=={@}NEVER_REQUIRED"), "q3_29_d{$j}_{$i}_date_group");
@@ -601,6 +610,7 @@ class NDB_BVL_Instrument_EARLI_interview_S3_inserts extends NDB_BVL_Instrument {
                 }
 
                 $this->form->addElement('static', null, "<br/>");
+
 
                 //q3-30
                 $this->form->addElement("select", "q3_30_$i", "3-30-$i)  Did you ever breastfeed or pump breast milk to feed [BABY]?", $this->yesNo);
@@ -612,13 +622,13 @@ class NDB_BVL_Instrument_EARLI_interview_S3_inserts extends NDB_BVL_Instrument {
 
                 //q3-31
                 $this->form->addElement("static", null, "3-31-$i) How long did you breastfeed [BABY]?");
-                $this->XINRegisterRule("q3_31_$i", array("q3_30_$i{@}=={@}01_yes"), "Required if breastfed baby");
                 $this->addTextElementRD("q3_31_weeks_$i",  $this->indent . "Enter weeks:");
                 $this->addTextElementRD("q3_31_months_$i", $this->indent . "or months:");
-                $this->XINRegisterRule("q3_31_weeks_$i", array("q3_30_$i{@}=={@}01_yes", "q3_31_months_$i{@}=={@}"), "You must specify weeks or months", "q3_31_weeks_{$i}_group");
-                $this->XINRegisterRule("q3_31_months_$i", array("q3_30_$i{@}=={@}01_yes", "q3_31_weeks_$i{@}=={@}"), "You must specify weeks or months", "q3_31_months_{$i}_group");
+                $this->XINRegisterRule("q3_31_weeks_$i", array("q3_30_$i{@}=={@}01_yes", "q3_31_months_$i{@}=={@}", "q3_31_months_{$i}_status{@}=={@}"), "You must specify weeks or months", "q3_31_weeks_{$i}_group");
+                $this->XINRegisterRule("q3_31_months_$i", array("q3_30_$i{@}=={@}01_yes", "q3_31_weeks_$i{@}=={@}", "q3_31_weeks_{$i}_status{@}=={@}"), "You must specify weeks or months", "q3_31_months_{$i}_group");
                 $this->form->addElement('static', null, "<br/>");
                 $this->form->addElement('static', null, "<br/>");
+
 
                 //q3-32
                 $this->form->addElement('static', null, "3-32-$i) Have you ever received a diagnosis from a health care provider that your child/any of your children from this pregnancy had or has...");
@@ -634,6 +644,11 @@ class NDB_BVL_Instrument_EARLI_interview_S3_inserts extends NDB_BVL_Instrument {
                         $this->XINRegisterRule("q3_32_other{$j}_{$i}", array("q3_32_{$j}_{$i}{@}=={@}88_other"), "You must specify other", "q3_32_other{$j}_{$i}_group");
                         $this->XINRegisterRule("q3_32_{$j}_{$i}", array("q3_32_{$j}_{$i}{@}=={@}NEVER_REQUIRED"));
                 }
+
+                $this->form->addElement('static', null, "<br/>");
+                $this->form->addElement('header', null, $this->indent . "<b>If more than one pregnancy, continue with pregnancy insert form(s) as needed for next pregnancy(s) ending with the pregnancy that gave rise to the baby sib.</b>");
+                $this->form->addElement('static', null, "<br/>");
+                $this->form->addElement('static', null, "<br/>");
 
 /*
                 $this->form->addElement('static', null, "<br/>");
@@ -662,6 +677,7 @@ class NDB_BVL_Instrument_EARLI_interview_S3_inserts extends NDB_BVL_Instrument {
 
 	function rulesPage1 ($fields)
         {
+
 		
                 function multSelect($fields, $question1)
                 {
@@ -677,22 +693,29 @@ class NDB_BVL_Instrument_EARLI_interview_S3_inserts extends NDB_BVL_Instrument {
 			
 		function dateEmpty($fields, $question)
 		{
-
 			return (empty($fields[$question]['Y']) || empty($fields[$question]['M']) || empty($fields[$question]['d']) || empty($fields[$question]));
 		}
 
-
-		for ($j = 1; $j<11; $j++)
+		$i = 0;
+		foreach ($fields as $key=>$value)
 		{
+			$len = strlen($key);
+			$j = $key[$len-1];
+			$i++;
+			if ($i ==1)
+				break;
+		}
 
-
+	
                 $errors = array();
 
                 $liveBirths = 0;
 
+		
                 //results from q3_6
                 if ($fields["q3_6_$j"] == "01")
                         $liveBirths = 1;
+
 
                 //results from q3_7
                 else
@@ -703,6 +726,7 @@ class NDB_BVL_Instrument_EARLI_interview_S3_inserts extends NDB_BVL_Instrument {
                                         $liveBirths++;
                         }
                 }
+
 
 
                 //for q3_8
@@ -737,6 +761,7 @@ class NDB_BVL_Instrument_EARLI_interview_S3_inserts extends NDB_BVL_Instrument {
                         $errors["q3_15_name2_{$j}_group"] = "You must specify name";
                 }
 
+
                 //for q3_16 and q3_17
                 if (empty($fields["q3_16_$j"]) && ($liveBirths == 1))
                         $errors["q3_16_$j"] = "You must specify a gender";
@@ -755,9 +780,11 @@ class NDB_BVL_Instrument_EARLI_interview_S3_inserts extends NDB_BVL_Instrument {
                 if (dateEmpty($fields, "q3_19_2_{$j}_date") && empty($fields["q3_19_2_{$j}_date_status"]) && ($liveBirths > 1))
                         $errors["q3_19_2_{$j}_date_group"] = "You must specify a birth date";
 
+
                 //for q3_20
                 if (dateEmpty($fields, "q3_20_{$j}_date") && empty($fields["q3_20_{$j}_date_status"]) && ($liveBirths < 1))
                         $errors["q3_20_{$j}_date_group"] = "You must specify";
+
 
                 //UNSURE ABOUT q3_21
 
@@ -802,6 +829,7 @@ class NDB_BVL_Instrument_EARLI_interview_S3_inserts extends NDB_BVL_Instrument {
                                                 $errors["q3_27_specify{$i}_{$j}_group"] = "You must specify";
                                 }
                         }
+
 
 
                //for q3_28 
@@ -858,7 +886,6 @@ class NDB_BVL_Instrument_EARLI_interview_S3_inserts extends NDB_BVL_Instrument {
                 }
 
                 return $errors;
-	}
         }
 
 
