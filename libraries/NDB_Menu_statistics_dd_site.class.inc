@@ -13,7 +13,7 @@ class NDB_Menu_statistics_dd_site extends NDB_Menu_statistics_site
             case "mri_parameter_form":
             case "vineland_subject":
             case "vineland_proband":
-            case "radiological_review":
+            case "radiology_review":
                 return false;
             default: return true;
         }

@@ -187,24 +187,26 @@ class NDB_BVL_Instrument_tsi_followup extends NDB_BVL_Instrument
 		$commentid = $this->getComment($sessionid);
 		$url = "main.php?test_name=tsi&candID=".$_REQUEST['candID']."&sessionID=".$sessionid."&commentID=".$commentid;
                 $this->form->addElement("link", null, "City of Birth:", $url, 'Click here to verify or enter this data in the TSI');
-		$this->form->addElement("link", null, "Candidate Ethnicity:", $url, 'Click here to verify or enter this data in the TSI'); 
+		$this->form->addElement("static", null, "Candidate Ethnicity:");		
+
+//		$this->form->addElement("link", null, "Candidate Ethnicity:", $url, 'Click here to verify or enter this data in the TSI'); 
 
 //              $this->form->addElement('link', null, null, "$url", 'Enter this data in the TSI');
 
-                $url = "main.php?test_name=tsi&candID=".$_REQUEST['candID']."&sessionID=".$sessionid."&commentID=".$commentid;
+ //               $url = "main.php?test_name=tsi&candID=".$_REQUEST['candID']."&sessionID=".$sessionid."&commentID=".$commentid;
 
 
-		$this->form->addElement("static", "mother_ethnicity", "Mother Ethnicity:");
+		$this->form->addElement("static", null, "Mother Ethnicity:");
 
-		$this->form->addElement("static", "father_ethnicity", "Father Ethnicity:"); 
+		$this->form->addElement("static", null, "Father Ethnicity:"); 
 		
 
 		//RACES
-		$this->form->addElement("static", "candidate_race", "Candidate Race:");
+		$this->form->addElement("static", null, "Candidate Race:");
 		
-		$this->form->addElement("static", "mother_race", "Mother Race:");
+		$this->form->addElement("static", null, "Mother Race:");
 
-        	$this->form->addElement("static", "father_race", "Father Race:");
+        	$this->form->addElement("static", null, "Father Race:");
 		
 		$this->form->addElement("header", null, "<br/><b>Parents' Information</b><br>");
 		
@@ -241,8 +243,10 @@ class NDB_BVL_Instrument_tsi_followup extends NDB_BVL_Instrument
             'emptyOptionValue' => null
     	);
 		
-	$this->addDateElement('mother_dob', "Date of Birth:");
+        $this->form->addElement("link", null, "Date of birth:", $url, 'Click here to verify or enter this data in the TSI');
+//	$this->form->addElement("static", 'mother_dob', "Date of Birth:");
        
+
 	//Father's Information
 	    
         $this->form->addElement("static", null, "<br><br><b>Father's Information</b><br>");
@@ -265,7 +269,8 @@ class NDB_BVL_Instrument_tsi_followup extends NDB_BVL_Instrument
 
     	$config =& NDB_Config::singleton();
 
-	$this->addDateElement('father_dob', "Date of Birth:");
+        $this->form->addElement("link", null, "Date of Birth:", $url, 'Click here to verify or enter this data in the TSI');
+	//$this->form->addElement("static", 'father_dob', "Date of Birth:");
       		
       	$this->form->addElement("static", null, "<br><br>");
       	
@@ -276,7 +281,7 @@ class NDB_BVL_Instrument_tsi_followup extends NDB_BVL_Instrument
 		"$this->indent a) Older sibling",
 		"$this->indent b) other siblings:",
 		"Nature of Referral:",
-		"SUBJECT  Ever been a patient at UNC?");
+		);
 		foreach ($nonAskedQuestions as $field) {
 			$this->form->addElement('static', null, $field);
 		}
@@ -284,7 +289,7 @@ class NDB_BVL_Instrument_tsi_followup extends NDB_BVL_Instrument
 
 	function _page1(){
 
-		$this->form->addElement('header', null, "Exclusionary Factors - ASD PROBANDs only");
+		$this->form->addElement('header', null, "Exclusionary Factors - PROBANDs only");
 
 		$questionArray = array("neurological_problems_proband"=>"Any neurological problems in PROBAND?",
 		"genetic_conditions_proband"=>"Diagnosed/suspected genetic conditions or syndromes?",
@@ -294,10 +299,10 @@ class NDB_BVL_Instrument_tsi_followup extends NDB_BVL_Instrument
 		"tested_for_fragile_x"=>"Tested for Fragile X syndrome?");
 		foreach($questionArray as $field=>$label) {
 			$this->form->addElement("select", $field, $label, $this->yesNo);
-			$this->XINRegisterRule($field, array("typical_or_asd_subject{@}=={@}asd"), "This field is required for an ASD subject");
+//			$this->XINRegisterRule($field, array("typical_or_asd_subject{@}=={@}asd"), "This field is required for an ASD subject");
 		}
 
-		$this->addTextAreaElement("asd_further_information", "If yes to any of the above, obtain further information.", array("typical_or_asd_subject{@}=={@}asd"));
+		$this->addTextAreaElement("asd_further_information", "If yes to any of the above, obtain further information.");  //array("typical_or_asd_subject{@}=={@}asd"));
 
 		$this->form->addElement("header", null, "Exclusionary Factors - Infant subjects");
 		$questionArray = array(

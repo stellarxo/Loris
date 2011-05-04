@@ -33,6 +33,14 @@ INSERT INTO instrument_subtests VALUES('', 'csbs', 'csbs_page2', 'Symbolic Behav
         "understanding_weighted",
         "object_use_weighted");
 
+        var $dateOptions = array(
+                'language' => 'en',
+                'format'   => 'YMd',
+                'minYear'  =>  '2007',
+                'maxYear'  => '2012',
+                'addEmptyOption' => true,
+                'emptyOptionValue' => null);
+
 
     /**
     * sets up basic data, such as the HTML_Quickform object, and so on.
@@ -180,7 +188,7 @@ INSERT INTO instrument_subtests VALUES('', 'csbs', 'csbs_page2', 'Symbolic Behav
         $this->form->addElement("static", null, "<br/>");
 
         $this->form->addElement('static', null, "The following two fields refer to Date and Coder for the CSBS");
-        $this->addDateElement("date_coded", "Date of Coding:");
+        $this->addDateElement("date_coded", "Date of Coding:", $this->dateOptions);
         $this->addTextElement("coder", "Coder:");
 
         $this->form->addElement("static", null, "<br/>");
@@ -220,79 +228,79 @@ INSERT INTO instrument_subtests VALUES('', 'csbs', 'csbs_page2', 'Symbolic Behav
         unset($group);
 	
 
-	$group[]= &$this->form->createElement("static", emotion_eye_gaze_weighted, null);
-        $group[]= &$this->form->createElement("static", emotion_eye_gaze_standard, null);
-        $group[]= &$this->form->createElement("static", emotion_eye_gaze_percentile, null);
+	$group[]= &$this->form->createElement("static", "emotion_eye_gaze_weighted", null);
+        $group[]= &$this->form->createElement("static", "emotion_eye_gaze_standard", null);
+        $group[]= &$this->form->createElement("static", "emotion_eye_gaze_percentile", null);
   	$this->form->addGroup($group, null, "Emotion and Eye Gaze", $this->_GUIDelimiter, false);
         unset($group);
 
+	
 
-	$group[]= &$this->form->createElement("static", communication_weighted, null);
-        $group[]= &$this->form->createElement("static", communication_standard, null);
-        $group[]= &$this->form->createElement("static", communication_percentile, null);
+	$group[]= &$this->form->createElement("static", "communication_weighted", $scores['communication_weighted']);
+        $group[]= &$this->form->createElement("static", "communication_standard", null);
+        $group[]= &$this->form->createElement("static", "communication_percentile", null);
   	$this->form->addGroup($group, null, "Communication", $this->_GUIDelimiter, false);
         unset($group);
 
 
-	$group[]= &$this->form->createElement("static", gestures_weighted, null);
-        $group[]= &$this->form->createElement("static", gestures_standard, null);
-        $group[]= &$this->form->createElement("static", gestures_percentile, null);
+	$group[]= &$this->form->createElement("static", "gestures_weighted", null);
+        $group[]= &$this->form->createElement("static", "gestures_standard", null);
+        $group[]= &$this->form->createElement("static", "gestures_percentile", null);
   	$this->form->addGroup($group, null, "Gestures", $this->_GUIDelimiter, false);
         unset($group);
 
 
-	$group[]= &$this->form->createElement("static", sounds_weighted, null);
-        $group[]= &$this->form->createElement("static", sounds_standard, null);
-        $group[]= &$this->form->createElement("static", sounds_percentile, null);
+	$group[]= &$this->form->createElement("static", "sounds_weighted", null);
+        $group[]= &$this->form->createElement("static", "sounds_standard", null);
+        $group[]= &$this->form->createElement("static", "sounds_percentile", null);
   	$this->form->addGroup($group, null, "Sounds", $this->_GUIDelimiter, false);
         unset($group);
 
-
-	$group[]= &$this->form->createElement("static", words_weighted, null);
-        $group[]= &$this->form->createElement("static", words_standard, null);
-        $group[]= &$this->form->createElement("static", words_percentile, null);
+	$group[]= &$this->form->createElement("static", "words_weighted", null);
+        $group[]= &$this->form->createElement("static", "words_standard", null);
+        $group[]= &$this->form->createElement("static", "words_percentile", null);
   	$this->form->addGroup($group, null, "Words", $this->_GUIDelimiter, false);
         unset($group);
 
 
-	$group[]= &$this->form->createElement("static", understanding_weighted, null);
-        $group[]= &$this->form->createElement("static", understanding_standard, null);
-        $group[]= &$this->form->createElement("static", understanding_percentile, null);
+	$group[]= &$this->form->createElement("static", "understanding_weighted", null);
+        $group[]= &$this->form->createElement("static", "understanding_standard", null);
+        $group[]= &$this->form->createElement("static", "understanding_percentile", null);
   	$this->form->addGroup($group, null, "Understanding", $this->_GUIDelimiter, false);
         unset($group);
  
 
-	$group[]= &$this->form->createElement("static", object_use_weighted, null);
-        $group[]= &$this->form->createElement("static", object_use_standard, null);
-        $group[]= &$this->form->createElement("static", object_use_percentile, null);
-  	$this->form->addGroup($group, null, "Object Use", $this->_GUIDelimiter, false);
+        $group[]= &$this->form->createElement("static", "object_use_weighted", null);
+        $group[]= &$this->form->createElement("static", "object_use_standard", null);
+        $group[]= &$this->form->createElement("static", "object_use_percentile", null);
+        $this->form->addGroup($group, null, "Object Use", $this->_GUIDelimiter, false);
         unset($group);
 
 
-	$group[]= &$this->form->createElement("static", social_composite_score, null);
-        $group[]= &$this->form->createElement("static", social_composite_standard, null);
-        $group[]= &$this->form->createElement("static", social_composite_percentile, null);
-  	$this->form->addGroup($group, null, "Social Composite", $this->_GUIDelimiter, false);
+        $group[]= &$this->form->createElement("static", "social_composite_score", null);
+        $group[]= &$this->form->createElement("static", "social_composite_standard", null);
+        $group[]= &$this->form->createElement("static", "social_composite_percentile", null);
+        $this->form->addGroup($group, null, "Social Composite", $this->_GUIDelimiter, false);
         unset($group);
 
 
-	$group[]= &$this->form->createElement("static", speech_composite_score, null);
-        $group[]= &$this->form->createElement("static", speech_composite_standard, null);
-        $group[]= &$this->form->createElement("static", speech_composite_percentile, null);
-  	$this->form->addGroup($group, null, "Speech Composite", $this->_GUIDelimiter, false);
+        $group[]= &$this->form->createElement("static", "speech_composite_score", null);
+        $group[]= &$this->form->createElement("static", "speech_composite_standard", null);
+        $group[]= &$this->form->createElement("static", "speech_composite_percentile", null);
+        $this->form->addGroup($group, null, "Speech Composite", $this->_GUIDelimiter, false);
         unset($group);
 
 
-	$group[]= &$this->form->createElement("static", symbolic_composite_score, null);
-        $group[]= &$this->form->createElement("static", symbolic_composite_standard, null);
-        $group[]= &$this->form->createElement("static", symbolic_composite_percentile, null);
-  	$this->form->addGroup($group, null, "Symbolic Composite", $this->_GUIDelimiter, false);
+        $group[]= &$this->form->createElement("static", "symbolic_composite_score", null);
+        $group[]= &$this->form->createElement("static", "symbolic_composite_standard", null);
+        $group[]= &$this->form->createElement("static", "symbolic_composite_percentile", null);
+        $this->form->addGroup($group, null, "Symbolic Composite", $this->_GUIDelimiter, false);
         unset($group);
 
 
-	$group[]= &$this->form->createElement("static", total_weighted_raw_score, null);
-        $group[]= &$this->form->createElement("static", total_standard, null);
-        $group[]= &$this->form->createElement("static", total_percentile, null);
+	$group[]= &$this->form->createElement("static", "total_weighted_raw_score", null);
+        $group[]= &$this->form->createElement("static", "total_standard", null);
+        $group[]= &$this->form->createElement("static", "total_percentile", null);
   	$this->form->addGroup($group, null, "Total", $this->_GUIDelimiter, false);
         unset($group);
     }
@@ -355,8 +363,8 @@ INSERT INTO instrument_subtests VALUES('', 'csbs', 'csbs_page2', 'Symbolic Behav
         $scores["q_13_words_raw_score"] = $this->_countWords($record, "q_13_words_");
         $scores["q_14_word_combos_raw_score"] = $this->_countChecked($record, "q_14_word_combos_");
         $scores["q_15_word_combos_raw_score"] = $this->_countWords($record, "q_15_word_combos_");
-
-        $scores["q_17_action_schemes_raw_score"] = $this->_countChecked($record, "q_17_action_schemes_");
+        $scores["q_17_action_schemes_raw_score"] = $this->_countCheckedNone($record, "q_17_action_schemes_", "q_17_action_schemes_none");
+       // $scores["q_17_action_schemes_raw_score"] = $this->_countChecked($record, "q_17_action_schemes_");
         $scores["q_18_actions_towards_other_raw_score"] = $this->_countActionTowardsOther($record, 6);
         $scores["q_19_sequence_action_schemes_raw_score"] = $this->_countAction1($record, 6);
         if (is_numeric(intval(substr($record["q_20_stacks_tower"], 0, 1)))) {
@@ -392,6 +400,8 @@ INSERT INTO instrument_subtests VALUES('', 'csbs', 'csbs_page2', 'Symbolic Behav
             $q_16_BestBody= $this->_sumBestRows($record, "body_parts", 3, 4);
         }
 
+	$scores["q_16_language_comp_raw_score"] = $q_16_BestObject + $q_16_BestPerson + $q_16_BestBody;
+
         $scores["understanding_weighted"] = ($q_16_BestObject + $q_16_BestPerson + $q_16_BestBody) * 3;
         // At least two answers are required. The >= is different for person because there's
         // only 3 opportunities for that table column
@@ -407,7 +417,7 @@ INSERT INTO instrument_subtests VALUES('', 'csbs', 'csbs_page2', 'Symbolic Behav
         $scores["q_2_shared_positive_affect_raw_score"] +
         3 * $scores["q_3_gaze_point_following_raw_score"];
 
-        $scores["communication_weighted"] = round($scores["q_4_rate_of_communicating_raw_score"] / 3) +
+        $scores["communication_weighted"] = number_format(($scores["q_4_rate_of_communicating_raw_score"]/3), 0) +
  	$scores["q_5_behaviour_regulation_raw_score"] +
         $scores["q_6_social_interaction_raw_score"] +
         $scores["q_7_joint_attention_raw_score"];
@@ -418,9 +428,9 @@ INSERT INTO instrument_subtests VALUES('', 'csbs', 'csbs_page2', 'Symbolic Behav
         $scores["sounds_weighted"] = $scores["q_10_syllables_consonants_raw_score"] +
         2 * $scores["q_11_inventory_of_consonants_raw_score"];
 
-        $scores["words_weighted"] = $scores["q_12_words_raw_score"] + round($scores["q_13_words_raw_score"] / 2) +  
+        $scores["words_weighted"] = number_format(($scores["q_12_words_raw_score"] + ($scores["q_13_words_raw_score"]/2) +  
         $scores["q_14_word_combos_raw_score"] +
-        $scores["q_15_word_combos_raw_score"];
+        $scores["q_15_word_combos_raw_score"]), 0);
 
         $scores["object_use_weighted"] = $scores["q_17_action_schemes_raw_score"] +
         $scores["q_18_actions_towards_other_raw_score"] +
@@ -499,7 +509,7 @@ INSERT INTO instrument_subtests VALUES('', 'csbs', 'csbs_page2', 'Symbolic Behav
 
 
 
-    if($scores['understanding_weighted'] !== "Unable to score") {
+    if($scores['understanding_weighted'] != "Unable to score") {
         $query_scores6 = "SELECT * FROM csbs_lookup WHERE age_months=".$age_months. " AND score_weighted=".$scores['understanding_weighted']." AND subscale='understanding_weighted'";
             $record_6 = array();
         $db->selectRow($query_scores6, $record_6);
@@ -651,7 +661,6 @@ INSERT INTO instrument_subtests VALUES('', 'csbs', 'csbs_page2', 'Symbolic Behav
         $group[] = &$this->form->createElement("advcheckbox", "q_8_conventional_gestures_pushes_pulls", null, "pushes/pulls", null, array("unchecked", "checked"));
         $group[] = &$this->form->addElement('static', null);
         $group[] = &$this->form->createElement("advcheckbox", "q_8_conventional_gestures_reaches", null, "reaches", null, array("unchecked", "checked"));
-        $group[] = &$this->form->createElement("static", null, null);
         $group[] = &$this->form->createElement("static", null, null);
         $group[] = &$this->form->createElement("static", "q_8_conventional_gestures_raw_score");
         $this->form->addGroup($group, null, "8. Inventory of conventional gestures", $this->_GUIDelimiter, false);
@@ -843,10 +852,11 @@ INSERT INTO instrument_subtests VALUES('', 'csbs', 'csbs_page2', 'Symbolic Behav
            
             $group[] =& $this->form->createElement('static', null, null, "$desc #$row");
             $group[] =& $this->form->createElement("text", $elname);
-            $group[] =& $this->form->createElement("select", $scorename, null, array('' => '', 0 => 0, 1 => 1, 'NA' => 'NA'));
+            $group[] =& $this->form->createElement("select", $scorename, null, array('' => '', 0 => 0, 1 => 1, 'NA' => 'Not Administered'));
             // Require score
-            $this->XINRegisterRule($scorename, array("$elname{@}!={@}NULL", "$elname{@}!={@}"), "Score required.", $groupname);
-            $this->XINRegisterRule($elname, array("$scorename{@}!={@}NULL", "$scorename{@}!={@}"), "Name required.", $groupname);
+
+            $this->XINRegisterRule($scorename, array("$elname{@}!={@}NULL"), "Score required.", $groupname);
+            $this->XINRegisterRule($elname, array("$elname{@}=={@}NEVER_REQUIRED"), "Name required.", $groupname);
             $this->form->addGroup($group, $groupname, null, $this->_GUIDelimiter, false);
             unset($group);
         }
@@ -863,7 +873,6 @@ INSERT INTO instrument_subtests VALUES('', 'csbs', 'csbs_page2', 'Symbolic Behav
         for($int = 1; $int <= 6; $int++) {
             $group[]= &$this->form->createElement("static", null, $this->indent);
         }
-        $group[] = &$this->form->createElement("static", null, null);
         $group[]= &$this->form->createElement("static", "raw_score", null);
         $this->form->addGroup($group, null, null, $this->_GUIDelimiter, false);
         unset($group);
@@ -874,6 +883,10 @@ INSERT INTO instrument_subtests VALUES('', 'csbs', 'csbs_page2', 'Symbolic Behav
         $group[] = &$this->form->createElement("static", null, null, "Item");
         $group[] = &$this->form->createElement("static", null, null, "Name");
         $group[] = &$this->form->createElement("static", null, null, "Score");
+        $group[] =& $this->form->createElement("static", null, null, null);
+        $group[] =& $this->form->createElement("static", null, null, null);
+        $group[] =& $this->form->createElement("static", null, null, null);
+        $group[] = &$this->form->createElement("static", "q_16_language_comp_raw_score", null, null);
 
         $this->form->addGroup($group, "q_16_language_comp_objects_headers", "16. Language comprehension" . $this->indent, $this->_GUIDelimiter, false);
         unset($group);
@@ -887,9 +900,9 @@ INSERT INTO instrument_subtests VALUES('', 'csbs', 'csbs_page2', 'Symbolic Behav
         $this->form->addGroup($group, null, null, $this->_GUIDelimiter, false);
         unset($group);
         $this->_addTableRow("Body Parts", "body_parts", 4);
-        
         $this->form->addElement("static", "understanding_weighted", "Weighted Raw Score for Scale 16 - Understanding:");
-        
+       
+
         //Object Use
         $this->form->addElement("header", null, "Object Use");
         $group[] = &$this->form->createElement("advcheckbox", "q_17_action_schemes_puts_in", null, "puts in(1)", null, array("unchecked", "checked"));
@@ -897,20 +910,28 @@ INSERT INTO instrument_subtests VALUES('', 'csbs', 'csbs_page2', 'Symbolic Behav
         $group[] = &$this->form->createElement("advcheckbox", "q_17_action_schemes_drinks_with_bottle", null, "drinks with bottle(3)", null, array("unchecked", "checked"));
         $group[] = &$this->form->createElement("advcheckbox", "q_17_action_schemes_drinks_with_cup", null, "drinks with cup(4)", null, array("unchecked", "checked"));
         $group[] = &$this->form->createElement("advcheckbox", "q_17_action_schemes_hugs", null, "hugs(5)", null, array("unchecked", "checked"));
-        $group[] = &$this->form->createElement("advcheckbox", "q_17_action_schemes_kisses", null, "kisses(6)", null, array("unchecked", "checked"));
-        //$group[] = &$this->form->createElement("static", null, null);
-        $group[] =& $this->form->createElement("advcheckbox", "q_17_action_schemes_none", null, "none", null, array("unchecked", "checked"));
-        $group[] = &$this->form->createElement("static", "q_17_action_schemes_raw_score");
-        $this->form->addGroup($group, null, "17. Inventory of action schemes", $this->_GUIDelimiter, false);
-        unset($group);
 
+        $this->form->addGroup($group, "q_17_action_schemes_group_1", "17. Inventory of action schemes", $this->_GUIDelimiter, false);
+        unset($group);
+        $group[] = &$this->form->createElement("advcheckbox", "q_17_action_schemes_kisses", null, "kisses(6)", null, array("unchecked", "checked"));
         $group[] = &$this->form->createElement("advcheckbox", "q_17_action_schemes_feeds_with_utensil", null, "feeds with utensil(7)", null, array("unchecked", "checked"));
         $group[] = &$this->form->createElement("advcheckbox", "q_17_action_schemes_feeds_with_bowl", null, "feeds with bowl(8)", null, array("unchecked", "checked"));
         $group[] = &$this->form->createElement("advcheckbox", "q_17_action_schemes_stirs", null, "stirs(9)", null, array("unchecked", "checked"));
         $group[] = &$this->form->createElement("advcheckbox", "q_17_action_schemes_scoops", null, "scoops(10)", null, array("unchecked", "checked"));
+
+        $this->form->addGroup($group, "q_17_action_schemes_group_2", null, $this->_GUIDelimiter, false);
+        unset($group);
+        //$group[] = &$this->form->createElement("static", null, null);
         $group[] = &$this->form->createElement("advcheckbox", "q_17_action_schemes_pours", null, "pours(11)", null, array("unchecked", "checked"));
         $group[] = &$this->form->createElement("advcheckbox", "q_17_action_schemes_other", null, "other(12)", null, array("unchecked", "checked"));
         $group[] = &$this->form->createElement("text", "q_17_action_schemes_other_specify");
+        $group[] =& $this->form->createElement("advcheckbox", "q_17_action_schemes_none", null, "none", null, array("unchecked", "checked"));
+        $group[] =& $this->form->createElement("static", null, null, null);
+        $group[] =& $this->form->createElement("static", null, null, null);
+        $group[] = &$this->form->createElement("static", "q_17_action_schemes_raw_score");
+        $this->form->addGroup($group, null, null, $this->_GUIDelimiter, false);
+        unset($group);
+
         $this->XINRegisterRule("q_17_action_schemes_other_specify", array("q_17_action_schemes_other{@}=={@}checked"), "Must specify other", "q_17_action_schemes_group_2");
         $this->form->addGroup($group, "q_17_action_schemes_group_2", null, $this->_GUIDelimiter, false);
         unset($group);
@@ -921,6 +942,10 @@ INSERT INTO instrument_subtests VALUES('', 'csbs', 'csbs_page2', 'Symbolic Behav
         $group[] = &$this->form->createElement("static", null, null, "Action");
         $group[] = &$this->form->createElement("static", null, null, "Agent");
         $group[] = &$this->form->createElement("static", null, null, "Other Agent");
+        $group[] = &$this->form->createElement("static", null, null, null);
+        $group[] = &$this->form->createElement("static", null, null, null);
+        $group[] = &$this->form->createElement("static", null, null, null);
+        $group[] = &$this->form->createElement("static", "q_18_actions_towards_other_raw_score");
 
         $this->form->addGroup($group, "q_18_actions_towards_other_headers", "18. Action schemes towards other" . $this->indent, $this->_GUIDelimiter, false);
         unset($group);
@@ -968,6 +993,11 @@ INSERT INTO instrument_subtests VALUES('', 'csbs', 'csbs_page2', 'Symbolic Behav
 
         $group[] = &$this->form->createElement("static", null, null, "1st Action");
         $group[] = &$this->form->createElement("static", null, null, "2nd Action");
+        $group[] = &$this->form->createElement("static", null, null, null);
+        $group[] = &$this->form->createElement("static", null, null, null);
+        $group[] = &$this->form->createElement("static", null, null, null);
+        $group[] = &$this->form->createElement("static", null, null, null);
+        $group[] = &$this->form->createElement("static", "q_19_sequence_action_schemes_raw_score");
 
         //Sequence action schemes
         $this->form->addGroup($group, "q_19_sequence_action_schemes_headers", "19. Sequence action schemes" . $this->indent, $this->_GUIDelimiter, false);
@@ -996,8 +1026,13 @@ INSERT INTO instrument_subtests VALUES('', 'csbs', 'csbs_page2', 'Symbolic Behav
                                 "3_stacks"=>"Stacks 3",
                                 "4_stacks"=>"Stacks 4",
                                 "5_stacks"=>"Stacks 5",
-                                "not_answered"=>"Not Answered"));
-        $group[] =& $this->form->createElement("static", "q_20_stacks_tower_raw_score", "Q20 Raw Score: ");
+                                "not_administered"=>"Not Administered"));
+        $group[] =& $this->form->createElement("static", null, null, null);
+        $group[] =& $this->form->createElement("static", null, null, null);
+        $group[] =& $this->form->createElement("static", null, null, null);
+        $group[] =& $this->form->createElement("static", null, null, null);
+        $group[] =& $this->form->createElement("static", null, null, null);
+        $group[] =& $this->form->createElement("static", "q_20_stacks_tower_raw_score", null, null);
         $this->XINRegisterRule("q_20_stacks_tower", array("q_20_stacks_tower{@}=={@}"), "Required.", "q_20_stacks_tower_group");
         $this->form->addGroup($group, "q_20_stacks_tower_group", "20. Stacks tower of blocks", $this->_GUIDelimiter, false);
         unset($group); 
@@ -1015,6 +1050,19 @@ INSERT INTO instrument_subtests VALUES('', 'csbs', 'csbs_page2', 'Symbolic Behav
         }
         return $score;
     }
+
+    function _countCheckedNone($record, $genericLabel, $option)
+    {
+	foreach ($record as $field=>$value)
+	{
+        	if (ereg($genericLabel, $field) && $field != $option)
+		{
+                	$score += ($value == "checked");
+		}
+	}
+	return $score;
+    }
+
 
     function _countWords($record, $genericLabel, $excludedWords = array()) {
         foreach($record as $field=>$value) {

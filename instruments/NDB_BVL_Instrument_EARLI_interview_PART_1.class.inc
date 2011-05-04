@@ -109,7 +109,7 @@ class NDB_BVL_Instrument_EARLI_interview_PART_1 extends NDB_BVL_Instrument {
 
 
 		//The array of dates/timestamps to convert to database dates/timestamps
-		$this->dateTimeFields=array("interview_date_date", "q1_1_date", "q1_16_date", "q2_39_date_1_date", "q2_39_date_2_date", "q3_18_0_date", "q3_19_1_0_date", "q3_19_2_0_date", "q3_19_3_0_date", "q3_19_4_0_date", "q3_19_5_0_date", "q3_20_0_date", "q3_28_2date_0_date", "q3_29_d1_0_date", "q3_29_d2_0_date", "q3_29_d3_0_date", "q3_29_d4_0_date", "q3_29_d5_0_date", "q4a_2_date", "q4_41_date_date", "q4_44_date_date");
+		$this->dateTimeFields=array("interview_date", "q1_1", "q1_16", "q2_39_date_1", "q2_39_date_2", "q3_18_0", "q3_19_1_0", "q3_19_2_0", "q3_19_3_0", "q3_19_4_0", "q3_19_5_0", "q3_20_0", "q3_28_2date_0", "q3_29_d1_0", "q3_29_d2_0", "q3_29_d3_0", "q3_29_d4_0", "q3_29_d5_0", "q4a_2", "q4_41_date", "q4_44_date");
 
 		//GLOBAL DEFINITIONS
 
