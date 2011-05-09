@@ -1164,7 +1164,11 @@ class NDB_BVL_Instrument_mullen extends NDB_BVL_Instrument
          	$calculatedScores[$scale_name . '_age_equivalent'] = $this->ageEquivalents[$scale_name][$calculatedScores[$scale_name . '_raw']];
             } else {
                 $record = array();
-                $all_complete = false;
+                // Gross motor score doesn't affect the composite score, so don't bother setting "all_complete" to false
+                // if it's the gross motor that's missing
+                if($scale_name !== 'gross_motor') {
+                    $all_complete = false;
+                }
             }
          }
 
