@@ -508,7 +508,7 @@ class NDB_BVL_Instrument_mullen extends NDB_BVL_Instrument
         // required fields for data entry completion status
         $this->_requiredElements = array('Examiner', "Date_taken");
 
-        //MODIFY THIS WHEN THE SCORING IS IMPLEMENTED
+        $this->_doubleDataEntryDiffIgnoreColumns = array_merge(array('CommentID', 'UserID', 'Testdate'), $this->scoreLabels);
 
         // setup the form
         $this->_setupForm();
