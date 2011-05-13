@@ -121,12 +121,14 @@ class NDB_Reliability_aosi_reliability extends NDB_Reliability
            
            foreach($scored_questions as $key){
               $denominator++;
-              if($candidate_record[$key] != $reliability_record[$key]){
+              if($candidate_record['q' . $key] != $reliability_record[$key]){
                  $reliability_count_raw++;
               }
            }
 
             // Score the reliability
+            print $denominator;
+            print $reliability_count_raw;
             $reliability['Reliability_score']= (($denominator-$reliability_count_raw)/$denominator*100);
            
           
