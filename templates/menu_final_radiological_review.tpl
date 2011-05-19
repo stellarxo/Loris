@@ -41,6 +41,11 @@
         <td nowrap="nowrap">{$form.Exclusionary_Status.html}</td>
     </tr>
     <tr>
+        <td nowrap="nowrap">{$form.Finalized.label}</td>
+        <td nowrap="nowrap">{$form.Finalized.html}</td>
+        <td nowrap="nowrap" colspan="2">&nbsp;</td>
+    </tr>
+    <tr>
         <td nowrap="nowrap">Actions:</td>
         <td colspan="3"><input type="submit" name="filter" value="Show Data" class="button" />&nbsp;<input type="button" name="reset" value="Clear Form" class="button" onclick="location.href='main.php?test_name=final_radiological_review&reset=true'">
     </tr>
@@ -50,6 +55,7 @@
 
 <!--  title table with pagination -->
 
+<div id="pagelinks">
 <table border="0" valign="bottom" width="100%">
 <tr>
     <!-- title -->
@@ -60,10 +66,12 @@
     <td align="right">{$page_links}</td>
 </tr>
 </table>
+</div>
 
 
 <!-- start data table -->
-<table border="0" width="100%" class="fancytable">
+<div id="datatable">
+<table border="0" class="fancytable">
 <tr>
  <th nowrap="nowrap">No.</th>
     <!-- print out column headings - quick & dirty hack -->
@@ -91,4 +99,5 @@
                     
 <!-- end data table -->
 </table>
+</div>
 
