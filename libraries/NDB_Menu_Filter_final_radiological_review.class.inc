@@ -114,6 +114,7 @@ class NDB_Menu_Filter_final_radiological_review extends NDB_Menu_Filter
         $this->form->addElement('select', 'Final_Review_Results', 'Results', $abnormal_atypical);
         $this->form->addElement('select', 'Exclusionary_Status', 'Exclusionary Status', $exclude);
 
+        $this->form->addElement('select', 'Finalized', 'Finalized', $options_boolean);
 
 
     }
