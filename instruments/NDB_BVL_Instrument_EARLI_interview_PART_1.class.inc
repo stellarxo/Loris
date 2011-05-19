@@ -105,7 +105,14 @@ class NDB_BVL_Instrument_EARLI_interview_PART_1 extends NDB_BVL_Instrument {
 		$this->testName = "EARLI_interview_PART_1";           // test_names.Test_name
 		$this->table = 'EARLI_interview_PART_1';              // name of table containing data keyed by commentID
 		$this->commentID = $commentID;
-		$this->_requiredElements = array('mother_id','q1_2','q2_1','q2_21','q3_3','q4a_1','q4_21','q4_31','q4_54','q4_74');
+
+                $db =& Database::singleton();
+		$sessionid = $this->getSessionID();
+                $subprojectid = $db->selectOne("SELECT SubprojectID FROM session WHERE ID='$sessionid'");
+		if ($subprojectid == '3')
+			$this->_requiredElements = array('mother_id','q1_2','q2_1','q2_21','q3_3_0');
+		else
+			$this->_requiredElements = array('mother_id','q1_2','q2_1','q2_21','q3_3_0','q4a_1','q4_21','q4_31','q4_54','q4_74');
 
 
 		//The array of dates/timestamps to convert to database dates/timestamps
@@ -156,7 +163,7 @@ class NDB_BVL_Instrument_EARLI_interview_PART_1 extends NDB_BVL_Instrument {
 		//Any HTML_Quickform multiple selects must be listed here
 		//Usually this appears at the beginning of the file in the setup() function
 
-		$this->_selectMultipleElements = array_merge($this->_selectMultipleElements, array("q3_32_1","q3_32_2","q3_32_3","q3_32_4", "q3_32_5", "q4_10_p1", "q4_10_p2", "q4_10_p3", "q4_10_p4", "q4_10_p5", "q4_13_m1", "q4_13_m2", "q4_13_m3", "q4_13_m4", "q4_13_m5", "q4_20_m", "q4_24", "q4_28", "q4_32", "q4_35", "q4_52", "q4_57", "q4_60", "q4_63", "q4_66", "q4_67", "q4_68_select_1", "q4_68_select_2", "q4_68_select_3", "q4_71_select_1", "q4_71_select_2", "q4_71_select_3", "q4_76_m_1", "q4_76_m_2", "q4_76_m_3", "q4_76_m1", "q4_76_m2", "q4_76_m3", "q4_79", "q4_92", "q4_95_month_1", "q4_95_month_2", "q4_95_month_3", "q4_98_1_month", "q4_98_2_month", "q4_98_3_month", "q4_98_4_month", "q4_98_5_month", "q4_98_6_month", "q4_98_7_month", "q4_98_8_month"));
+		$this->_selectMultipleElements = array_merge($this->_selectMultipleElements, array("q3_32_1_0","q3_32_2_0","q3_32_3_0","q3_32_4_0", "q3_32_5_0", "q4_10_p1", "q4_10_p2", "q4_10_p3", "q4_10_p4", "q4_10_p5", "q4_13_m1", "q4_13_m2", "q4_13_m3", "q4_13_m4", "q4_13_m5", "q4_20_m", "q4_24", "q4_28", "q4_32", "q4_35", "q4_52", "q4_57", "q4_60", "q4_63", "q4_66", "q4_67", "q4_68_select_1", "q4_68_select_2", "q4_68_select_3", "q4_71_select_1", "q4_71_select_2", "q4_71_select_3", "q4_76_m_1", "q4_76_m_2", "q4_76_m_3", "q4_76_m1", "q4_76_m2", "q4_76_m3", "q4_79", "q4_92", "q4_95_month_1", "q4_95_month_2", "q4_95_month_3", "q4_98_1_month", "q4_98_2_month", "q4_98_3_month", "q4_98_4_month", "q4_98_5_month", "q4_98_6_month", "q4_98_7_month", "q4_98_8_month"));
 
 
 		//column headers
