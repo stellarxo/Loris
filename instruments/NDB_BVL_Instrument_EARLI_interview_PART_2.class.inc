@@ -88,7 +88,7 @@ class NDB_BVL_Instrument_EARLI_interview_PART_2 extends NDB_BVL_Instrument {
 		$this->testName = "EARLI_interview_PART_2";           // test_names.Test_name
 		$this->table = 'EARLI_interview_PART_2';              // name of table containing data keyed by commentID
 		$this->commentID = $commentID;
-		$this->_requiredElements = array('mother_id','q5_2_t', 'q5_17', 'q5_25', 'q5_58', 'q5_68', 'q5_80', 'q5_85', 'q5_95', 'q5_110_a', 'q6_1', 'q6_85', 'q7_1', 'q7_19', 'q7_37_1');
+		$this->_requiredElements = array('mother_id','q5_2_t', 'q5_17', 'q5_32', 'q5_58', 'q5_68', 'q5_80', 'q5_85', 'q5_95', 'q5_110_a', 'q6_1', 'q6_85', 'q7_1', 'q7_19', 'q7_37_1');
 
 
 		//The array of dates/timestamps to convert to database dates/timestamps
@@ -552,26 +552,26 @@ class NDB_BVL_Instrument_EARLI_interview_PART_2 extends NDB_BVL_Instrument {
 
 		$procedureOptions =  array(NULL=>"", "01" => "01 Artificial insemination or intrauterine insemination", "02" => "02 In vitro fertilization- embryo transfer (IVF-ET)", "03" => "03  Gamete intrafallopian transfer (GIFT)", "04" => "04 Zygote intrafallopian transfer (ZIFT)", "05" => "05 Intracytoplasmic sperm injection (ICSI)", "06" => "06 Frozen embryo transfer", "07" => "07 Tubal embryo transfer (TET)", "08_other" => "08 Other", "88_refused"=>"88 Refused", "99_Do_not_know"=>"99 Do not know", "Not_Answered"=>"Not Answered");
 
-		$this->form->addElement("select", "q5_22_p#1", $this->indent . "PROC #1:", $procedureOptions); 
-		$this->addTextAreaElementRD('q5_22_p#1_other', $this->indent . $this->indent . " If you selected [Other], please specify:");
+		$this->form->addElement("select", "q5_22_p1", $this->indent . "PROC #1:", $procedureOptions); 
+		$this->addTextAreaElementRD('q5_22_p1_other', $this->indent . $this->indent . " If you selected [Other], please specify:");
 
 		$this->form->addElement('static', null, "<br/>");
-		$this->form->addElement("select", "q5_22_p#2", $this->indent . "PROC #2:", $procedureOptions);
-		$this->addTextAreaElementRD('q5_22_p#2_other', $this->indent . $this->indent . " If you selected [Other], please specify:");
+		$this->form->addElement("select", "q5_22_p2", $this->indent . "PROC #2:", $procedureOptions);
+		$this->addTextAreaElementRD('q5_22_p2_other', $this->indent . $this->indent . " If you selected [Other], please specify:");
 
 		$this->form->addElement('static', null, "<br/>");
-		$this->form->addElement("select", "q5_22_p#3", $this->indent . "PROC #3:", $procedureOptions); 
-		$this->addTextAreaElementRD('q5_22_p#3_other', $this->indent . $this->indent . " If you selected [Other], please specify:");
+		$this->form->addElement("select", "q5_22_p3", $this->indent . "PROC #3:", $procedureOptions); 
+		$this->addTextAreaElementRD('q5_22_p3_other', $this->indent . $this->indent . " If you selected [Other], please specify:");
 
 		$this->form->addElement('static', null, "<br/>");
 		
 		for ($i=1; $i<4; $i++)
-			$this->XINRegisterRule("q5_22_p#{$i}_other", array("q5_22_p#{$i}{@}=={@}08_other"), "You must specify other", "q5_22_p#{$i}_other_group");
+			$this->XINRegisterRule("q5_22_p{$i}_other", array("q5_22_p{$i}{@}=={@}08_other"), "You must specify other", "q5_22_p{$i}_other_group");
 		
 
-		$this->XINRegisterRule("q5_22_p#1", array("q5_21{@}=={@}01_yes"), "You must specify procedure 1");
-		$this->XINRegisterRule("q5_22_p#2", array("q5_22_p#2{@}=={@}NEVER_REQUIRED"));
-		$this->XINRegisterRule("q5_22_p#3", array("q5_22_p#3{@}=={@}NEVER_REQUIRED"));
+		$this->XINRegisterRule("q5_22_p1", array("q5_21{@}=={@}01_yes"), "You must specify procedure 1");
+		$this->XINRegisterRule("q5_22_p2", array("q5_22_p2{@}=={@}NEVER_REQUIRED"));
+		$this->XINRegisterRule("q5_22_p3", array("q5_22_p3{@}=={@}NEVER_REQUIRED"));
 
 		$this->form->addElement('static', null, $this->indent . $this->indent . " If you selected [Refused] or [Don't Know]:");
 		$this->form->addElement('static', null, $this->indent . $this->indent . $this->indent . " If child's biological father known, then go to 5-25");
@@ -595,7 +595,7 @@ class NDB_BVL_Instrument_EARLI_interview_PART_2 extends NDB_BVL_Instrument {
 //				$this->form->addRule(array("q5_23_{$value}_{$key}_{$i}", "q5_22_p{$i}"), 'This question is required', 'requiredIf', array('operator'=>'!=', 'value'=>'NULL'));
 //				$this->setRequired("q5_23_{$value}_{$key}_{$i}");
 				if ($i==1)
-					$this->XINRegisterRule("q5_23_{$value}_{$key}_{$i}", array("q5_22_p#{$i}{@}=={@}01|02|03|04|05|06|07"), "Required if specified procedures");
+					$this->XINRegisterRule("q5_23_{$value}_{$key}_{$i}", array("q5_22_p{$i}{@}=={@}01|02|03|04|05|06|07"), "Required if specified procedures");
 				else
 					$this->XINRegisterRule("q5_23_{$value}_{$key}_{$i}", array("q5_23_{$value}_{$key}_{$i}{@}=={@}NEVER_REQUIRED"));
 
@@ -608,9 +608,9 @@ class NDB_BVL_Instrument_EARLI_interview_PART_2 extends NDB_BVL_Instrument {
 				$this->form->addElement("select", "q5_23_{$value}_{$key}other_{$i}", $this->indent . $this->indent . "{$value}:", array(NULL=>"", "01_yes" => "01 Yes", "02" => "02 No ", "98" => "98 Refused", "99" => "99 Do not know", "Not_Answered" => "Not Answered"));
 		
 				if ($i==1)
-					$this->XINRegisterRule("q5_23_{$value}_{$key}other_{$i}", array("q5_22_p#{$i}{@}=={@}08_other"), "Required if specified other");
+					$this->XINRegisterRule("q5_23_{$value}_{$key}other_{$i}", array("q5_22_p{$i}{@}=={@}08_other"), "Required if specified other");
 				else
-					$this->XINRegisterRule("q5_23_{$value}_{$key}other_{$i}", array("q5_22_p#{$i}{@}=={@}NEVER_REQUIRED"));
+					$this->XINRegisterRule("q5_23_{$value}_{$key}other_{$i}", array("q5_22_p{$i}{@}=={@}NEVER_REQUIRED"));
 //				$this->form->addRule(array("q5_23_{$value}_{$key}other", "q5_22_p{$key}"), 'This question is required', 'requiredIf', array('operator'=>'==', 'value'=>'08'));
 //				$this->setRequired("q5_23_{$value}_{$key}other");
 			}
@@ -636,7 +636,7 @@ class NDB_BVL_Instrument_EARLI_interview_PART_2 extends NDB_BVL_Instrument {
                                 $this->form->addElement("select", "q5_24_{$value}_{$key}_{$i}", $this->indent . $this->indent . "{$value}:", array(NULL=>"", "01_yes" => "01 Yes", "02" => "02 No ", "98" => "98 Refused", "99" => "99 Do not know", "Not_Answered" => "Not Answered"));
 
                         	if ($i==1)  
-                               		$this->XINRegisterRule("q5_24_{$value}_{$key}_{$i}", array("q5_22_p#{$i}{@}=={@}01|02|03|04|05|06|07"), "Required if specified procedures");
+                               		$this->XINRegisterRule("q5_24_{$value}_{$key}_{$i}", array("q5_22_p{$i}{@}=={@}01|02|03|04|05|06|07"), "Required if specified procedures");
 
                         	else        
 					$this->XINRegisterRule("q5_24_{$value}_{$key}_{$i}", array("q5_23_{$value}_{$i}{@}=={@}NEVER_REQUIRED"));
@@ -648,9 +648,9 @@ class NDB_BVL_Instrument_EARLI_interview_PART_2 extends NDB_BVL_Instrument {
 			{
                                 $this->form->addElement("select", "q5_24_{$value}_{$key}other_{$i}", $this->indent . $this->indent . "{$value}:", array(NULL=>"", "01_yes" => "01 Yes", "02" => "02 No ", "98" => "98 Refused", "99" => "99 Do not know", "Not_Answered" => "Not Answered"));
 				if ($i==1)
-                                	 $this->XINRegisterRule("q5_24_{$value}_{$key}other_{$i}", array("q5_22_p#{$i}{@}=={@}08_other"), "Required if specified other");
+                                	 $this->XINRegisterRule("q5_24_{$value}_{$key}other_{$i}", array("q5_22_p{$i}{@}=={@}08_other"), "Required if specified other");
                         	else
-                                	 $this->XINRegisterRule("q5_24_{$value}_{$key}other_{$i}", array("q5_22_p#{$i}{@}=={@}NEVER_REQUIRED"));
+                                	 $this->XINRegisterRule("q5_24_{$value}_{$key}other_{$i}", array("q5_22_p{$i}{@}=={@}NEVER_REQUIRED"));
                         }
 
                         $this->form->addElement('static', null, "<br/>");
@@ -679,6 +679,8 @@ class NDB_BVL_Instrument_EARLI_interview_PART_2 extends NDB_BVL_Instrument {
                 }
 
                 $db->selectRow("SELECT q5_16 FROM EARLI_interview_PART_2 WHERE CommentID='".$this->getCommentID()."'", &$answer);
+
+		//print_r($fields);
 	
 		if ($answer["q5_16"] == "01_yes")
 		{
@@ -709,7 +711,7 @@ class NDB_BVL_Instrument_EARLI_interview_PART_2 extends NDB_BVL_Instrument {
 
 
 		//q5***
-		$this->form->addElement("select", "q5***", "5***. Is [SIBLING]'s biological father known?", $this->yesNo); 
+		$this->form->addElement("select", "q5_father_known", "5***. Is [SIBLING]'s biological father known?", $this->yesNo); 
 		$this->form->addElement('static', null, $this->indent . "If [SIBLING]'s biological father is unknown, go to 5-32");
 		$this->XINRegisterRule("q5***", array("q5***{@}=={@}NEVER_REQUIRED"));
 		$this->form->addElement('static', null, "<br/>");
@@ -1033,7 +1035,7 @@ class NDB_BVL_Instrument_EARLI_interview_PART_2 extends NDB_BVL_Instrument {
                 $db->selectRow("SELECT q4a_1 FROM EARLI_interview_PART_1 WHERE CommentID='". $otherCommentID."'", &$answ);
 
 
-
+	//	print_r($fields);
 
 		//q5_25a
                 if ($answer["q5_16"] == "01_yes")
