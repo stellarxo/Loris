@@ -112,7 +112,7 @@ class NDB_BVL_Instrument_EARLI_interview_PART_1 extends NDB_BVL_Instrument {
 		if ($subprojectid == '3')
 			$this->_requiredElements = array('mother_id','q1_2','q2_1','q2_21','q3_3_0');
 		else
-			$this->_requiredElements = array('mother_id','q1_2','q2_1','q2_21','q3_3_0','q4a_1','q4_21','q4_31','q4_54','q4_74');
+			$this->_requiredElements = array('mother_id','q1_2','q2_1','q2_21','q3_3_0','q4a_1','q4_31','q4_54','q4_73');
 
 
 		//The array of dates/timestamps to convert to database dates/timestamps
@@ -1052,7 +1052,7 @@ class NDB_BVL_Instrument_EARLI_interview_PART_1 extends NDB_BVL_Instrument {
 		$this->form->addElement("select", "q3_10_0", "3-10) Was this pregnancy with [PROBAND]?",  array(NULL=>"", "01_yes" => "01 Yes", "02" => "02 No ", "88_Refused" => "88 Refused",  "99_Do_not_know"=>"99 Do not know", "Not_Answered"=>"Not Answered"));
 		
 		//Rule is taken care of in rulesPage4 function
-		$this->XINRegisterRule("q3_10_0", array("q3_6_0{@}=={@}NEVER_REQUIRED"));
+		$this->XINRegisterRule("q3_10_0", array("q3_10_0{@}=={@}NEVER_REQUIRED"));
 		$this->form->addElement('static', null, $this->indent . " If you selected [Yes], go to question 3-13");
 		$this->form->addElement('static', null, $this->indent . " If you selected [No], go to question 3-11");
 		$this->form->addElement('static', null, "<br/>");
@@ -1359,6 +1359,7 @@ class NDB_BVL_Instrument_EARLI_interview_PART_1 extends NDB_BVL_Instrument {
 	function rulesPage4 ($fields)
 	{
 
+		//print_r($fields);
                 function multSelect($fields, $question1)
                 {
                         return ($fields[$question1] == array(0=>null) || empty($fields[$question1]));
@@ -1550,6 +1551,7 @@ class NDB_BVL_Instrument_EARLI_interview_PART_1 extends NDB_BVL_Instrument {
 				$errors["q3_32_2_0"] = "Required if >01 live births";
 		}
 
+		//print_r($errors);
 		return $errors;
 	}
 
