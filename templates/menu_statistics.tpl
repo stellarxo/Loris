@@ -36,15 +36,15 @@ function CreateScatterplot() {
     graph.CSVExtraFields = ['candID', 'sessionID', 'commentID']
     graph.RenderChart();
     FormatLink = function(url, val, extras) {
-        base = '<a href="javascript:window.open(\'main.php?test_name=' + url;
+        full_url = 'main.php?test_name=' + url;
         if(extras) {
             for(exval in extras) {
                 if(exval != 'x' && exval != 'y' && exval != 'name') {
-                    base += '&' + exval + '=' + extras[exval];
+                    full_url += '&' + exval + '=' + extras[exval];
                 }
             }
         }
-        base += '\', \'newwindow\');" target="_blank" xlink:show="new">' + val + '</a><br />';
+        base = '<a href="' + full_url + '">' + val + '</a><br />';
         return base;
     }
     graph.XFormat = function(val, pt) { return FormatLink(jQuery("#instrumenty").val(), jQuery("#fieldx").val() + ':' + val, pt.config); };
