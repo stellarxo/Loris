@@ -200,8 +200,7 @@ function _page2(){
 
              $this->form->addElement("static", null, "<BR>"); //line space
             
-}
+    }
 }
 
 ?>
-          
