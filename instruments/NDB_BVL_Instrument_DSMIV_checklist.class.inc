@@ -39,7 +39,7 @@ class NDB_BVL_Instrument_DSMIV_checklist extends NDB_BVL_Instrument
         //Any HTML_Quickform date elements must be listed here
         $this->dateTimeFields=array("Date_taken", "date_taken_diagnostic_assessor", "date_taken_confirming_clinician");
 
-        $this->_requiredElements = array('Examiner', 'Date_taken', 'q3c_preoccupation_objects', 'q4_criteria_autistic_disorder');
+        $this->_requiredElements = array('Examiner', 'Date_taken', 'q3d_preoccupation_objects', 'q4_criteria_autistic_disorder');
 
 
         $config =& NDB_Config::singleton();
