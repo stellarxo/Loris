@@ -14,6 +14,7 @@ class NDB_Menu_statistics_site extends NDB_Menu
             "adi_r_subject",
             "ados_module1",
             "ados_module2",
+            "ados_module3",
             "aosi",
             "csbs", 
             "DSMIV_checklist",
@@ -25,7 +26,8 @@ class NDB_Menu_statistics_site extends NDB_Menu
             "head_measurements_subject",
             "i3",
             "ibq_r",
-            "m_chat",
+            "m_chat_proband",
+            "m_chat_subject",
             //    "macarthur_cdi",
             "macarthur_words_gestures",
             //    "med_extract_new_recruit",
@@ -44,7 +46,7 @@ class NDB_Menu_statistics_site extends NDB_Menu
             "scq_subject",
             "seq",
             "tsi",
-            //   "tsi_followup",
+            "tsi_followup",
             "vineland_proband",
             "vineland_subject" 
     );

@@ -121,6 +121,12 @@ class NDB_BVL_Instrument_mri_parameter_form extends NDB_BVL_Instrument
         $this->addDateElement('DTI_Scan_done', 'If so, when?');
         $this->addTextAreaElement('DTI_Comments', 'Comments');
         
+        $this->form->addElement('header', null, '65 Direction DTI');
+        $this->form->addElement('static', null, 'SIEMENS: epd2_diff_12ch_b2000');
+        $this->form->addElement('select', 'DTI65Dir_Scan_done', 'Was this sequence acquired?', $yes_no_option);
+        $this->form->addElement('text', "DTI65Dir_number_attempts", "Number of scan attempts:");
+        $this->addDateElement('DTI65Dir_Scan_done', 'If so, when?');
+        $this->addTextAreaElement('DTI65Dir_Comments', 'Comments');
 
         $this->form->addElement('header', null, 'Resting BOLD');
         $yes_no_option2 = array(""=>NULL, "No"=>"No", "Complete"=>"Yes, Complete Acquisition (2 Full Runs)", "Partial"=>"Yes, Partial Acquisition", "not_answered"=>"Not Answered");

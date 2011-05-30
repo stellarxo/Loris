@@ -1,0 +1,16 @@
+alter table DSMIV_checklist change 1a_impairment_non_verbal_behaviors q1a_impairment_non_verbal_behaviors enum('yes','no','not_applicable','not_answered');
+alter table DSMIV_checklist change 1b_failure_develop_relationships q1b_failure_develop_relationships enum('yes','no','not_applicable','not_answered');
+alter table DSMIV_checklist change 1c_lack_spontaneous_enjoyment q1c_lack_spontaneous_enjoyment enum('yes','no');
+alter table DSMIV_checklist change 1d_lack_social_reciprocity q1d_lack_social_reciprocity enum('yes','no');
+alter table DSMIV_checklist change 2a_development_spoken_language q2a_development_spoken_language enum('yes','no','not_applicable','not_answered');
+alter table DSMIV_checklist change 2b_impairment_conversation q2b_impairment_conversation enum('yes','no','not_applicable','not_answered');
+alter table DSMIV_checklist change 2c_use_language q2c_use_language enum('yes','no','not_applicable','not_answered');
+alter table DSMIV_checklist change 2d_lack_play q2d_lack_play enum('yes','no');
+alter table DSMIV_checklist change 3a_preoccupation_patterns q3a_preoccupation_patterns enum('yes','no');
+alter table DSMIV_checklist change 3b_adherence_routines q3b_adherence_routines enum('yes','no','not_applicable','not_answered');
+alter table DSMIV_checklist change 3c_motor_mannerisms q3c_motor_mannerisms enum('yes','no','not_applicable','not_answered');
+alter table DSMIV_checklist change 3c_preoccupation_objects 3d_preoccupation_objects enum('yes','no','not_applicable','not_answered');
+alter table DSMIV_checklist change 4_criteria_autistic_disorder q4_criteria_autistic_disorder enum('yes','no');
+alter table DSMIV_checklist change 4_criteria_PDD q4_criteria_PDD enum('yes','no','not_answered');
+alter table DSMIV_checklist change 4b_not_ASD_specify q4b_not_ASD_specify varchar(255);
+alter table DSMIV_checklist change 4b_not_ASD_specify_status q4b_not_ASD_specify_status  enum('not_answered');

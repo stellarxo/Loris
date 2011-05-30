@@ -1,0 +1,413 @@
+<?php
+class NDB_BVL_Instrument_ados_module3 extends NDB_BVL_Instrument
+{
+/*
+    INSERT INTO test_names VALUES ('', 'ados_module3', 'ADOS Module 3', '0', '1');
+
+    INSERT INTO instrument_subtests VALUES('', 'ados_module3', 'ados_module3_page1', 'Sections A-B', 1);
+    INSERT INTO instrument_subtests VALUES('', 'ados_module3', 'ados_module3_page2', 'Sections C-E', 2);
+
+    INSERT INTO test_battery VALUES ('', "ados_module3", "1053", "1179","Y","Visit","1", NULL);
+    INSERT INTO test_battery VALUES ('', "ados_module3", "1053", "1179","Y","Visit","2", NULL);
+    INSERT INTO test_battery VALUES ('', "ados_module3", "1053", "1179","Y","Visit","3", NULL);
+
+*/
+    var $option01237 = array(""=>NULL, 0=>0, 1=>1, 2=>2, 3=>3, 7=>7, "not_answered"=>"Not Answered");
+    var $option0127 = array(""=>NULL, 0=>0, 1=>1, 2=>2, 7=>7, "not_answered"=>"Not Answered");
+    var $option01278 = array(""=>NULL, 0=>0, 1=>1, 2=>2, 7=>7, 8=>8, "not_answered"=>"Not Answered");
+    var $option0123 = array(""=>NULL, 0=>0, 1=>1, 2=>2, 3=>3, "not_answered"=>"Not Answered");
+    var $option01238 = array(""=>NULL, 0=>0, 1=>1, 2=>2, 3=>3, 8=>8, "not_answered"=>"Not Answered");
+    var $option02 = array(""=>NULL, 0=>0, 2=>2, "not_answered"=>"Not Answered");
+    var $option012 = array(""=>NULL, 0=>0, 1=>1, 2=>2, "not_answered"=>"Not Answered");
+    var $option0128 = array(""=>NULL, 0=>0, 1=>1, 2=>2, 8=>8, "not_answered"=>"Not Answered");
+
+    var $scoreCols = array("social_affect_total", "restricted_repetitive_behavior_total", "social_affect_restricted_repetitive_behavior_total", "ADOS_classification");
+    /**
+    * sets up basic data, such as the HTML_Quickform object, and so on.
+    *
+    * @param string $commentID  the CommentID identifying the data to load
+    * @param string $page       if a multipage form, the page to show
+    * @return void
+    * @access public
+    */
+    function setup($commentID, $page){
+        $this->formType="XIN";
+        $this->form = new HTML_Quickform('test_form');
+        $this->page = $page;            // page label (number or
+        // string - used by
+        // user-defined child classes)
+
+        // set the object properties
+        $this->testName = "ados_module3";           // test_names.Test_name
+        $this->table = 'ados_module3';              // name of database table corresponding to instrument
+        // data keyed by commentID
+        $this->commentID = $commentID;
+
+        //The array of dates/timestamps to convert to database dates/timestamps
+        //Any HTML_Quickform date elements must be listed here
+        $this->dateTimeFields=array("Date_taken");
+
+       //The array of selects with multiple answers allowed
+        //Any HTML_Quickform multiple selects must be listed here
+        $this->_selectMultipleElements = array();
+
+        // required fields for data entry completion status
+        $this->_requiredElements = array('Examiner', "a1", "c1");
+
+		
+		/**
+		 * Array of column names to be ignored by the double data entry conflict detector.
+		 */
+		$this->_doubleDataEntryDiffIgnoreColumns = array('CommentID', 'UserID', 'Testdate',
+								 'd1_specify',
+								 'd1_specify_status',
+								 'd2_specify',
+								 'd2_specify_status',
+								 'd4_specify',
+								 'd4_specify_status');
+
+
+
+       // setup the form
+        $this->_setupForm();
+    }
+
+
+    //If the instrument is not paged, remove the switch from the _setupForm method and add all the form Elements in this function.
+    /**
+    * method to build the HTML_Quickform object into a paged form
+    *
+    * @return void
+    * @access private
+    */
+    function _setupForm(){
+
+       if(ereg("ados_module3(_page[0-9]+)",$this->page,$matches)){
+            call_user_method($matches[1], &$this);
+        } else {
+            $this->_main();
+        }
+
+        //Defines the call back function for HTML Quickform to use when validating the form.
+        $this->form->addFormRule(array(&$this,'XINValidate'));
+
+    }
+
+    /**
+    * generates the main page of the form.
+    *
+    * @return void
+    * @access private
+    *
+    */
+
+
+    function _main(){
+        // display test name
+        $this->form->addElement('header', 'instrument_title', "ADOS Module 3");
+
+        // automatically adds examiner & date of administration
+        $this->_addMetadataFields();
+
+
+    	$this->form->addElement("header",null,"SUMMARY SCORES:");
+    
+    	$this->form->addElement("static",null,null);
+    	$this->form->addElement("static",null,null);
+    
+    	$group[]= &$this->form->createElement("static", "social_affect_total", null);
+     	$this->form->addGroup($group, null, "Social Affect Total:", $this->_GUIDelimiter, false);
+        unset($group);
+    
+    	$this->form->addElement("static",null,null);
+    	$this->form->addElement("static",null,null);
+    
+    	$group[]= &$this->form->createElement("static", "restricted_repetitive_behavior_total", null);
+     	$this->form->addGroup($group, null, "Restricted and Repetitive Behavior Total:", $this->_GUIDelimiter, false);
+        unset($group);
+    
+    	$this->form->addElement("static",null,null);
+    	$this->form->addElement("static",null,null);
+    
+    	$group[]= &$this->form->createElement("static", "social_affect_restricted_repetitive_behavior_total", null);
+     	$this->form->addGroup($group, null, "Social Affect and Restricted and Repetitive Behavior Total:", $this->_GUIDelimiter, false);
+        unset($group);
+    
+    	$this->form->addElement("static",null,null);
+    	$this->form->addElement("static",null,null);
+    
+    	$group[]= &$this->form->createElement("static", "ADOS_classification", null);
+     	$this->form->addGroup($group, null, "ADOS Classification:", $this->_GUIDelimiter, false);
+        unset($group);
+    
+    	$this->form->addElement("static",null,null);
+    	$this->form->addElement("static",null,null);
+    }
+    
+/*	
+	//They decided not to use this section - it was only partially implemented.
+	//Section A: Observation
+	//Question #1 - Free Play
+        $this->form->addElement('header', null, "OBSERVATION:");
+        $this->form->addElement("static", null, "<BR>"); //line space
+
+        $group[] =&$this->form->createElement('textarea', 'obs_q_1', null, "Communication Sample");
+        $group[] =&$this->form->createElement('advcheckbox', 'obs_q_1_check', null, "Not Answered");
+        $this->form->addGroup($group, 'obs_q_1_group', '1. Free Play', false);
+        unset($group);
+
+        $this->form->addElement("static", null, "<BR>"); //line space
+
+        $group[] =&$this->form->createElement('textarea', 'obs_q_1_notes', null, "Notes");
+        $group[] =&$this->form->createElement('advcheckbox', 'obs_q_1_notes_check', null, "Not Answered");
+        $this->form->addGroup($group, 'obs_q_1_notes_group', null, false);
+        unset($group);
+
+	//Rules for Question #1:
+        $reqIfSettings = array('controller'=>"obs_q_1_check", 'operator'=>'!=', 'value'=>'1');
+        $this->form->addRule("obs_q_1_group", 'Communication Sample is Required', 'requiredIfGroup', array_merge($reqIfSettings, array('element'=>"obs_q_1")));
+
+        $reqIfSettings = array('controller'=>"obs_q_1_notes_check", 'operator'=>'!=', 'value'=>'1');
+        $this->form->addRule("obs_q_1_notes_group", 'Notes are Required', 'requiredIfGroup', array_merge($reqIfSettings, array('element'=>"obs_q_1_notes")));
+
+
+
+	//Question #2 - Response to Name
+        $this->form->addElement("static", null, "<BR>"); //line space
+
+        $group[] =&$this->form->createElement('textarea', 'obs_q_2_notes', null, "Notes");
+        $group[] =&$this->form->createElement('advcheckbox', 'obs_q_2_notes_check', null, "Not Answered");
+        $this->form->addGroup($group, 'obs_q_2_notes_group', '2. Response to Name', false);
+        unset($group);
+
+	//Rules for Question #2:
+        $reqIfSettings = array('controller'=>"obs_q_2_notes_check", 'operator'=>'!=', 'value'=>'1');
+        $this->form->addRule("obs_q_2_notes_group", 'Notes are Required', 'requiredIfGroup', array_merge($reqIfSettings, array('element'=>"obs_q_2_notes")));
+
+
+
+	//Question #3 - Response to Joint Attention
+        $this->form->addElement("static", null, "<BR>"); //line space
+
+        $group[] =&$this->form->createElement('textarea', 'obs_q_3_notes', null, "Notes");
+        $group[] =&$this->form->createElement('advcheckbox', 'obs_q_3_notes_check', null, "Not Answered");
+        $this->form->addGroup($group, 'obs_q_3_notes_group', '3. Response to Joint Attention', false);
+        unset($group);
+
+	//Rules for Question #3:
+        $reqIfSettings = array('controller'=>"obs_q_3_notes_check", 'operator'=>'!=', 'value'=>'1');
+        $this->form->addRule("obs_q_3_notes_group", 'Notes are Required', 'requiredIfGroup', array_merge($reqIfSettings, array('element'=>"obs_q_3_notes")));
+
+
+
+	//Question #4 - Bubble Play
+        $this->form->addElement("static", null, "<BR>"); //line space
+
+        $group[] =&$this->form->createElement('textarea', 'obs_q_4_notes', null, "Notes");
+        $group[] =&$this->form->createElement('advcheckbox', 'obs_q_4_notes_check', null, "Not Answered");
+        $this->form->addGroup($group, 'obs_q_3_notes_group', '4. Bubble Play', false);
+        unset($group);
+
+	//Rules for Question #4:
+        $reqIfSettings = array('controller'=>"obs_q_4_notes_check", 'operator'=>'!=', 'value'=>'1');
+        $this->form->addRule("obs_q_4_notes_group", 'Notes are Required', 'requiredIfGroup', array_merge($reqIfSettings, array('element'=>"obs_q_4_notes")));
+
+
+
+	//Question #5 - Anticipation of a Routine with Objects
+        $this->form->addElement("static", null, "<BR>"); //line space
+
+        $group[] =&$this->form->createElement('textarea', 'obs_q_5_notes', null, "Notes");
+        $group[] =&$this->form->createElement('advcheckbox', 'obs_q_5_notes_check', null, "Not Answered");
+        $this->form->addGroup($group, 'obs_q_3_notes_group', '5. Anticipation of a Routine with Objects', false);
+        unset($group);
+
+	//Rules for Question #4:
+        $reqIfSettings = array('controller'=>"obs_q_5_notes_check", 'operator'=>'!=', 'value'=>'1');
+        $this->form->addRule("obs_q_5_notes_group", 'Notes are Required', 'requiredIfGroup', array_merge($reqIfSettings, array('element'=>"obs_q_5_notes")));
+
+*/
+
+
+    function _page1(){
+    	//CODING
+    	//Section A: Language and Communication
+        $this->form->addElement('header', null, "ADOS Module 3");
+        $this->form->addElement("static", null, "<BR>"); //line space
+
+        $this->form->addElement('header', null, "Section A: Language and Communication");
+        $this->form->addElement("static", null, "<BR>"); //line space
+        $this->form->addElement("static", null, "<BR>"); //line space
+        $this->form->addElement('select', 'a1', '1. Overall Level of Non-Echoed Language', $this->option0123);
+        $this->form->addElement("static", null, "<BR>"); //line space
+        $this->form->addElement('select', 'a2', '2. Speech Abnormalities Associated with Autism (Intonation/Volume/Rhythm/Rate)', $this->option01278);
+        $this->form->addElement("static", null, "<BR>"); //line space
+        $this->form->addElement('select', 'a3', '3. Immediate Echolalia',  $this->option0123);
+        $this->form->addElement("static", null, "<BR>"); //line space
+        $this->form->addElement('select', 'a4', '4. Stereotyped/Idiosyncratic Use of Words or Phrases', $this->option0123);
+        $this->form->addElement("static", null, "<BR>"); //line space
+        $this->form->addElement('select', 'a5', '5. Offers Information', $this->option012);
+        $this->form->addElement("static", null, "<BR>"); //line space
+        $this->form->addElement('select', 'a6', '6. Asks for Information', $this->option0123);
+        $this->form->addElement("static", null, "<BR>"); //line space
+        $this->form->addElement('select', 'a7', '7. Reporting of Events', $this->option0123);
+        $this->form->addElement("static", null, "<BR>"); //line space
+        $this->form->addElement('select', 'a8', '8. Conversation', $this->option0123);
+        $this->form->addElement("static", null, "<BR>"); //line space
+        $this->form->addElement('select', 'a9', '9. Descriptive, Conventional, Instrumental, or Informational Gestures', $this->option01238);
+
+        $this->form->addElement("static", null, "<BR>"); //line space
+        $this->form->addElement("static", null, "<BR>"); //line space
+
+
+	   //Section B: Reciprocal Social Interaction
+        $this->form->addElement('header', null, "Section B: Reciprocal Social Interaction");
+        $this->form->addElement("static", null, "<BR>"); //line space
+        $this->form->addElement("static", null, "<BR>"); //line space
+
+        $this->form->addElement('select', 'b1', '1. Unusual Eye Contact', $this->option02);
+        $this->form->addElement("static", null, "<BR>"); //line space
+        $this->form->addElement('select', 'b2', '2. Facial Expressions Directed to Others', $this->option012);
+        $this->form->addElement("static", null, "<BR>"); //line space
+        $this->form->addElement('select', 'b3', '3. Language Production and Linked Nonverbal Communication', $this->option01278);
+        $this->form->addElement("static", null, "<BR>"); //line space
+        $this->form->addElement('select', 'b4', '4. Shared Enjoyment in Interaction', $this->option0128);
+        $this->form->addElement("static", null, "<BR>"); //line space
+        $this->form->addElement('select', 'b5', "5. Empathy/Comments on Others' Emotions", $this->option0123);
+        $this->form->addElement("static", null, "<BR>"); //line space
+        $this->form->addElement('select', 'b6', '6. Insight', $this->option0123);
+        $this->form->addElement("static", null, "<BR>"); //line space
+        $this->form->addElement('select', 'b7', '7. Quality of Social Overtures', $this->option0123);
+        $this->form->addElement("static", null, "<BR>"); //line space
+        $this->form->addElement('select', 'b8', '8. Quality of Social Response', $this->option0123);
+        $this->form->addElement("static", null, "<BR>"); //line space
+        $this->form->addElement('select', 'b9', '9. Amount of Reciprocal Social Communication', $this->option0123);
+        $this->form->addElement("static", null, "<BR>"); //line space
+        $this->form->addElement('select', 'b10', '10. Overall Quality of Rapport', $this->option0123);
+        $this->form->addElement("static", null, "<BR>"); //line space
+ 
+        $this->form->addElement("static", null, "<BR>"); //line space
+        $this->form->addElement("static", null, "<BR>"); //line space
+    }
+
+    function _page2(){
+    	//Section C: Play
+        $this->form->addElement('header', null, "Section C: Imagination");
+        $this->form->addElement("static", null, "<BR>"); //line space
+        $this->form->addElement("static", null, "<BR>"); //line space
+        $this->form->addElement('select', 'c1', '1. Imagination/Creativity', $this->option0123);
+        $this->form->addElement("static", null, "<BR>"); //line space
+
+        $this->form->addElement("static", null, "<BR>"); //line space
+        $this->form->addElement("static", null, "<BR>"); //line space
+
+    	//Section D: Stereotyped Behaviors and Restricted Interests
+        $this->form->addElement('header', null, "Section D: Stereotyped Behaviors and Restricted Interests");
+        $this->form->addElement("static", null, "<BR>"); //line space
+        $this->form->addElement("static", null, "<BR>"); //line space
+        $this->form->addElement('select', 'd1', '1. Unusual Sensory Interest in Play Material/Person', $this->option012);
+        $this->form->addElement("static", null, "<BR>"); //line space
+     	$this->addTextAreaElement('d1_specify', $this->indent . "Please specify:");
+        $this->form->addElement("static", null, "<BR>"); //line space
+        $this->form->addElement('select', 'd2', '2. Hand and Finger and Other Complex Mannerisms', $this->option012);
+        $this->form->addElement("static", null, "<BR>"); //line space
+    	$this->addTextAreaElement('d2_specify', $this->indent . "Please specify:");
+        $this->form->addElement("static", null, "<BR>"); //line space
+        $this->form->addElement('select', 'd3', '3. Self-Injurious Behavior', $this->option012);
+        $this->form->addElement("static", null, "<BR>"); //line space
+        $this->form->addElement('select', 'd4', '4. Excessive Interest in or References to Unusual or Highly Specific Topics or Objects or Repetitive Behaviors', $this->option0123);
+        $this->form->addElement("static", null, "<BR>"); //line space
+    	$this->form->addElement('select', 'd5', "5. Compulsions or Rituals", $this->option012);
+        $this->form->addElement("static", null, "<BR>"); //line space
+    	$this->addTextAreaElement('d5_specify', $this->indent . "Please specify:");
+
+        $this->form->addElement("static", null, "<BR>"); //line space
+        $this->form->addElement("static", null, "<BR>"); //line space
+
+    	//Section E: Other Abnormal Behaviors
+        $this->form->addElement('header', null, "Section E: Other Abnormal Behaviors");
+        $this->form->addElement("static", null, "<BR>"); //line space
+        $this->form->addElement("static", null, "<BR>"); //line space
+        $this->form->addElement('select', 'e1', '1. Overactivity/Agitation', $this->option0127);
+        $this->form->addElement("static", null, "<BR>"); //line space
+        $this->form->addElement('select', 'e2', '2. Tantrums, Aggression, Negative or Disruptive Behavior', $this->option012);
+        $this->form->addElement("static", null, "<BR>"); //line space
+        $this->form->addElement('select', 'e3', '3. Anxiety', $this->option012);
+
+        $this->form->addElement("static", null, "<BR>"); //line space
+        $this->form->addElement("static", null, "<BR>"); //line space
+
+    } // End Form
+
+    function score(){
+    	if ($this->_determineDataEntryCompletionStatus() == "Incomplete") {
+    		return;
+    	}
+	
+        // null scores
+        $this->_nullScores($this->scoreCols);
+
+        //get the saved scores
+    	$db =& Database::singleton();
+    	if (PEAR::isError($db)) {
+			return PEAR::raiseError ("Could not connect to database".$db->getMessage());
+    	}
+  	
+    	$query = "SELECT * FROM $this->table WHERE CommentID = '$this->commentID'";
+    	$record = array();
+    	$db->selectRow($query, $record);
+    	if (PEAR::isError($record)) {
+    		return PEAR::raiseError("Could not retrieve scores: " . $record->getMessage());
+    	}
+ 
+
+       // Get the subject age in months for scoring
+        $timepoint =& TimePoint::singleton($this->getSessionID());
+        $dob = $timepoint->getEffectiveDateOfBirth();
+        
+		$age = Utility::calculateAge($dob, $record["Date_taken"]);
+       		$age_years = $age['year'] + ($age['mon']/12);
+	    if($this->isError($age)) {
+  	          return $this->raiseError("Could not compute age");
+     	 }  
+
+	
+        //Convert the entered scores to countable scores:
+        //"Convert scores of 3 on the protocol to 2, and treat all other scores other than 0-3 as 0."
+        $scores = array(); //holds converted scores
+        foreach($record as $field=>$value) {
+            if($value == 0) {
+                $scores[$field] = 0;
+            } elseif ($value == 1) {
+                $scores[$field] = 1;
+            } elseif ($value == 2) {
+                $scores[$field] = 2;
+            } elseif ($value == 3) {
+                $scores[$field] = 2;
+            } elseif ($value >= 4) {
+                $scores[$field] = 0;
+            } elseif ($value == "not_answered") {
+                $scores[$field] = 0;
+            }
+        }
+        
+    		$scoreCols["social_affect_total"] = $scores["a7"] + $scores["a8"] + $scores["a9"] + $scores["b1"] + $scores["b2"] + $scores["b4"] + $scores["b7"] + $scores["b8"] + $scores["b9"] + $scores["b10"]; 
+    		$scoreCols["restricted_repetitive_behavior_total"] = $scores["a4"] + $scores["d1"] + $scores["d2"] + $scores["d4"];
+    		$scoreCols["social_affect_restricted_repetitive_behavior_total"] = $scoreCols["social_affect_total"] + $scoreCols["restricted_repetitive_behavior_total"];
+    
+    		if($scoreCols["social_affect_restricted_repetitive_behavior_total"] >= 7 && $scoreCols["social_affect_restricted_repetitive_behavior_total"] < 9){
+    			$scoreCols["ADOS_classification"] = "autism spectrum";
+    		} elseif ($scoreCols["social_affect_restricted_repetitive_behavior_total"] >= 9) {
+    			$scoreCols["ADOS_classification"] = "autism";
+    		} else {
+           		$scoreCols["ADOS_classification"] = "none";
+    		}
+
+        // save scores to database
+    	$result = $db->update($this->table, $scoreCols, array("CommentID"=>$this->getCommentID()));
+    	if($db->isError($result)) {
+    		return PEAR::raiseError("Could not save total score: ". $result->getMessage());
+    	}
+    }    // end score function
+}
+?>

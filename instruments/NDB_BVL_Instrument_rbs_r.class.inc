@@ -33,54 +33,54 @@ INSERT INTO instrument_subtests VALUES('', 'rbs_r', 'rbs_r_page1', 'Subscales', 
     );
 
 	var $questionArray = array(//I. Stereotyped Behavior Subscale
-	'1_whole_body'=>'1. WHOLE BODY',
-	'2_head'=>'2. HEAD',
-	'3_hand_finger'=>'3. HAND/FINGER',
-	'4_locomotion'=>'4. LOCOMOTION',
-	'5_object_usage'=>'5. OBJECT USAGE',
-	'6_sensory'=>'6. SENSORY',
+	'q1_whole_body'=>'1. WHOLE BODY',
+	'q2_head'=>'2. HEAD',
+	'q3_hand_finger'=>'3. HAND/FINGER',
+	'q4_locomotion'=>'4. LOCOMOTION',
+	'q5_object_usage'=>'5. OBJECT USAGE',
+	'q6_sensory'=>'6. SENSORY',
 	//II. Self-Injurious Behavior Subscale
-	'7_hits_self_body_part'=>'7. HITS SELF WITH BODY PART',
-	'8_hits_self_against_surface'=>'8. HITS SELF AGAINST SURFACE OR OBJECT',
-	'9_hits_self_with_object'=>'9. HITS SELF WITH OBJECT',
-	'10_bites_self'=>'10. BITES SELF',
-	'11_pulls'=>'11. PULLS',
-	'12_rubs_or_scratches'=>'12. RUBS OR SCRATCHES SELF',
-	'13_inserts_finger_or_object'=>'13. INSERTS FINGER OR OBJECT',
-	'14_skin_picking'=>'14. SKIN PICKING',
+	'q7_hits_self_body_part'=>'7. HITS SELF WITH BODY PART',
+	'q8_hits_self_against_surface'=>'8. HITS SELF AGAINST SURFACE OR OBJECT',
+	'q9_hits_self_with_object'=>'9. HITS SELF WITH OBJECT',
+	'q10_bites_self'=>'10. BITES SELF',
+	'q11_pulls'=>'11. PULLS',
+	'q12_rubs_or_scratches'=>'12. RUBS OR SCRATCHES SELF',
+	'q13_inserts_finger_or_object'=>'13. INSERTS FINGER OR OBJECT',
+	'q14_skin_picking'=>'14. SKIN PICKING',
 	//III. Compulsive Behavior Subscale
-	'15_arranging_ordering'=>'15. ARRANGING / ORDERING',
-	'16_completeness'=>'16. COMPLETENESS',
-	'17_washing_cleaning'=>'17. WASHING / CLEANING',
-	'18_checking'=>'18. CHECKING',
-	'19_counting'=>'19. COUNTING',
-	'20_hoarding_saving'=>'20. HOARDING/SAVING',
-	'21_repeating'=>'21. REPEATING',
-	'22_touch_tap'=>'22. TOUCH / TAP',
+	'q15_arranging_ordering'=>'15. ARRANGING / ORDERING',
+	'q16_completeness'=>'16. COMPLETENESS',
+	'q17_washing_cleaning'=>'17. WASHING / CLEANING',
+	'q18_checking'=>'18. CHECKING',
+	'q19_counting'=>'19. COUNTING',
+	'q20_hoarding_saving'=>'20. HOARDING/SAVING',
+	'q21_repeating'=>'21. REPEATING',
+	'q22_touch_tap'=>'22. TOUCH / TAP',
 	//IV. Ritualistic Behavior Subscale
-	'23_eating_mealtime'=>'23. EATING / MEALTIME',
-	'24_sleeping_bedtime'=>'24. SLEEPING / BEDTIME',
-	'25_self_care'=>'25. SELF-CARE - BATHROOM AND DRESSING',
-	'26_travel_transportation'=>'26. TRAVEL / TRANSPORTATION',
-	'27_play_leisure'=>'27. PLAY / LEISURE',
-	'28_communication'=>'28. COMMUNICATION / SOCIAL INTERACTIONS',
+	'q23_eating_mealtime'=>'23. EATING / MEALTIME',
+	'q24_sleeping_bedtime'=>'24. SLEEPING / BEDTIME',
+	'q25_self_care'=>'25. SELF-CARE - BATHROOM AND DRESSING',
+	'q26_travel_transportation'=>'26. TRAVEL / TRANSPORTATION',
+	'q27_play_leisure'=>'27. PLAY / LEISURE',
+	'q28_communication'=>'28. COMMUNICATION / SOCIAL INTERACTIONS',
 	//V. Sameness Behavior Subscale
-	'29_insists_things_remain'=>'29. Insists that things remain in the same place(s)',
-	'30_objects_to_visiting'=>'30. Objects to visiting new places',
-	'31_upset_if_interrupted'=>'31. Becomes upset if interrupted in what he/she is doing',
-	'32_walking_in_a_pattern'=>'32. Insists on walking in a particular pattern',
-	'33_insists_on_sitting_at_same_place'=>'33. Insists on sitting at the same place',
-	'34_dislikes_change'=>'34. Dislikes changes in appearance or behavior of the people around him/her',
-	'35_insists_on_particular_door'=>'35. Insists on using a particular door',
-	'36_likes_same_cd'=>'36. Likes the same CD, tape, record or piece of music played continually',
-	'37_resists_changing_activities'=>'37. Resists changing activities; Difficulty with transitions',
-	'38_insists_on_same_routine'=>'38. Insists on same routine, household, school or work schedule everyday',
-	'39_insists_that_specific'=>'39. Insists that specific things take place at specific times',
+	'q29_insists_things_remain'=>'29. Insists that things remain in the same place(s)',
+	'q30_objects_to_visiting'=>'30. Objects to visiting new places',
+	'q31_upset_if_interrupted'=>'31. Becomes upset if interrupted in what he/she is doing',
+	'q32_walking_in_a_pattern'=>'32. Insists on walking in a particular pattern',
+	'q33_insists_on_sitting_at_same_place'=>'33. Insists on sitting at the same place',
+	'q34_dislikes_change'=>'34. Dislikes changes in appearance or behavior of the people around him/her',
+	'q35_insists_on_particular_door'=>'35. Insists on using a particular door',
+	'q36_likes_same_cd'=>'36. Likes the same CD, tape, record or piece of music played continually',
+	'q37_resists_changing_activities'=>'37. Resists changing activities; Difficulty with transitions',
+	'q38_insists_on_same_routine'=>'38. Insists on same routine, household, school or work schedule everyday',
+	'q39_insists_that_specific'=>'39. Insists that specific things take place at specific times',
 	//VI. Restricted Behavior Subscale
-	'40_fascination_preoccupation'=>'40. Fascination, preoccupation with one subject or activity',
-	'41_strongly_attached'=>'41. Strongly attached to one specific object',
-	'42_preoccupation_with_parts'=>'42. Preoccupation with part(s) of object rather than the whole object',
-	'43_fascination_with_movement'=>'43. Fascination, preoccupation with movement / things that move');
+	'q40_fascination_preoccupation'=>'40. Fascination, preoccupation with one subject or activity',
+	'q41_strongly_attached'=>'41. Strongly attached to one specific object',
+	'q42_preoccupation_with_parts'=>'42. Preoccupation with part(s) of object rather than the whole object',
+	'q43_fascination_with_movement'=>'43. Fascination, preoccupation with movement / things that move');
 
 	//holder for the score calculations
     var $calculatedScores = array();
@@ -115,7 +115,7 @@ INSERT INTO instrument_subtests VALUES('', 'rbs_r', 'rbs_r_page1', 'Subscales', 
 		$this->_selectMultipleElements = array();
 
 		// required fields for data entry completion status
-		$this->_requiredElements = array('Examiner', '1_whole_body');
+		$this->_requiredElements = array('Examiner', 'q1_whole_body');
 
 		// setup the form
 		$this->_setupForm();
@@ -193,12 +193,12 @@ INSERT INTO instrument_subtests VALUES('', 'rbs_r', 'rbs_r_page1', 'Subscales', 
 		'not_answered'=>"Not Answered");
 
 		//The first question of each section...
-		$sectionStarts = array('1_whole_body'=>"I. Stereotyped Behavior Subscale",
-		'7_hits_self_body_part'=>"II. Self-Injurious Behavior Subscale",
-		'15_arranging_ordering'=>"III. Compulsive Behavior Subscale",
-		'23_eating_mealtime'=>"IV. Ritualistic Behavior Subscale",
-		'29_insists_things_remain'=>"V. Sameness Behavior Subscale",
-		'40_fascination_preoccupation'=>"VI. Restricted Behavior Subscale");
+		$sectionStarts = array('q1_whole_body'=>"I. Stereotyped Behavior Subscale",
+		'q7_hits_self_body_part'=>"II. Self-Injurious Behavior Subscale",
+		'q15_arranging_ordering'=>"III. Compulsive Behavior Subscale",
+		'q23_eating_mealtime'=>"IV. Ritualistic Behavior Subscale",
+		'q29_insists_things_remain'=>"V. Sameness Behavior Subscale",
+		'q40_fascination_preoccupation'=>"VI. Restricted Behavior Subscale");
 
 		//The questions themselves
 		foreach($this->questionArray as $field=>$label) {
@@ -222,7 +222,8 @@ INSERT INTO instrument_subtests VALUES('', 'rbs_r', 'rbs_r_page1', 'Subscales', 
 			return PEAR::raiseError ("Could not connect to database: ".$db->getMessage());
 		}
 
-		$this->_nullScores($this->scoreLabels);
+		// null scores ...not currently doing anything...  Don't have an array of scores to nullify.
+//		$this->_nullScores($this->scoreCols);
 		//Initially reset all values to 0
 		$this->calculatedScores['overall_endorsed'] = 0;
 		$this->calculatedScores['overall_score'] = 0;
@@ -248,6 +249,7 @@ INSERT INTO instrument_subtests VALUES('', 'rbs_r', 'rbs_r_page1', 'Subscales', 
 
 			//convert textual question labels to just numbers 
 			$questionNum = intval($key);
+			print "Q num: " . $questionNum;
 			//only work with the numbered subscale questions...
 			if($questionNum == 0) continue;
 			//Only count the non-zero answers in both the number endorsed and the subscale scores

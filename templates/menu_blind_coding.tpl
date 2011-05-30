@@ -31,7 +31,7 @@ $(document).ready(function() {
 });
 </script>
 {/literal}
-<form method="post" action="main.php?test_name=reliability">
+<form method="post" action="main.php?test_name=blind_coding">
 <!-- start the selection table -->
 {if $form.error}
 <div class="error">{$form.error.label}</div>
@@ -58,8 +58,8 @@ $(document).ready(function() {
         <td nowrap="nowrap">{$form.CenterID.html}</td>
         <td nowrap="nowrap">{$form.Instrument.label}</td>
         <td nowrap="nowrap">{$form.Instrument.html}</td>
-        <td nowrap="nowrap">{$form.reliability_center_id.label}</td>
-        <td nowrap="nowrap">{$form.reliability_center_id.html}</td>
+        <td nowrap="nowrap">{$form.CodingCenterID.label}</td>
+        <td nowrap="nowrap">{$form.CodingCenterID.html}</td>
       </tr>
     <tr>
         <td nowrap="nowrap">DCCID:</td>
@@ -83,14 +83,13 @@ $(document).ready(function() {
  
    <tr>
         <td nowrap="nowrap" width='10%'>Actions:</td>
-<!--        <td nowrap="nowrap"><input type="button" name="button" value="Add Instrument" class="button" onclick="location.href='main.php?test_name=csbs_reliability&subtest=csbs_reliability'"/></td> -->
-        <td colspan="14" align="right"><input type="submit" name="filter" value="Show Data" class="button" />&nbsp;<input type="button" name="reset" value="Clear Form" class="button" onclick="location.href='main.php?test_name=reliability&reset=true'" /></td>
+        <td colspan="14" align="right"><input type="submit" name="filter" value="Show Data" class="button" />&nbsp;<input type="button" name="reset" value="Clear Form" class="button" onclick="location.href='main.php?test_name=blind_coding&reset=true'" /></td>
     </tr>
 </table>
 </form>
 
-{if $reliability_swap_candidates}
-<form method="post" action="main.php?test_name=reliability">
+{if $blind_swap_candidates}
+<form method="post" action="main.php?test_name=blind_coding">
     <input type="hidden" name="swap" value="swap" />
     <table border="0" valign="top" class="std" id="swapcandidates">
     <thead>
@@ -128,12 +127,12 @@ $(document).ready(function() {
     </table>
 </form>
 {/if}
-{if $EARLI_Reliability}
-<form method="post" action="main.php?test_name=reliability">
+{if $blind_add_candidates}
+<form method="post" action="main.php?test_name=blind_coding">
     <table border="0" valign="top" class="std" id="addcandidate">
     <thead>
     <tr>
-        <th colspan="4" class="button">Add EARLI Candidate</th>
+        <th colspan="4" class="button">Add Candidate</th>
     </tr>
     </thead>
     <tbody>
@@ -152,8 +151,8 @@ $(document).ready(function() {
     <tr>
         <td>{$form.AddInstrument.label}</td>
         <td>{$form.AddInstrument.html}</td>
-        <td>{$form.AddReliabilityCenter.label}</td>
-        <td>{$form.AddReliabilityCenter.html}</td>
+        <td>{$form.AddBlindCenter.label}</td>
+        <td>{$form.AddBlindCenter.html}</td>
     </tr>
     <tr>
         <td colspan="4" align="right"><input type="submit" name="swap" value="Add Candidate" class="button" /></td>
@@ -162,25 +161,12 @@ $(document).ready(function() {
     </table>
 </form>
 {/if}
-<br>
-{if $IBIS_Access}
-<a href='main.php?test_name=reliability_phase_one'>Phase 1 Reliability</a> |
-<a href='main.php?test_name=reliability_diagnostic_calls'>Diagnostic Behavioural Call Cases</a> | 
-<a href="main.php?test_name=reliability&EARLI=0">IBIS Reliability Candidates</a>
-{/if}
-{if $IBIS_Access and $EARLI_Reliability} | {/if}
-{if $EARLI_Reliability}
-<a href="main.php?test_name=reliability&EARLI=1">EARLI Reliability Candidates</a>
-{/if}
-<br>
-<br>
-<!-- <h2><font color="red">Note: Phase 2 reliability forms are unavailable at the moment as the system is being upgraded.</font></h2> -->
 
 <!--  title table with pagination -->
 <table border="0" valign="bottom" width="100%">
 <tr>
     <!-- title -->
-    <td class="controlPanelSection">List of Log Entries</td>
+    <td class="controlPanelSection">List of Blind Coded Entries</td>
 
     <!-- display pagination links -->
     <td align="right">{$page_links}</td>
@@ -195,9 +181,9 @@ $(document).ready(function() {
     {section name=header loop=$headers}
         <th nowrap="nowrap">
           {if $headers[header].displayName != "Reliable"}
-            <a href="main.php?test_name=reliability&filter[order][field]={$headers[header].name}&filter[order][fieldOrder]={$headers[header].fieldOrder}">
-              {if $headers[header].displayName == "Reliability Center Id"}
-                Site of Reliability Test
+            <a href="main.php?test_name=blind_coding&filter[order][field]={$headers[header].name}&filter[order][fieldOrder]={$headers[header].fieldOrder}">
+              {if $headers[header].displayName == "CodingCenterID"}
+                Site of Blind Coding Test
               {else}
                 {$headers[header].displayName}
               {/if}
@@ -222,7 +208,7 @@ $(document).ready(function() {
      {elseif $items[item][piece].invalid == "yes"}
         {$items[item][piece].value} <font color="red">(Invalid)</font>
      {else}     
-          <a href="main.php?test_name={$items[item][piece].Instrument}_reliability&subtest={$items[item][piece].Instrument}_reliability&identifier={$items[item][piece].CommentID}&reliability_center_id={$items[item][piece].SiteID}">{$items[item][piece].value}</a> 
+          <a href="main.php?test_name={$items[item][piece].Instrument}_reliability&subtest={$items[item][piece].Instrument}_reliability&identifier={$items[item][piece].CommentID}&reliability_center_id={$items[item][piece].SiteID}&blind=1">{$items[item][piece].value}</a> 
        {/if}
         {if $items[item][piece].manual == "yes"}
             <font color="red">(Manual)</font>
@@ -237,7 +223,7 @@ $(document).ready(function() {
       	{elseif $items[item][piece].value== "3"}
       					Control
       		{/if}</td>
-  	{elseif  $items[item][piece].name == "Reliability"}
+  	{elseif  $items[item][piece].name == "Reliable"}
   	  {if $items[item][piece].value== "Yes"}
   	  <td nowrap="nowrap" style="background-color:#55FF55;">{$items[item][piece].value}</td>
   	  {elseif $items[item][piece].value== "No"}
@@ -252,7 +238,7 @@ $(document).ready(function() {
     {/section}
     </tr>           
 {sectionelse}
-    <tr><td colspan="15">No reliability entries found</td></tr>
+    <tr><td colspan="15">No blind coding entries found</td></tr>
 {/section}
                     
 <!-- end data table -->

@@ -429,7 +429,7 @@ class Utility extends PEAR
         $DB =& Database::singleton();
 
         // craft the select query
-        $query = "SELECT t.Test_name FROM test_battery AS b, test_names AS t WHERE t.Test_name=b.Test_name AND b.AgeMinDays<='$age' AND b.AgeMaxDays>='$age' AND b.Active='Y'";
+        $query = "SELECT t.Test_name FROM test_battery b JOIN test_names t ON (t.Test_name=b.Test_name) WHERE b.AgeMinDays<='$age' AND b.AgeMaxDays>='$age' AND b.Active='Y'";
 
         if(!is_null($stage)) {
             $query .= " AND b.Stage='$stage'";
