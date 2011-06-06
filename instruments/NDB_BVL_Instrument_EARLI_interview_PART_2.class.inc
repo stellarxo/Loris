@@ -88,7 +88,14 @@ class NDB_BVL_Instrument_EARLI_interview_PART_2 extends NDB_BVL_Instrument {
 		$this->testName = "EARLI_interview_PART_2";           // test_names.Test_name
 		$this->table = 'EARLI_interview_PART_2';              // name of table containing data keyed by commentID
 		$this->commentID = $commentID;
-		$this->_requiredElements = array('mother_id','q5_2_t', 'q5_17', 'q5_32', 'q5_58', 'q5_68', 'q5_80', 'q5_85', 'q5_95', 'q5_110_a', 'q6_1', 'q6_85', 'q7_1', 'q7_19', 'q7_37_1');
+
+                $db =& Database::singleton();
+                $fertilityTreatment = $db->selectOne("SELECT q5_16 FROM EARLI_interview_PART_2 WHERE CommentID='$commentID'");
+                if ($fertilityTreatment == '01_yes')
+                        $this->_requiredElements = array('mother_id','q5_2_t', 'q5_17', 'q5_32', 'q5_58', 'q5_68', 'q5_80', 'q5_85', 'q5_95', 'q5_110_a', 'q6_1', 'q6_85', 'q7_1', 'q7_19', 'q7_37_1');
+                else
+                        $this->_requiredElements = array('mother_id','q5_2_t','q5_32', 'q5_58', 'q5_68', 'q5_80', 'q5_85', 'q5_95', 'q5_110_a', 'q6_1', 'q6_85', 'q7_1', 'q7_19', 'q7_37_1');
+
 
 
 		//The array of dates/timestamps to convert to database dates/timestamps
@@ -718,7 +725,7 @@ class NDB_BVL_Instrument_EARLI_interview_PART_2 extends NDB_BVL_Instrument {
 
 		//q5-25
 		$this->form->addElement("select", "q5_25", "5-25. Has [the SIBLINGS pregnancy's father] ever been diagnosed by a medical provider as having male infertility factor?",  array(NULL=>"", "01_yes" => "01 Yes", "02_no" => "02 No", "88_refused" => "88 Refused",  "99_Do_not_know"=>"99 Do not know", "Not_Answered"=>"Not Answered"));
-		$this->XINRegisterRule("q5_25", array("q5***{@}=={@}01_yes"), "Required if father is known");
+		$this->XINRegisterRule("q5_25", array("q5_father_known{@}=={@}01_yes"), "Required if father is known");
 		$this->form->addElement('static', null, "<br/>");
 
 		//q5-26
@@ -1705,12 +1712,15 @@ class NDB_BVL_Instrument_EARLI_interview_PART_2 extends NDB_BVL_Instrument {
 
 			foreach ($this->oneToThree as $field => $label){
 
-				$this->form->addElement("select", "q5_86_{$i}_med{$field}",   $this->indent . $this->indent . "Med {$label}:",  array(NULL=>"", "Achromycin ", "Acyclovir ", "Amoxicillin ", "Amoxil ", "Augmentin ", "Azithromycin", "Bactrim", "Biaxin ", "Cefprozil", "Ceftin ", "Cefuroxime", "Cefzil ", "Cephalexin", "Cipro ", "Ciprofloxacin", "Clarithromycin", "Cleocin ", "Clindamycin", "Cofatrim", "Cotrim ", "Diflucan ", "Doxycin", "Doxycycline ", "Doxytec", "Dynacin", "EES", "E-Mycin ", "Erythrocin", "Erythromycin", "Flagyl ", "Fluconazole", "Ilosone", "Keflex ", "Levaquin", "Levofloxacin", "Macrobid ", "Metronidazole", "Minocin", "Minocycline", "Mycostatin", "Nilstat", "Nitrofurantoin", "Novacet ", "Novo-Doxylin", "Nystatin", "Nystex", "Panmycin", "Penicillin", "Penicillin VK ", "Penicillin V potassium", "Protostat", "Quixin", "Septra ", "Sodium sulfacetamide-sulfur", "Sulfatrim", "Sumycin", "Tetracap", "Tetracycline", "Topicycline", "Trimox", "Valacyclovir", "Valtrex ", "Veetids ", "Vibramycin ", "Vibra-Tabs", "Zithromax ", "Zovirax", "88_refused"=>"88 Refused", "99_do_not_know"=>"99 Do not know", "not_answered"=>"Not Answered"));
+				$this->form->addElement("select", "q5_86_{$i}_med{$field}",   $this->indent . $this->indent . "Med {$label}:",  array(NULL=>"", "Achromycin ", "Acyclovir ", "Amoxicillin ", "Amoxil ", "Augmentin ", "Azithromycin", "Bactrim", "Biaxin ", "Cefprozil", "Ceftin ", "Cefuroxime", "Cefzil ", "Cephalexin", "Cipro ", "Ciprofloxacin", "Clarithromycin", "Cleocin ", "Clindamycin", "Cofatrim", "Cotrim ", "Diflucan ", "Doxycin", "Doxycycline ", "Doxytec", "Dynacin", "EES", "E-Mycin ", "Erythrocin", "Erythromycin", "Flagyl ", "Fluconazole", "Ilosone", "Keflex ", "Levaquin", "Levofloxacin", "Macrobid ", "Metronidazole", "Minocin", "Minocycline", "Mycostatin", "Nilstat", "Nitrofurantoin", "Novacet ", "Novo-Doxylin", "Nystatin", "Nystex", "Panmycin", "Penicillin", "Penicillin VK ", "Penicillin V potassium", "Protostat", "Quixin", "Septra ", "Sodium sulfacetamide-sulfur", "Sulfatrim", "Sumycin", "Tetracap", "Tetracycline", "Topicycline", "Trimox", "Valacyclovir", "Valtrex ", "Veetids ", "Vibramycin ", "Vibra-Tabs", "Zithromax ", "Zovirax", "other"=>"Other", "88_refused"=>"88 Refused", "99_do_not_know"=>"99 Do not know", "not_answered"=>"Not Answered"));
 				$this->XINRegisterRule("q5_86_1_med1", array("q5_85{@}=={@}01_yes"), "Specify medication");
 				$this->XINRegisterRule("q5_86_2_med1", array("q5_86_2_med1{@}=={@}NEVER_REQUIRED"));
 				$this->XINRegisterRule("q5_86_3_med1", array("q5_86_3_med1{@}=={@}NEVER_REQUIRED"));
 				$this->XINRegisterRule("q5_86_{$i}_med2", array("q5_86_{$i}_med2{@}=={@}NEVER_REQUIRED"));
 				$this->XINRegisterRule("q5_86_{$i}_med3", array("q5_86_{$i}_med3{@}=={@}NEVER_REQUIRED"));
+
+				$this->addTextAreaElement("q5_86_{$i}_other{$field}", $this->indent . $this->indent . "Other medication:", array("q5_86_{$i}_med{$field}{@}=={@}other"), "You must specify other medication");			
+
 			}
 		}
 
