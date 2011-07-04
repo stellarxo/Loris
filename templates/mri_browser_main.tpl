@@ -8,7 +8,7 @@
 <!-- page title -->
 <TITLE>MRI - {$study_title}</TITLE>
 <!-- end page header -->
-</head>
+
 {literal}
 <script type="text/javascript">
 function open_popup(newurl) {
@@ -19,9 +19,28 @@ var x = 200, y = 400;
 }
 </script>
 {/literal}
+</head>
+<body>
 
-<div id="divTopLeft" style="position:absolute; top: 100px; padding-top: 50px;">
+<div id="sidebar" style="position:fixed; top: 75px; padding-left: 5px;">
 <!-- back button and other navigation buttons -->
+        <h2>Links</h2>
+        <ul class="controlPanel">
+        {if $subject.ParameterFormCommentID}
+            <li class="controlPanelItem">
+                <a href="main.php?test_name=mri_parameter_form&candID={$subject.candid}&sessionID={$subject.sessionID}&commentID={$subject.ParameterFormCommentID}">MRI Parameter Form</a>
+            </li>
+        {/if}
+        {if $subject.tarchiveids != ""}
+                {foreach from=$subject.tarchiveids item=Tarchive }
+                <li class="controlPanelItem"><a href="dicom_archive.php?TarchiveID={$Tarchive.TarchiveID}" class="linkButton">DICOM Archive {$Tarchive.TarchiveID}</a>
+                </li>
+                {/foreach}
+        {/if}
+            <li class="controlPanelItem">
+                <a href="{$mantis}" target="mantis">Mantis</a>
+            </li>
+        </ul>
     {if $backURL!=""}
         <h2>Navigation</h2>
         <ul class="controlPanel">
@@ -40,77 +59,33 @@ var x = 200, y = 400;
        </li>
     {/if}
     </ul>
+
+    {if $showFloatJIV}
+    <div id="divTopRight">
+    <p>3D panel viewing<br><br>
+    <input type="button" accesskey="c" class="button" value="3D+Overlay" onClick="javascript:show_jiv(jivNames, jivData, true);"><br>
+    <input type="button" accesskey="d" class="button" value="3D Only" onClick="javascript:show_jiv(jivNames, jivData, false);">
+    </p>
+    </div>
+
+    <div id="divBottomLeft">
+    <p>Visit-Level controls</p>
+     <a href="#" onClick="javascript:open_popup('feedback_mri_popup.php?sessionID={$subject.sessionID}')">Visit-level<br>feedback</a>
+    <!-- table with candidate profile info -->
+    {if $has_permission}<form action="" method="post">{/if}
+    <p>QC Status<br>   {if $has_permission}{html_options options=$status_options selected=$subject.mriqcstatus name=visit_status tabindex=1>}
+                   {else}{$subject.mriqcstatus}
+                   {/if}
+    </p>
+    <p>QC Pending<br>  {if $has_permission}{html_options options=$pending_options selected=$subject.mriqcpending name=visit_pending tabindex=2}
+                   {else}{if $subject.mriqcpending=="Y"}<img src="images/check_blue.gif" width="12" height="12">{else}&nbsp;{/if}
+                   {/if}
+    </p>
+    {if $has_permission}<input class="button" type="submit" accesskey="s" value="Save" name="save_changes">{/if}            
+    </div>
+    {/if}
+
 </div>
-
-{if $showFloatJIV}
-<div id="divTopRight" style="position:absolute;">
-<p>3D panel viewing<br><br>
-<input type="button" accesskey="c" class="button" value="3D+Overlay" onClick="javascript:show_jiv(jivNames, jivData, true);"><br>
-<input type="button" accesskey="d" class="button" value="3D Only" onClick="javascript:show_jiv(jivNames, jivData, false);">
-</p>
-</div>
-
-<div id="divBottomLeft" style="position:absolute">
-<p>Visit-Level controls</p>
- <a href="#" onClick="javascript:open_popup('feedback_mri_popup.php?sessionID={$subject.sessionID}')">Visit-level<br>feedback</a>
-<!-- table with candidate profile info -->
-{if $has_permission}<form action="" method="post">{/if}
-<p>QC Status<br>   {if $has_permission}{html_options options=$status_options selected=$subject.mriqcstatus name=visit_status tabindex=1>}
-               {else}{$subject.mriqcstatus}
-               {/if}
-</p>
-<p>QC Pending<br>  {if $has_permission}{html_options options=$pending_options selected=$subject.mriqcpending name=visit_pending tabindex=2}
-               {else}{if $subject.mriqcpending=="Y"}<img src="images/check_blue.gif" width="12" height="12">{else}&nbsp;{/if}
-               {/if}
-</p>
-{if $has_permission}<input class="button" type="submit" accesskey="s" value="Save" name="save_changes">{/if}            
-</div>
-
-{/if}
-<!-- *********************************************************
-     * You may use this code for free on any web page provided that 
-     * these comment lines and the following credit remain in the code.
-     * Floating Div from http://www.javascript-fx.com
-     ********************************************************  -->
-
-{literal}
-<script type="text/javascript">
-var ns = (navigator.appName.indexOf("Netscape") != -1);
-var d = document;
-var px = document.layers ? "" : "px";
-function JSFX_FloatDiv(id, sx, sy)
-{
-	var el=d.getElementById?d.getElementById(id):d.all?d.all[id]:d.layers[id];
-	window[id + "_obj"] = el;
-	if(d.layers)el.style=el;
-	el.cx = el.sx = sx;el.cy = el.sy = sy;
-	el.sP=function(x,y){this.style.left=x+px;this.style.top=y+px;};
-	el.flt=function()
-	{
-		var pX, pY;
-		pX = (this.sx >= 0) ? 0 : ns ? innerWidth : 
-		document.documentElement && document.documentElement.clientWidth ? 
-		document.documentElement.clientWidth : document.body.clientWidth;
-		pY = ns ? pageYOffset : document.documentElement && document.documentElement.scrollTop ? 
-		document.documentElement.scrollTop : document.body.scrollTop;
-		if(this.sy<0) 
-		pY += ns ? innerHeight : document.documentElement && document.documentElement.clientHeight ? 
-		document.documentElement.clientHeight : document.body.clientHeight;
-		this.cx += (pX + this.sx - this.cx)/8;this.cy += (pY + this.sy - this.cy)/8;
-		this.sP(this.cx, this.cy);
-		setTimeout(this.id + "_obj.flt()", 40);
-	}
-	return el;
-}
-JSFX_FloatDiv("divTopLeft",       10, 100).flt();
-JSFX_FloatDiv("divTopRight", 	  10, 230).flt();
-JSFX_FloatDiv("divBottomLeft",    10, 350).flt();
-//JSFX_FloatDiv("divBottomRight", -100, -100).flt();
-
-</script>
-{/literal}
-
-<BODY>
 <!-- start main table -->
 <table width="95%" border="0" cellpadding="5" cellspacing="2">
 <tr>
@@ -133,23 +108,6 @@ JSFX_FloatDiv("divBottomLeft",    10, 350).flt();
     <td width="10%" class="tabox" valign="top" nowrap="nowrap">
     
         <!-- Start Section on the left -->
-        <h2>Links</h2>
-        <ul class="controlPanel">
-        {if $subject.ParameterFormCommentID}
-            <li class="controlPanelItem">
-                <a href="main.php?test_name=mri_parameter_form&candID={$subject.candid}&sessionID={$subject.sessionID}&commentID={$subject.ParameterFormCommentID}">MRI Parameter Form</a>
-            </li>
-        {/if}
-        {if $subject.tarchiveids != ""}
-                {foreach from=$subject.tarchiveids item=Tarchive }
-                <li class="controlPanelItem"><a href="dicom_archive.php?TarchiveID={$Tarchive.TarchiveID}" class="linkButton">DICOM Archive {$Tarchive.TarchiveID}</a>
-                </li>
-                {/foreach}
-        {/if}
-            <li class="controlPanelItem">
-                <a href="{$mantis}" target="mantis">Mantis</a>
-            </li>
-        </ul>
     </td>
     
     
@@ -167,7 +125,7 @@ JSFX_FloatDiv("divBottomLeft",    10, 350).flt();
     </td>
 </tr>
 </table>
-</BODY>
+</body>
 </HTML>
 
 
