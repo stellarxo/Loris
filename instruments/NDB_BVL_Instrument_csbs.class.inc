@@ -333,7 +333,18 @@ INSERT INTO instrument_subtests VALUES('', 'csbs', 'csbs_page2', 'Symbolic Behav
         $dob = $timepoint->getEffectiveDateOfBirth();
         
 		$age = Utility::calculateAge($dob, $record["Date_taken"]);
-       		$age_months = $age['year'] * 12 + $age['mon'];
+       		$age_months = $age['year'] * 12 + $age['mon'] + ($age['day']/30);
+
+	if ($age_months >= 11.75 && $age_months < 12)
+		$age_months = 12;
+		
+	elseif ($age_months <= 24.75 && $age_months > 24)
+		$age_months = 24;
+
+	elseif ($age_months > 24.75)
+		$age_months = 25;
+
+
         if($this->isError($age)) {
             return $this->raiseError("Could not compute age");
         }  
