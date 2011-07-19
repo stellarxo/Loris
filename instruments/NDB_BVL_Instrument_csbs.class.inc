@@ -599,6 +599,19 @@ INSERT INTO instrument_subtests VALUES('', 'csbs', 'csbs_page2', 'Symbolic Behav
 
 
     function _page1(){
+	//Administration
+        $this->form->addElement("header", null, "Administration of activities");
+        $this->form->addElement("select", "wind_up_admin", "1. Wind-up toy", array(null=>"", "fully_admin"=>"Fully Administered", "partially_admin"=>"Partially Administered (please specify)", "not_admin"=>"Not Administered"));
+        $this->form->addElement("select", "balloon_admin", "2. Balloon", array(null=>"", "fully_admin"=>"Fully Administered", "partially_admin"=>"Partially Administered (please specify)", "not_admin"=>"Not Administered"));
+        $this->form->addElement("select", "bubbles_admin", "3. Bubbles", array(null=>"", "fully_admin"=>"Fully Administered", "partially_admin"=>"Partially Administered (please specify)", "not_admin"=>"Not Administered"));
+        $this->form->addElement("select", "jar_admin", "4. Jar", array(null=>"", "fully_admin"=>"Fully Administered", "partially_admin"=>"Partially Administered (please specify)", "not_admin"=>"Not Administered"));
+        $this->form->addElement("select", "books_admin", "5. Books", array(null=>"", "fully_admin"=>"Fully Administered", "partially_admin"=>"Partially Administered (please specify)", "not_admin"=>"Not Administered"));
+        $this->form->addElement("select", "play_admin", "6. Play", array(null=>"", "fully_admin"=>"Fully Administered", "partially_admin"=>"Partially Administered (please specify)", "not_admin"=>"Not Administered"));
+        $this->form->addElement("header", null, "If you selected 'Partially Administered' for any of the items above, please specify in the comments box on the top page.");
+        $this->form->addElement("static", null, "</br>");
+        $this->form->addElement("static", null, "</br>");
+
+
         //Emotion and Eye Gaze
         $this->form->addElement("header", null, "Emotion and Eye Gaze");
         $this->_printHeaderCols();
