@@ -92,9 +92,9 @@ class NDB_BVL_Instrument_EARLI_interview_PART_2 extends NDB_BVL_Instrument {
                 $db =& Database::singleton();
                 $fertilityTreatment = $db->selectOne("SELECT q5_16 FROM EARLI_interview_PART_2 WHERE CommentID='$commentID'");
                 if ($fertilityTreatment == '01_yes')
-                        $this->_requiredElements = array('mother_id','q5_2_t', 'q5_17', 'q5_32', 'q5_58', 'q5_68', 'q5_80', 'q5_85', 'q5_95', 'q5_110_a', 'q6_1', 'q6_85', 'q7_1', 'q7_19', 'q7_37_1');
+                        $this->_requiredElements = array('mother_id','q5_2_t', 'q5_17', 'q5_32', 'q5_58', 'q5_68', 'q5_76_a', 'q5_88', 'q5_95', 'q5_110_a', 'q6_1', 'q6_85', 'q7_1', 'q7_19', 'q7_37_1');
                 else
-                        $this->_requiredElements = array('mother_id','q5_2_t','q5_32', 'q5_58', 'q5_68', 'q5_80', 'q5_85', 'q5_95', 'q5_110_a', 'q6_1', 'q6_85', 'q7_1', 'q7_19', 'q7_37_1');
+                        $this->_requiredElements = array('mother_id','q5_2_t','q5_32', 'q5_58', 'q5_68', 'q5_76_a', 'q5_88', 'q5_95', 'q5_110_a', 'q6_1', 'q6_85', 'q7_1', 'q7_19', 'q7_37_1');
 
 
 
@@ -1549,7 +1549,7 @@ class NDB_BVL_Instrument_EARLI_interview_PART_2 extends NDB_BVL_Instrument {
 
 			for ($i=1; $i<4; $i++)
 			{
-				$this->form->addElement("select", "q5_81_{$field}_med{$i}",   $this->indent . $this->indent . "Med {$i}:",  array(NULL=>"", "Achromycin ", "Acyclovir ", "Amoxicillin ", "Amoxil ", "Augmentin ", "Azithromycin", "Bactrim", "Biaxin ", "Cefprozil", "Ceftin ", "Cefuroxime", "Cefzil ", "Cephalexin", "Cipro ", "Ciprofloxacin", "Clarithromycin", "Cleocin ", "Clindamycin", "Cofatrim", "Cotrim ", "Diflucan ", "Doxycin", "Doxycycline ", "Doxytec", "Dynacin", "EES", "E-Mycin ", "Erythrocin", "Erythromycin", "Flagyl ", "Fluconazole", "Ilosone", "Keflex ", "Levaquin", "Levofloxacin", "Macrobid ", "Metronidazole", "Minocin", "Minocycline", "Mycostatin", "Nilstat", "Nitrofurantoin", "Novacet ", "Novo-Doxylin", "Nystatin", "Nystex", "Panmycin", "Penicillin", "Penicillin VK ", "Penicillin V potassium", "Protostat", "Quixin", "Septra ", "Sodium sulfacetamide-sulfur", "Sulfatrim", "Sumycin", "Tetracap", "Tetracycline", "Topicycline", "Trimox", "Valacyclovir", "Valtrex ", "Veetids ", "Vibramycin ", "Vibra-Tabs", "Zithromax ", "Zovirax" , "88_refused"=>"88 Refused", "99_do_not_know"=>"99 Do not know", "Not_Answered" => "Not Answered"));
+				$this->form->addElement("select", "q5_81_{$field}_med{$i}",   $this->indent . $this->indent . "Med {$i}:",  array(NULL=>"", "Achromycin ", "Acyclovir ", "Amoxicillin ", "Amoxil ", "Augmentin ", "Azithromycin", "Bactrim", "Biaxin ", "Cefprozil", "Ceftin ", "Cefuroxime", "Cefzil ", "Cephalexin", "Cipro ", "Ciprofloxacin", "Clarithromycin", "Cleocin ", "Clindamycin", "Cofatrim", "Cotrim ", "Diflucan ", "Doxycin", "Doxycycline ", "Doxytec", "Dynacin", "EES", "E-Mycin ", "Erythrocin", "Erythromycin", "Flagyl ", "Fluconazole", "Ilosone", "Keflex ", "Levaquin", "Levofloxacin", "Macrobid ", "Metronidazole", "Minocin", "Minocycline", "Mycostatin", "Nilstat", "Nitrofurantoin", "Novacet ", "Novo-Doxylin", "Nystatin", "Nystex", "Panmycin", "Penicillin", "Penicillin VK ", "Penicillin V potassium", "Protostat", "Quixin", "Septra ", "Sodium sulfacetamide-sulfur", "Sulfatrim", "Sumycin", "Tetracap", "Tetracycline", "Topicycline", "Trimox", "Valacyclovir", "Valtrex ", "Veetids ", "Vibramycin ", "Vibra-Tabs", "Zithromax ", "Zovirax" , "other"=>"Other", "88_refused"=>"88 Refused", "99_do_not_know"=>"99 Do not know", "Not_Answered" => "Not Answered"));
 
 				if ($field ==1 && $i==1)
 					$this->XINRegisterRule("q5_81_{$field}_med{$i}", array("q5_80{@}=={@}01_yes"), "Specify medication");
