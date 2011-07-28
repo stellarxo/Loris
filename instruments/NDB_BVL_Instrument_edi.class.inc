@@ -243,7 +243,7 @@ INSERT INTO test_battery VALUES ('', 'edi', '1050', '1140', 'Y', 'Visit', '2');
 /**
      * Array of column names to be ignored by the double data entry conflict detector.
      */
-    $this->_doubleDataEntryDiffIgnoreColumns = array('CommentID', 'UserID', 'Testdate', 'EDI8ot', 'EDI19ot', 'EDIT33ot',
+    $this->_doubleDataEntryDiffIgnoreColumns = array('CommentID', 'UserID', 'Testdate', 'EDI8ot', 'EDI19ot', 'EDIT33ot',  'Window_Difference', 'Candidate_Age',
                                                    'EDI45ot', 'EDI58ot', 'EDI70ot', 'EDI82ot', 'EDI96ot', 'inj_month',
                                                    'dear_month', 'conf_month', 'legl_month', 'emp_month', 'crim_month',
                                                    'other_1_month', 'other_2_month', 'comnt');
@@ -254,7 +254,7 @@ INSERT INTO test_battery VALUES ('', 'edi', '1050', '1140', 'Y', 'Visit', '2');
 /**
      * Array of column names to be ignored by the double data entry conflict detector.
      */
-    $this->_doubleDataEntryDiffIgnoreColumns = array('CommentID', 'UserID', 'Testdate', 
+    $this->_doubleDataEntryDiffIgnoreColumns = array('CommentID', 'UserID', 'Testdate',   'Window_Difference', 'Candidate_Age',
 						     'EDI8ot', 
 						     'EDI19ot', 
 						     'EDIT33ot',
