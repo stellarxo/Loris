@@ -609,7 +609,9 @@ class NDB_BVL_Instrument_mullen extends NDB_BVL_Instrument
              $this->form->addElement("static", 'gross_motor_error_95', "95% Band of Error (+/-)");
           }
           else{
-             $this->form->addElement("header",null , '<font color="Red">N/A for children over 33 months.</font>');
+             $this->form->addElement("static", 'gross_motor_raw', "Raw Score");
+             $this->form->addElement("static", 'gross_motor_age_equivalent', "Age Equivalent");
+             $this->form->addElement("static", null, '<font color="Red">T Score N/A for children over 33 months.</font>');
           }
 
          $this->form->addElement("header", null, "Visual Reception Scores");
@@ -653,7 +655,7 @@ class NDB_BVL_Instrument_mullen extends NDB_BVL_Instrument
 
         $this->form->addElement("header", null, "Scale 1. Gross Motor");
         if($this->localDefaults['age_months'] > 33){
-            $this->form->addElement("header",null , '<font color="Red">N/A for children over 33 months.</font>');
+            $this->form->addElement("header",null , '<font color="Red">T Score N/A for children over 33 months.</font>');
          }
         $questionArray = array(0=>null,
         "1. Enjoys being held/realigns (Up)",
@@ -743,7 +745,9 @@ class NDB_BVL_Instrument_mullen extends NDB_BVL_Instrument
             $this->form->addElement("static", 'gross_motor_error_95', "95% Band of Error (+/-)");
          }
          else{
-            $this->form->addElement("header",null , '<font color="Red">N/A for children over 33 months.</font>');
+            $this->form->addElement("static", 'gross_motor_raw', "Raw Score");
+            $this->form->addElement("static", 'gross_motor_age_equivalent', "Age Equivalent");
+            $this->form->addElement("static", null, '<font color="Red">T Score N/A for children over 33 months.</font>');
          }
       }
 
