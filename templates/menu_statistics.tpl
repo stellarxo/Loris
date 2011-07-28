@@ -23,13 +23,21 @@ function changeFieldOptions(axis) {
         jQuery('#field' + axis).change();
     });
 }
+
+/*function updateGraph() {
+    // Trigger the jQuery.change() closure created in CreateScatterplot by faking an administration change
+    // (even if it's a different field that changed, it doesn't matter.
+    jQuery("#Administration").change();
+}*/
 function CreateScatterplot() {
     var GetCSVUrl = function() {
         return 'GetCSV.php?InstrumentY=' + jQuery("#instrumenty").val() +
             '&InstrumentX=' + jQuery("#instrumentx").val() +
             '&FieldY=' + jQuery("#fieldy").val() + 
             '&FieldX=' + jQuery("#fieldx").val() + 
-            '&Administration=' + jQuery('#Administration').val();
+            '&Administration=' + jQuery('#Administration').val() +
+            '&Visit_label=' + jQuery('#Visit_label').val() +
+            '&site=' + jQuery('#GraphSite').val();
     };
     graph = new ACES_Scatterplot();
     graph.CSVUrl = GetCSVUrl();
@@ -57,6 +65,18 @@ function CreateScatterplot() {
     jQuery("#fieldy").change(function() {
         graph.CSVUrl = GetCSVUrl();
         graph.UpdateYField($(this).val());
+        graph.RenderChart();
+    });
+    jQuery("#Administration").change(function() {
+        graph.CSVUrl = GetCSVUrl();
+        graph.RenderChart();
+    });
+    jQuery("#GraphSite").change(function() {
+        graph.CSVUrl = GetCSVUrl();
+        graph.RenderChart();
+    });
+    jQuery("#Visit_label").change(function() {
+        graph.CSVUrl = GetCSVUrl();
         graph.RenderChart();
     });
 }
@@ -334,7 +354,7 @@ function CreateScatterplot() {
 <fieldset>
     <legend>Candidate Filters</legend>
     <div>
-        Site: {html_options options=$Sites name="site" selected=$CurrentSite.ID}
+        Site: {html_options options=$Sites name="site" selected=$CurrentSite.ID id="GraphSite"}
         Administration: 
             <select name="Administration" id="Administration">
                 <option value="">Any</option>
