@@ -28,8 +28,8 @@ class NDB_BVL_Instrument_med_records_recruit extends NDB_BVL_Instrument_med_reco
 		$this->table = 'med_records_recruit'; // name of database table corresponding to instrument
 		
 		$this->_doubleDataEntryDiffIgnoreColumns = array('CommentID', 'UserID', 'Testdate',
-								 'significant_notes_during_pregnancy_or_delivery_specify',
-								 'significant_notes_during_pregnancy_or_delivery_specify_status',
+								 'sig_notes_during_pregnancy_or_delivery_specify',
+								 'sig_notes_during_pregnancy_or_delivery_specify_status',
 								 'significant_injuries_or_illnesses_specify',
 								 'significant_injuries_or_illnesses_specify_status',
 								 'history_of_psychiatric_problems_specify',
@@ -61,7 +61,7 @@ class NDB_BVL_Instrument_med_records_recruit extends NDB_BVL_Instrument_med_reco
 	
 	function _page1() {
 		$this->form->addElement ( "select", "significant_notes_during_pregnancy_or_delivery", "Anything significant noted during pregnancy or delivery?", $this->yesNo );
-		$this->addTextElement ( "significant_notes_during_pregnancy_or_delivery_specify", $this->indent . "If yes, specify:", array ("significant_notes_during_pregnancy_or_delivery{@}=={@}yes" ), "This field is required." );
+		$this->addTextElement ( "sig_notes_during_pregnancy_or_delivery_specify", $this->indent . "If yes, specify:", array ("significant_notes_during_pregnancy_or_delivery{@}=={@}yes" ), "This field is required." );
 		$this->form->addElement ( "static", null, "<BR>" ); //line space
 		
 
