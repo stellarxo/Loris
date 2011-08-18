@@ -252,6 +252,12 @@ INSERT INTO instrument_subtests VALUES('', 'aosi', 'aosi_page2', 'General Observ
         $this->form->addElement("static", "q5_anticipatory_response_score", "Score:");
         $this->addTextAreaElement("q5_anticipatory_response_notes", "Notes:");
 
+        if (preg_match("/KAI/", $this->commentID) || preg_match("/MND/", $this->commentID) || preg_match("/DRX/", $this->commentID) || preg_match("/HPK/", $this->commentID) )
+        {
+        	$this->form->addElement("static", "q5_anticipatory_response_affect", "Anticipatory Response Affect");
+        }
+
+
         //Question 6
         $this->form->addElement("static", null, "6. Imitation of Actions");
         for($activity = 1; $activity <= 3; $activity++) {
@@ -319,8 +325,18 @@ INSERT INTO instrument_subtests VALUES('', 'aosi', 'aosi_page2', 'General Observ
             else $answerArray = $zeroOneTwo;
             $this->form->addElement("select", $field, $label, $answerArray);
             $this->addTextAreaElement("{$field}_notes", "Notes: ");
-            
-        }
+
+	}
+
+        if (preg_match("/KAI/", $this->commentID) || preg_match("/MND/", $this->commentID) || preg_match("/DRX/", $this->commentID) || preg_match("/HPK/", $this->commentID) )
+        {
+ 		$this->form->addElement("static", "startDate", "Start date:");
+        	$this->form->addElement("static", "endDate", "End date:");
+        	$this->form->addElement("static", "startTime", "Start time:");
+        	$this->form->addElement("static", "endTime", "End time:");
+        	$this->form->addElement("static", "surveyStatus", "Survey status:");
+        	$this->form->addElement("static", "notes", "Notes:");
+	}
     }
 
     
