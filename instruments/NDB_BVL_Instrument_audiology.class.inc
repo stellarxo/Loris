@@ -46,7 +46,7 @@ INSERT INTO test_battery VALUES ('', 'audiology', '660', '780', 'Y', 'Visit', '2
 	/**
 	 * Array of column names to be ignored by the double data entry conflict detector.
 	 */
-	$this->_doubleDataEntryDiffIgnoreColumns = array('CommentID', 'UserID', 'Testdate',
+	$this->_doubleDataEntryDiffIgnoreColumns = array('CommentID', 'UserID', 'Testdate', 'Window_Difference', 'Candidate_Age',
 							 'not_completed_other_specify',
 							 'not_completed_other_specify_status',
 							 'other_method_specify',

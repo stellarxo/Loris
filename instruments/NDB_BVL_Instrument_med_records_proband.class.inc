@@ -31,7 +31,7 @@ class NDB_BVL_Instrument_med_records_proband extends NDB_BVL_Instrument_med_reco
 		$this->testName = "med_records_proband"; // test_names.Test_name
 		$this->table = 'med_records_proband'; // name of database table corresponding to instrument
 		
-		$this->_doubleDataEntryDiffIgnoreColumns = array('CommentID', 'UserID', 'Testdate',
+		$this->_doubleDataEntryDiffIgnoreColumns = array('CommentID', 'UserID', 'Testdate',  'Window_Difference', 'Candidate_Age',
 								 'diagnositic_setting_result',
 								 'diagnositic_setting_result_status',
 								 'clinician_background_specify',

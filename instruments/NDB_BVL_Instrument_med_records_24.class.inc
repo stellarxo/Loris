@@ -33,7 +33,7 @@ class NDB_BVL_Instrument_med_records_24 extends NDB_BVL_Instrument_med_records {
 		/**
 		 * Array of column names to be ignored by the double data entry conflict detector.
 		 */
-		$this->_doubleDataEntryDiffIgnoreColumns = array('CommentID', 'UserID', 'Testdate',
+		$this->_doubleDataEntryDiffIgnoreColumns = array('CommentID', 'UserID', 'Testdate',  'Window_Difference', 'Candidate_Age',
 								 'significant_injuries_or_illnesses_specify',
 								 'significant_injuries_or_illnesses_specify_status',
 								 'other_genetic_tests_completed_specify',

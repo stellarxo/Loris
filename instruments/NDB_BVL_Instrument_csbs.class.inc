@@ -87,7 +87,7 @@ INSERT INTO instrument_subtests VALUES('', 'csbs', 'csbs_page2', 'Symbolic Behav
     /**
      * Array of column names to be ignored by the double data entry conflict detector.
      */
-    $this->_doubleDataEntryDiffIgnoreColumns = array('CommentID', 'UserID', 'Testdate',
+    $this->_doubleDataEntryDiffIgnoreColumns = array('CommentID', 'UserID', 'Testdate', 'Window_Difference', 'Candidate_Age',
 						     'relationship_to_child',
 						     'relationship_to_child_status',
 						     'comments',

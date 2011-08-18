@@ -98,7 +98,7 @@ class NDB_BVL_Instrument_med_psych_hist extends NDB_BVL_Instrument
     /**
     * Array of column names to be ignored by the double data entry conflict detector.
     */
-    $this->_doubleDataEntryDiffIgnoreColumns = array('CommentID', 'UserID', 'Testdate', 
+    $this->_doubleDataEntryDiffIgnoreColumns = array('CommentID', 'UserID', 'Testdate',  'Window_Difference', 'Candidate_Age',
 						     'relationship_to_child_other', 
 						     'relationship_to_child_other_status',
 						     'a_aut_spect_disorder_who_other',

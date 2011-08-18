@@ -41,7 +41,7 @@ class NDB_BVL_Instrument_figs_year3 extends NDB_BVL_Instrument
         // data keyed by commentID
         $this->commentID = $commentID;
 
-	$this->_doubleDataEntryDiffIgnoreColumns = array('CommentID', 'UserID', 'Testdate', 'RelativeID',
+	$this->_doubleDataEntryDiffIgnoreColumns = array('CommentID', 'UserID', 'Testdate', 'RelativeID',  'Window_Difference', 'Candidate_Age',
 							 'Face_CauseOfDeath',
 							 'Face_Comments',
 							 'Other_Narrative',

@@ -81,7 +81,8 @@ INSERT INTO test_battery VALUES ('', 'intervention_history', '1053', '1179', 'Y'
 	/**
 	 * Array of column names to be ignored by the double data entry conflict detector.
 	 */
-	$this->_doubleDataEntryDiffIgnoreColumns = array('CommentID', 'UserID', 'Testdate');
+     // Commented out so that the ones from NDB_BVL_Instrument are picked up. This doesn't seem to be any different
+	//$this->_doubleDataEntryDiffIgnoreColumns = array('CommentID', 'UserID', 'Testdate');
 
         // setup the form
         $this->_setupForm();
