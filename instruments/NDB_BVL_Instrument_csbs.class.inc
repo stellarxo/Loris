@@ -309,6 +309,7 @@ INSERT INTO instrument_subtests VALUES('', 'csbs', 'csbs_page2', 'Symbolic Behav
     	if($this->_determineDataEntryCompletionStatus() == "Incomplete") {
     		return;
     	}
+        print "not Return!!!";
 
         //null scores
 		$this->_nullScores($this->scoreLabels);
@@ -344,11 +345,13 @@ INSERT INTO instrument_subtests VALUES('', 'csbs', 'csbs_page2', 'Symbolic Behav
 	elseif ($age_months > 24.75)
 		$age_months = 25;
 
+    $age_months = round($age_months);
 
         if($this->isError($age)) {
             return $this->raiseError("Could not compute age");
         }  
 
+    print "after compute age\n";
 
   	//calculate raw scores
         $scores["q_1_gaze_shifts_raw_score"] = $this->_countChecked($record, "q_1_gaze_shifts_");
