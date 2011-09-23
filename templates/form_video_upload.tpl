@@ -16,11 +16,6 @@
         <td nowrap="nowrap" colspan="2" class="error">{$error}</td>
     </tr>
     {/foreach}
-    {if $message}
-    <tr>
-        <td nowrap="nowrap" colspan="2" class="error">{$message}</td>
-    </tr>
-    {/if}
   <tr>
     <td nowrap="nowrap">{$form.Instrument.label}</td>
 		<td nowrap="nowrap">{$form.Instrument.html}</td>
@@ -71,18 +66,16 @@
   		<td nowrap="nowrap">{$form.File_name.label}</td>
   		<td nowrap="nowrap">{$form.File_name.html}</td>
   	</tr>  
-    {if $has_delete_permission}
     <tr>
   		<td nowrap="nowrap">{$form.hide_video.label} (check both to confirm)</td>
   		<td nowrap="nowrap">{$form.hide_video.html} {$form.hide_video_confirm.html}</td>
     </tr>
-    {/if}
 
   {/if}
 
   {if empty($success)}
     <tr>
-  		<td nowrap="nowrap" colspan="2"><input class="button" name="fire_away" value="Upload/Delete" type="submit" /></td>
+  		<td nowrap="nowrap" colspan="2"><input class="button" name="fire_away" value="Upload" type="submit" /></td>
   	</tr>
   {/if}
 	
