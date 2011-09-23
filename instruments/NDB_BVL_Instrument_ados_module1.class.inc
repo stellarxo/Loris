@@ -444,6 +444,11 @@ class NDB_BVL_Instrument_ados_module1 extends NDB_BVL_Instrument
 	    //Requires age in months:  
         $db->selectRow("SELECT * FROM $this->table WHERE CommentID='".$this->getCommentID()."'", $Answers);
 	    $age_months = 0;
+        if($this->getSessionID() != NULL) { //quickform_parser doesn't use any specific session
+            $timepoint =& TimePoint::singleton($this->getSessionID());
+            $dob = $timepoint->getEffectiveDateOfBirth();
+        }
+
         if(!empty($dob) && !empty($Answers['Date_taken'])) {
             $age = Utility::calculateAge($dob, $Answers["Date_taken"]);
             if(!$this->isError($age)) {
@@ -453,13 +458,18 @@ class NDB_BVL_Instrument_ados_module1 extends NDB_BVL_Instrument
         //Severity score lookup:  column limits for age (min, max), raw score (min, max) 
         // ados_lookup table columns : sevscore module minagemos maxagemos minraw maxraw   
 	    if ( $module != '' && $age_months != 0) {  
-	       $query_severity_lookup = "SELECT sevscore FROM ados_lookup WHERE module = ".$module. " AND minagemos <= ".$age_months. " AND maxagemos >= ".$age_months. " AND minraw <= ".$scoreCols['social_affect_restricted_repetitive_behavior_total']." AND maxraw >= ".$scoreCols['social_affect_restricted_repetitive_behavior_total'];
+	       $query_severity_lookup = "SELECT sevscore FROM ados_lookup WHERE module = :modname AND minagemos <= :agemonths AND maxagemos >= :agemonths AND minraw <= :rawscore AND maxraw >= :rawscore";
         	$record_lookup = array();
-	        $db->selectRow($query_severity_lookup, $record_lookup);
+	        $sevscore = $db->pselectOne($query_severity_lookup, array(
+                'modname' => $module,
+                'agemonths' => $age_months,
+                'rawscore' => $scoreCols['social_affect_restricted_repetitive_behavior_total']
+            ));
         	if (PEAR::isError($record_lookup)) {
                 	return PEAR::raiseError("Could not retrieve scores: " . $record_lookup->getMessage());
  	     	}
-        	$scoreCols['severity_score_lookup']=($record_2['sevscore']);
+        	$scoreCols['severity_score_lookup']=$sevscore;
+            //($record_lookup['sevscore']);
 	    }
 
         // save scores to database
