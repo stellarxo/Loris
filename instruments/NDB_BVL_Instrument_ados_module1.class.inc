@@ -378,9 +378,13 @@ class NDB_BVL_Instrument_ados_module1 extends NDB_BVL_Instrument
                 $scores[$field] = 0;
             }
         }
+
+	$module = '';
         
         // NO WORDS scoring
         if($record["a1"] == 3 || $record["a1"] == 8) {
+		$module = '1-NoWords'; 
+
     		$scoreCols["social_affect_total"] = $scores["a2"] + $scores["a8"] + $scores["b1"] + $scores["b3"] + $scores["b4"] + $scores["b5"] + $scores["b9"] + $scores["b10"] + $scores["b11"] + $scores["b12"];
     		$scoreCols["restricted_repetitive_behavior_total"] = $scores["a3"] + $scores["d1"] + $scores["d2"] + $scores["d4"];
     		$scoreCols["social_affect_restricted_repetitive_behavior_total"] = $scoreCols["social_affect_total"] + $scoreCols["restricted_repetitive_behavior_total"];
@@ -396,6 +400,8 @@ class NDB_BVL_Instrument_ados_module1 extends NDB_BVL_Instrument
 
     	//SOME WORDS Scoring
         if($record["a1"] == 0 || $record["a1"] == 1 || $record["a1"] == 2) {
+                $module = '1-Words';
+
         	$scoreCols["social_affect_total"] = $scores["a2"] + $scores["a7"] + $scores["a8"] + $scores["b1"] + $scores["b3"] + $scores["b4"] + $scores["b5"] + $scores["b9"] + $scores["b10"] + $scores["b12"];
         	$scoreCols["restricted_repetitive_behavior_total"] = $scores["a5"] + $scores["d1"] + $scores["d2"] + $scores["d4"];
         	$scoreCols["social_affect_restricted_repetitive_behavior_total"] = $scoreCols["social_affect_total"] + $scoreCols["restricted_repetitive_behavior_total"];
@@ -407,12 +413,34 @@ class NDB_BVL_Instrument_ados_module1 extends NDB_BVL_Instrument
         	} else {
         		$scoreCols["ADOS_classification"] = "none";
         	}
-        }
+	}
+
+        //Determine Severity score from ados_lookup table 
+	//Requires age in months:  
+        $db->selectRow("SELECT * FROM $this->table WHERE CommentID='".$this->getCommentID()."'", $Answers);
+	$age_months = 0;
+        if(!empty($dob) && !empty($Answers['Date_taken'])) {
+            $age = Utility::calculateAge($dob, $Answers["Date_taken"]);
+             if(!$this->isError($age)) {
+                $age_months = $age['year'] * 12 + $age['mon'];
+	     }
+        } 
+        //Severity score lookup:  column limits for age (min, max), raw score (min, max) 
+        // ados_lookup table columns : sevscore module minagemos maxagemos minraw maxraw   
+	if ( $module != '' && $age_months != 0) {  
+	       $query_severity_lookup = "SELECT sevscore FROM ados_lookup WHERE module = ".$module. " AND minagemos <= ".$age_months. " AND maxagemos >= ".$age_months. " AND minraw <= ".$scoreCols['social_affect_restricted_repetitive_behavior_total']." AND maxraw >= ".$scoreCols['social_affect_restricted_repetitive_behavior_total'].";
+        	$record_lookup = array();
+	        $db->selectRow($query_severity_lookup, $record_lookup);
+        	if (PEAR::isError($record_lookup)) {
+                	return PEAR::raiseError("Could not retrieve scores: " . $record_lookup->getMessage());
+ 	     	  }
+        	$scoreCols['severity_score_lookup']=($record_2['sevscore']);
+	}
 
         // save scores to database
-    	$result = $db->update($this->table, $scoreCols, array("CommentID"=>$this->getCommentID()));
+ 	$result = $db->update($this->table, $scoreCols, array("CommentID"=>$this->getCommentID()));
     	if($db->isError($result)) {
-    		return PEAR::raiseError("Could not save total score: ". $result->getMessage());
+    	return PEAR::raiseError("Could not save total score: ". $result->getMessage());
     	}
     }    // end score function
 }
