@@ -74,16 +74,16 @@ INSERT INTO test_battery VALUES ('', 'head_measurements', '1050', '1140', 'Y', '
         $this->_addMetadataFields();
         
         $this->form->addElement('header', null, 'Head Measurements');
-        $this->addTextElement('head_circumference1', "Circumference 1: (in Centimeters)");
+        $this->addTextElement('head_circumference1', "Circumference 1: (<span style=\"font-weight: bold; color: red;\">in Centimeters</span>)");
         $this->addTextElement('head_circumference2', "Circumference 2:");
 
         $this->form->addElement('header', null, 'Length');
-        $this->addTextElement('length1', "Length 1: (in Centimeters)");
+        $this->addTextElement('length1', "Length 1: (<span style=\"font-weight: bold; color: red;\">in Centimeters</span>)");
         $this->addTextElement('length2', "Length 2:");
         $this->form->addElement('select', 'measurement_method', $this->indent . "Child was measured:", array(""=>NULL, "lying_down"=>"Lying down", "standing_up"=>"Standing up", "not_answered"=>"Not Answered"));
 
         $this->form->addElement('header', null, 'Weight');
-        $this->addTextElement('weight1', "Weight 1: (in Kilograms)");
+        $this->addTextElement('weight1', "Weight 1: (<span style=\"font-weight: bold; color: red;\">in Kilograms</span>)");
         $this->addTextElement('weight2', "Weight 2:");
         
     }
