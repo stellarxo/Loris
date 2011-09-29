@@ -2,7 +2,7 @@
 class NDB_BVL_Instrument_figs_year3 extends NDB_BVL_Instrument
 {
     
-    var $_relationshipCodeRegex = '/^MOM|DAD|MGM|MGF|PGM|PGF|(FB|FS|HB|HS|CID|CIS|MA|MU|PA|PU|FX|MX|PX|HX)[0-9]+$/';
+    var $_relationshipCodeRegex = '/^MOM|DAD|MGM|MGF|PGM|PGF|FX|MX|PX|HX|(FB|FS|HB|HS|CID|CIS|MA|MU|PA|PU)[0-9]+$/';
     
     var $scoreCols = array('ADHD','Alcohol','ASP','Depression','Drug_substance','Nicotine','Mania','OCD','Paranoid','Psychosis','Tic');
     var $scoreColsRelative = array('Score_adhd_combined','Score_adhd_inattentive','Score_adhd_hyperactive','Score_alcohol_abuse','Score_alcohol_dependence','Score_alcohol_nicotine','Score_alcohol_drug_substance','Score_asp','Score_depression','Score_chronic_depression','Score_recurrent_depression','Score_mania','Score_ocd','Score_paranoid_personality','Score_pervasive_development','Score_schizoid','Score_schizotypal','Score_psychosis_schizophrenia','Score_psychosis_depression','Score_psychosis_mania','Score_tic_tourettes','Score_tic_motor_c','Score_tic_vocal_c','Score_tic_motor_t','Score_tic_vocal_t');
