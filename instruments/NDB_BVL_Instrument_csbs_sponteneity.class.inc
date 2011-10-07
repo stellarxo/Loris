@@ -13,7 +13,6 @@ INSERT INTO instrument_subtests VALUES('', 'csbs_sponteneity', 'csbs_sponteneity
 */
 	var $yesNo = array(null=>"", "yes"=>"Yes", "no"=>"No", "not_answered"=>"Not Answered");
 
-	var $dateOptions = array(NULL=>"", "2007"=>"2007", "2008"=>"2008", "2009"=>"2009", "2010"=>"2010", "2011"=>"2011", "2012"=>"2012");
 
     /**
     * sets up basic data, such as the HTML_Quickform object, and so on.
@@ -146,15 +145,24 @@ INSERT INTO instrument_subtests VALUES('', 'csbs_sponteneity', 'csbs_sponteneity
         for ($i = 1; $i <5; $i++) {
             $this->form->addElement("static", null, "<b>$headers[$i]</b>");
             for ($j = 1; $j<3; $j++) {
+                /*
                 $group[] =&$this->form->createElement("static", "prompt_header", "Prompt Level");
                 $group[] =&$this->form->createElement("static", "response_header", "Quality of Response");
                 $group[] =&$this->form->createElement("static", "other_header", "Other - specify");
-                $this->form->addGroup($group, "wind_up_headers", "", $this->_GUIDelimiter, false);
+                */
+                $group[] =&$this->form->createElement("static", null, "Prompt Level");
+                $group[] =&$this->form->createElement("static", null, "Quality of Response");
+                $group[] =&$this->form->createElement("static", null, "Other - specify");
+                $this->form->addGroup($group, "wind_up_headers_$j" . "_$i", "", $this->_GUIDelimiter, false);
                 unset($group);
 
                 $group[] = &$this->form->createElement("select", "wind_up_ph{$j}_$i", null, $promptLevel);
                 $group[] = &$this->form->createElement("select", "wind_up_ph{$j}_response_$i", null, $qualityResponse);
                 $group[] = &$this->form->createElement("text", "wind_up_ph{$j}_other_$i", null);
+                        $this->XINRegisterRule("wind_up_ph{$j}_$i", array("wind_up_ph{$j}_$i{@}=={@}NEVER_REQUIRED"));
+                        $this->XINRegisterRule("wind_up_ph{$j}_response_$i", array("wind_up_ph{$j}_response_$i{@}=={@}NEVER_REQUIRED"));
+                        $this->XINRegisterRule("wind_up_ph{$j}_other_$i", array("wind_up_ph{$j}_other_$i{@}=={@}NEVER_REQUIRED"));
+
 
                 if ($j == 1) {
                     $this->form->addGroup($group, null, "a. PH $j", $this->_GUIDelimiter, false);
