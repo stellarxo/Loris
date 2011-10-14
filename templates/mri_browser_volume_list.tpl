@@ -122,6 +122,9 @@ return true;
             <th nowrap="nowrap">Subproject</th><td nowrap="nowrap">{$subject.SubprojectTitle}</td>
             <th nowrap="nowrap">EDC</th><td nowrap="nowrap">{$subject.edc}</td>
         </tr>
+        <tr>
+            <th>Mantis ID</th><td colspan="5">{$subject.pscid} {$subject.candid} {$subject.visitLabel}</td>
+        </tr>
         
         <tr>
             <td colspan="5"><a href="#" onClick="javascript:window.open('feedback_mri_popup.php?sessionID={$subject.sessionID}', 'feedback_mri', 
