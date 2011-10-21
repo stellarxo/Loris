@@ -58,18 +58,43 @@ class NDB_BVL_Instrument_ados_module1 extends NDB_BVL_Instrument
         // required fields for data entry completion status
         $this->_requiredElements = array('Examiner', "a1", "c1");
 
-	$this->_doubleDataEntryDiffIgnoreColumns = array('CommentID', 'UserID', 'Testdate', 'Window_Difference', 'Candidate_Age',
+	    $this->_doubleDataEntryDiffIgnoreColumns = array('CommentID', 'UserID', 'Testdate', 'Window_Difference', 'Candidate_Age',
+                             // Text entry columns
 							 'd1_specify',
 							 'd1_specify_status',
 							 'd2_specify',
 							 'd2_specify_status',
 							 'd4_specify',
-							 'd4_specify_status');
+							 'd4_specify_status',
+                             // Scored columns
+                             "social_affect_total", 
+                             "restricted_repetitive_behavior_total", 
+                             "social_affect_restricted_repetitive_behavior_total", 
+                             "ADOS_classification");
+                             'a2_weighted',
+                             'a3_weighted',
+                             'a8_weighted',
+                             'b1_weighted',
+                             'b3_weighted',
+                             'b4_weighted',
+                             'b5_weighted',
+                             'b9_weighted',
+                             'b10_weighted',
+                             'b11_weighted',
+                             'b12_weighted',
+                             'd1_weighted',
+                             'd2_weighted',
+                             'd4_weighted',
+                             'social_affect_gotham_weighted',
+                             'restricted_repetitive_gotham_weighted',
+                             'gotham_weighted_score',
+                             'severity_score_lookup'
+        );
 
 
 
        // setup the form
-        $this->_setupForm();
+       $this->_setupForm();
     }
 
     //If the instrument is not paged, remove the switch from the _setupForm method and add all the form Elements in this function.
