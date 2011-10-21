@@ -201,6 +201,11 @@ class NDB_BVL_Instrument_mri_parameter_form extends NDB_BVL_Instrument
                   $date = $values['DTI_Scan_done_date'];
                   $values['DTI_Scan_done_date'] = sprintf("%04d-%02d-%02d", $date['Y'], $date['M'], $date['d']);
               }
+
+              if(isset($values['DTI65Dir_Scan_done_date'])) {
+                  $date = $values['DTI65Dir_Scan_done_date'];
+                  $values['DTI65Dir_Scan_done_date'] = sprintf("%04d-%02d-%02d", $date['Y'], $date['M'], $date['d']);
+              }
               if(isset($values['BOLD_Scan_done_date'])) {
                   $date = $values['BOLD_Scan_done_date'];
                   $values['BOLD_Scan_done_date'] = sprintf("%04d-%02d-%02d", $date['Y'], $date['M'], $date['d']);
