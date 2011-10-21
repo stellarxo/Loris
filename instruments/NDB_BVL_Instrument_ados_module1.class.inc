@@ -70,7 +70,7 @@ class NDB_BVL_Instrument_ados_module1 extends NDB_BVL_Instrument
                              "social_affect_total", 
                              "restricted_repetitive_behavior_total", 
                              "social_affect_restricted_repetitive_behavior_total", 
-                             "ADOS_classification");
+                             "ADOS_classification",
                              'a2_weighted',
                              'a3_weighted',
                              'a8_weighted',
