@@ -653,45 +653,57 @@ class NDB_BVL_Instrument_figs_year3 extends NDB_BVL_Instrument
         $treatment_Option5_Q1a = array(null=>'', '4' => '4. Medication', 'NA' => 'N/A');
         $treatment_Option6_Q1a = array(null=>'', '9' => '9. Unknown', 'NA' => 'N/A');
         $question1f_Options = array(null=>'', '0' => '0. None', '1' => '1. Impaired', '2'=>'2. Incapacitated', '3'=>'3. Clinically Significant Distress', '4'=>'4. Change from previous functioning', '9'=>'9. Unknown', 'NA' => 'N/A');
-        
-        // Questions
         $this->form->addElement("textarea", "Other_Narrative", "Write narrative:");
-        $this->form->addElement("text", "Other_Q1_Disorder", "1. Indicate any disorder NOT in the checklists and complete questions 1.a-f for the disorder (includes neurologic disorders).");
-        $this->form->addElement("static", null, "1.a) Code and describe professional treatment:");
         
-        $this->form->addElement("select", "Other_Q1a_Treatment1", "0. ", $treatment_Option1_Q1a);
-        $this->form->addElement("select", "Other_Q1a_Treatment2", "1. ", $treatment_Option2_Q1a);
-        $this->form->addElement("select", "Other_Q1a_Treatment3", "2. ", $treatment_Option3_Q1a);
-        $this->form->addElement("select", "Other_Q1a_Treatment4", "3. ", $treatment_Option4_Q1a);
-        $this->form->addElement("select", "Other_Q1a_Treatment5", "4. ", $treatment_Option5_Q1a);
-        $this->form->addElement("select", "Other_Q1a_Treatment6", "9. ", $treatment_Option6_Q1a);
-        $this->form->addElement("textarea","Other_Q1a_Description", "Please describe treatments:");
+        for($i = 1; $i <= 5; $i++) {
+            // Disorder 2-5 was added after the fact, so instead of "Other1" it needs to stay "Other".. add
+            // an extra variable
+            if($i == 1) {
+                $DisorderNum = "";
+            } else {
+                $DisorderNum = $i;
+            }
+            // Questions
+            $this->form->addElement('header', null, "Disorder Number $i");
+            $this->form->addElement("text", "Other{$DisorderNum}_Q1_Disorder", "1. Indicate any disorder NOT in the checklists and complete questions 1.a-f for the disorder (includes neurologic disorders).");
+            $this->form->addElement("static", null, "1.a) Code and describe professional treatment:");
+            
+            $this->form->addElement("select", "Other{$DisorderNum}_Q1a_Treatment1", "0. ", $treatment_Option1_Q1a);
+            $this->form->addElement("select", "Other{$DisorderNum}_Q1a_Treatment2", "1. ", $treatment_Option2_Q1a);
+            $this->form->addElement("select", "Other{$DisorderNum}_Q1a_Treatment3", "2. ", $treatment_Option3_Q1a);
+            $this->form->addElement("select", "Other{$DisorderNum}_Q1a_Treatment4", "3. ", $treatment_Option4_Q1a);
+            $this->form->addElement("select", "Other{$DisorderNum}_Q1a_Treatment5", "4. ", $treatment_Option5_Q1a);
+            $this->form->addElement("select", "Other{$DisorderNum}_Q1a_Treatment6", "9. ", $treatment_Option6_Q1a);
+            $this->form->addElement("textarea","Other{$DisorderNum}_Q1a_Description", "Please describe treatments:");
 
-        $this->form->addElement("text","Other_Q1b_OnsetAge","1.b) Age of onset (in years - numbers only!)");
-        $this->form->addElement("advcheckbox","Other_Q1bNA","NA");
-        $this->form->addElement("text","Other_Q1c_Episodes","1.c) Number of episodes (numbers only!)");
-        $this->form->addElement("advcheckbox","Other_Q1cNA","NA");
-        $this->form->addElement("text","Other_Q1d_Duration","1.d) Duration of longest episode in weeks (numbers only!)");
-        $this->form->addElement("advcheckbox","Other_Q1dNA","NA");
-        $this->form->addElement("select","Other_Q1e_Impairment","1.e) Rate and code impairment or incapacitation:", $question1f_Options);
-        
-        // Rules for questions
-        $this->form->addRule("Other_Q1_Disorder", "Required", 'required', null);
-      
-        $this->form->addRule("Other_Q1a_Treatment1", "Required", 'required', null);
-        $this->form->addRule("Other_Q1a_Treatment2", "Required", 'required', null);
-        $this->form->addRule("Other_Q1a_Treatment3", "Required", 'required', null);
-        $this->form->addRule("Other_Q1a_Treatment4", "Required", 'required', null);
-        $this->form->addRule("Other_Q1a_Treatment5", "Required", 'required', null);
-        $this->form->addRule("Other_Q1a_Treatment6", "Required", 'required', null);
+            $this->form->addElement("text","Other{$DisorderNum}_Q1b_OnsetAge","1.b) Age of onset (in years - numbers only!)");
+            $this->form->addElement("advcheckbox","Other{$DisorderNum}_Q1bNA","NA");
+            $this->form->addElement("text","Other{$DisorderNum}_Q1c_Episodes","1.c) Number of episodes (numbers only!)");
+            $this->form->addElement("advcheckbox","Other{$DisorderNum}_Q1cNA","NA");
+            $this->form->addElement("text","Other{$DisorderNum}_Q1d_Duration","1.d) Duration of longest episode in weeks (numbers only!)");
+            $this->form->addElement("advcheckbox","Other{$DisorderNum}_Q1dNA","NA");
+            $this->form->addElement("select","Other{$DisorderNum}_Q1e_Impairment","1.e) Rate and code impairment or incapacitation:", $question1f_Options);
+            
+            // Rules for disorder 1.. other disorders aren't required.
+            if($i == 1) {
+                $this->form->addRule("Other{$DisorderNum}_Q1_Disorder", "Required", 'required', null);
+              
+                $this->form->addRule("Other{$DisorderNum}_Q1a_Treatment1", "Required", 'required', null);
+                $this->form->addRule("Other{$DisorderNum}_Q1a_Treatment2", "Required", 'required', null);
+                $this->form->addRule("Other{$DisorderNum}_Q1a_Treatment3", "Required", 'required', null);
+                $this->form->addRule("Other{$DisorderNum}_Q1a_Treatment4", "Required", 'required', null);
+                $this->form->addRule("Other{$DisorderNum}_Q1a_Treatment5", "Required", 'required', null);
+                $this->form->addRule("Other{$DisorderNum}_Q1a_Treatment6", "Required", 'required', null);
 
-        $this->form->addRule(array('Other_Q1b_OnsetAge', 'Other_Q1bNA'), 'Age of onset is required if available', 'requiredIf', array('operator'=>'!=', 'value'=>'1'));
-        $this->setRequired('Other_Q1b_OnsetAge');
-        $this->form->addRule(array('Other_Q1c_Episodes', 'Other_Q1cNA'), 'Number of episodes is required if available', 'requiredIf', array('operator'=>'!=', 'value'=>'1'));
-        $this->setRequired('Other_Q1c_Episodes');
-        $this->form->addRule(array('Other_Q1d_Duration', 'Other_Q1dNA'), 'Duration of longest episode is required if available', 'requiredIf', array('operator'=>'!=', 'value'=>'1'));
-        $this->setRequired('Other_Q1d_Duration');
-        $this->form->addRule("Other_Q1e_Impairment", "Required", 'required', null);
+                $this->form->addRule(array("Other{$DisorderNum}_Q1b_OnsetAge", "Other{$DisorderNum}_Q1bNA"), 'Age of onset is required if available', 'requiredIf', array('operator'=>'!=', 'value'=>'1'));
+                $this->setRequired("Other{$DisorderNum}_Q1b_OnsetAge");
+                $this->form->addRule(array("Other{$DisorderNum}_Q1c_Episodes", "Other{$DisorderNum}_Q1cNA"), 'Number of episodes is required if available', 'requiredIf', array('operator'=>'!=', 'value'=>'1'));
+                $this->setRequired("Other{$DisorderNum}_Q1c_Episodes");
+                $this->form->addRule(array("Other{$DisorderNum}_Q1d_Duration", "Other{$DisorderNum}_Q1dNA"), 'Duration of longest episode is required if available', 'requiredIf', array('operator'=>'!=', 'value'=>'1'));
+                $this->setRequired("Other{$DisorderNum}_Q1d_Duration");
+                $this->form->addRule("Other{$DisorderNum}_Q1e_Impairment", "Required", 'required', null);
+            }
+        }
         
     } // End function
     
