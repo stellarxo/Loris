@@ -59,14 +59,33 @@ class NDB_BVL_Instrument_ados_module3 extends NDB_BVL_Instrument
 		 * Array of column names to be ignored by the double data entry conflict detector.
 		 */
 		$this->_doubleDataEntryDiffIgnoreColumns = array('CommentID', 'UserID', 'Testdate', 'Window_Difference', 'Candidate_Age',
+                                // Text entry columns
 								 'd1_specify',
 								 'd1_specify_status',
 								 'd2_specify',
 								 'd2_specify_status',
 								 'd4_specify',
-								 'd4_specify_status');
-
-
+								 'd4_specify_status',
+                                 // Scored columns
+                                 'social_affect_total',
+                                 'restricted_repetitive_behavior_total',
+                                 'social_affect_restricted_repetitive_behavior_total',
+                                 'ADOS_classification',
+                                 'b1_weighted',
+                                 'b9_weighted',
+                                 'b2_weighted',
+                                 'b10_weighted',
+                                 'b4_weighted',
+                                 'b7_weighted',
+                                 'a8_weighted',
+                                 'a9_weighted',
+                                 'b8_weighted',
+                                 'a7_weighted',
+                                 'a4_weighted',
+                                 'd1_weighted',
+                                 'd2_weighted',
+                                 'd4_weighted',
+                                 );
 
        // setup the form
         $this->_setupForm();
@@ -368,8 +387,24 @@ class NDB_BVL_Instrument_ados_module3 extends NDB_BVL_Instrument
 		$age = Utility::calculateAge($dob, $record["Date_taken"]);
        		$age_years = $age['year'] + ($age['mon']/12);
 	    if($this->isError($age)) {
-  	          return $this->raiseError("Could not compute age");
-     	 }  
+  	         return $this->raiseError("Could not compute age");
+     	}
+
+        // For severity score from ados_lookup table
+        $age_months = 0;
+        if($this->getSessionID() != NULL) { //quickform_parser doesn't use any specific session
+            $timepoint =& TimePoint::singleton($this->getSessionID());
+            $dob = $timepoint->getEffectiveDateOfBirth();
+        }
+
+        $db->selectRow("SELECT * FROM $this->table WHERE CommentID='".$this->getCommentID()."'", $Answers);
+        if(!empty($dob) && !empty($Answers['Date_taken'])) {
+            $age = Utility::calculateAge($dob, $Answers["Date_taken"]);
+            if(!$this->isError($age)) {
+                $age_months = $age['year'] * 12 + $age['mon'];
+            }
+        }
+
 
 	
         //Convert the entered scores to countable scores:
@@ -391,17 +426,55 @@ class NDB_BVL_Instrument_ados_module3 extends NDB_BVL_Instrument
             }
         }
         
-    		$scoreCols["social_affect_total"] = $scores["a7"] + $scores["a8"] + $scores["a9"] + $scores["b1"] + $scores["b2"] + $scores["b4"] + $scores["b7"] + $scores["b8"] + $scores["b9"] + $scores["b10"]; 
-    		$scoreCols["restricted_repetitive_behavior_total"] = $scores["a4"] + $scores["d1"] + $scores["d2"] + $scores["d4"];
-    		$scoreCols["social_affect_restricted_repetitive_behavior_total"] = $scoreCols["social_affect_total"] + $scoreCols["restricted_repetitive_behavior_total"];
+        $scoreCols["social_affect_total"] = $scores["a7"] + $scores["a8"] + $scores["a9"] + $scores["b1"] + $scores["b2"] + $scores["b4"] + $scores["b7"] + $scores["b8"] + $scores["b9"] + $scores["b10"]; 
+    	$scoreCols["restricted_repetitive_behavior_total"] = $scores["a4"] + $scores["d1"] + $scores["d2"] + $scores["d4"];
+    	$scoreCols["social_affect_restricted_repetitive_behavior_total"] = $scoreCols["social_affect_total"] + $scoreCols["restricted_repetitive_behavior_total"];
     
-    		if($scoreCols["social_affect_restricted_repetitive_behavior_total"] >= 7 && $scoreCols["social_affect_restricted_repetitive_behavior_total"] < 9){
-    			$scoreCols["ADOS_classification"] = "autism spectrum";
-    		} elseif ($scoreCols["social_affect_restricted_repetitive_behavior_total"] >= 9) {
-    			$scoreCols["ADOS_classification"] = "autism";
-    		} else {
-           		$scoreCols["ADOS_classification"] = "none";
-    		}
+    	if($scoreCols["social_affect_restricted_repetitive_behavior_total"] >= 7 && $scoreCols["social_affect_restricted_repetitive_behavior_total"] < 9){
+    		$scoreCols["ADOS_classification"] = "autism spectrum";
+    	} elseif ($scoreCols["social_affect_restricted_repetitive_behavior_total"] >= 9) {
+    		$scoreCols["ADOS_classification"] = "autism";
+    	} else {
+        	$scoreCols["ADOS_classification"] = "none";
+    	}
+
+        // Severity score
+        if ($age_months != 0) {
+            $query_severity_lookup = "SELECT sevscore FROM ados_lookup WHERE module = :modname AND minagemos <= :agemonths AND maxagemos >= :agemonths AND minraw <= :rawscore AND maxraw >= :rawscore";
+            $record_lookup = array();
+            $sevscore = $db->pselectOne($query_severity_lookup, array(
+                    'modname' => 3,
+                    'agemonths' => $age_months,
+                    'rawscore' => $scoreCols['social_affect_restricted_repetitive_behavior_total']
+            ));
+            if (PEAR::isError($record_lookup)) {
+                return PEAR::raiseError("Could not retrieve scores: " . $record_lookup->getMessage());
+            }
+            $scoreCols['severity_score_lookup']=$sevscore;
+        }
+        // Weightings from Gotham, Risi, Pickles and Lord 2008 Table 2
+        // Put in the same order as the paper, which happens to be different than
+        // how Loris orders it, which is why this looks a little weird
+        // Social Affect
+        $scoreCols['b1_weighted'] = $scores['b1'] * 0.56; // Unusual Eye Contact
+        $scoreCols['b9_weighted'] = $scores['b9'] * 0.78; // Amount of social communication
+        $scoreCols['b2_weighted'] = $scores['b2'] * 0.64; // Facial Expressions
+        $scoreCols['b10_weighted'] = $scores['b10'] * 0.77; // Quality of rapport
+        $scoreCols['b4_weighted'] = $scores['b4'] * 0.84; // Shared Enjoyment
+        $scoreCols['b7_weighted'] = $scores['b7'] * 0.72; // Quality of Social Overtures
+        $scoreCols['a8_weighted'] = $scores['a8'] * 0.63; // Conversation
+        $scoreCols['a9_weighted'] = $scores['a9'] * 0.66; // Gestures
+        $scoreCols['b8_weighted'] = $scores['b8'] * 0.72; // Quality of social response
+        $scoreCols['a7_weighted'] = $scores['a7'] * 0.37; // Reporting of events
+        $scoreCols["social_affect_gotham_weighted"] = $scoreCols["b1_weighted"] + $scoreCols["b9_weighted"] + $scoreCols["b2_weighted"] + $scoreCols["b10_weighted"] + $scoreCols["b4_weighted"] + $scoreCols["b7_weighted"] + $scoreCols["a8_weighted"] + $scoreCols["a9_weighted"] + $scoreCols["b8_weighted"] + $scoreCols["a7_weighted"];
+
+        // Restricted Repetitive Behaviours 
+        $scoreCols['a4_weighted'] = $scores['a4'] * 0.66; // Stereotyped language 
+        $scoreCols['d1_weighted'] = $scores['d1'] * 0.43; // Unusual Sensory Interest 
+        $scoreCols['d4_weighted'] = $scores['d4'] * 0.54; // Highly specific topics
+        $scoreCols['d2_weighted'] = $scores['d2'] * 0.57; // Hand Mannerisms
+        $scoreCols['restricted_repetitive_gotham_weighted'] = $scoreCols['a4_weighted'] + $scoreCols['d1_weighted'] + $scoreCols['d2_weighted'] + $scoreCols['d4_weighted'];
+        $scoreCols['gotham_weighted_score'] + $scoreCols['social_affect_gotham_weighted'] + $scoreCols['restricted_repetitive_gotham_weighted'];
 
         // save scores to database
     	$result = $db->update($this->table, $scoreCols, array("CommentID"=>$this->getCommentID()));
