@@ -495,7 +495,7 @@ class NDB_BVL_Instrument_ados_module2 extends NDB_BVL_Instrument
         $scoreCols['d4_weighted'] = $scores['d4'] * 0.01; // Repetitive Interests
         $scoreCols['d2_weighted'] = $scores['d2'] * 0.16; // Hand Mannerisms
         $scoreCols['restricted_repetitive_gotham_weighted'] = $scoreCols['a5_weighted'] + $scoreCols['d1_weighted'] + $scoreCols['d2_weighted'] + $scoreCols['d4_weighted'];
-        $scoreCols['gotham_weighted_score'] + $scoreCols['social_affect_gotham_weighted'] + $scoreCols['restricted_repetitive_gotham_weighted'];
+        $scoreCols['gotham_weighted_score'] = $scoreCols['social_affect_gotham_weighted'] + $scoreCols['restricted_repetitive_gotham_weighted'];
 
         // save scores to database
     	$result = $db->update($this->table, $scoreCols, array("CommentID"=>$this->getCommentID()));

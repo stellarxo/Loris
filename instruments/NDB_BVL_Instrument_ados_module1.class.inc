@@ -457,7 +457,7 @@ class NDB_BVL_Instrument_ados_module1 extends NDB_BVL_Instrument
             $scoreCols['d2_weighted'] = $scores['d2'] * 0.66; // Hand Mannerisms
             $scoreCols['restricted_repetitive_gotham_weighted'] = $scoreCols['a3_weighted'] + $scoreCols['d1_weighted'] + $scoreCols['d2_weighted'] + $scoreCols['d4_weighted'];
 
-            $scoreCols['gotham_weighted_score'] + $scoreCols['social_affect_gotham_weighted'] + $scoreCols['restricted_repetitive_gotham_weighted'];
+            $scoreCols['gotham_weighted_score'] = $scoreCols['social_affect_gotham_weighted'] + $scoreCols['restricted_repetitive_gotham_weighted'];
 
     	}
 
