@@ -161,6 +161,12 @@ class NDB_BVL_Instrument_ados_module3 extends NDB_BVL_Instrument
     
     	$this->form->addElement("static",null,null);
     	$this->form->addElement("static",null,null);
+
+        $this->form->addElement('static', null, '<br>');
+        $this->form->addElement('header', null, 'Severity Scores:');
+        $this->form->addElement('static', 'gotham_weighted_score', 'Weighted Score:');
+        $this->form->addElement('static', 'severity_score_lookup', 'Severity Score:');
+
     }
     
 /*	
