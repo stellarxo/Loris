@@ -100,7 +100,9 @@ class NDB_BVL_Instrument_vineland extends NDB_BVL_Instrument
          $this->form->addElement('static', "File_name", "Uploaded File");
          
          
-         $percentile = null;
+         // This used to be null, but it throws off the quickform parser,
+         // so I changed it to 95% for now - Dave
+         $percentile = "95%";
           if(!empty($record["ABC_85%_CI"])){
              $percentile = "85%";   
           } else if(!empty($record["ABC_90%_CI"])){
