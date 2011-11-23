@@ -299,7 +299,7 @@ class NDB_BVL_Instrument_EARLI_interview_PART_1 extends NDB_BVL_Instrument {
 		$this->form->addElement('static', null, "<br/>");
 
 		//q1-9
-		$this->form->addElement("select", "q1_9", "1-9) What is your race?", array(NULL=>"", "01" => "01 White", "02" => "02 Black, African American", "03" => "03 American Indian / Alaskan Native Asian", "04" => "04 Asian Indian", "05" => "05 Chinese", "06" => "06 Filipino", "07" => "07 Japanese", "08" => "08 Korean", "02" => "09 Vietnamese", "10" => "10 Thai / Cambodian", "11" => "11 Other Asian Native Hawaiian/Pacific Islander",  "12" => "12 Native Hawaiian",  "13" => "13 Guamanian or Chamorro" ,  "14" => "14 Samoan",  "15" => "15 Other Pacific Islander",  "16_other" => "16 Other race", "88_Refused" => "88 Refused",  "99_Do_not_know"=>"99 Do not know", "Not_Answered"=>"Not Answered"));
+		$this->form->addElement("select", "q1_9", "1-9) What is your race?", array(NULL=>"", "01" => "01 White", "02" => "02 Black, African American", "03" => "03 American Indian / Alaskan Native Asian", "04" => "04 Asian Indian", "05" => "05 Chinese", "06" => "06 Filipino", "07" => "07 Japanese", "08" => "08 Korean", "09" => "09 Vietnamese", "10" => "10 Thai / Cambodian", "11" => "11 Other Asian Native Hawaiian/Pacific Islander",  "12" => "12 Native Hawaiian",  "13" => "13 Guamanian or Chamorro" ,  "14" => "14 Samoan",  "15" => "15 Other Pacific Islander",  "16_other" => "16 Other race", "88_Refused" => "88 Refused",  "99_Do_not_know"=>"99 Do not know", "Not_Answered"=>"Not Answered"));
 		$this->addTextAreaElementRD('q1_9_Other', $this->indent . "If you selected [Other race] please specify");
 		$this->XINRegisterRule('q1_9_Other', array("q1_9{@}=={@}16_other"), "You must specify a race", "q1_9_Other_group");
 		$this->form->addElement('static', null, "<br/>");
@@ -981,7 +981,7 @@ class NDB_BVL_Instrument_EARLI_interview_PART_1 extends NDB_BVL_Instrument {
 		$this->form->addElement('static', null, "<br/>");
 
 		//q3-3
-		$this->form->addElement("select", "q3_3_0", "3-3)  What was the average or typical number of days of your cycle between the first day of one menstrual period and the first day of the next menstrual period? Please think back to a time when you were not using birth control pills or other hormonal contraceptives.", array(NULL=>"", "21" => "21", "22", "23" => "23", "24", "25", "26", "27", "28", "29", "30", "31", "32", "33", "34", "35", "90 Irregular period", "88_Refused" => "88 Refused",  "99_Do_not_know"=>"99 Do not know", "Not_Answered"=>"Not Answered"));
+		$this->form->addElement("select", "q3_3_0", "3-3)  What was the average or typical number of days of your cycle between the first day of one menstrual period and the first day of the next menstrual period? Please think back to a time when you were not using birth control pills or other hormonal contraceptives.", array(NULL=>"", "21" => "21", "22", "23" => "23", "24", "25", "26", "27", "28", "29", "30", "31", "32", "33", "34", "35", "90"=>"90 Irregular period", "88_Refused" => "88 Refused",  "99_Do_not_know"=>"99 Do not know", "Not_Answered"=>"Not Answered"));
 		$this->form->addElement('static', null, "<br/>");
 
 		//q3-4
