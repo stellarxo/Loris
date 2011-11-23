@@ -31,6 +31,11 @@ var x = 200, y = 400;
                 <a href="main.php?test_name=mri_parameter_form&candID={$subject.candid}&sessionID={$subject.sessionID}&commentID={$subject.ParameterFormCommentID}">MRI Parameter Form</a>
             </li>
         {/if}
+        {if $subject.RadiologicalReviewCommentID}
+            <li class="controlPanelItem">
+                <a href="main.php?test_name=final_radiological_review&subtest=final_radiological_review&identifier={$subject.RadiologicalReviewCommentID}">Radiological Review</a>
+            </li>
+        {/if}
         {if $subject.tarchiveids != ""}
                 {foreach from=$subject.tarchiveids item=Tarchive }
                 <li class="controlPanelItem"><a href="dicom_archive.php?TarchiveID={$Tarchive.TarchiveID}" class="linkButton">DICOM Archive {$Tarchive.TarchiveID}</a>
