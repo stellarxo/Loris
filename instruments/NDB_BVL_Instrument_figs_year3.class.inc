@@ -704,9 +704,32 @@ class NDB_BVL_Instrument_figs_year3 extends NDB_BVL_Instrument
                 $this->form->addRule("Other{$DisorderNum}_Q1e_Impairment", "Required", 'required', null);
             }
         }
-        
+        $this->form->addFormRule(array(&$this,'OtherDisorderRules'));
     } // End function
     
+    // Rules for disorder 2-5, which are more complicated because they depend on both a criteria and on the Q1_Disorder
+    // being specified
+    function OtherDisorderRules($values) {
+        $errors = array();
+        for($i = 2; $i <= 5; $i++) {
+            if($values["Other{$i}_Q1_Disorder"] != '') {
+                if($values["Other{$i}_Q1a_Treatment1"] == '') { $errors["Other{$i}_Q1a_Treatment1"] = 'Required'; }
+                if($values["Other{$i}_Q1a_Treatment2"] == '') { $errors["Other{$i}_Q1a_Treatment2"] = 'Required'; }
+                if($values["Other{$i}_Q1a_Treatment3"] == '') { $errors["Other{$i}_Q1a_Treatment3"] = 'Required'; }
+                if($values["Other{$i}_Q1a_Treatment4"] == '') { $errors["Other{$i}_Q1a_Treatment4"] = 'Required'; }
+                if($values["Other{$i}_Q1a_Treatment5"] == '') { $errors["Other{$i}_Q1a_Treatment5"] = 'Required'; }
+                if($values["Other{$i}_Q1a_Treatment6"] == '') { $errors["Other{$i}_Q1a_Treatment6"] = 'Required'; }
+
+                // Options with an N/A checkbox
+                if($values["Other{$i}_Q1bNA"] != 1 && $values["Other{$i}_Q1b_OnsetAge"] == '') { $errors["Other{$i}_Q1b_OnsetAge"] = "Age of onset is required if available"; }
+                if($values["Other{$i}_Q1cNA"] != 1 && $values["Other{$i}_Q1c_Episodes"] == '') { $errors["Other{$i}_Q1c_Episodes"] = "Number of episodes is required if available"; }
+                if($values["Other{$i}_Q1dNA"] != 1 && $values["Other{$i}_Q1d_Duration"] == '') { $errors["Other{$i}_Q1d_Duration"] = "Duration of longest episode is required if available"; }
+                if($values["Other{$i}_Q1e_Impairment"] == '') { $errors["Other{$i}_Q1e_Impairment"] = 'Required'; }
+
+            }
+        }
+        return $errors;
+    }
     function _setupFigsRelativesGeneralScreening() // General Screening Questions
     {
         // Display test name
