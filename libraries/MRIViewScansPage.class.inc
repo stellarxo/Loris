@@ -136,11 +136,9 @@ class MRIViewScansPage {
             $subjectData['edc'] = $candidate->getCandidateEDC();
             $subjectData['gender'] = $candidate->getCandidateGender();
 
-            // This doesn't work. Need to find the proper way to get the TarchiveID. It should be per file, not per 
-            // candidate. --Dave
             $EntityType = $candidate->getData('Entity_type');
             if($EntityType == 'Scanner') {
-                $ID = "'" . $timePoint->getData('PSCID') . "'";
+                $ID = "'" . $timePoint->getData('Visit_label') . "'";
 
             }
             else {
