@@ -129,8 +129,13 @@ class NDB_BVL_Instrument_mri_parameter_form extends NDB_BVL_Instrument
         $this->addTextAreaElement('DTI65Dir_Comments', 'Comments');
 
         $this->form->addElement('header', null, 'Resting BOLD');
-        $yes_no_option2 = array(""=>NULL, "No"=>"No", "Complete"=>"Yes, Complete Acquisition (2 Full Runs)", "Partial"=>"Yes, Partial Acquisition", "not_answered"=>"Not Answered");
+        $yes_no_option2 = array(""=>NULL, "No"=>"No", "Complete"=>"Yes, Complete Acquisition", "Partial"=>"Yes, Partial Acquisition", "not_answered"=>"Not Answered");
         $this->form->addElement('select', 'BOLD_Scan_done', 'Was this sequence acquired?', $yes_no_option2);
+        $this->form->addElement('select', 'BOLD_Number_Complete_Runs', 'Number of complete runs:', array('' => '', '2'=> '2', '3' => '3'));
+        // Adding XIN rules would be complicated at this point, since everything would need to ne explicitly never_required'd.
+        // So just add a form rule
+        $this->form->addFormRule(array(&$this, 'MRI_Bold_Rules'));
+        $this->XINRegisterRule("BOLD_Number_Complete_Runs", array("Bold_Scan_done{@}=={@}Complete"), "Required if ");
         $this->form->addElement('text', "BOLD_number_attempts", "Number of scan attempts:");
         $this->addDateElement('BOLD_Scan_done', 'If so, when?');
         $this->addTextAreaElement('BOLD_Comments', 'Comments');
@@ -164,6 +169,12 @@ class NDB_BVL_Instrument_mri_parameter_form extends NDB_BVL_Instrument
 
         $this->form->addElement('file', 'directions_file', 'Upload the directions file (optional)');
     } // End setupForm
+    function MRI_Bold_Rules($values) {
+        if($values['BOLD_Scan_done'] == 'Complete' && $values['BOLD_Number_Complete_Runs'] == '') {
+            return array('BOLD_Number_Complete_Runs' => 'Required if acquisition complete');
+        }
+    }
+
     
          // methods available to all children
           /**
