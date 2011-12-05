@@ -109,9 +109,9 @@ class MRIViewScansPage {
     function GetSubjectData() {
         // Cache the data, since it's called twice. Once in display,
         // and once for the header
-        //if(isset($this->_subjectData)) {
-        //    return $this->_subjectData;
-        //}
+        if(isset($this->_subjectData)) {
+            $subjectData = $this->_subjectData;
+        }
         $timePoint =& TimePoint::singleton($_REQUEST['sessionID']);
         if(PEAR::isError($timePoint)) {
             print $timePoint->getMessage()."<br>";
@@ -192,11 +192,12 @@ class MRIViewScansPage {
         foreach($files AS $fileID) {
             $file = new MRIFile($fileID['FileID']);
 
+            //print_r($file);
             if(empty($scannerID)) {
                 $scannerID = $file->getParameter('ScannerID');
                 if(!empty($scannerID)) {
                     $query = "SELECT CONCAT_WS(' ', Manufacturer, Model, Serial_number) FROM mri_scanner WHERE ID=$scannerID";
-                    $subjectData['scanner'] = $this->DB->selectOne($query);
+                    $this->_subjectData['scanner'] = $this->DB->selectOne($query);
                 }
             }
             $fileData[$fIdx]['fileID'] = $fileID['FileID'];
