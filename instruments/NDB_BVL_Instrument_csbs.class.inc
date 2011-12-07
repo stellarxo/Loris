@@ -218,8 +218,36 @@ INSERT INTO instrument_subtests VALUES('', 'csbs', 'csbs_page2', 'Symbolic Behav
 
 	$this->form->addElement("header",null,"Summary Scores:");
 	
+	//acode to add an extra field to the table which gets populated if candidate is out of age range - scores invalid
+	//scores still displayed for candidates over 24.75mo of age
+    	$db =& Database::singleton();
+    	if(PEAR::isError($db)) {
+			return PEAR::raiseError ("Could not connect to database".$db->getMessage());
+    	}
+
+    	$query = "SELECT * FROM $this->table WHERE CommentID = '$this->commentID'";
+    	$record = array();
+    	$db->selectRow($query, $record);
+    	if (PEAR::isError($record)) {
+    		return PEAR::raiseError("Could not retrieve scores: " . $record->getMessage());
+    	}
+
+        $timepoint =& TimePoint::singleton($this->getSessionID());
+        $dob = $timepoint->getEffectiveDateOfBirth();
+        $age = Utility::calculateAge($dob, $record["Date_taken"]);
+        $age_months = $age['year'] * 12 + $age['mon'] + ($age['day']/30);
+
+        if($this->isError($age)) {
+            return $this->raiseError("Could not compute age");
+        }  
+
+	if($age_months > '24.75')
+		$db->update($this->table, array("score_validity"=>"<span class=\"error\">CANDIDATE'S AGE IS OUT OF RANGE. STANDARD SCORES ARE INVALID.</span>"), array("CommentID"=>$this->commentID));
 
 
+	$this->form->addElement("static",null,"</br>");
+	$this->form->addElement("header","score_validity",null);
+	$this->form->addElement("static",null,"</br>");
 	
 	$group[]= &$this->form->createElement("static", "raw_weighted", null);
         $group[]= &$this->form->createElement("static", "standard_score", null);
@@ -342,7 +370,7 @@ INSERT INTO instrument_subtests VALUES('', 'csbs', 'csbs_page2', 'Symbolic Behav
 		$age_months = 24;
 
 	elseif ($age_months > 24.75)
-		$age_months = 25;
+		$age_months = 24;
 
     $age_months = round($age_months);
 
@@ -588,7 +616,15 @@ INSERT INTO instrument_subtests VALUES('', 'csbs', 'csbs_page2', 'Symbolic Behav
     	}
 	$scores['total_standard']=($record_11['score_standard']);
 	$scores['total_percentile']=($record_11['score_percentile']);
-
+/*
+	$query_scores_OUTOFRANGE = "SELECT * FROM csbs_lookup WHERE age_months = '24' AND score_weighted = ".$scores['total_weighted_raw_score']." AND subscale='total_weighted_raw_score'";
+	$record_OUTOFRANGE = array();
+	$db->selectRow($query_scores_OUTOFRANGE, $record_OUTOFRANGE);
+	if (PEAR::isError($record_OUTOFRANGE)) {
+		return PEAR::raiseError("Could not retrieve scores: " . $record_11->getMessage());
+        }
+	
+*/
 
 	// save scores
 	$result = $db->update($this->table, $scores, array("CommentID"=>$this->getCommentID()));
