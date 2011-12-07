@@ -70,7 +70,7 @@ class NDB_BVL_Instrument_ados_module1 extends NDB_BVL_Instrument
                              "social_affect_total", 
                              "restricted_repetitive_behavior_total", 
                              "social_affect_restricted_repetitive_behavior_total", 
-                             "ADOS_classification");
+                             "ADOS_classification",
                              'a2_weighted',
                              'a3_weighted',
                              'a8_weighted',
@@ -163,9 +163,22 @@ class NDB_BVL_Instrument_ados_module1 extends NDB_BVL_Instrument
     	$group[]= &$this->form->createElement("static", "ADOS_classification", null);
      	$this->form->addGroup($group, null, "ADOS Classification:", $this->_GUIDelimiter, false);
         unset($group);
-    
+        $this->form->addElement('static', null, '<br>');
+        $this->form->addElement('header', null, 'Severity Scores:');
+        $this->form->addElement('static', 'gotham_weighted_score', 'Weighted Score:');
+        $this->form->addElement('static', 'severity_score_lookup', 'Severity Score:');
+        /*
+    	$group[]= &$this->form->createElement("static", "gotham_weighted_score", null);
+     	$this->form->addGroup($group, null, "ADOS Classification:", $this->_GUIDelimiter, false);
+        unset($group);
+
+    	$group[]= &$this->form->createElement("static", "ADOS_classification", null);
+     	$this->form->addGroup($group, null, "ADOS Classification:", $this->_GUIDelimiter, false);
+        unset($group);
+
     	$this->form->addElement("static",null,null);
     	$this->form->addElement("static",null,null);
+        */
     }
     
 /*	
@@ -444,7 +457,7 @@ class NDB_BVL_Instrument_ados_module1 extends NDB_BVL_Instrument
             $scoreCols['d2_weighted'] = $scores['d2'] * 0.66; // Hand Mannerisms
             $scoreCols['restricted_repetitive_gotham_weighted'] = $scoreCols['a3_weighted'] + $scoreCols['d1_weighted'] + $scoreCols['d2_weighted'] + $scoreCols['d4_weighted'];
 
-            $scoreCols['gotham_weighted_score'] + $scoreCols['social_affect_gotham_weighted'] + $scoreCols['restricted_repetitive_gotham_weighted'];
+            $scoreCols['gotham_weighted_score'] = $scoreCols['social_affect_gotham_weighted'] + $scoreCols['restricted_repetitive_gotham_weighted'];
 
     	}
 

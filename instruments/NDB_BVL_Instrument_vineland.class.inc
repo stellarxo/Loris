@@ -100,7 +100,9 @@ class NDB_BVL_Instrument_vineland extends NDB_BVL_Instrument
          $this->form->addElement('static', "File_name", "Uploaded File");
          
          
-         $percentile = null;
+         // This used to be null, but it throws off the quickform parser,
+         // so I changed it to 95% for now - Dave
+         $percentile = "95%";
           if(!empty($record["ABC_85%_CI"])){
              $percentile = "85%";   
           } else if(!empty($record["ABC_90%_CI"])){
@@ -145,6 +147,23 @@ class NDB_BVL_Instrument_vineland extends NDB_BVL_Instrument
            foreach($domains as $field=>$label) {
                foreach($columnHeaders as $scoreField=>$scoreLabel) {
                   
+                  // Domain scores and ABC don't have AGE_EQUIV, but add a blank column to keep the table aligned
+                  if(($field == "COM" || $field == "DLS" || $field == "SOC" || $field == "MS" || $field == "ABC") && $scoreField == "AGE_EQUIV"){
+                      $group[] = $this->form->createElement('static', null, "&nbsp;");
+                      continue;
+                  }
+                  // Subdomains don't have STD_SCORE, %ILE_RANK, or STANINE, but again add a blank column to keep the table aligned
+                  if(($field == 'REC' || $field == 'EXP' || $field == 'WRN' ||  // Communication subdomains
+                      $field == 'PER' || $field == 'DOM' || $field == 'CMM' ||  // Daily Living Skills subdomains
+                      $field == 'IPR' || $field == 'PL'  || $field == 'CS'  ||  // Socialization subdomains
+                      $field == 'GMS' || $field == 'FMS') &&                    // Motor skills subdomains
+                      ($scoreField == 'STD_SCORE' || $scoreField == '%ILE_RANK' || $scoreField == 'STANINE')
+                      ) {
+                      $group[] = $this->form->createElement('static', null, "&nbsp;");
+                      continue;
+
+                  }
+
                   if(($field == "COM" || $field == "DLS" || $field == "SOC" || $field == "MS") && $scoreField == "VSCALE"){
                      $scoreField = "SUM_VSCALES_FOR_DOMAIN";
                   }
@@ -422,11 +441,12 @@ class NDB_BVL_Instrument_vineland extends NDB_BVL_Instrument
           //$file->setFilenamePrefix($timepoint->getVisitLabel()."-".$this->testName."-");
 
           //set the the IDs to the handler functions.
+          $user =& User::singleton();
           $file->setHandlerArgs(array("CommentID"=>$this->getCommentID(),
                                       "candID"=>$candidate->getCandID(),
                                       "PSCID"=>$candidate->getPSCID(),
                                       "visitLabel"=>$timepoint->getVisitLabel(),
-                                      "username"=>$_SESSION['State']->getUsername(),
+                                      "username"=>$user->getUsername(),
                                       "values"=>$values)
           
           
