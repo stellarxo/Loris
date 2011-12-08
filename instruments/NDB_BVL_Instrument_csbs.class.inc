@@ -346,6 +346,7 @@ INSERT INTO instrument_subtests VALUES('', 'csbs', 'csbs_page2', 'Symbolic Behav
 		$age_months = 24;
         $scores['score_validity'] = "<span class=\"error\">CANDIDATE'S AGE IS OUT OF RANGE. STANDARD SCORES ARE INVALID.</span>";
     }
+    $age_months = round($age_months);
 
 
   	//calculate raw scores
