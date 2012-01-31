@@ -248,8 +248,10 @@ INSERT INTO instrument_subtests VALUES('', 'rbs_r', 'rbs_r_page1', 'Subscales', 
 		foreach($scores as $key=>$value) {
 
 			//convert textual question labels to just numbers 
-			$questionNum = intval($key);
-			print "Q num: " . $questionNum;
+            if($key[0] == 'q') {
+                $questionNum = intval(substr($key, 1));
+            }
+			//print "key: $key Q num: " . $questionNum;
 			//only work with the numbered subscale questions...
 			if($questionNum == 0) continue;
 			//Only count the non-zero answers in both the number endorsed and the subscale scores
