@@ -20,7 +20,7 @@ class BaseNDAR {
         "SubprojectID" => array("Control"),
         "Visit" => array("Failure", "Withdrawal"),
         "Screening" => array("Failure", "Withdrawal"),
-        "Administration" => array("None", "Partial", ""),
+        "Administration" => array("None", "Partial", "", "."),
         "Data_entry" => array("In Progress")
     );
 
