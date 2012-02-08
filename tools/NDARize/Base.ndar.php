@@ -74,7 +74,7 @@ class BaseNDAR {
         $result = preg_replace("/not_answered/", "", $result);
         // Replace "." with empty. Not sure why the Excel dump puts the . in the
         // first place, but NDAR doesn't like it.
-        $result = preg_replace("/^.\$/", "", $result);
+        $result = preg_replace("/^\.\$/", "", $result);
         // They want "M" and "F" in capitals to indicate male or female
         $result = preg_replace("/^(m|Male)\$/i", "M", $result);
         $result = preg_replace("/^(f|Female)\$/i", "F", $result);
@@ -94,7 +94,11 @@ class BaseNDAR {
 
     function process($line) {
         // Strip out the exclusions. Headers_IDX only contains included columns, as built in the constructor
-        return array_intersect_key($this->_process($line), $this->Headers_IDX);
+        $line = $this->_process($line);
+        if($line) {
+            return array_intersect_key($line, $this->Headers_IDX);
+        }
+        return;
     }
 }
 ?>

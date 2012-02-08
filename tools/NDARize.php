@@ -47,9 +47,9 @@ $headers_csv = fgetcsv($fp);
 if(file_exists("./NDARize/$instrument.ndar.php")) {
     require_once("./NDARize/$instrument.ndar.php");
     $className = $instrument . "NDAR";
-    $Processor = new $className($headers_csv);
+    $Processor = new $className($headers_csv, $instrument);
 } else {
-    $Processor = new BaseNDAR($headers_csv);
+    $Processor = new BaseNDAR($headers_csv, $instrument);
 }
 
 fputcsv($ofp, $Processor->getheaders());
