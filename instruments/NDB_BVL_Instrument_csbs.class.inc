@@ -20,7 +20,7 @@ INSERT INTO instrument_subtests VALUES('', 'csbs', 'csbs_page2', 'Symbolic Behav
         "q_13_words_raw_score",
         "q_14_word_combos_raw_score",
         "q_15_word_combos_raw_score",
-        "q_16_language_comp_raw_score",
+        "q_16_language_comp_body_parts_raw_score",
         "q_17_action_schemes_raw_score",
         "q_18_actions_towards_other_raw_score",
         "q_19_sequence_action_schemes_raw_score",
@@ -410,7 +410,7 @@ INSERT INTO instrument_subtests VALUES('', 'csbs', 'csbs_page2', 'Symbolic Behav
             $q_16_BestBody= $this->_sumBestRows($record, "body_parts", 3, 4);
         }
 
-	$scores["q_16_language_comp_raw_score"] = $q_16_BestObject + $q_16_BestPerson + $q_16_BestBody;
+	$scores["q_16_language_comp_body_parts_raw_score"] = $q_16_BestObject + $q_16_BestPerson + $q_16_BestBody;
 
         $scores["understanding_weighted"] = ($q_16_BestObject + $q_16_BestPerson + $q_16_BestBody) * 3;
         // At least two answers are required. The >= is different for person because there's
