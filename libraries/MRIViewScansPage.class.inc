@@ -23,7 +23,7 @@ class MRIViewScansPage {
 
     function _updateStatus($values) {
         if (is_array($values['status'])) {
-            foreach($values['status'] AS $curFileID => $curStatus) {
+            foreach($values['caveat'] AS $curFileID => $curStatus) {
                 if ($curStatus == 'unrated') $curStatus='';
                 $updateSet = array('QCStatus'=>$curStatus, 'QCLastChangeTime'=>time());
 
@@ -45,6 +45,32 @@ class MRIViewScansPage {
                     $this->DB->insert("files_qcstatus", $updateSet);
                 }
             }
+        }
+        if(is_array($values['caveat'])) {
+            $user = User::singleton();
+            $timePoint =& TimePoint::singleton($_REQUEST['sessionID']);
+            $candid = $timePoint->getCandID();
+            $visit_label = $timePoint->getData('Visit_label');
+            foreach($values['caveat'] AS $curFileID => $curCaveat) {
+
+                $this->DB->update("files", array('Caveat' => $curCaveat), array('FileID'=>$curFileID));
+
+                if($curCaveat == true) {
+                    $file = new MRIFile($curFileID);
+                    $insertSet['SeriesUID'] = $file->getParameter('series_instance_uid');
+                    $insertSet['TarchiveID'] = $file->getParameter('TarchiveSource');
+                    $insertSet['MincFile'] = $file->getParameter('File');
+                    $insertSet['PatientName'] = $file->getParameter('patient_name');
+                    $insertSet['CandID'] = $candid;
+                    $insertSet['Visit_label'] = $visit_label;
+                    $insertSet['CheckID'] = null;
+                    $insertSet['Severity'] = 'warning';
+                    $insertSet['Header'] = 'Manual Caveat Set by ' . $user->getUsername();
+
+                    $this->DB->insert("mri_violations_log", $insertSet);
+                }
+            }
+
         }
     }
     function _updateSelected($selectedTypeID) {
@@ -88,7 +114,7 @@ class MRIViewScansPage {
                 die("DB Error: ".$success->getMessage());
             }
 
-            // sppool a message to the mri qc status rss channel
+            // spool a message to the mri qc status rss channel
             if(($save_visit_status != $old_visit_status) || ($old_pending_status != $_POST['visit_pending'])) {
                 $timePoint =& TimePoint::singleton($_REQUEST['sessionID']);
                 $candid = $timePoint->getCandID();
@@ -191,8 +217,6 @@ class MRIViewScansPage {
         $timer->setMarker('Querying for data');
         foreach($files AS $fileID) {
             $file = new MRIFile($fileID['FileID']);
-
-            //print_r($file);
             if(empty($scannerID)) {
                 $scannerID = $file->getParameter('ScannerID');
                 if(!empty($scannerID)) {
@@ -210,6 +234,8 @@ class MRIViewScansPage {
             $fileData[$fIdx]['qcDate'] = $file->getParameter('QCLastChangeTime');
             $fileData[$fIdx]['new'] = $file->getParameter('QCFirstChangeTime');
             $fileData[$fIdx]['new'] = empty($fileData[$fIdx]['new']);
+            $fileData[$fIdx]['Caveat'] = $file->getParameter('Caveat');
+            $fileData[$fIdx]['SeriesUID'] = $file->getParameter('SeriesUID');
 
             if(preg_match("/(\d{4})-?(\d{2})-?(\d{2})/", $file->getParameter('acquisition_date'), $acqDate)) {
                 $fileData[$fIdx]['acquisitionDate'] = mktime(12, 0, 0, $acqDate[2], $acqDate[3], $acqDate[1]);
@@ -247,6 +273,7 @@ class MRIViewScansPage {
         $fileData = $this->GetFileData($selectedTypeID);
         $file_tpl_data['outputType'] = $this->_getOutputType();
         $file_tpl_data['status_options'] = array (''=>'&nbsp;', 'Pass'=>'Pass', 'Fail'=>'Fail');
+        $file_tpl_data['caveat_options'] = array (''=>'&nbsp;', false =>'False', true=>'True');
         //$file_tpl_data['pending_options'] = array ('Y'=>'Yes', 'N'=>'No');
 
         // fixme this should not be hard-coded. make it read the db for possible native types
