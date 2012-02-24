@@ -22,7 +22,27 @@ var x = 200, y = 400;
 </head>
 <body>
 
-<div id="sidebar" style="position:fixed; top: 75px; padding-left: 5px;">
+<!-- start main table -->
+<table width="95%" border="0" cellpadding="5" cellspacing="2">
+<tr>
+    <th background="images/title_background.jpg" class="banner" colspan="2" align="left">
+        <strong>MRI browser - {$study_title}</strong>
+    </th>
+</tr>
+<tr>
+    <td colspan="2" class="controlPanelSection" >
+        User:&nbsp;
+        {$user_full_name}
+        &nbsp;&nbsp;Site:&nbsp;
+        {$user_site_name}
+        &nbsp;&nbsp;Date:&nbsp;
+        {$smarty.now|date_format:"%B %e %Y"}
+    </td>
+</tr>
+
+<tr>
+    <td width="10%" class="tabox" valign="top" nowrap="nowrap">
+ <div id="sidebar" style="position:fixed; display: block; top: 75px; padding-left: 5px;">
 <!-- back button and other navigation buttons -->
         <h2>Links</h2>
         <ul class="controlPanel">
@@ -91,33 +111,18 @@ var x = 200, y = 400;
     {/if}
 
 </div>
-<!-- start main table -->
-<table width="95%" border="0" cellpadding="5" cellspacing="2">
-<tr>
-    <th background="images/title_background.jpg" class="banner" colspan="2" align="left">
-        <strong>MRI browser - {$study_title}</strong>
-    </th>
-</tr>
-<tr>
-    <td colspan="2" class="controlPanelSection" >
-        User:&nbsp;
-        {$user_full_name}
-        &nbsp;&nbsp;Site:&nbsp;
-        {$user_site_name}
-        &nbsp;&nbsp;Date:&nbsp;
-        {$smarty.now|date_format:"%B %e %Y"}
-    </td>
-</tr>
+        {if $subject.tarchiveids != ""}
+<div style="color: rgba(255, 0, 0, 0)">
+DICOM Archive 400015599
+</div>
+{/if}
 
-<tr>
-    <td width="10%" class="tabox" valign="top" nowrap="nowrap">
-    
         <!-- Start Section on the left -->
     </td>
     
     
     <!-- main page table tags -->
-    <td width=100% class="tabox" valign="top">
+    <td width=90% class="tabox" valign="top">
     
     
     <!-- Start workspace area -->

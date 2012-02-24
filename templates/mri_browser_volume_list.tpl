@@ -155,7 +155,8 @@ return true;
         <td align="center">
         <table class="std">
 {* checked boxes can be viewed with Alt + d *}
-        <tr><td>Add panel<input type="checkbox" onClick="javascript:toggle_jiv_panel('{$files[fIdx].jivFilename}', '{$files[fIdx].jivAddress}');"></td></tr>
+        <tr><td>Add panel<input type="checkbox" onClick="javascript:toggle_jiv_panel('{$files[fIdx].jivFilename}', '{$files[fIdx].jivAddress}');">
+        </td></tr>
 
 {* SELECTED DROPDOWN only for native images*}
 {if $files[fIdx].outputType == "native"} 
@@ -179,6 +180,20 @@ return true;
                 {if $files[fIdx].qcStatus != ""}{$files[fIdx].qcStatus}{else}&nbsp;{/if}
             {/if}
             </td></tr>
+            <tr><th>Caveat Emptor</th></tr>
+            <tr><td>
+            {if $has_permission}
+                {if $files[fIdx].Caveat}
+                <a href="main.php?test_name=mri_violations&SeriesUID={$files[fIdx].SeriesUID}&filter=true">Caveat List</a>
+                {/if}
+                {html_options options=$caveat_options selected=$files[fIdx].Caveat tabindex=5 name=caveat[`$files[fIdx].fileID`]}
+            {else}
+                {if $files[fIdx].Caveat}<a href="main.php?test_name=mri_violations&SeriesUID={$files[fIdx].SeriesUID}&filter=true">Caveats</a>
+                {else}No caveats{/if}
+                </a>
+            {/if}
+            </td></tr>
+
             <tr><td>&nbsp;</td></tr>
 {* LINK TO COMMENTS *}
             <tr><td>
