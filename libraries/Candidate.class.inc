@@ -52,7 +52,7 @@ class Candidate
         }
 
         // get candidate data from database
-        $query = "SELECT c.CenterID, c.CandID, c.PSCID, c.DoB, c.EDC, c.Gender, p.Name AS PSC, c.Ethnicity, c.ZIP, c.Sibling1, c.Sibling2, c.Sibling3, c.Active, c.Cancelled, u1.Real_name as RegisteredBy, c.UserID, c.Entity_type FROM candidate as c left join psc as p using (CenterID) left join users as u1 on (u1.UserID = c.RegisteredBy) WHERE c.CandID='$candID' AND c.Active = 'Y' AND c.Cancelled = 'N'";
+        $query = "SELECT c.CenterID, c.CandID, c.PSCID, c.DoB, c.EDC, c.Gender, p.Name AS PSC, c.Ethnicity, c.ZIP, c.Sibling1, c.Sibling2, c.Sibling3, c.Active, u1.Real_name as RegisteredBy, c.UserID, c.Entity_type FROM candidate as c left join psc as p using (CenterID) left join users as u1 on (u1.UserID = c.RegisteredBy) WHERE c.CandID='$candID' AND c.Active = 'Y'";
         $row = array();
         $db->selectRow($query, $row);
         
@@ -78,7 +78,7 @@ class Candidate
         
         // get Time Point SessionIDs for the $candID
         // select ALL of them - later you can filter out cancelled and inactive ones
-        $query = "SELECT s.ID FROM session as s WHERE s.CandID='$candID' AND s.Active='Y' AND s.Cancelled='N' ORDER BY ID";
+        $query = "SELECT s.ID FROM session as s WHERE s.CandID='$candID' AND s.Active='Y' ORDER BY ID";
         $db->select($query, $row);
         
         if(PEAR::isError($row)) {
@@ -272,11 +272,6 @@ class Candidate
         return $this->candidateInfo["Active"];
     }
 
-    function isCancelled()
-    {
-        return $this->candidateInfo["Cancelled"];
-    }
-
     function registeredBy()
     {
         return $this->candidateInfo["RegisteredBy"];
@@ -304,7 +299,7 @@ class Candidate
             return PEAR::raiseError("Could not connect to database: ".$db->getMessage());
         }
 
-        $query  = "SELECT ID, Visit_label FROM session WHERE CandID='$candID' AND Active='Y' AND Cancelled='N' ORDER BY ID";
+        $query  = "SELECT ID, Visit_label FROM session WHERE CandID='$candID' AND Active='Y' ORDER BY ID";
         $db->select($query, $result);
         if(PEAR::isError($result)) {
             return PEAR::raiseError("Could not retrieve existing data for session");
@@ -332,7 +327,7 @@ class Candidate
             return PEAR::raiseError("Could not connect to database: ".$db->getMessage());
         }
 
-        $query  = "SELECT IFNULL(max(VisitNo)+1, 1) AS nextVisitNo FROM session WHERE CandID='$candID' AND (Active='Y' OR Active is null) AND (Cancelled='N' OR Cancelled IS NULL) GROUP BY CandID";
+        $query  = "SELECT IFNULL(max(VisitNo)+1, 1) AS nextVisitNo FROM session WHERE CandID='$candID' AND (Active='Y' OR Active is null) GROUP BY CandID";
         $db->selectRow($query, $result);
         if(PEAR::isError($result)) {
             return PEAR::raiseError("Could not retrieve existing data for session");
@@ -362,7 +357,7 @@ class Candidate
 
         if($visitLabelSettings['generation'] == 'user' && !empty($visitLabelSettings['suggest'])) {
             $existingVisitLabels = $this->getListOfVisitLabels();
-            $query  = "SELECT IFNULL(max(VisitNo)+1, 1) AS nextVisitLabel FROM session WHERE CandID='$candID' AND (Active='Y' OR Active is null) AND (Cancelled='N' OR Cancelled IS NULL) GROUP BY CandID";
+            $query  = "SELECT IFNULL(max(VisitNo)+1, 1) AS nextVisitLabel FROM session WHERE CandID='$candID' AND (Active='Y' OR Active is null) GROUP BY CandID";
             $db->selectRow($query, $result);
             if(PEAR::isError($result)) {
                 return PEAR::raiseError("Could not retrieve existing data for session");
