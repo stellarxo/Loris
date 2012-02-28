@@ -23,7 +23,7 @@ class MRIViewScansPage {
 
     function _updateStatus($values) {
         if (is_array($values['status'])) {
-            foreach($values['caveat'] AS $curFileID => $curStatus) {
+            foreach($values['status'] AS $curFileID => $curStatus) {
                 if ($curStatus == 'unrated') $curStatus='';
                 $updateSet = array('QCStatus'=>$curStatus, 'QCLastChangeTime'=>time());
 
