@@ -122,7 +122,17 @@ class NDB_Menu_Filter_reliability extends NDB_Menu_Filter
             }
             if(is_array($list_of_sites)) 
             {
-                $list_of_sites = array_merge(array('' => 'Any'), $list_of_sites);
+                // This doesn't work, it causes all the indexes to change
+                // and the index is supposed to be the CenterID number
+                // $list_of_sites = array_merge(array('' => 'Any'), $list_of_sites);
+
+                // So instead, manually iterate through and set everything
+                // in a new array
+                $new_list = array('' => 'Any');
+                foreach($list_of_sites as $key => $val) {
+                    $new_list[$key] = $val;
+                }
+                $list_of_sites = $new_list;
             }
         }
         else {
