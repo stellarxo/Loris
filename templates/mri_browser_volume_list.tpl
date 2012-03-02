@@ -120,7 +120,7 @@ return true;
         <tr>
             <th nowrap="nowrap">Scanner</th><td nowrap="nowrap">{$subject.scanner}</td>
             <th nowrap="nowrap">Subproject</th><td nowrap="nowrap">{$subject.SubprojectTitle}</td>
-            <th nowrap="nowrap">EDC</th><td nowrap="nowrap">{$subject.edc}</td>
+            <th nowrap="nowrap">Current Stage</th><td nowrap="nowrap">{$subject.Current_stage}</td>
         </tr>
         <tr>
             <th>Mantis ID</th><td colspan="5">{$subject.pscid} {$subject.candid} {$subject.visitLabel}</td>

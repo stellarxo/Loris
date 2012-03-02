@@ -149,6 +149,7 @@ class MRIViewScansPage {
         $subjectData['visitLabel'] = $timePoint->getVisitLabel();
         $subjectData['visitNo'] = $timePoint->getVisitNo();
         $subjectData['site'] = $timePoint->getPSC();
+        $subjectData['Current_stage'] = $timePoint->getCurrentStage();
         $this->DB->selectRow("SELECT MRIQCStatus, MRIQCPending FROM session WHERE ID=$_REQUEST[sessionID]", $qcstatus);
         $subjectData['mriqcstatus'] = $qcstatus['MRIQCStatus'];
         $subjectData['mriqcpending'] = $qcstatus['MRIQCPending'];
