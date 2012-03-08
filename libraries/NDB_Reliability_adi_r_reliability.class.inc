@@ -65,9 +65,10 @@ class NDB_Reliability_adi_r_reliability extends NDB_Reliability
             
             $sites = array(1 => 'DCC', 2 => 'SEA', 3 => 'PHI', 4 => 'STL', 5 => 'UNC');
                         
+            $initial_table = preg_replace('/_reliability/', '', $this->name);
             $defaults['Examiner'] = $row['Examiner'];
             $defaults['Date_taken'] = $row['Date_taken'];
-            $defaults['CommentID'] = $row['CommentID'];
+            $defaults['CommentID'] = "<a href=\"main.php?test_name=reliability_breakdown&instrument=$initial_table&CommentID=$row[CommentID]\">" . $row['CommentID'] . "</a>";
             $defaults['Gold_standard'] = $row['Gold_standard'];
             $defaults['reliability_center'] = $sites[$row['reliability_center_id']];
             $defaults['DoB_proband'] = $row['DoB_proband'];

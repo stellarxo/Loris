@@ -10,31 +10,6 @@ require_once "NDB_Reliability.class.inc";
 class NDB_Reliability_csbs_reliability extends NDB_Reliability
 
 {
-// function _hasAccess()
-//     {
-//         // create user object
-//         $user =& User::singleton();
-//         if (PEAR::isError($user)) {
-//             return PEAR::raiseError("User Error: ".$user->getMessage());
-//         }
-
-//         $DB =& Database::singleton();
-//         if (PEAR::isError($DB)) {
-//             return PEAR::raiseError("Could not connect to database: ".$DB->getMessage());
-//         }
-       
-//         if(!empty($this->identifier)) {
-//             $query = "SELECT psc.CenterID FROM tracking_logs, candidate, psc WHERE tracking_logs.CandID=candidate.CandID AND candidate.CenterID=psc.CenterID AND tracking_logs.Tracking_log_ID='$this->identifier'";
-//             $recordCenterID = $DB->selectOne($query);
-            
-//             return ($user->hasPermission('tracking_logs')
-//                     && ($user->hasPermission('tracking_logs_edit_all')
-//                         || ($user->getData('CenterID') == $recordCenterID)));
-
-//         } else {
-//             return ($user->hasPermission('tracking_logs'));
-//         }
-//     }
 
     function _getDefaults()
     {
@@ -54,10 +29,11 @@ class NDB_Reliability_csbs_reliability extends NDB_Reliability
 
             // print_r($row['CommentID']);
 
+            $initial_table = preg_replace('/_reliability/', '', $this->name);
             // Set the defaults
             $defaults['Examiner'] = $row['Examiner'];
             $defaults['Date_taken'] = $row['Date_taken'];
-            $defaults['CommentID'] = $row['CommentID'];
+            $defaults['CommentID'] = "<a href=\"main.php?test_name=reliability_breakdown&instrument=$initial_table&CommentID=$row[CommentID]\">" . $row['CommentID'] . "</a>";
             $defaults['reliability_score'] = $row['reliability_score'];
             $defaults['q_1_alertness'] = $row['q_1_alertness'];
             $defaults['q_2_emotional_reaction'] = $row['q_2_emotional_reaction'];

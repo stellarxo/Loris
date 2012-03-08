@@ -47,6 +47,8 @@ class NDB_Reliability_aosi_reliability extends NDB_Reliability
             return PEAR::raiseError("Could not connect to database: ".$DB->getMessage());
         }
                
+        $initial_table = preg_replace('/_reliability/', '', $this->name);
+
         //print_r($this->identifier);
        
             
@@ -75,6 +77,7 @@ class NDB_Reliability_aosi_reliability extends NDB_Reliability
 
         }
 
+        $defaults['CommentID'] = "<a href=\"main.php?test_name=reliability_breakdown&instrument=$initial_table&CommentID=$row[CommentID]\">" . $row['CommentID'] . "</a>";
         return $defaults;
     }
 
@@ -188,6 +191,7 @@ class NDB_Reliability_aosi_reliability extends NDB_Reliability
          //Scoring header
          $this->form->addElement('header', 'instrument_title', "Scoring:");
          $this->form->addElement("static", "reliability_score", "Reliability Score (%):");
+          $this->form->addElement("static", "CommentID", "CommentID:");
 
          $GoldStandardArray = array(""=>NULL, "Gold_standard"=>"Gold standard", "Initial_entry"=>"Initial Entry");
          //$this->form->addElement("select", "Gold_standard", "Compare against:", $GoldStandardArray);
