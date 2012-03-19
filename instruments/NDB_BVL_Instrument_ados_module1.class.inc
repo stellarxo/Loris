@@ -18,8 +18,26 @@ class NDB_BVL_Instrument_ados_module1 extends NDB_BVL_Instrument
     var $option012 = array(""=>NULL, 0=>0, 1=>1, 2=>2, "not_answered"=>"Not Answered");
     var $option0127 = array(""=>NULL, 0=>0, 1=>1, 2=>2, 7=>7, "not_answered"=>"Not Answered");
 
-    var $scoreCols = array("social_affect_total", "restricted_repetitive_behavior_total", "social_affect_restricted_repetitive_behavior_total", "ADOS_classification");
-
+    var $scoreCols = array("social_affect_total", "restricted_repetitive_behavior_total", "social_affect_restricted_repetitive_behavior_total", "ADOS_classification",
+                             'a2_weighted',
+                             'a3_weighted',
+                             'a8_weighted',
+                             'b1_weighted',
+                             'b3_weighted',
+                             'b4_weighted',
+                             'b5_weighted',
+                             'b9_weighted',
+                             'b10_weighted',
+                             'b11_weighted',
+                             'b12_weighted',
+                             'd1_weighted',
+                             'd2_weighted',
+                             'd4_weighted',
+                             'social_affect_gotham_weighted',
+                             'restricted_repetitive_gotham_weighted',
+                             'gotham_weighted_score',
+                             'severity_score_lookup');
+ 
 
     /**
      * Array of column names to be ignored by the double data entry conflict detector.
@@ -67,10 +85,10 @@ class NDB_BVL_Instrument_ados_module1 extends NDB_BVL_Instrument
 							 'd4_specify',
 							 'd4_specify_status',
                              // Scored columns
+                             "ADOS_classification",
                              "social_affect_total", 
                              "restricted_repetitive_behavior_total", 
                              "social_affect_restricted_repetitive_behavior_total", 
-                             "ADOS_classification",
                              'a2_weighted',
                              'a3_weighted',
                              'a8_weighted',
@@ -89,7 +107,7 @@ class NDB_BVL_Instrument_ados_module1 extends NDB_BVL_Instrument
                              'restricted_repetitive_gotham_weighted',
                              'gotham_weighted_score',
                              'severity_score_lookup'
-        );
+       );
 
 
 
