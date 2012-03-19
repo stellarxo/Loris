@@ -90,7 +90,10 @@ class NDB_BVL_Instrument_mri_parameter_form extends NDB_BVL_Instrument
         $this->addHourMinElement("total_duration", "Total Duration of Session (hours:minutes)");
         $this->form->addElement('select','sedation', "Was sedation administered?", array(""=>NULL,"Yes" => "Yes", "No"=>"No"));
         $this->form->addElement('static', null, "(please use comment field for details)");
+        $this->form->addElement('select','medication', "Was the child on any medication?", array(""=>NULL,"Yes" => "Yes", "No"=>"No"));
 
+        $this->form->addElement("text", "medication_specify", "If yes, specify:");
+        $this->form->addFormRule(array(&$this, 'Medication_Rules'));
         $yes_no_option= array(""=>NULL, "No"=>"No", "Complete"=>"Yes, Complete Acquisition", "Partial"=>"Yes, Partial Acquisition", "not_answered"=>"Not Answered");
 
         $this->form->addElement('header', null, 'Localizer');
@@ -169,6 +172,13 @@ class NDB_BVL_Instrument_mri_parameter_form extends NDB_BVL_Instrument
 
         $this->form->addElement('file', 'directions_file', 'Upload the directions file (optional)');
     } // End setupForm
+
+    function Medication_Rules($values) {
+        if($values['medication'] == 'Yes' && $values['medication_specify'] == '') {
+            return array('medication_specify' => 'Required if on medication');
+        }
+    }
+
     function MRI_Bold_Rules($values) {
         if($values['BOLD_Scan_done'] == 'Complete' && $values['BOLD_Number_Complete_Runs'] == '') {
             return array('BOLD_Number_Complete_Runs' => 'Required if acquisition complete');
