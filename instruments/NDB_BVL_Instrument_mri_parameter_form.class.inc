@@ -134,7 +134,7 @@ class NDB_BVL_Instrument_mri_parameter_form extends NDB_BVL_Instrument
         $this->form->addElement('header', null, 'Resting BOLD');
         $yes_no_option2 = array(""=>NULL, "No"=>"No", "Complete"=>"Yes, Complete Acquisition", "Partial"=>"Yes, Partial Acquisition", "not_answered"=>"Not Answered");
         $this->form->addElement('select', 'BOLD_Scan_done', 'Was this sequence acquired?', $yes_no_option2);
-        $this->form->addElement('select', 'BOLD_Number_Complete_Runs', 'Number of complete runs:', array('' => '', '2'=> '2', '3' => '3'));
+        $this->form->addElement('select', 'BOLD_Number_Complete_Runs', 'Number of complete runs:', array('' => '', '1' => '1', '2'=> '2', '3' => '3'));
         // Adding XIN rules would be complicated at this point, since everything would need to ne explicitly never_required'd.
         // So just add a form rule
         $this->form->addFormRule(array(&$this, 'MRI_Bold_Rules'));
@@ -180,8 +180,8 @@ class NDB_BVL_Instrument_mri_parameter_form extends NDB_BVL_Instrument
     }
 
     function MRI_Bold_Rules($values) {
-        if($values['BOLD_Scan_done'] == 'Complete' && $values['BOLD_Number_Complete_Runs'] == '') {
-            return array('BOLD_Number_Complete_Runs' => 'Required if acquisition complete');
+        if(($values['BOLD_Scan_done'] == 'Complete' || $values['BOLD_Scan_done'] == 'Partial')&& $values['BOLD_Number_Complete_Runs'] == '') {
+            return array('BOLD_Number_Complete_Runs' => 'Required if acquisition complete or partial');
         }
     }
 
