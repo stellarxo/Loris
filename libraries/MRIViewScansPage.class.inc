@@ -198,7 +198,7 @@ class MRIViewScansPage {
 
         $extra_where_string = "";
         if(!empty($_REQUEST['selectedOnly'])) {
-            $extra_where_string .= " AND sel.Value IS NOT NULL";
+            $extra_where_string .= " AND sel.Value IS NOT NULL AND sel.Value <> ''";
         }
         // To better support QC for CIVET output a couple of additional conditions have been put in...
         if(!empty($_REQUEST['outputType'])) {
