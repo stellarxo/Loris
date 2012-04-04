@@ -591,7 +591,7 @@ class NDB_Reliability_adi_r_reliability extends NDB_Reliability
         $this->addTextElement("q_10_first_phrases_code", "10. Age of first phrases (if ever used)");
 		//$this->addLargeTextAreaElement("q_10_first_phrases_text");
         $this->form->addElement("select", "q_11_loss_of_language", "11. Loss of language skills after acquisition", $yesNoNA);
-        $answerArray = array(""=>NULL, "0_daily"=>"0. Daily", "1_occasional"=>"1. Occasional", "2_upon_request"=>"2. Produced upon request", "3_spontaneous_imitations"=>"3. Spontaneous imitations", "8_no_change"=>"8. No change", "9_not_asked"=>"9. Not asked", "not_answered"=>"Not Answered");
+        $answerArray = array(""=>NULL, "0_daily"=>"0. Daily", "1_occasional"=>"1. Occasional", "2_upon_request"=>"2. Produced upon request", "3_spontaneous_imitations"=>"3. Spontaneous imitations", "8_no_change_or_loss"=>"8. No change", "9_not_asked"=>"9. Not asked", "not_answered"=>"Not Answered");
 		$this->form->addElement("select", "q_12_level_before_loss_code", "12. Level of communicative language before loss", $answerArray);
 		$this->XINRegisterRule("q_12_level_before_loss_code", array("q_11_loss_of_language{@}=={@}1_yes"), "This is required if language was lost (answered 'yes' to question 11)");
 		//$this->addLargeTextAreaElement("q_12_level_before_loss_text", $this->indent . "Describe:", array("q_11_loss_of_language{@}=={@}1_yes"), "This is required if language was lost (answered 'yes' to question 11)");
