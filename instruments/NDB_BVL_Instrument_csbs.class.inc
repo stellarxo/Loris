@@ -410,6 +410,10 @@ INSERT INTO instrument_subtests VALUES('', 'csbs', 'csbs_page2', 'Symbolic Behav
             $q_16_BestBody= $this->_sumBestRows($record, "body_parts", 3, 4);
         }
 
+    $scores["q_16a_language_comp_object_raw_score"] = $q_16_BestObject;
+    $scores["q_16b_language_comp_person_name_raw_score"] = $q_16_BestPerson;
+    $scores["q_16c_language_comp_body_parts_raw_score"] = $q_16_BestBody;
+
 	$scores["q_16_language_comp_body_parts_raw_score"] = $q_16_BestObject + $q_16_BestPerson + $q_16_BestBody;
 
         $scores["understanding_weighted"] = ($q_16_BestObject + $q_16_BestPerson + $q_16_BestBody) * 3;
