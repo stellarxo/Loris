@@ -207,8 +207,8 @@ class NDB_Reliability_csbs_reliability extends NDB_Reliability
 
         if(empty($row)) {
             // insert
+            $values['CommentID'] = $this->identifier;
             $DB->insert("csbs_reliability", $values);
-            $this->identifier = $db->lastInsertID;
         } else {
             // update
             $DB->update("csbs_reliability", $values, array('CommentID'=>$this->identifier));
