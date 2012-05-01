@@ -10,32 +10,6 @@ require_once "NDB_Reliability.class.inc";
 class NDB_Reliability_ados_module1_reliability extends NDB_Reliability
 
 {
-// function _hasAccess()
-//     {
-//         // create user object
-//         $user =& User::singleton();
-//         if (PEAR::isError($user)) {
-//             return PEAR::raiseError("User Error: ".$user->getMessage());
-//         }
-
-//         $DB =& Database::singleton();
-//         if (PEAR::isError($DB)) {
-//             return PEAR::raiseError("Could not connect to database: ".$DB->getMessage());
-//         }
-       
-//         if(!empty($this->identifier)) {
-//             $query = "SELECT psc.CenterID FROM tracking_logs, candidate, psc WHERE tracking_logs.CandID=candidate.CandID AND candidate.CenterID=psc.CenterID AND tracking_logs.Tracking_log_ID='$this->identifier'";
-//             $recordCenterID = $DB->selectOne($query);
-            
-//             return ($user->hasPermission('tracking_logs')
-//                     && ($user->hasPermission('tracking_logs_edit_all')
-//                         || ($user->getData('CenterID') == $recordCenterID)));
-
-//         } else {
-//             return ($user->hasPermission('tracking_logs'));
-//         }
-//     }
-
     function _getDefaults()
     {
         $DB =& Database::singleton();
@@ -1885,20 +1859,28 @@ class NDB_Reliability_ados_module1_reliability extends NDB_Reliability
         $this->form->addElement("static", null, "<BR>"); //line space
         $this->form->addElement("static", null, "<BR>"); //line space
         $this->form->addElement('select', 'a1', '1. Overall Level of Non-Echoed Language', $option01238);
+        $this->form->addRule('a1', 'Required.', 'required');
         $this->form->addElement("static", null, "<BR>"); //line space
         $this->form->addElement('select', 'a2', '2. Frequency of Vocalization Directed to Others', $option0123);
+        $this->form->addRule('a2', 'Required.', 'required');
         $this->form->addElement("static", null, "<BR>"); //line space
         $this->form->addElement('select', 'a3', '3. Intonation of Vocalizations or Verbalization', $option0128);
+        $this->form->addRule('a3', 'Required.', 'required');
         $this->form->addElement("static", null, "<BR>"); //line space
         $this->form->addElement('select', 'a4', '4. Immediate Echolalia', $option01238);
+        $this->form->addRule('a4', 'Required.', 'required');
         $this->form->addElement("static", null, "<BR>"); //line space
         $this->form->addElement('select', 'a5', '5. Stereotyped/Idiosyncratic Use of Words or Phrases', $option01238);
+        $this->form->addRule('a5', 'Required.', 'required');
         $this->form->addElement("static", null, "<BR>"); //line space
         $this->form->addElement('select', 'a6', '6. Use of Others Body to Communicate', $option0128);
+        $this->form->addRule('a6', 'Required.', 'required');
         $this->form->addElement("static", null, "<BR>"); //line space
         $this->form->addElement('select', 'a7', '7. Pointing', $option0123);
+        $this->form->addRule('a7', 'Required.', 'required');
         $this->form->addElement("static", null, "<BR>"); //line space
         $this->form->addElement('select', 'a8', '8. Gestures', $option0128);
+        $this->form->addRule('a8', 'Required.', 'required');
         $this->form->addElement("static", null, "<BR>"); //line space
         $this->form->addElement("static", null, "<BR>"); //line space
 
@@ -1909,28 +1891,40 @@ class NDB_Reliability_ados_module1_reliability extends NDB_Reliability
         $this->form->addElement("static", null, "<BR>"); //line space
 
         $this->form->addElement('select', 'b1', '1. Unusual Eye Contact', $option02);
+        $this->form->addRule('b1', 'Required.', 'required');
         $this->form->addElement("static", null, "<BR>"); //line space
         $this->form->addElement('select', 'b2', '2. Responsive Social Smile', $option0123);
+        $this->form->addRule('b2', 'Required.', 'required');
         $this->form->addElement("static", null, "<BR>"); //line space
         $this->form->addElement('select', 'b3', '3. Facial Expressions Directed to Others', $option012);
+        $this->form->addRule('b3', 'Required.', 'required');
         $this->form->addElement("static", null, "<BR>"); //line space
         $this->form->addElement('select', 'b4', '4. Integration of Gaze and Other Behaviors During Social Overtures', $option0123);
+        $this->form->addRule('b4', 'Required.', 'required');
         $this->form->addElement("static", null, "<BR>"); //line space
         $this->form->addElement('select', 'b5', '5. Shared Enjoyment in Interaction', $option012);
+        $this->form->addRule('b5', 'Required.', 'required');
         $this->form->addElement("static", null, "<BR>"); //line space
         $this->form->addElement('select', 'b6', '6. Response to Name', $option0123);
+        $this->form->addRule('b6', 'Required.', 'required');
         $this->form->addElement("static", null, "<BR>"); //line space
         $this->form->addElement('select', 'b7', '7. Requesting', $option0123);
+        $this->form->addRule('b7', 'Required.', 'required');
         $this->form->addElement("static", null, "<BR>"); //line space
         $this->form->addElement('select', 'b8', '8. Giving', $option012);
+        $this->form->addRule('b8', 'Required.', 'required');
         $this->form->addElement("static", null, "<BR>"); //line space
         $this->form->addElement('select', 'b9', '9. Showing', $option012);
+        $this->form->addRule('b9', 'Required.', 'required');
         $this->form->addElement("static", null, "<BR>"); //line space
         $this->form->addElement('select', 'b10', '10. Spontaneous Initiation of Joint Attention', $option012);
+        $this->form->addRule('b10', 'Required.', 'required');
         $this->form->addElement("static", null, "<BR>"); //line space
         $this->form->addElement('select', 'b11', '11. Response to Joint Attention', $option0123);
+        $this->form->addRule('b11', 'Required.', 'required');
         $this->form->addElement("static", null, "<BR>"); //line space
         $this->form->addElement('select', 'b12', '12. Quality of Social Overtures', $option0123);
+        $this->form->addRule('b12', 'Required.', 'required');
         $this->form->addElement("static", null, "<BR>"); //line space
 
         $this->form->addElement("static", null, "<BR>"); //line space
@@ -1941,8 +1935,10 @@ class NDB_Reliability_ados_module1_reliability extends NDB_Reliability
         $this->form->addElement("static", null, "<BR>"); //line space
         $this->form->addElement("static", null, "<BR>"); //line space
         $this->form->addElement('select', 'c1', '1. Functional Play with Objects', $option0123);
+        $this->form->addRule('c1', 'Required.', 'required');
         $this->form->addElement("static", null, "<BR>"); //line space
         $this->form->addElement('select', 'c2', '2. Imagination/Creativity', $option0123);
+        $this->form->addRule('c2', 'Required.', 'required');
 
         $this->form->addElement("static", null, "<BR>"); //line space
         $this->form->addElement("static", null, "<BR>"); //line space
@@ -1952,16 +1948,20 @@ class NDB_Reliability_ados_module1_reliability extends NDB_Reliability
         $this->form->addElement("static", null, "<BR>"); //line space
         $this->form->addElement("static", null, "<BR>"); //line space
         $this->form->addElement('select', 'd1', '1. Unusual Sensory Interest in Play Material/Person', $option012);
+        $this->form->addRule('d1', 'Required.', 'required');
         $this->form->addElement("static", null, "<BR>"); //line space
      	$this->addTextAreaElement('d1_specify', $this->indent . "Please specify:");
         $this->form->addElement("static", null, "<BR>"); //line space
         $this->form->addElement('select', 'd2', '2. Hand and Finger and Other Complex Mannerisms', $option012);
+        $this->form->addRule('d2', 'Required.', 'required');
         $this->form->addElement("static", null, "<BR>"); //line space
     	$this->addTextAreaElement('d2_specify', $this->indent . "Please specify:");
         $this->form->addElement("static", null, "<BR>"); //line space
         $this->form->addElement('select', 'd3', '3. Self-Injurious Behavior', $option012);
+        $this->form->addRule('d3', 'Required.', 'required');
         $this->form->addElement("static", null, "<BR>"); //line space
         $this->form->addElement('select', 'd4', '4. Unusually Repetitive Interests or Stereotyped Behaviors', $option0123);
+        $this->form->addRule('d4', 'Required.', 'required');
         $this->form->addElement("static", null, "<BR>"); //line space
     	$this->addTextAreaElement('d4_specify', $this->indent . "Please specify unusual preoccupations, rituals, repetitive behaviors:");
 
@@ -1973,40 +1973,18 @@ class NDB_Reliability_ados_module1_reliability extends NDB_Reliability
         $this->form->addElement("static", null, "<BR>"); //line space
         $this->form->addElement("static", null, "<BR>"); //line space
         $this->form->addElement('select', 'e1', '1. Overactivity', $option0127);
+        $this->form->addRule('e1', 'Required.', 'required');
         $this->form->addElement("static", null, "<BR>"); //line space
         $this->form->addElement('select', 'e2', '2. Tantrums, Aggression, Negative or Disruptive Behavior', $option012);
+        $this->form->addRule('e2', 'Required.', 'required');
         $this->form->addElement("static", null, "<BR>"); //line space
         $this->form->addElement('select', 'e3', '3. Anxiety', $option012);
+        $this->form->addRule('e3', 'Required.', 'required');
 
         $this->form->addElement("static", null, "<BR>"); //line space
         $this->form->addElement("static", null, "<BR>"); //line space
 
         $this->redirect = "test_name=$this->name"; // what does this do?
-        
-        //------------------------------------------------------------
-       
-       //  //Take this out
-//         // put this into ados_module1_reliability function
-//         $renderer =& new HTML_QuickForm_Renderer_Default();
-//         $renderer->setFormTemplate("<form{attributes}><table class=\"instrument\">{content}</table></form>");
-//         $renderer->setElementTemplate("<tr><td class=\"lab\"><!-- BEGIN required --><span style=\"color: #ff0000\">*</span><!-- END required -->{label}</td><td class=\"ele\"><!-- BEGIN error --><span style=\"color: #ff0000\">{error}</span><br /><!-- END error -->{element}</td></tr>");
-//         $renderer->setElementTemplate("<tr><td class=\"lab\"><i>{label}</i></td><td class=\"ele\">\t<i>{element}</i></td></tr>", "static");
-//         $renderer->setHeaderTemplate("<tr><th colspan=\"2\"><br><b>{header}</b></th></tr>");
-//         $this->form->accept($renderer);
-//         $this->tpl_data['tempFormHTML'] = $renderer->toHtml();
-
-//         // My get defaults function sets $defaults array
-//         $localDefaults = $this->_getDefaults();
-//         if (PEAR::isError($localDefaults)) {
-//             return PEAR::raiseError("NDB_Form::display(): ".$localDefaults->getMessage());
-//         }
-//         if(!is_array($localDefaults)) { $localDefaults = array(); }
-
-
-//         $this->form->setDefaults($this->defaults);
-//     	$this->form->applyFilter('__ALL__', 'trim');
-
-
     } // End function 
 
     function addDateElement($name, $label){
@@ -2043,6 +2021,7 @@ class NDB_Reliability_ados_module1_reliability extends NDB_Reliability
         }
         return true;
     }
+
     function _process($values)
     {
         $DB =& Database::singleton();
