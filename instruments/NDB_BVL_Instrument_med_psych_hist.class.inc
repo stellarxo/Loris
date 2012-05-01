@@ -579,7 +579,7 @@ class NDB_BVL_Instrument_med_psych_hist extends NDB_BVL_Instrument
         $questionArray = array("a_abnormal_brain_picture"=>"a. Had an abnormal picture of the brain",
         "b_meningitis_encephalitis"=>"b. Been hospitalized for meningitis or encephalitis",
         "c_lost_consciousness_head_injury"=>"c. Lost consciousness due to a head injury");
-        $this->form->addElement("select", "16_has_child_ever", "16. Has this child ever...", $questionArray, "multiple");
+        $this->form->addElement("select", "q16_has_child_ever", "16. Has this child ever...", $questionArray, "multiple");
 
         $this->form->addElement("static", null, "If the child has lost consciousness...");
         $this->form->addElement("static", null, $this->indent . "At what age(s) did this child lose consciousness");
