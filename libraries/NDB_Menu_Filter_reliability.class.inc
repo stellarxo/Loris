@@ -327,6 +327,10 @@ class NDB_Menu_Filter_reliability extends NDB_Menu_Filter
         if($current_site == "PHI" && ($instrument == "adi_r_subject" || $instrument == "adi_r_proband")){
           $phi_site_clause = " AND Date_taken >= '2009-11-11' ";
         }
+
+        if($current_site == "STL" && ($instrument == "aosi")){
+          $phi_site_clause = " AND Date_taken >= '2010-02-15' ";
+        }
       
         $db->select("SELECT i.CommentID FROM {$instrument} as i, flag as f, session as s WHERE i.CommentID=f.CommentID AND f.sessionID=s.ID AND s.Current_stage<>'Recycling Bin' AND f.Data_entry='Complete' AND i.CommentID LIKE '%{$current_site}%' AND s.visit_label<>'v18' AND i.CommentID NOT LIKE 'DDE%' {$phi_site_clause} AND f.Administration <> 'None' ORDER BY RIGHT(i.CommentID, 6)", $instrument_records);
         $total_records_count = $db->selectOne("SELECT COUNT(i.CommentID) FROM {$instrument} as i, flag as f, session as s WHERE i.CommentID=f.CommentID AND f.sessionID=s.ID AND s.Current_stage<>'Recycling Bin' AND f.Data_entry='Complete' AND i.CommentID LIKE '%{$current_site}%' AND s.visit_label<>'v18' AND i.CommentID NOT LIKE 'DDE%' AND f.Administration <> 'None' ORDER BY RIGHT(i.CommentID, 6)");
@@ -371,6 +375,9 @@ class NDB_Menu_Filter_reliability extends NDB_Menu_Filter
         
         if($current_site == "PHI" && ($instrument == "adi_r_subject" || $instrument == "adi_r_proband")){
           $phi_site_clause = " AND Date_taken >= '2009-11-11' ";
+        }
+        if($current_site == "STL" && ($instrument == "aosi")){
+          $phi_site_clause = " AND Date_taken >= '2010-02-15' ";
         }
           
         $db->select("SELECT i.CommentID FROM {$instrument} as i, flag as f, session as s WHERE i.CommentID=f.CommentID AND f.sessionID=s.ID AND s.Current_stage<>'Recycling Bin' AND f.Data_entry='Complete' AND i.CommentID LIKE '%{$current_site}%' AND s.visit_label<>'v18'{$query_extra} AND i.CommentID NOT LIKE 'DDE%' {$phi_site_clause} AND f.Administration <> 'None' ORDER BY RIGHT(i.CommentID, 6)", $instrument_records);
