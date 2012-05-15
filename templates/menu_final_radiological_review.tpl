@@ -63,7 +63,7 @@
     <td class="controlPanelSection"><a href="main.php?test_name=final_radiological_review&subtest=final_radiological_review">Create new review</a></td>
     *}
     <!-- display pagination links -->
-    <td align="right">{$page_links}</td>
+    <td align="left">{$page_links}</td>
 </tr>
 </table>
 </div>
