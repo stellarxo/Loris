@@ -49,7 +49,6 @@ class NDB_Reliability_csbs_reliability extends NDB_Reliability
                 return PEAR::raiseError("DB Error: ".$defaults->getMessage());
             }
 
-            print_r($defaults);
             // Make the CommentID a link to the comparison page
             $initial_table = preg_replace('/_reliability/', '', $this->name);
             $defaults['CommentID'] = "<a href=\"main.php?test_name=reliability_breakdown&instrument=$initial_table&CommentID=$defaults[CommentID]\">" . $defaults['CommentID'] . "</a>";
