@@ -62,7 +62,7 @@ DoB subject should be somewhere in the candidate table.  For now, we'll just mak
         
 		// call the subclass scoring method
         $this->_score();
-        Utility::SetSupplementalGrantStatus($this->getSessionID());
+        ProjectUtility::SetSupplementalGrantStatus($this->getSessionID());
     }
     
     function _getAge() {
