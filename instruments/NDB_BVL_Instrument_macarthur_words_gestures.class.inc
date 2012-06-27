@@ -30,6 +30,21 @@ class NDB_BVL_Instrument_macarthur_words_gestures extends NDB_BVL_Instrument
         "total_gestures_percentile"
     );
 
+    var $_doubleDataEntryDiffIgnoreColumns = array('CommentID', 'UserID', 'Testdate',  'Window_Difference', 'Candidate_Age',
+        "phrases_understood_number",
+        "words_understood_number",
+        "words_produced_number",
+        "early_gestures_number",
+        "later_gestures_number",
+        "total_gestures_number",
+        "phrases_understood_percentile",
+        "words_understood_percentile",
+        "words_produced_percentile",
+        "early_gestures_percentile",
+        "later_gestures_percentile",
+        "total_gestures_percentile");
+
+
 
     //answers to often asked questions
     var $yesNo = array(''=>null, 'yes'=>"Yes", 'no'=>"No", 'not_answered'=>"Not Answered");
