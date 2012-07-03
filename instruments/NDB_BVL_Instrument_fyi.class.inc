@@ -1353,7 +1353,7 @@ INSERT INTO instrument_subtests VALUES('', 'fyi', 'fyi_page2', '#47-#63', 2);
           if($db->isError($result)) {
              return PEAR::raiseError("Could not save total score: ".$result->getMessage());
           }
-          Utility::SetSupplementalGrantStatus($this->getSessionID());
+          ProjectUtility::SetSupplementalGrantStatus($this->getSessionID());
          #echo("D118: " . $D118);
          #echo("\nBDM: " . $BDM_total);
         // print_r($calculatedScores);

@@ -74,16 +74,19 @@ INSERT INTO test_battery VALUES ('', 'head_measurements', '1050', '1140', 'Y', '
         $this->_addMetadataFields();
         
         $this->form->addElement('header', null, 'Head Measurements');
-        $this->addTextElement('head_circumference1', "Circumference 1: (<span style=\"font-weight: bold; color: red;\">in Centimeters</span>)");
+        $this->form->addElement('select', 'head_circumference_unit', 'Unit for head circumference', array('cm' => 'centimeters', "inches" => "inches", "not_answered" => "Not Answered"));
+        $this->addTextElement('head_circumference1', "Circumference 1:");
         $this->addTextElement('head_circumference2', "Circumference 2:");
 
         $this->form->addElement('header', null, 'Length');
-        $this->addTextElement('length1', "Length 1: (<span style=\"font-weight: bold; color: red;\">in Centimeters</span>)");
+        $this->form->addElement('select', 'head_length_unit', 'Unit for head circumference', array('cm' => 'centimeters', "inches" => "inches", "not_answered" => "Not Answered"));
+        $this->addTextElement('length1', "Length 1:");
         $this->addTextElement('length2', "Length 2:");
         $this->form->addElement('select', 'measurement_method', $this->indent . "Child was measured:", array(""=>NULL, "lying_down"=>"Lying down", "standing_up"=>"Standing up", "not_answered"=>"Not Answered"));
 
         $this->form->addElement('header', null, 'Weight');
-        $this->addTextElement('weight1', "Weight 1: (<span style=\"font-weight: bold; color: red;\">in Kilograms</span>)");
+        $this->form->addElement('select', 'weight_unit', 'Unit for weight', array('kg' => 'kilograms', "lbs" => "pounds", "not_answered" => "Not Answered"));
+        $this->addTextElement('weight1', "Weight 1:");
         $this->addTextElement('weight2', "Weight 2:");
         
     }
