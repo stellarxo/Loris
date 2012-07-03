@@ -143,6 +143,7 @@ class NDB_Menu_statistics_site extends NDB_Menu
 
         $this->tpl_data["data"] = $data;
         $this->tpl_data["SiteName"] = $name;
+        $this->tpl_data["CenterID"] = $id;
         sort($visits);
         $this->tpl_data['AllVisits'] = $visits;
         $this->tpl_data['NumVisitLabels'] = count($visits);
