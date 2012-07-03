@@ -7,7 +7,7 @@ require_once 'PEAR.php';
  * @access public
  * @package main
  */
-class Utility extends PEAR
+class ProjectUtility extends PEAR
 {
     /**
      * Builds a query string
@@ -553,7 +553,7 @@ class Utility extends PEAR
        $Scored = array();
        $Nothing = array();
        foreach($All as $Instrument) {
-           if(Utility::getScoreColsForInstrument($Instrument) != $Nothing) {
+           if(ProjectUtility::getScoreColsForInstrument($Instrument) != $Nothing) {
                $Scored[] = $Instrument;
            }
        }

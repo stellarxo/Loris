@@ -1,6 +1,7 @@
 <?php
 require_once 'NDB_Menu.class.inc';
 require_once 'NDB_Menu_Filter_reliability.class.inc';
+require_once 'ProjectUtility.class.inc';
 
 /**
  * The welcome menu
@@ -163,7 +164,7 @@ class NDB_Menu_statistics extends NDB_Menu
             array( '' => 'Recruit Gender Breakdown'),
                 Utility::getAllInstruments()
         );
-        $this->tpl_data['scored_instruments'] = Utility::getScoredInstruments(); 
+        $this->tpl_data['scored_instruments'] = ProjectUtility::getScoredInstruments();
         $this->tpl_data['all_instruments'] = Utility::getAllInstruments();
         if(isset($_REQUEST['instrument']) && $_REQUEST['instrument'] != '') {
             $Subcategories = array('Complete', 'Incomplete'); 
