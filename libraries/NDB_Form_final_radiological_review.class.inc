@@ -30,7 +30,7 @@ class NDB_Form_final_radiological_review extends NDB_Form
                          'normal' => 'Normal', 
                          'abnormal' => 'Abnormal', 
                          'atypical' => 'Atypical');
-        $abnormality = array('' => '',
+        $abnormality = array(null => '',
                             '0' => 'None',
                             '1' => 'Minimal',
                             '2' => 'Mild',
@@ -118,12 +118,28 @@ class NDB_Form_final_radiological_review extends NDB_Form
         return array();
     }
 
+    function stripEmpty(&$arr, $field) {
+        if($arr[$field] === '') {
+            $arr[$field] = null;
+        }
+        return $arr;
+    }
     function _process($values)
     {
         if(!is_array($values) || count($values) == 0 || $this->_has_perm('edit_final_radiological_review') == False) 
         {
             return true;
         }
+
+        $this->stripEmpty($values, 'Review_Done');
+        $this->stripEmpty($values, 'SAS');
+        $this->stripEmpty($values, 'PVS');
+        $this->stripEmpty($values, 'Final_Examiner');
+        $this->stripEmpty($values, 'SAS2');
+        $this->stripEmpty($values, 'PVS2');
+        $this->stripEmpty($values, 'Final_Examiner2');
+        $this->stripEmpty($values, 'Review_Done2');
+        $this->stripEmpty($values, 'Finalized');
 
         $DB =& Database::singleton();
         if(isset($this->identifier))
@@ -133,6 +149,8 @@ class NDB_Form_final_radiological_review extends NDB_Form
             if($exists == array()) 
             {
                 $insert_values = array_merge(array('CommentID' => $this->identifier), $values);
+                print_r($values);
+                print_r($insert_values);
                 $DB->insert($this->__table, $insert_values);
             }
             else
