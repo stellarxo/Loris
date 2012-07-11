@@ -374,6 +374,7 @@ class NDB_Menu_statistics extends NDB_Menu
                         AND s.Active='Y'
                         AND c.Cancelled='N'
                         AND c.Active='Y'
+                        AND f.CommentID NOT LIKE 'DDE%'
                   GROUP BY Subcat, s.SubprojectID, c.CenterID, s.Visit_label", &$result);
         $M_Visits = array ('6 Month' => 'v06', '12 Month' => 'v12', '24 Month' => 'v24');
         $this->tpl_data['MRI_Done_Table'] = $this->render_stats_table($MRIHeader, $MRISubcategories, $M_Visits, "mri_type", $MRIOptions, $MRI_Type, $centers, $result, "mri");
@@ -395,6 +396,7 @@ class NDB_Menu_statistics extends NDB_Menu
                         AND f.Administration <> 'None'
                         AND s.Cancelled='N'
                         AND s.Active='Y'
+                        AND f.CommentID NOT LIKE 'DDE%'
                   GROUP BY s.SubprojectID, c.CenterID, s.Visit_label;", 
         $result);
         foreach($result as $row) {
@@ -427,6 +429,7 @@ class NDB_Menu_statistics extends NDB_Menu
                             AND s.Cancelled='N' 
                             AND t.TarchiveID IS NULL 
                             AND f.Data_entry='Complete'
+                            AND f.CommentID NOT LIKE 'DDE%'
                             AND (m.T1_Scan_done IS NULL OR m.T1_Scan_done <> 'No')
                      GROUP BY s.CenterID;", $result);
         foreach($result as $row) {
@@ -444,6 +447,7 @@ class NDB_Menu_statistics extends NDB_Menu
                             OR m.T1_Scan_done <> 'No') 
                            AND fi.FileID IS NULL 
                            AND f.Data_entry = 'Complete'
+                           AND m.CommentID NOT LIKE 'DDE%'
                            AND s.Active='Y' AND s.Cancelled = 'N'
                      GROUP by s.CenterID;", $result);
         foreach($result as $row) {
@@ -461,6 +465,7 @@ class NDB_Menu_statistics extends NDB_Menu
                         WHERE s.Active='Y' and s.Cancelled='N' 
                             AND (f.ID IS NULL OR f.Data_entry <> 'Complete' OR f.Data_entry IS NULL) 
                             AND c.PSCID <> 'scanner'
+                            AND mpf.CommentID NOT LIKE 'DDE%'
                         GROUP BY s.CenterID", $result);
         foreach($result as $row) {
             $this->tpl_data['mri_errors'][$row['CenterID']]['no_parameter'] = $row['val'];

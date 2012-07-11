@@ -37,6 +37,7 @@ class NDB_Menu_statistics_mri_site extends NDB_Menu_statistics_site
                             AND f.Administration <> 'None'
                             AND t.TarchiveID IS NULL
                             AND s.Active='Y'
+                            AND m.CommentID NOT LIKE 'DDE%'
                             AND s.Cancelled='N'
                             AND f.Data_entry='Complete'
                             AND s.CenterID=" . $DB->quote($_REQUEST['CenterID']) . "
@@ -53,6 +54,7 @@ class NDB_Menu_statistics_mri_site extends NDB_Menu_statistics_site
                     WHERE (m.DTI_Scan_done <> 'No'
                         OR m.T2_Scan_done <> 'No'
                         OR m.T1_Scan_done <> 'No')
+                        AND m.CommentID NOT LIKE 'DDE%'
                         AND fi.FileID IS NULL
                         AND f.Data_entry= 'Complete'
                         AND s.Active='Y'
@@ -68,6 +70,7 @@ class NDB_Menu_statistics_mri_site extends NDB_Menu_statistics_site
                         LEFT JOIN mri_parameter_form mpf ON (mpf.CommentID=f.CommentID)
                         LEFT JOIN candidate c ON (c.CandID=s.CandID)
                         WHERE s.Active='Y' and s.Cancelled='N'
+                           AND mpf.CommentID NOT LIKE 'DDE%'
                            AND c.PSCID <> 'scanner'
                            AND (f.ID IS NULL OR
                            f.Data_entry <> 'Complete' OR
