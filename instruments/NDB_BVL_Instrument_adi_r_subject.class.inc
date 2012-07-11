@@ -1,6 +1,7 @@
 <?php
 
 require_once("Utility.class.inc");
+require_once("ProjectUtility.class.inc");
 require_once('NDB_BVL_Instrument_adi_r.class.inc');
 
 class NDB_BVL_Instrument_adi_r_subject extends NDB_BVL_Instrument_adi_r

@@ -634,13 +634,13 @@ class ProjectUtility extends PEAR
         $DB =& Database::singleton();
         $IDs = $DB->pselect("SELECT ID FROM session WHERE CandID=(SELECT CandID FROM session WHERE ID=:SessionID)", array(":SessionID"=>$SessionID));
         print_r($IDs);
-        $IDs_string = join(',', array_map(array('Utility', 'FlattenID'),$IDs));
+        $IDs_string = join(',', array_map(array('ProjectUtility', 'FlattenID'),$IDs));
         $DB->run("delete from session_status WHERE ID IN ($IDs_string) AND Name='Grant Status'");
         foreach($IDs as $ID ) {
             $DB->insert("session_status", array(
                 'SessionID' => $ID['ID'],
                 'Name' => "Grant Status", 
-                'Value' => Utility::GetSupplementalGrantStatus($ID['ID'])));
+                'Value' => ProjectUtility::GetSupplementalGrantStatus($ID['ID'])));
         }
         //$DB->run("delete from session_status WHERE SessionID IN ($IDs_string) AND Name='Grant Status'");
     }
