@@ -79,7 +79,7 @@ INSERT INTO test_battery VALUES ('', 'head_measurements', '1050', '1140', 'Y', '
         $this->addTextElement('head_circumference2', "Circumference 2:");
 
         $this->form->addElement('header', null, 'Length');
-        $this->form->addElement('select', 'head_length_unit', 'Unit for head length', array('cm' => 'centimeters', "inches" => "inches", "not_answered" => "Not Answered"));
+        $this->form->addElement('select', 'head_length_unit', 'Unit for length', array('cm' => 'centimeters', "inches" => "inches", "not_answered" => "Not Answered"));
         $this->addTextElement('length1', "Length 1:");
         $this->addTextElement('length2', "Length 2:");
         $this->form->addElement('select', 'measurement_method', $this->indent . "Child was measured:", array(""=>NULL, "lying_down"=>"Lying down", "standing_up"=>"Standing up", "not_answered"=>"Not Answered"));
