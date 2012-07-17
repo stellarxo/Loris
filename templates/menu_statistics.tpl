@@ -1,10 +1,10 @@
 
 {literal}
 <!-- jQuery CSV parser plugin, which handles escaping/quotes -->
-<script type="text/javascript" src="JS/jquery.csv.js"></script>
+<script type="text/javascript" src="js/jquery.csv.js"></script>
 <!-- highcharts graphing library -->
-<script type="text/javascript" src="JS/Highcharts/js/highcharts.src.js"></script>
-<script type="text/javascript" src="JS/LorisGraph.js"></script>
+<script type="text/javascript" src="js/Highcharts/js/highcharts.src.js"></script>
+<script type="text/javascript" src="js/LorisGraph.js"></script>
 
 <script language="javascript" type="text/javascript">
 var graph;

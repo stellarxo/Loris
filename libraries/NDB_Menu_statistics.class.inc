@@ -1,4 +1,5 @@
 <?php
+require_once 'Utility.class.inc';
 require_once 'NDB_Menu.class.inc';
 require_once 'NDB_Menu_Filter_reliability.class.inc';
 require_once 'ProjectUtility.class.inc';
@@ -76,8 +77,8 @@ class NDB_Menu_statistics extends NDB_Menu
         $DB->select("SELECT s.subprojectid as rowid, 
                             COUNT(DISTINCT(c.PSCID)) as val 
                      FROM candidate as c LEFT JOIN session s ON (s.CandID=c.CandID) 
-                     WHERE s.active='Y' and s.Cancelled='N' AND s.CenterID <> '1'        
-                        AND c.Active='Y' AND c.Cancelled='N'
+                     WHERE s.active='Y' AND s.CenterID <> '1'        
+                        AND c.Active='Y'
                         AND (s.Current_stage IN ('Visit', 'Screening')) 
         AND COALESCE(s.Screening,'') NOT IN ('Failure', 'Withdrawal')
         AND COALESCE(s.Visit,'') NOT IN ('Failure', 'Withdrawal')
@@ -88,16 +89,14 @@ class NDB_Menu_statistics extends NDB_Menu
             $this->tpl_data['registered']['visittotal'] += $row['val'];
         }
 
-        $DB->select("SELECT s.subprojectid as rowid, count(DISTINCT(c.PSCID)) as val from candidate as c left join session s ON (s.CandID=c.CandID) WHERE coalesce(s.active, 'Y')='Y' and coalesce(s.Cancelled,'N')='N' AND c.CenterID <> '1' and c.PSCID <> 'scanner' and coalesce(s.visit_label, 'v06') in ('v06', 'v12', 'v18', 'v24', 'v36') AND c.Active='Y' AND c.Cancelled='N'
-        $ExtraSite_Criteria group by s.subprojectid", $result);
+        $DB->select("SELECT s.subprojectid as rowid, count(DISTINCT(c.PSCID)) as val from candidate as c left join session s ON (s.CandID=c.CandID) WHERE coalesce(s.active, 'Y')='Y' AND c.CenterID <> '1' and c.PSCID <> 'scanner' and coalesce(s.visit_label, 'v06') in ('v06', 'v12', 'v18', 'v24', 'v36') AND c.Active='Y' $ExtraSite_Criteria group by s.subprojectid", $result);
         foreach($result as $row) {
             $this->tpl_data['registered'][$row['rowid']]['total'] = $row['val'];
             $this->tpl_data['registered']['total'] += $row['val'];
         }
 
 	// Total, explicitly calculated instead of added in the loop to ensure there's no one double registered in 2 different cohorts
-        $DB->select("SELECT count(distinct(c.PSCID)) from candidate as c WHERE c.PSCID<>'scanner' AND c.CenterID<>'1' AND c.Active='Y' AND c.Cancelled='N' 
-        $ExtraSite_Criteria", $total);
+        $DB->select("SELECT count(distinct(c.PSCID)) from candidate as c WHERE c.PSCID<>'scanner' AND c.CenterID<>'1' AND c.Active='Y' $ExtraSite_Criteria", $total);
         if (PEAR::isError($total)) {
             return PEAR::raiseError("DB Error: ".$total->getMessage());
         }
@@ -112,8 +111,8 @@ class NDB_Menu_statistics extends NDB_Menu
             ('edi', 'mri_parameter_form', 'vineland_subject') 
         AND COALESCE(s.Screening,'') NOT IN ('Failure', 'Withdrawal')
         AND COALESCE(s.Visit,'') NOT IN ('Failure', 'Withdrawal')
-                AND s.Active='Y' and s.Cancelled='N'
-                AND c.Active='Y' and c.Cancelled='N'
+                AND s.Active='Y'
+                AND c.Active='Y'
                 AND (f.Administration = 'All' OR f.Administration='Partial')
                 AND s.Current_stage <> 'Recycling Bin'
                 $ExtraSite_Criteria
@@ -127,8 +126,8 @@ class NDB_Menu_statistics extends NDB_Menu
         $DB->select("SELECT count(DISTINCT c.PSCID) as val, s.SubprojectID as rowid FROM flag f JOIN mri_parameter_form mp USING(CommentID) join session s ON (s.ID=f.SessionID) join candidate c ON (c.CandID=s.CandID) WHERE f.Test_name='mri_parameter_form'
         AND COALESCE(s.Screening,'') NOT IN ('Failure', 'Withdrawal')
         AND COALESCE(s.Visit,'') NOT IN ('Failure', 'Withdrawal')
-                AND s.Active='Y' and s.Cancelled='N'
-                AND c.Active='Y' and c.Cancelled='N'
+                AND s.Active='Y'
+                AND c.Active='Y'
                 AND f.Administration <> 'None'
                 AND mp.T1_Scan_done='Complete'
                 AND s.Current_stage <> 'Recycling Bin'
@@ -182,7 +181,7 @@ class NDB_Menu_statistics extends NDB_Menu
                         FROM session s JOIN candidate c ON (s.CandID=c.CandID)
                             JOIN flag f ON (f.SessionID=s.ID)
                             JOIN $_REQUEST[instrument] i USING(CommentID)
-                        WHERE s.Cancelled='N' AND s.Active='Y' AND
+                        WHERE s.Active='Y' AND
                             c.CenterID <> '1' AND f.Data_entry='Complete' AND
                             f.Administration='All' AND
                             f.CommentID NOT LIKE 'DDE%'
@@ -200,10 +199,10 @@ class NDB_Menu_statistics extends NDB_Menu
                     FROM session s JOIN candidate c USING(CandID) 
                         JOIN flag f ON (f.SessionID=s.ID) 
                         JOIN $_REQUEST[instrument] i USING(CommentID)
-                    WHERE s.Cancelled='N' AND s.Active='Y' and s.CenterID <> 1
+                    WHERE s.Active='Y' and s.CenterID <> 1
                     AND f.CommentID NOT LIKE 'DDE%' AND (f.Data_entry IS NULL OR f.Data_entry <> 'Complete')
                     GROUP BY c.CenterID, SubprojectID, VLabel, Subcat
-            ", &$result);
+            ", $result);
             $this->tpl_data['RecruitsTable'] = $this->render_stats_table("Data Entry Completion Status for $_REQUEST[instrument]", $Subcategories, $Visits, "instrument", $instruments, $_REQUEST['instrument'], $centers, $result, "demographics");
         } else {
             $Subcategories = array('Male', 'Female');
@@ -218,12 +217,12 @@ class NDB_Menu_statistics extends NDB_Menu
                         c.gender as Subcat,
                         count(s.CandID) as val
                  FROM session s JOIN candidate c ON (s.CandID=c.CandID) 
-                 WHERE s.Cancelled='N'  AND s.active='Y' AND s.CenterID <> '1'
+                 WHERE s.active='Y' AND s.CenterID <> '1'
                     AND ((s.Current_stage IN ('Visit', 'Screening')
                     AND s.SubprojectID IN (1, 2)) OR s.SubprojectID=3) 
        AND COALESCE(s.Screening,'') NOT IN ('Failure', 'Withdrawal')
         AND COALESCE(s.Visit,'') NOT IN ('Failure', 'Withdrawal')
-                 GROUP BY c.CenterID, SubprojectID, VLabel, Subcat", &$result);
+                 GROUP BY c.CenterID, SubprojectID, VLabel, Subcat", $result);
             if (PEAR::isError($result)) {
                 return PEAR::raiseError("DB Error: ".$result->getMessage());
             }
@@ -247,8 +246,7 @@ class NDB_Menu_statistics extends NDB_Menu
                         FROM session s JOIN candidate c ON (s.CandID=c.CandID)
                             JOIN flag f ON (f.SessionID=s.ID)
                         WHERE 
-                        s.Cancelled='N' AND s.Active='Y' 
-                        AND c.Cancelled='N' AND c.Active='Y' 
+                        s.Active='Y' AND c.Active='Y' 
                         AND s.Current_stage <> 'Recycling Bin'
                             AND f.CommentID NOT LIKE 'DDE%' 
                         GROUP by s.CenterID, VLabel, f.Data_Entry", 
@@ -289,10 +287,10 @@ class NDB_Menu_statistics extends NDB_Menu
                                 ELSE lower(s.visit_label) END as VLabel,
                             COUNT(s.CandID) as val
                     FROM session as s JOIN candidate as c ON (s.CandID=c.CandID) JOIN flag as f ON (f.SessionID=s.ID) 
-                    WHERE s.Cancelled='N' AND s.Active='Y' 
+                    WHERE s.Active='Y' 
                         AND s.Current_stage <> 'Recycling Bin'
                         AND f.CommentID LIKE 'DDE%' 
-                        AND c.Cancelled='N' AND c.Active='Y' 
+                        AND c.Active='Y' 
                         AND (f.Test_name NOT LIKE '%parameter%' 
                                 AND f.Test_name NOT LIKE '%radiological%' 
                                 AND f.Test_name NOT LIKE '%vineland%')
@@ -370,12 +368,10 @@ class NDB_Menu_statistics extends NDB_Menu
                         JOIN candidate c ON (c.CandID=s.CandID) 
                   WHERE s.Current_stage <> 'Recycling Bin' 
                         AND f.Administration <> 'None'
-                        AND s.Cancelled='N'
                         AND s.Active='Y'
-                        AND c.Cancelled='N'
                         AND c.Active='Y'
                         AND f.CommentID NOT LIKE 'DDE%'
-                  GROUP BY Subcat, s.SubprojectID, c.CenterID, s.Visit_label", &$result);
+                  GROUP BY Subcat, s.SubprojectID, c.CenterID, s.Visit_label", $result);
         $M_Visits = array ('6 Month' => 'v06', '12 Month' => 'v12', '24 Month' => 'v24');
         $this->tpl_data['MRI_Done_Table'] = $this->render_stats_table($MRIHeader, $MRISubcategories, $M_Visits, "mri_type", $MRIOptions, $MRI_Type, $centers, $result, "mri");
 
@@ -394,7 +390,6 @@ class NDB_Menu_statistics extends NDB_Menu
                   WHERE T1_Scan_Done='Complete' 
                         AND s.Current_stage <> 'Recycling Bin' 
                         AND f.Administration <> 'None'
-                        AND s.Cancelled='N'
                         AND s.Active='Y'
                         AND f.CommentID NOT LIKE 'DDE%'
                   GROUP BY s.SubprojectID, c.CenterID, s.Visit_label;", 
@@ -426,7 +421,6 @@ class NDB_Menu_statistics extends NDB_Menu
                             and f.Administration <> 'None'
                             and t.TarchiveID IS NULL
                             AND s.Active='Y' 
-                            AND s.Cancelled='N' 
                             AND t.TarchiveID IS NULL 
                             AND f.Data_entry='Complete'
                             AND f.CommentID NOT LIKE 'DDE%'
@@ -448,7 +442,7 @@ class NDB_Menu_statistics extends NDB_Menu
                            AND fi.FileID IS NULL 
                            AND f.Data_entry = 'Complete'
                            AND m.CommentID NOT LIKE 'DDE%'
-                           AND s.Active='Y' AND s.Cancelled = 'N'
+                           AND s.Active='Y'
                      GROUP by s.CenterID;", $result);
         foreach($result as $row) {
             $this->tpl_data['mri_errors'][$row['CenterID']]['no_browser'] = $row['val'];
@@ -462,7 +456,7 @@ class NDB_Menu_statistics extends NDB_Menu
                             AND f.CommentID NOT LIKE 'DDE%') 
                         LEFT JOIN mri_parameter_form mpf ON (mpf.CommentID=f.CommentID)
                         LEFT JOIN candidate c ON (c.CandID=s.CandID)
-                        WHERE s.Active='Y' and s.Cancelled='N' 
+                        WHERE s.Active='Y'
                             AND (f.ID IS NULL OR f.Data_entry <> 'Complete' OR f.Data_entry IS NULL) 
                             AND c.PSCID <> 'scanner'
                             AND mpf.CommentID NOT LIKE 'DDE%'
@@ -486,25 +480,25 @@ class NDB_Menu_statistics extends NDB_Menu
               list(,$result23)=each($result23[0]);
               $work_station_count = $result23;
               
-              $DB->select("SELECT COUNT(s.CandID) FROM session as s, psc as p, candidate as c WHERE c.CandID=s.CandID AND s.Active='Y' AND s.Cancelled='N' AND s.CenterID=p.CenterID  AND s.Scan_done='Y' AND s.CenterID={$id} ORDER BY s.CandID;", $result24);
+              $DB->select("SELECT COUNT(s.CandID) FROM session as s, psc as p, candidate as c WHERE c.CandID=s.CandID AND s.Active='Y' AND s.CenterID=p.CenterID  AND s.Scan_done='Y' AND s.CenterID={$id} ORDER BY s.CandID;", $result24);
                 if (PEAR::isError($result24)) {
                     return PEAR::raiseError("DB Error: ".$result24->getMessage());
                 }
                 list(,$result24)=each($result24[0]);
                 $claimed_count = $result24;
                 
-                $DB->select("SELECT COUNT(s.CandID) FROM mri_parameter_form as pf, session as s, flag as f, psc as p, candidate as c WHERE f.CommentID=pf.CommentID AND s.ID=f.SessionID AND c.CandID=s.CandID AND s.Active='Y' AND s.Cancelled='N' AND s.CenterID=p.CenterID AND pf.Data_entry_completion_status='Complete' AND s.CenterID={$id} ORDER BY p.Name;", $result25);
+                $DB->select("SELECT COUNT(s.CandID) FROM mri_parameter_form as pf, session as s, flag as f, psc as p, candidate as c WHERE f.CommentID=pf.CommentID AND s.ID=f.SessionID AND c.CandID=s.CandID AND s.Active='Y' AND s.CenterID=p.CenterID AND pf.Data_entry_completion_status='Complete' AND s.CenterID={$id} ORDER BY p.Name;", $result25);
                   if (PEAR::isError($result25)) {
                       return PEAR::raiseError("DB Error: ".$result25->getMessage());
                   }
                   list(,$result25)=each($result25[0]);
                   $forms_count = $result25;
                 $three_scans = $DB->selectOne("SELECT count(distinct CandID) FROM session v06  join flag f06 ON (f06.SessionID=v06.ID and Test_name='mri_parameter_form' AND CommentID NOT LIKE 'DDE%') join mri_parameter_form m06 ON (f06.CommentID=m06.CommentID) 
-                        WHERE v06.Active='Y' AND v06.Cancelled='N' AND v06.Visit_label='v06' and m06.T1_Scan_Done='Complete'
+                        WHERE v06.Active='Y' AND v06.Visit_label='v06' and m06.T1_Scan_Done='Complete'
                             AND EXISTS (SELECT 'x' FROM session v12 join flag f12 ON (f12.SessionID=v12.ID and Test_name='mri_parameter_form' AND CommentID NOT LIKE 'DDE%') join mri_parameter_form m12 ON (f12.CommentID=m12.CommentID)
-                                            WHERE v12.Active='Y' AND v12.Cancelled='N' AND v12.Visit_label='v12' AND v06.CandID=v12.CandID AND m12.T1_Scan_Done='Complete') 
+                                            WHERE v12.Active='Y' AND v12.Visit_label='v12' AND v06.CandID=v12.CandID AND m12.T1_Scan_Done='Complete') 
                             AND EXISTS (SELECT 'x' FROM session v24 join flag f24 ON (f24.SessionID=v24.ID and Test_name='mri_parameter_form' AND CommentID NOT LIKE 'DDE%') join mri_parameter_form m24 ON (f24.CommentID=m24.CommentID)
-                                            WHERE v24.Active='Y' AND v24.Cancelled='N' AND v24.Visit_label='v24' AND v06.CandID=v24.CandID and m24.T1_Scan_Done='Complete') 
+                                            WHERE v24.Active='Y' AND v24.Visit_label='v24' AND v06.CandID=v24.CandID and m24.T1_Scan_Done='Complete') 
                             AND v06.CenterID='{$id}'");
               
               $mri_data[] = array('name' => $name,  'work_station_count' => $work_station_count, 'claimed_count' => $claimed_count, 'forms_count' => $forms_count, 'all_three_scans' => $three_scans);
@@ -543,7 +537,7 @@ class NDB_Menu_statistics extends NDB_Menu
                                     LEFT JOIN session v24 ON (v24.CandID=c.CandID and v24.Visit_label='v24' and v24.Current_stage <> 'Recycling Bin' and v24.Active='Y') 
                                     LEFT JOIN flag f24 ON (f24.SessionID=v24.ID AND f24.Test_name='mri_parameter_form' AND f24.CommentID NOT LIKE 'DDE%') 
                                     LEFT JOIN mri_parameter_form mpf24 ON (mpf24.CommentID=f24.CommentID) WHERE 
-                                            c.Active='Y' and c.Cancelled='N' AND c.PSCID  not like 'dcc%'  and c.PSCID <> 'scanner' 
+                                            c.Active='Y' and c.PSCID  not like 'dcc%'  and c.PSCID <> 'scanner' 
                             GROUP BY c.CenterID) breakdown JOIN psc ON (breakdown.CenterID=psc.CenterID) WHERE psc.CenterID <> 1 GROUP BY psc.Name ORDER BY psc.CenterID", array());
         $total = array('Name' => 'Total', 'T1' => 0, 'T2' => 0, 'DTI' => 0, 'All' => 0);
         foreach ($MultiTimepoint as $row) {
