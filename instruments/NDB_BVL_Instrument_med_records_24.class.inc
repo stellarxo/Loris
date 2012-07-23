@@ -98,6 +98,12 @@ class NDB_BVL_Instrument_med_records_24 extends NDB_BVL_Instrument_med_records {
 
 		$this->form->addElement ( "static", null, "<BR>" ); //line space
 	}
+    function _linkParagraph() {
+        $db = Database::singleton();
+        $RecruitsEntry= $db->pselectRow("SELECT mrr.CommentID, s2.ID as sessionID, CandID FROM flag mr24 JOIN session s ON (s.ID=mr24.SessionID) LEFT JOIN candidate USING (CandID) LEFT JOIN session s2 USING (CandID) LEFT JOIN flag mrr on (s2.ID=mrr.SessionID AND mrr.Test_name='med_records_recruit') WHERE  mr24.CommentID=:CID AND mrr.CommentID IS NOT NULL AND mrr.CommentID NOT LIKE 'DDE%'", array("CID" => $this->getCommentID()));
+        $this->form->addElement("static", null, "<br>");
+        $this->form->addElement("static", null, "<b>Please note that previous measurements from medical records are saved in the Medical Records form for new recruits. They can be found by following <a href=\"?test_name=med_records_recruit&commentID=$RecruitsEntry[CommentID]&sessionID=$RecruitsEntry[sessionID]&candID=$RecruitsEntry[CandID]&subtest=med_records_recruit_page2\">this link</a></b>.");
+    }
 }
 
 ?>

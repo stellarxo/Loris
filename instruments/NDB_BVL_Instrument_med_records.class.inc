@@ -93,12 +93,17 @@ function _possibleExclusionaryCriteria() {
 		$this->form->addElement ( "static", null, "<BR>" ); //line space
 	}
 	
-function _page2() {
+    function _linkParagraph() {
+        return;
+    }
+
+    function _page2() {
 		$this->form->addElement ( 'header', null, "Growth Chart Information:" );
 		$this->form->addElement ( "static", null, "<BR>" ); //line space
 		$this->form->addElement ( "static", null, "<BR>" ); //line space
 		$this->form->addElement ( "static", null, "Units will be automatically converted, if you would like to see the conversion results please exit this page and re-enter it.<BR>" );
 		$this->form->addElement ( "static", null, "If you select no more growth data, no more data needs to be entered into the form after that point.<BR>" );
+        $this->_linkParagraph();
 
 		//Source of information
 		$administrations = array ("first" => "1", "second" => "2", "third" => "3", "fourth" => "4", "fifth" => "5", "sixth" => "6", "seventh" => "7", "eighth" => "8", "ninth" => "9", "tenth" => "10", "eleventh" => "11", "twelfth" => "12", "thirteenth" => "13", "fourteenth" => "14", "fifteenth" => "15", "sixteenth" => "16", "seventeenth" => "17");
