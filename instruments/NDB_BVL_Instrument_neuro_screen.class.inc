@@ -328,6 +328,11 @@ class NDB_BVL_Instrument_neuro_screen extends NDB_BVL_Instrument
 
         $this->form->addElement("static", null, "22. Measurements");
         $this->form->addElement("static", null, "(Sometimes this is erroneously called #21)");
+        $db =Database::singleton();
+        $HMSRow = $db->pselectRow("SELECT hms.CommentID, hms.SessionID, s.CandID FROM flag ns left join flag hms ON (hms.Test_name='head_measurements_subject' AND hms.SessionID=ns.SessionID) LEFT JOIN session s ON (s.ID=hms.SessionID) WHERE ns.CommentID=:CID AND ns.CommentID NOT LIKE 'DDE%'",
+            array("CID" => $this->getCommentID()));
+        $this->form->addElement("static", null, "<i>Note that this question has been moved to the <a href=\"?test_name=head_measurements_subject&candID=$HMSRow[CandID]&sessionID=$HMSRow[SessionID]&commentID=$HMSRow[CommentID]\">Head Measurements (Subject)</a> form</i>");
+        /*
         $this->form->addElement("static", null, "Head Circumferences (cm):");
         $this->addNumericElement("q22_child_hc_cm", $this->indent . "a) Child:");
         $this->addNumericElement("q22_mother_hc_cm", $this->indent . "b) Mother:");
@@ -341,6 +346,7 @@ class NDB_BVL_Instrument_neuro_screen extends NDB_BVL_Instrument
         $this->form->addElement("static", null, "Parental Weight (kg):");
         $this->addNumericElement("q22_mother_weight_kg", $this->indent . "f) Mother:");
         $this->addNumericElement("q22_father_weight_kg", $this->indent . "g) Father:");
+         */
 
         $this->form->addElement("select", "q23_adenoma_sebaceum", "23. Adenoma Sebaceum", array(null=>"",
         "0_absent"=>"0 absent",

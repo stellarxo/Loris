@@ -23,5 +23,49 @@ INSERT INTO test_battery VALUES ('', 'head_measurements_subject', '1050', '1140'
         
         $this->_setup($commentID, $page);
     }   
+
+    /**
+    * generates the main page of the form.
+    *
+    * @return void
+    * @access private
+    *
+    */
+    function _main(){
+        // display test name
+        $this->form->addElement('header', 'instrument_title', "Measurements Data Sheet");
+    
+        // automatically adds examiner & date of administration
+        $this->_addMetadataFields();
+    
+        $this->form->addElement('header', null, 'Head Measurements');
+        $types = array('Child', 'Mother', 'Father');
+        foreach($types as $type) {
+            if($type === 'Child') {
+                $suffix = '';
+            } else {
+                $suffix= '_' . strtolower($type);
+            }
+            $this->form->addElement('static', null, "<br><b>" . $type .'</b>:');
+            $this->form->addElement('select', "head_circumference_unit$suffix", 'Unit for head circumference', array('c    m' => 'centimeters', "inches" => "inches", "not_answered" => "Not Answered"));
+            $this->addTextElement("head_circumference1$suffix", "Circumference 1:");
+            $this->addTextElement("head_circumference2$suffix", "Circumference 2:");
+        
+            $this->form->addElement('header', null, 'Length');
+            $this->form->addElement('select', "head_length_unit$suffix", 'Unit for length', array('cm' => 'centimeters'    , "inches" => "inches", "not_answered" => "Not Answered"));
+            $this->addTextElement("length1$suffix", "Length 1:");
+            $this->addTextElement("length2$suffix", "Length 2:");
+            if($type === 'Child') {
+                $this->form->addElement("select", 'measurement_method', $this->indent . "Child was measured:", array    (""=>NULL, "lying_down"=>"Lying down", "standing_up"=>"Standing up", "not_answered"=>"Not Answered"));
+            }
+       
+            $this->form->addElement('header', null, 'Weight');
+            $this->form->addElement('select', "weight_unit$suffix", 'Unit for weight', array('kg' => 'kilograms', "lbs"     => "pounds", "not_answered" => "Not Answered"));
+            $this->addTextElement("weight1$suffix", "Weight 1:");
+            $this->addTextElement("weight2$suffix", "Weight 2:");
+        }
+  
+    }
+
 }
 ?>
