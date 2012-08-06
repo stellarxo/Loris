@@ -47,6 +47,16 @@ class NDB_Menu_Filter_reliability extends NDB_Menu_Filter
     
     var $reliability_table;
 
+    function _hasAccess() {
+        $user =& User::singleton();
+        if(PEAR::isError($user)) {
+            return PEAR::raiseError("User Error: ".$user->getMessage());
+        }
+        if($user->hasPermission('access_all_profiles') || $user->hasPermission('reliability_edit_all')) {
+            return true;
+        }
+        return false;
+    }
     function _setupVariables()
     {
         $user =& User::singleton();

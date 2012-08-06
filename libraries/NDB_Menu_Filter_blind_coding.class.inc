@@ -14,6 +14,13 @@ class NDB_Menu_Filter_blind_coding extends NDB_Menu_Filter
     
     var $site_id = array('SEA' => 2, 'PHI' => 3, 'STL' => 4, 'UNC' => 5, 'UofA' => 6);
 
+    function _hasAccess() {
+        $user =& User::singleton();
+        if(PEAR::isError($user)) {
+            return PEAR::raiseError("User Error: ".$user->getMessage());
+        }
+        return $user->hasPermission('blind_add_candidates');
+    }
     function _setupVariables()
     {
         $user =& User::singleton();

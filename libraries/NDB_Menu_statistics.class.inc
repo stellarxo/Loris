@@ -10,14 +10,23 @@ require_once 'ProjectUtility.class.inc';
  */
 class NDB_Menu_statistics extends NDB_Menu
 {
-        function _inCenter($centerID, $Centres) {
-            foreach ($Centres as $Centre) {
-                if($Centre['NumericID'] == $centerID) {
-                    return TRUE;
-                }
-            }
-            return FALSE;
+    function _hasAccess() {
+        $user =& User::singleton();
+        if(PEAR::isError($user)) {
+          return PEAR::raiseError("User Error: ".$user->getMessage());
         }
+        return $user->hasPermission('data_entry');
+    }
+
+    function _inCenter($centerID, $Centres) {
+        foreach ($Centres as $Centre) {
+            if($Centre['NumericID'] == $centerID) {
+                return TRUE;
+            }
+        }
+        return FALSE;
+    }
+
     function render_stats_table($header, $subcats, $visits, $dropdown_name, $dropdown_opt, $dropdown_selected, $centres, $data, $Subsection="") {
         $tpl_data = array();
         $tpl_data['test_name'] = $_REQUEST['test_name'];
