@@ -1137,9 +1137,8 @@ class NDB_BVL_Instrument_mullen extends NDB_BVL_Instrument
             if($calculatedScores[$scale_name . '_raw'] ||
                 // Make sure the value isn't 0, which evaluates to false, because if it is we still need to calculate t-scores
                 $calculatedScores[$scale_name . '_raw'] === 0 || $calculatedScores[$scale_name . '_raw'] === '0' ) {
-                $query = "SELECT * FROM mullen_lookup WHERE age_months=".$age_months. " AND raw_score=".$calculatedScores[$scale_name . '_raw'];
-                $record = array();
-                $db->selectRow($query, $record);
+                $query = "SELECT * FROM mullen_lookup WHERE age_months=:CandAge AND raw_score=:ScaleScore";
+                $record = $db->pselectRow($query, array('CandAge' => $age_months, 'ScaleScore' => $calculatedScores[$scale_name . '_raw']));
                 if (PEAR::isError($record)) {
                     return PEAR::raiseError("Could not retrieve scores: " . $record->getMessage());
                 }
@@ -1148,13 +1147,16 @@ class NDB_BVL_Instrument_mullen extends NDB_BVL_Instrument
             // get the closest score
             
             if (count($record) == 0) {
-                $db->selectRow("SELECT MAX(raw_score) as max, MIN(raw_score) as min FROM mullen_lookup WHERE age_months=".$age_months, $maxmin);
+                $maxmin = $db->pselectRow("SELECT MAX(raw_score) as max, MIN(raw_score) as min FROM mullen_lookup WHERE age_months=:CandAge", array('CandAge' => $age_months));
                 if($calculatedScores[$scale_name . '_raw'] < $maxmin['min']) {
-                    $query = "SELECT * FROM mullen_lookup WHERE age_months=".$age_months. " AND raw_score=" . $maxmin['min'];
+                    $minimax = $maxmin['min'];
                 } elseif($calculatedScores[$scale_name . '_raw'] > $maxmin['max']) {
-                    $query = "SELECT * FROM mullen_lookup WHERE age_months=".$age_months. " AND raw_score=" . $maxmin['max'];
+                    $minimax = $maxmin['max'];
+                } else {
+                    $minimax = -1;
                 }
-         	    $db->selectRow($query, $record);
+                $query = "SELECT * FROM mullen_lookup WHERE age_months=:CandAge AND raw_score=:MiniMax";
+         	    $record = $db->pselectRow($query, array('CandAge' => $age_months, 'MiniMax' => $minimax));
                 if (PEAR::isError($record)) {
                     return PEAR::raiseError("Could not retrieve scores: " . $record->getMessage());
                 }
