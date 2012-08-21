@@ -602,25 +602,27 @@ function _possibleExclusionaryCriteria() {
             //find the z value from the function     
             $kgs = $grams_value/1000;
           
-            //calculate z value
-            $zWeight = ((pow(($kgs/$M), $L) - 1)/($L*$S));
-     
-            if($zWeight < -5){
-                $newValues["{$field}_weight_percentage"]=0;
-            }
-            elseif($zWeight > 5){
-                $newValues["{$field}_weight_percentage"]=100;
-            }
 
-          else{
-     
-            //calculate percentile
-            $newValues["{$field}_weight_percentage"] = round(normalDist($zWeight)*100, 2);
-          
-          
-           if ($newValues["{$field}_weight_percentage"] < 0){
-               $newValues["{$field}_weight_percentage"]=0;
-           }
+            if($M == 0 || $L*$S == 0) {
+                // Calculating zWeight would be a div by 0.
+                // Can't save "error" since the field is a float.
+                $newValues["{$field}_weight_percentage"]=null;
+            }
+            else {
+                //calculate z value
+                $zWeight = ((pow(($kgs/$M), $L) - 1)/($L*$S));
+
+                if($zWeight < -5) {
+                    $newValues["{$field}_weight_percentage"]=0;
+                } elseif($zWeight > 5){
+                    $newValues["{$field}_weight_percentage"]=100;
+                } else{
+                    //calculate percentile
+                    $newValues["{$field}_weight_percentage"] = round(normalDist($zWeight)*100, 2);
+                    if ($newValues["{$field}_weight_percentage"] < 0){
+                        $newValues["{$field}_weight_percentage"]=0;
+                }
+            }
          }
         }
           
@@ -654,24 +656,29 @@ function _possibleExclusionaryCriteria() {
               $M = interpolate($modified_age_one, $modified_age_two, $age_in_months, $M_one, $M_two);
               $S = interpolate($modified_age_one, $modified_age_two, $age_in_months, $S_one, $S_two);
 
-              //find the z value from the function     
-              $zLength = ((pow(($cm_value_length/$M), $L) - 1)/($L*$S));
+              // save vs div by zero
+              if($L == 0 || $L*$S == 0) {
+                  $newValues["{$field}_percentage_length"]=null;
+              } else {
+                  //find the z value from the function
+                  $zLength = ((pow(($cm_value_length/$M), $L) - 1)/($L*$S));
 
-              if($zLength < -5){
-                  $newValues["{$field}_percentage_length"]=0;
-              }
-              elseif($zLength > 5){
-                  $newValues["{$field}_percentage_length"]=100;
-              }
+                  if($zLength < -5){
+                      $newValues["{$field}_percentage_length"]=0;
+                  }
+                  elseif($zLength > 5){
+                      $newValues["{$field}_percentage_length"]=100;
+                  }
 
-              else{
-                  //Calculate the percentile
-                $newValues["{$field}_percentage_length"] = round(normalDist($zLength)*100, 2);
-           
-                if ($newValues["{$field}_percentage_length"] < 0){
-                    $newValues["{$field}_percentage_length"]=0;
+                  else{
+                      //Calculate the percentile
+                    $newValues["{$field}_percentage_length"] = round(normalDist($zLength)*100, 2);
+
+                    if ($newValues["{$field}_percentage_length"] < 0){
+                        $newValues["{$field}_percentage_length"]=0;
+                    }
                 }
-            }
+              }
         
          }
             
@@ -714,22 +721,22 @@ function _possibleExclusionaryCriteria() {
                     $S = interpolate($modified_age_one, $modified_age_two, $age_in_months, $S_one, $S_two);
                     
 
-                    $zHead = ((pow(($cm_head_value/$M), $L) - 1)/($L*$S));
-                    
+                    if($M == 0 || $L*$S == 0) {
+                        $newValues["{$field}_head_percentage"] = NULL;
+                    } else {
+                        $zHead = ((pow(($cm_head_value/$M), $L) - 1)/($L*$S));
 
-                    if($zHead < -5){
-                          $newValues["{$field}_head_percentage"]=0;
+                        if($zHead < -5){
+                              $newValues["{$field}_head_percentage"]=0;
+                        } elseif($zHead > 5) {
+                              $newValues["{$field}_head_percentage"]=100;
+                        } else {
+                             $newValues["{$field}_head_percentage"] = round(normalDist($zHead)*100, 2);
+                             if ($newValues["{$field}_head_percentage"] < 0){
+                                 $newValues["{$field}_head_percentage"]=0;
+                             }
+                        }
                     }
-                    elseif($zHead > 5){
-                          $newValues["{$field}_head_percentage"]=100;
-                    }
-                    else{
-                         $newValues["{$field}_head_percentage"] = round(normalDist($zHead)*100, 2);
-                    
-                         if ($newValues["{$field}_head_percentage"] < 0){
-                             $newValues["{$field}_head_percentage"]=0;
-                    }
-                     }
                      
                      
                   } else {
