@@ -31,7 +31,7 @@ class NDB_BVL_Instrument_mri_parameter_form extends NDB_BVL_Instrument
         //Any HTML_Quickform date elements must be listed here
         $this->dateTimeFields=array("Date_taken", "wait_time", "total_duration");
 
-        //$this->_requiredElements = array('Date_taken', 'Examiner', 'CaregiverReport');
+        $this->_requiredElements = array('Date_taken', 'Examiner'); //, 'CaregiverReport');
 
         $config =& NDB_Config::singleton();
         $this->dateOptions = array(
@@ -177,12 +177,14 @@ class NDB_BVL_Instrument_mri_parameter_form extends NDB_BVL_Instrument
         if($values['medication'] == 'Yes' && $values['medication_specify'] == '') {
             return array('medication_specify' => 'Required if on medication');
         }
+        return array();
     }
 
     function MRI_Bold_Rules($values) {
         if(($values['BOLD_Scan_done'] == 'Complete' || $values['BOLD_Scan_done'] == 'Partial')&& $values['BOLD_Number_Complete_Runs'] == '') {
             return array('BOLD_Number_Complete_Runs' => 'Required if acquisition complete or partial');
         }
+        return array();
     }
 
     
@@ -204,36 +206,70 @@ class NDB_BVL_Instrument_mri_parameter_form extends NDB_BVL_Instrument
 
               if(isset($values['Date_taken'])) {
                   $date = $values['Date_taken'];
-                  $values['Date_taken'] = sprintf("%04d-%02d-%02d", $date['Y'], $date['M'], $date['d']);
-                  $this->_saveCandidateAge(&$values);
-              }
+                  if(!empty($date['Y']) && !empty($date['M']) && !empty($date['d'])) {
+                      $values['Date_taken'] = sprintf("%04d-%02d-%02d", $date['Y'], $date['M'], $date['d']);
+                      $this->_saveCandidateAge(&$values);
+                  }  else {
+                      unset($values['Date_taken']);
+                  }
+             }
               
               if(isset($values['T1_Scan_done_date'])) {
                   $date = $values['T1_Scan_done_date'];
-                  $values['T1_Scan_done_date'] = sprintf("%04d-%02d-%02d", $date['Y'], $date['M'], $date['d']);
+                  if(!empty($date['Y']) && !empty($date['M']) && !empty($date['d'])) {
+                      $values['T1_Scan_done_date'] = sprintf("%04d-%02d-%02d", $date['Y'], $date['M'], $date['d']);
+                  } else {
+                      unset($values['T1_Scan_done_date']);
+                  }
+
               }
               
               if(isset($values['T2_Scan_done_date'])) {
                   $date = $values['T2_Scan_done_date'];
-                  $values['T2_Scan_done_date'] = sprintf("%04d-%02d-%02d", $date['Y'], $date['M'], $date['d']);
+                  if(!empty($date['Y']) && !empty($date['M']) && !empty($date['d'])) {
+                      $values['T2_Scan_done_date'] = sprintf("%04d-%02d-%02d", $date['Y'], $date['M'], $date['d']);
+                  } else {
+                      unset($values['T2_Scan_done_date']);
+                  }
+
               }
               
               if(isset($values['DTI_Scan_done_date'])) {
                   $date = $values['DTI_Scan_done_date'];
-                  $values['DTI_Scan_done_date'] = sprintf("%04d-%02d-%02d", $date['Y'], $date['M'], $date['d']);
+                  if(!empty($date['Y']) && !empty($date['M']) && !empty($date['d'])) {
+                      $values['DTI_Scan_done_date'] = sprintf("%04d-%02d-%02d", $date['Y'], $date['M'], $date['d']);
+                  } else {
+                      unset($values['DTI_Scan_done_date']);
+                  }
+
               }
 
               if(isset($values['DTI65Dir_Scan_done_date'])) {
                   $date = $values['DTI65Dir_Scan_done_date'];
-                  $values['DTI65Dir_Scan_done_date'] = sprintf("%04d-%02d-%02d", $date['Y'], $date['M'], $date['d']);
+                  if(!empty($date['Y']) && !empty($date['M']) && !empty($date['d'])) {
+                      $values['DTI65Dir_Scan_done_date'] = sprintf("%04d-%02d-%02d", $date['Y'], $date['M'], $date['d']);
+                  } else {
+                      unset($values['DTI65Dir_Scan_done_date']);
+                  }
+
               }
               if(isset($values['BOLD_Scan_done_date'])) {
                   $date = $values['BOLD_Scan_done_date'];
-                  $values['BOLD_Scan_done_date'] = sprintf("%04d-%02d-%02d", $date['Y'], $date['M'], $date['d']);
+                  if(!empty($date['Y']) && !empty($date['M']) && !empty($date['d'])) {
+                      $values['BOLD_Scan_done_date'] = sprintf("%04d-%02d-%02d", $date['Y'], $date['M'], $date['d']);
+                  } else {
+                      unset($values['BOLD_Scan_done_date']);
+                  }
+
               }
               if(isset($values['Spectroscopy_Scan_done_date'])) {
                   $date = $values['Spectroscopy_Scan_done_date'];
-                  $values['Spectroscopy_Scan_done_date'] = sprintf("%04d-%02d-%02d", $date['Y'], $date['M'], $date['d']);
+                  if(!empty($date['Y']) && !empty($date['M']) && !empty($date['d'])) {
+                      $values['Spectroscopy_Scan_done_date'] = sprintf("%04d-%02d-%02d", $date['Y'], $date['M'], $date['d']);
+                  } else {
+                      unset($values['Spectroscopy_Scan_done_date']);
+                  }
+
               }
               
               if(isset($values['wait_time'])) {
