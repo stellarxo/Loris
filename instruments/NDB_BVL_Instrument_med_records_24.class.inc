@@ -66,6 +66,7 @@ class NDB_BVL_Instrument_med_records_24 extends NDB_BVL_Instrument_med_records {
 		
         // automatically adds examiner & date of administration
         $this->_addMetadataFields();
+        $this->form->addElement('textarea', 'comments', 'General comments:');
 	}
 	
 	function _page1() {

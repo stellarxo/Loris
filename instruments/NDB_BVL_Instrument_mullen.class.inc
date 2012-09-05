@@ -25,7 +25,13 @@ class NDB_BVL_Instrument_mullen extends NDB_BVL_Instrument
     // then fix the nullscores portion of the scoring function to use it.
     // See ticket #1260 on Redmine.
     // - Dave
-    var $scoreLabels = array("gross_motor_raw", "visual_reception_raw", "fine_motor_raw", "receptive_language_raw", "expressive_language_raw", "gross_motor_t", "visual_reception_t", "fine_motor_t", "receptive_language_t", "expressive_language_t", "gross_motor_percentile", "visual_reception_percentile", "fine_motor_percentile", "receptive_language_percentile", "expressive_language_percentile", "gross_motor_description", "visual_reception_description", "fine_motor_description", "receptive_language_description", "expressive_language_description", "gross_motor_age_equivalent", "visual_reception_age_equivalent", "fine_motor_age_equivalent", "receptive_language_age_equivalent", "expressive_language_age_equivalent", "cognitive_t_score_sum", "composite_standard_score", "composite_percentile", "composite_description");
+    var $scoreLabels = array("gross_motor_raw", "visual_reception_raw", "fine_motor_raw", "receptive_language_raw", "expressive_language_raw", "gross_motor_t", "visual_reception_t", "fine_motor_t", "receptive_language_t", "expressive_language_t", "gross_motor_percentile", "visual_reception_percentile", "fine_motor_percentile", "receptive_language_percentile", "expressive_language_percentile", "gross_motor_description", "visual_reception_description", "fine_motor_description", "receptive_language_description", "expressive_language_description", "gross_motor_age_equivalent", "visual_reception_age_equivalent", "fine_motor_age_equivalent", "receptive_language_age_equivalent", "expressive_language_age_equivalent", "cognitive_t_score_sum", "composite_standard_score", "composite_percentile", "composite_description", 
+    "gross_motor_calc_basal", "gross_motor_calc_ceiling",
+    "visual_recept_calc_basal", "visual_recept_calc_ceiling",
+    "fine_motor_calc_basal", "fine_motor_calc_ceiling",
+    "receptive_lang_calc_basal", "receptive_lang_calc_ceiling",
+    "expressive_lang_calc_basal", "expressive_lang_calc_ceiling"
+    );
 
     var $yesNo = array(""=>null, "no"=>"No", "yes"=>"Yes", "not_answered"=>"Not Answered");
 
@@ -1176,6 +1182,8 @@ class NDB_BVL_Instrument_mullen extends NDB_BVL_Instrument
                     $all_complete = false;
                 }
             }
+            /*$calculatedScores[$scale_name . '_calc_ceiling'] =*/ $this->getScaleCeiling($scale_name, $score_record, $calculatedScores);
+            /* $calculatedScores[$scale_name . '_calc_basal'] =*/ $this->getScaleBasal($scale_name, $score_record, $calculatedScores);
          }
 
          if($all_complete){
@@ -1217,30 +1225,6 @@ class NDB_BVL_Instrument_mullen extends NDB_BVL_Instrument
         $start_question = $score_record[$scale_name . '_' . "basal"];
         $end_question = $score_record[$scale_name . '_' . "ceiling"];
 
-        // $base_found = false;
-        //         $ceiling_found = false;
-        //         $failures = 0;
-
-        // while(!($base_found && $ceiling_found)){
-        //            $start_question = $this->get_starting_point($age, $scale, $failures);
-        //            if($start_question > 1 && ($score_record[$scale_name . '_' . $start_question] == 0
-        //               || $score_record[$scale_name . '_' . ($start_question + 1)] == 0
-        //               || $score_record[$scale_name . '_' . ($start_question + 2)] == 0)){
-        //                  $failures++;
-        //                  continue;
-        //               }
-        //            $base_found = true;
-        //            for($question = $start_question; $question <= $num_questions; $question++){
-        //               if($score_record[$scale_name . '_' . $question] == 0
-        //                  && $score_record[$scale_name . '_' . ($question + 1)] == 0
-        //                  && $score_record[$scale_name . '_' . ($question + 2)] == 0){
-        //                    $end_question = $question;
-        //                    break;
-        //                  }
-        //            }
-        //            $ceiling_found = true;
-        //         }
-
         $raw_score = 0;
         for ($question=1; $question <= $num_questions; $question++) {
            if($question < $start_question){
@@ -1263,141 +1247,88 @@ class NDB_BVL_Instrument_mullen extends NDB_BVL_Instrument
         return $raw_score;
      }
 
-     function get_starting_point($age, $scale, $offset){
-        $starting_points = array(
-         1 => array(1, 5, 8, 11, 15, 18, 22),
-         2 => array(1, 3, 7, 9, 16, 19, 25),
-         3 => array(1, 4, 7, 11, 13, 16, 21),
-         4 => array(1, 4, 8, 12, 18, 22, 25),
-         5 => array(1, 4, 7, 11, 15, 19, 22)
-         );
-
-         $start_point = 0;
-
-         if($scale == 1){
-            if($age <= 4){
-               $start_point = 0;
-            }
-            else if ($age <= 8){
-               $start_point = 1;
-            }
-            else if ($age <= 12){
-               $start_point = 2;
-            }
-            else if ($age <= 17){
-               $start_point = 3;
-            }
-            else if ($age <= 20){
-               $start_point = 4;
-            }
-            else if ($age <= 26){
-               $start_point = 5;
-            }
-            else {
-               $start_point = 6;
-            }
+     function getScaleCeiling($scalename, $responses, &$score) {
+         $min = 1;
+         $q_prefix = $scalename;
+         $scale_list = array('gross_motor', 'visual_reception', 'fine_motor', 'receptive_language', 'expressive_language');
+         switch($scalename) {
+         case 'gross_motor':
+             $max = 35;
+             break;
+         case 'visual_reception':
+             $q_prefix = 'visual_recept';
+             $max = 33;
+             break;
+         case 'fine_motor':
+             $max = 30;
+             break;
+         case 'receptive_language':
+             $q_prefix = 'receptive_lang';
+             $max = 33;
+             break;
+         case 'expressive_language':
+             $q_prefix = 'expressive_lang';
+             $max = 28;
+             break;
          }
-         else if($scale == 2){
-            if($age <= 4){
-               $start_point = 0;
-            }
-            else if ($age <= 8){
-               $start_point = 1;
-            }
-            else if ($age <= 12){
-               $start_point = 2;
-            }
-            else if ($age <= 20){
-               $start_point = 3;
-            }
-            else if ($age <= 32){
-               $start_point = 4;
-            }
-            else if ($age <= 44){
-               $start_point = 5;
-            }
-            else {
-               $start_point = 6;
-            }
+         for($i = $min; $i <= $max; $i += 1) {
+             if($responses[$q_prefix . '_' . $i] == '0' &&
+                $responses[$q_prefix . '_' . ($i+1)] == '0' &&
+                $responses[$q_prefix . '_' . ($i+2)] == '0') {
+                    $score[$q_prefix . '_calc_ceiling'] = ($i+2);
+                    return $i;
+                }
          }
-         else if($scale == 3){
-            if($age <= 4){
-               $start_point = 0;
-            }
-            else if ($age <= 8){
-               $start_point = 1;
-            }
-            else if ($age <= 12){
-               $start_point = 2;
-            }
-            else if ($age <= 17){
-               $start_point = 3;
-            }
-            else if ($age <= 29){
-               $start_point = 4;
-            }
-            else if ($age <= 44){
-               $start_point = 5;
-            }
-            else {
-               $start_point = 6;
-            }
+         if($responses[$q_prefix . '_' . $max] != '' || $responses[$q_prefix . '_' . $max] === '0') {
+             //print "$scalename $q_prefix $max: " . $responses[$q_prefix . '_' . $max] . "\n";
+             $score[$q_prefix . '_calc_ceiling'] = $max;
+             return $max;
          }
-         else if($scale == 4){
-            if($age <= 4){
-               $start_point = 0;
-            }
-            else if ($age <= 10){
-               $start_point = 1;
-            }
-            else if ($age <= 14){
-               $start_point = 2;
-            }
-            else if ($age <= 22){
-               $start_point = 3;
-            }
-            else if ($age <= 32){
-               $start_point = 4;
-            }
-            else if ($age <= 44){
-               $start_point = 5;
-            }
-            else {
-               $start_point = 6;
-            }
-         }
-         else if($scale == 5){
-            if($age <= 4){
-               $start_point = 0;
-            }
-            else if ($age <= 8){
-               $start_point = 1;
-            }
-            else if ($age <= 14){
-               $start_point = 2;
-            }
-            else if ($age <= 23){
-               $start_point = 3;
-            }
-            else if ($age <= 32){
-               $start_point = 4;
-            }
-            else if ($age <= 44){
-               $start_point = 5;
-            }
-            else {
-               $start_point = 6;
-            }
-         }
-
-         if($start_point - $offset < 0){
-            return 1;
-         }
-         else {
-            return $starting_points[$scale][$start_point - $offset];
-         }
+         return 'No valid ceiling';
      }
 
+     function getScaleBasal($scalename, $responses, &$score) {
+         $min = 1;
+         $q_prefix = $scalename;
+         switch($scalename) {
+         case 'gross_motor':
+             $max = 35;
+             $sections = array(1, 5, 8, 11, 15, 18, 22);
+             break;
+         case 'visual_reception':
+             $q_prefix = 'visual_recept';
+             $max = 33;
+             $sections = array(1, 3, 7, 9, 16, 19, 25);
+             break;
+         case 'fine_motor':
+             $max = 30;
+             $sections = array(1, 4, 7, 11, 13, 16, 21);
+             break;
+         case 'receptive_language':
+             $q_prefix = 'receptive_lang';
+             $max = 33;
+             $sections = array(1, 4, 8, 12, 18, 22, 25);
+             break;
+         case 'expressive_language':
+             $q_prefix = 'expressive_lang';
+             $max = 28;
+             $sections = array(1, 4, 7, 11, 15, 19, 22);
+             break;
+         }
+         for($i = $min; $i <= $max; $i += 1) {
+             if(in_array($i+1,$sections) || in_array($i+2, $sections)) {
+                 // one of the three 1s are the start of another section,
+                 // so they're not three consecutive 1s within a section.
+                 continue;
+             }
+             if($responses[$q_prefix . '_' . $i] == '1' &&
+                $responses[$q_prefix . '_' . ($i+1)] == '1' &&
+                $responses[$q_prefix . '_' . ($i+2)] == '1') {
+                    $score[$q_prefix . '_calc_basal'] = $i;
+                    return $i;
+                }
+         }
+     }
      function band_of_error($age){
         if($age <= 4){
            return array('gross_motor_error_90' => 9,

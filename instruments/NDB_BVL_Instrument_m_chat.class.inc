@@ -13,7 +13,7 @@ class NDB_BVL_Instrument_m_chat extends NDB_BVL_Instrument
 	CHANGE FOR ZAPHOD!!!
 	*/
 
-	var $scoreCols = array("score", "critical_fails", "item_fails");
+	var $scoreCols = array("score", "total_critical_fails", "total_item_fails");
 
 	//If the instrument is not paged, remove the switch from the _setupForm method and add all the form Elements in this function.
 

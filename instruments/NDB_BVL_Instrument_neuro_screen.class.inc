@@ -327,7 +327,7 @@ class NDB_BVL_Instrument_neuro_screen extends NDB_BVL_Instrument
         unset($group);
 
         $this->form->addElement("static", null, "22. Measurements");
-        $this->form->addElement("static", null, "(Sometimes this is erroneously called #21)");
+        //$this->form->addElement("static", null, "(Sometimes this is erroneously called #21)");
         $db =Database::singleton();
         $HMSRow = $db->pselectRow("SELECT hms.CommentID, hms.SessionID, s.CandID FROM flag ns left join flag hms ON (hms.Test_name='head_measurements_subject' AND hms.SessionID=ns.SessionID) LEFT JOIN session s ON (s.ID=hms.SessionID) WHERE ns.CommentID=:CID AND ns.CommentID NOT LIKE 'DDE%'",
             array("CID" => $this->getCommentID()));
