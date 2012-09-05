@@ -38,6 +38,9 @@ class NDB_Form_candidate_parameters extends NDB_Form
         foreach($value_results AS $vresult){
         	$defaults["PTID_".$vresult['ParameterTypeID']]=$vresult['Value'];
         }
+        $defaults['CandidateGUID'] = $DB->pselectOne("SELECT CandidateGUID FROM candidate WHERE CandID=:CandidateID", array('CandidateID' => $this->identifier));
+        $defaults['ProbandGUID'] = $DB->pselectOne("SELECT ProbandGUID FROM candidate WHERE CandID=:CandidateID", array('CandidateID' => $this->identifier));
+        
         return $defaults;
     }
 
@@ -55,11 +58,16 @@ class NDB_Form_candidate_parameters extends NDB_Form
         //insert new values
         while(list($key, $value)=each($values)){
         	$set="";
-        	$set['ParameterTypeID']=str_replace("PTID_","",$key);
-        	$set['CandID']=$this->identifier;
-        	$set['Value']=$value;
-        	$set['InsertTime']=time();
-        	$DB->insert("parameter_candidate", $set);
+            if(strpos($key, "PTID_") === 0) {
+                $set['ParameterTypeID']=str_replace("PTID_","",$key);
+                $set['CandID']=$this->identifier;
+                $set['Value']=$value;
+                $set['InsertTime']=time();
+                $DB->insert("parameter_candidate", $set);
+            } else if($key == 'CandidateGUID' || $key == "ProbandGUID") {
+                $DB->update("candidate", array($key => $value), array('CandID' => $this->identifier));
+            }
+
         }
 
         $this->tpl_data['success'] = true;
@@ -143,6 +151,11 @@ class NDB_Form_candidate_parameters extends NDB_Form
         if($DoB_ADI_R != $DoB_Vineland) {
             $this->form->addElement('static', 'dob_error', 'Date of Birth from Vineland and ADI-R do not match');
         }
+
+        $this->form->addElement('text', 'CandidateGUID', 'Candidate GUID:');
+        $this->form->addElement('text', 'ProbandGUID', 'Proband GUID:');
+        $this->form->addElement('date', 'DoB_Proband', 'DoB Proband:');
+        $this->form->addElement('select', 'Gender_Proband', 'Proband gender:', array('' => '','male' => 'Male', 'female' => 'Female') );
         $this->form->addElement('static', 'dob_proband_adi_r', 'DoB of Proband (ADI-R):', $DoB_ADI_R);
         $this->form->addElement('static', 'dob_proband_vineland', 'DoB of Proband (Vineland):', $DoB_Vineland);
         $this->form->addElement('static', 'mother_race', 'Mother\'s Race:', $this->_getTSIinfo("mother_race"));

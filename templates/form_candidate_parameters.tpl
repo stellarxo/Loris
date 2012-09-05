@@ -17,6 +17,24 @@
     </tr>
     {/if}
     <tr>
+        <td nowrap="nowrap">{$form.CandidateGUID.label}</td>
+        <td nowrap="nowrap">{$form.CandidateGUID.html}</td>
+    </tr>
+    <tr>
+        <td nowrap="nowrap">{$form.ProbandGUID.label}</td>
+        <td nowrap="nowrap">{$form.ProbandGUID.html}</td>
+    </tr>
+    {*
+    <tr>
+        <td nowrap="nowrap">{$form.Gender_Proband.label}</td>
+        <td nowrap="nowrap">{$form.Gender_Proband.html}</td>
+    </tr>
+    <tr>
+        <td nowrap="nowrap">{$form.DoB_Proband.label}</td>
+        <td nowrap="nowrap">{$form.DoB_Proband.html}</td>
+    </tr>
+    *}
+    <tr>
         <td nowrap="nowrap">{$form.dob_proband_adi_r.label}</td>
         <td nowrap="nowrap">{$form.dob_proband_adi_r.html}</td>
     </tr>
