@@ -118,7 +118,7 @@ function _possibleExclusionaryCriteria() {
 			$this->form->addElement ( "static", null, "<BR>" ); //line space
 			
 
-			$this->form->addElement ( "select", "{$field}_chart", "<b> $label . Source of Information</b> <BR> Selecting chart indicates measurements were taken from a growth chart. <BR> Selecting actual indicates the measurements entered were the actual measurements taken.", array (NULL => "", "not_answered" => "Not Answered", "actual" => "Actual", "chart" => "Chart", "not_answered" => "Not Answered", "no_more_chart_data" => "No More Growth Data" ) );
+			$this->form->addElement ( "select", "{$field}_chart", "<b> $label . Source of Information</b> <BR> Selecting chart indicates measurements were taken from a growth chart. <BR> Selecting actual indicates the measurements entered were the actual measurements taken.<BR> Selecting parent report indicates the measurements entered were reported by the parents and taken from the child's vaccination booklet", array (NULL => "", "not_answered" => "Not Answered", "actual" => "Actual", "chart" => "Chart", 'parent_report' => 'Parent Report', "not_answered" => "Not Answered", "no_more_chart_data" => "No More Growth Data" ) );
 			
 			//Once "No More Growth Data" is selected once, nothing further is required.
 			$this->XINRegisterRule ( "{$field}_chart", array ("{$prevField}_chart{@}!={@}no_more_chart_data", "{$prevField}_chart{@}!={@}" ), "These fields are required unless no more growth data is selected" );
@@ -276,7 +276,7 @@ function _possibleExclusionaryCriteria() {
 
   			$this->form->addElement ( "static", null, "<BR>" ); //line space
 
-  			$this->form->addElement ( "select", "{$field}_chart", "<b> $label . Source of Information</b> <BR> Selecting chart indicates measurements were taken from a growth chart. <BR> Selecting actual indicates the measurements entered were the actual measurements taken.", array (NULL => "", "not_answered" => "Not Answered", "actual" => "Actual", "chart" => "Chart", "not_answered" => "Not Answered", "no_more_chart_data" => "No More Growth Data" ) );
+  			$this->form->addElement ( "select", "{$field}_chart", "<b> $label . Source of Information</b> <BR> Selecting chart indicates measurements were taken from a growth chart. <BR> Selecting actual indicates the measurements entered were the actual measurements taken.<BR> Selecting parent report indicates the measurements entered were reported by the parents and taken from the child's vaccination booklet", array (NULL => "", "not_answered" => "Not Answered", "actual" => "Actual", "chart" => "Chart", 'parent_report' => 'Parent Report', "not_answered" => "Not Answered", "no_more_chart_data" => "No More Growth Data" ) );
 
   			//Once "No More Growth Data" is selected once, nothing further is required.
   			$this->XINRegisterRule ( "{$field}_chart", array ("{$prevField}_chart{@}!={@}no_more_chart_data", "{$prevField}_chart{@}!={@}" ), "These fields are required unless no more growth data is selected" );
