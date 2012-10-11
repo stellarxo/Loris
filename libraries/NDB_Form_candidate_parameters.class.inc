@@ -40,6 +40,8 @@ class NDB_Form_candidate_parameters extends NDB_Form
         }
         $defaults['CandidateGUID'] = $DB->pselectOne("SELECT CandidateGUID FROM candidate WHERE CandID=:CandidateID", array('CandidateID' => $this->identifier));
         $defaults['ProbandGUID'] = $DB->pselectOne("SELECT ProbandGUID FROM candidate WHERE CandID=:CandidateID", array('CandidateID' => $this->identifier));
+        $defaults['ProbandDoB'] = $DB->pselectOne("SELECT ProbandDoB FROM candidate WHERE CandID=:CandidateID", array('CandidateID' => $this->identifier));
+        $defaults['ProbandGender'] = $DB->pselectOne("SELECT ProbandGender FROM candidate WHERE CandID=:CandidateID", array('CandidateID' => $this->identifier));
         
         return $defaults;
     }
@@ -64,7 +66,10 @@ class NDB_Form_candidate_parameters extends NDB_Form
                 $set['Value']=$value;
                 $set['InsertTime']=time();
                 $DB->insert("parameter_candidate", $set);
-            } else if($key == 'CandidateGUID' || $key == "ProbandGUID") {
+            } else if($key == 'CandidateGUID' || $key == "ProbandGUID" || $key == 'ProbandDoB' || $key == 'ProbandGender') {
+                if($key == 'ProbandDoB') {
+                    $value = $this->_getDatabaseDate($value);
+                }
                 $DB->update("candidate", array($key => $value), array('CandID' => $this->identifier));
             }
 
@@ -97,6 +102,7 @@ class NDB_Form_candidate_parameters extends NDB_Form
     function candidate_parameters()
     {
         $DB =& Database::singleton();
+        $config =& NDB_Config::singleton();
 
         $ethnicityList = array(null=>'');
         $success = Utility::getEthnicityList();
@@ -154,8 +160,17 @@ class NDB_Form_candidate_parameters extends NDB_Form
 
         $this->form->addElement('text', 'CandidateGUID', 'Candidate GUID:');
         $this->form->addElement('text', 'ProbandGUID', 'Proband GUID:');
-        $this->form->addElement('date', 'DoB_Proband', 'DoB Proband:');
-        $this->form->addElement('select', 'Gender_Proband', 'Proband gender:', array('' => '','male' => 'Male', 'female' => 'Female') );
+        $probandDateOptions = array(
+            'language' => 'en',
+            'format'   => 'YMd',
+            'minYear'  => $config->getSetting('startYear') - 20, //allows for proband siblings up to 20 years older than candidate
+            'maxYear'  => $config->getSetting('endYear'),
+            'addEmptyOption' => true,
+            'emptyOptionValue' => null
+        );
+
+        $this->form->addElement('date', 'ProbandDoB', 'DoB Proband:', $probandDateOptions);
+        $this->form->addElement('select', 'ProbandGender', 'Proband gender:', array('' => '','Male' => 'Male', 'Female' => 'Female') );
         $this->form->addElement('static', 'dob_proband_adi_r', 'DoB of Proband (ADI-R):', $DoB_ADI_R);
         $this->form->addElement('static', 'dob_proband_vineland', 'DoB of Proband (Vineland):', $DoB_Vineland);
         $this->form->addElement('static', 'mother_race', 'Mother\'s Race:', $this->_getTSIinfo("mother_race"));
@@ -163,5 +178,23 @@ class NDB_Form_candidate_parameters extends NDB_Form
         $this->form->addElement('static', 'birth_city', 'City of Birth:', $this->_getTSIinfo("city_of_birth"));
         $this->form->addElement('static', 'home_lang', 'Primary Language At Home:', $this->_getTSIinfo("primary_language"));
     }
+
+    /* This is taken from NDB_BVL_Instrument. It should be moved to NDB_Page once NDB_Page is merged. */
+
+    function _getDatabaseDate($formDateValue) {
+        if(!empty($formDateValue)){
+            // check if it's already formatted correctly
+            if(is_string($formDateValue) && preg_match("/^[\d]{4}-[\d]{2}-[\d]{2}$/", $formDateValue)) {
+                return $formDateValue;
+            }
+            if(count($formDateValue)==2) {
+                $databaseValue = "$formDateValue[H]:$formDateValue[i]";  //handle time (HH:MM:SS)
+            } else {
+                $databaseValue = "$formDateValue[Y]-$formDateValue[M]-$formDateValue[d]";  //handle date (YYYY/MM/DD)
+            }
+        }
+        return $databaseValue;
+    }
+
 }
 ?>
