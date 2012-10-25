@@ -207,7 +207,7 @@ class NDB_BVL_Instrument_mri_parameter_form extends NDB_BVL_Instrument
               if(isset($values['Date_taken'])) {
                   $date = $values['Date_taken'];
                   if(!empty($date['Y']) && !empty($date['M']) && !empty($date['d'])) {
-                      $values['Date_taken'] = sprintf("%04d-%02d-%02d", $date['Y'], $date['M'], $date['d']);
+                      $values['Date_taken'] = $this->_getDatabaseDate($date); //sprintf("%04d-%02d-%02d", $date['Y'], $date['M'], $date['d']);
                       $this->_saveCandidateAge(&$values);
                   }  else {
                       unset($values['Date_taken']);
@@ -217,7 +217,8 @@ class NDB_BVL_Instrument_mri_parameter_form extends NDB_BVL_Instrument
               if(isset($values['T1_Scan_done_date'])) {
                   $date = $values['T1_Scan_done_date'];
                   if(!empty($date['Y']) && !empty($date['M']) && !empty($date['d'])) {
-                      $values['T1_Scan_done_date'] = sprintf("%04d-%02d-%02d", $date['Y'], $date['M'], $date['d']);
+                      $values['T1_Scan_done_date'] = $this->_getDatabaseDate($date); //sprintf("%04d-%02d-%02d", $date['Y'], $date['M'], $date['d']);
+                      //$values['T1_Scan_done_date'] = sprintf("%04d-%02d-%02d", $date['Y'], $date['M'], $date['d']);
                   } else {
                       unset($values['T1_Scan_done_date']);
                   }
@@ -227,7 +228,8 @@ class NDB_BVL_Instrument_mri_parameter_form extends NDB_BVL_Instrument
               if(isset($values['T2_Scan_done_date'])) {
                   $date = $values['T2_Scan_done_date'];
                   if(!empty($date['Y']) && !empty($date['M']) && !empty($date['d'])) {
-                      $values['T2_Scan_done_date'] = sprintf("%04d-%02d-%02d", $date['Y'], $date['M'], $date['d']);
+                      $values['T2_Scan_done_date'] = $this->_getDatabaseDate($date); //sprintf("%04d-%02d-%02d", $date['Y'], $date['M'], $date['d']);
+                      //$values['T2_Scan_done_date'] = sprintf("%04d-%02d-%02d", $date['Y'], $date['M'], $date['d']);
                   } else {
                       unset($values['T2_Scan_done_date']);
                   }
@@ -237,7 +239,8 @@ class NDB_BVL_Instrument_mri_parameter_form extends NDB_BVL_Instrument
               if(isset($values['DTI_Scan_done_date'])) {
                   $date = $values['DTI_Scan_done_date'];
                   if(!empty($date['Y']) && !empty($date['M']) && !empty($date['d'])) {
-                      $values['DTI_Scan_done_date'] = sprintf("%04d-%02d-%02d", $date['Y'], $date['M'], $date['d']);
+                      $values['DTI_Scan_done_date'] = $this->_getDatabaseDate($date); //sprintf("%04d-%02d-%02d", $date['Y'], $date['M'], $date['d']);
+                      //$values['DTI_Scan_done_date'] = sprintf("%04d-%02d-%02d", $date['Y'], $date['M'], $date['d']);
                   } else {
                       unset($values['DTI_Scan_done_date']);
                   }
@@ -247,7 +250,8 @@ class NDB_BVL_Instrument_mri_parameter_form extends NDB_BVL_Instrument
               if(isset($values['DTI65Dir_Scan_done_date'])) {
                   $date = $values['DTI65Dir_Scan_done_date'];
                   if(!empty($date['Y']) && !empty($date['M']) && !empty($date['d'])) {
-                      $values['DTI65Dir_Scan_done_date'] = sprintf("%04d-%02d-%02d", $date['Y'], $date['M'], $date['d']);
+                      $values['DTI65Dir_Scan_done_date'] = $this->_getDatabaseDate($date); //sprintf("%04d-%02d-%02d", $date['Y'], $date['M'], $date['d']);
+                      //$values['DTI65Dir_Scan_done_date'] = sprintf("%04d-%02d-%02d", $date['Y'], $date['M'], $date['d']);
                   } else {
                       unset($values['DTI65Dir_Scan_done_date']);
                   }
@@ -256,7 +260,8 @@ class NDB_BVL_Instrument_mri_parameter_form extends NDB_BVL_Instrument
               if(isset($values['BOLD_Scan_done_date'])) {
                   $date = $values['BOLD_Scan_done_date'];
                   if(!empty($date['Y']) && !empty($date['M']) && !empty($date['d'])) {
-                      $values['BOLD_Scan_done_date'] = sprintf("%04d-%02d-%02d", $date['Y'], $date['M'], $date['d']);
+                      $values['BOLD_Scan_done_date'] = $this->_getDatabaseDate($date); //sprintf("%04d-%02d-%02d", $date['Y'], $date['M'], $date['d']);
+                      //$values['BOLD_Scan_done_date'] = sprintf("%04d-%02d-%02d", $date['Y'], $date['M'], $date['d']);
                   } else {
                       unset($values['BOLD_Scan_done_date']);
                   }
@@ -265,7 +270,8 @@ class NDB_BVL_Instrument_mri_parameter_form extends NDB_BVL_Instrument
               if(isset($values['Spectroscopy_Scan_done_date'])) {
                   $date = $values['Spectroscopy_Scan_done_date'];
                   if(!empty($date['Y']) && !empty($date['M']) && !empty($date['d'])) {
-                      $values['Spectroscopy_Scan_done_date'] = sprintf("%04d-%02d-%02d", $date['Y'], $date['M'], $date['d']);
+                      $values['Spectroscopy_Scan_done_date'] = $this->_getDatabaseDate($date); //sprintf("%04d-%02d-%02d", $date['Y'], $date['M'], $date['d']);
+                      //$values['Spectroscopy_Scan_done_date'] = sprintf("%04d-%02d-%02d", $date['Y'], $date['M'], $date['d']);
                   } else {
                       unset($values['Spectroscopy_Scan_done_date']);
                   }
