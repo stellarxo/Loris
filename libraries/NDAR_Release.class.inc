@@ -24,28 +24,48 @@ class NDAR_Release {
         } else if($this->instrument == 'scq_subject') {
             return $Base . " AND s.SubprojectID=3 AND UPPER(s.Visit_label)='V24' $GUID";
         } else if ($this->instrument == 'vineland_proband') {
+            // No DDE
             return "COALESCE(s.Current_stage, '') <> 'Recycling Bin' AND COALESCE(s.Visit, '') NOT IN ('Failure', 'Withdrawal') AND COALESCE(s.Screening, '') NOT IN ('Failure', 'Withdrawal') AND f.Administration='All' AND f.Data_entry='Complete' AND s.CenterID IN (2, 3, 4, 5) AND s.SubprojectID IN (1, 2) $GUID";
-        } else if($this->instrument == "vineland_subject") {
-            return $Base . " AND ((s.SubprojectID=3 AND UPPER(s.Visit_label) IN ('V06', 'V12', 'V24')) OR (s.SubprojectID=1 AND UPPER(s.Visit_label)='V06')) $GUID";
+        } else if($this->instrument == 'vineland_subject') {
+            // No DDE
+            return "COALESCE(s.Current_stage, '') <> 'Recycling Bin' AND COALESCE(s.Visit, '') NOT IN ('Failure', 'Withdrawal') AND COALESCE(s.Screening, '') NOT IN ('Failure', 'Withdrawal') AND f.Administration='All' AND f.Data_entry='Complete' AND s.CenterID IN (2, 3, 4, 5) AND ((s.SubprojectID=1 AND UPPER(s.Visit_label)='V06') OR (s.SubprojectID=3 AND UPPER(s.Visit_label) IN ('V06', 'V12', 'V24'))) $GUID";
+            //return "COALESCE(s.Current_stage, '') <> 'Recycling Bin' AND COALESCE(s.Visit, '') NOT IN ('Failure', 'Withdrawal') AND COALESCE(s.Screening, '') NOT IN ('Failure', 'Withdrawal') AND f.Administration='All' AND f.Data_entry='Complete' AND s.CenterID IN (2, 3, 4, 5) AND s.SubprojectID IN (1, 2) $GUID";
         } else if ($this->instrument == 'prefrontal_task') {
             return $Base . " AND s.SubprojectID=3 AND UPPER(s.Visit_label) IN ('V12', 'V24') $GUID";
+        } else if ($this->instrument == 'fyi') {
+            return $Base . " AND s.SubprojectID=3 AND UPPER(s.Visit_label)='V12' $GUID";
+        } else if($this->instrument == 'edi') {
+            return $Base . " AND s.SubprojectID=3 AND UPPER(s.Visit_label) IN ('V06', 'V12', 'V24') $GUID";
+        } else if ($this->instrument == 'charge') {
+            // Don't use Base because there's multiple instruments
+            // All the conflicts don't exist is done in the join, since they need to be part of the left join
+            // criteria
+            return "-- Make sure at least one of the instruments was done since they're all left joins above
+                     COALESCE(audflag.CommentID, medpsychflag.CommentID, neuroscreenflag.CommentID, tsiflag.CommentID) IS NOT NULL AND
+                    -- Standard filters
+                    COALESCE(s.Current_stage, '') <> 'Recycling Bin' AND COALESCE(s.Visit, '') NOT IN ('Failure', 'Withdrawal')
+                    AND COALESCE(s.Screening, '') NOT IN ('Failure', 'Withdrawal')
+                    AND s.CenterID IN (2, 3, 4, 5) AND ((s.SubprojectID=1 AND UPPER(s.Visit_label)='V06') OR (s.SubprojectID=3 AND UPPER(s.Visit_label) IN ('V06', 'V12', 'V24'))) AND c.CandidateGUID IS NOT NULL";
         }
         return $Base . " AND ((s.SubprojectID=1 AND UPPER(s.Visit_label)='V06') OR (s.SubprojectID=3 AND UPPER(s.Visit_label) IN ('V06', 'V12', 'V24'))) $GUID";
     }
 
     function getCommonFields() {
+        if($this->instrument == 'charge') {
+            return "c.IBISID, s.Visit_label, s.CenterID as Site, CASE s.SubprojectID WHEN 1 THEN 'High Risk' WHEN 2 THEN 'High Risk' WHEN 3 THEN 'Low Risk' END as Cohort, ";
+        }
         if(strpos($this->instrument, '_proband') !== FALSE) {
             if($this->instrument == 'm_chat_proband') {
                 // No validity
-                return "c.IBISID, s.Visit_label, s.CenterID, CASE s.SubprojectID WHEN 1 THEN 'High Risk' WHEN 2 THEN 'High Risk' WHEN 3 THEN 'Control' END as Cohort, c.ProbandGUID, c.ProbandDoB, c.ProbandGender, ROUND(DATEDIFF(i.Date_taken, c.ProbandDoB) / (365/12)) AS Proband_Age_in_Months, i.Date_taken, ";
+                return "c.IBISID, s.Visit_label, s.CenterID as Site, CASE s.SubprojectID WHEN 1 THEN 'High Risk' WHEN 2 THEN 'High Risk' WHEN 3 THEN 'Low Risk' END as Cohort, c.ProbandGUID, c.ProbandDoB, c.ProbandGender, ROUND(DATEDIFF(i.Date_taken, c.ProbandDoB) / (365/12)) AS Proband_Age_in_Months, i.Date_taken, ";
             }
-            return "c.IBISID, s.Visit_label, s.CenterID, CASE s.SubprojectID WHEN 1 THEN 'High Risk' WHEN 2 THEN 'High Risk' WHEN 3 THEN 'Control' END as Cohort, c.ProbandGUID, c.ProbandDoB, c.ProbandGender, ROUND(DATEDIFF(i.Date_taken, c.ProbandDoB) / (365/12)) AS Proband_Age_in_Months, f.Validity, i.Date_taken, ";
+            return "c.IBISID, s.Visit_label, s.CenterID as Site, CASE s.SubprojectID WHEN 1 THEN 'High Risk' WHEN 2 THEN 'High Risk' WHEN 3 THEN 'Low Risk' END as Cohort, c.ProbandGUID, c.ProbandDoB, c.ProbandGender, ROUND(DATEDIFF(i.Date_taken, c.ProbandDoB) / (365/12)) AS Proband_Age_in_Months, f.Validity, i.Date_taken, ";
         } else {
-            $NoValidities = array('scq_subject', 'macarthur_words_gestures', 'rbs_r', 'seq', 'ibq_r', 'head_measurements_subject', 'prefrontal_task');
+            $NoValidities = array('scq_subject', 'macarthur_words_gestures', 'rbs_r', 'seq', 'ibq_r', 'head_measurements_subject', 'prefrontal_task', 'fyi', 'edi');
             if(in_array($this->instrument, $NoValidities)) {
-                return "c.IBISID, s.Visit_label, s.CenterID, CASE s.SubprojectID WHEN 1 THEN 'High Risk' WHEN 2 THEN 'High Risk' WHEN 3 THEN 'Control' END as Cohort, c.CandidateGUID, c.DoB, c.Gender, ROUND(DATEDIFF(i.Date_taken, c.DoB) / (365/12)) AS Candidate_Age_in_Months, i.Date_taken, ";
+                return "c.IBISID, s.Visit_label, s.CenterID as Site, CASE s.SubprojectID WHEN 1 THEN 'High Risk' WHEN 2 THEN 'High Risk' WHEN 3 THEN 'Low Risk' END as Cohort, c.CandidateGUID, c.DoB, c.Gender, ROUND(DATEDIFF(i.Date_taken, c.DoB) / (365/12)) AS Candidate_Age_in_Months, i.Date_taken, ";
             }
-            return "c.IBISID, s.Visit_label, s.CenterID, CASE s.SubprojectID WHEN 1 THEN 'High Risk' WHEN 2 THEN 'High Risk' WHEN 3 THEN 'Control' END as Cohort, c.CandidateGUID, c.DoB, c.Gender, ROUND(DATEDIFF(i.Date_taken, c.DoB) / (365/12)) AS Candidate_Age_in_Months, f.Validity, i.Date_taken, ";
+            return "c.IBISID, s.Visit_label, s.CenterID as Site, CASE s.SubprojectID WHEN 1 THEN 'High Risk' WHEN 2 THEN 'High Risk' WHEN 3 THEN 'Low Risk' END as Cohort, c.CandidateGUID, c.DoB, c.Gender, ROUND(DATEDIFF(i.Date_taken, c.DoB) / (365/12)) AS Candidate_Age_in_Months, f.Validity, i.Date_taken, ";
         }
     }
     function getInstrumentFields() {
@@ -1076,6 +1096,11 @@ class NDAR_Release {
                 'i.MS_STD_SCORE',
                 'i.MS_SUM_VSCALES_FOR_DOMAIN',
                 'i.MS_SW',
+                'i.`OTH_95%_CI` AS OTH_95PERCENT_CI',
+                'i.OTH_ADAPT_LEVEL',
+                'i.OTH_RAW',
+                'i.OTH_STATUS',
+                'i.OTH_VSCALE',
                 'i.OTH_ITEM_1_NDAR',
                 'i.OTH_ITEM_2_NDAR',
                 'i.OTH_ITEM_3_NDAR',
@@ -1747,7 +1772,14 @@ class NDAR_Release {
                 'i.later_gestures_number',
                 'i.later_gestures_percentile',
                 'i.phrases_understood_number',
-                'i.phrases_understood_percentile');
+                'i.phrases_understood_percentile',
+                'i.words_produced_number',
+                'i.words_produced_percentile',
+                'i.words_understood_number',
+                'i.words_understood_percentile',
+                'i.total_gestures_number',
+                'i.total_gestures_percentile'
+            );
         } else if ($this->instrument == 'csbs') {
             $fields = array('i.object_use_weighted',
             'i.Candidate_Age',
@@ -1993,9 +2025,15 @@ class NDAR_Release {
         } else if($this->instrument == 'ibq_r') {
             $fields = array('i.Candidate_Age', 'i.activity_level', 'i.approach', 'i.cuddliness', 'i.distress_to_limitations', 'i.duration_of_orienting', 'i.falling_reactivity', 'i.fear', 'i.high_pleasure', 'i.low_pleasure', 'i.perceptual_sensitivity', 'i.sadness', 'i.smiling_and_laughter', 'i.soothability', 'i.vocal_reactivity', 'i.q_1', 'i.q_10', 'i.q_100', 'i.q_101', 'i.q_102', 'i.q_103', 'i.q_104', 'i.q_105', 'i.q_106', 'i.q_107', 'i.q_108', 'i.q_109', 'i.q_11', 'i.q_110', 'i.q_111', 'i.q_112', 'i.q_113', 'i.q_114', 'i.q_115', 'i.q_116', 'i.q_117', 'i.q_118', 'i.q_119', 'i.q_12', 'i.q_120', 'i.q_121', 'i.q_122', 'i.q_123', 'i.q_124', 'i.q_125', 'i.q_126', 'i.q_127', 'i.q_128', 'i.q_129', 'i.q_13', 'i.q_130', 'i.q_131', 'i.q_132', 'i.q_133', 'i.q_134', 'i.q_135', 'i.q_136', 'i.q_137', 'i.q_138', 'i.q_139', 'i.q_14', 'i.q_140', 'i.q_141', 'i.q_142', 'i.q_143', 'i.q_144', 'i.q_145', 'i.q_146', 'i.q_147', 'i.q_148', 'i.q_149', 'i.q_15', 'i.q_150', 'i.q_151', 'i.q_152', 'i.q_153', 'i.q_154', 'i.q_155', 'i.q_156', 'i.q_157', 'i.q_158', 'i.q_159', 'i.q_16', 'i.q_160', 'i.q_161', 'i.q_162', 'i.q_163', 'i.q_164', 'i.q_165', 'i.q_166', 'i.q_167', 'i.q_168', 'i.q_169', 'i.q_17', 'i.q_170', 'i.q_171', 'i.q_172', 'i.q_173', 'i.q_174', 'i.q_175', 'i.q_176', 'i.q_177', 'i.q_178', 'i.q_179', 'i.q_18', 'i.q_180', 'i.q_181', 'i.q_182', 'i.q_183', 'i.q_184', 'i.q_185', 'i.q_186', 'i.q_187', 'i.q_188', 'i.q_189', 'i.q_19', 'i.q_190', 'i.q_191', 'i.q_2', 'i.q_20', 'i.q_21', 'i.q_22', 'i.q_23', 'i.q_24', 'i.q_25', 'i.q_26', 'i.q_27', 'i.q_28', 'i.q_29', 'i.q_3', 'i.q_30', 'i.q_31', 'i.q_32', 'i.q_33', 'i.q_34', 'i.q_35', 'i.q_36', 'i.q_37', 'i.q_38', 'i.q_39', 'i.q_4', 'i.q_40', 'i.q_41', 'i.q_42', 'i.q_43', 'i.q_44', 'i.q_45', 'i.q_46', 'i.q_47', 'i.q_48', 'i.q_49', 'i.q_5', 'i.q_50', 'i.q_51', 'i.q_52', 'i.q_53', 'i.q_54', 'i.q_55', 'i.q_56', 'i.q_57', 'i.q_58', 'i.q_59', 'i.q_6', 'i.q_60', 'i.q_61', 'i.q_62', 'i.q_63', 'i.q_64', 'i.q_65', 'i.q_66', 'i.q_67', 'i.q_68', 'i.q_69', 'i.q_7', 'i.q_70', 'i.q_71', 'i.q_72', 'i.q_73', 'i.q_74', 'i.q_75', 'i.q_76', 'i.q_77', 'i.q_78', 'i.q_79', 'i.q_8', 'i.q_80', 'i.q_81', 'i.q_82', 'i.q_83', 'i.q_84', 'i.q_85', 'i.q_86', 'i.q_87', 'i.q_88', 'i.q_89', 'i.q_9', 'i.q_90', 'i.q_91', 'i.q_92', 'i.q_93', 'i.q_94', 'i.q_95', 'i.q_96', 'i.q_97', 'i.q_98', 'i.q_99');
         } else if ($this->instrument == 'head_measurements_subject') {
-            $fields = array('i.head_circumference1', 'i.head_circumference1_status', 'i.head_circumference2', 'i.head_circumference2_status', 'i.length1', 'i.length1_status', 'i.length2', 'i.length2_status', 'i.measurement_method', 'i.weight1', 'i.weight1_status', 'i.weight2', 'i.weight2_status');
+            $fields = array('i.head_circumference1', 'i.head_circumference1_status', 'i.head_circumference2', 'i.head_circumference2_status', 'i.head_circumference_unit', 'i.length1', 'i.length1_status', 'i.length2', 'i.length2_status', 'i.head_length_unit', 'i.measurement_method', 'i.weight1', 'i.weight1_status', 'i.weight2', 'i.weight2_status', 'i.weight_unit');
         } else if ($this->instrument == 'prefrontal_task') {
             $fields = array('i.training', 'i.training_finds_partially_covered', 'i.training_finds_fully_covered', 'i.training_retrieves_R_well', 'i.training_retrieves_R_well_trial', 'i.training_retrieves_R_well_trial_of', 'i.training_retrieves_L_well', 'i.training_retrieves_L_well_trial', 'i.training_retrieves_L_well_trial_of', 'i.start_side', 'i.trial_1', 'i.trial_2', 'i.trial_3', 'i.trial_4', 'i.trial_5', 'i.trial_6', 'i.trial_7', 'i.trial_8', 'i.trial_9', 'i.trial_10', 'i.trial_11', 'i.trial_12', 'i.trial_13', 'i.trial_14', 'i.trial_15', 'i.trial_16', 'i.trial_17', 'i.trial_18', 'i.trial_19', 'i.trial_20', 'i.trial_21', 'i.trial_22', 'i.trial_23', 'i.trial_24', 'i.first_reversal', 'i.second_reversal', 'i.third_reversal', 'i.fourth_reversal', 'i.validity_of_data', 'i.invalidity_reason', 'i.invalidity_comment', 'i.invalidity_comment_status', 'i.5sec_overall_correct', 'i.5sec_overall_trials', 'i.5sec_reversals_correct', 'i.5sec_reversals_trials', 'i.12sec_overall_correct', 'i.12sec_overall_trials', 'i.12sec_reversals_correct', 'i.12sec_reversals_trials');
+        } else if ($this->instrument == 'fyi') {
+            $fields = array('i.person_filling_out', 'i.person_filling_out_specify', 'i.person_filling_out_specify_status', 'i.risk_score', 'i.percentile', 'i.soc_com_risk', 'i.sen_reg_risk', 'i.orientrec', 'i.affeng', 'i.imitate', 'i.express', 'i.senproc', 'i.regpat', 'i.react', 'i.repplay', 'i.q_1', 'i.q_2', 'i.q_3', 'i.q_4', 'i.q_5', 'i.q_6', 'i.q_7', 'i.q_8', 'i.q_9', 'i.q_10', 'i.q_11', 'i.q_12', 'i.q_13', 'i.q_14', 'i.q_15', 'i.q_16', 'i.q_17', 'i.q_18', 'i.q_19', 'i.q_20', 'i.q_21', 'i.q_22', 'i.q_23', 'i.q_24', 'i.q_25', 'i.q_26', 'i.q_27', 'i.q_28', 'i.q_29', 'i.q_30', 'i.q_31', 'i.q_32', 'i.q_33', 'i.q_34', 'i.q_35', 'i.q_36', 'i.q_37', 'i.q_38', 'i.q_39', 'i.q_40', 'i.q_41', 'i.q_42', 'i.q_43', 'i.q_44', 'i.q_45', 'i.q_46', 'i.q_47', 'i.q_48', 'i.q_49', 'i.q_50', 'i.q_51', 'i.q_52', 'i.q_53', 'i.q_54', 'i.q_55', 'i.q_56', 'i.q_57', 'i.q_58', 'i.q_59', 'i.q_60', 'i.sounds_p', 'i.sounds_b', 'i.sounds_t', 'i.sounds_d', 'i.sounds_k', 'i.sounds_g', 'i.sounds_m', 'i.sounds_n', 'i.sounds_w', 'i.sounds_y', 'i.sounds_h', 'i.sounds_s', 'i.q_62', 'i.q_62_status', 'i.q_63', 'i.q_63_status');
+        } else if ($this->instrument == 'edi') {
+            $fields = array('i.score_0_3_regulatory', 'i.score_0_3_total_symptoms', 'i.score_10_12_communication', 'i.score_10_12_regulatory', 'i.score_10_12_repetitive_behaviour', 'i.score_10_12_social', 'i.score_10_12_total_symptoms', 'i.score_13_15_communication', 'i.score_13_15_regulatory', 'i.score_13_15_repetitive_behaviour', 'i.score_13_15_social', 'i.score_13_15_total_symptoms', 'i.score_16_18_communication', 'i.score_16_18_regulatory', 'i.score_16_18_repetitive_behaviour', 'i.score_16_18_social', 'i.score_16_18_total_symptoms', 'i.score_19_21_communication', 'i.score_19_21_regulatory', 'i.score_19_21_repetitive_behaviour', 'i.score_19_21_social', 'i.score_19_21_total_symptoms', 'i.score_22_24_communication', 'i.score_22_24_regulatory', 'i.score_22_24_repetitive_behaviour', 'i.score_22_24_social', 'i.score_22_24_total_symptoms', 'i.score_4_6_regulatory', 'i.score_4_6_social', 'i.score_4_6_total_symptoms', 'i.score_7_9_communication', 'i.score_7_9_regulatory', 'i.score_7_9_social', 'i.score_7_9_total_symptoms', 'i.EDI1', 'i.EDI2', 'i.EDI3', 'i.EDI4', 'i.EDI5', 'i.EDI6', 'i.EDI7', 'i.EDI8', 'i.EDI8ot', 'i.EDI8ot_status', 'i.EDI9', 'i.EDI10', 'i.EDI11', 'i.EDI12', 'i.EDI13', 'i.EDI14', 'i.EDI15', 'i.EDI16', 'i.EDI17', 'i.EDI18', 'i.EDI19', 'i.EDI19ot', 'i.EDI19ot_status', 'i.EDI20', 'i.EDI21', 'i.EDI22', 'i.EDI23', 'i.EDI24', 'i.EDI25', 'i.EDI26', 'i.EDI27', 'i.EDI28', 'i.EDI29', 'i.EDI30', 'i.EDI31', 'i.EDI32', 'i.EDI33', 'i.EDI33ot', 'i.EDI33ot_status', 'i.EDI34', 'i.EDI35', 'i.EDI36', 'i.EDI37', 'i.EDI38', 'i.EDI39', 'i.EDI40', 'i.EDI41', 'i.EDI42', 'i.EDI43', 'i.EDI44', 'i.EDI45', 'i.EDI45ot', 'i.EDI45ot_status', 'i.EDI46', 'i.EDI47', 'i.EDI48', 'i.EDI49', 'i.EDI50', 'i.EDI51', 'i.EDI52', 'i.EDI53', 'i.EDI54', 'i.EDI55', 'i.EDI56', 'i.EDI57', 'i.EDI58', 'i.EDI58ot', 'i.EDI58ot_status', 'i.EDI59', 'i.EDI60', 'i.EDI61', 'i.EDI62', 'i.EDI63', 'i.EDI64', 'i.EDI65', 'i.EDI66', 'i.EDI67', 'i.EDI68', 'i.EDI69', 'i.EDI70', 'i.EDI70ot', 'i.EDI70ot_status', 'i.EDI71', 'i.EDI72', 'i.EDI73', 'i.EDI74', 'i.EDI75', 'i.EDI76', 'i.EDI77', 'i.EDI78', 'i.EDI79', 'i.EDI80', 'i.EDI81', 'i.EDI82', 'i.EDI82ot', 'i.EDI82ot_status', 'i.EDI83', 'i.EDI84', 'i.EDI85', 'i.EDI86', 'i.EDI87', 'i.EDI88', 'i.EDI89', 'i.EDI90', 'i.EDI91', 'i.EDI92', 'i.EDI93', 'i.EDI94', 'i.EDI95', 'i.EDI96', 'i.EDI96ot', 'i.EDI96ot_status', 'i.inj', 'i.inj_month', 'i.inj_month_status', 'i.dear', 'i.dear_month', 'i.dear_month_status', 'i.conf', 'i.conf_month', 'i.conf_month_status', 'i.legl', 'i.legl_month', 'i.legl_month_status', 'i.emp', 'i.emp_month', 'i.emp_month_status', 'i.crim', 'i.crim_month', 'i.crim_month_status', 'i.other_1', 'i.other_1_status', 'i.other_1_code', 'i.other_1_month', 'i.other_1_month_status', 'i.other_2', 'i.other_2_status', 'i.other_2_code', 'i.other_2_month', 'i.other_2_month_status', 'i.comnt', 'i.comnt_status');
+        } else if($this->instrument == 'charge') {
+            $fields = array('aud.Date_taken as Audiology_Date_taken', 'aud.Candidate_Age as Audiology_Candidate_Age', 'aud.test_results', 'medpsych.Date_taken as Med_Psych_Hist_Date_Taken', 'medpsych.Candidate_Age as Med_Psych_Hist_Candidate_Age', 'medpsych.q16_has_child_ever', 'medpsych.q15_c_fever_seizures', 'medpsych.q15_seizures_convulsions', 'medpsych.q17_birth_defects', 'neuroscreen.Date_taken as Neuroscreen_Date_Taken', 'neuroscreen.Candidate_Age as Neuroscreen_Candidate_Age', 'neuroscreen.q19_other_physical_abnormalities', 'neuroscreen.q1_strabismus', 'neuroscreen.q6_ear_formation', 'tsi.Date_taken as TSI_Date_Taken', 'tsi.Candidate_Age as TSI_Candidate_Age', 'tsi.med_his_q_5_medications', 'tsi.med_his_q_5_medications_describe', 'tsi.med_his_q_8_brain_MRI_results', 'tsi.congenital_heart_problems', 'tsi.med_his_q_6_allergies', 'tsi.med_his_q_6_allergies_describe');
         }
         return implode($fields, ", ");
     }
@@ -2006,8 +2044,21 @@ class NDAR_Release {
 
     function getQuery() {
         if($this->instrument == 'demographics') {
-            return "SELECT DISTINCT IBISID, CandidateGUID, ProbandGUID, Gender, ProbandGender, c.CenterID, DoB, CASE s.SubprojectID WHEN 1 THEN 'High Risk' WHEN 2 THEN 'High Risk' WHEN 3 THEN 'Control' END as Cohort FROM candidate c JOIN session s ON (s.CandID=c.CandID) WHERE c.Active='Y' AND s.Active='Y' AND c.CandidateGUID IS NOT NULL";
-        }
+            return "SELECT DISTINCT IBISID, CandidateGUID, ProbandGUID, Gender, ProbandGender, c.CenterID as Site, DoB, CASE s.SubprojectID WHEN 1 THEN 'High Risk' WHEN 2 THEN 'High Risk' WHEN 3 THEN 'Low Risk' END as Cohort FROM candidate c JOIN session s ON (s.CandID=c.CandID) WHERE c.Active='Y' AND s.Active='Y' AND COALESCE(s.Current_stage, '') <> 'Recycling Bin' AND COALESCE(s.Visit, '') NOT IN ('Failure', 'Withdrawal') AND COALESCE(s.Screening, '') NOT IN ('Failure', 'Withdrawal') AND c.CandidateGUID IS NOT NULL AND s.SubprojectID IN (1, 2, 3) AND c.CenterID IN (2, 3, 4, 5)";
+            } else if($this->instrument == 'charge') {
+                return "SELECT " . $this->getFields() . " FROM session s JOIN candidate c USING (CandID)
+                    LEFT JOIN flag audflag ON (s.ID=audflag.SessionID AND audflag.Test_name='audiology' AND audflag.Administration='All' AND audflag.Data_entry='Complete' AND EXISTS (SELECT 'x' FROM flag df WHERE df.CommentID=CONCAT('DDE_', audflag.CommentID) AND df.Data_entry='Complete') AND NOT EXISTS (SELECT 'x' FROM conflicts_unresolved cu WHERE cu.CommentId1=audflag.CommentID OR cu.CommentId2=audflag.CommentID) )
+                    LEFT JOIN flag medpsychflag ON (s.ID=medpsychflag.SessionID AND medpsychflag.Test_name='med_psych_hist' AND medpsychflag.Administration='All' AND medpsychflag.Data_entry='Complete' AND EXISTS (SELECT 'x' FROM flag df WHERE df.CommentID=CONCAT('DDE_', medpsychflag.CommentID) AND df.Data_entry='Complete') AND NOT EXISTS (SELECT 'x' FROM conflicts_unresolved cu WHERE cu.CommentId1=medpsychflag.CommentID OR cu.CommentId2=medpsychflag.CommentID) )
+                    LEFT JOIN flag neuroscreenflag ON (s.ID=neuroscreenflag.SessionID AND neuroscreenflag.Test_name='neuro_screen' AND neuroscreenflag.Administration='All' AND neuroscreenflag.Data_entry='Complete' AND EXISTS (SELECT 'x' FROM flag df WHERE df.CommentID=CONCAT('DDE_', neuroscreenflag.CommentID) AND df.Data_entry='Complete') AND NOT EXISTS (SELECT 'x' FROM conflicts_unresolved cu WHERE cu.CommentId1=neuroscreenflag.CommentID OR cu.CommentId2=neuroscreenflag.CommentID))
+                    LEFT JOIN flag tsiflag ON (s.ID=tsiflag.SessionID AND tsiflag.Test_name='tsi' AND tsiflag.Administration='All' AND tsiflag.Data_entry='Complete' AND EXISTS (SELECT 'x' FROM flag df WHERE df.CommentID=CONCAT('DDE_', tsiflag.CommentID) AND df.Data_entry='Complete') AND NOT EXISTS (SELECT 'x' FROM conflicts_unresolved cu WHERE cu.CommentId1=tsiflag.CommentID OR cu.CommentId2=tsiflag.CommentID) )
+                    -- The instrument tables themselves..
+                    LEFT JOIN audiology aud ON (audflag.CommentID=aud.CommentID)
+                    LEFT JOIN med_psych_hist medpsych ON (medpsychflag.CommentID=medpsych.CommentID)
+                    LEFT JOIN neuro_screen neuroscreen ON (neuroscreenflag.CommentID=neuroscreen.CommentID)
+                    LEFT JOIN tsi tsi ON (tsiflag.CommentID=tsi.CommentID)
+
+                    WHERE " . $this->getWhere();
+            }
         return "SELECT " . $this->getFields() . " FROM " . $this->instrument . " i JOIN flag f ON (f.CommentID=i.CommentID) JOIN session s ON (s.ID=f.SessionID) JOIN candidate c ON (c.CandID=s.CandID) WHERE " . $this->getWhere();
     }
 
@@ -2024,9 +2075,9 @@ class NDAR_Release {
                 }
             }
             foreach($row as $key => $val) {
-                if($key == 'Date_taken' || $key == 'DoB') {
+                if(strpos($key, 'Date_taken') !== FALSE || $key == 'DoB' || strpos($key, 'Date_Taken') !== FALSE) {
                     $Date = explode('-', $val);
-                    $row['Date_taken'] = $Date[1] . '/' . '01' . '/' . $Date[0];
+                    $row[$key] = $Date[1] . '/' . '01' . '/' . $Date[0];
                 }
                 if($this->instrument == 'adi_r_proband') {
                     if($key == 'Total_B2V' || $key == 'Total_B3V' || $key == 'BV_Total' || $key == 'BNV_Total') {
