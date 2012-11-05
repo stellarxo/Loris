@@ -29,7 +29,7 @@
         <td nowrap="nowrap">{$form.ProbandGender.html}</td>
     </tr>
     <tr>
-        <td nowrap="nowrap">{$form.ProbandDoB.label}x</td>
+        <td nowrap="nowrap">{$form.ProbandDoB.label}</td>
         <td nowrap="nowrap">{$form.ProbandDoB.html}</td>
     </tr>
     <tr>
