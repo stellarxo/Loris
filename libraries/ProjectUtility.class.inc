@@ -76,6 +76,10 @@ class ProjectUtility extends PEAR
         }
         return '';
     }
+
+    function FlattenID($Arr) {
+        return $Arr['ID'];
+    }
     /* Set the session_status for the Grant Status field for anything that
      * Depends on this SessionID. Note that multiple sessions of the same
      * candidate may be affected by this session, so we just get all
@@ -85,7 +89,6 @@ class ProjectUtility extends PEAR
     function SetSupplementalGrantStatus($SessionID) {
         $DB =& Database::singleton();
         $IDs = $DB->pselect("SELECT ID FROM session WHERE CandID=(SELECT CandID FROM session WHERE ID=:SessionID)", array(":SessionID"=>$SessionID));
-        print_r($IDs);
         $IDs_string = join(',', array_map(array('ProjectUtility', 'FlattenID'),$IDs));
         $DB->run("delete from session_status WHERE ID IN ($IDs_string) AND Name='Grant Status'");
         foreach($IDs as $ID ) {
