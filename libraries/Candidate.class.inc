@@ -103,7 +103,7 @@ class Candidate
    * @throws PEAR::Error
    * @static
    */
-   function createNew($centerID, $dateOfBirth, $edc, $gender, $PSCID=null)
+   function createNew($centerID, $dateOfBirth, $edc, $gender, $PSCID=null, $startNumber=0)
    {
        if(!empty($this->candidateInfo['candID'])) {
            return PEAR::raiseError("createNew must be called statically");
@@ -149,7 +149,7 @@ class Candidate
                return PEAR::raiseError("PSCID not unique", PSCID_NOT_UNIQUE);
            }
        } else {           
-           $PSCID = Candidate::_generatePSCID($site->getSiteAlias());
+           $PSCID = Candidate::_generatePSCID($site->getSiteAlias(), $startNumber);
            if(PEAR::isError($PSCID)) return $PSCID;
        }
        
@@ -413,9 +413,15 @@ class Candidate
     * @return string
     * @throws PEAR::Error
     */
-    function _generatePSCID($prefix)
+    function _generatePSCID($prefix, $startNumber)
     {
-        // get a database connection
+        // The generatePSCID() function is confusing and I don't fully understand it, but
+        // from what I understand it generates an array with a list of possible values for
+        // each digit/section of the PSCID based on the config.xml. 
+        // generateFirst/RandomStringFromArrays then concatenates the first option (or a random one)
+        // from each together to get a valid PSCID, and then checks if it already exists in the database
+        // If it does, it increments the number until it gets a unique PSCID.
+        // - Dave
         $db =& Database::singleton();
         if(PEAR::isError($db)) {
             return $db;
@@ -425,6 +431,10 @@ class Candidate
         $PSCIDSettings = $config->getSetting('PSCID');
         $pscidArrays = Candidate::generateArrays($PSCIDSettings, $prefix);
 
+        // If IBIS2, take "0" out of the possibilities for the first digit of the numbers.
+        if($startNumber == 1000) {
+            $pscidArrays[1] = array(1, 2, 3, 4, 5, 6, 7, 8, 9);
+        }
         // run one first time, then loop until the pscid is not used
         do {
             // pick a new pscid
