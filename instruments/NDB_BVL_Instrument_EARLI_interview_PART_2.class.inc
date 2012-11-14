@@ -731,7 +731,7 @@ class NDB_BVL_Instrument_EARLI_interview_PART_2 extends NDB_BVL_Instrument {
 		//q5-26
 		$this->form->addElement("select", "q5_26", "5-26. Was the [SIBLINGS]'s father ever tested for anti-sperm antibody?",  array(NULL=>"", "01_yes" => "01 Yes", "02" => "02 No ", "88_refused" => "88 Refused",  "99_Do_not_know"=>"99 Do not know", "Not_Answered"=>"Not Answered"));
 		$this->form->addElement('static', null, $this->indent . "If you selected [No], [Refused] or [Don't Know] skip to question 5-28");
-		$this->XINRegisterRule("q5_26", array("q5***{@}=={@}01_yes"), "Required if father is known");
+		$this->XINRegisterRule("q5_26", array("q5{@}=={@}01_yes"), "Required if father is known");
 		$this->form->addElement('static', null, "<br/>");
 
 
@@ -772,7 +772,7 @@ class NDB_BVL_Instrument_EARLI_interview_PART_2 extends NDB_BVL_Instrument {
 
 		//q5-30
 		$this->form->addElement("select", "q5_30", "5-30. Did [SIBLING PREGNANCY]'s father have any procedures or surgeries to help you become pregnant?",  array(NULL=>"", "01_yes" => "01 Yes", "02" => "02 No ", "88_refused" => "88 Refused",  "99_Do_not_know"=>"99 Do not know", "Not_Answered"=>"Not Answered"));
-		$this->XINRegisterRule("q5_30", array("q5***{@}=={@}01_yes"), "Required if biological father is known");
+		$this->XINRegisterRule("q5_30", array("q5{@}=={@}01_yes"), "Required if biological father is known");
 		$this->form->addElement('static', null, $this->indent . "If you selected [No], [Refused] or [Don't Know] skip to question 5-32");
 		$this->form->addElement('static', null, "<br/>");
 
@@ -1045,12 +1045,12 @@ class NDB_BVL_Instrument_EARLI_interview_PART_2 extends NDB_BVL_Instrument {
 
 		//q5_25a
                 if ($answer["q5_16"] == "01_yes")
-		{
+                {
                 	if ($answ["q4a_1"] == "01_yes" || $answ["q4a_1"] == "02")
                 	{
-	                	if (empty($fields["q5***"]))
-           	             		$errors["q5***"] =  "You must specify";
-			}
+	                	if (empty($fields["q5"]))
+           	             		$errors["q5"] =  "You must specify";
+                    }
                 }
 
 		//q5-33
