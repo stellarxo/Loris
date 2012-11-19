@@ -380,8 +380,8 @@ INSERT INTO test_battery VALUES ('', 'edi', '1050', '1140', 'Y', 'Visit', '2');
         //If trying to start anywhere but the _main page...
         if(!empty($this->page) && empty($this->Date_taken)){
             $this->form->addElement("header", null, "<p><b style='color:red'>Please return to the Top page and enter the subjects age details.</b>");
-            $this->form->freeze();
-            return;
+            //$this->form->freeze();
+            //return;
         }
 
         if(ereg("(_page[0-9]+)",$this->page,$matches)){
