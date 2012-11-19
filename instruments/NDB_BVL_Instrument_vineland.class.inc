@@ -723,5 +723,55 @@ $db->_trackChanges = false;
         $this->XINRegisterRule("{$prefix}comments", $rules_array, "Please record this section's comments, or mark it as 'Not Answered'.", "{$prefix}comments" . '_group');
     }
 
+    // Based on Mia's vineland_NDAR script from Redmine ticket #2558, this
+    // updates the ..._NDAR fields
+    function setValueScore($item, $corritem) {
+        $db =& Database::singleton();
+
+        $ndar_item = $item . "_NDAR";
+        $commentid = $this->getCommentID();
+
+        $record = $db->pSelectRow("select $item, $corritem from " . $this->table . " WHERE CommentID=:cid", array('cid' => $commentid));
+
+        if($record[$corritem] == "") {
+            $setvalue = $record[$item];
+            $success = $db->update($this->table, array($ndar_item=> $setvalue),
+                array('CommentID' => $commentid)
+            );
+        } else {
+            $setvalue = $record[$corritem];
+        }
+    }
+
+    function scoreNDARGroup($qprefix, $qcorrprefix, $numq) {
+        for($i = 1; $i < $numq; $i++) {
+            $this->setValueScore($qprefix . $i, $qcorrprefix . $i);
+        }
+    }
+
+    function score() {
+        $sections = array(
+            array('Name' => "REC", 'Items' => 21),
+            array('Name' => "EXP", 'Items' => 55),
+            array('Name' => "WRN", 'Items' => 26),
+            array('Name' => "PER", 'Items' => 42),
+            array('Name' => "DOM", 'Items' => 25),
+            array('Name' => "CMM", 'Items' => 45),
+            array('Name' => "IPR", 'Items' => 39),
+            array('Name' => "PL", 'Items' => 32),
+            array('Name' => "CS", 'Items' => 31),
+            array('Name' => "GMS", 'Items' => 41),
+            array('Name' => "FMS", 'Items' => 37),
+            array('Name' => "INT", 'Items' => 12),
+            array('Name' => "EXT", 'Items' => 11),
+            array('Name' => "OTH", 'Items' => 16)
+        );
+        foreach($sections as $section) {
+            $this->scoreNDARGroup($section['Name'] . "_ITEM_", 
+                $section['Name'] . "_CORRECTED_ITEM_", 
+                $section['Items']
+            );
+        }
+    }
 }
 ?>
