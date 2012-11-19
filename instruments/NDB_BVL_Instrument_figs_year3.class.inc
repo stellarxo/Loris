@@ -291,7 +291,7 @@ class NDB_BVL_Instrument_figs_year3 extends NDB_BVL_Instrument
         $this->_nullStatus(&$values);
         if(isset($values['Date_taken'])) {
             $Date_taken = $values['Date_taken'];
-            $values['Date_taken'] = "$Date_taken[Y]-$Date_taken[M]-$Date_taken[d]";
+            $values['Date_taken'] = $this->_getDatabaseDate($Date_taken);
             $this->_saveCandidateAge(&$values);
 
         }
