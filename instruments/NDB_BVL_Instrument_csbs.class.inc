@@ -523,7 +523,7 @@ INSERT INTO instrument_subtests VALUES('', 'csbs', 'csbs_page2', 'Symbolic Behav
 
 
 
-    if($scores['understanding_weighted'] != "Unable to score") {
+    if($scores['understanding_weighted'] !== "Unable to score") {
         $query_scores6 = "SELECT * FROM csbs_lookup WHERE age_months=".$age_months. " AND score_weighted=".$scores['understanding_weighted']." AND subscale='understanding_weighted'";
             $record_6 = array();
         $db->selectRow($query_scores6, $record_6);
@@ -1038,8 +1038,8 @@ INSERT INTO instrument_subtests VALUES('', 'csbs', 'csbs_page2', 'Symbolic Behav
         $this->form->addGroup($group, "q_19_sequence_action_schemes_headers", "19. Sequence action schemes" . $this->indent, $this->_GUIDelimiter, false);
         unset($group);
         for($i = 1; $i <= 6; $i++) {
-            $group[] =& $this->_addNoActionsPerformed("q_19_sequence_action_schemes_{$i}_action1", $actions_array, $i);
-            $group[] =& $this->form->createElement("select", "q_19_sequence_action_schemes_$i" . "_action2", null, $actions_array);
+            $group[] = $this->_addNoActionsPerformed("q_19_sequence_action_schemes_{$i}_action1", $actions_array, $i);
+            $group[] = $this->form->createElement("select", "q_19_sequence_action_schemes_$i" . "_action2", null, $actions_array);
             // Require the first dropdown. Even though XIN rules requires things by default, we explicitly require it
             // to make sure the error message shows up, since it's part of a group.
             if($i == 1) {
