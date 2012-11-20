@@ -90,7 +90,7 @@ class NDB_BVL_Instrument_mri_parameter_form extends NDB_BVL_Instrument
         $this->addHourMinElement("total_duration", "Total Duration of Session (hours:minutes)");
         $this->form->addElement('select','sedation', "Was sedation administered?", array(""=>NULL,"Yes" => "Yes", "No"=>"No"));
         $this->form->addElement('static', null, "(please use comment field for details)");
-        $this->form->addElement('select','medication', "Was the child on any medication?", array(""=>NULL,"Yes" => "Yes", "No"=>"No"));
+        $this->form->addElement('select','medication', "Was the child on any medication?", array(""=>NULL,"Yes" => "Yes", "No"=>"No", 'not_answered'=>'Not Answered'));
 
         $this->form->addElement("text", "medication_specify", "If yes, specify:");
         $this->form->addFormRule(array(&$this, 'Medication_Rules'));
