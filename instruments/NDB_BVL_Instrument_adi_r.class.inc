@@ -313,13 +313,13 @@ class NDB_BVL_Instrument_adi_r extends NDB_BVL_Instrument
 			//Age of First Single Words
 			if (($this->respondentAgeYears*12.0) > 24 && in_array($this->scores["q_9_first_single_words_code"], array(993, 994, 997))){
 			    $scoreCols["D_Total"] += 1;
-			} elseif (($this->scores["q_9_first_single_words_code"]*12.0) > 24 && $this->scores["q_9_first_single_words_code"] < 990) {
+			} elseif (($this->scores["q_9_first_single_words_code"]) > 24 && $this->scores["q_9_first_single_words_code"] < 990) {
 			    $scoreCols["D_Total"] += 1;
 			}
 			//Age of First Phrases
 			if (($this->respondentAgeYears*12.0) > 33 && in_array($this->scores["q_10_first_phrases_code"], array(993, 994, 997))){
 			    $scoreCols["D_Total"] += 1;
-			} elseif (($this->scores["q_10_first_phrases_code"]*12.0) > 33 && $this->scores["q_10_first_phrases_code"] < 990) {
+			} elseif (($this->scores["q_10_first_phrases_code"]) > 33 && $this->scores["q_10_first_phrases_code"] < 990) {
 			    $scoreCols["D_Total"] += 1;
 			}
             //Age When Abnormality First Evident
@@ -327,7 +327,7 @@ class NDB_BVL_Instrument_adi_r extends NDB_BVL_Instrument
 			     $scoreCols["D_Total"] += 1;
 			}
 			//Interviewers's Judgement
-			if (($this->scores["q_87_interviewers_judgment"]/12.0) < 36 && !is_null($this->scores["q_87_interviewers_judgment"])) {
+			if (($this->scores["q_87_interviewers_judgment"]) < 36 && !is_null($this->scores["q_87_interviewers_judgment"])) {
 			     $scoreCols["D_Total"] += 1;
 			}
 			
@@ -401,7 +401,7 @@ class NDB_BVL_Instrument_adi_r extends NDB_BVL_Instrument
 			     $scoreCols["D_Total"] += 1;
 			}
 			//Interviewers's Judgement
-			if (($this->scores["q_87_interviewers_judgment"]*12) < 36 && !is_null($this->scores["q_87_interviewers_judgment"])) {
+			if (($this->scores["q_87_interviewers_judgment"]) < 36 && !is_null($this->scores["q_87_interviewers_judgment"])) {
 			     $scoreCols["D_Total"] += 1;
 			}
         }
