@@ -301,6 +301,9 @@ class NDB_BVL_Instrument_macarthur_words_gestures extends NDB_BVL_Instrument
             if (PEAR::isError($record_1a)) {
                 return PEAR::raiseError("Could not retrieve scores: " . $record_1a->getMessage());
             }
+            if(empty($record_1a)) {
+                $db->selectRow("SELECT * from macarthur_lookup WHERE age_months=$age_months AND sex='$gender'     AND subscale='$scale_number' ORDER BY score_raw ASC LIMIT 1", $record_1a);
+            }
 
             $query_scores1b = "SELECT * FROM macarthur_lookup WHERE age_months=".$age_months. " AND sex='$gender' AND subscale='$scale_number' AND score_raw<$score_holder ORDER BY score_raw DESC LIMIT 1";
             $record_1b = array();
@@ -309,6 +312,7 @@ class NDB_BVL_Instrument_macarthur_words_gestures extends NDB_BVL_Instrument
                 return PEAR::raiseError("Could not retrieve scores: " . $record_1b->getMessage());
             }
 
+            //print "scale: $scale_number score: " . $scores[$scale_number] . " x< " . $record_1b['score_raw'] . " x> " . $record_1a['score_raw'] . " Y> " . $record_1b['score_percentile'] . " Y< " . $record_1b['score_percentile'] . '<br />';
             $percentile_calculation1 = (
                     ($scores[$scale_number]-$record_1b['score_raw'])/
                     ($record_1a['score_raw']-$record_1b['score_raw'])
@@ -316,6 +320,9 @@ class NDB_BVL_Instrument_macarthur_words_gestures extends NDB_BVL_Instrument
 
             $scores[$scale_percentile]=round($percentile_calculation1);
 
+        }
+        if($scores[$scale_percentile] > 99) {
+            $scores[$scale_percentile]=99;
         }
     }
 
