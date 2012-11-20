@@ -161,7 +161,7 @@ INSERT INTO instrument_subtests VALUES('', 'csbs', 'csbs_page2', 'Symbolic Behav
     * @access private
     */
     function _setupForm(){
-        if(ereg("csbs(_page[0-9]+)",$this->page,$matches)){
+        if(preg_match("/csbs(_page[0-9]+)/",$this->page,$matches)){
             call_user_method($matches[1], &$this);
         } else {
             $this->_main();
@@ -355,7 +355,7 @@ INSERT INTO instrument_subtests VALUES('', 'csbs', 'csbs_page2', 'Symbolic Behav
         $scores["q_3_gaze_point_following_raw_score"] = $this->_countChecked($record, "q_3_gaze_point_following_");
 
         foreach($record as $field=>$value) {
-            if(ereg("q_4_rate_of_communicating", $field)) {
+            if(preg_match("/q_4_rate_of_communicating/", $field)) {
                 $score += $value;
             }
         }
@@ -1079,7 +1079,7 @@ INSERT INTO instrument_subtests VALUES('', 'csbs', 'csbs_page2', 'Symbolic Behav
     
     function _countChecked($record, $genericLabel) {
         foreach ($record as $field=>$value) {
-            if (ereg($genericLabel, $field)) {
+            if (preg_match("/$genericLabel/", $field)) {
                 $score += ($value == "checked");
             }
         }
@@ -1090,7 +1090,7 @@ INSERT INTO instrument_subtests VALUES('', 'csbs', 'csbs_page2', 'Symbolic Behav
     {
 	foreach ($record as $field=>$value)
 	{
-        	if (ereg($genericLabel, $field) && $field != $option)
+        	if (preg_match("/$genericLabel/", $field) && $field != $option)
 		{
                 	$score += ($value == "checked");
 		}
@@ -1101,7 +1101,7 @@ INSERT INTO instrument_subtests VALUES('', 'csbs', 'csbs_page2', 'Symbolic Behav
 
     function _countWords($record, $genericLabel, $excludedWords = array()) {
         foreach($record as $field=>$value) {
-            if(ereg($genericLabel, $field) && !is_null($value) && $value !== '') {
+            if(preg_match("/$genericLabel/", $field) && !is_null($value) && $value !== '') {
                 if(!in_array($value, $excludedWords)) {
                     $score++; 
                 }
