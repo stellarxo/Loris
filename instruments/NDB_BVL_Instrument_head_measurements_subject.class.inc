@@ -70,7 +70,7 @@ INSERT INTO test_battery VALUES ('', 'head_measurements_subject', '1050', '1140'
                 $this->addTextElement("weight2$suffix", "Weight 2:");
             }
         }
-        $this->form->addElement('textarea', 'comments', 'General Comments:');
+        $this->addTextAreaElement('comments', 'General Comments:');
   
     }
 
