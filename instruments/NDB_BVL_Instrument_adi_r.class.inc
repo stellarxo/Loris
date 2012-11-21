@@ -135,7 +135,7 @@ class NDB_BVL_Instrument_adi_r extends NDB_BVL_Instrument
             }
         }
         
-        if(ereg("(_page[0-9]+)",$this->page,$matches)){
+        if(preg_match("/(_page[0-9]+)/",$this->page,$matches)){
             call_user_method($matches[1], &$this);
         } else {
             $this->_main();
@@ -173,7 +173,7 @@ class NDB_BVL_Instrument_adi_r extends NDB_BVL_Instrument
         'emptyOptionValue' => null
         );
 
-        if (ereg("proband", $this->testName)) {
+        if (preg_match("/proband/", $this->testName)) {
             $this->form->addElement('date', 'DoB_proband', 'DoB Proband', $dateOptions);
         }
         
@@ -1100,7 +1100,7 @@ e skills first apparent");               // $this->form->addElement('select', 'q
 	}
 	
 	function _cleanToDigits($string) {
-	   $string = ereg_replace("[^0-9]", "", $string);
+	   $string = preg_replace("/[^0-9]/", "", $string);
 	   if(is_numeric($string)) {
             return intval($string);
 	   } else return null;
