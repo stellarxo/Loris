@@ -448,28 +448,28 @@ class NDB_BVL_Instrument_adi_r extends NDB_BVL_Instrument
         	$this->addTextElement("q_3_first_symptoms_text", "3. First symptoms to arouse parental concern");
         	$this->form->addElement('static', NULL, "<br />"); //blank line
     	
-    		$this->addTextElement("q_4_onset_as_perceived_code", "4. Onset as perceived with hindsight");
+    		$this->addNumericElement("q_4_onset_as_perceived_code", "4. Onset as perceived with hindsight");
     		$this->addLargeTextAreaElement("q_4_onset_as_perceived_text");
     	
 		$this->form->addElement('static', null, "<br />");
 
-    		$this->addTextElement("q_5_first_walked_code", "5. First walked unaided");
+    		$this->addNumericElement("q_5_first_walked_code", "5. First walked unaided");
 		$this->addLargeTextAreaElement("q_5_first_walked_text");
 
 		$this->form->addElement('static', null, "<br />");
 		
-		$this->addTextElement("q_6_bladder_daytime_code", "6. Acquisition of bladder control: daytime");
+		$this->addNumericElement("q_6_bladder_daytime_code", "6. Acquisition of bladder control: daytime");
 		$this->addLargeTextAreaElement("q_6_bladder_daytime_text");
 
 		$this->form->addElement('static', null, "<br />");
 		
-		$this->addTextElement("q_7_bladder_nighttime_code", "7. Acquisition of bladder control: nighttime");
+		$this->addNumericElement("q_7_bladder_nighttime_code", "7. Acquisition of bladder control: nighttime");
 		$this->addLargeTextAreaElement("q_7_bladder_nighttime_text");
 
                 $this->form->addElement('static', null, "<br />");
 
 
- 		$this->addTextElement("q_8_bowel_control_code", "8. Acquisition of bowel control");
+ 		$this->addNumericElement("q_8_bowel_control_code", "8. Acquisition of bowel control");
 
                 $this->form->addElement('static', null, "<br />");
 
@@ -518,7 +518,7 @@ class NDB_BVL_Instrument_adi_r extends NDB_BVL_Instrument
                 	$this->form->addElement('static', null, "<br />");
 		}
 		
-		$this->addTextElement("q_17_main_loss_apparent_code", "17. Age when main loss of language skills first apparent", array("q_11_loss_of_language{@}=={@}1_yes"), "This is required if language was lost (answered 'yes' to question 11)");
+		$this->addNumericElement("q_17_main_loss_apparent_code", "17. Age when main loss of language skills first apparent", array("q_11_loss_of_language{@}=={@}1_yes"), "This is required if language was lost (answered 'yes' to question 11)");
 		$this->addLargeTextAreaElement("q_17_main_loss_apparent_text", $this->indent . "Describe:", array("q_11_loss_of_language{@}=={@}1_yes"), "This is required if language was lost (answered 'yes' to question 11)");
 	
                 $this->form->addElement('static', null, "<br />");
@@ -531,7 +531,7 @@ class NDB_BVL_Instrument_adi_r extends NDB_BVL_Instrument
 		//$this->addLargeTextAreaElement("q_18_loss_due_to_illness_text", $this->indent . "Describe:", array("q_11_loss_of_language{@}=={@}1_yes"), "This is required if language was lost (answered 'yes' to question 11)");
 	
 
-		$this->addTextElement("q_19_duration_of_loss_code", "19. Duration of loss of language skills", array("q_11_loss_of_language{@}=={@}1_yes"), "This is required if language was lost (answered 'yes' to question 11)");
+		$this->addNumericElement("q_19_duration_of_loss_code", "19. Duration of loss of language skills", array("q_11_loss_of_language{@}=={@}1_yes"), "This is required if language was lost (answered 'yes' to question 11)");
 		$this->addLargeTextAreaElement("q_19_duration_of_loss_text", $this->indent . "Describe:", array("q_11_loss_of_language{@}=={@}1_yes"), "This is required if language was lost (answered 'yes' to question 11)");
 		
                 $this->form->addElement('static', null, "<br />"); 
@@ -561,7 +561,7 @@ class NDB_BVL_Instrument_adi_r extends NDB_BVL_Instrument
 		
 		$this->XINRegisterRule("q_21_purposive_hand_movements", array("q_20_loss_of_skills_code{@}=={@}01_yes"), "This is required if skills were lost (answered 'yes' to question 20)");
 
-		$this->addTextElement("q_26_loss_first_apparent_code", "26. Age when main loss of skill first apparent");
+		$this->addNumericElement("q_26_loss_first_apparent_code", "26. Age when main loss of skill first apparent");
                 $this->form->addElement('static', null, "<br />");
 
 	
@@ -570,7 +570,7 @@ class NDB_BVL_Instrument_adi_r extends NDB_BVL_Instrument
                 $this->form->addElement('static', null, "<br />");
 		//$this->addLargeTextAreaElement("q_27_physical_illness_text");
 		
-		$this->addTextElement("q_28_duration_of_loss_code", "28. Duration of loss of skills");
+		$this->addNumericElement("q_28_duration_of_loss_code", "28. Duration of loss of skills");
 
 
 		$this->form->addElement('static', null, "<br /><br />");
