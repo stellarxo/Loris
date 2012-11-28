@@ -99,7 +99,7 @@ INSERT INTO test_battery VALUES ('', 'intervention_history', '1053', '1179', 'Y'
     */
     function _setupForm(){
 
-    	if(ereg("intervention_history(_page[0-9]+)", $this->page, $matches))
+    	if(preg_match("/intervention_history(_page[0-9]+)/", $this->page, $matches))
         {
  	       call_user_method($matches[1], &$this);
         }

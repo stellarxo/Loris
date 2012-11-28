@@ -97,7 +97,7 @@ class NDB_BVL_Instrument_macarthur_words_gestures extends NDB_BVL_Instrument
     * @access private
     */
     function _setupForm(){
-        if(ereg("macarthur_words_gestures(_page[0-9]+)",$this->page,$matches)){
+        if(preg_match("/macarthur_words_gestures(_page[0-9]+)/",$this->page,$matches)){
             call_user_method($matches[1], &$this);
         } else {
             $this->_main();
