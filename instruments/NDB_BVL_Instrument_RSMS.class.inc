@@ -65,7 +65,7 @@ class NDB_BVL_Instrument_RSMS extends NDB_BVL_Instrument{
     * @access private
     */
 	function _setupForm(){
-	       if(ereg("RSMS(_page[0-9]+)",$this->page,$matches)){
+	       if(preg_match("/RSMS(_page[0-9]+)/",$this->page,$matches)){
                 call_user_method($matches[1], &$this);
             } else {
                 $this->_main();

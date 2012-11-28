@@ -384,7 +384,7 @@ INSERT INTO test_battery VALUES ('', 'edi', '1050', '1140', 'Y', 'Visit', '2');
             //return;
         }
 
-        if(ereg("(_page[0-9]+)",$this->page,$matches)){
+        if(preg_match("/(_page[0-9]+)/",$this->page,$matches)){
             call_user_method($matches[1], &$this);
         } else {
             $this->_main();

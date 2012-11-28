@@ -163,7 +163,7 @@ class NDB_BVL_Instrument_SRS extends NDB_BVL_Instrument
     * @access private
     */
     function _setupForm(){
-        if(ereg("SRS_page([0-9]+)",$this->page,$matches)){
+        if(preg_match("/SRS_page([0-9]+)/",$this->page,$matches)){
             $this->_page($matches[1]);
         } else {
             $this->_main();

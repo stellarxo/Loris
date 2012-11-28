@@ -58,7 +58,7 @@ function _setupForm(){
     	 //Defines the call back function for HTML Quickform to use when validating the form.
         $this->form->addFormRule(array(&$this,'XINValidate'));
     	
-    	if(ereg("(_page[0-9]+)",$this->page,$matches)){
+    	if(preg_match("/(_page[0-9]+)/",$this->page,$matches)){
             call_user_method($matches[1], &$this);
         } else {
             $this->_main();
