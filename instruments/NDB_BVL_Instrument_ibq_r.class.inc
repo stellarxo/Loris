@@ -67,7 +67,7 @@ class NDB_BVL_Instrument_ibq_r extends NDB_BVL_Instrument
     {
     	$this->answer_options=array(NULL=>'', '1'=>'1', '2'=>'2', '3'=>'3', '4'=>'4', '5'=>'5', '6'=>'6', '7'=>'7', 'does_not_apply'=>'Does not apply', 'not_answered'=>'Not Answered');
     	
-    	if(ereg("(_page[0-9])", $this->page, $matches)) {
+    	if(preg_match("/(_page[0-9])/", $this->page, $matches)) {
     		call_user_method($matches[1], &$this);
     	} else {
     		$this->_main();
@@ -133,7 +133,7 @@ class NDB_BVL_Instrument_ibq_r extends NDB_BVL_Instrument
     			$record[$field] = null;
     		}
 	    	//reverse as needed
-    		if (in_array(ereg_replace("q_", "", $field), $reverseItems) && !is_null($record[$field])) {
+    		if (in_array(preg_replace("/q_/", "", $field), $reverseItems) && !is_null($record[$field])) {
     			$record[$field] = 8 - $record[$field];
     		}
     	}

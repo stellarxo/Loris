@@ -87,7 +87,7 @@ class NDB_BVL_Instrument_EARLI_interview_revised extends NDB_BVL_Instrument {
 		//XIN rule is applied to every single field in the form
 		$this->form->addFormRule(array(&$this,'XINValidate'));
 
-		if(ereg("EARLI_interview(_page[0-9]+)_revised", $this->page, $matches)) 	
+		if(preg_match("/EARLI_interview(_page[0-9]+)_revised/", $this->page, $matches))
 		{
 			call_user_method($matches[1], &$this);
 		}	

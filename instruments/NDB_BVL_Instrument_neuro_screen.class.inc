@@ -87,7 +87,7 @@ class NDB_BVL_Instrument_neuro_screen extends NDB_BVL_Instrument
     * @access private
     */
     function _setupForm(){
-        if(ereg("neuro_screen(_page[0-9]+)",$this->page,$matches)){
+        if(preg_match("/neuro_screen(_page[0-9]+)/",$this->page,$matches)){
             call_user_method($matches[1], &$this);
         } else {
             $this->_main();
@@ -557,7 +557,7 @@ class NDB_BVL_Instrument_neuro_screen extends NDB_BVL_Instrument
         
         foreach($allQuestions as $field) {
             //question number
-            ereg("([0-9]+)", $field, $matches);
+            preg_match("/([0-9]+)/", $field, $matches);
             
             //is this question used in this version number?
             if(in_array($matches[1], $requiredQuestions)) {
