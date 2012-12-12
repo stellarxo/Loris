@@ -41,7 +41,7 @@ class NDB_BVL_Instrument_figs_year3 extends NDB_BVL_Instrument
         // data keyed by commentID
         $this->commentID = $commentID;
 
-	$this->_doubleDataEntryDiffIgnoreColumns = array('CommentID', 'UserID', 'Testdate', 'RelativeID',  'Window_Difference', 'Candidate_Age',
+	$this->_doubleDataEntryDiffIgnoreColumns = array('CommentID', 'UserID', 'Testdate', 'Data_entry_completion_status', 'RelativeID',  'Window_Difference', 'Candidate_Age',
 							 'Face_CauseOfDeath',
 							 'Face_Comments',
 							 'Other_Narrative',
@@ -75,7 +75,10 @@ class NDB_BVL_Instrument_figs_year3 extends NDB_BVL_Instrument
 							 'OCD_Q3b_Duration',
 							 'OCD_Q4aDescription',
 							 'ADHD_Q1k2_Grade',
-							 'ADHD_Q3aDescription');
+							 'ADHD_Q3aDescription',
+                             'DataEntryCompleted' /* For relatives data entry completion*/
+                         );
+        $this->_doubleDataEntryDiffIgnoreColumns = array_merge($this->_doubleDataEntryDiffIgnoreColumns, $this->scoreCols, $this->scoreColsRelative);
 	
 
         
