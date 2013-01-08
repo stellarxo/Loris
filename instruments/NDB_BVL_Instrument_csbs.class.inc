@@ -36,8 +36,8 @@ INSERT INTO instrument_subtests VALUES('', 'csbs', 'csbs_page2', 'Symbolic Behav
         var $dateOptions = array(
                 'language' => 'en',
                 'format'   => 'YMd',
-                'minYear'  =>  '2007',
-                'maxYear'  => '2012',
+                'minYear'  =>  '2006',
+                'maxYear'  => '2017',
                 'addEmptyOption' => true,
                 'emptyOptionValue' => null);
 
