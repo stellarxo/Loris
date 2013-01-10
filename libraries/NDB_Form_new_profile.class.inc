@@ -61,6 +61,15 @@ class NDB_Form_new_profile extends NDB_Form
             return PEAR::raiseError("Candidate Error ($candID): ".$candidate->getMessage());
         }
 
+        $db = Database::singleton();
+        $PTID = $db->pselectOne("SELECT ParameterTypeID FROM parameter_type WHERE Name='candidate_plan'", array());
+        if(!is_numeric($PTID)) {
+            return PEAR::raiseError("Missing ParameterTypeID for candidate_plan");
+        }
+        $db->insert("parameter_candidate", array('ParameterTypeID' => $PTID,
+            'CandID' => $candID,
+            'Value' => $values['candidate_plan']
+        ));
         //------------------------------------------------------------
 
         $this->tpl_data['success'] = true;
@@ -115,6 +124,20 @@ class NDB_Form_new_profile extends NDB_Form
     
         // gender rules
         $this->form->addRule('gender', 'Gender is required', 'required');
+
+        $this->form->addElement("select", "candidate_plan", 'Candidate Plan', 
+            array(
+                ''         => '',
+                '3m_plan1' => '3m_plan1',
+                '3m_plan2' => '3m_plan2',
+                '3m_plan3' => '3m_plan3',
+                '3m_plan4' => '3m_plan4',
+                '6m_plan1' => '6m_plan1',
+                '6m_plan2' => '6m_plan2',
+                '6m_plan3' => '6m_plan3'
+            )
+        );
+        $this->form->addRule('candidate_plan', 'Plan is required', 'required');
 
         $PSCIDsettings = $config->getSetting('PSCID');
         if($PSCIDsettings['generation'] == 'user') {
