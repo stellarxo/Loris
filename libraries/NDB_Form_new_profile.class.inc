@@ -137,7 +137,6 @@ class NDB_Form_new_profile extends NDB_Form
                 '6m_plan3' => '6m_plan3'
             )
         );
-        $this->form->addRule('candidate_plan', 'Plan is required', 'required');
 
         $PSCIDsettings = $config->getSetting('PSCID');
         if($PSCIDsettings['generation'] == 'user') {
@@ -185,6 +184,10 @@ class NDB_Form_new_profile extends NDB_Form
             $errors['ProjectID'] = "Project is required";
         }
 
+        if(empty($values['candidate_plan']) && $values['ProjectID'] == '2') {
+            $errors['candidate_plan'] = 'Plan is required for IBIS2';
+        }
+        //$this->form->addRule('candidate_plan', 'Plan is required', 'required');
         return $errors;
     }
 
