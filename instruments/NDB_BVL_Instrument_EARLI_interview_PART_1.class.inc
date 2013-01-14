@@ -132,7 +132,7 @@ class NDB_BVL_Instrument_EARLI_interview_PART_1 extends NDB_BVL_Instrument {
 		'emptyOptionValue' => null
 		);
 
-		$ages = array_combine(range(11,70), range(11,70));
+		$ages = array_combine(range(5,70), range(5,70));
 		$this->ageOptions = array(NULL=>"") + ($ages) + array("88_refused"=>"88 Refused", "99_do_not_know"=>"99 Don't Know", "not_answered"=>"Not Answered");
 
 		$years = array_combine(range(1940, 2012), range(1940, 2012));
@@ -163,7 +163,8 @@ class NDB_BVL_Instrument_EARLI_interview_PART_1 extends NDB_BVL_Instrument {
 		//Any HTML_Quickform multiple selects must be listed here
 		//Usually this appears at the beginning of the file in the setup() function
 
-		$this->_selectMultipleElements = array_merge($this->_selectMultipleElements, array("q3_32_1_0","q3_32_2_0","q3_32_3_0","q3_32_4_0", "q3_32_5_0", "q4_10_p1", "q4_10_p2", "q4_10_p3", "q4_10_p4", "q4_10_p5", "q4_13_m1", "q4_13_m2", "q4_13_m3", "q4_13_m4", "q4_13_m5", "q4_20_m", "q4_24", "q4_28", "q4_32", "q4_35", "q4_52", "q4_57", "q4_60", "q4_63", "q4_66", "q4_67", "q4_68_select_1", "q4_68_select_2", "q4_68_select_3", "q4_71_select_1", "q4_71_select_2", "q4_71_select_3", "q4_76_m_1", "q4_76_m_2", "q4_76_m_3", "q4_76_m1", "q4_76_m2", "q4_76_m3", "q4_79", "q4_92", "q4_95_month_1", "q4_95_month_2", "q4_95_month_3", "q4_98_1_month", "q4_98_2_month", "q4_98_3_month", "q4_98_4_month", "q4_98_5_month", "q4_98_6_month", "q4_98_7_month", "q4_98_8_month"));
+        $this->_selectMultipleElements = array_merge($this->_selectMultipleElements, array("q3_32_1_0","q3_32_2_0","q3_32_3_0","q3_32_4_0", "q3_32_5_0", "q4_10_p1", "q4_10_p2", "q4_10_p3", "q4_10_p4", "q4_10_p5", "q4_13_m1", "q4_13_m2", "q4_13_m3", "q4_13_m4", "q4_13_m5", "q4_20_m", "q4_24", "q4_28", "q4_32", "q4_35", "q4_50", "q4_52", "q4_57", "q4_60", "q4_63", "q4_66", "q4_67", "q4_68_select_1", "q4_68_select_2", "q4_68_select_3", "q4_71_select_1", "q4_71_select_2", "q4_71_select_3", "q4_76_m_1", "q4_76_m_2", "q4_76_m_3", "q4_76_m1", "q4_76_m2", "q4_76_m3", "q4_79", "q4_92", "q4_95_month_1", "q4_95_month_2", "q4_95_month_3", "q4_98_1_month", "q4_98_2_month", "q4_98_3_month", "q4_98_4_month", "q4_98_5_month", "q4_98_6_month", "q4_98_7_month", "q4_98_8_month"));
+		//$this->_selectMultipleElements = array_merge($this->_selectMultipleElements, array("q3_32_1_0","q3_32_2_0","q3_32_3_0","q3_32_4_0", "q3_32_5_0", "q4_10_p1", "q4_10_p2", "q4_10_p3", "q4_10_p4", "q4_10_p5", "q4_13_m1", "q4_13_m2", "q4_13_m3", "q4_13_m4", "q4_13_m5", "q4_20_m", "q4_24", "q4_28", "q4_32", "q4_35", "q4_52", "q4_57", "q4_60", "q4_63", "q4_66", "q4_67", "q4_68_select_1", "q4_68_select_2", "q4_68_select_3", "q4_71_select_1", "q4_71_select_2", "q4_71_select_3", "q4_76_m_1", "q4_76_m_2", "q4_76_m_3", "q4_76_m1", "q4_76_m2", "q4_76_m3", "q4_79", "q4_92", "q4_95_month_1", "q4_95_month_2", "q4_95_month_3", "q4_98_1_month", "q4_98_2_month", "q4_98_3_month", "q4_98_4_month", "q4_98_5_month", "q4_98_6_month", "q4_98_7_month", "q4_98_8_month"));
 
 
 		//column headers
@@ -1169,6 +1170,8 @@ class NDB_BVL_Instrument_EARLI_interview_PART_1 extends NDB_BVL_Instrument {
 		$this->addNumericElementRD('q3_21months_0', $this->indent . "Months");
 		$this->form->addElement('static', null, "<br/>");
 		$this->form->addElement('static', null, "<br/>");
+        $this->XINRegisterRule('q3_21weeks_0', array("q3_21weeks_0{@}=={@}NEVER_REQUIRED"), "q3_21weeks_0_group");
+        $this->XINRegisterRule('q3_21months_0', array("q3_21months_0{@}=={@}NEVER_REQUIRED"), "q3_21months_0_group");
 
 		//q3-22
 		$this->form->addElement("static", null, "3-22) How many pounds and ounces did [BABY] weigh?");
@@ -2295,7 +2298,7 @@ class NDB_BVL_Instrument_EARLI_interview_PART_1 extends NDB_BVL_Instrument {
 
 
 		//q4-50
-		$this->form->addElement("select", "q4_50", "4-50. During your pregnancy with [PROBAND], did you receive shots or immunizations such as",  array(NULL=>"", "01" => "01 Immunoglobulin injection (other than RhoGam)?", "02" => "02 No ", "03_other" => "03  Other", "05" => "05 Flu Shot", "88_Refused" => "88 Refused",  "99_Do_not_know"=>"99 Do not know", "Not_Answered"=>"Not Answered"));
+        $this->form->addElement ("select", "q4_50", "4-50. During your pregnancy with [PROBAND], did you receive shots or immunizations such as",  array(NULL=>"", "01" => "01 Immunoglobulin injection (other than RhoGam)?", "02" => "02 No ", "03_other" => "03  Other", "05" => "05 Flu Shot", "88_Refused" => "88 Refused",  "99_Do_not_know"=>"99 Do not know", "Not_Answered"=>"Not Answered"), "multiple size = '7'");
 		$this->addTextAreaElementRD('q4_50_text', $this->indent . "If you selected [Other], please specify:");
 		$this->XINRegisterRule("q4_50_text", array("q4_50{@}=={@}03_other"), "You must specify other", "q4_50_text_group");
 

@@ -1115,7 +1115,7 @@ class NDB_BVL_Instrument_EARLI_interview_PART_2 extends NDB_BVL_Instrument {
 		$aToF = array("a", "b", "c", "d", "e", "f");
 		foreach($aToF as $label) {
 			$group[] = &$this->form->createElement( "select", "q5_60_m_{$label}", null, $this->negThreeToTen);
-			$group[] = &$this->form->createElement ( "select", "q5_60_f_{$label}", null, array (NULL => "", "01" => "01 Less than once a week", "02" => "02 Once a week", "03" => "03  A few times a week", "04" => "04 Every day", "88 Refused", "99" => "99 Do not know", "not_answered"=>"Not Answered") );
+            $group[] = &$this->form->createElement ( "select", "q5_60_f_{$label}", null, array (NULL => "", "01" => "01 More than once a week", "02" => "02 Once a week", "03" => "03  Once every 2-3 weeks", "04" => "04 Once a month or less", "88 Refused", "99" => "99 Do not know", "not_answered"=>"Not Answered") );
 			$this->form->addGroup($group, "q5_60_{$label}_group", "{$label})", $this->_GUIDelimiter, false);
 			unset($group);
 			//Don't require all questions, but allow them to be filled in, if desired.
