@@ -107,6 +107,7 @@ INSERT INTO test_battery VALUES ('', 'audiology', '660', '780', 'Y', 'Visit', '2
         'emptyOptionValue' => null
         );
         $this->addDateElement('hearing_screening', "Date of hearing screening:");
+        $this->XINRegisterRule("hearing_screening_date", array("hearing_screening_date_status{@}=={@}", "not_completed{@}!={@}non-asd"), "Please specify date of hearing");
 
         $this->form->addElement("static", null);
         $this->form->addElement("header", null, "Methods used: (check all that apply)");
