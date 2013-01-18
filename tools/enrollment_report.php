@@ -22,7 +22,7 @@ $projects = Utility::getProjectList();
 foreach( $centers as $site){
     $siteID = $site['NumericID'];
     foreach( $projects as $projID => $projName){
-        $filename = "EnrollmentReport_".$site['ShortName']."_".$projName.".txt";
+        $filename = "EnrollmentReport_".$site['ShortName']."_".$projName.".csv";
         $fd = fopen($filename, 'w+');
         if($fd === FALSE){
             exit(-1);
