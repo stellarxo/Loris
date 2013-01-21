@@ -23,7 +23,7 @@
 </tr>
 <tr>
    <th>Projects</th><td>{html_options options=$projects selected=$filter.project name=filter[project]}</td>
-   <td></td> 
+   <td></td><td></td> 
     <td colspan="4"><input class="button" type="submit"></td>
 </tr>
 </table>
