@@ -20,6 +20,10 @@
 <tr>
     <th>QC Status</th><td>{html_options options=$qcStatus_options selected=$filter.qcStatus name=filter[qcStatus]}</td>
     <th>Pending and new</th><td><input type='checkbox' name='filter[pending]' value='1' {if $filter.pending}checked{/if}></td>
+</tr>
+<tr>
+   <th>Projects</th><td>{html_options options=$projects selected=$filter.project name=filter[project]}</td>
+   <td></td> 
     <td colspan="4"><input class="button" type="submit"></td>
 </tr>
 </table>
