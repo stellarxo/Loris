@@ -141,6 +141,8 @@ class NDB_BVL_Instrument_mri_parameter_form extends NDB_BVL_Instrument
         $this->XINRegisterRule("BOLD_Number_Complete_Runs", array("Bold_Scan_done{@}=={@}Complete"), "Required if ");
         $this->form->addElement('text', "BOLD_number_attempts", "Number of scan attempts:");
         $this->addDateElement('BOLD_Scan_done', 'If so, when?');
+        $yes_no_option3 = array(""=>NULL,"No"=>"No","Yes"=>"Yes","Possibly"=>"Possibly");
+        $this->form->addElement('select','BOLD_child_awake','Was the child awake during the BOLD scanning?',$yes_no_option3);
         $this->addTextAreaElement('BOLD_Comments', 'Comments');
 
         $this->form->addElement('header', null, 'Spectroscopy');
