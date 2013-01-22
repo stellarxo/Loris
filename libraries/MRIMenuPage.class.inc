@@ -35,7 +35,8 @@ class MRIMenuPage {
                 'visitLabel' => 's.Visit_label',
                 'qcStatus' => 's.MRIQCStatus',
                 'SubprojectID' => 's.SubprojectID',
-                'pending' => "(s.MRIQCPending='Y' OR s.MRIQCStatus='' OR ifnull(fqc.QCFirstChangeTime,0)=0)"
+                'pending' => "(s.MRIQCPending='Y' OR s.MRIQCStatus='' OR ifnull(fqc.QCFirstChangeTime,0)=0)",
+                'project' => 'c.ProjectID'
                 );
         $this->headers = array(
                 'No.' => '',
@@ -122,9 +123,9 @@ class MRIMenuPage {
         $this->visit_tpl_data['qcStatus_options'] = array (''=>'&nbsp;', 'Pass'=>'Pass', 'Fail'=>'Fail');
         $this->visit_tpl_data['SubprojectID_options'] = array (''=>'&nbsp;', '1'=>'1', '2'=>'2');
         $mri_projs = array(' ' => 'All Projects');
-        $projects = $DB->select("SELECT DISTINCT (cad.ProjectID) from candidate cad 
+        $projects = $DB->pselect("SELECT DISTINCT (cad.ProjectID) from candidate cad 
                                  JOIN session sn on cad.CandID = sn.CandID 
-                                 JOIN files f on sn.ID = f.SessionID ORDER BY cad.ProjectID");
+                                 JOIN files f on sn.ID = f.SessionID ORDER BY cad.ProjectID", array());
         $projectList = Utility::getProjectList();
         foreach($projects as $row){
             $projid = $row['ProjectID'];
