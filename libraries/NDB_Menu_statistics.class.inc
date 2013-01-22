@@ -68,13 +68,18 @@ class NDB_Menu_statistics extends NDB_Menu
         return $html;
 
     }
-    function setup()
+   
+   
+   function setup()
     {
         $DB =& Database::singleton();
         if (PEAR::isError($DB)) {
             return PEAR::raiseError("Could not connect to database: ".$DB->getMessage());
         }
-
+        $projects[null] = 'All Projects';
+        foreach(Utility::getProjectList() as $key => $value) {
+            $projects[$key] = $value;
+        }
         $subprojects = Utility::getSubprojectList(); //array('1' => '6 Month Recruit', '2' => '12 Month Recruit', '3' => 'Control');
         if(isset($_REQUEST['site']) && $_REQUEST['site'] != '') {
             $ExtraSite_Criteria = 'AND (c.CenterID IS NULL OR c.CenterID=' . $_REQUEST['site'] . ')';
@@ -83,6 +88,7 @@ class NDB_Menu_statistics extends NDB_Menu
             $ExtraSite_Criteria = '';
         }
         $this->tpl_data['Subprojects'] = $subprojects;
+        $this->tpl_data['Projects'] = $projects;
         $DB->select("SELECT s.subprojectid as rowid, 
                             COUNT(DISTINCT(c.PSCID)) as val 
                      FROM candidate as c LEFT JOIN session s ON (s.CandID=c.CandID) 
@@ -163,6 +169,7 @@ class NDB_Menu_statistics extends NDB_Menu
             if($_REQUEST['site'] == $row['NumericID']) {
                 $this->tpl_data['CurrentSite'] = array('ID' => $row['NumericID'], 'Name' => $row['LongName']);
             }
+           
         }
         $this->tpl_data['Subprojects'] = Utility::getSubprojectList(); //array('1' => '6 Month Recruit', '2' => '12 Month Recruit', '3' => 'Control');
         $Visits = array ('6 Month' => 'v06', '12 Month' => 'v12', '18 Month' => 'v18', '24 Month' => 'v24', '36 Month' => 'v36');
@@ -415,6 +422,26 @@ class NDB_Menu_statistics extends NDB_Menu
             $this->tpl_data['mri_total']['total'] += $row['val'];
 
         }
+        // Enrollment stats
+
+        if(isset($_REQUEST['site']) && $_REQUEST['site'] != '') {
+            $siteID = $_REQUEST['site'];
+        } 
+        if(isset($_REQUEST['project']) && $_REQUEST['project'] != '') {
+                $projectid = $_REQUEST['project'];
+                $this->tpl_data['CurrentProject'] =  array('ID' => $projectid, 'Name' => $projects[$projectid]);
+        
+
+        }
+        $enroll_results = NDB_Menu_statistics::getEnrollmentData($siteID, $projectid);
+       
+        $this->tpl_data['enroll_data'] = $enroll_results['enroll_data'];
+        $this->tpl_data['enroll_data_total'] = $enroll_results['enroll_data_total'];
+        $this->tpl_data['enroll_data_race'] =$enroll_results['enroll_data_race'];
+        $this->tpl_data['enroll_data_racetotal']= $enroll_results['enroll_data_racetotal'];
+        $this->tpl_data['enroll_data_hispanic'] = $enroll_results['enroll_data_hispanic'];
+        $this->tpl_data['enroll_data_hispanictotal'] = $enroll_results['enroll_data_hispanictotal'];
+        $this->tpl_data['enroll_data_withdrawal'] = $enroll_results['withdraw'];
 
         // MRI INTEGRITY STATS 
         // MRI parameter form is completed, but nothing in tarchive
@@ -568,6 +595,167 @@ class NDB_Menu_statistics extends NDB_Menu
         $this->tpl_data['reliability_completion'] = $this->getReliabilityData();
 
     } // End function
+
+   static function getEnrollmentData($siteID= null, $projID= null){
+        $DB =& Database::singleton(); 
+        $enroll_data = array();
+        $params = array();
+        $Extra_Where = '';
+        if(!empty($siteID)) {
+            $Extra_Where .= " AND sn.CenterID = :site"; //$_REQUEST['site'];
+            $params['site'] = $siteID; 
+        }
+        if(!empty($projID)) {
+             $Extra_Where .= " AND  cad.ProjectID = :project"; //$_REQUEST['site'];
+            $params['project'] = $projID;
+        }
+        $ethnic_categories = array("hispanic","non_hispanic","not_answered");
+        $ethnic_name = array("Hispanic or Latino", "Not Hispanic or Latino", 
+                "Unknown (individuals not reporting ethnicity");
+        $cat_count = 0;
+        $cat_total = array('Female' =>0, 'Male' =>0, 'Unknown' =>0);
+        foreach($ethnic_categories as $ethnic_cat){
+        $gender = array('Female' => 0, 'Male' => 0, 'Unknown' => 0);
+            $results = $DB->pselect("SELECT ProjectID, COALESCE(Gender, 'Unknown') as Gender, COUNT( DISTINCT cad.CandID) as val FROM candidate cad 
+                    JOIN session sn on cad.CandID= sn.CandID 
+                    JOIN flag fg on sn.ID = fg.SessionID
+                    JOIN tsi ti on fg.CommentID = ti.CommentID 
+                    WHERE ti.child_ethnicity = '$ethnic_cat' 
+                    AND fg.CommentID NOT LIKE 'DDE%' AND sn.CenterID <> '1' AND sn.Active='Y' 
+                    AND cad.Active='Y' AND fg.Data_Entry='Complete' $Extra_Where AND fg.Administration <> 'None' GROUP BY Gender", $params);
+           if(is_null($results)){
+               }else{
+           foreach($results as $row){
+             $Gender = $row['Gender'];
+                $Count = $row['val'];
+                //$total_count += $Count;
+               if(is_null($Gender)) {
+                    $gender['Unknown'] = $Count;
+                } else {
+                    $gender[$Gender] = $Count;
+                    $cat_total[$Gender] += $Count;
+                }
+               
+            }}
+            $enroll_data[] = array('ethnic_cat' => $ethnic_name[$cat_count],'female_count' => $gender['Female'],'male_count' => $gender['Male'],'unknown_count' => $gender['Unknown'],'total_count' =>array_sum($gender) );
+            $cat_count++;
+        }
+        $enroll_data_total[] = array('total_name' =>" Ethnic Category: Total of All Subjects",'total_female'=>$cat_total['Female'],'total_male'=>$cat_total['Male'],'total_unknown'=> $cat_total['Unknown'],'total_total'=> array_sum($cat_total)); 
+
+        $enroll_data_race = array();
+
+        $race_categories = array("american_indian_alaska_native","asian","native_hawaiian_pacific_islander","black_african_american","white","more_than_one_race","unknown_not_reported");
+        $race_name = array("American Indian/Alaska Native", "Asian", "Native Hawaiian or Other Pacific Islander","Black or African American","White"," More Than One Race","Unknown or Not Reported");
+        $race_count = 0;
+        $race_total = array('Female' =>0, 'Male' =>0, 'Unknown' =>0);
+        $gender = array('Female' => 0, 'Male' => 0, 'Unknown' => 0);
+
+        foreach($race_categories as $race_cat){
+            $gender = array('Female' => 0, 'Male' => 0, 'Unknown' => 0);
+
+            if($race_cat === "more_than_one_race"){
+      $race_cat = '%'.$race_cat.'%';
+                $results = $DB->pselect("SELECT COALESCE(Gender, 'Unknown') as Gender, COUNT( DISTINCT cad.CandID) as val FROM candidate cad
+                       JOIN session sn on cad.CandID= sn.CandID
+                       LEFT JOIN flag fg on sn.ID = fg.SessionID
+                       LEFT JOIN tsi ti on fg.CommentID = ti.CommentID WHERE ( ti.candidate_race LIKE  '$race_cat' OR ti.candidate_race LIKE '%{@}%' ) AND fg.CommentID NOT LIKE 'DDE%' AND sn.CenterID <> '1' AND sn.Active='Y' AND cad.Active='Y' AND fg.Data_Entry='Complete' $Extra_Where AND fg.Administration <> 'None' AND fg.Test_name='tsi' GROUP BY Gender" , $params);
+            }
+          else if($race_cat === "unknown_not_reported"){
+                $results = $DB->pselect("SELECT COALESCE(Gender, 'Unknown') as Gender, COUNT( DISTINCT cad.CandID) as val FROM candidate cad
+                       JOIN session sn on cad.CandID= sn.CandID
+                       LEFT JOIN flag fg on sn.ID = fg.SessionID
+                       LEFT JOIN tsi ti on fg.CommentID = ti.CommentID WHERE (ti.candidate_race LIKE  '$race_cat'OR ti.candidate_race IS NULL) AND fg.CommentID NOT LIKE 'DDE%' AND sn.CenterID <> '1' AND sn.Active='Y' AND cad.Active='Y' AND fg.Data_Entry='Complete' $Extra_Where AND fg.Administration <> 'None' AND fg.Test_name='tsi' GROUP BY Gender" ,$params);
+
+              }else{
+
+               $results = $DB->pselect("SELECT COALESCE(Gender, 'Unknown') as Gender, COUNT( DISTINCT cad.CandID) as val FROM candidate cad
+                       JOIN session sn on cad.CandID= sn.CandID
+                       LEFT JOIN flag fg on sn.ID = fg.SessionID
+                       LEFT JOIN tsi ti on fg.CommentID = ti.CommentID WHERE ti.candidate_race LIKE  '$race_cat' AND fg.CommentID NOT LIKE 'DDE%' AND sn.CenterID <> '1' AND sn.Active='Y' AND cad.Active='Y' AND fg.Data_Entry='Complete' $Extra_Where AND fg.Administration <> 'None' AND fg.Test_name='tsi' GROUP BY Gender" , $params);
+}      
+               
+               $Count = 0;
+               foreach($results as $row){
+                   $Gender = $row['Gender'];
+                   $Count = $row['val'];
+                   if(is_null($Count)){
+                       $Count = 0;
+                   }
+                   //$total_count += $Count;
+                   if(is_null($Gender)) {
+                       $gender['Unknown'] = $Count;
+                   } else {
+                       $gender[$Gender] = $Count;
+                       $race_total[$Gender] += $Count;
+                   }
+
+               }
+
+
+               $enroll_data_race[] = array('race_cat' => $race_name[$race_count],'female_count' => $gender['Female'],'male_count' => $gender['Male'],'unknown_count' => $gender['Unknown'],'total_count' => array_sum($gender));
+               $race_count++;
+           
+        }
+        $enroll_data_racetotal[] = array('total_name' =>" Racial Categories: Total of All Subjects",'total_female'=>$race_total['Female'],'total_male'=>$race_total['Male'],'total_unknown'=> $race_total['Unknown'],'total_total'=> array_sum($race_total));
+
+
+        $enroll_data_hispanic = array();
+        $hispanic_race_count = 0;
+        $hispanic_total = array('Female' =>0, 'Male' =>0, 'Unknown' =>0);
+        $gender = array('Female' => 0, 'Male' => 0, 'Unknown' => 0);
+
+        foreach($race_categories as $race_cat){
+        $gender = array('Female' => 0, 'Male' => 0, 'Unknown' => 0);
+            if($race_cat === "more_than_one_race"){
+               $race_cat = '%'.$race_cat.'%';
+                $results = $DB->pselect("SELECT COALESCE(Gender, 'Unknown') as Gender, COUNT( DISTINCT cad.CandID) as val FROM candidate cad
+                        JOIN session sn on cad.CandID= sn.CandID
+                        LEFT JOIN flag fg on sn.ID = fg.SessionID
+                        LEFT JOIN tsi ti on fg.CommentID = ti.CommentID WHERE ( ti.candidate_race LIKE  '$race_cat' OR ti.candidate_race LIKE '%{@}%' ) AND ti.child_ethnicity='hispanic' AND fg.CommentID NOT LIKE 'DDE%' AND sn.CenterID <> '1' AND sn.Active='Y' AND cad.Active='Y' AND fg.Data_Entry='Complete' $Extra_Where AND fg.Administration <> 'None' AND fg.Test_name='tsi' GROUP BY Gender" , $params);
+            }         
+           else if($race_cat === "unknown_not_reported"){
+                $results = $DB->pselect("SELECT COALESCE(Gender,'Unknown') as Gender ,COUNT( DISTINCT cad.CandID) as val FROM candidate cad
+                        JOIN session sn on cad.CandID= sn.CandID
+                        LEFT JOIN flag fg on sn.ID = fg.SessionID
+                        LEFT JOIN tsi ti on fg.CommentID = ti.CommentID WHERE (ti.candidate_race LIKE '$race_cat' OR ti.candidate_race IS NULL) AND ti.child_ethnicity='hispanic' AND fg.CommentID NOT LIKE 'DDE%' AND sn.CenterID <> '1' AND sn.Active='Y' AND cad.Active='Y' AND fg.Data_Entry='Complete' $Extra_Where  AND fg.Administration <> 'None' AND fg.Test_name='tsi' GROUP BY Gender" , $params);
+}else{
+                $results = $DB->pselect("SELECT COALESCE(Gender, 'Unknown') as Gender,COUNT( DISTINCT cad.CandID) as val FROM candidate cad
+                        JOIN session sn on cad.CandID= sn.CandID
+                        LEFT JOIN flag fg on sn.ID = fg.SessionID
+                        LEFT JOIN tsi ti on fg.CommentID = ti.CommentID WHERE ti.candidate_race LIKE '$race_cat' AND ti.child_ethnicity='hispanic' AND fg.CommentID NOT LIKE 'DDE%' AND sn.CenterID <> '1' AND sn.Active='Y' AND cad.Active='Y' AND fg.Data_Entry='Complete'  $Extra_Where  AND fg.Administration <> 'None' AND fg.Test_name='tsi' GROUP BY Gender" , $params);
+            }    
+
+            foreach($results as $row){
+                $Gender = $row['Gender'];
+                $Count = $row['val'];
+                if(is_null($Count)){
+                    $Count = 0;
+                }
+                //$total_count += $Count;
+                $gender[$Gender] = $Count;
+                $hispanic_total[$Gender] += $Count;
+
+
+            }
+
+            $enroll_data_hispanic[] = array('race_cat' => $race_name[$hispanic_race_count],'female_count' => $gender['Female'],'male_count' => $gender['Male'],'unknown_count' => $gender['Unknown'],'total_count' => array_sum($gender));
+            $hispanic_race_count++;
+
+        }
+        $enroll_data_hispanictotal[] = array('total_name' =>" Racial Categories: Total of Hispanic or Latinos",'total_female'=>$hispanic_total['Female'],'total_male'=>$hispanic_total['Male'],'total_unknown'=> $hispanic_total['Unknown'],'total_total'=> array_sum($hispanic_total));
+
+$withdraw = $DB->pselectOne("SELECT COUNT( DISTINCT cad.CandID) as val FROM candidate cad
+                        JOIN session sn on cad.CandID= sn.CandID
+                        LEFT JOIN flag fg on sn.ID = fg.SessionID
+                        LEFT JOIN tsi ti on fg.CommentID = ti.CommentID WHERE fg.CommentID NOT LIKE 'DDE%' AND sn.CenterID <> '1' AND sn.Active='Y' AND cad.Active='Y' AND fg.Data_Entry='Complete'  $Extra_Where  AND fg.Administration <> 'None' AND (sn.Screening IN ('Failure','Withdrawal') OR sn.Visit IN ('Withdrawal','Failure') ) " , $params);
+    
+    
+    $enroll_results = array('enroll_data'=> $enroll_data,'enroll_data_total'=> $enroll_data_total,'enroll_data_race'=> $enroll_data_race,'enroll_data_racetotal'=>$enroll_data_racetotal,'enroll_data_hispanic'=>$enroll_data_hispanic,'enroll_data_hispanictotal'=> $enroll_data_hispanictotal , 'withdraw' => $withdraw);
+
+        return $enroll_results; 
+
+    } 
+
 
 
     function _getCrossSiteReliabilityData($name, $inst_name, $cutoff, $extra_where="") {
