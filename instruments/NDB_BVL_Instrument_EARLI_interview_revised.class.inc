@@ -10,7 +10,7 @@ class NDB_BVL_Instrument_EARLI_interview_revised extends NDB_BVL_Instrument {
                 'language' => 'en',
                 'format'   => 'YMd',
                 'minYear'  =>  '2007', //$config->getSetting('startYear')
-                'maxYear'  => '2012', //$config->getSetting('endYear'),
+                'maxYear'  => '2017', //$config->getSetting('endYear'),
                 'addEmptyOption' => true,
                 'emptyOptionValue' => null);
 	
@@ -151,7 +151,7 @@ class NDB_BVL_Instrument_EARLI_interview_revised extends NDB_BVL_Instrument {
 		$this->form->addElement('static', null, "<br/>");
 		$this->form->addElement('static', null, "8-1 To the best of your ability, please tell us about each job or occupation you held for at least 1 month in the US or elsewhere while you were pregnant with [SIBLING]. Include full-time, seasonal work, part-time, volunteer work and military service if you worked the cumulative equivalent of 1 month or more. Include the last job that you held while pregnant with [SIBLING], even if you have had this for less than 1 month; begin with that job and continue back. Please estimate the time period if you cannot remember exact dates. (Attach additional pages if needed.)");
 		
-		$years = array(NULL=>"") + array_combine(range(1970,2012), range(1970, 2012)) + array("88_refused"=>"88 Refused", "99_Do_not_know"=>"99 Do not know", "not_answered"=>"Not Answered");
+		$years = array(NULL=>"") + array_combine(range(1970,2017), range(1970, 2017)) + array("88_refused"=>"88 Refused", "99_Do_not_know"=>"99 Do not know", "not_answered"=>"Not Answered");
 
 		for ($i=1; $i<7; $i++)
 		{
@@ -248,7 +248,7 @@ class NDB_BVL_Instrument_EARLI_interview_revised extends NDB_BVL_Instrument {
 
 		$options = array("a"=>"a", "b"=>"b", "c"=>"c", "d"=>"d");
 
-		$years = array(NULL=>"") + array_combine(range(1970, 2012), range(1970, 2012)) + array("88_refused"=>"88 Refused", "99_Do_not_know"=>"99 Do not know", "not_answered"=>"Not Answered");
+		$years = array(NULL=>"") + array_combine(range(1970, 2017), range(1970, 2017)) + array("88_refused"=>"88 Refused", "99_Do_not_know"=>"99 Do not know", "not_answered"=>"Not Answered");
 
 		foreach ($options as $field=>$label)
 		{

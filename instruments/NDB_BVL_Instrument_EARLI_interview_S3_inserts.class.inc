@@ -49,7 +49,7 @@ class NDB_BVL_Instrument_EARLI_interview_S3_inserts extends NDB_BVL_Instrument {
                 'language' => 'en',
                 'format'   => 'YMd',
                 'minYear'  => '1960',/* $config->getSetting('startYear') *///
-                'maxYear'  => '2012' /*$config->getSetting('endYear')*/,
+                'maxYear'  => '2017' /*$config->getSetting('endYear')*/,
                 'addEmptyOption' => true,
                 'emptyOptionValue' => null);
 
@@ -113,11 +113,11 @@ class NDB_BVL_Instrument_EARLI_interview_S3_inserts extends NDB_BVL_Instrument {
                 $ages = array_combine(range(11,70), range(11,70));
                 $this->ageOptions = array(NULL=>"") + ($ages) + array("88_refused"=>"88 Refused", "99_do_not_know"=>"99 Don't Know", "not_answered"=>"Not Answered");
 
-                $years = array_combine(range(1940, 2012), range(1940, 2012));
+                $years = array_combine(range(1940, 2017), range(1940, 2017));
                 $this->years1940 = array(NULL=>"") + ($years) + array("88_Refused" => "88 Refused", "99_Do_not_know" => "99 Do not know", "not_answered" => "Not Answered");
                 reset($years);
 
-                $years = array_combine(range(1950, 2012), range(1950, 2012));
+                $years = array_combine(range(1950, 2017), range(1950, 2017));
                 $this->years1950 = array(NULL=>"") + ($years) + array("88_Refused" => "88 Refused", "99_Do_not_know" => "99 Do not know", "not_answered" => "Not Answered");
 
 

@@ -10,7 +10,7 @@ class NDB_BVL_Instrument_EARLI_interview_PART_4 extends NDB_BVL_Instrument {
                 'language' => 'en',
                 'format'   => 'YMd',
                 'minYear'  =>  '2007', //$config->getSetting('startYear'),
-                'maxYear'  => '2012', //$config->getSetting('endYear'),
+                'maxYear'  => '2017', //$config->getSetting('endYear'),
                 'addEmptyOption' => true,
                 'emptyOptionValue' => null);
 	

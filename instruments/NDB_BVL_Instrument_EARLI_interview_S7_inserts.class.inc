@@ -12,7 +12,7 @@ class NDB_BVL_Instrument_EARLI_interview_S7_inserts extends NDB_BVL_Instrument {
                 'language' => 'en',
                 'format'   => 'YMd',
                 'minYear'  =>  '2007',
-                'maxYear'  => '2012', 
+                'maxYear'  => '2017', 
                 'addEmptyOption' => true,
                 'emptyOptionValue' => null);
 
@@ -75,7 +75,7 @@ class NDB_BVL_Instrument_EARLI_interview_S7_inserts extends NDB_BVL_Instrument {
 		);
 
 
-		$years = array_combine(range(1950, 2012), range(1950, 2012));
+		$years = array_combine(range(1950, 2017), range(1950, 2017));
                 $this->years1950 = array(NULL=>"") + ($years) + array("88_Refused" => "88 Refused", "99_Do_not_know" => "99 Do not know", "not_answered" => "Not Answered");
 
 		//number arrays
