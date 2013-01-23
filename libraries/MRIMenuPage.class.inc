@@ -123,9 +123,10 @@ class MRIMenuPage {
         $this->visit_tpl_data['qcStatus_options'] = array (''=>'&nbsp;', 'Pass'=>'Pass', 'Fail'=>'Fail');
         $this->visit_tpl_data['SubprojectID_options'] = array (''=>'&nbsp;', '1'=>'1', '2'=>'2');
         $mri_projs = array('' => '&nbsp;');
+        $params = array();
         $projects = $DB->select("SELECT DISTINCT (cad.ProjectID) from candidate cad 
                                  JOIN session sn on cad.CandID = sn.CandID 
-                                 JOIN files f on sn.ID = f.SessionID ORDER BY cad.ProjectID", array());
+                                 JOIN files f on sn.ID = f.SessionID ORDER BY cad.ProjectID", $params);
         $projectList = Utility::getProjectList();
         foreach($projects as $row){
             $projid = $row['ProjectID'];
