@@ -61,15 +61,17 @@ class NDB_Form_new_profile extends NDB_Form
             return PEAR::raiseError("Candidate Error ($candID): ".$candidate->getMessage());
         }
 
-        $db = Database::singleton();
-        $PTID = $db->pselectOne("SELECT ParameterTypeID FROM parameter_type WHERE Name='candidate_plan'", array());
-        if(!is_numeric($PTID)) {
-            return PEAR::raiseError("Missing ParameterTypeID for candidate_plan");
-        }
-        $db->insert("parameter_candidate", array('ParameterTypeID' => $PTID,
-            'CandID' => $candID,
-            'Value' => $values['candidate_plan']
-        ));
+        $db = Database::singleton(); 
+	if( $values['ProjectID'] == '2'){
+		$PTID = $db->pselectOne("SELECT ParameterTypeID FROM parameter_type WHERE Name='candidate_plan'", array());
+		if(!is_numeric($PTID)) {
+			return PEAR::raiseError("Missing ParameterTypeID for candidate_plan");
+		}
+		$db->insert("parameter_candidate", array('ParameterTypeID' => $PTID,
+					'CandID' => $candID,
+					'Value' => $values['candidate_plan']
+					));
+	}
         //------------------------------------------------------------
 
         $this->tpl_data['success'] = true;
@@ -124,7 +126,6 @@ class NDB_Form_new_profile extends NDB_Form
     
         // gender rules
         $this->form->addRule('gender', 'Gender is required', 'required');
-
         $this->form->addElement("select", "candidate_plan", 'Candidate Plan', 
             array(
                 ''         => '',
@@ -137,15 +138,13 @@ class NDB_Form_new_profile extends NDB_Form
                 '6m_plan3' => '6m_plan3'
             )
         );
-
         $PSCIDsettings = $config->getSetting('PSCID');
         if($PSCIDsettings['generation'] == 'user') {
             $this->form->addElement('text', 'PSCID', 'PSCID');
         }
-
+        $this->form->addElement('text', 'Candidate Plan is required ONLY for IBIS2 project');
         $this->form->addFormRule(array(&$this, '_validate'));
     }
-
     function _validate($values)
     {
         $errors = array();
