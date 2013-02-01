@@ -142,7 +142,6 @@ class NDB_Form_new_profile extends NDB_Form
         if($PSCIDsettings['generation'] == 'user') {
             $this->form->addElement('text', 'PSCID', 'PSCID');
         }
-        $this->form->addElement('text', 'Candidate Plan is required ONLY for IBIS2 project');
         $this->form->addFormRule(array(&$this, '_validate'));
     }
     function _validate($values)
@@ -185,6 +184,9 @@ class NDB_Form_new_profile extends NDB_Form
 
         if(empty($values['candidate_plan']) && $values['ProjectID'] == '2') {
             $errors['candidate_plan'] = 'Plan is required for IBIS2';
+        }
+        elseif(!empty($values['candidate_plan']) && $values['ProjectID'] != '2') {
+            $errors['candidate_plan'] = 'Candidate Plan is not required for non-IBIS2 candidates';
         }
         //$this->form->addRule('candidate_plan', 'Plan is required', 'required');
         return $errors;
