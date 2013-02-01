@@ -58,7 +58,7 @@
     {/if}
     {if $form.ProjectID.html != ""}
     <tr>
-        <td nowrap="nowrap">Candidate Plan</td>
+        <td nowrap="nowrap">Candidate Plan (ONLY for IBIS2 candidates)</td>
         <td nowrap="nowrap">{$form.candidate_plan.html}</td>
     </tr>
     {/if}
@@ -66,6 +66,7 @@
 	<tr>
 		<td nowrap="nowrap" colspan="2" align="right"><input class="button" name="fire_away" value="Create" type="submit" /></td>
 	</tr>
+
 </table>
 {$form.hidden}
 </form>
