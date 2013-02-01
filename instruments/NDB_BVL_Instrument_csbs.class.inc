@@ -928,14 +928,20 @@ INSERT INTO instrument_subtests VALUES('', 'csbs', 'csbs_page2', 'Symbolic Behav
 
         $this->_addTableRow("Object", "objects", 4);
         $group[] =& $this->form->createElement('static', null, null, "&nbsp;");
+        $this->form->addElement("static", "q_16a_language_comp_object_raw_score","Object Raw Score:" );
         $this->form->addGroup($group, null, null, $this->_GUIDelimiter, false);
         unset($group);
         $this->_addTableRow("Person Name", "person", 3);
         $group[] =& $this->form->createElement('static', null, null, "&nbsp;");
+        $this->form->addElement("static", "q_16b_language_comp_person_name_raw_score","Person Name Raw Score:" );
         $this->form->addGroup($group, null, null, $this->_GUIDelimiter, false);
         unset($group);
         $this->_addTableRow("Body Parts", "body_parts", 4);
-        $this->form->addElement("static", "understanding_weighted", "Weighted Raw Score for Scale 16 - Understanding:");
+        $this->form->addElement("static", "q_16c_language_comp_body_parts_raw_score","Body Parts Raw Score:" );
+      $this->form->addGroup($group, null, null, $this->_GUIDelimiter, false);
+        unset($group);
+ 
+       $this->form->addElement("static", "understanding_weighted", "Weighted Raw Score for Scale 16 - Understanding:");
        
 
         //Object Use
