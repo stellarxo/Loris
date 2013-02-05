@@ -342,7 +342,8 @@ class NDB_Form_video_upload extends NDB_Form
             if($_REQUEST['multipart'] == 'Yes') {
                 $WhereCriteria['File_name'] = $filename;
             }
-
+           
+            $values['hide_video'] = false;
             $result = $db->update('videos', $values, $WhereCriteria);
         }
 
