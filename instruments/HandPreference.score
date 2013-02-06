@@ -1,0 +1,51 @@
+#!/usr/bin/php
+<?php
+require_once "../tools/generic_includes.php";
+// set_include_path(get_include_path().":../libraries:../../php/libraries:");
+
+require_once "Database.class.inc";
+
+$CommentID = $argv[1];
+$db =& Database::singleton();
+if(PEAR::isError($db)) {
+	print "Could not connect to database: " . $db->getMessage();
+    exit(1);
+}
+
+$query = "SELECT * from HandPreference WHERE CommentID = :CommentID";
+
+$WhereCriteria = array('CommentID'=>$CommentID);
+$result = $db->pselectRow($query, $WhereCriteria);
+if(PEAR::isError($result)){
+	print "Query has failed to select: ".$result->getMessage();
+    exit(2);
+}
+//Uni Manual Response: no. times right hand used + no. time left hand used
+$UMR = 0;
+//Right-Handed Response
+$RHR = 0;
+
+foreach($result as $key=>$value) {
+	if($value == 'l' || $value == 'r') {
+		$UMR = $UMR+1;
+	}
+	if($value =='r') {
+		$RHR = $RHR +1;
+	}
+}
+
+if($UMR !== 0) {
+    $LI = ($RHR/$UMR)*24;
+} else {
+    $LI = "Error UMR is zero";
+}
+
+$values = array('LateralityIndex'=>$LI);
+$result = $db->update('HandPreference', $values, $WhereCriteria);
+if(PEAR::isError($result)) {
+    print "Could not save to database: " . $result->getMessage();
+    exit(3);
+}
+
+exit(0);
+?>
