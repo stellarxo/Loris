@@ -4,7 +4,7 @@ date{@}Date_taken{@}Date of Administration{@}2006{@}2012
 static{@}Candidate_Age{@}Candidate Age (Months)
 static{@}Window_Difference{@}Window Difference (+/- Days)
 select{@}Examiner{@}Examiner{@}NULL=>''
-select{@}ParentQuestion{@}Is  child right handed or left handed?{@}NULL=>''{-}'l'=>'L'{-}'r'=>'R'{-}'b'=>'B'{-}'uk'=>'UK'{-}'not_answered'=>'Not Answered'
+select{@}ParentQuestion{@}Ask Parent:Is  child right handed or left handed?{@}NULL=>''{-}'l'=>'L'{-}'r'=>'R'{-}'b'=>'B'{-}'uk'=>'UK'{-}'not_answered'=>'Not Answered'
 header{@}{@}Eating with Spoon (Show me how you eat)
 select{@}EatingTrial1{@}Trial#1{@}NULL=>''{-}'l'=>'L'{-}'r'=>'R'{-}'b'=>'B'{-}'uk'=>'UK'{-}'not_answered'=>'Not Answered'
 select{@}EatingTrial2{@}Trial#2{@}NULL=>''{-}'l'=>'L'{-}'r'=>'R'{-}'b'=>'B'{-}'uk'=>'UK'{-}'not_answered'=>'Not Answered'
