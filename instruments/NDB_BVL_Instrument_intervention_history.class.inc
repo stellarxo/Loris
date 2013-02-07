@@ -26,7 +26,7 @@ INSERT INTO test_battery VALUES ('', 'intervention_history', '1053', '1179', 'Y'
                 'language' => 'en',
                 'format'   => 'YMd',
                 'minYear'  =>  '2007',
-                'maxYear'  => '2012',
+                'maxYear'  => '2017',
                 'addEmptyOption' => true,
                 'emptyOptionValue' => null);
 
