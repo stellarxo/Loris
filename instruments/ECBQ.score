@@ -1,0 +1,102 @@
+#!/usr/bin/php
+<?php
+require_once "../tools/generic_includes.php";
+
+$CommentID = $argv[1];
+$db =& Database::singleton();
+if(PEAR::isError($db)) {
+        print "Could not connect to database: " . $db->getMessage();
+    exit(1);
+}
+$query = "SELECT * from ECBQ WHERE CommentID = :CommentID";
+
+$WhereCriteria = array('CommentID'=>$CommentID);
+$record = array();
+$record = $db->pselectRow($query, $WhereCriteria);
+if(PEAR::isError($record)){
+        print "Query has failed to select: ".$record->getMessage();
+    exit(2);
+}
+//do the math...
+$reverseItems = array(41,70,102,110,49,90,92,126,196,197,167,169,61,158,15,16,17,80,81,159,177,87,45,124,23,25,82,141,26,27,28,113,142,143,132,166,89,3,79,150,47,48,186,116);
+//restrict to numerical scores
+foreach ($record as $field=>$value) {
+  $val = explode("_",$value); //to get only numeric responses from the enum
+  $value = $val[0];
+if(is_numeric($value)) {
+		$record[$field] = intval($value);
+	} else {
+		$record[$field] = null;
+	}
+	//reverse as needed
+	if (in_array(preg_replace("/q_/", "", $field), $reverseItems) && !is_null($record[$field])) {
+		$record[$field] = 8 - $record[$field];
+	}
+}
+$scores = array("Activity_Level_Energy"=>"Activity Level/Energy",
+                                                        "Attentional_Focusing"=>"Attentional Focusing",
+                                                        "Attentional_Shifting"=>"Attentional Shifting",
+                                                        "Cuddliness"=>"Cuddliness",
+                                                        "Discomfort"=>"Discomfort",
+                                                        "Fear"=>"Fear",
+                                                        "Frustration"=>"Frustration",
+                                                        "High_Intensity_Pleasure"=>"High_Intensity_Pleasure",
+                                                        "Impulsivity"=>"Impulsivity", 
+                                                        "Inhibitory_Control"=>"Inhibitory Control",
+                                                        "Low_Intensity_Pleasure"=>"Low Intensity Pleasure",
+                                                        "Motor_Activation"=>"Motor Activation",
+                                                        "Perceptual_Sensitivity"=>"Perpetual Sensitivity",
+                                                        "Positive_Anticipation"=>"Positive Anticipation",
+                                                        "Sadness"=>"Sadness",
+                                                        "Shyness"=>"Shyness",
+                                                        "Sociability"=>"Sociability",
+                                                        "Soothability"=>"Soothability" );
+
+
+
+
+$subScales = array("Activity_Level_Energy"=>array(41,42,57,156,69,70,101,102,109,110,122,123),
+        "Attentional_Focusing"=>array(49,50,90,91,92,126,127,196,197,167,168,169),
+        "Attentional_Shifting"=>array(43,51,60,61,93,95,120,121,157,158,179,189),
+        "Cuddliness"=>array_merge(range(14, 18), array(80,81,103,159,160,161,162)),
+        "Discomfort"=>array(8,9,33,55,56,94,105,152,153,180),
+        "Fear"=>array(6,104,38,39,62,97,98,99,100,176,177),
+        "Frustration"=>array(1,2,19,68,86,87,119,134,135,136,171,184),
+        "High_Intensity_Pleasure"=>array(11,13,44,45,190,191,192,74,75,76,124,125),
+        "Impulsivity"=>array(23,24,25,63,64,82,83,140,141,178),
+        "Inhibitory_Control"=>array_merge(range(26,28),range(111,113),range(142,144),range(173,175)),
+        "Low_Intensity_Pleasure"=>array_merge(array(12,193), range(29,32),array(146,147,163,170)),
+        "Motor_Activation"=>array_merge(array(7,36,108,182), range(71,73), array(128,129,194,195)),
+        "Perceptual_Sensitivity"=>array(34,35,58,96,106,107,154,155,181,183,138,139),
+        "Positive_Anticipation"=>array_merge(array(37,65,66),range(130,133),range(164,166),array(198)),
+        "Sadness"=>array(20,59,88,89,114,117,118,137,145,151,185,201),
+        "Shyness"=>array_merge(range(3,5),range(52,54),range(77,79),range(148,150)),
+        "Sociability"=>array(21,22,40,84,85,172,199,200),
+        "Soothability"=>array_merge(array(10),range(46,48),range(186,188),array(115,116)) );
+
+foreach($subScales as $field=>$array) {
+    $numericalResponses = 0;
+    foreach($array as $question) {
+        $scores[$field] += $record["q_".$question];
+        if($record["q_".$question]) {
+            $numericalResponses++;
+        }
+    }
+    //take average of numerical responses
+    if ($numericalResponses == 0) {
+        $scores[$field] = null;
+    } else {
+        $scores[$field] = round($scores[$field] / $numericalResponses, 2);
+    }
+}
+
+//save scores
+$result = $db->update('ECBQ', $scores, $WhereCriteria);
+if($db->isError($result)) {
+    print "Could not save total score: ". $result->getMessage();
+    exit(3);
+}
+
+
+exit(0);
+?>
