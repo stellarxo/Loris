@@ -33,7 +33,6 @@ if(is_numeric($value)) {
 		$record[$field] = 8 - $record[$field];
 	}
 }
-print_r($record);
 $scores = array("Activity_Level_Energy"=>"Activity Level/Energy",
                                                         "Attentional_Focusing"=>"Attentional Focusing",
                                                         "Attentional_Shifting"=>"Attentional Shifting",
