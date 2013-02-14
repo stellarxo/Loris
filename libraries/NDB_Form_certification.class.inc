@@ -134,20 +134,20 @@ class NDB_Form_certification extends NDB_Form
                 array_push($testIDs, $arr['testID']);
                 $i++;
             }
-            $exists = in_array($testID, $testIDs);//array_key_exists($testID, $testIDs);
+            $exists = in_array($testID, $testIDs);
 
 
             //for new certification events
-            if ((empty($this->identifier))) { //|| (!empty($this->identifier) && empty($exists))) {
+            if ((empty($certID))) {
                 $success = $DB->insert('certification', array(
-                            //                                'certID' => $this->identifier,
                             'examinerID'  => $values['examinerID'], 
                             'date_cert'   => $date_cert,
                             'visit_label' => $visit_label,
                             'testID'      => $testID,
                             'pass'        => $pass,
                             'comment'     => $values['comment'][$testID]
-                            ));
+                        )
+                    );
                 if (PEAR::isError($success)) {
                     return PEAR::raiseError("DB Error: ".$success->getMessage());
                 }
@@ -171,21 +171,18 @@ class NDB_Form_certification extends NDB_Form
                 }
             } else {
                 if (empty($measureID) && in_array($pass, array('not_certified', 'in_training', 'certified'))) {
-                    $success = $DB->insert('certification', array(
-                                'certID'      => $certID, //$this->identifier,
+                    $success = $DB->replace('certification', array(
+                                'certID'      => $certID,
                                 'examinerID'  => $values['examinerID'],
                                 'date_cert'   => $date_cert,
                                 'visit_label' => $visit_label,
                                 'pass'        => $pass, 
-                                'testID'      => $testID, 
+                                'testID'      => $testID,
                                 'comment'     => $values['comment'][$testID]
                                 ));
                     if (PEAR::isError($success)) {
                         return PEAR::raiseError("DB Error: ".$success->getMessage());
                     }
-                    //    $DB->selectRow($history_query, $oldVals);
-                    //   $oldVal = $oldVals['new'];
-                    //   $oldDate = $oldVals['new_date'];
                     unset($success);
                     $success = $DB->insert('certification_history', array(
                                 'col'         => 'pass',
@@ -199,7 +196,7 @@ class NDB_Form_certification extends NDB_Form
                                 'changeDate'  => date("Y-m-d H:i:s"),
                                 'userID'      => $_SESSION['State']->getUsername(),
                                 'type'        => 'I'
-                                ));
+                            ));
                     if (PEAR::isError($success)) {
                         return PEAR::raiseError("DB Error: ".$success->getMessage());
                     }
