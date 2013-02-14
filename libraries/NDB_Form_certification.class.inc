@@ -149,7 +149,6 @@ class NDB_Form_certification extends NDB_Form
 
 //            $certID = $DB->selectOne("SELECT certID from certification where examinerID = '".$values['examinerID']."'");
             $certID = $DB->pselectOne("SELECT certID from certification where examinerID =:eid", array('eid'=>$values['examinerID']));
-            print "--------------CERTID: " . $certID . "</br>";
             //      if (in_array($pass, array('not_certified', 'in_training', 'certified')) || $values['comment'][$testID]!="") {
             //$tests = $DB->select("SELECT testID from certification where certID='" .$this->identifier."'");
             $tests = $DB->pselect("SELECT testID from certification where certID=:crt_id", array('crt_id'=>$this->identifier));
@@ -164,7 +163,6 @@ class NDB_Form_certification extends NDB_Form
 
             //for new certification events
             if ((empty($this->identifier))) { //|| (!empty($this->identifier) && empty($exists))) {
-                //print "&&&&&&EMPTY IDENTIFIER\n";
                 $success = $DB->insert('certification', array(
                             //                                'certID' => $this->identifier,
                             'examinerID'  => $values['examinerID'], 
@@ -197,7 +195,6 @@ class NDB_Form_certification extends NDB_Form
                 }
             } else {
                 if (empty($measureID) && in_array($pass, array('not_certified', 'in_training', 'certified'))) {
-                    //print "|||||||||||||||EMPTY MEASURE\n";
                     $success = $DB->insert('certification', array(
                                 'certID'      => $certID, //$this->identifier,
                                 'examinerID'  => $values['examinerID'],
@@ -254,13 +251,9 @@ class NDB_Form_certification extends NDB_Form
                     /* if (empty($certification_exists)) {
                     //if ($test_certification != $pass || $values['comment'][$testID] != $comment || $values['date'][$testID] != $date) {
                     //   if (empty($test_certification)) {
-                    //   print "***EMPTY CERTIFICATION\n";
-                    //   print $testID;
-                    print "+++++++Certification exists";
                     $DB->selectRow($history_query, $oldVals);
                     $oldVal = $oldVals['new'];
                     $oldDate = $oldVals['new_date'];
-                    //print "***CERTIFICATION DOESNT EXIST\n";
                     $success = $DB->insert('certification', array(
                     'certID'      => $this->identifier,
                     'examinerID'  => $values['examinerID'],
@@ -274,7 +267,6 @@ class NDB_Form_certification extends NDB_Form
                     }
                     else {*/
                     if ($test_certification != $pass || $values['comment'][$testID] != $comment || $values['date_cert'][$testID] != $date_cert) {
-                        // print "~~~~~~~DIFF VALS\n";
 
                         //            $DB->selectRow($history_query, $oldVals); 
                         //           $oldVal = $oldVals['new'];
