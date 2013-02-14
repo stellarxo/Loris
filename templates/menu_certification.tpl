@@ -2,7 +2,7 @@
 <!-- start the selection table -->
 <table border="0" valign="top" class="std">
     <tr>
-        <th nowrap="nowrap" colspan="6">Selection Filter</th>
+        <th nowrap="nowrap" colspan="7">Selection Filter</th>
     </tr>
     <tr>
         <td nowrap="nowrap">Site:</td>
@@ -16,7 +16,7 @@
         <td nowrap="nowrap">DCCID:</td>
         <td nowrap="nowrap">{$form.subject.html}</td>-->
     <tr>
-        <td nowrap="nowrap"><input type="button" name="button" value="Add Certification" class="button" onclick="location.href='main.php?test_name=certification&subtest=edit_event'" /></td>
+        <td colspan="2" nowrap="nowrap"><input type="button" name="button" value="Add Certification" class="button" onclick="location.href='main.php?test_name=certification&subtest=edit_event'" /></td>
         <td colspan="6" align="right"><input type="submit" name="filter" value="Show Data" class="button" />&nbsp;<input type="button" name="reset" value="Clear Form" class="button" onclick="location.href='main.php?test_name=certification&reset=true'" /></td>
     </tr>
 <table>
