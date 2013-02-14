@@ -20,7 +20,6 @@ class NDB_Form_certification extends NDB_Form
             return PEAR::raiseError("Could not connect to database: ".$DB->getMessage());
         }
 
-        //$centerID = $DB->selectOne("SELECT centerID FROM examiners, certification WHERE examiners.examinerID = certification.examinerID AND certification.certID = '$this->identifier'");
         $centerID = $DB->pselectOne("SELECT centerID FROM examiners, certification WHERE examiners.examinerID = certification.examinerID AND certification.certID =:crt_id", array('crt_id'=>$this->identifier));
         if (PEAR::isError($centerID)) {
             return PEAR::raiseError("DB Error: ".$centerID->getMessage());
@@ -43,8 +42,6 @@ class NDB_Form_certification extends NDB_Form
 
         $DB->select('SELECT userID, changeDate, old, old_date, Full_name as Measure, visit_label, primaryVals, new, new_date FROM certification_history JOIN test_names on certification_history.testID = test_names.ID WHERE primaryVals=' . $DB->quote($this->identifier) . ' ORDER BY changeDate DESC', &$certification_history );
 
-//        &$certification_history = $DB->pselect('SELECT userID, changeDate, old, old_date, Full_name as Measure, visit_label, primaryVals, new, new_date FROM certification_history JOIN test_names on certification_history.testID = test_names.ID WHERE primaryVals=:crt_id ORDER BY changeDate DESC', array('crt_id'=>$DB->quote($this->identifier)));
-
         foreach($certification_history as &$history_item)
         {
             if (!preg_match('/mullen/', $history_item['Measure'])) {
@@ -54,20 +51,12 @@ class NDB_Form_certification extends NDB_Form
             $history_display .= '<tr><td>' . $history_item['changeDate'] . '</td><td>' . $history_item['userID'] .  '</td><td>' . $history_item['Measure'] . '</td><td>' . $history_item['visit_label'] . '</td><td>' . $history_item['old'] . '</td><td>' .  $history_item['old_date'] . '</td><td>' . $history_item['new'] . '</td><td>' . $history_item['new_date'] . '</td></tr>';
         }
 
-
-        /*
-           foreach ($result as $row) {
-           $defaults['pass['.$row['ID'].']'] = 'N/A';
-           }
-         */
-
         $defaults = array();
         $defaults['certification_history'] = $history_display;
 
         if (!empty($this->identifier)) {
             // set the certificatione event details
             $row = $DB->pselect("SELECT examinerID FROM certification WHERE certID =:crt_id", array('crt_id'=>$this->identifier));
-            //$DB->selectRow("SELECT examinerID FROM certification WHERE certID = $this->identifier", $row);
             if (PEAR::isError($row)) {
                 return PEAR::raiseError("DB Error: ".$row->getMessage());
             }
@@ -76,11 +65,8 @@ class NDB_Form_certification extends NDB_Form
             foreach ($row as $r) { 
                $defaults['examinerID'] = $r['examinerID'];
             }
-            //$defaults['cert_visit_label'] = $row['visit_label'];
-
 
             // set the certification results
-//            $DB->select("SELECT testID, pass, date_cert, comment FROM certification WHERE certID = $this->identifier", $result);
             $result = $DB->pselect("SELECT testID, pass, date_cert, comment FROM certification WHERE certID =:crt_id", array('crt_id'=> $this->identifier));
             if (PEAR::isError($result)) {
                 return PEAR::raiseError("DB Error: ".$result->getMessage());
@@ -107,37 +93,30 @@ class NDB_Form_certification extends NDB_Form
 
 
         foreach ($values['pass'] as $testID => $pass) {
-            //$history_query = "SELECT new, new_date from certification_history where primaryVals = '" . $this->identifier . "' AND testID = '" . $testID ."' ORDER BY changeDate DESC";
             $history_query = "SELECT new, new_date from certification_history where primaryVals =:crt_id AND testID =:tst_id ORDER BY changeDate DESC";
             $history_where = array('crt_id'=>$this->identifier, 'tst_id'=>$testID);
             //set visit labels for the mullen
             if ($testID  == "15_3_9" ) {
-                //    $testID = '15';
                 $visit_label = '3-9mo';
-//                $history_query = "SELECT new, new_date from certification_history where primaryVals = '" . $this->identifier . "' AND testID = '" . $testID ."' AND visit_label = '". $visit_label . "' ORDER BY changeDate DESC"; 
                 $history_query = "SELECT new, new_date from certification_history where primaryVals =:crt_id AND testID =:tst_id AND visit_label =:vst ORDER BY changeDate DESC"; 
                 $history_where['vst'] = $visit_label;
             }
             elseif ($testID == '15_12_15') {
                 $visit_label = '12-15mo';
-                //$history_query = "SELECT new, new_date from certification_history where primaryVals = '" . $this->identifier . "' AND testID = '" . $testID ."' AND visit_label = '". $visit_label . "' ORDER BY changeDate DESC"; 
                 $history_query = "SELECT new, new_date from certification_history where primaryVals =:crt_id AND testID =:tst_id AND visit_label =:vst ORDER BY changeDate DESC"; 
                 $history_where['vst'] = $visit_label;
             }
             elseif ($testID == '15_24_36') {
                 $visit_label = '24-36mo';
-                //$history_query = "SELECT new, new_date from certification_history where primaryVals = '" . $this->identifier . "' AND testID = '" . $testID ."' AND visit_label = '". $visit_label . "' ORDER BY changeDate DESC"; 
                 $history_query = "SELECT new, new_date from certification_history where primaryVals =:crt_id AND testID =:tst_id AND visit_label =:vst ORDER BY changeDate DESC"; 
                 $history_where['vst'] = $visit_label;
             }
 
             //select history events
-            //$DB->selectRow($history_query, $oldVals);
             $oldVals = $DB->pselectRow($history_query, $history_where);
             $oldVal = $oldVals['new'];
             $oldDate = $oldVals['new_date'];
 
-            //$DB->selectRow("SELECT testID from certification where certID='" .$this->identifier."' AND testID = '" . $testID . "'", $measureID);
             $measureID = $DB->pselectRow("SELECT testID from certification where certID=:crt_id AND testID =:tst_id", array('crt_id'=>$this->identifier, 'tst_id'=>$testID));
             $date = $values['date_cert'][$testID];
             $values['comment'][$testID] = trim($values['comment'][$testID]);
@@ -147,10 +126,7 @@ class NDB_Form_certification extends NDB_Form
                 $date_cert = null;
             }
 
-//            $certID = $DB->selectOne("SELECT certID from certification where examinerID = '".$values['examinerID']."'");
             $certID = $DB->pselectOne("SELECT certID from certification where examinerID =:eid", array('eid'=>$values['examinerID']));
-            //      if (in_array($pass, array('not_certified', 'in_training', 'certified')) || $values['comment'][$testID]!="") {
-            //$tests = $DB->select("SELECT testID from certification where certID='" .$this->identifier."'");
             $tests = $DB->pselect("SELECT testID from certification where certID=:crt_id", array('crt_id'=>$this->identifier));
             $testIDs = array();
             foreach($tests as $arr) {
@@ -232,11 +208,8 @@ class NDB_Form_certification extends NDB_Form
                 } elseif (!empty($measureID)) { //if entry for this examiner/measure combination exists
                     unset($test_certification); 
                     //check existing values and update accordingly if they are different
-                    //$test_certification = $DB->selectOne("SELECT pass from certification where certID='" .$this->identifier."' AND testID ='".$testID."'");
                     $test_certification = $DB->pselectOne("SELECT pass from certification where certID=:crt_id AND testID =:tst_id", array('crt_id'=>$this->identifier, 'tst_id'=>$testID));
-//                    $date = $DB->selectOne("SELECT date_cert from certification where certID = '" .$this->identifier."' AND testID ='".$testID."'");
                     $date = $DB->pselectOne("SELECT date_cert from certification where certID =:crt_id AND testID =:tst_id", array('crt_id'=>$this->identifier, 'tst_id'=>$testID));
-//                    $comment = $DB->selectOne("SELECT comment from certification where certID = '" .$this->identifier."' AND testID ='".$testID."'");
                     $comment = $DB->pselectOne("SELECT comment from certification where certID =:crt_id AND testID =:tst_id", array('crt_id'=>$this->identifier, 'tst_id'=>$testID));
 
                     if ($testID == '15_3_9' || $testID == '15_12_15' || $testID == '15_24_36') {
@@ -246,204 +219,161 @@ class NDB_Form_certification extends NDB_Form
                         $where = array('certID' => $this->identifier, 'testID' => $testID);
                     }
 
-//                    $certification_exists = $DB->selectOne("SELECT certID from certification where certID ='" . $this->identifier ."' AND testID = '" . $testID ."'");
                     $certification_exists = $DB->pselectOne("SELECT certID from certification where certID =:crt_id AND testID =:tst_id", array('crt_id'=>$this->identifier, 'tst_id'=>$testID));
-                    /* if (empty($certification_exists)) {
-                    //if ($test_certification != $pass || $values['comment'][$testID] != $comment || $values['date'][$testID] != $date) {
-                    //   if (empty($test_certification)) {
-                    $DB->selectRow($history_query, $oldVals);
-                    $oldVal = $oldVals['new'];
-                    $oldDate = $oldVals['new_date'];
-                    $success = $DB->insert('certification', array(
-                    'certID'      => $this->identifier,
-                    'examinerID'  => $values['examinerID'],
-                    'date_cert'   => $date_cert,
-                    'visit_label' => $visit_label,
-                    'pass'        => $pass, //$values['pass'],
-                    'testID'      => $testID, //$values['test_ID'],
-                    'comment'     => $values['comment'][$testID]
-                    ));
-                    $type = 'I';
-                    }
-                    else {*/
-                    if ($test_certification != $pass || $values['comment'][$testID] != $comment || $values['date_cert'][$testID] != $date_cert) {
 
-                        //            $DB->selectRow($history_query, $oldVals); 
-                        //           $oldVal = $oldVals['new'];
-                        //          $oldDate = $oldVals['new_date'];
+                    if ($test_certification != $pass || $values['comment'][$testID] != $comment || $values['date_cert'][$testID] != $date_cert) {
                         $success = $DB->update('certification', array(
-                                    'date_cert'   => $date_cert,
-                                    'pass'        => $pass, //$values['pass'],
-                                    'comment'     => $values['comment'][$testID]
-                                    ), $where);
+                            'date_cert'   => $date_cert,
+                            'pass'        => $pass, //$values['pass'],
+                            'comment'     => $values['comment'][$testID]
+                        ), $where);
                         $type = 'U';
 
                         if (PEAR::isError($success)) {
                             return PEAR::raiseError("DB Error: ".$success->getMessage());
                         }
                     }
-                    // }
                     unset($success);
                     if ($oldDate != $date_cert || $oldVal != $pass) {
                         $success = $DB->insert('certification_history', array(
-                                    'col'         => 'pass',
-                                    'old'         => $oldVal,
-                                    'old_date'    => $oldDate,
-                                    'new'         => $pass,
-                                    'new_date'    => $date_cert,
-                                    'primaryVals' => $certID, 
-                                    'testID'      => $testID, 
-                                    'visit_label' => $visit_label,
-                                    'changeDate'  => date("Y-m-d H:i:s"),
-                                    'userID'      => $_SESSION['State']->getUsername(),
-                                    'type'        => $type
-                                    ));
+                            'col'         => 'pass',
+                            'old'         => $oldVal,
+                            'old_date'    => $oldDate,
+                            'new'         => $pass,
+                            'new_date'    => $date_cert,
+                            'primaryVals' => $certID, 
+                            'testID'      => $testID, 
+                            'visit_label' => $visit_label,
+                            'changeDate'  => date("Y-m-d H:i:s"),
+                            'userID'      => $_SESSION['State']->getUsername(),
+                            'type'        => $type
+                        ));
                         if (PEAR::isError($success)) {
                             return PEAR::raiseError("DB Error: ".$success->getMessage());
                         }
                     }
                 }
-                // }
-
-                }
             }
-            $this->form->freeze();
-            }
+        }
+        $this->form->freeze();
+    }
 
-            function edit_event()
-            {
-                $this->redirect = "test_name=$this->name";
+    function edit_event()
+    {
+        $this->redirect = "test_name=$this->name";
 
-                //------------------------------------------------------------
+        //------------------------------------------------------------
 
-                $config =& NDB_Config::singleton();
-                $study = $config->getSetting('study');
-                $dateOptions = array(
-                        'language'        => 'en',
-                        'format'          => 'YMd',
-                        'addEmptyOption'  => true,
-                        'minYear'         => $study['startYear'],
-                        'maxYear'         => $study['endYear']
-                        );
+        $config =& NDB_Config::singleton();
+        $study = $config->getSetting('study');
+        $dateOptions = array(
+            'language'        => 'en',
+            'format'          => 'YMd',
+            'addEmptyOption'  => true,
+            'minYear'         => $study['startYear'],
+            'maxYear'         => $study['endYear']
+        );
 
-                $DB =& Database::singleton();
-                if(PEAR::isError($DB)) {
-                    return PEAR::raiseError("Could not connect to database: ".$DB->getMessage());
+        $DB =& Database::singleton();
+        if(PEAR::isError($DB)) {
+            return PEAR::raiseError("Could not connect to database: ".$DB->getMessage());
+        }
+
+        $DB->select("SELECT examinerID, concat(psc.Alias, ' - ', examiners.full_name) AS full_name FROM examiners, psc WHERE examiners.centerID=psc.CenterID ORDER BY full_name", $result);
+        if (PEAR::isError($result)) {
+            return PEAR::raiseError("DB Error: ".$result->getMessage());
+        }
+        $examinerOptions[0] = '';
+        foreach ($result as $row) {
+            $examinerOptions[$row['examinerID']] = $row['full_name'];
+        }
+
+        $visits = Utility::getVisitList();
+
+        // examiner
+        $this->form->addElement('select', 'examinerID', 'Examiner', $examinerOptions);
+        $this->form->addRule('examinerID', 'Examiner is required', 'required');
+        $this->form->addElement('static', 'certification_history', '', '');
+
+        $instruments = array();
+        $instruments_query = "SELECT ID, Full_name FROM test_names WHERE Test_name like ";
+        $certificationConfig = $config->getSetting("Certification");
+        $certificationInstruments = $certificationConfig['CertificationInstruments'];
+        foreach(Utility::toArray($certificationInstruments) AS $certificationInstrument){
+            foreach (Utility::toArray($certificationInstrument['test']) AS $test) {
+                $test_key = $test['@']['value'];
+                if (preg_match('/mullen/', $test_key)) {
+                    $test_key = 'mullen';
                 }
-
-                $DB->select("SELECT examinerID, concat(psc.Alias, ' - ', examiners.full_name) AS full_name FROM examiners, psc WHERE examiners.centerID=psc.CenterID ORDER BY full_name", $result);
+                $instruments_query .= "'%" . $test_key . "%' OR Test_name LIKE ";
+                $testID = $DB->selectOne("SELECT ID FROM test_names WHERE Test_name like '%$test_key%'");
                 if (PEAR::isError($result)) {
                     return PEAR::raiseError("DB Error: ".$result->getMessage());
                 }
-                $examinerOptions[0] = '';
-                foreach ($result as $row) {
-                    $examinerOptions[$row['examinerID']] = $row['full_name'];
-                }
-
-                $visits = Utility::getVisitList();
-
-                // examiner
-                $this->form->addElement('select', 'examinerID', 'Examiner', $examinerOptions);
-                $this->form->addRule('examinerID', 'Examiner is required', 'required');
-                $this->form->addElement('static', 'certification_history', '', '');
-
-                // date of certification
-                //        $this->form->addElement('date', 'date_cert', "Date of testing", $dateOptions);
-                //        $this->form->addRule('date_cert', 'Date of testing is required', 'required');
-
-                // candid
-                //    $this->form->addElement('text', 'cert_candID', 'DCCID');
-                //        $this->form->addElement('select', 'cert_visit_label', 'Visit label', $visits);
-
-
-                $instruments = array();
-                $instruments_query = "SELECT ID, Full_name FROM test_names WHERE Test_name like ";
-                $certificationInstruments = $config->getSetting("CertificationInstruments");
-                foreach(Utility::toArray($certificationInstruments) AS $certificationInstrument){
-                    foreach (Utility::toArray($certificationInstrument['test']) AS $test) { //['labelSet']['test']) AS $test) {
-                        $test_key = $test['@']['value'];
-                        if (preg_match('/mullen/', $test_key)) {
-                            $test_key = 'mullen';
-                        }
-                        $instruments_query .= "'%" . $test_key . "%' OR Test_name LIKE ";
-                        $testID = $DB->selectOne("SELECT ID FROM test_names WHERE Test_name like '%$test_key%'");
-                        if (PEAR::isError($result)) {
-                            return PEAR::raiseError("DB Error: ".$result->getMessage());
-                        }
-                        //$labelOptions[$test['@']['value']] = $test['#'];
-                        $test_value = $test['#'];
-                        $instruments[$testID] = $test_value;
-                        //$instruments[$test_key] = $test_value;
-                        //                      print "value: " . $test_value; //$labelOptions[$test['@']['value']] . "\n";
-                    }
-                    }
-
-                    if (preg_match('/OR Test_name LIKE $/', $instruments_query)) {
-                        $query = preg_replace('/OR Test_name LIKE $/', '', $instruments_query);
-                    }
-
-                    // table of tests
-                    $statusOptions = array(null=>'N/A',
-                            'not_certified'=>'Not Certified',
-                            'in_training'=>'In Training',
-                            'certified'=>'Certified'
-                            );
-
-                    foreach ($instruments as $key=>$value) {
-                        if (preg_match("/Mullen/", $value)) {
-                            $v = explode(' ', $value);
-                            $value = $v[0];
-                            $this->form->addElement('select', 'pass['.$key.'_3_9]', $value . " 3-9mo", $statusOptions);
-                            $this->form->addElement('text', 'comment['.$key.'_3_9]', 'Comment');
-                            $this->form->addElement('date', 'date_cert['.$key.'_3_9]', 'Date', $dateOptions);
-                            $this->form->addElement('select', 'pass['.$key.'_12_15]', $value . " 12-15mo", $statusOptions);
-                            $this->form->addElement('text', 'comment['.$key.'_12_15]', 'Comment');
-                            $this->form->addElement('date', 'date_cert['.$key.'_12_15]', 'Date', $dateOptions);
-                            $this->form->addElement('select', 'pass['.$key.'_24_36]', $value . " 24-36mo", $statusOptions);
-                            $this->form->addElement('text', 'comment['.$key.'_24_36]', 'Comment');
-                            $this->form->addElement('date', 'date_cert['.$key.'_24_36]', 'Date', $dateOptions);
-                        }
-                        else {
-                            $this->form->addElement('select', 'pass['.$key.']', $value, $statusOptions);
-                            //$this->form->addGroup($options, 'test_Group['.$row['ID'].']', $row['Full_name'], $this->_GUIDelimiter, FALSE);
-                            $this->form->addElement('text', 'comment['.$key.']', 'Comment');
-                            $this->form->addElement('date', 'date_cert['.$key.']', 'Date', $dateOptions);
-                        }
-                    }
-                    $this->form->addFormRule(array(&$this, '_validate'));
-                }
-
-                function _validate($values)
-                {
-                    $db =& Database::singleton();
-                    $errors = array();
-
-                    // make sure an examiner was selected
-                    if(empty($values['examinerID'])) $errors['examinerID'] = 'Examiner is required';
-                    /*
-                    // check date pairs
-                    if (empty($values['date_cert']['M']) && empty($values['date_cert']['d']) && empty($values['date_cert']['Y'])) {
-                    $errors['date_cert'] .= "Date is required. \n";
-                    }
-                    elseif (!_checkDate($values['date_cert'])) {
-                    $errors['date_cert'] = 'Date of testing is not a valid date.';
-                    }
-                     */
-                    // check candid & visit_label
-                    if(!empty($values['cert_candID'])) {
-//                        $idValid = $db->selectOne("SELECT COUNT(CandID) FROM candidate WHERE CandID=".$db->quote($values['cert_candID']));
-                        $idValid = $db->pselectOne("SELECT COUNT(CandID) FROM candidate WHERE CandID=:cnd_id", array('cnd_id'=>$db->quote($values['cert_candID'])));
-                        if(!$idValid) $errors['cert_candID'] = 'ID entered is not valid';
-
-                        if(empty($values['cert_visit_label'])) $errors['cert_visit_label'] = 'Visit label is required';
-                        else {
-//                            $labelValid = $db->selectOne("SELECT COUNT(ID) FROM session WHERE CandID=".$db->quote($values['cert_candID'])." AND Visit_label=".$db->quote($values['cert_visit_label']));
-                            $labelValid = $db->pselectOne("SELECT COUNT(ID) FROM session WHERE CandID=:cnd_id AND Visit_label=:vst", array('cnd_id'=>$db->quote($values['cert_candID']), 'vst'=>$db->quote($values['cert_visit_label'])));
-                            if(!$labelValid) $errors['cert_visit_label'] = 'Visit label entered is not valid';
-                        }
-                    }
-
-                    return $errors;
-                }
+                $test_value = $test['#'];
+                $instruments[$testID] = $test_value;
             }
-            ?>
+        }
+
+        if (preg_match('/OR Test_name LIKE $/', $instruments_query)) {
+            $query = preg_replace('/OR Test_name LIKE $/', '', $instruments_query);
+        }
+
+        // table of tests
+        $statusOptions = array(null=>'N/A',
+            'not_certified'=>'Not Certified',
+            'in_training'=>'In Training',
+            'certified'=>'Certified'
+        );
+
+        foreach ($instruments as $key=>$value) {
+            if (preg_match("/Mullen/", $value)) {
+                $v = explode(' ', $value);
+                $value = $v[0];
+                $this->form->addElement('select', 'pass['.$key.'_3_9]', $value . " 3-9mo", $statusOptions);
+                $this->form->addElement('text', 'comment['.$key.'_3_9]', 'Comment');
+                $this->form->addElement('date', 'date_cert['.$key.'_3_9]', 'Date', $dateOptions);
+                $this->form->addElement('select', 'pass['.$key.'_12_15]', $value . " 12-15mo", $statusOptions);
+                $this->form->addElement('text', 'comment['.$key.'_12_15]', 'Comment');
+                $this->form->addElement('date', 'date_cert['.$key.'_12_15]', 'Date', $dateOptions);
+                $this->form->addElement('select', 'pass['.$key.'_24_36]', $value . " 24-36mo", $statusOptions);
+                $this->form->addElement('text', 'comment['.$key.'_24_36]', 'Comment');
+                $this->form->addElement('date', 'date_cert['.$key.'_24_36]', 'Date', $dateOptions);
+            }
+            else {
+                $this->form->addElement('select', 'pass['.$key.']', $value, $statusOptions);
+                $this->form->addElement('text', 'comment['.$key.']', 'Comment');
+                $this->form->addElement('date', 'date_cert['.$key.']', 'Date', $dateOptions);
+            }
+        }
+        $this->form->addFormRule(array(&$this, '_validate'));
+    }
+
+    function _validate($values)
+    {
+        $db =& Database::singleton();
+        $errors = array();
+
+        // make sure an examiner was selected
+        if(empty($values['examinerID'])) {
+            $errors['examinerID'] = 'Examiner is required';
+        }
+        // check candid & visit_label
+        if(!empty($values['cert_candID'])) {
+            $idValid = $db->pselectOne("SELECT COUNT(CandID) FROM candidate WHERE CandID=:cnd_id", array('cnd_id'=>$db->quote($values['cert_candID'])));
+            if(!$idValid) {
+                $errors['cert_candID'] = 'ID entered is not valid';
+            }
+
+            if(empty($values['cert_visit_label'])) {
+                $errors['cert_visit_label'] = 'Visit label is required';
+            } else {
+                $labelValid = $db->pselectOne("SELECT COUNT(ID) FROM session WHERE CandID=:cnd_id AND Visit_label=:vst", array('cnd_id'=>$db->quote($values['cert_candID']), 'vst'=>$db->quote($values['cert_visit_label'])));
+                if(!$labelValid) $errors['cert_visit_label'] = 'Visit label entered is not valid';
+            }
+        }
+
+        return $errors;
+    }
+}
+?>
