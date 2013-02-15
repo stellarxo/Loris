@@ -342,7 +342,7 @@ INSERT INTO test_battery VALUES ('', 'edi', '1050', '1140', 'Y', 'Visit', '2');
     
     function _determineRequiredQuestions($age, $subProjectID, $projID){
    //get age in days, to more easily compare with the test_battery;
-        $ageDays = $age['year'] * 365 + $age['mon'] * 30.5 + $age['day']; print $ageDays;
+        $ageDays = $age['year'] * 365 + $age['mon'] * 30.5 + $age['day']; // print $ageDays;
         if($projID == 1){  
         // 6month visit
         if($ageDays <= 270 && $subProjectID == 1) {
