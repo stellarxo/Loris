@@ -1,5 +1,5 @@
 <?php
-class NDB_BVL_Instrument_adi_r extends NDB_BVL_Instrument
+abstract class NDB_BVL_Instrument_adi_r extends NDB_BVL_Instrument
 {
 	//Commonly used level of indentation;
 	var $indent = "&nbsp;&nbsp;&nbsp;&nbsp;";
@@ -18,6 +18,7 @@ class NDB_BVL_Instrument_adi_r extends NDB_BVL_Instrument
     // Holds the algorithm score conversions
     var $scores = array();
 
+    //abstract function setup($commentID, $page);
 	/**
     * sets up basic data, such as the HTML_Quickform object, and so on.
     *
@@ -49,6 +50,7 @@ class NDB_BVL_Instrument_adi_r extends NDB_BVL_Instrument
         								"q_41_cur_comm_speech_current_code", "q_50_direct_gaze_current_code",
         								"q_60_init_activities_current_code", "q_67_unusual_preoccupations_current_code",
         								"q_80_gait_current_code", "q_88_visuospatial_ability_current_code");
+        $this->_doubleDataEntryDiffIgnoreColumns = array_merge(array('CommentID', 'UserID', 'Testdate', 'Window_Difference', 'Candidate_Age'), $this->scoreCols);
         // setup the form
         $this->_setupForm();
 
@@ -1106,5 +1108,47 @@ e skills first apparent");               // $this->form->addElement('select', 'q
 	   } else return null;
 	   
 	}
+
+    // Special case for certification module, since
+    // both adi_r_subject and proband are treated
+    // as one.
+    //
+    function _getExaminerNames()
+    {
+        $db =& Database::singleton();
+
+        $centerID = $db->pselectOne("SELECT session.CenterID FROM session, flag WHERE session.ID=flag.SessionID and flag.CommentID=:cmnt_id", array('cmnt_id'=>$this->getCommentID()));
+
+        //get examiner certifications for profiles part of IBIS2
+        $project = $db->pselectOne("SELECT ProjectID from candidate where CandID =:cnd_id", array('cnd_id'=>$_REQUEST["candID"]));
+
+        list($CertificationEnabled, $CertificationProjects, $CertificationInstruments) = $this->_getCertificationConfig();
+        if ($CertificationEnabled && in_array($project, $CertificationProjects)
+        ) {
+            // Don't include check against config file for instrument, because it's stored
+            // in the config as 'ADI-R' not $testName
+            //&& in_array($this->testName, $CertificationInstruments)) {
+            // Just use the testID for proband, because that's the one that's saved.
+            $test_id = $db->pselectOne("SELECT ID FROM test_names WHERE Test_name =:tst_name", array('tst_name'=>'adi_r_proband'));
+            $results = $db->pselect("SELECT certification.examinerID, full_name FROM certification JOIN examiners ON (certification.examinerID=examiners.examinerID) WHERE testID =:tid AND pass =:cert_id AND centerID =:cid ORDER BY full_name",array('tid'=>$test_id,'cert_id'=>'certified','cid'=>$centerID));
+            if($db->isError($results)) {
+                return $this->raiseError("Could not get examiner names: ".$results->getMessage());
+            }
+        } else {
+            $results = $db->pselect("SELECT examinerID, full_name FROM examiners WHERE centerID=:centID ORDER BY full_name", array('centID' => $centerID));
+            if($db->isError($results)) {
+                return $this->raiseError("Could not get examiner names: ".$results->getMessage());
+            }
+        }
+        
+        $examiners = array(''=>'');
+        if(is_array($results) && !empty($results)) {
+            foreach($results AS $row) {
+                $examiners[$row['examinerID']] = $row['full_name'];
+            }
+        }
+        return $examiners;
+    }
+
 }
 ?>

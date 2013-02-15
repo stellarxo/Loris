@@ -499,6 +499,9 @@ class NDB_BVL_Instrument_mullen extends NDB_BVL_Instrument
         // Get the subject DoB for scoring
         if($this->getSessionID() != NULL) { //quickform_parser doesn't use any specific session
             $timepoint =& TimePoint::singleton($this->getSessionID());
+            if($this->isError($timepoint)) {
+                return PEAR::raiseError("Invalid timepoint.");
+            }
             $dob = $timepoint->getEffectiveDateOfBirth();
         }
         if(!empty($dob) && !empty($record['Date_taken'])) {
@@ -1115,14 +1118,17 @@ class NDB_BVL_Instrument_mullen extends NDB_BVL_Instrument
 
          // Get the subject age in months for scoring
          $age_months = $this->localDefaults['age_months'];
-         if($age_months == null){
-            $timepoint =& TimePoint::singleton($this->getSessionID());
-              $dob = $timepoint->getEffectiveDateOfBirth();
-              $age = Utility::calculateAge($dob, $score_record["Date_taken"]);
-              if($this->isError($age)) {
-               return PEAR::raiseError("Could not calculate age.");
-              }
-            $age_months = $age['year'] * 12 + $age['mon'];
+         if($age_months == null) {
+             $timepoint =& TimePoint::singleton($this->getSessionID());
+             if($this->isError($timepoint)) {
+                 return PEAR::raiseError("Invalid timepoint.");
+             }
+             $dob = $timepoint->getEffectiveDateOfBirth();
+             $age = Utility::calculateAge($dob, $score_record["Date_taken"]);
+             if($this->isError($age)) {
+                 return PEAR::raiseError("Could not calculate age.");
+             }
+             $age_months = $age['year'] * 12 + $age['mon'];
          }
 
          $calculatedScores = array();
@@ -1512,6 +1518,59 @@ class NDB_BVL_Instrument_mullen extends NDB_BVL_Instrument
         else{
            return $y;
         }
+     }
+
+     // For certification module
+     function _getExaminerNames() {
+        $db =& Database::singleton();
+
+        $centerID = $db->pselectOne("SELECT session.CenterID FROM session, flag WHERE session.ID=flag.SessionID and flag.CommentID=:cmnt_id", array('cmnt_id'=>$this->getCommentID()));
+
+         $project = $db->pselectOne("SELECT ProjectID from candidate where CandID =:cnd_id", array('cnd_id'=>$_REQUEST["candID"]));
+         list($CertificationEnabled, $CertificationProjects, $CertificationInstruments) = $this->_getCertificationConfig();
+
+         if($CertificationEnabled && in_array($project, $CertificationProjects)
+         )
+            // Don't need to check this because we know it's the mullen, and because the config contains mullen_xxxx instead of just "mullen" it won't work
+             // && in_array($this->testName, $CertificationInstruments)) 
+         {
+             print "Hihi";
+             $visit_label = $db->pselectOne("SELECT LOWER(Visit_label) FROM session WHERE ID=:ssn_id", array('ssn_id'=>$this->getSessionID()));
+             $test_id = $db->pselectOne("SELECT ID FROM test_names WHERE Test_name=:tst_name", array('tst_name'=>$this->testName));
+
+             $query = "SELECT certification.examinerID, full_name FROM certification JOIN examiners ON (certification.examinerID=examiners.examinerID) WHERE testID LIKE CONCAT(:testID, '%') AND pass=:cert_id AND centerID=:cid AND visit_label LIKE CONCAT(:vl, '%') ORDER BY full_name";
+             if($visit_label == 'v03' || $visit_label=='v06' || $visit_label == 'v09') {
+                 $visit_label = '3-9';
+             } elseif ($visit_label == 'v12' || $visit_label == 'v15') {
+                 $visit_label = '12-15';
+             } elseif( $visit_label == 'v24' || $visit_label == 'v36') {
+                 $visit_label = '24-36';
+             }
+
+             $results = $db->pselect($query, array(
+                 'testID' => $test_id,
+                 'cert_id' => 'certified',
+                 'cid' => $centerID,
+                 'vl' => $visit_label
+             ));
+             if($db->isError($results)) {
+                 return $this->raiseError("Could not get examiner names: ". $results->getMessage());
+             }
+         } else {
+             $results = $db->pselect("SELECT examinerID, full_name FROM examiners WHERE centerID=:centre ORDER BY full_name", array('centre' => $centerID));
+             if($db->isError($results)) {
+                 return $this->raiseError("Could not get examiner names: ".$results->getMessage());
+             }
+         }
+
+         $examiners = array('' => '');
+         if(is_array($results) && !empty($results)) {
+             foreach($results AS $row) {
+                 $examiners[$row['examinerID']] = $row['full_name'];
+             }
+         }
+         return $examiners;
+
      }
 
 }
