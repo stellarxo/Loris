@@ -1,0 +1,83 @@
+table{@}aims
+title{@}Alberta Infant Motor Scale
+date{@}Date_taken{@}Date of Administration{@}2006{@}2012
+static{@}Candidate_Age{@}Candidate Age (Months)
+static{@}Window_Difference{@}Window Difference (+/- Days)
+select{@}Examiner{@}Examiner{@}NULL=>''
+static{@}{@}<br />
+static{@}{@}<br />
+header{@}{@}Scores
+static{@}prone{@}Prone Subscale Score
+static{@}supine{@}Supine Subscale Score
+static{@}sit{@}Sit Subscale Score
+static{@}stand{@}Stand Subscale Score
+static{@}{@}<br />
+static{@}total_score{@}Total Score
+static{@}percentile{@}Percentile
+static{@}{@}<br />
+page{@}{@}Prone
+header{@}{@}Prone
+select{@}q1_prone_lying{@}Phsiological flexion - Turns head to clear nose from surface{@}NULL=>''{-}'credited'=>'credited'{-}'observed'=>'observed'{-}'not_observed'=>'not_observed'{-}'above_ceiling'=>'above_ceiling'{-}'not_answered'=>'Not Answered'
+select{@}q2_prone_lying{@}Lifts head symmetrically to 45 degrees - Cannot maintain head in midline{@}NULL=>''{-}'credited'=>'credited'{-}'observed'=>'observed'{-}'not_observed'=>'not_observed'{-}'above_ceiling'=>'above_ceiling'{-}'not_answered'=>'Not Answered'
+select{@}q3_prone_lying{@}Elbows behind shoulders - Unsustained head raising to 45 degrees{@}NULL=>''{-}'credited'=>'credited'{-}'observed'=>'observed'{-}'not_observed'=>'not_observed'{-}'above_ceiling'=>'above_ceiling'{-}'not_answered'=>'Not Answered'
+select{@}q4_prone_lying{@}Lifts and maintains head past 45 degrees - Elbows in line with shoulders - Chest Centered{@}NULL=>''{-}'credited'=>'credited'{-}'observed'=>'observed'{-}'not_observed'=>'not_observed'{-}'above_ceiling'=>'above_ceiling'{-}'not_answered'=>'Not Answered'
+select{@}q5_prone_lying{@}Head to 90 degrees - Uncontrolled Weight Shifts{@}NULL=>''{-}'credited'=>'credited'{-}'observed'=>'observed'{-}'not_observed'=>'not_observed'{-}'above_ceiling'=>'above_ceiling'{-}'not_answered'=>'Not Answered'
+select{@}q6_prone_lying{@}Elbows in front of shoulder - Active chin tuck with neck elongation{@}NULL=>''{-}'credited'=>'credited'{-}'observed'=>'observed'{-}'not_observed'=>'not_observed'{-}'above_ceiling'=>'above_ceiling'{-}'not_answered'=>'Not Answered'
+select{@}q7_prone_lying{@}Arms extended - Chin tuck and chest elevated - Lateral weight shift{@}NULL=>''{-}'credited'=>'credited'{-}'observed'=>'observed'{-}'not_observed'=>'not_observed'{-}'above_ceiling'=>'above_ceiling'{-}'not_answered'=>'Not Answered'
+select{@}q8_prone_lying{@}Movement initiated by head - Trunk moves as one unit{@}NULL=>''{-}'credited'=>'credited'{-}'observed'=>'observed'{-}'not_observed'=>'not_observed'{-}'above_ceiling'=>'above_ceiling'{-}'not_answered'=>'Not Answered'
+select{@}q9_prone_lying{@}Active extensor pattern{@}NULL=>''{-}'credited'=>'credited'{-}'observed'=>'observed'{-}'not_observed'=>'not_observed'{-}'above_ceiling'=>'above_ceiling'{-}'not_answered'=>'Not Answered'
+select{@}q10_prone_lying{@}Active weight shift from one side - Controlled reach with free arm{@}NULL=>''{-}'credited'=>'credited'{-}'observed'=>'observed'{-}'not_observed'=>'not_observed'{-}'above_ceiling'=>'above_ceiling'{-}'not_answered'=>'Not Answered'
+select{@}q11_prone_lying{@}Pivots - Movement in arms and legs - Lateral trunk flexion{@}NULL=>''{-}'credited'=>'credited'{-}'observed'=>'observed'{-}'not_observed'=>'not_observed'{-}'above_ceiling'=>'above_ceiling'{-}'not_answered'=>'Not Answered'
+select{@}q12_prone_lying{@}Trunk rotation{@}NULL=>''{-}'credited'=>'credited'{-}'observed'=>'observed'{-}'not_observed'=>'not_observed'{-}'above_ceiling'=>'above_ceiling'{-}'not_answered'=>'Not Answered'
+select{@}q13_prone_lying{@}Legs flexed, abducted, and externally rotated - Lumbar lordosis - Maintains position{@}NULL=>''{-}'credited'=>'credited'{-}'observed'=>'observed'{-}'not_observed'=>'not_observed'{-}'above_ceiling'=>'above_ceiling'{-}'not_answered'=>'Not Answered'
+select{@}q14_prone_lying{@}Dissociation of legs - Shoulder stability - Rotation within body axis{@}NULL=>''{-}'credited'=>'credited'{-}'observed'=>'observed'{-}'not_observed'=>'not_observed'{-}'above_ceiling'=>'above_ceiling'{-}'not_answered'=>'Not Answered'
+select{@}q15_prone_lying{@}Recipricol arm and leg movements with trunk rotation{@}NULL=>''{-}'credited'=>'credited'{-}'observed'=>'observed'{-}'not_observed'=>'not_observed'{-}'above_ceiling'=>'above_ceiling'{-}'not_answered'=>'Not Answered'
+select{@}q16_prone_lying{@}Plays in and out of position - May get to sitting{@}NULL=>''{-}'credited'=>'credited'{-}'observed'=>'observed'{-}'not_observed'=>'not_observed'{-}'above_ceiling'=>'above_ceiling'{-}'not_answered'=>'Not Answered'
+select{@}q17_prone_lying{@}Legs abducted, and externally rotated - Lumbar lordosis: weight shift side to side with lateral trunk flexion{@}NULL=>''{-}'credited'=>'credited'{-}'observed'=>'observed'{-}'not_observed'=>'not_observed'{-}'above_ceiling'=>'above_ceiling'{-}'not_answered'=>'Not Answered'
+select{@}q18_prone_lying{@}Reaches with extended arm - Trunk rotation{@}NULL=>''{-}'credited'=>'credited'{-}'observed'=>'observed'{-}'not_observed'=>'not_observed'{-}'above_ceiling'=>'above_ceiling'{-}'not_answered'=>'Not Answered'
+select{@}q19_prone_lying{@}Hips aligned under pelvis - Flattening of lumbar spine{@}NULL=>''{-}'credited'=>'credited'{-}'observed'=>'observed'{-}'not_observed'=>'not_observed'{-}'above_ceiling'=>'above_ceiling'{-}'not_answered'=>'Not Answered'
+select{@}q20_prone_lying{@}Plays in position - May move forward{@}NULL=>''{-}'credited'=>'credited'{-}'observed'=>'observed'{-}'not_observed'=>'not_observed'{-}'above_ceiling'=>'above_ceiling'{-}'not_answered'=>'Not Answered'
+select{@}q21_prone_lying{@}Lumbar spine flat - Moves with trunk rotation{@}NULL=>''{-}'credited'=>'credited'{-}'observed'=>'observed'{-}'not_observed'=>'not_observed'{-}'above_ceiling'=>'above_ceiling'{-}'not_answered'=>'Not Answered'
+page{@}{@}Supine
+header{@}{@}Supine
+select{@}q22_prone_lying{@}Physiological flexion - Head rotation: mouth to hand - Random arm and leg movement{@}NULL=>''{-}'credited'=>'credited'{-}'observed'=>'observed'{-}'not_observed'=>'not_observed'{-}'above_ceiling'=>'above_ceiling'{-}'not_answered'=>'Not Answered'
+select{@}q23_prone_lying{@}Head rotation towards midline - Nonobligatory ATNR{@}NULL=>''{-}'credited'=>'credited'{-}'observed'=>'observed'{-}'not_observed'=>'not_observed'{-}'above_ceiling'=>'above_ceiling'{-}'not_answered'=>'Not Answered'
+select{@}q24_prone_lying{@}Head in midline - Moves arms but unable to bring hands to midline{@}NULL=>''{-}'credited'=>'credited'{-}'observed'=>'observed'{-}'not_observed'=>'not_observed'{-}'above_ceiling'=>'above_ceiling'{-}'not_answered'=>'Not Answered'
+select{@}q25_prone_lying{@}Neck flexors active - chin tuck - Brings hands to midline{@}NULL=>''{-}'credited'=>'credited'{-}'observed'=>'observed'{-}'not_observed'=>'not_observed'{-}'above_ceiling'=>'above_ceiling'{-}'not_answered'=>'Not Answered'
+select{@}q26_prone_lying{@}Chin tuck - Reaches hands to knees - Abdominals active{@}NULL=>''{-}'credited'=>'credited'{-}'observed'=>'observed'{-}'not_observed'=>'not_observed'{-}'above_ceiling'=>'above_ceiling'{-}'not_answered'=>'Not Answered'
+select{@}q27_prone_lying{@}Can maintain legs in mid-range - Pelvic mobility present{@}NULL=>''{-}'credited'=>'credited'{-}'observed'=>'observed'{-}'not_observed'=>'not_observed'{-}'above_ceiling'=>'above_ceiling'{-}'not_answered'=>'Not Answered'
+select{@}q28_prone_lying{@}Pushes into extension with legs{@}NULL=>''{-}'credited'=>'credited'{-}'observed'=>'observed'{-}'not_observed'=>'not_observed'{-}'above_ceiling'=>'above_ceiling'{-}'not_answered'=>'Not Answered'
+select{@}q29_prone_lying{@}Lateral head righting - Trunk moves as one unit{@}NULL=>''{-}'credited'=>'credited'{-}'observed'=>'observed'{-}'not_observed'=>'not_observed'{-}'above_ceiling'=>'above_ceiling'{-}'not_answered'=>'Not Answered'
+select{@}q30_prone_lying{@}Trunk rotation{@}NULL=>''{-}'credited'=>'credited'{-}'observed'=>'observed'{-}'not_observed'=>'not_observed'{-}'above_ceiling'=>'above_ceiling'{-}'not_answered'=>'Not Answered'
+page{@}{@}Sitting
+header{@}{@}Sitting
+select{@}q31{@}Lifts and maintains head in midline briefly{@}NULL=>''{-}'credited'=>'credited'{-}'observed'=>'observed'{-}'not_observed'=>'not_observed'{-}'above_ceiling'=>'above_ceiling'{-}'not_answered'=>'Not Answered'
+select{@}q32{@}Maintains head in midline - Supports weight on arms briefly{@}NULL=>''{-}'credited'=>'credited'{-}'observed'=>'observed'{-}'not_observed'=>'not_observed'{-}'above_ceiling'=>'above_ceiling'{-}'not_answered'=>'Not Answered'
+select{@}q33{@}Chin tuck: head in line or in front of body{@}NULL=>''{-}'credited'=>'credited'{-}'observed'=>'observed'{-}'not_observed'=>'not_observed'{-}'above_ceiling'=>'above_ceiling'{-}'not_answered'=>'Not Answered'
+select{@}q34{@}Scapular adduction  and humeral extension - Cannot maintain position{@}NULL=>''{-}'credited'=>'credited'{-}'observed'=>'observed'{-}'not_observed'=>'not_observed'{-}'above_ceiling'=>'above_ceiling'{-}'not_answered'=>'Not Answered'
+select{@}q35{@}Thoracic spine extended - Head movements free from trunk: propped on extended arms{@}NULL=>''{-}'credited'=>'credited'{-}'observed'=>'observed'{-}'not_observed'=>'not_observed'{-}'above_ceiling'=>'above_ceiling'{-}'not_answered'=>'Not Answered'
+select{@}q36{@}Cannot be left alone in sitting indefinitely{@}NULL=>''{-}'credited'=>'credited'{-}'observed'=>'observed'{-}'not_observed'=>'not_observed'{-}'above_ceiling'=>'above_ceiling'{-}'not_answered'=>'Not Answered'
+select{@}q37{@}Weight shift forward, backwards, and sideways - Cannot be left alone in sitting{@}NULL=>''{-}'credited'=>'credited'{-}'observed'=>'observed'{-}'not_observed'=>'not_observed'{-}'above_ceiling'=>'above_ceiling'{-}'not_answered'=>'Not Answered'
+select{@}q38{@}Arms move away from body - Can play with a toy - Can be left alone in sitting{@}NULL=>''{-}'credited'=>'credited'{-}'observed'=>'observed'{-}'not_observed'=>'not_observed'{-}'above_ceiling'=>'above_ceiling'{-}'not_answered'=>'Not Answered'
+select{@}q39{@}Sits independently - Reaches for toy with trunk rotation{@}NULL=>''{-}'credited'=>'credited'{-}'observed'=>'observed'{-}'not_observed'=>'not_observed'{-}'above_ceiling'=>'above_ceiling'{-}'not_answered'=>'Not Answered'
+select{@}q40{@}Moves out of sitting to achieve prone lying - Pulls with arms: legs inactive{@}NULL=>''{-}'credited'=>'credited'{-}'observed'=>'observed'{-}'not_observed'=>'not_observed'{-}'above_ceiling'=>'above_ceiling'{-}'not_answered'=>'Not Answered'
+select{@}q41{@}Actively lifts pelvis, buttocks, and unweighted leg to assume four-point kneeling{@}NULL=>''{-}'credited'=>'credited'{-}'observed'=>'observed'{-}'not_observed'=>'not_observed'{-}'above_ceiling'=>'above_ceiling'{-}'not_answered'=>'Not Answered'
+select{@}q42{@}Position of legs varies - Infant moves in and out of positions easily{@}NULL=>''{-}'credited'=>'credited'{-}'observed'=>'observed'{-}'not_observed'=>'not_observed'{-}'above_ceiling'=>'above_ceiling'{-}'not_answered'=>'Not Answered'
+page{@}{@}Standing
+header{@}{@}Standing
+select{@}q43{@}May have intermittent hip and knee flexion{@}NULL=>''{-}'credited'=>'credited'{-}'observed'=>'observed'{-}'not_observed'=>'not_observed'{-}'above_ceiling'=>'above_ceiling'{-}'not_answered'=>'Not Answered'
+select{@}q44{@}Head in line with body - Hips behind shoulders - Variable movement of legs{@}NULL=>''{-}'credited'=>'credited'{-}'observed'=>'observed'{-}'not_observed'=>'not_observed'{-}'above_ceiling'=>'above_ceiling'{-}'not_answered'=>'Not Answered'
+select{@}q45{@}Hips in line with shoulders- Active control of trunk - Variable movements of legs{@}NULL=>''{-}'credited'=>'credited'{-}'observed'=>'observed'{-}'not_observed'=>'not_observed'{-}'above_ceiling'=>'above_ceiling'{-}'not_answered'=>'Not Answered'
+select{@}q46{@}Pull to Stand With Support - Pushes down with arms and extends knees{@}NULL=>''{-}'credited'=>'credited'{-}'observed'=>'observed'{-}'not_observed'=>'not_observed'{-}'above_ceiling'=>'above_ceiling'{-}'not_answered'=>'Not Answered'
+select{@}q47{@}Pull to Stand/Stands- Pulls to stand;shifts weight from side to side{@}NULL=>''{-}'credited'=>'credited'{-}'observed'=>'observed'{-}'not_observed'=>'not_observed'{-}'above_ceiling'=>'above_ceiling'{-}'not_answered'=>'Not Answered'
+select{@}q48{@}Supported Standing With Rotation- Rotation of trunk and pelvis{@}NULL=>''{-}'credited'=>'credited'{-}'observed'=>'observed'{-}'not_observed'=>'not_observed'{-}'above_ceiling'=>'above_ceiling'{-}'not_answered'=>'Not Answered'
+select{@}q49{@}Cruising Without Rotation - Cruises sideways without rotation{@}NULL=>''{-}'credited'=>'credited'{-}'observed'=>'observed'{-}'not_observed'=>'not_observed'{-}'above_ceiling'=>'above_ceiling'{-}'not_answered'=>'Not Answered'
+select{@}q50{@}Half Kneeling - May assume standing or play in position{@}NULL=>''{-}'credited'=>'credited'{-}'observed'=>'observed'{-}'not_observed'=>'not_observed'{-}'above_ceiling'=>'above_ceiling'{-}'not_answered'=>'Not Answered'
+select{@}q51{@}Controlling Lowering Through Standing - Controlled lowering from standing{@}NULL=>''{-}'credited'=>'credited'{-}'observed'=>'observed'{-}'not_observed'=>'not_observed'{-}'above_ceiling'=>'above_ceiling'{-}'not_answered'=>'Not Answered'
+select{@}q52{@}Cruising With Rotation - Cruises with rotation{@}NULL=>''{-}'credited'=>'credited'{-}'observed'=>'observed'{-}'not_observed'=>'not_observed'{-}'above_ceiling'=>'above_ceiling'{-}'not_answered'=>'Not Answered'
+select{@}q53{@}Stands Alone - Stands alone momentarily- Balance reactions in feet{@}NULL=>''{-}'credited'=>'credited'{-}'observed'=>'observed'{-}'not_observed'=>'not_observed'{-}'above_ceiling'=>'above_ceiling'{-}'not_answered'=>'Not Answered'
+select{@}q54{@}Early Stepping - Walks independently; moves quickly with short steps{@}NULL=>''{-}'credited'=>'credited'{-}'observed'=>'observed'{-}'not_observed'=>'not_observed'{-}'above_ceiling'=>'above_ceiling'{-}'not_answered'=>'Not Answered'
+select{@}q55{@}Standding from Modified Squat - Moves from squat to standing with controlled flexion and extension of hips and knees{@}NULL=>''{-}'credited'=>'credited'{-}'observed'=>'observed'{-}'not_observed'=>'not_observed'{-}'above_ceiling'=>'above_ceiling'{-}'not_answered'=>'Not Answered'
+select{@}q56{@}Standing from Quadruped Position - Pushes quickly with hands to get standing{@}NULL=>''{-}'credited'=>'credited'{-}'observed'=>'observed'{-}'not_observed'=>'not_observed'{-}'above_ceiling'=>'above_ceiling'{-}'not_answered'=>'Not Answered'
+select{@}q57{@}Walks Alone - Walks independently{@}NULL=>''{-}'credited'=>'credited'{-}'observed'=>'observed'{-}'not_observed'=>'not_observed'{-}'above_ceiling'=>'above_ceiling'{-}'not_answered'=>'Not Answered'
+select{@}q58{@}Maintains position by balance reactions in feet and position of trunk{@}NULL=>''{-}'credited'=>'credited'{-}'observed'=>'observed'{-}'not_observed'=>'not_observed'{-}'above_ceiling'=>'above_ceiling'{-}'not_answered'=>'Not Answered'
