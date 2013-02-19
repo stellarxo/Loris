@@ -535,129 +535,29 @@ INSERT INTO test_battery VALUES ('', 'edi', '1050', '1140', 'Y', 'Visit', '2');
 
     function _page10() {  
 
-//    function _page4() {
-		$answerArray = array(""=>NULL, "0_no"=>"0. No", "1_possible"=>"1. Possible", "2_definite"=>"2. Definite", "not_answered"=>"Not Answered");
+	    $answerArray = array(""=>NULL, "0_no"=>"0. No", "1_possible"=>"1. Possible", "2_definite"=>"2. Definite", "not_answered"=>"Not Answered");
+	    $visit_interval = array (""=>NULL,"0-3m"=>"0-3m","0-6m"=>"0-6m","3m-6m"=>"3m-6m","3m-9m"=>"3m-9m","6m-9m"=>"6m-9m","6m-12m"=>"6m-12m","6m-15m"=>"6m-15m","7m-12m"=>"7m-12m","9m-12m"=>"9m-12m","9m-15m"=>"9m-15m","12m-15m"=>"12m-15m","12m-24m"=>"12m-24m","13m-18m"=>"13m-18m","13m-24m"=>"13m-24m","13m-24m"=>"13m-24m","15m-24m"=>"15m-24m","19m-24m"=>"19m-24m","24m-36m"=>"24m-36m");
 
-		$this->form->addElement("header", null, "Family Changes, 0-6 months");
-		$this->form->addElement('static', null, "<br/>");
-		$this->form->addElement('static', null, "</br>");
-		$questionArray = $this->familyChanges;
-		
-		foreach($questionArray as $field=>$label) {
-			$this->form->addElement("select", $field . "_0_6months", $label, $answerArray);
-		}							
+	    $this->form->addElement("header", null, "Family Changes");
+	    $this->form->addElement('static', null, "<br/>");
+	    $this->form->addElement('static', null, "</br>");
+	    $this->form->addElement('select',"timeframe_visit","Time frame since last visit : ", $visit_interval);
+	    $questionArray = $this->familyChanges;
 
-		$this->form->addElement('static', null, "<br/>");
-		$this->form->addElement("header", null, "Child Medical Events, 0-6 months");
-		$this->form->addElement('static', null, "<br/>");
-		$questionArray = $this->childMedicalEvents;
-		
-		foreach($questionArray as $field=>$label) {
-			$this->form->addElement("select", $field . "_0_6months", $label, $answerArray);
-		}
+	    foreach($questionArray as $field=>$label) {
+		    $this->form->addElement("select", $field, $label, $answerArray);
+	    }							
 
-		$this->form->addElement('static', null, "<br/>");
-    }
+	    $this->form->addElement('static', null, "<br/>");
+	    $this->form->addElement("header", null, "Child Medical Events");
+	    $this->form->addElement('static', null, "<br/>");
+	    $questionArray = $this->childMedicalEvents;
 
+	    foreach($questionArray as $field=>$label) {
+		    $this->form->addElement("select", $field, $label, $answerArray);
+	    }
 
-    function _page11() {  
-
-//    function _page6() {
-		$answerArray = array(""=>NULL, "0_no"=>"0. No", "1_possible"=>"1. Possible", "2_definite"=>"2. Definite", "not_answered"=>"Not Answered");
-
-		$this->form->addElement("header", null, "Family Changes, 7-12 months");
-		$this->form->addElement('static', null, "<br/>");
-		$questionArray = $this->familyChanges;
-		
-		foreach($questionArray as $field=>$label) {
-			$this->form->addElement("select", $field . "_7_12months", $label, $answerArray);
-		}							
-
-		$this->form->addElement('static', null, "<br/>");
-		$this->form->addElement("header", null, "Child Medical Events, 7-12 months");
-		$questionArray = $this->childMedicalEvents;
-		
-		foreach($questionArray as $field=>$label) {
-			$this->form->addElement("select", $field . "_7_12months", $label, $answerArray);
-		}
-
-		$this->form->addElement('static', null, "<br/>");
-    }
-    
-
-    function _page14() {  
-
-//    function _page7() {
-		$answerArray = array(""=>NULL, "0_no"=>"0. No", "1_possible"=>"1. Possible", "2_definite"=>"2. Definite", "not_answered"=>"Not Answered");
-
-		$this->form->addElement("header", null, "Family Changes, 13-24 months");
-		$this->form->addElement('static', null, "<br/>");
-		$questionArray = $this->familyChanges;
-		
-		foreach($questionArray as $field=>$label) {
-			$this->form->addElement("select", $field . "_13_24months", $label, $answerArray);
-		}							
-
-		$this->form->addElement('static', null, "<br/>");
-		$this->form->addElement("header", null, "Child Medical Events, 13-24 months");
-		$this->form->addElement('static', null, "<br/>");
-		$questionArray = $this->childMedicalEvents;
-		
-		foreach($questionArray as $field=>$label) {
-			$this->form->addElement("select", $field . "_13_24months", $label, $answerArray);
-		}
-
-		$this->form->addElement('static', null, "<br/>");
-    }
-    
-    function _page12() {
-
-//    function _page7() {
-                $answerArray = array(""=>NULL, "0_no"=>"0. No", "1_possible"=>"1. Possible", "2_definite"=>"2. Definite", "not_answered"=>"Not Answered");
-
-                $this->form->addElement("header", null, "Family Changes, 13-18 months");
-		$this->form->addElement('static', null, "<br/>");
-                $questionArray = $this->familyChanges;
-
-                foreach($questionArray as $field=>$label) {
-                        $this->form->addElement("select", $field . "_13_18months", $label, $answerArray);
-                }
-
-		$this->form->addElement('static', null, "<br/>");
-                $this->form->addElement("header", null, "Child Medical Events, 13-18 months");
-		$this->form->addElement('static', null, "<br/>");
-                $questionArray = $this->childMedicalEvents;
-
-                foreach($questionArray as $field=>$label) {
-                        $this->form->addElement("select", $field . "_13_18months", $label, $answerArray);
-                }
-
-		$this->form->addElement('static', null, "<br/>");
-    }
-
-    function _page13() {
-
-//    function _page7() {
-                $answerArray = array(""=>NULL, "0_no"=>"0. No", "1_possible"=>"1. Possible", "2_definite"=>"2. Definite", "not_answered"=>"Not Answered");
-
-                $this->form->addElement("header", null, "Family Changes, 19-24 months");
-		$this->form->addElement('static', null, "<br/>");
-                $questionArray = $this->familyChanges;
-
-                foreach($questionArray as $field=>$label) {
-                        $this->form->addElement("select", $field . "_19_24months", $label, $answerArray);
-                }
-
-		$this->form->addElement('static', null, "<br/>");
-                $this->form->addElement("header", null, "Child Medical Events, 19-24 months");
-		$this->form->addElement('static', null, "<br/>");
-                $questionArray = $this->childMedicalEvents;
-
-                foreach($questionArray as $field=>$label) {
-                        $this->form->addElement("select", $field . "_19_24months", $label, $answerArray);
-		}
-
-		$this->form->addElement('static', null, "<br/>");
+	    $this->form->addElement('static', null, "<br/>");
     }
 
 
