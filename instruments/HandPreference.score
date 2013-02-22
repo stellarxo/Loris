@@ -26,13 +26,16 @@ $UMR = 0;
 $RHR = 0;
 
 foreach($result as $key=>$value) {
-	if($value == 'l' || $value == 'r') {
-		$UMR = $UMR+1;
-	}
-	if($value =='r') {
-		$RHR = $RHR +1;
+	if($key != 'ParentQuestion'){
+		if($value == 'l' || $value == 'r') {
+			$UMR = $UMR+1;
+		}
+		if($value =='r') {
+			$RHR = $RHR +1;
+		}
 	}
 }
+
 
 if($UMR !== 0) {
     $LI = ($RHR/$UMR)*24;
