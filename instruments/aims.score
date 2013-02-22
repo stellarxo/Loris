@@ -1,0 +1,104 @@
+#!/usr/bin/php
+<?php
+require_once "../tools/generic_includes.php";
+
+$CommentID = $argv[1];
+$db =& Database::singleton();
+if(PEAR::isError($db)) {
+            print "Could not connect to database: " . $db->getMessage();
+                exit(1);
+}
+$query = "SELECT * from aims WHERE CommentID = :CommentID";
+
+$WhereCriteria = array('CommentID'=>$CommentID);
+$record = array();
+$record = $db->pselectRow($query, $WhereCriteria);
+if(PEAR::isError($record)){
+            print "Query has failed to select: ".$record->getMessage();
+                exit(2);
+}
+$scores = array();
+$scores['prone_prev_itemscredited'] = 0;
+$scores['prone_window_itemscredited'] = 0;
+$scores['prone_subscalescore'] = 0;
+$scores['supine_prev_itemscredited'] = 0;
+$scores['supine_window_itemscredited'] = 0;
+$scores['supine_subscalescore'] = 0;
+$scores['sit_prev_itemscredited'] = 0;
+$scores['sit_window_itemscredited'] = 0;
+$scores['sit_subscalescore'] = 0;
+$scores['stand_prev_itemscredited'] = 0;
+$scores['stand_window_itemscredited'] = 0;
+$scores['stand_subscalescore'] = 0;
+
+
+foreach ($record as $field=>$value) {
+    $num = explode("_",$field);
+    
+    $qstn = substr($num[0], 1); // returns question number
+    if ($qstn >= 1 & $qstn <= 21){
+        //prone related questions
+        if ($value == 'credited'){
+            $scores['prone_prev_itemscredited']++;
+
+        } 
+        if ($value == 'observed'){
+            $scores['prone_window_itemscredited']++;
+        } 
+
+    }
+    $scores['prone_subscalescore'] = $scores['prone_prev_itemscredited'] + $scores['prone_window_itemscredited'];
+    
+    if ($qstn >=22 & $qstn <= 30){
+        //prone related questions
+        if ($value == 'credited'){
+            $scores['supine_prev_itemscredited']++;
+
+        } 
+        if ($value == 'observed'){
+            $scores['supine_window_itemscredited']++;
+        } 
+
+    }
+    $scores['supine_subscalescore'] = $scores['supine_prev_itemscredited'] + $scores['supine_window_itemscredited'];
+
+    if ($qstn >= 31 & $qstn <= 42){
+        //prone related questions
+        if ($value == 'credited'){
+            $scores['sit_prev_itemscredited']++;
+
+        } 
+        if ($value == 'observed'){
+            $scores['sit_window_itemscredited']++;
+        } 
+
+    }
+    $scores['sit_subscalescore'] = $scores['sit_prev_itemscredited'] + $scores['sit_window_itemscredited'];
+
+    if ($qstn >= 43 & $qstn <= 58){
+        //prone related questions
+        if ($value == 'credited'){
+            $scores['stand_prev_itemscredited']++;
+
+        } 
+        if ($value == 'observed'){
+            $scores['stand_window_itemscredited']++;
+        } 
+
+    }
+    $scores['stand_subscalescore'] = $scores['stand_prev_itemscredited'] + $scores['stand_window_itemscredited'];
+
+}
+$scores['total_score']= $scores['prone_subscalescore']+ $scores['supine_subscalescore']+$scores['sit_subscalescore']+$scores['stand_subscalescore'];
+//save scores
+$result = $db->update('aims', $scores, $WhereCriteria);
+if($db->isError($result)) {
+        print "Could not save total score: ". $result->getMessage();
+            exit(3);
+}
+
+
+exit(0);
+
+
+?>
