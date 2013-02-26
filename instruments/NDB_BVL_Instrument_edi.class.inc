@@ -315,6 +315,7 @@ INSERT INTO test_battery VALUES ('', 'edi', '1050', '1140', 'Y', 'Visit', '2');
 
         // Get the subject DoB for scoring
         $timepoint =& TimePoint::singleton($this->getSessionID());
+        $visit_label = $timepoint->getVisitLabel(); 
         $dob = $timepoint->getEffectiveDateOfBirth();
         $candidate =& Candidate::singleton($timepoint->getCandID());
         $projID = $candidate->getProjectID(); 
@@ -373,40 +374,40 @@ INSERT INTO test_battery VALUES ('', 'edi', '1050', '1140', 'Y', 'Visit', '2');
         }
     }
 	if($projID == 2){
-		// 3month visit: three month probes along with pregnancy events are required.
-		if($ageDays <= 90 ) {
+        // 3month visit: three month probes along with pregnancy events are required.
+		if($visit_label == 'V03' ) {
 			$this->_requiredElements = array_merge($this->_requiredElements, array("EDI1", "inj"));
 		}
 
 		// 6month visit
-	    elseif($ageDays > 90 && $ageDays <= 180) {
+	    elseif($visit_label == 'V06') {
 			$this->_requiredElements = array_merge($this->_requiredElements, array("EDI9" ));
 		}
 		// 9month visit
-		elseif($ageDays >180  && $ageDays <= 270) {
+		elseif($visit_label == 'V09') {
 			$this->_requiredElements = array_merge($this->_requiredElements, array("EDI20"));
 		}
 
 		// 12month visit
-		elseif($ageDays > 270 && $ageDays <= 480) {
+		elseif($visit_label == 'V12') {
 			//12m recruit
 			$this->_requiredElements = array_merge($this->_requiredElements, array("EDI34" ));
 		} 
 		// 15month visit
-		elseif($ageDays > 480 && $ageDays <= 450) {
+		elseif($visit_label == 'V15') {
 			$this->_requiredElements = array_merge($this->_requiredElements, array("EDI46"));
 		} 
 		// 18 month visit
-		elseif($ageDays > 450 && $ageDays <= 540) {
+		elseif($visit_label == 'V18') {
 			$this->_requiredElements = array_merge($this->_requiredElements, array("EDI59"));
 		}
 		// 21 month visit
-		elseif($ageDays > 540 && $ageDays <= 630) {
+		elseif($visit_label == 'V21') {
 			$this->_requiredElements = array_merge($this->_requiredElements, array("EDI71"));
 		}
 
 		// 24month visit
-		elseif($ageDays > 630 && $ageDays <= 720) {
+		elseif($visit_label == 'V24') {
 			$this->_requiredElements = array_merge($this->_requiredElements, array("EDI83"));
 		}
 
