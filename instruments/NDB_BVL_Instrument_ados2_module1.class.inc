@@ -450,7 +450,7 @@ class NDB_BVL_Instrument_ados2_module1 extends NDB_BVL_Instrument
 	    $module = '';
         
         // NO WORDS scoring
-        if($record["a1"] == 3 || $record["a1"] == 8) {
+        if($record["a1"] == 3 || $record["a1"] == 4) {
             $module = '1-NoWords'; 
 
     		$scoreCols["social_affect_total"] = $scores["a2"] + $scores["a8"] + $scores["b1"] + $scores["b3"] + $scores["b4"] + $scores["b5"] + $scores["b9"] + $scores["b10"] + $scores["b11"] + $scores["b12"];

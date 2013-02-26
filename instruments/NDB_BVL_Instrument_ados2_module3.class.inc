@@ -434,7 +434,7 @@ class NDB_BVL_Instrument_ados2_module3 extends NDB_BVL_Instrument
             }
         }
         
-        $scoreCols["social_affect_total"] = $scores["a7"] + $scores["a8"] + $scores["a9"] + $scores["b1"] + $scores["b2"] + $scores["b4"] + $scores["b7"] + $scores["b8"] + $scores["b9"] + $scores["b10"]; 
+        $scoreCols["social_affect_total"] = $scores["a7"] + $scores["a8"] + $scores["a9"] + $scores["b1"] + $scores["b2"] + $scores["b4"] + $scores["b7"]  + $scores["b9"]+ $scores["b10"]+ $scores["b11"]; 
     	$scoreCols["restricted_repetitive_behavior_total"] = $scores["a4"] + $scores["d1"] + $scores["d2"] + $scores["d4"];
     	$scoreCols["social_affect_restricted_repetitive_behavior_total"] = $scoreCols["social_affect_total"] + $scoreCols["restricted_repetitive_behavior_total"];
     
