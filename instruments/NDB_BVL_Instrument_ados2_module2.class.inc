@@ -38,8 +38,8 @@ class NDB_BVL_Instrument_ados2_module2 extends NDB_BVL_Instrument
         // user-defined child classes)
 
         // set the object properties
-        $this->testName = "ados_module2";           // test_names.Test_name
-        $this->table = 'ados_module2';              // name of database table corresponding to instrument
+        $this->testName = "ados2_module2";           // test_names.Test_name
+        $this->table = 'ados2_module2';              // name of database table corresponding to instrument
         // data keyed by commentID
         $this->commentID = $commentID;
 
@@ -102,7 +102,7 @@ class NDB_BVL_Instrument_ados2_module2 extends NDB_BVL_Instrument
     */
     function _setupForm(){
 
-       if(preg_match("/ados_module2(_page[0-9]+)/",$this->page,$matches)){
+       if(preg_match("/ados2_module2(_page[0-9]+)/",$this->page,$matches)){
             call_user_method($matches[1], &$this);
         } else {
             $this->_main();
@@ -124,7 +124,7 @@ class NDB_BVL_Instrument_ados2_module2 extends NDB_BVL_Instrument
 
     function _main(){
         // display test name
-        $this->form->addElement('header', 'instrument_title', "ADOS Module 2");
+        $this->form->addElement('header', 'instrument_title', "ADOS2 Module 2");
 
         // automatically adds examiner & date of administration
         $this->_addMetadataFields();
