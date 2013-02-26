@@ -418,8 +418,8 @@ class NDB_BVL_Instrument_ados2_module2 extends NDB_BVL_Instrument
         
         // The cutoff depends on the age of the child. Younger ones have more leeway.
         if($age_years < 5) {
-    		$scoreCols["social_affect_total"] = $scores["a7"] + $scores["a8"] + $scores["b1"] + $scores["b2"] + $scores["b3"] + $scores["b5"] + $scores["b6"] + $scores["b8"] + $scores["b10"] + $scores["b11"];
-    		$scoreCols["restricted_repetitive_behavior_total"] = $scores["a5"] + $scores["d1"] + $scores["d2"] + $scores["d4"];
+    		$scoreCols["social_affect_total"] = $scores["a6"] + $scores["a7"] + $scores["b1"] + $scores["b2"] + $scores["b3"] + $scores["b5"] + $scores["b6"] + $scores["b8"] + $scores["b11"] + $scores["b12"];
+    		$scoreCols["restricted_repetitive_behavior_total"] = $scores["a4"] + $scores["d1"] + $scores["d2"] + $scores["d4"];
     		$scoreCols["social_affect_restricted_repetitive_behavior_total"] = $scoreCols["social_affect_total"] + $scoreCols["restricted_repetitive_behavior_total"];
     
     		if($scoreCols["social_affect_restricted_repetitive_behavior_total"] >= 7 && $scoreCols["social_affect_restricted_repetitive_behavior_total"] <= 9){
@@ -432,7 +432,7 @@ class NDB_BVL_Instrument_ados2_module2 extends NDB_BVL_Instrument
     	}
 
         if($age_years >= 5) {
-        	$scoreCols["social_affect_total"] = $scores["a7"] + $scores["a8"] + $scores["b1"] + $scores["b2"] + $scores["b3"] + $scores["b5"] + $scores["b6"] + $scores["b8"] + $scores["b10"] + $scores["b11"];
+        	$scoreCols["social_affect_total"] = $scores["a6"] + $scores["a7"] + $scores["b1"] + $scores["b2"] + $scores["b3"] + $scores["b5"] + $scores["b6"] + $scores["b8"] + $scores["b11"] + $scores["b12"];
         	$scoreCols["restricted_repetitive_behavior_total"] = $scores["a5"] + $scores["d1"] + $scores["d2"] + $scores["d4"];
         	$scoreCols["social_affect_restricted_repetitive_behavior_total"] = $scoreCols["social_affect_total"] + $scoreCols["restricted_repetitive_behavior_total"];
         
