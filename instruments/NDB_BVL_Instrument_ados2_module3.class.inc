@@ -2,10 +2,10 @@
 class NDB_BVL_Instrument_ados2_module3 extends NDB_BVL_Instrument
 {
 /*
-    INSERT INTO test_names VALUES ('', 'ados_module3', 'ADOS Module 3', '0', '1');
+    INSERT INTO test_names (Test_name, Full_name, LimitAge, Sub_group) VALUES ('ados2_module3', 'ADOS2 Module 3', '0', '1');
 
-    INSERT INTO instrument_subtests VALUES('', 'ados_module3', 'ados_module3_page1', 'Sections A-B', 1);
-    INSERT INTO instrument_subtests VALUES('', 'ados_module3', 'ados_module3_page2', 'Sections C-E', 2);
+    INSERT INTO instrument_subtests VALUES('', 'ados2_module3', 'ados2_module3_page1', 'Sections A-B', 1);
+    INSERT INTO instrument_subtests VALUES('', 'ados2_module3', 'ados2_module3_page2', 'Sections C-E', 2);
 
     INSERT INTO test_battery VALUES ('', "ados_module3", "1053", "1179","Y","Visit","1", NULL);
     INSERT INTO test_battery VALUES ('', "ados_module3", "1053", "1179","Y","Visit","2", NULL);
