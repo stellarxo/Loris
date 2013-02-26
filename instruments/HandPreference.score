@@ -42,8 +42,8 @@ if($UMR !== 0) {
 } else {
     $LI = "Error UMR is zero";
 }
-
-$values = array('LateralityIndex'=>$LI);
+$final_score = 24 - $LI;
+$values = array('LateralityIndex'=>$final_score);
 $result = $db->update('HandPreference', $values, $WhereCriteria);
 if(PEAR::isError($result)) {
     print "Could not save to database: " . $result->getMessage();
