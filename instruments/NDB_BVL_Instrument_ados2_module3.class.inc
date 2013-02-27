@@ -292,11 +292,11 @@ class NDB_BVL_Instrument_ados2_module3 extends NDB_BVL_Instrument
 
         $this->form->addElement('select', 'b1', '1. Unusual Eye Contact', $this->option02);
         $this->form->addElement("static", null, "<BR>"); //line space
-        $this->form->addElement('select', 'b2', '2. Facial Expressions Directed to Others', $this->option012);
+        $this->form->addElement('select', 'b2', '2. Facial Expressions Directed to the Examiner', $this->option012);
         $this->form->addElement("static", null, "<BR>"); //line space
         $this->form->addElement('select', 'b3', '3. Language Production and Linked Nonverbal Communication', $this->option01278);
         $this->form->addElement("static", null, "<BR>"); //line space
-        $this->form->addElement('select', 'b4', '4. Shared Enjoyment in Interaction', $this->option012);
+        $this->form->addElement('select', 'b4', '4. Shared Enjoyment in Interaction', $this->option0123);
         $this->form->addElement("static", null, "<BR>"); //line space
         $this->form->addElement('select', 'b5', "5. Empathy/Comments on Others' Emotions", $this->option012);
         $this->form->addElement("static", null, "<BR>"); //line space
