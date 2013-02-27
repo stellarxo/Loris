@@ -1,0 +1,11 @@
+DELETE FROM instrument_subtests WHERE Test_name='edi'; 
+ INSERT INTO instrument_subtests (Test_name, Subtest_name, Description, Order_number) VALUES('edi', 'edi_page1', '6month Probes', 1);
+ INSERT INTO instrument_subtests (Test_name, Subtest_name, Description, Order_number) VALUES('edi', 'edi_page2', '12month Probes', 2);
+ INSERT INTO instrument_subtests (Test_name, Subtest_name, Description, Order_number) VALUES('edi', 'edi_page3', '18month Probes', 3);
+ INSERT INTO instrument_subtests (Test_name, Subtest_name, Description, Order_number) VALUES('edi', 'edi_page4', '24month Probes', 4);
+ INSERT INTO instrument_subtests (Test_name, Subtest_name, Description, Order_number) VALUES('edi', 'edi_page5', 'Pregnancy Events', 5);
+ INSERT INTO instrument_subtests (Test_name, Subtest_name, Description, Order_number) VALUES('edi', 'edi_page6', 'Childhood Events, 0-6 months', 6);
+ INSERT INTO instrument_subtests (Test_name, Subtest_name, Description, Order_number) VALUES('edi', 'edi_page7', 'Childhood Events, 7-12 months', 7);
+ INSERT INTO instrument_subtests (Test_name, Subtest_name, Description, Order_number) VALUES('edi', 'edi_page8', 'Childhood Events, 13-24 months', 8);
+ INSERT INTO instrument_subtests (Test_name, Subtest_name, Description, Order_number) VALUES('edi', 'edi_page9', 'Childhood Events, 13-18 months', 9);
+ INSERT INTO instrument_subtests (Test_name, Subtest_name, Description, Order_number) VALUES('edi', 'edi_page10', 'Childhood Events, 19-24 months', 10);
