@@ -1,42 +1,46 @@
 table{@}HandPreference
 title{@}Hand Preference Demonstration Task (HPDT) 
+static{@}{@}<br />
 date{@}Date_taken{@}Date of Administration{@}2006{@}2012
 static{@}Candidate_Age{@}Candidate Age (Months)
 static{@}Window_Difference{@}Window Difference (+/- Days)
 select{@}Examiner{@}Examiner{@}NULL=>''
 select{@}ParentQuestion{@}Ask Parent:Is  child right handed or left handed?{@}NULL=>''{-}'l'=>'L'{-}'r'=>'R'{-}'b'=>'B'{-}'uk'=>'UK'{-}'not_answered'=>'Not Answered'
+static{@}{@}<br />
+static{@}{@}<b><u>Please Note:</u></b> Right and Left are Experimenter's Right and Left
+static{@}{@}<br />
 header{@}{@}Eating with Spoon (Show me how you eat)
-select{@}EatingTrial1{@}Trial#1{@}NULL=>''{-}'l'=>'L'{-}'r'=>'R'{-}'b'=>'B'{-}'uk'=>'UK'{-}'not_answered'=>'Not Answered'
-select{@}EatingTrial2{@}Trial#2{@}NULL=>''{-}'l'=>'L'{-}'r'=>'R'{-}'b'=>'B'{-}'uk'=>'UK'{-}'not_answered'=>'Not Answered'
-select{@}EatingTrial3{@}Trial#3{@}NULL=>''{-}'l'=>'L'{-}'r'=>'R'{-}'b'=>'B'{-}'uk'=>'UK'{-}'not_answered'=>'Not Answered'
+select{@}EatingTrial1{@}Trial#1{@}NULL=>''{-}'l'=>'L'{-}'r'=>'R'{-}'b'=>'B'{-}'nr'=>'NR'{-}'not_answered'=>'Not Answered'
+select{@}EatingTrial2{@}Trial#2{@}NULL=>''{-}'l'=>'L'{-}'r'=>'R'{-}'b'=>'B'{-}'nr'=>'NR'{-}'not_answered'=>'Not Answered'
+select{@}EatingTrial3{@}Trial#3{@}NULL=>''{-}'l'=>'L'{-}'r'=>'R'{-}'b'=>'B'{-}'nr'=>'NR'{-}'not_answered'=>'Not Answered'
 header{@}{@}Drinking from a cup (Show me how you drink)
-select{@}DrinkingTrial1{@}Trial#1{@}NULL=>''{-}'l'=>'L'{-}'r'=>'R'{-}'b'=>'B'{-}'uk'=>'UK'{-}'not_answered'=>'Not Answered'
-select{@}DrinkingTrial2{@}Trial#2{@}NULL=>''{-}'l'=>'L'{-}'r'=>'R'{-}'b'=>'B'{-}'uk'=>'UK'{-}'not_answered'=>'Not Answered'
-select{@}DrinkingTrial3{@}Trial#3{@}NULL=>''{-}'l'=>'L'{-}'r'=>'R'{-}'b'=>'B'{-}'uk'=>'UK'{-}'not_answered'=>'Not Answered'
+select{@}DrinkingTrial1{@}Trial#1{@}NULL=>''{-}'l'=>'L'{-}'r'=>'R'{-}'b'=>'B'{-}'nr'=>'NR'{-}'not_answered'=>'Not Answered'
+select{@}DrinkingTrial2{@}Trial#2{@}NULL=>''{-}'l'=>'L'{-}'r'=>'R'{-}'b'=>'B'{-}'nr'=>'NR'{-}'not_answered'=>'Not Answered'
+select{@}DrinkingTrial3{@}Trial#3{@}NULL=>''{-}'l'=>'L'{-}'r'=>'R'{-}'b'=>'B'{-}'nr'=>'NR'{-}'not_answered'=>'Not Answered'
 header{@}{@}Brushing teeth (Show me how you brush your teeth)
-select{@}BrushingTrial1{@}Trail#1{@}NULL=>''{-}'l'=>'L'{-}'r'=>'R'{-}'b'=>'B'{-}'uk'=>'UK'{-}'not_answered'=>'Not Answered'
-select{@}BrushingTrial2{@}Trail#2{@}NULL=>''{-}'l'=>'L'{-}'r'=>'R'{-}'b'=>'B'{-}'uk'=>'UK'{-}'not_answered'=>'Not Answered'
-select{@}BrushingTrial3{@}Trail#3{@}NULL=>''{-}'l'=>'L'{-}'r'=>'R'{-}'b'=>'B'{-}'uk'=>'UK'{-}'not_answered'=>'Not Answered'
+select{@}BrushingTrial1{@}Trail#1{@}NULL=>''{-}'l'=>'L'{-}'r'=>'R'{-}'b'=>'B'{-}'nr'=>'NR'{-}'not_answered'=>'Not Answered'
+select{@}BrushingTrial2{@}Trail#2{@}NULL=>''{-}'l'=>'L'{-}'r'=>'R'{-}'b'=>'B'{-}'nr'=>'NR'{-}'not_answered'=>'Not Answered'
+select{@}BrushingTrial3{@}Trail#3{@}NULL=>''{-}'l'=>'L'{-}'r'=>'R'{-}'b'=>'B'{-}'nr'=>'NR'{-}'not_answered'=>'Not Answered'
 header{@}{@}Drawing with a crayon (Color here)
-select{@}DrawingTrial1{@}Trial#1{@}NULL=>''{-}'l'=>'L'{-}'r'=>'R'{-}'b'=>'B'{-}'uk'=>'UK'{-}'not_answered'=>'Not Answered'
-select{@}DrawingTrial2{@}Trial#2{@}NULL=>''{-}'l'=>'L'{-}'r'=>'R'{-}'b'=>'B'{-}'uk'=>'UK'{-}'not_answered'=>'Not Answered'
-select{@}DrawingTrial3{@}Trial#3{@}NULL=>''{-}'l'=>'L'{-}'r'=>'R'{-}'b'=>'B'{-}'uk'=>'UK'{-}'not_answered'=>'Not Answered'
+select{@}DrawingTrial1{@}Trial#1{@}NULL=>''{-}'l'=>'L'{-}'r'=>'R'{-}'b'=>'B'{-}'nr'=>'NR'{-}'not_answered'=>'Not Answered'
+select{@}DrawingTrial2{@}Trial#2{@}NULL=>''{-}'l'=>'L'{-}'r'=>'R'{-}'b'=>'B'{-}'nr'=>'NR'{-}'not_answered'=>'Not Answered'
+select{@}DrawingTrial3{@}Trial#3{@}NULL=>''{-}'l'=>'L'{-}'r'=>'R'{-}'b'=>'B'{-}'nr'=>'NR'{-}'not_answered'=>'Not Answered'
 header{@}{@}Throwing a ball (Throw it to me)
-select{@}ThrowingTrial1{@}Trial#1{@}NULL=>''{-}'l'=>'L'{-}'r'=>'R'{-}'b'=>'B'{-}'uk'=>'UK'{-}'not_answered'=>'Not Answered'
-select{@}ThrowingTrial2{@}Trial#2{@}NULL=>''{-}'l'=>'L'{-}'r'=>'R'{-}'b'=>'B'{-}'uk'=>'UK'{-}'not_answered'=>'Not Answered'
-select{@}ThrowingTrial3{@}Trial#3{@}NULL=>''{-}'l'=>'L'{-}'r'=>'R'{-}'b'=>'B'{-}'uk'=>'UK'{-}'not_answered'=>'Not Answered'
+select{@}ThrowingTrial1{@}Trial#1{@}NULL=>''{-}'l'=>'L'{-}'r'=>'R'{-}'b'=>'B'{-}'nr'=>'NR'{-}'not_answered'=>'Not Answered'
+select{@}ThrowingTrial2{@}Trial#2{@}NULL=>''{-}'l'=>'L'{-}'r'=>'R'{-}'b'=>'B'{-}'nr'=>'NR'{-}'not_answered'=>'Not Answered'
+select{@}ThrowingTrial3{@}Trial#3{@}NULL=>''{-}'l'=>'L'{-}'r'=>'R'{-}'b'=>'B'{-}'nr'=>'NR'{-}'not_answered'=>'Not Answered'
 header{@}{@}Hammering (What do you do with that?)
-select{@}HammeringTrial1{@}Trial#1{@}NULL=>''{-}'l'=>'L'{-}'r'=>'R'{-}'b'=>'B'{-}'uk'=>'UK'{-}'not_answered'=>'Not Answered'
-select{@}HammeringTrial2{@}Trial#2{@}NULL=>''{-}'l'=>'L'{-}'r'=>'R'{-}'b'=>'B'{-}'uk'=>'UK'{-}'not_answered'=>'Not Answered'
-select{@}HammeringTrial3{@}Trial#3{@}NULL=>''{-}'l'=>'L'{-}'r'=>'R'{-}'b'=>'B'{-}'uk'=>'UK'{-}'not_answered'=>'Not Answered'
+select{@}HammeringTrial1{@}Trial#1{@}NULL=>''{-}'l'=>'L'{-}'r'=>'R'{-}'b'=>'B'{-}'nr'=>'NR'{-}'not_answered'=>'Not Answered'
+select{@}HammeringTrial2{@}Trial#2{@}NULL=>''{-}'l'=>'L'{-}'r'=>'R'{-}'b'=>'B'{-}'nr'=>'NR'{-}'not_answered'=>'Not Answered'
+select{@}HammeringTrial3{@}Trial#3{@}NULL=>''{-}'l'=>'L'{-}'r'=>'R'{-}'b'=>'B'{-}'nr'=>'NR'{-}'not_answered'=>'Not Answered'
 header{@}{@}Picking up a piece of food (e.g.,cheerio)(Show me how you eat)
-select{@}PickingTrial1{@}Trial#1{@}NULL=>''{-}'l'=>'L'{-}'r'=>'R'{-}'b'=>'B'{-}'uk'=>'UK'{-}'not_answered'=>'Not Answered'
-select{@}PickingTrial2{@}Trial#2{@}NULL=>''{-}'l'=>'L'{-}'r'=>'R'{-}'b'=>'B'{-}'uk'=>'UK'{-}'not_answered'=>'Not Answered'
-select{@}PickingTrial3{@}Trial#3{@}NULL=>''{-}'l'=>'L'{-}'r'=>'R'{-}'b'=>'B'{-}'uk'=>'UK'{-}'not_answered'=>'Not Answered'
+select{@}PickingTrial1{@}Trial#1{@}NULL=>''{-}'l'=>'L'{-}'r'=>'R'{-}'b'=>'B'{-}'nr'=>'NR'{-}'not_answered'=>'Not Answered'
+select{@}PickingTrial2{@}Trial#2{@}NULL=>''{-}'l'=>'L'{-}'r'=>'R'{-}'b'=>'B'{-}'nr'=>'NR'{-}'not_answered'=>'Not Answered'
+select{@}PickingTrial3{@}Trial#3{@}NULL=>''{-}'l'=>'L'{-}'r'=>'R'{-}'b'=>'B'{-}'nr'=>'NR'{-}'not_answered'=>'Not Answered'
 header{@}{@}Putting a dime in a slot (Put it in)
-select{@}PuttingTrial1{@}Trial#1{@}NULL=>''{-}'l'=>'L'{-}'r'=>'R'{-}'b'=>'B'{-}'uk'=>'UK'{-}'not_answered'=>'Not Answered'
-select{@}PuttingTrial2{@}Trial#2{@}NULL=>''{-}'l'=>'L'{-}'r'=>'R'{-}'b'=>'B'{-}'uk'=>'UK'{-}'not_answered'=>'Not Answered'
-select{@}PuttingTrial3{@}Trial#3{@}NULL=>''{-}'l'=>'L'{-}'r'=>'R'{-}'b'=>'B'{-}'uk'=>'UK'{-}'not_answered'=>'Not Answered'
+select{@}PuttingTrial1{@}Trial#1{@}NULL=>''{-}'l'=>'L'{-}'r'=>'R'{-}'b'=>'B'{-}'nr'=>'NR'{-}'not_answered'=>'Not Answered'
+select{@}PuttingTrial2{@}Trial#2{@}NULL=>''{-}'l'=>'L'{-}'r'=>'R'{-}'b'=>'B'{-}'nr'=>'NR'{-}'not_answered'=>'Not Answered'
+select{@}PuttingTrial3{@}Trial#3{@}NULL=>''{-}'l'=>'L'{-}'r'=>'R'{-}'b'=>'B'{-}'nr'=>'NR'{-}'not_answered'=>'Not Answered'
 header{@}{@}Validity
 textarea{@}CommentValidity{@}Comments About Validity:
 select{@}CommentValidity_status{@}{@}NULL=>''{-}'not_answered'=>'Not Answered'
