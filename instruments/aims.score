@@ -30,75 +30,155 @@ $scores['sit_subscalescore'] = 0;
 $scores['stand_prev_itemscredited'] = 0;
 $scores['stand_window_itemscredited'] = 0;
 $scores['stand_subscalescore'] = 0;
-
+$beg_prone = $record['prone_first_item'];
+$end_prone = $record['prone_last_item'];
+$beg_supine = $record['supine_first_item'];
+$end_supine = $record['supine_last_item'];
+$beg_sit = $record['sit_first_item'];
+$end_sit = $record['sit_last_item'];
+$beg_stand = $record['stand_first_item'];
+$end_stand = $record['stand_last_item'];
+$scores['data_entry_flag'] = " ";
 
 foreach ($record as $field=>$value) {
-    $num = explode("_",$field);
-    
-    $qstn = substr($num[0], 1); // returns question number
-    if ($qstn >= 1 & $qstn <= 21){
-        //prone related questions
-        if ($value == 'credited'){
-            $scores['prone_prev_itemscredited']++;
+	$num = explode("_",$field);
 
-        } 
-        if ($value == 'observed'){
-            $scores['prone_window_itemscredited']++;
-        } 
+	$qstn = substr($num[0], 1); // returns question number
+	if ($qstn >= 1 & $qstn < $beg_prone){
+		//prone related questions
+		if ($value == 'credited'){
+			$scores['prone_prev_itemscredited']++;
 
-    }
-    $scores['prone_subscalescore'] = $scores['prone_prev_itemscredited'] + $scores['prone_window_itemscredited'];
-    
-    if ($qstn >=22 & $qstn <= 30){
-        //prone related questions
-        if ($value == 'credited'){
-            $scores['supine_prev_itemscredited']++;
+		}else{
+			$scores['data_entry_error'] = 'Prone: Items above window were not Credited';
+		}
 
-        } 
-        if ($value == 'observed'){
-            $scores['supine_window_itemscredited']++;
-        } 
 
-    }
-    $scores['supine_subscalescore'] = $scores['supine_prev_itemscredited'] + $scores['supine_window_itemscredited'];
+	} elseif( $qstn >= $beg_prone & $qstn <= $end_prone){
+		if ($value == 'observed'){
+			$scores['prone_window_itemscredited']++;
+		}else{
+			$scores['data_entry_error'] = 'Prone: Items within window are not set to Observed';
+		}
+	}elseif ($qstn >$end_prone & $qstn <=21){
+		if( ($value != 'not_answered') || ($value != 'above_ceiling')){
+			$scores['data_entry_error'] = 'Prone: Items above window are not set to Not Answered/Above Ceiling';
 
-    if ($qstn >= 31 & $qstn <= 42){
-        //prone related questions
-        if ($value == 'credited'){
-            $scores['sit_prev_itemscredited']++;
+		}
+	}
+	$scores['prone_subscalescore'] = $scores['prone_prev_itemscredited'] + $scores['prone_window_itemscredited'];
 
-        } 
-        if ($value == 'observed'){
-            $scores['sit_window_itemscredited']++;
-        } 
+	if ($qstn >=22 & $qstn < $beg_supine){
+		//supine related questions
+		if ($value == 'credited'){
+			$scores['supine_prev_itemscredited']++;
 
-    }
-    $scores['sit_subscalescore'] = $scores['sit_prev_itemscredited'] + $scores['sit_window_itemscredited'];
+		} else{
+			$scores['data_entry_error']='Supine: Items above window are not set to Credited';
+		}
+	}elseif( $qstn >= $beg_supine & $qstn <= $end_supine){
+		if ($value == 'observed'){
+			$scores['supine_window_itemscredited']++;
+		}else{
+			if($value != 'observed' || $value != 'not_observed'){
+				$scores['data_entry_error']='Items within window not set to Observed';
+			}
+		}
+	}elseif($qstn > $end_supine & $qstn <= 30){
+		if( ($value != 'not_answered') || ($value != 'above_ceiling')){
+			$scores['data_entry_error'] = 'Supine: Items above window are not set to Not Answered/Above Ceiling';
 
-    if ($qstn >= 43 & $qstn <= 58){
-        //prone related questions
-        if ($value == 'credited'){
-            $scores['stand_prev_itemscredited']++;
+		}
 
-        } 
-        if ($value == 'observed'){
-            $scores['stand_window_itemscredited']++;
-        } 
+	}
 
-    }
-    $scores['stand_subscalescore'] = $scores['stand_prev_itemscredited'] + $scores['stand_window_itemscredited'];
+	$scores['supine_subscalescore'] = $scores['supine_prev_itemscredited'] + $scores['supine_window_itemscredited'];
+
+	if ($qstn >= 31 & $qstn < $beg_sit){
+		//Sitting related questions
+		if ($value == 'credited'){
+			$scores['sit_prev_itemscredited']++;
+
+		} else{
+			$scores['data_entry_error']='Sitting: Items above window are not set to Credited';
+		}
+	}elseif($qstn >= $beg_sit & $qstn <= $end_sit){     
+		if ($value == 'observed'){
+			$scores['sit_window_itemscredited']++;
+		}else{
+			if($value != 'observed' || $value != 'not_observed'){
+				$scores['data_entry_error']='Sitting: Items in Window are not set to Observed';
+			} 
+		}
+	}elseif($qstn >$end_sit & $qstn <=42){
+		if( ($value != 'not_answered') || ($value != 'above_ceiling')){
+			$scores['data_entry_error'] = 'Sitting: Items above window are not set to Not Answered/Above Ceiling';
+
+		}
+
+
+	}
+
+	$scores['sit_subscalescore'] = $scores['sit_prev_itemscredited'] + $scores['sit_window_itemscredited'];
+
+	if ($qstn >= 43 & $qstn < $beg_stand){
+		//Standing related questions
+		if ($value == 'credited'){
+			$scores['stand_prev_itemscredited']++;
+
+		}else{
+			$scores['data_entry_error']='Standing: Items above window are set not to Credited';
+		} 
+	}
+	elseif($qstn >= $beg_stand & $qstn <= $end_stand){
+		if ($value == 'observed'){
+			$scores['stand_window_itemscredited']++;
+		}else{
+			if($value != 'observed' || $value != 'not_observed'){
+				$scores['data_entry_error']='Standing: Items within window are not set to Obseved';
+			}
+
+		} 
+	}elseif ($qstn > $end_stand & $qstn <=58){
+		if( ($value != 'not_answered') || ($value != 'above_ceiling')){
+			$scores['data_entry_error'] = 'Standing: Items above window are not set to Not Answered/Above Ceiling';
+
+		}
+
+
+	}
+
+	$scores['stand_subscalescore'] = $scores['stand_prev_itemscredited'] + $scores['stand_window_itemscredited'];
 
 }
 $scores['total_score']= $scores['prone_subscalescore']+ $scores['supine_subscalescore']+$scores['sit_subscalescore']+$scores['stand_subscalescore'];
+
+$Age = intval($record['Candidate_Age']);
+$query_score = "SELECT Percentile from aims_lookup WHERE Rawscore = :Rawscore AND Age = :Age";
+$WhereCriteria_p = array('Rawscore'=>$scores['total_score'],'Age'=>$Age);
+$percentile = $db->pselectOne($query_score, $WhereCriteria_p);
+if(PEAR::isError($percentile)){
+    print "Query has failed to select: ".$percentile->getMessage();
+    exit(2);
+}
+if($percentile['Percentile'] == 0){
+        $scores['percentile'] = '<1';
+}
+else if($percentile['Percentile'] == 100){
+        $scores['percentile'] = '>99';
+}else{
+        $scores['percentile'] = $percentile['Percentile'];
+}
+
+
 //save scores
 $result = $db->update('aims', $scores, $WhereCriteria);
 if($db->isError($result)) {
-        print "Could not save total score: ". $result->getMessage();
-            exit(3);
+            print "Could not save total score: ". $result->getMessage();
+                        exit(3);
 }
 
 
 exit(0);
-
 
 ?>
