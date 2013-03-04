@@ -111,7 +111,7 @@ class NDB_Form_video_upload extends NDB_Form
         } else {
             $this->form->addElement("select", "PSCID", "PSCID", $candidates);
         }
-        $this->form->addElement("select", "visitLabel", "Visit Label", array("v06" => "v06", "v12" => "v12", "v18" => "v18", "v24" => "v24", "v36" => "v36"));
+        $this->form->addElement("select", "visitLabel", "Visit Label", array("v03"=>"v03","v06" => "v06","v09"=>"v09", "v12" => "v12","v15"=>"v15", "v18" => "v18", "v24" => "v24", "v36" => "v36"));
         $dateOptions = array(
                              'language' => 'en',
                              'format'   => 'YMd',
