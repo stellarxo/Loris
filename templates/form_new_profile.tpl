@@ -29,11 +29,11 @@
 
     {if $form.edc1.html != ""}
 	<tr>
-		<td nowrap="nowrap">Expected Date of Confinement</td>
+		<td nowrap="nowrap">Estimated Due Date</td>
 		<td nowrap="nowrap">{$form.edc1.html}</td>
 	</tr>
 	<tr>
-		<td nowrap="nowrap">Confirm EDC</td>
+		<td nowrap="nowrap">Confirm Estimated Due Date</td>
 		<td nowrap="nowrap">{$form.edc2.html}</td>
 	</tr>
     {/if}
