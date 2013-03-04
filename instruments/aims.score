@@ -67,115 +67,115 @@ foreach ($record as $field=>$value) {
 	$num = explode("_",$field);
 
 	$qstn = substr($num[0], 1); // returns question number
-      if($qstn >=1){
-	if ($qstn >= 1 & $qstn < $beg_prone){
-		//prone related questions
-		if ($value == 'credited'){
-			$scores['prone_prev_itemscredited']++;
+	if($qstn >=1){
+		if ($qstn >= 1 & $qstn < $beg_prone){
+			//prone related questions
+			if ($value == 'credited'){
+				$scores['prone_prev_itemscredited']++;
 
-		}else{
-			$scores['data_entry_error'] = 'Prone: Items above window were not Credited';
-		}
+			}else{
+				$scores['data_entry_error'] = 'Prone: Items above window were not Credited';
+			}
 
 
-	} elseif( $qstn >= $beg_prone & $qstn <= $end_prone){
-		if ($value == 'observed'){
-			$scores['prone_window_itemscredited']++;
-		}else{
-                  if(! in_array($value, $in_window)){
-			$scores['data_entry_error'] = 'Prone: Items within window are not set to Observed';
-		}
-              } 
-	}elseif ($qstn >$end_prone & $qstn <=21){
-		if(! in_array($value, $out_window)){
-			$scores['data_entry_error'] = 'Prone: Items above window are not set to Not Answered/Above Ceiling';
+		} elseif( $qstn >= $beg_prone & $qstn <= $end_prone){
+			if ($value == 'observed'){
+				$scores['prone_window_itemscredited']++;
+			}else{
+				if(! in_array($value, $in_window)){
+					$scores['data_entry_error'] = 'Prone: Items within window are not set to Observed';
+				}
+			} 
+		}elseif ($qstn >$end_prone & $qstn <=21){
+			if(! in_array($value, $out_window)){
+				$scores['data_entry_error'] = 'Prone: Items above window are not set to Not Answered/Above Ceiling';
 
-		}
-	}
-	$scores['prone_subscalescore'] = $scores['prone_prev_itemscredited'] + $scores['prone_window_itemscredited'];
-
-	if ($qstn >=22 & $qstn < $beg_supine){
-		//supine related questions
-		if ($value == 'credited'){
-			$scores['supine_prev_itemscredited']++;
-
-		} else{
-			$scores['data_entry_error']='Supine: Items above window are not set to Credited';
-		}
-	}elseif( $qstn >= $beg_supine & $qstn <= $end_supine){
-		if ($value == 'observed'){
-			$scores['supine_window_itemscredited']++;
-		}else{
-		 if(! in_array($value, $in_window)){
-				$scores['data_entry_error']='Items within window not set to Observed';
 			}
 		}
-	}elseif($qstn > $end_supine & $qstn <= 30){
-		 if(! in_array($value, $out_window)){
-			$scores['data_entry_error'] = 'Supine: Items above window are not set to Not Answered/Above Ceiling';
+		$scores['prone_subscalescore'] = $scores['prone_prev_itemscredited'] + $scores['prone_window_itemscredited'];
+
+		if ($qstn >=22 & $qstn < $beg_supine){
+			//supine related questions
+			if ($value == 'credited'){
+				$scores['supine_prev_itemscredited']++;
+
+			} else{
+				$scores['data_entry_error']='Supine: Items above window are not set to Credited';
+			}
+		}elseif( $qstn >= $beg_supine & $qstn <= $end_supine){
+			if ($value == 'observed'){
+				$scores['supine_window_itemscredited']++;
+			}else{
+				if(! in_array($value, $in_window)){
+					$scores['data_entry_error']='Items within window not set to Observed';
+				}
+			}
+		}elseif($qstn > $end_supine & $qstn <= 30){
+			if(! in_array($value, $out_window)){
+				$scores['data_entry_error'] = 'Supine: Items above window are not set to Not Answered/Above Ceiling';
+
+			}
 
 		}
 
-	}
+		$scores['supine_subscalescore'] = $scores['supine_prev_itemscredited'] + $scores['supine_window_itemscredited'];
 
-	$scores['supine_subscalescore'] = $scores['supine_prev_itemscredited'] + $scores['supine_window_itemscredited'];
+		if ($qstn >= 31 & $qstn < $beg_sit){
+			//Sitting related questions
+			if ($value == 'credited'){
+				$scores['sit_prev_itemscredited']++;
 
-	if ($qstn >= 31 & $qstn < $beg_sit){
-		//Sitting related questions
-		if ($value == 'credited'){
-			$scores['sit_prev_itemscredited']++;
+			} else{
+				$scores['data_entry_error']='Sitting: Items above window are not set to Credited';
+			}
+		}elseif($qstn >= $beg_sit & $qstn <= $end_sit){     
+			if ($value == 'observed'){
+				$scores['sit_window_itemscredited']++;
+			}else{
+				if(! in_array($value, $in_window)){
+					$scores['data_entry_error']='Sitting: Items in Window are not set to Observed';
+				} 
+			}
+		}elseif($qstn >$end_sit & $qstn <=42){
+			if(! in_array($value, $out_window)){
 
-		} else{
-			$scores['data_entry_error']='Sitting: Items above window are not set to Credited';
+				$scores['data_entry_error'] = 'Sitting: Items above window are not set to Not Answered/Above Ceiling';
+			}
+
+
 		}
-	}elseif($qstn >= $beg_sit & $qstn <= $end_sit){     
-		if ($value == 'observed'){
-			$scores['sit_window_itemscredited']++;
-		}else{
-			 if(! in_array($value, $in_window)){
-				$scores['data_entry_error']='Sitting: Items in Window are not set to Observed';
+
+		$scores['sit_subscalescore'] = $scores['sit_prev_itemscredited'] + $scores['sit_window_itemscredited'];
+
+		if ($qstn >= 43 & $qstn < $beg_stand){
+			//Standing related questions
+			if ($value == 'credited'){
+				$scores['stand_prev_itemscredited']++;
+
+			}else{
+				$scores['data_entry_error']='Standing: Items above window are set not to Credited';
 			} 
 		}
-	}elseif($qstn >$end_sit & $qstn <=42){
-	 if(! in_array($value, $out_window)){
+		elseif($qstn >= $beg_stand & $qstn <= $end_stand){
+			if ($value == 'observed'){
+				$scores['stand_window_itemscredited']++;
+			}else{
+				if(! in_array($value, $in_window)){
+					//$scores['data_entry_error']='Standing: Items within window are not set to Obseved';
+				}
 
-			$scores['data_entry_error'] = 'Sitting: Items above window are not set to Not Answered/Above Ceiling';
-		}
+			} 
+		}elseif ($qstn > $end_stand & $qstn <=58){
+			if(! in_array($value, $out_window))	{ 
 
-
-	}
-
-	$scores['sit_subscalescore'] = $scores['sit_prev_itemscredited'] + $scores['sit_window_itemscredited'];
-
-	if ($qstn >= 43 & $qstn < $beg_stand){
-		//Standing related questions
-		if ($value == 'credited'){
-			$scores['stand_prev_itemscredited']++;
-
-		}else{
-			$scores['data_entry_error']='Standing: Items above window are set not to Credited';
-		} 
-	}
-	elseif($qstn >= $beg_stand & $qstn <= $end_stand){
-		if ($value == 'observed'){
-			$scores['stand_window_itemscredited']++;
-		}else{
-			 if(! in_array($value, $in_window)){
-			//$scores['data_entry_error']='Standing: Items within window are not set to Obseved';
+				$scores['data_entry_error'] = 'Standing: Items above window are not set to Not Answered/Above Ceiling';
 			}
 
-		} 
-	}elseif ($qstn > $end_stand & $qstn <=58){
-	 if(! in_array($value, $out_window))	{ 
 
-			$scores['data_entry_error'] = 'Standing: Items above window are not set to Not Answered/Above Ceiling';
 		}
 
-
+		$scores['stand_subscalescore'] = $scores['stand_prev_itemscredited'] + $scores['stand_window_itemscredited'];
 	}
-
-	$scores['stand_subscalescore'] = $scores['stand_prev_itemscredited'] + $scores['stand_window_itemscredited'];
-}
 }
 $scores['total_score']= $scores['prone_subscalescore']+ $scores['supine_subscalescore']+$scores['sit_subscalescore']+$scores['stand_subscalescore'];
 
@@ -196,7 +196,6 @@ else if($percentile['Percentile'] == 100){
         $scores['percentile'] = $percentile['Percentile'];
 }
 
-print_r($scores);
 //save scores
 $result = $db->update('aims', $scores, $WhereCriteria);
 if($db->isError($result)) {
