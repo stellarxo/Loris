@@ -1,6 +1,6 @@
 <?php
 require_once "NDB_Form.class.inc";
-
+require_once "Utility.class.inc";
 /**
  * The forms for the new profile menu
  * @package main
@@ -111,7 +111,8 @@ class NDB_Form_video_upload extends NDB_Form
         } else {
             $this->form->addElement("select", "PSCID", "PSCID", $candidates);
         }
-        $this->form->addElement("select", "visitLabel", "Visit Label", array("v03"=>"v03","v06" => "v06","v09"=>"v09", "v12" => "v12","v15"=>"v15", "v18" => "v18", "v24" => "v24", "v36" => "v36"));
+        $visit_list = Utility::getVisitList();
+        $this->form->addElement("select", "visitLabel", "Visit Label", $visit_list);
         $dateOptions = array(
                              'language' => 'en',
                              'format'   => 'YMd',
