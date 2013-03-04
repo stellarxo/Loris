@@ -38,12 +38,36 @@ $beg_sit = $record['sit_first_item'];
 $end_sit = $record['sit_last_item'];
 $beg_stand = $record['stand_first_item'];
 $end_stand = $record['stand_last_item'];
-$scores['data_entry_flag'] = " ";
+$scores['data_entry_error'] = " ";
 
+if($end_prone < $beg_prone){
+$scores['data_entry_error'] = 'Prone: Window is not set properly';
+print "Error in data Entry". $scores['data_entry_error'];
+exit(4);
+}
+if($end_supine < $beg_supine){
+$scores['data_entry_error'] ='Supine: Windown is not set properly';
+print "Error in data Entry". $scores['data_entry_error'];
+exit(4);
+}
+if($end_sit < $beg_sit){
+$scores['data_entry_error']= 'Sitting: Window is not set properly';
+print "Error in data Entry". $scores['data_entry_error'];
+exit(4);
+}
+if($end_stand < $beg_stand){
+$scores['data_entry_error'] = 'Standing: Window is not set properly';
+print "Error in data Entry". $scores['data_entry_error'];
+exit(4);
+}
+
+$in_window = array('observed','not_observed');
+$out_window = array('above_ceiling','not_answered');
 foreach ($record as $field=>$value) {
 	$num = explode("_",$field);
 
 	$qstn = substr($num[0], 1); // returns question number
+      if($qstn >=1){
 	if ($qstn >= 1 & $qstn < $beg_prone){
 		//prone related questions
 		if ($value == 'credited'){
@@ -58,10 +82,12 @@ foreach ($record as $field=>$value) {
 		if ($value == 'observed'){
 			$scores['prone_window_itemscredited']++;
 		}else{
+                  if(! in_array($value, $in_window)){
 			$scores['data_entry_error'] = 'Prone: Items within window are not set to Observed';
 		}
+              } 
 	}elseif ($qstn >$end_prone & $qstn <=21){
-		if( ($value != 'not_answered') || ($value != 'above_ceiling')){
+		if(! in_array($value, $out_window)){
 			$scores['data_entry_error'] = 'Prone: Items above window are not set to Not Answered/Above Ceiling';
 
 		}
@@ -80,12 +106,12 @@ foreach ($record as $field=>$value) {
 		if ($value == 'observed'){
 			$scores['supine_window_itemscredited']++;
 		}else{
-			if($value != 'observed' || $value != 'not_observed'){
+		 if(! in_array($value, $in_window)){
 				$scores['data_entry_error']='Items within window not set to Observed';
 			}
 		}
 	}elseif($qstn > $end_supine & $qstn <= 30){
-		if( ($value != 'not_answered') || ($value != 'above_ceiling')){
+		 if(! in_array($value, $out_window)){
 			$scores['data_entry_error'] = 'Supine: Items above window are not set to Not Answered/Above Ceiling';
 
 		}
@@ -106,14 +132,14 @@ foreach ($record as $field=>$value) {
 		if ($value == 'observed'){
 			$scores['sit_window_itemscredited']++;
 		}else{
-			if($value != 'observed' || $value != 'not_observed'){
+			 if(! in_array($value, $in_window)){
 				$scores['data_entry_error']='Sitting: Items in Window are not set to Observed';
 			} 
 		}
 	}elseif($qstn >$end_sit & $qstn <=42){
-		if( ($value != 'not_answered') || ($value != 'above_ceiling')){
-			$scores['data_entry_error'] = 'Sitting: Items above window are not set to Not Answered/Above Ceiling';
+	 if(! in_array($value, $out_window)){
 
+			$scores['data_entry_error'] = 'Sitting: Items above window are not set to Not Answered/Above Ceiling';
 		}
 
 
@@ -134,22 +160,22 @@ foreach ($record as $field=>$value) {
 		if ($value == 'observed'){
 			$scores['stand_window_itemscredited']++;
 		}else{
-			if($value != 'observed' || $value != 'not_observed'){
-				$scores['data_entry_error']='Standing: Items within window are not set to Obseved';
+			 if(! in_array($value, $in_window)){
+			//$scores['data_entry_error']='Standing: Items within window are not set to Obseved';
 			}
 
 		} 
 	}elseif ($qstn > $end_stand & $qstn <=58){
-		if( ($value != 'not_answered') || ($value != 'above_ceiling')){
-			$scores['data_entry_error'] = 'Standing: Items above window are not set to Not Answered/Above Ceiling';
+	 if(! in_array($value, $out_window))	{ 
 
+			$scores['data_entry_error'] = 'Standing: Items above window are not set to Not Answered/Above Ceiling';
 		}
 
 
 	}
 
 	$scores['stand_subscalescore'] = $scores['stand_prev_itemscredited'] + $scores['stand_window_itemscredited'];
-
+}
 }
 $scores['total_score']= $scores['prone_subscalescore']+ $scores['supine_subscalescore']+$scores['sit_subscalescore']+$scores['stand_subscalescore'];
 
@@ -170,7 +196,7 @@ else if($percentile['Percentile'] == 100){
         $scores['percentile'] = $percentile['Percentile'];
 }
 
-
+print_r($scores);
 //save scores
 $result = $db->update('aims', $scores, $WhereCriteria);
 if($db->isError($result)) {
