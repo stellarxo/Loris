@@ -6,6 +6,9 @@ static{@}Window_Difference{@}Window Difference (+/- Days)
 select{@}Examiner{@}Examiner{@}NULL=>''
 static{@}{@}<br />
 static{@}{@}<br />
+header{@}{@}Validity
+textarea{@}CommentValidity{@}Comments About Validity:
+select{@}CommentValidity_status{@}{@}NULL=>''{-}'not_answered'=>'Not Answered'
 header{@}{@}Scores
 static{@}prone_prev_itemscredited{@}Prone: Previous Items Credited
 static{@}prone_window_itemscredited{@}Prone: Items Credited in Window
