@@ -83,7 +83,7 @@ foreach ($record as $field=>$value) {
 				$scores['prone_window_itemscredited']++;
 			}else{
 				if(! in_array($value, $in_window)){
-					$scores['data_entry_error'] = 'Prone: Items within window are not set to Observed';
+					$scores['data_entry_error'] = 'Prone: Items within window are not set to Observed/Not Observed';
 				}
 			} 
 		}elseif ($qstn >$end_prone & $qstn <=21){
@@ -107,7 +107,7 @@ foreach ($record as $field=>$value) {
 				$scores['supine_window_itemscredited']++;
 			}else{
 				if(! in_array($value, $in_window)){
-					$scores['data_entry_error']='Items within window not set to Observed';
+					$scores['data_entry_error']='Supine:Items within window not set to Observed/Not Observed';
 				}
 			}
 		}elseif($qstn > $end_supine & $qstn <= 30){
@@ -133,7 +133,7 @@ foreach ($record as $field=>$value) {
 				$scores['sit_window_itemscredited']++;
 			}else{
 				if(! in_array($value, $in_window)){
-					$scores['data_entry_error']='Sitting: Items in Window are not set to Observed';
+					$scores['data_entry_error']='Sitting: Items in Window are not set to Observed/Not Observed';
 				} 
 			}
 		}elseif($qstn >$end_sit & $qstn <=42){
@@ -161,7 +161,7 @@ foreach ($record as $field=>$value) {
 				$scores['stand_window_itemscredited']++;
 			}else{
 				if(! in_array($value, $in_window)){
-					//$scores['data_entry_error']='Standing: Items within window are not set to Obseved';
+					//$scores['data_entry_error']='Standing: Items within window are not set to Obseved/Not Observed';
 				}
 
 			} 
@@ -187,13 +187,14 @@ if(PEAR::isError($percentile)){
     print "Query has failed to select: ".$percentile->getMessage();
     exit(2);
 }
-if($percentile['Percentile'] == 0){
+
+if($percentile == 0){
         $scores['percentile'] = '<1';
 }
-else if($percentile['Percentile'] == 100){
+else if($percentile == 100){
         $scores['percentile'] = '>99';
 }else{
-        $scores['percentile'] = $percentile['Percentile'];
+        $scores['percentile'] = $percentile;
 }
 
 //save scores
