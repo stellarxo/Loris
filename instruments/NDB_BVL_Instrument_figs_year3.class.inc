@@ -618,7 +618,8 @@ class NDB_BVL_Instrument_figs_year3 extends NDB_BVL_Instrument
         
         $questionOptions = array(null=>'', '0' => '0. No', '1' => '1. Yes', '9'=>'9. Unk', 'NA' => 'N/A');
         $question1f_Options = array(null=>'', '1' => '1. Good', '2'=>'2. Fair', '3'=>'3. Poor', 'NA' => 'N/A');
-        
+        $question1_1a_Options = array(null=>'','0'=>'0.No','1'=>'1.Yes','9'=>'9.Unknown','NA'=>'N/A');
+        $question1_1b_Options = array(null=>'','1'=>'1.Full mutation','2'=>'2.Pre-mutation','3'=>'3.Carrier','4'=>'4.Fragile X-associated Tremor/Ataxia syndrome','5'=>'5.Fragile X-associated Primary Ovarian Insufficiency','6'=>'6. Other','7'=>'7.Not Applicable','8'=>'8.Not Answered','9'=>'9.Unknown');
         $dateOptions =  array(
         'language' => 'en',
         'format'   => 'YMd',
@@ -643,6 +644,9 @@ class NDB_BVL_Instrument_figs_year3 extends NDB_BVL_Instrument
         $this->form->addElement('text', "Face_CauseOfDeath", "If deceased, cause of death:");
         $this->form->addElement('select', "Face_Suicide", "Suicide?", $questionOptions);
         $this->form->addElement('select', "Face_OtherProblems", "1. Has he/she had any other psychiatric or personality problems other than/or like those we mentioned earlier? ", $questionOptions);
+        $this->form->addElement('select',"Face_fragilex_syndrome","1.1a) Has he/she ever been tested for FRAGILE X SYNDROME?",$question1_1a_Options); 
+        $this->form->addElement('select',"Face_outcome_test","1.1b) What was the outcome of the test?",$question1_1b_Options);
+        $this->form->addElement('text', "Face_testoutcome_other", "Specify other outcome:");
         $this->form->addElement('select', "Face_Reliability", "1.f) Interviewer judgment on reliability of this information:", $question1f_Options);
         $this->form->addElement('text', "Face_Comments", "Comments:");
         
@@ -658,9 +662,15 @@ class NDB_BVL_Instrument_figs_year3 extends NDB_BVL_Instrument
 
         $this->form->addRule(array('Face_Suicide', 'Face_Living'), 'Suicide is required if person is deceased', 'requiredIf', array('operator'=>'==', 'value'=>'0'));
         $this->setRequired('Face_Suicide');
-
+        
         $this->form->addRule("Face_OtherProblems", "Required", 'required', null);
         $this->form->addRule("Face_Reliability", "Required", 'required', null);
+
+        $this->form->addRule(array('Face_outcome_test','Face_fragilex_syndrome'),'Specify outcome if Fragile X test was conducted','requiredIf',array('operator'=>'==','value'=>'1'));
+        $this->setRequired('Face_outcome_test');
+
+        $this->form->addRule(array('Face_testoutcome_other','Face_outcome_test'),'Specify outcome of Fragile X test if option not in dropdown','requiredIf',array('operator'=>'==','value'=>'6'));
+        $this->setRequired('Face_testoutcome_other');
     }
     
     function _setupFigsRelativesOtherDisorders() // Other Disorders
