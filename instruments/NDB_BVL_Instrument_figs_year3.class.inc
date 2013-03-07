@@ -665,7 +665,8 @@ class NDB_BVL_Instrument_figs_year3 extends NDB_BVL_Instrument
         
         $this->form->addRule("Face_OtherProblems", "Required", 'required', null);
         $this->form->addRule("Face_Reliability", "Required", 'required', null);
-
+        $this->form->addRule("Face_fragilex_syndrome", "Required", 'required', null);
+        $this->setRequired('Face_fragilex_syndrome');
         $this->form->addRule(array('Face_outcome_test','Face_fragilex_syndrome'),'Specify outcome if Fragile X test was conducted','requiredIf',array('operator'=>'==','value'=>'1'));
         $this->setRequired('Face_outcome_test');
 
