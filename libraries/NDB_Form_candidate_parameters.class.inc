@@ -135,8 +135,11 @@ class NDB_Form_candidate_parameters extends NDB_Form
         			$options=substr($fresult['Type'],4);
         			$options=trim($options,"()");
         			$options=Utility::explodeEncapsulated(",", "'", $options);
-                    $options = array_merge(array('' => ''), $options);
-        			$this->form->addElement('select', "PTID_".$fresult['ParameterTypeID'], $fresult['Description'], $options);
+                    $elOptions = array('' => '');
+                    foreach($options as $option) {
+                        $elOptions[$option] = $option;
+                    }
+        			$this->form->addElement('select', "PTID_".$fresult['ParameterTypeID'], $fresult['Description'], $elOptions);
         		break;
         		
         		case "dat":
