@@ -355,7 +355,7 @@ class NDB_BVL_Instrument_ados2_module2 extends NDB_BVL_Instrument
         $this->form->addElement("static", null, "<BR>"); //line space
         $this->form->addElement('select', 'e1', '1. Overactivity', $this->option01237);
         $this->form->addElement("static", null, "<BR>"); //line space
-        $this->form->addElement('select', 'e2', '2. Tantrums, Aggression, Negative or Disruptive Behavior', $this->option012);
+        $this->form->addElement('select', 'e2', '2. Tantrums, Aggression, Negative or Disruptive Behavior', $this->option0123);
         $this->form->addElement("static", null, "<BR>"); //line space
         $this->form->addElement('select', 'e3', '3. Anxiety', $this->option012);
 
