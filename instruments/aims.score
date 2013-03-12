@@ -67,14 +67,14 @@ foreach ($record as $field=>$value) {
 	$num = explode("_",$field);
 
 	$qstn = substr($num[0], 1); // returns question number
-	if($qstn >=1){
+	if($qstn >=1 & $value != NULL){
 		if ($qstn >= 1 & $qstn < $beg_prone){
 			//prone related questions
 			if ($value == 'credited'){
 				$scores['prone_prev_itemscredited']++;
 
 			}else{
-				$scores['data_entry_error'] = 'Prone: Items above window were not Credited';
+				$scores['data_entry_error'] .= 'Prone: Items above window were not Credited <br/>';
 			}
 
 
@@ -83,12 +83,12 @@ foreach ($record as $field=>$value) {
 				$scores['prone_window_itemscredited']++;
 			}else{
 				if(! in_array($value, $in_window)){
-					$scores['data_entry_error'] = 'Prone: Items within window are not set to Observed/Not Observed';
+					$scores['data_entry_error'] .= 'Prone: Items within window are not set to Observed/Not Observed  <br/>';
 				}
 			} 
 		}elseif ($qstn >$end_prone & $qstn <=21){
 			if(! in_array($value, $out_window)){
-				$scores['data_entry_error'] = 'Prone: Items above window are not set to Not Answered/Above Ceiling';
+				$scores['data_entry_error'] .= 'Prone: Items above window are not set to Not Answered/Above Ceiling <br/>';
 
 			}
 		}
@@ -100,19 +100,19 @@ foreach ($record as $field=>$value) {
 				$scores['supine_prev_itemscredited']++;
 
 			} else{
-				$scores['data_entry_error']='Supine: Items above window are not set to Credited';
+				$scores['data_entry_error'] .='Supine: Items above window are not set to Credited <br/>';
 			}
 		}elseif( $qstn >= $beg_supine & $qstn <= $end_supine){
 			if ($value == 'observed'){
 				$scores['supine_window_itemscredited']++;
 			}else{
 				if(! in_array($value, $in_window)){
-					$scores['data_entry_error']='Supine:Items within window not set to Observed/Not Observed';
+					$scores['data_entry_error'] .='Supine:Items within window not set to Observed/Not Observed <br/>';
 				}
 			}
 		}elseif($qstn > $end_supine & $qstn <= 30){
 			if(! in_array($value, $out_window)){
-				$scores['data_entry_error'] = 'Supine: Items above window are not set to Not Answered/Above Ceiling';
+				$scores['data_entry_error'] .='Supine: Items above window are not set to Not Answered/Above Ceiling <br/>';
 
 			}
 
@@ -126,20 +126,20 @@ foreach ($record as $field=>$value) {
 				$scores['sit_prev_itemscredited']++;
 
 			} else{
-				$scores['data_entry_error']='Sitting: Items above window are not set to Credited';
+				$scores['data_entry_error'] .='Sitting: Items above window are not set to Credited  <br/>';
 			}
 		}elseif($qstn >= $beg_sit & $qstn <= $end_sit){     
 			if ($value == 'observed'){
 				$scores['sit_window_itemscredited']++;
 			}else{
 				if(! in_array($value, $in_window)){
-					$scores['data_entry_error']='Sitting: Items in Window are not set to Observed/Not Observed';
+					$scores['data_entry_error'].='Sitting: Items in Window are not set to Observed/Not Observed  <br/>';
 				} 
 			}
 		}elseif($qstn >$end_sit & $qstn <=42){
 			if(! in_array($value, $out_window)){
 
-				$scores['data_entry_error'] = 'Sitting: Items above window are not set to Not Answered/Above Ceiling';
+				$scores['data_entry_error'] .='Sitting: Items above window are not set to Not Answered/Above Ceiling  <br/>';
 			}
 
 
@@ -153,7 +153,7 @@ foreach ($record as $field=>$value) {
 				$scores['stand_prev_itemscredited']++;
 
 			}else{
-				$scores['data_entry_error']='Standing: Items above window are set not to Credited';
+				$scores['data_entry_error'] .='Standing: Items above window are set not to Credited  <br/>';
 			} 
 		}
 		elseif($qstn >= $beg_stand & $qstn <= $end_stand){
@@ -161,14 +161,14 @@ foreach ($record as $field=>$value) {
 				$scores['stand_window_itemscredited']++;
 			}else{
 				if(! in_array($value, $in_window)){
-					//$scores['data_entry_error']='Standing: Items within window are not set to Obseved/Not Observed';
+					$scores['data_entry_error'] .='Standing: Items within window are not set to Obseved/Not Observed  <br/>';
 				}
 
 			} 
 		}elseif ($qstn > $end_stand & $qstn <=58){
 			if(! in_array($value, $out_window))	{ 
 
-				$scores['data_entry_error'] = 'Standing: Items above window are not set to Not Answered/Above Ceiling';
+				$scores['data_entry_error'] .= 'Standing: Items above window are not set to Not Answered/Above Ceiling  <br/>';
 			}
 
 
