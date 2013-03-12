@@ -2,8 +2,9 @@
 
 require_once("RequiredIfGroup.inc");
 require_once('RequiredIf.inc');
+require_once('NDB_BVL_Instrument_EARLI_interview.class.inc');
 
-class NDB_BVL_Instrument_EARLI_interview_PART_3 extends NDB_BVL_Instrument {
+class NDB_BVL_Instrument_EARLI_interview_PART_3 extends NDB_BVL_Instrument_EARLI_interview {
 
 
 	var $dateOptions = array(

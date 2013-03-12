@@ -3,6 +3,7 @@
 
 require_once("RequiredIfGroup.inc");
 require_once('RequiredIf.inc');
+require_once('NDB_BVL_Instrument_EARLI_interview.class.inc');
 
 
 
@@ -42,7 +43,7 @@ insert into instrument_subtests values ('', 'EARLI_interview_S3_inserts', 'EARLI
 */
 
 
-class NDB_BVL_Instrument_EARLI_interview_S3_inserts extends NDB_BVL_Instrument {
+class NDB_BVL_Instrument_EARLI_interview_S3_inserts extends NDB_BVL_Instrument_EARLI_interview {
 
 
          var $dateOptions1960 = array(
