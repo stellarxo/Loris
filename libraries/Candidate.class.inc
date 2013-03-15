@@ -70,7 +70,8 @@ class Candidate
         }
 
         // checK PSCID - only if it's passed by the open profile form
-        if (isset($_REQUEST['PSCID'])) {
+        // PSCID is also passed by the conflict resolver filter, so we don't check in that case
+        if (isset($_REQUEST['PSCID']) && isset($_REQUEST['test_name']) && $_REQUEST['test_name'] !== 'conflicts_resolve') {
             if (strtolower(trim($_REQUEST['PSCID'])) != strtolower($this->getPSCID())) {
                 return (PEAR::raiseError("IDs do not match"));
             }
