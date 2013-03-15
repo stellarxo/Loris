@@ -1534,7 +1534,6 @@ class NDB_BVL_Instrument_mullen extends NDB_BVL_Instrument
             // Don't need to check this because we know it's the mullen, and because the config contains mullen_xxxx instead of just "mullen" it won't work
              // && in_array($this->testName, $CertificationInstruments)) 
          {
-             print "Hihi";
              $visit_label = $db->pselectOne("SELECT LOWER(Visit_label) FROM session WHERE ID=:ssn_id", array('ssn_id'=>$this->getSessionID()));
              $test_id = $db->pselectOne("SELECT ID FROM test_names WHERE Test_name=:tst_name", array('tst_name'=>$this->testName));
 
