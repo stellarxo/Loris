@@ -7,7 +7,6 @@ require_once "Utility.class.inc";
 $client = new NDB_Client();
 $client->makeCommandLine();
 $client->initialize('../config.xml');
-$enroll = new NDB_Menu_statistics();
 
 $date = date("Y-m-d");
 $dir = "../../htdocs/EnrollmentReport/".$date;
@@ -27,7 +26,7 @@ foreach( $centers as $site){
         if($fd === FALSE){
             exit(-1);
          }
-        $results = $enroll::getEnrollmentData($siteID, $projID);
+        $results = NDB_Menu_statistics::getEnrollmentData($siteID, $projID);
         foreach( $results as $tablesection => $enrolldata){
             switch($tablesection){
                 case "enroll_data":
