@@ -44,7 +44,7 @@ $lastsite = '';
 foreach($candidates as &$c) {
     $site = substr($c['PSCID'], 0, 3);
     if($lastsite === '' || $site != $lastsite) {
-        print "Site is now: $site\n";
+        print "Generating site: $site\n";
 
         if(isset($fp) && $fp > 0) {
             fclose($fp);
