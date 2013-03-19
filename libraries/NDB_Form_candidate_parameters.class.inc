@@ -27,7 +27,7 @@ class NDB_Form_candidate_parameters extends NDB_Form
         }
 
         // check user permissions
-    	return ($user->hasPermission('data_entry') && $user->getData('CenterID') == $candidate->getData('CenterID'));
+    	return ($user->hasPermission('data_entry') && $user->getData('CenterID') == $candidate->getData('CenterID') && $user->hasPermission('unsend_to_dcc'));
     }
 
     function _getDefaults()
