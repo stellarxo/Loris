@@ -43,7 +43,7 @@ class NDB_Form_candidate_parameters extends NDB_Form
         $defaults['ProbandDoB'] = $DB->pselectOne("SELECT ProbandDoB FROM candidate WHERE CandID=:CandidateID", array('CandidateID' => $this->identifier));
         
         $defaults['ProbandGender'] = $DB->pselectOne("SELECT ProbandGender FROM candidate WHERE CandID=:CandidateID", array('CandidateID' => $this->identifier));
-        $candidate_dob = $DB->pselectOne("SELECT DoB FROM candidate WHERE CandID=:CandidateID", array('CandidateID' => $this->identifier));
+	$candidate_dob = $DB->pselectOne("SELECT DoB FROM candidate WHERE CandID=:CandidateID", array('CandidateID' => $this->identifier));
 
 	$age = Utility::calculateAge($defaults['ProbandDoB'],$candidate_dob ); 
 	$defaults['Age_Difference'] = $age['year']*12 + $age['mon']+ round($age['day']/30,2);
@@ -166,7 +166,6 @@ class NDB_Form_candidate_parameters extends NDB_Form
         if($DoB_ADI_R != $DoB_Vineland) {
             $this->form->addElement('static', 'dob_error', 'Date of Birth from Vineland and ADI-R do not match');
         }
-        
         $this->form->addElement('text', 'CandidateGUID', 'Candidate GUID:');
         $this->form->addElement('text', 'ProbandGUID', 'Proband GUID:');
         $probandDateOptions = array(
