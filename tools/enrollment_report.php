@@ -16,16 +16,33 @@ $DB->select("SELECT CenterID as NumericID, PSCArea as LongName, Name as ShortNam
         if(PEAR::isError($centers)) {
             return PEAR::raiseError("DB Error: ".$centers->getMessage());
         }
-$sites = Utility::getSiteList();
-$projects = Utility::getProjectList();
+$centers[null]= null;
+$projects[null]=null;
+foreach(Utility::getProjectList() as $key => $value) {
+    $projects[$key] = $value;
+}
 foreach( $centers as $site){
-    $siteID = $site['NumericID'];
+    if($site != null){
+        $siteID = $site['NumericID'];
+    }else{
+        $siteID = null;
+    }
     foreach( $projects as $projID => $projName){
-        $filename = "EnrollmentReport_".$site['ShortName']."_".$projName.".csv";
-        $fd = fopen($filename, 'w+');
-        if($fd === FALSE){
-            exit(-1);
-         }
+        if($projID != null){
+            $filename = "EnrollmentReport_".$site['ShortName']."_".$projName.".csv";
+            $fd = fopen($filename, 'w+');
+            if($fd === FALSE){
+                exit(-1);
+            }
+        }
+        if($siteID == null && $projID == null){
+            $filename = "EnrollmentReport_Total.csv";
+            $fd = fopen($filename, 'w+');
+            if($fd === FALSE){
+                exit(-1);
+            }
+
+        }
         $results = NDB_Menu_statistics::getEnrollmentData($siteID, $projID);
         foreach( $results as $tablesection => $enrolldata){
             switch($tablesection){
@@ -44,12 +61,17 @@ foreach( $centers as $site){
                     fputcsv($fd,$headers);
                     break;
 
-
+                case "withdraw":
+                    $header = array('Total Failure or Withdrawls');
+                    $failures = array('withdraw'=>$enrolldata);
+                    fputcsv($fd,$header);
+                    fputcsv($fd,$failures);
+                    break;
             }
 
-            
+
             foreach( $enrolldata as $row){
-               fputcsv($fd,$row);
+                fputcsv($fd,$row);
             }
         }
     }
