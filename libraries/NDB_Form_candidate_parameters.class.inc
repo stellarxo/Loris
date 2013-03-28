@@ -41,8 +41,13 @@ class NDB_Form_candidate_parameters extends NDB_Form
         $defaults['CandidateGUID'] = $DB->pselectOne("SELECT CandidateGUID FROM candidate WHERE CandID=:CandidateID", array('CandidateID' => $this->identifier));
         $defaults['ProbandGUID'] = $DB->pselectOne("SELECT ProbandGUID FROM candidate WHERE CandID=:CandidateID", array('CandidateID' => $this->identifier));
         $defaults['ProbandDoB'] = $DB->pselectOne("SELECT ProbandDoB FROM candidate WHERE CandID=:CandidateID", array('CandidateID' => $this->identifier));
-        $defaults['ProbandGender'] = $DB->pselectOne("SELECT ProbandGender FROM candidate WHERE CandID=:CandidateID", array('CandidateID' => $this->identifier));
         
+        $defaults['ProbandGender'] = $DB->pselectOne("SELECT ProbandGender FROM candidate WHERE CandID=:CandidateID", array('CandidateID' => $this->identifier));
+        $candidate_dob = $DB->pselectOne("SELECT DoB FROM candidate WHERE CandID=:CandidateID", array('CandidateID' => $this->identifier));
+
+        $age = Utility::calculateAge($defaults['ProbandDoB'],$candidate_dob ); 
+        $defaults['Age_Difference'] = $age['year']*12 + $age['mon']+ round($age['day']/30,2);
+
         return $defaults;
     }
 
@@ -161,7 +166,6 @@ class NDB_Form_candidate_parameters extends NDB_Form
         if($DoB_ADI_R != $DoB_Vineland) {
             $this->form->addElement('static', 'dob_error', 'Date of Birth from Vineland and ADI-R do not match');
         }
-
         $this->form->addElement('text', 'CandidateGUID', 'Candidate GUID:');
         $this->form->addElement('text', 'ProbandGUID', 'Proband GUID:');
         $probandDateOptions = array(
@@ -177,10 +181,12 @@ class NDB_Form_candidate_parameters extends NDB_Form
         $this->form->addElement('select', 'ProbandGender', 'Proband gender:', array('' => '','Male' => 'Male', 'Female' => 'Female') );
         $this->form->addElement('static', 'dob_proband_adi_r', 'DoB of Proband (ADI-R):', $DoB_ADI_R);
         $this->form->addElement('static', 'dob_proband_vineland', 'DoB of Proband (Vineland):', $DoB_Vineland);
+        $this->form->addElement('static', 'Age_Difference','Age Difference (in months):');
         $this->form->addElement('static', 'mother_race', 'Mother\'s Race:', $this->_getTSIinfo("mother_race"));
         $this->form->addElement('static', 'father_race', 'Father\'s Race:', $this->_getTSIinfo("father_race"));
         $this->form->addElement('static', 'birth_city', 'City of Birth:', $this->_getTSIinfo("city_of_birth"));
         $this->form->addElement('static', 'home_lang', 'Primary Language At Home:', $this->_getTSIinfo("primary_language"));
+
     }
 
     /* This is taken from NDB_BVL_Instrument. It should be moved to NDB_Page once NDB_Page is merged. */

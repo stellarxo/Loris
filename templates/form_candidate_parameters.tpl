@@ -16,9 +16,15 @@
         <td colspan="2" class="error">{$form.dob_error.label}</td>
     </tr>
     {/if}
+    <tr> 
+      <td nowrap="nowrap"><b>Candidate Infomation</b></td>
+    </tr>
     <tr>
         <td nowrap="nowrap">{$form.CandidateGUID.label}</td>
         <td nowrap="nowrap">{$form.CandidateGUID.html}</td>
+    </tr>
+     <tr> 
+      <td nowrap="nowrap"><b>Proband Infomation</b></td>
     </tr>
     <tr>
         <td nowrap="nowrap">{$form.ProbandGUID.label}</td>
@@ -40,7 +46,14 @@
         <td nowrap="nowrap">{$form.dob_proband_vineland.label}</td>
         <td nowrap="nowrap">{$form.dob_proband_vineland.html}</td>
     </tr>
-    <tr>
+     <tr>
+        <td nowrap="nowrap">{$form.Age_Difference.label}</td>
+        <td nowrap="nowrap">{$form.Age_Difference.html}</td>
+    </tr>
+    <tr> 
+      <td nowrap="nowrap"><b>Parent Infomation</b></td>
+    </tr>
+<tr>
 		<td nowrap="nowrap">{$form.mother_race.label}</td>
 		<td nowrap="nowrap">{$form.mother_race.html}</td>
     </tr>
