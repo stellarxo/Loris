@@ -46,7 +46,11 @@ class NDB_Form_candidate_parameters extends NDB_Form
         $candidate_dob = $DB->pselectOne("SELECT DoB FROM candidate WHERE CandID=:CandidateID", array('CandidateID' => $this->identifier));
 
         $age = Utility::calculateAge($defaults['ProbandDoB'],$candidate_dob ); 
-        $defaults['Age_Difference'] = $age['year']*12 + $age['mon']+ round($age['day']/30,2);
+        if(Utility::isErrorX($age)) {
+            $defaults['Age_Difference'] = 'Could not calculate age';
+        } else {
+            $defaults['Age_Difference'] = $age['year']*12 + $age['mon']+ round($age['day']/30,2);
+        }
 
         return $defaults;
     }
