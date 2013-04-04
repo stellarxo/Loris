@@ -386,7 +386,22 @@ class Candidate
         //return the next visit No
         return $nextVisitLabel;
     }
-    
+    function getCandidatePlan()
+    {
+	    $candID=$this->getCandID();
+	    // make a local reference to the Database object
+	    $db =& Database::singleton();
+	    if(Utility::isErrorX($db)) {
+		    return PEAR::raiseError("Could not connect to database: ".$db->getMessage());
+	    }
+	    $query = "SELECT Value as Plan FROM candidate c JOIN parameter_candidate pc ON (pc.CandID=c.CandID) LEFT JOIN parameter_type pt ON (pc.ParameterTypeID=pt.ParameterTypeID) WHERE c.CandID='$candID' AND pt.Name='candidate_plan';";
+	    $plan = $db->pselectOne($query);
+	    if(Utility::isErrorX($plan)) {
+		    return PEAR::raiseError("Could not connect to database: ".$plan->getMessage());
+	    }
+	    return $plan;
+
+    }    
     /**
     * generates a new random CandID
     * @static
