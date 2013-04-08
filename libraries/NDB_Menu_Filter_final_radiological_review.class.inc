@@ -1,41 +1,47 @@
-<?
+<?php
 require_once 'NDB_Menu_Filter.class.inc';
 require_once 'Candidate.class.inc';
-// Utility function to make things more human readable.
-// This is used both below and in the history on the NDB_Form
+/**
+ * Utility function to make things more human readable.
+ *
+ * This is used both below and in the history on the NDB_Form.
+ *
+ * @param string  $key The key that's being prettified
+ * @param unknown $val The raw value for the key
+ *
+ * @return string Human readable version of raw data
+ *
+ */
 function _makePretty($key, $val)
 {
-    if($key == 'Review_Done' || $key=='Conflict1' || $key=="Finalized" || $key=="Conflict2" || $key=="Conflict")
-    {
+    if ($key == 'Review_Done' || $key=='Conflict1' || $key=="Finalized" || $key=="Conflict2" || $key=="Conflict") {
         // The table was created with a boolean, which mysql turns into a tinyint.
         // Print 'Yes' or 'No' instead of 1 or 0.
-        if($val == 1)
+        if ($val == 1) {
             return 'Yes';
-        elseif($val === "0") // PHP turns the tinyint back into a string ....
+        } elseif ($val === "0") { // PHP turns the tinyint back into a string ....
             return 'No';
-        else // Leave nulls empty so that we can distinguish
+        } else { // Leave nulls empty so that we can distinguish
             return '';
-    }
-
-    if($key == 'Final_Review_Results' || $key == 'Exclusionary_Status' || $key=="Final_Exclusionary" || $key == "Results")
-    {
-        // Make the enum columns prettier by changing _ into a space and capitalizing
-        return ucwords(str_replace('_', ' ', $val));
-    }
-    else if ($key == 'SAS' or $key == 'PVS')
-    {
-        switch($val)
-        {
-            case '0': return 'None';
-            case '1': return 'Minimal';
-            case '2': return 'Mild';
-            case '3': return 'Moderate';
-            case '4': return 'Marked';
-            default: return 'Not Answered';
         }
     }
-    else
-    {
+
+    if ($key == 'Final_Review_Results' || $key == 'Exclusionary_Status' || $key=="Final_Exclusionary" || $key == "Results") {
+        // Make the enum columns prettier by changing _ into a space and capitalizing
+        return ucwords(str_replace('_', ' ', $val));
+    } elseif ($key == 'SAS' or $key == 'PVS') {
+        switch($val) {
+        case '0': return 'None';
+        case '1': return 'Minimal';
+        case '2': return 'Mild';
+        case '3': return 'Moderate';
+        case '4': return 'Marked';
+        default: return 'Not Answered';
+        }
+    } elseif ($key == 'Project') {
+        $projectlist=Utility::getProjectList();
+        return $projectlist[$val];
+    } else {
         return $val;
     }
 }
@@ -93,29 +99,29 @@ class NDB_Menu_Filter_final_radiological_review extends NDB_Menu_Filter
     {
         $list_of_visit_labels = array(null => 'Any' );
         $visitList = Utility::getVisitList();
-        foreach ($visitList as $key=>$value){
-          $list_of_visit_labels[$key] = $value;
+        foreach ($visitList as $key=>$value) {
+            $list_of_visit_labels[$key] = $value;
         }
         $list_of_sites = array(null =>'Any');
         $sitesList = Utility::getSiteList(false);
-        if(Utility::isErrorX($sitesList)) {
-                return PEAR::raiseError("DB Error: ".$sitesList->getMessage());
+        if (Utility::isErrorX($sitesList)) {
+            return PEAR::raiseError("DB Error: ".$sitesList->getMessage());
         }
-        foreach ($sitesList as $key=>$value){
-           $list_of_sites[$key]= $value;
+        foreach ($sitesList as $key=>$value) {
+            $list_of_sites[$key]= $value;
         } 
         ksort($list_of_sites);
         $list_of_projects = array(null =>'Any');
         $projectList = Utility::getProjectList();
-        if(Utility::isErrorX($projectList)){
+        if (Utility::isErrorX($projectList)) {
                 return PEAR::raiseError("DB Error: ".$projectList->getMessage());
         }
-        foreach ($projectList as $key => $value){
-           $list_of_projects[$key] =$value;
+        foreach ($projectList as $key => $value) {
+            $list_of_projects[$key] =$value;
         }  
-        $options_boolean= array(null => 'Any', True => 'Yes', False => 'No');
-        $conflict_options1 = array(null => 'Any', True => 'Yes', False => 'No', );
-        $conflict_options2 = array(null => 'Any', 'prim_second' => 'Yes', False => 'No');
+        $options_boolean= array(null => 'Any', true => 'Yes', false => 'No');
+        $conflict_options1 = array(null => 'Any', true => 'Yes', false => 'No', );
+        $conflict_options2 = array(null => 'Any', 'prim_second' => 'Yes', false => 'No');
         $comment_options = array(null => 'Any', 'True' => 'Yes', 'False' => 'No');
         $bob_score = array(null => 'Any', '0' => 'None', '1' => 'Minimal', '2' => 'Mild', '3' => 'Moderate', '4' => 'Marked');
         $abnormal_atypical = array(null => 'Any', 'abnormal' => 'Abnormal', 'atypical' => 'Atypical', 'normal' => 'Normal');
@@ -138,7 +144,7 @@ class NDB_Menu_Filter_final_radiological_review extends NDB_Menu_Filter
         $this->form->addElement('select', 'Exclusionary_Status', 'Exclusionary Status', $exclude);
 
         $this->form->addElement('select', 'Finalized', 'Finalized', $options_boolean);
-        $this->form->addElement('select','Project','Project',$list_of_projects);
+        $this->form->addElement('select', 'Project', 'Project', $list_of_projects);
 
     }
 
@@ -146,24 +152,27 @@ class NDB_Menu_Filter_final_radiological_review extends NDB_Menu_Filter
     function _setDataTableRows($count)
     {
         $x = 0;
-        $projectlist=Utility::getProjectList();
         foreach ($this->list as $item) {
             $this->tpl_data['items'][$x][0]['value'] = $x + $count;
 
             //print out data rows
             $i = 1;
             foreach ($item as $key => $val) {
-                if ($key == 'CommentID') continue;
-                if ($key == 'SessionID') continue;
-                if ($key == 'Site') continue;
-                if ($key == 'Conflict2') continue;
-		if ($key=='Project') {
-			$this->tpl_data['items'][$x][$i]['value'] = $projectlist[$val];
-                      //  print $this->tpl_data['items'][$x][$i]['value'];
-		}
+                if ($key == 'CommentID') {
+                    continue;
+                }
+                if ($key == 'SessionID') {
+                    continue;
+                }
+                if ($key == 'Site') {
+                    continue;
+                }
+                if ($key == 'Conflict2') {
+                    continue;
+                }
+
 
                 $this->tpl_data['items'][$x][$i]['value'] = _makePretty($key, $val);
-
                 $this->tpl_data['items'][$x][$i]['name'] = $key;
                 $this->tpl_data['items'][$x][$i]['CandID'] = $item['CandID'];
                 $this->tpl_data['items'][$x][$i]['CommentID'] = $item['CommentID'];
