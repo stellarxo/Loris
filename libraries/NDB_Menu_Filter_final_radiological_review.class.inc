@@ -1,6 +1,6 @@
 <?
 require_once 'NDB_Menu_Filter.class.inc';
-
+require_once 'Candidate.class.inc';
 // Utility function to make things more human readable.
 // This is used both below and in the history on the NDB_Form
 function _makePretty($key, $val)
@@ -45,7 +45,7 @@ class NDB_Menu_Filter_final_radiological_review extends NDB_Menu_Filter
     function _hasAccess()
     {
         $user =& User::singleton();
-        if (PEAR::isError($user)) {
+        if (Utility::isErrorX($user)) {
             return PEAR::raiseError("User Error: " .$user->getMessage());
         }
         return $user->hasPermission('view_final_radiological_review');
@@ -57,10 +57,10 @@ class NDB_Menu_Filter_final_radiological_review extends NDB_Menu_Filter
         $conflict_condition2 = "(case when r.Final_Review_Results <> r.Final_Review_Results2 THEN 'prim_second' WHEN r.Final_Exclusionary <> r.Final_Exclusionary2 THEN 'prim_second' WHEN r.SAS <> r.SAS2 THEN 'prim_second' WHEN r.PVS <> r.PVS2 THEN 'prim_second' ELSE False end)";
 
         $this->query = " FROM radiology_review orig LEFT JOIN final_radiological_review r ON (r.CommentID=orig.CommentID) JOIN flag f on (f.CommentID=orig.CommentID) JOIN session s on (s.ID=f.SessionID) JOIN candidate c ON (c.CandID=s.CandID) WHERE orig.commentid NOT LIKE 'DDE_%' AND orig.commentid IS NOT NULL AND s.active='Y' AND NOT (f.Administration='None') AND f.Data_entry='Complete' AND (orig.Scan_done IS NULL OR orig.Scan_done <> 'no')";
-        $this->columns = array('c.PSCID as PSCID', 'c.CandID as DCCID', 's.visit_label as Visit_Label', 'c.CenterID as Site', 'c.DOB as Birth_Date', 'COALESCE(r.Review_Done, False) as Review_Done', 'r.Final_Review_Results as Results', 'r.Final_Exclusionary as Exclusionary_Status', 'r.sas as SAS', 'r.pvs as PVS', 'orig.CommentID as CommentID', "$conflict_condition1 as Conflict, $conflict_condition2 as Conflict2", 'r.Finalized as Finalized', 'r.Final_Incidental_Findings as Comments' );
+        $this->columns = array('c.PSCID as PSCID', 'c.CandID as DCCID', 's.visit_label as Visit_Label','c.ProjectID as Project','c.CenterID as Site', 'c.DOB as Birth_Date', 'COALESCE(r.Review_Done, False) as Review_Done', 'r.Final_Review_Results as Results', 'r.Final_Exclusionary as Exclusionary_Status', 'r.sas as SAS', 'r.pvs as PVS', 'orig.CommentID as CommentID', "$conflict_condition1 as Conflict, $conflict_condition2 as Conflict2", 'r.Finalized as Finalized', 'r.Final_Incidental_Findings as Comments' );
         $this->order_by = 'PSCID';
         $this->headers = array('PSCID',
-                               'DCCID', 'Visit_Label', 
+                               'DCCID', 'Visit_Label','Project', 
                                'Birth_Date', 'Review_Done', 
                                'Results', 
                                'Exclusionary_Status', 'SAS', 'PVS', 
@@ -68,12 +68,14 @@ class NDB_Menu_Filter_final_radiological_review extends NDB_Menu_Filter
                                'Finalized',
                                'Comments'
         );
-        $this->validFilters = array('c.CandID', 'r.DICOM_ID', 's.visit_label', 'c.PSCID', 'r.Final_Review_Results', 'COALESCE(r.Review_Done, False)', 'r.sas', 'r.pvs', 'r.Final_Exclusionary', $conflict_condition1, $conflict_condition2, 'r.Finalized', 'c.CenterID');
+        $this->validFilters = array('c.CandID', 'r.DICOM_ID', 's.visit_label', 'c.PSCID', 'r.Final_Review_Results', 'COALESCE(r.Review_Done, False)', 'r.sas', 'r.pvs', 'r.Final_Exclusionary', $conflict_condition1, $conflict_condition2, 'r.Finalized', 'c.CenterID','C.ProjectID');
+        
         $this->formToFilter = array (
                                     //'folder' => 'substring_index(t.sourcelocation, \'/\', -1)',
                                     'dccid' => 'c.CandID',
                                     'site' => 'c.CenterID',
                                     'Visit_label' => 's.visit_label',
+                                    'ProjectID'=>'c.ProjectID',
                                     'pscid' => 'c.PSCID',
                                     'Review_done' => 'COALESCE(r.Review_Done, False)',
                                     'Results' => 'r.Final_Review_Results',
@@ -89,7 +91,28 @@ class NDB_Menu_Filter_final_radiological_review extends NDB_Menu_Filter
 
     function _setFilterForm()
     {
-        $list_of_visit_labels = array(null => 'Any', 'V06' => 'V06', 'V12' => 'V12', 'V24' => 'V24');
+        $list_of_visit_labels = array(null => 'Any' );
+        $visitList = Utility::getVisitList();
+        foreach ($visitList as $key=>$value){
+          $list_of_visit_labels[$key] = $value;
+        }
+        $list_of_sites = array(null =>'Any');
+        $sitesList = Utility::getSiteList(false);
+        if(Utility::isErrorX($sitesList)) {
+                return PEAR::raiseError("DB Error: ".$sitesList->getMessage());
+        }
+        foreach ($sitesList as $key=>$value){
+           $list_of_sites[$key]= $value;
+        } 
+        ksort($list_of_sites);
+        $list_of_projects = array(null =>'Any');
+        $projectList = Utility::getProjectList();
+        if(Utility::isErrorX($projectList)){
+                return PEAR::raiseError("DB Error: ".$projectList->getMessage());
+        }
+        foreach ($projectList as $key => $value){
+           $list_of_projects[$key] =$value;
+        }  
         $options_boolean= array(null => 'Any', True => 'Yes', False => 'No');
         $conflict_options1 = array(null => 'Any', True => 'Yes', False => 'No', );
         $conflict_options2 = array(null => 'Any', 'prim_second' => 'Yes', False => 'No');
@@ -103,7 +126,7 @@ class NDB_Menu_Filter_final_radiological_review extends NDB_Menu_Filter
         $this->form->addElement('text', 'pscid', 'PSCID:', array("size"=>9, "maxlength"=>11));
         $this->form->addElement('text', 'dccid', 'DCCID:', array("size"=>9, "maxlength"=>6));
         $this->form->addElement('select', 'Visit_label', 'Visit Label:', $list_of_visit_labels);
-        $this->form->addElement('select', 'site', 'Site', array('' => 'Any', '2' => 'SEA', '3' => 'PHI', '4' => 'STL', '5' => 'UNC'));
+        $this->form->addElement('select', 'site', 'Site', $list_of_sites);
         $this->form->addElement('select', 'Review_done', 'Review Done:', $options_boolean);
         $this->form->addElement('select', 'Conflict1', 'Conflict between any reviews:', $conflict_options1);
         $this->form->addElement('select', 'Conflict2', 'Conflict between final and extra reviews:', $conflict_options2);
@@ -115,7 +138,7 @@ class NDB_Menu_Filter_final_radiological_review extends NDB_Menu_Filter
         $this->form->addElement('select', 'Exclusionary_Status', 'Exclusionary Status', $exclude);
 
         $this->form->addElement('select', 'Finalized', 'Finalized', $options_boolean);
-
+        $this->form->addElement('select','Project','Project',$list_of_projects);
 
     }
 
@@ -123,6 +146,7 @@ class NDB_Menu_Filter_final_radiological_review extends NDB_Menu_Filter
     function _setDataTableRows($count)
     {
         $x = 0;
+        $projectlist=Utility::getProjectList();
         foreach ($this->list as $item) {
             $this->tpl_data['items'][$x][0]['value'] = $x + $count;
 
@@ -133,7 +157,10 @@ class NDB_Menu_Filter_final_radiological_review extends NDB_Menu_Filter
                 if ($key == 'SessionID') continue;
                 if ($key == 'Site') continue;
                 if ($key == 'Conflict2') continue;
-
+		if ($key=='Project') {
+			$this->tpl_data['items'][$x][$i]['value'] = $projectlist[$val];
+                      //  print $this->tpl_data['items'][$x][$i]['value'];
+		}
 
                 $this->tpl_data['items'][$x][$i]['value'] = _makePretty($key, $val);
 
