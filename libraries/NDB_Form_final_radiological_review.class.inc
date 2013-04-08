@@ -92,37 +92,37 @@ class NDB_Form_final_radiological_review extends NDB_Form
             $radiologists[$row['examinerID']] = $row['full_name'];
         }
 
-        $this->form->addElement('select', 'Final_Examiner', 'Radiologist/Reviewer:', $radiologists);
-        $this->form->addElement('static', 'CandID', 'DCCID:', 'Unknown');
-        $this->form->addElement('static', 'PSCID', 'PSCID:', 'Unknown');
-        $this->form->addElement('static', 'SessionID', 'Session ID:', '');
-        $this->form->addElement('static', 'CommentID', 'Comment ID:', '');
-        $this->form->addElement('static', 'Visit_label', 'Visit Label:', '');
+        $this->addSelect('Final_Examiner', 'Radiologist/Reviewer:', $radiologists);
+        $this->addScoreColumn('CandID', 'DCCID:', 'Unknown');
+        $this->addScoreColumn('PSCID', 'PSCID:', 'Unknown');
+        $this->addScoreColumn('SessionID', 'Session ID:', '');
+        $this->addScoreColumn('CommentID', 'Comment ID:', '');
+        $this->addScoreColumn('Visit_label', 'Visit Label:', '');
 
-        $this->form->addElement('static', 'DICOM_Folder_Name', 'DICOM Folder:', 'Unknown');
-        $this->form->addElement('static', 'DICOM_ID', 'DICOM ID:', 'Unknown');
+        $this->addScoreColumn('DICOM_Folder_Name', 'DICOM Folder:', 'Unknown');
+        $this->addScoreColumn('DICOM_ID', 'DICOM ID:', 'Unknown');
 
-        $this->form->addElement('select', 'Review_Done', 'Review Done:', $yes_no);
-        $this->form->addElement('select', 'Final_Review_Results', 'Results of Radiology Review:', $results);
-        $this->form->addElement('select', 'Final_Exclusionary', 'Exclusionary Status:', $exclusionary);
-        $this->form->addElement('select', 'SAS', 'SAS Score:', $abnormality);
-        $this->form->addElement('select', 'PVS', 'PVS Score:', $abnormality);
-        $this->form->addElement('textarea', 'Final_Incidental_Findings', 'Description of Incidental Findings (Comments):');
-        $this->form->addElement('select', 'Finalized', 'Is review finalized?', $yes_no);
+        $this->addSelect('Review_Done', 'Review Done:', $yes_no);
+        $this->addSelect('Final_Review_Results', 'Results of Radiology Review:', $results);
+        $this->addSelect('Final_Exclusionary', 'Exclusionary Status:', $exclusionary);
+        $this->addSelect('SAS', 'SAS Score:', $abnormality);
+        $this->addSelect('PVS', 'PVS Score:', $abnormality);
+        $this->addBasicTextArea('Final_Incidental_Findings', 'Description of Incidental Findings (Comments):');
+        $this->addSelect('Finalized', 'Is review finalized?', $yes_no);
 
-        $this->form->addElement('select', 'Final_Examiner2', 'Radiologist/Reviewer:', $radiologists);
-        $this->form->addElement('select', 'Review_Done2', 'Review Done:', $yes_no);
-        $this->form->addElement('select', 'Final_Review_Results2', 'Results of Radiology Review:', $results);
-        $this->form->addElement('select', 'Final_Exclusionary2', 'Exclusionary Status:', $exclusionary);
-        $this->form->addElement('select', 'SAS2', 'SAS Score:', $abnormality);
-        $this->form->addElement('select', 'PVS2', 'PVS Score:', $abnormality);
-        $this->form->addElement('textarea', 'Final_Incidental_Findings2', 'Description of Incidental Findings (Comments):');
+        $this->addSelect('Final_Examiner2', 'Radiologist/Reviewer:', $radiologists);
+        $this->addSelect('Review_Done2', 'Review Done:', $yes_no);
+        $this->addSelect('Final_Review_Results2', 'Results of Radiology Review:', $results);
+        $this->addSelect('Final_Exclusionary2', 'Exclusionary Status:', $exclusionary);
+        $this->addSelect('SAS2', 'SAS Score:', $abnormality);
+        $this->addSelect('PVS2', 'PVS Score:', $abnormality);
+        $this->addBasicTextArea('Final_Incidental_Findings2', 'Description of Incidental Findings (Comments):');
         // Original review, this might move
-        $this->form->addElement('static', 'Original_Scan_Done', 'Original Scan Done:', 'Unknown');
-        $this->form->addElement('static', 'Original_Review_Results', 'Original Results:', 'Unknown');
-        $this->form->addElement('static', 'Original_Exclusionary', 'Original Exclusionary Results:', '');
-        $this->form->addElement('static', 'Original_Incidental_Findings', 'Original Incidental Findings:', '');
-        $this->form->addElement('static', 'Original_Examiner', 'Original Radiologist/Reviewer:', 'Unknown');
+        $this->addScoreColumn('Original_Scan_Done', 'Original Scan Done:', 'Unknown');
+        $this->addScoreColumn('Original_Review_Results', 'Original Results:', 'Unknown');
+        $this->addScoreColumn('Original_Exclusionary', 'Original Exclusionary Results:', '');
+        $this->addScoreColumn('Original_Incidental_Findings', 'Original Incidental Findings:', '');
+        $this->addScoreColumn('Original_Examiner', 'Original Radiologist/Reviewer:', 'Unknown');
 
         $this->form->addElement('static', 'history', '', '');
 
@@ -269,8 +269,6 @@ class NDB_Form_final_radiological_review extends NDB_Form
                     array('CommentID' => $this->identifier), 
                     $values
                 );
-                print_r($values);
-                print_r($insert_values);
                 $DB->insert($this->__table, $insert_values);
             } else {
                 $DB->update(
