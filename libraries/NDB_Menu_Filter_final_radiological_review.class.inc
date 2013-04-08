@@ -70,7 +70,8 @@ class NDB_Menu_Filter_final_radiological_review extends NDB_Menu_Filter
     {
         $conflict_condition1 = "(CASE 
             WHEN orig.review_results <> r.final_review_results THEN True 
-            WHEN orig.abnormal_atypical_exculsionary <> r.final_exclusionary THEN True
+            WHEN orig.abnormal_atypical_exculsionary <> r.final_exclusionary 
+               THEN True
             WHEN r.Final_Review_Results <> r.Final_Review_Results2 THEN True 
             WHEN r.Final_Exclusionary <> r.Final_Exclusionary2 THEN True 
             WHEN r.SAS <> r.SAS2 THEN True 
@@ -141,7 +142,8 @@ class NDB_Menu_Filter_final_radiological_review extends NDB_Menu_Filter
                                     'Visit_label' => 's.visit_label',
                                     'ProjectID'   => 'c.ProjectID',
                                     'pscid'       => 'c.PSCID',
-                                    'Review_done' => 'COALESCE(r.Review_Done, False)',
+                                    'Review_done' => 
+                                        'COALESCE(r.Review_Done, False)',
                                     'Results'     => 'r.Final_Review_Results',
                                     'Final_Review_Results' 
                                                   => 'r.Final_Review_Results',
@@ -203,14 +205,24 @@ class NDB_Menu_Filter_final_radiological_review extends NDB_Menu_Filter
             'non_exclusionary' => 'Non Exclusionary'
         );
 
-        $this->addBasicText('dicomid', 'DICOM ID:', array("size"=>9, "maxlength"=>20));
+        $this->addBasicText(
+            'dicomid', 'DICOM ID:', array("size"=>9, "maxlength"=>20)
+        );
         $this->addBasicText('pscid', 'PSCID:', array("size"=>9, "maxlength"=>11));
         $this->addBasicText('dccid', 'DCCID:', array("size"=>9, "maxlength"=>6));
         $this->addSelect('Visit_label', 'Visit Label:', $list_of_visit_labels);
         $this->addSelect('site', 'Site', $list_of_sites);
         $this->addSelect('Review_done', 'Review Done:', $options_boolean);
-        $this->addSelect('Conflict1', 'Conflict between any reviews:', $conflict_options1);
-        $this->addSelect('Conflict2', 'Conflict between final and extra reviews:', $conflict_options2);
+        $this->addSelect(
+            'Conflict1', 
+            'Conflict between any reviews:', 
+            $conflict_options1
+        );
+        $this->addSelect(
+            'Conflict2',
+            'Conflict between final and extra reviews:', 
+            $conflict_options2
+        );
 
         $this->addSelect('SAS', 'SAS (Subarachnoid Spaces):', $bob_score);
         $this->addSelect('PVS', 'PVS (Perivascular Spaces):', $bob_score);
