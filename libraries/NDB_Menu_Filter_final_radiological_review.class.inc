@@ -14,7 +14,12 @@ require_once 'Candidate.class.inc';
  */
 function _makePretty($key, $val)
 {
-    if ($key == 'Review_Done' || $key=='Conflict1' || $key=="Finalized" || $key=="Conflict2" || $key=="Conflict") {
+    if ($key == 'Review_Done' 
+        || $key=='Conflict1' 
+        || $key=="Finalized"
+        || $key=="Conflict2" 
+        || $key=="Conflict"
+    ) {
         // The table was created with a boolean, which mysql turns into a tinyint.
         // Print 'Yes' or 'No' instead of 1 or 0.
         if ($val == 1) {
@@ -26,7 +31,11 @@ function _makePretty($key, $val)
         }
     }
 
-    if ($key == 'Final_Review_Results' || $key == 'Exclusionary_Status' || $key=="Final_Exclusionary" || $key == "Results") {
+    if ($key == 'Final_Review_Results' 
+        || $key == 'Exclusionary_Status'
+        || $key=="Final_Exclusionary" 
+        || $key == "Results"
+    ) {
         // Make the enum columns prettier by changing _ into a space and capitalizing
         return ucwords(str_replace('_', ' ', $val));
     } elseif ($key == 'SAS' or $key == 'PVS') {
@@ -59,11 +68,47 @@ class NDB_Menu_Filter_final_radiological_review extends NDB_Menu_Filter
 
     function _setupVariables()
     {
-        $conflict_condition1 = "(case when orig.review_results <> r.final_review_results then True when orig.abnormal_atypical_exculsionary <>  r.final_exclusionary THEN True WHEN r.Final_Review_Results <> r.Final_Review_Results2 THEN True WHEN r.Final_Exclusionary <> r.Final_Exclusionary2 THEN True WHEN r.SAS <> r.SAS2 THEN True WHEN r.PVS <> r.PVS2 THEN True ELSE False end)";
-        $conflict_condition2 = "(case when r.Final_Review_Results <> r.Final_Review_Results2 THEN 'prim_second' WHEN r.Final_Exclusionary <> r.Final_Exclusionary2 THEN 'prim_second' WHEN r.SAS <> r.SAS2 THEN 'prim_second' WHEN r.PVS <> r.PVS2 THEN 'prim_second' ELSE False end)";
+        $conflict_condition1 = "(CASE 
+            WHEN orig.review_results <> r.final_review_results THEN True 
+            WHEN orig.abnormal_atypical_exculsionary <> r.final_exclusionary THEN True
+            WHEN r.Final_Review_Results <> r.Final_Review_Results2 THEN True 
+            WHEN r.Final_Exclusionary <> r.Final_Exclusionary2 THEN True 
+            WHEN r.SAS <> r.SAS2 THEN True 
+            WHEN r.PVS <> r.PVS2 THEN True 
+            ELSE False END)";
+        $conflict_condition2 = "(CASE
+            WHEN r.Final_Review_Results <> r.Final_Review_Results2 THEN 'prim_second'
+            WHEN r.Final_Exclusionary <> r.Final_Exclusionary2 THEN 'prim_second' 
+            WHEN r.SAS <> r.SAS2 THEN 'prim_second'
+            WHEN r.PVS <> r.PVS2 THEN 'prim_second'
+            ELSE False END)";
 
-        $this->query = " FROM radiology_review orig LEFT JOIN final_radiological_review r ON (r.CommentID=orig.CommentID) JOIN flag f on (f.CommentID=orig.CommentID) JOIN session s on (s.ID=f.SessionID) JOIN candidate c ON (c.CandID=s.CandID) WHERE orig.commentid NOT LIKE 'DDE_%' AND orig.commentid IS NOT NULL AND s.active='Y' AND NOT (f.Administration='None') AND f.Data_entry='Complete' AND (orig.Scan_done IS NULL OR orig.Scan_done <> 'no')";
-        $this->columns = array('c.PSCID as PSCID', 'c.CandID as DCCID', 's.visit_label as Visit_Label','c.ProjectID as Project','c.CenterID as Site', 'c.DOB as Birth_Date', 'COALESCE(r.Review_Done, False) as Review_Done', 'r.Final_Review_Results as Results', 'r.Final_Exclusionary as Exclusionary_Status', 'r.sas as SAS', 'r.pvs as PVS', 'orig.CommentID as CommentID', "$conflict_condition1 as Conflict, $conflict_condition2 as Conflict2", 'r.Finalized as Finalized', 'r.Final_Incidental_Findings as Comments' );
+        $this->query = " FROM radiology_review orig 
+            LEFT JOIN final_radiological_review r ON (r.CommentID=orig.CommentID) 
+            JOIN flag f ON (f.CommentID=orig.CommentID) 
+            JOIN session s ON (s.ID=f.SessionID) 
+            JOIN candidate c ON (c.CandID=s.CandID) 
+            WHERE orig.commentid NOT LIKE 'DDE_%' AND orig.commentid IS NOT NULL 
+            AND s.active='Y' AND NOT (f.Administration='None') 
+            AND f.Data_entry='Complete' 
+            AND (orig.Scan_done IS NULL OR orig.Scan_done <> 'no')";
+        $this->columns = array('c.PSCID as PSCID', 
+            'c.CandID as DCCID', 
+            's.visit_label as Visit_Label',
+            'c.ProjectID as Project',
+            'c.CenterID as Site',
+            'c.DOB as Birth_Date',
+            'COALESCE(r.Review_Done, False) as Review_Done',
+            'r.Final_Review_Results as Results',
+            'r.Final_Exclusionary as Exclusionary_Status',
+            'r.sas as SAS',
+            'r.pvs as PVS',
+            'orig.CommentID as CommentID',
+            "$conflict_condition1 as Conflict",
+            "$conflict_condition2 as Conflict2", 
+            'r.Finalized as Finalized', 
+            'r.Final_Incidental_Findings as Comments'
+        );
         $this->order_by = 'PSCID';
         $this->headers = array('PSCID',
                                'DCCID', 'Visit_Label','Project', 
@@ -74,24 +119,39 @@ class NDB_Menu_Filter_final_radiological_review extends NDB_Menu_Filter
                                'Finalized',
                                'Comments'
         );
-        $this->validFilters = array('c.CandID', 'r.DICOM_ID', 's.visit_label', 'c.PSCID', 'r.Final_Review_Results', 'COALESCE(r.Review_Done, False)', 'r.sas', 'r.pvs', 'r.Final_Exclusionary', $conflict_condition1, $conflict_condition2, 'r.Finalized', 'c.CenterID','C.ProjectID');
+        $this->validFilters = array('c.CandID', 
+            'r.DICOM_ID', 
+            's.visit_label', 
+            'c.PSCID', 
+            'r.Final_Review_Results', 
+            'COALESCE(r.Review_Done, False)', 
+            'r.sas', 
+            'r.pvs', 
+            'r.Final_Exclusionary', 
+            $conflict_condition1, 
+            $conflict_condition2, 
+            'r.Finalized', 
+            'c.CenterID',
+            'C.ProjectID'
+        );
         
         $this->formToFilter = array (
-                                    //'folder' => 'substring_index(t.sourcelocation, \'/\', -1)',
-                                    'dccid' => 'c.CandID',
-                                    'site' => 'c.CenterID',
+                                    'dccid'       => 'c.CandID',
+                                    'site'        => 'c.CenterID',
                                     'Visit_label' => 's.visit_label',
-                                    'ProjectID'=>'c.ProjectID',
-                                    'pscid' => 'c.PSCID',
+                                    'ProjectID'   => 'c.ProjectID',
+                                    'pscid'       => 'c.PSCID',
                                     'Review_done' => 'COALESCE(r.Review_Done, False)',
-                                    'Results' => 'r.Final_Review_Results',
-                                    'Final_Review_Results' => 'r.Final_Review_Results',
-                                    'Exclusionary_Status' => 'r.Final_Exclusionary',
-                                    'PVS' => 'r.pvs',
-                                    'SAS' => 'r.sas',
-                                    'Conflict' => $conflict_condition1,
-                                    'Conflict2' => $conflict_condition2,
-                                    'Finalized' =>  'r.Finalized'
+                                    'Results'     => 'r.Final_Review_Results',
+                                    'Final_Review_Results' 
+                                                  => 'r.Final_Review_Results',
+                                    'Exclusionary_Status'  
+                                                  => 'r.Final_Exclusionary',
+                                    'PVS'         => 'r.pvs',
+                                    'SAS'         => 'r.sas',
+                                    'Conflict'    => $conflict_condition1,
+                                    'Conflict2'   => $conflict_condition2,
+                                    'Finalized'   => 'r.Finalized'
         );
     }
 
@@ -121,30 +181,45 @@ class NDB_Menu_Filter_final_radiological_review extends NDB_Menu_Filter
         }  
         $options_boolean= array(null => 'Any', true => 'Yes', false => 'No');
         $conflict_options1 = array(null => 'Any', true => 'Yes', false => 'No', );
-        $conflict_options2 = array(null => 'Any', 'prim_second' => 'Yes', false => 'No');
+        $conflict_options2 = array(null => 'Any', 
+            'prim_second' => 'Yes', 
+            false => 'No'
+        );
         $comment_options = array(null => 'Any', 'True' => 'Yes', 'False' => 'No');
-        $bob_score = array(null => 'Any', '0' => 'None', '1' => 'Minimal', '2' => 'Mild', '3' => 'Moderate', '4' => 'Marked');
-        $abnormal_atypical = array(null => 'Any', 'abnormal' => 'Abnormal', 'atypical' => 'Atypical', 'normal' => 'Normal');
-        $exclude = array(null => 'Any', 'exclusionary' => 'Exclusionary', 'non_exclusionary' => 'Non Exclusionary');
+        $bob_score = array(null => 'Any', 
+            '0' => 'None', 
+            '1' => 'Minimal', 
+            '2' => 'Mild', 
+            '3' => 'Moderate', 
+            '4' => 'Marked'
+        );
+        $abnormal_atypical = array(null => 'Any', 
+            'abnormal' => 'Abnormal', 
+            'atypical' => 'Atypical', 
+            'normal' => 'Normal'
+        );
+        $exclude = array(null => 'Any', 
+            'exclusionary' => 'Exclusionary', 
+            'non_exclusionary' => 'Non Exclusionary'
+        );
 
-        //$this->form->addElement('text', 'folder', 'DICOM Folder Name:', array("size"=>20, "maxlength"=>30));
-        $this->form->addElement('text', 'dicomid', 'DICOM ID:', array("size"=>9, "maxlength"=>20));
-        $this->form->addElement('text', 'pscid', 'PSCID:', array("size"=>9, "maxlength"=>11));
-        $this->form->addElement('text', 'dccid', 'DCCID:', array("size"=>9, "maxlength"=>6));
-        $this->form->addElement('select', 'Visit_label', 'Visit Label:', $list_of_visit_labels);
-        $this->form->addElement('select', 'site', 'Site', $list_of_sites);
-        $this->form->addElement('select', 'Review_done', 'Review Done:', $options_boolean);
-        $this->form->addElement('select', 'Conflict1', 'Conflict between any reviews:', $conflict_options1);
-        $this->form->addElement('select', 'Conflict2', 'Conflict between final and extra reviews:', $conflict_options2);
+        $this->addBasicText('dicomid', 'DICOM ID:', array("size"=>9, "maxlength"=>20));
+        $this->addBasicText('pscid', 'PSCID:', array("size"=>9, "maxlength"=>11));
+        $this->addBasicText('dccid', 'DCCID:', array("size"=>9, "maxlength"=>6));
+        $this->addSelect('Visit_label', 'Visit Label:', $list_of_visit_labels);
+        $this->addSelect('site', 'Site', $list_of_sites);
+        $this->addSelect('Review_done', 'Review Done:', $options_boolean);
+        $this->addSelect('Conflict1', 'Conflict between any reviews:', $conflict_options1);
+        $this->addSelect('Conflict2', 'Conflict between final and extra reviews:', $conflict_options2);
 
-        $this->form->addElement('select', 'SAS', 'SAS (Subarachnoid Spaces):', $bob_score);
-        $this->form->addElement('select', 'PVS', 'PVS (Perivascular Spaces):', $bob_score);
+        $this->addSelect('SAS', 'SAS (Subarachnoid Spaces):', $bob_score);
+        $this->addSelect('PVS', 'PVS (Perivascular Spaces):', $bob_score);
 
-        $this->form->addElement('select', 'Final_Review_Results', 'Results', $abnormal_atypical);
-        $this->form->addElement('select', 'Exclusionary_Status', 'Exclusionary Status', $exclude);
+        $this->addSelect('Final_Review_Results', 'Results', $abnormal_atypical);
+        $this->addSelect('Exclusionary_Status', 'Exclusionary Status', $exclude);
 
-        $this->form->addElement('select', 'Finalized', 'Finalized', $options_boolean);
-        $this->form->addElement('select', 'Project', 'Project', $list_of_projects);
+        $this->addSelect('Finalized', 'Finalized', $options_boolean);
+        $this->addSelect('Project', 'Project', $list_of_projects);
 
     }
 
