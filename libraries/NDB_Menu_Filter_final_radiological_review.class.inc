@@ -1,10 +1,34 @@
 <?php
+/**
+ * This class features the code for the menu portion of the final radiological
+ * review. The Final Radiological Review module is used for the head radiologist
+ * of a study to do an radiological review on each subject in a study, in addition
+ * to the on-site review that was done by the each site's (likely more junior) 
+ * radiologist.
+ *
+ * For sites where the head radiologist is also the site radiologist, a second,
+ * trusted radiologist does the second review. Conflicts between any of the radiology
+ * reviews are flagged for the radiologists to consult over before finalizing.
+ *
+ * PHP Version 5
+ *
+ *  @package    Main
+ *  @subpackage RadiologicalReview
+ *  @author     Dave MacFarlane <driusan@bic.mni.mcgill.ca>
+ *  @license    Loris license
+ *  @link       https://www.github.com/aces/Loris-Trunk/
+ */
+
 require_once 'NDB_Menu_Filter.class.inc';
 require_once 'Candidate.class.inc';
+
 /**
  * Utility function to make things more human readable.
  *
  * This is used both below and in the history on the NDB_Form.
+ *
+ * This maybe should be moved into the base class so that other menus that need
+ * to customize the display of how data is shown can do so in a consistent manner
  *
  * @param string  $key The key that's being prettified
  * @param unknown $val The raw value for the key
@@ -45,7 +69,7 @@ function _makePretty($key, $val)
         case '2': return 'Mild';
         case '3': return 'Moderate';
         case '4': return 'Marked';
-        default: return 'Not Answered';
+        default:  return 'Not Answered';
         }
     } elseif ($key == 'Project') {
         $projectlist=Utility::getProjectList();
@@ -55,8 +79,22 @@ function _makePretty($key, $val)
     }
 }
 
+/**
+ * Provides the PHP code for the menu filter for the final radiological review.
+ *
+ *  @package    Main
+ *  @subpackage RadiologicalReview
+ *  @author     Dave MacFarlane <driusan@bic.mni.mcgill.ca>
+ *  @license    Loris license
+ *  @link       https://www.github.com/aces/Loris-Trunk/
+ */
 class NDB_Menu_Filter_final_radiological_review extends NDB_Menu_Filter
 {
+    /**
+     * Determine whether the user has permission to view this page
+     *
+     * @return bool whether the user hass access
+     */
     function _hasAccess()
     {
         $user =& User::singleton();
@@ -66,6 +104,12 @@ class NDB_Menu_Filter_final_radiological_review extends NDB_Menu_Filter
         return $user->hasPermission('view_final_radiological_review');
     }
 
+    /**
+     * Set up the variables required by NDB_Menu_Filter class for constructing
+     * a query
+     *
+     * @return null
+     */
     function _setupVariables()
     {
         $conflict_condition1 = "(CASE 
@@ -157,6 +201,11 @@ class NDB_Menu_Filter_final_radiological_review extends NDB_Menu_Filter
         );
     }
 
+    /**
+     * Setup $this->tpl_data for use by Smarty
+     *
+     * @return null
+     */
     function _setFilterForm()
     {
         $list_of_visit_labels = array(null => 'Any' );
@@ -236,6 +285,18 @@ class NDB_Menu_Filter_final_radiological_review extends NDB_Menu_Filter
     }
 
 
+    /**
+     * Overrides the NDB_Menu's setDataTableRows function in order to
+     * not show the variables that were selected because the information
+     * is needed to construct the url for the NDB_Form.
+     *
+     * Also uses makePretty function to make some variables more human
+     * readable
+     *
+     * @param integer $count Page offset
+     *
+     * @return null
+     */
     function _setDataTableRows($count)
     {
         $x = 0;
