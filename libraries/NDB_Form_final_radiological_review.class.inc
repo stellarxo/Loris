@@ -149,8 +149,6 @@ class NDB_Form_final_radiological_review extends NDB_Form
             if($exists == array()) 
             {
                 $insert_values = array_merge(array('CommentID' => $this->identifier), $values);
-                print_r($values);
-                print_r($insert_values);
                 $DB->insert($this->__table, $insert_values);
             }
             else
