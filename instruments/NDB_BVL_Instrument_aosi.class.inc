@@ -341,7 +341,10 @@ INSERT INTO instrument_subtests VALUES('', 'aosi', 'aosi_page2', 'General Observ
 
     
     function score() {
-        
+        if($this->_determineDataEntryCompletionStatus() == "Incomplete") {
+            return;
+        }
+
         //holds raw question values
         $score_record = array();
         
@@ -407,6 +410,7 @@ INSERT INTO instrument_subtests VALUES('', 'aosi', 'aosi_page2', 'General Observ
         //Question 3
         //calculate
             //2
+         if( $score_record[TrialName(1,1)] != NULL && $score_record[TrialName(2,1)] != NULL){   
             if($score_record[TrialName(1,1)] == "not_answered" ||
                 $score_record[TrialName(2,1)] == "not_answered") {
                 $this->scores["q3_orients_to_name_score"] = "Unable to score";
@@ -435,7 +439,9 @@ INSERT INTO instrument_subtests VALUES('', 'aosi', 'aosi_page2', 'General Observ
             else {
                 $this->scores["q3_orients_to_name_score"] = "Scoring error";
             }
-//        }
+        } else{
+                $this->scores["q3_orients_to_name_score"] = "Unable to score";
+            }
         
         //Question 4
         $this->scores["q4_differential_response_to_facial_emotion_score"] = $score_record["q4_differential_response_to_facial_emotion"];
