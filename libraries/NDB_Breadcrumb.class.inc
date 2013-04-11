@@ -107,6 +107,27 @@ class NDB_Breadcrumb extends PEAR
         }
     }
 
+    /** 
+     * Adds a request parameter to $this->_parameters
+     * if and only if the entry is set in $_REQUEST.
+     * 
+     * @param string paramname  The name of the parameter being added
+     * @param string defaultval The value to be assigned if the request param isn't
+     *                          set. If null, then won't touch the data at all if 
+     *                          REQUEST parameter not passed 
+     *
+     * @return null
+     */
+    function _addParameter($paramname, $defaultval=null) {
+        if(isset($_REQUEST[$paramname])) {
+            $this->_parameters[$paramname] = $_REQUEST[$paramname];
+        } elseif(is_null($defaultval)) {
+            return;
+        } else {
+            $this->_parameters[$paramname] = $defaultval;
+        }
+    }
+
     /**
      * Makes a breadcrumb
      *
@@ -117,26 +138,20 @@ class NDB_Breadcrumb extends PEAR
     function getBreadcrumb()
     {
         // set the parameters array
-        $this->_parameters = array(
-                                   'test_name' => $_REQUEST['test_name'],
-                                   'subtest' => $_REQUEST['subtest'],
-                                   'candID' => $_REQUEST['candID'],
-                                   'sessionID' => $_REQUEST['sessionID'],
-                                   'commentID' => $_REQUEST['commentID'],
-                                   'identifier' => $_REQUEST['identifier'],
-                                   );
+        
+        $this->_parameters = array();
+        $this->_addParameter('test_name', '');
+        $this->_addParameter('subtest', '');
+        $this->_addParameter('candID', '');
+        $this->_addParameter('sessionID', '');
+        $this->_addParameter('commentID', '');
+        $this->_addParameter('identifier', '');
 
         /* Don't add the CenterID or reliabilility_center_id unless they're already present.
            since we only need them on statistics and reliability pages */
-        if(isset($_REQUEST['CenterID'])) {
-            $this->_parameters['CenterID'] = $_REQUEST['CenterID'];
-        }
-        if(isset($_REQUEST['reliability_center_id'])) {
-            $this->_parameters['reliability_center_id'] = $_REQUEST['reliability_center_id'];
-        }
-        if(isset($_REQUEST['blind'])) {
-            $this->_parameters['blind'] = $_REQUEST['blind'];
-        }
+        $this->_addParameter('CenterID');
+        $this->_addParameter('reliability_center_id');
+        $this->_addParameter('blind');
 
         // check if test name is empty
         if (empty($this->_parameters['test_name'])) {
