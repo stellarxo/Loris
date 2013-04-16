@@ -5,7 +5,7 @@ class NDB_BVL_Instrument_edi2 extends NDB_BVL_Instrument
 {
 	
 /*
-INSERT INTO test_names(Test_name,Full_name,LimitAge,Sub_group) VALUES ('edi2', 'EDI2 (Early Development Interview - IBIS2)', '0', '3');
+INSERT INTO test_names(Test_name,Full_name,LimitAge,Sub_group) VALUES ('edi2', 'EDI_IBIS2 (Early Development Interview - IBIS2)', '0', '3');
 
 INSERT INTO instrument_subtests(Test_name,Subtest_name,Description,Order_number) VALUES('edi2', 'edi2_page1', '3month Probes', 1);
 INSERT INTO instrument_subtests(Test_name,Subtest_name,Description,Order_number) VALUES('edi2', 'edi2_page2', '6month Probes', 2);
@@ -386,7 +386,7 @@ INSERT INTO test_battery(Test_name,AgeMinDays,AgeMaxDays,Active,Stage,Subproject
 
 		// 24month visit
 		elseif($visit_label == 'V24') {
-			$this->_requiredElements = array_merge($this->_requiredElements, array("EDI83","bir"));
+			$this->_requiredElements = array_merge($this->_requiredElements, array("EDI71","EDI83","bir"));
 		}
 
     }
