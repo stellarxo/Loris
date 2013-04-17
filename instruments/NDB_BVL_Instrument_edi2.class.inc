@@ -1,19 +1,24 @@
 <?php
-class NDB_BVL_Instrument_edi extends NDB_BVL_Instrument
+require_once "Utility.class.inc";
+require_once "Candidate.class.inc";
+class NDB_BVL_Instrument_edi2 extends NDB_BVL_Instrument
 {
 	
 /*
-INSERT INTO test_names VALUES ('', 'edi', 'EDI', '0', '1');
+INSERT INTO test_names(Test_name,Full_name,LimitAge,Sub_group) VALUES ('edi2', 'EDI_IBIS2 (Early Development Interview - IBIS2)', '0', '3');
 
-INSERT INTO instrument_subtests VALUES('', 'edi', 'edi_page1', '6month Probes', 1);
-INSERT INTO instrument_subtests VALUES('', 'edi', 'edi_page2', '12month Probes', 2);
-INSERT INTO instrument_subtests VALUES('', 'edi', 'edi_page3', '24month Probes', 3);
-INSERT INTO instrument_subtests VALUES('', 'edi', 'edi_page4', 'Childhood Events, 0-6 months', 4);
-INSERT INTO instrument_subtests VALUES('', 'edi', 'edi_page5', 'Pregnancy Events', 5);
-INSERT INTO instrument_subtests VALUES('', 'edi', 'edi_page6', 'Childhood Events, 7-12 months', 6);
-INSERT INTO instrument_subtests VALUES('', 'edi', 'edi_page7', 'Childhood Events, 13-24 months', 7);
+INSERT INTO instrument_subtests(Test_name,Subtest_name,Description,Order_number) VALUES('edi2', 'edi2_page1', '3month Probes', 1);
+INSERT INTO instrument_subtests(Test_name,Subtest_name,Description,Order_number) VALUES('edi2', 'edi2_page2', '6month Probes', 2);
+INSERT INTO instrument_subtests(Test_name,Subtest_name,Description,Order_number) VALUES('edi2', 'edi2_page3', '9month Probes', 3);
+INSERT INTO instrument_subtests(Test_name,Subtest_name,Description,Order_number) VALUES('edi2', 'edi2_page4', '12month Probes', 4);
+INSERT INTO instrument_subtests(Test_name,Subtest_name,Description,Order_number) VALUES('edi2', 'edi2_page5', '15month Probes', 5);
+INSERT INTO instrument_subtests(Test_name,Subtest_name,Description,Order_number) VALUES('edi2', 'edi2_page8', '18month Probes', 6);
+INSERT INTO instrument_subtests(Test_name,Subtest_name,Description,Order_number) VALUES('edi2', 'edi2_page7', '21month Probes', 7);
+INSERT INTO instrument_subtests(Test_name,Subtest_name,Description,Order_number) VALUES('edi2', 'edi2_page8', '24month Probes', 8);
+INSERT INTO instrument_subtests(Test_name,Subtest_name,Description,Order_number) VALUES('edi2', 'edi2_page9', 'Pregnancy Events', 9);
+INSERT INTO instrument_subtests(Test_name,Subtest_name,Description,Order_number) VALUES('edi2', 'edi2_page10', 'Childhood Events', 10);
 
-INSERT INTO test_battery VALUES ('', 'edi', '1050', '1140', 'Y', 'Visit', '2');
+INSERT INTO test_battery(Test_name,AgeMinDays,AgeMaxDays,Active,Stage,SubprojectID) VALUES ('edi2', '1050', '1140', 'Y', 'Visit', '2');
 */
 	
 	var $total_symptomAnchors = array("score_0_3_total_symptoms"=>"",
@@ -126,7 +131,7 @@ INSERT INTO test_battery VALUES ('', 'edi', '1050', '1140', 'Y', 'Visit', '2');
                                 "66. Failure to increase vocabulary/language from previous timepoint?",
                                 "67. Failure to imitate actions on objects?",
                                 "68. Failure to use formal gestures?",
-                                "69. Placed adult?s hand on desired objects/moved adult?s hand?",
+                                "69. Placed adult's hand on desired objects/moved adult's hand?",
                                 "70. Anything else that gave you concern? (write in)",
                                 "71. Overly sensitive/lack of sensitivity to noise...?",
                                 "72. Repetitive/stereotyped motor movements?",
@@ -138,7 +143,7 @@ INSERT INTO test_battery VALUES ('', 'edi', '1050', '1140', 'Y', 'Visit', '2');
                                 "78. Failure to increase vocabulary/language from previous timepoint?",
                                 "79. Failure to use formal gestures?",
                                 "80. Failure to imitate actions on objects?",
-                                "81. Placed adult?s hand on desired objects/moved adult?s hand?",
+                                "81. Placed adult's hand on desired objects/moved adult's hand?",
                                 "82. Anything else that gave you concern? (write in)",
                                 "83. Overly sensitive/lack of sensitivity to noise...?",
                                 "84. Repetitive/stereotyped motor movements?",
@@ -150,7 +155,7 @@ INSERT INTO test_battery VALUES ('', 'edi', '1050', '1140', 'Y', 'Visit', '2');
                                 "90. Failure to use increase language/vocabulary from previous timepoint?",
                                 "91. Failure to combine words?",
                                 "92. Failure to use formal gestures?",
-                                "93. Placed adult?s hand on desired objects/moved adult?s hand?",
+                                "93. Placed adult's hand on desired objects/moved adult's hand?",
                                 "94. Had routines/rituals?",
                                 "95. Had unusual attachments to objects?",
                                 "96. Anything else that gave you concern? (write in)");
@@ -201,8 +206,8 @@ INSERT INTO test_battery VALUES ('', 'edi', '1050', '1140', 'Y', 'Visit', '2');
         // user-defined child classes)
         
         // set the object properties
-        $this->testName = "edi";           // test_names.Test_name
-        $this->table = 'edi';              // name of database table corresponding to instrument
+        $this->testName = "edi2";           // test_names.Test_name
+        $this->table = 'edi2';              // name of database table corresponding to instrument
         // data keyed by commentID
         $this->commentID = $commentID;
         
@@ -313,9 +318,12 @@ INSERT INTO test_battery VALUES ('', 'edi', '1050', '1140', 'Y', 'Visit', '2');
 
         // Get the subject DoB for scoring
         $timepoint =& TimePoint::singleton($this->getSessionID());
+        $visit_label = $timepoint->getVisitLabel();
         $dob = $timepoint->getEffectiveDateOfBirth();
-        
-		$age = Utility::calculateAge($dob, $this->Date_taken);
+        $candidate =& Candidate::singleton($timepoint->getCandID());
+        $projID = $candidate->getProjectID();
+        $plan = $candidate->getCandidatePlan(); 
+        $age = Utility::calculateAge($dob, $this->Date_taken);
         if($this->isError($age)) {
             return $this->raiseError("Could not compute age");
         }
@@ -323,8 +331,7 @@ INSERT INTO test_battery VALUES ('', 'edi', '1050', '1140', 'Y', 'Visit', '2');
         //determine subProjectID
         $subProjectID = $timepoint->getSubprojectID();
         //determine required questions
-        $this->_determineRequiredQuestions($age, $subProjectID);
-        
+        $this->_determineRequiredQuestions($plan, $visit_label);
         if(empty($this->_requiredElements)) return 'Complete';
 
         $db =& Database::singleton();
@@ -337,39 +344,52 @@ INSERT INTO test_battery VALUES ('', 'edi', '1050', '1140', 'Y', 'Visit', '2');
         return parent::_determineDataEntryCompletionStatus();
     }
     
-    function _determineRequiredQuestions($age, $subProjectID){
-        //get age in days, to more easily compare with the test_battery;
-        $ageDays = $age['year'] * 365 + $age['mon'] * 30.5 + $age['day'];
+    function _determineRequiredQuestions($plan, $visit_label){
+   //get age in days, to more easily compare with the test_battery;
+       $planInfo = explode("_",$plan);
+        // 3month visit: three month probes along with pregnancy events are required.
 
-        // 6month visit
-        if($ageDays <= 270 && $subProjectID == 1) {
-            //6m recruit,
-            if($subProjectID == 1) {
-                $this->_requiredElements = array_merge($this->_requiredElements, array("EDI1", "EDI9", "bir_0_6months", "sei_0_6months", "inj"));}
-        }
-        
-        // 12month visit
-        elseif($ageDays >= 300 && $ageDays <= 420) {
-            //6m recruit
-            if($subProjectID == 1) {
-                $this->_requiredElements = array_merge($this->_requiredElements, array("EDI20", "EDI34", "bir_7_12months", "sei_7_12months"));
-            }
+		if($visit_label == 'V03' ) {
+			$this->_requiredElements = array_merge($this->_requiredElements, array("EDI1", "inj","bir"));
+		}
 
-            //12m recruit
-            elseif($subProjectID == 2) {
-                $this->_requiredElements = array_merge($this->_requiredElements, array("EDI1", "EDI9", "EDI20", "EDI34", "bir_0_6months", "sei_0_6months", "inj", "bir_7_12months", "sei_7_12months"));
-            }
-        } 
-        // 18 month visit
-        elseif($ageDays >= 510 && $ageDays <= 570) {
-            $this->_requiredElements = array_merge($this->_requiredElements, array("EDI46", "EDI59", "bir_13_18months", "sei_13_18months"));
-        }
-        // 24month visit
-        elseif($ageDays >= 660 && $ageDays <= 780) {
-            $this->_requiredElements = array_merge($this->_requiredElements, array("EDI71", "EDI83", "bir_19_24months", "sei_19_24months"));
-        }            
+		// 6month visit
+		elseif($visit_label == 'V06') { 
+			if($planInfo[0] =="6m"){
+				$this->_requiredElements = array_merge($this->_requiredElements, array("EDI9","inj","bir"));
+			}else{
+				$this->_requiredElements = array_merge($this->_requiredElements, array("EDI9","bir"));
+			}
+		}
+		// 9month visit
+		elseif($visit_label == 'V09') {
+			$this->_requiredElements = array_merge($this->_requiredElements, array("EDI20","bir"));
+		}
+
+		// 12month visit
+		elseif($visit_label == 'V12') {
+			//12m recruit
+			$this->_requiredElements = array_merge($this->_requiredElements, array("EDI34","bir"));
+		} 
+		// 15month visit
+		elseif($visit_label == 'V15') {
+			$this->_requiredElements = array_merge($this->_requiredElements, array("EDI46","bir"));
+		} 
+		// 18 month visit
+		elseif($visit_label == 'V18') {
+			$this->_requiredElements = array_merge($this->_requiredElements, array("EDI59","bir"));
+		}
+		// 21 month visit
+		elseif($visit_label == 'V21') {
+			$this->_requiredElements = array_merge($this->_requiredElements, array("EDI71","bir"));
+		}
+
+		// 24month visit
+		elseif($visit_label == 'V24') {
+			$this->_requiredElements = array_merge($this->_requiredElements, array("EDI71","EDI83","bir"));
+		}
+
     }
-    
     /**
     * method to build the HTML_Quickform object into a paged form
     *
@@ -407,9 +427,9 @@ INSERT INTO test_battery VALUES ('', 'edi', '1050', '1140', 'Y', 'Visit', '2');
         
         // automatically adds examiner & date of administration
         $this->_addMetadataFields();
-        
-        $this->form->addElement('static', null, "You need only complete the time-appropriate pages.");
-        $this->form->addElement('static', null, "Any unasked pages may be left completely blank.");
+        $this->form->addElement('static', null, null);
+        $this->form->addElement('header', null, "Please note that the probes are set up on separate pages. Please fill out all time-appropriate probes.");
+        //$this->form->addElement('static', null, "Please fill out all the time-appropriate probes ");
 
         $this->form->addElement('static', null, null);
         $this->form->addElement('header', null, "Scores");
@@ -435,26 +455,38 @@ INSERT INTO test_battery VALUES ('', 'edi', '1050', '1140', 'Y', 'Visit', '2');
             unset($group);
         }
     }
-    
-    function _page1(){
-        $this->generateQuestions(1, 19);
+     function _page1(){
+        $this->generateQuestions(1, 8);
     }
     
     function _page2(){
-        $this->generateQuestions(20, 26);
+        $this->generateQuestions(9, 11);
     }
-  
-    function _page3() {
-	$this->generateQuestions(46, 25);
-    }
-
-    function _page4() {  
-//    function _page3() {
-        $this->generateQuestions(71, 1000);
+    function _page3(){
+        $this->generateQuestions(20, 14);
     }
     
-  
-    function _page5() {  
+    function _page4(){
+        $this->generateQuestions(34, 12);
+    }
+   
+    function _page5(){
+        $this->generateQuestions(46, 13);
+    }
+
+    function _page6() {
+	$this->generateQuestions(59,12);
+    }
+
+    function _page7() {  
+//    function _page3() {
+        $this->generateQuestions(71,12);
+    }
+    
+  function _page8(){
+      $this->generateQuestions(83,14);
+  }
+    function _page9() {  
  //   function _page5(){
 		$answerArray = array(""=>NULL, "0_no"=>"0. No", "1_possible"=>"1. Possible", "2_definite"=>"2. Definite", "not_answered"=>"Not Answered");
 
@@ -471,139 +503,37 @@ INSERT INTO test_battery VALUES ('', 'edi', '1050', '1140', 'Y', 'Visit', '2');
         for($field = 1; $field <= 2; $field++) {
     		$this->addTextElement("other_{$field}", "Other:");
     		$this->form->addElement("select", "other_{$field}_code", $this->indent . "Code", $answerArray);
-    		$this->XINRegisterRule("other_{$field}_code", array("other_{$field}_status{@}=={@}"), "Please indicate a code, or mark the `Other` question as Not Answered");
     		$this->addTextElement("other_{$field}_month" , $this->indent . "Month of pregnancy", array("other_{$field}_code{@}=={@}1_possible|2_definite"), "This is required if you answered 1. Possible or 2. Definite");
+    		$this->XINRegisterRule("other_{$field}_code", array("other_{$field}_status{@}=={@}"), "Please indicate a code, or mark the `Other` question as Not Answered");
 		}		
 		$this->addTextAreaElement("comnt", "Comments:");
 		$this->form->addElement('static', null, "<br/>");
     }
 
 
-    function _page6() {  
+    function _page10() {  
 
-//    function _page4() {
-		$answerArray = array(""=>NULL, "0_no"=>"0. No", "1_possible"=>"1. Possible", "2_definite"=>"2. Definite", "not_answered"=>"Not Answered");
+	    $answerArray = array(""=>NULL, "0_no"=>"0. No", "1_possible"=>"1. Possible", "2_definite"=>"2. Definite", "not_answered"=>"Not Answered");
 
-		$this->form->addElement("header", null, "Family Changes, 0-6 months");
-		$this->form->addElement('static', null, "<br/>");
-		$this->form->addElement('static', null, "</br>");
-		$questionArray = $this->familyChanges;
-		
-		foreach($questionArray as $field=>$label) {
-			$this->form->addElement("select", $field . "_0_6months", $label, $answerArray);
-		}							
+	    $this->form->addElement("header", null, "Family Changes, since last visit");
+	    $this->form->addElement('static', null, "<br/>");
+	    $this->form->addElement('static', null, "</br>");
+	    $questionArray = $this->familyChanges;
 
-		$this->form->addElement('static', null, "<br/>");
-		$this->form->addElement("header", null, "Child Medical Events, 0-6 months");
-		$this->form->addElement('static', null, "<br/>");
-		$questionArray = $this->childMedicalEvents;
-		
-		foreach($questionArray as $field=>$label) {
-			$this->form->addElement("select", $field . "_0_6months", $label, $answerArray);
-		}
+	    foreach($questionArray as $field=>$label) {
+		    $this->form->addElement("select", $field, $label, $answerArray);
+	    }							
 
-		$this->form->addElement('static', null, "<br/>");
-    }
+	    $this->form->addElement('static', null, "<br/>");
+	    $this->form->addElement("header", null, "Child Medical Events, since last visit");
+	    $this->form->addElement('static', null, "<br/>");
+	    $questionArray = $this->childMedicalEvents;
 
+	    foreach($questionArray as $field=>$label) {
+		    $this->form->addElement("select", $field, $label, $answerArray);
+	    }
 
-    function _page7() {  
-
-//    function _page6() {
-		$answerArray = array(""=>NULL, "0_no"=>"0. No", "1_possible"=>"1. Possible", "2_definite"=>"2. Definite", "not_answered"=>"Not Answered");
-
-		$this->form->addElement("header", null, "Family Changes, 7-12 months");
-		$this->form->addElement('static', null, "<br/>");
-		$questionArray = $this->familyChanges;
-		
-		foreach($questionArray as $field=>$label) {
-			$this->form->addElement("select", $field . "_7_12months", $label, $answerArray);
-		}							
-
-		$this->form->addElement('static', null, "<br/>");
-		$this->form->addElement("header", null, "Child Medical Events, 7-12 months");
-		$questionArray = $this->childMedicalEvents;
-		
-		foreach($questionArray as $field=>$label) {
-			$this->form->addElement("select", $field . "_7_12months", $label, $answerArray);
-		}
-
-		$this->form->addElement('static', null, "<br/>");
-    }
-    
-
-    function _page8() {  
-
-//    function _page7() {
-		$answerArray = array(""=>NULL, "0_no"=>"0. No", "1_possible"=>"1. Possible", "2_definite"=>"2. Definite", "not_answered"=>"Not Answered");
-
-		$this->form->addElement("header", null, "Family Changes, 13-24 months");
-		$this->form->addElement('static', null, "<br/>");
-		$questionArray = $this->familyChanges;
-		
-		foreach($questionArray as $field=>$label) {
-			$this->form->addElement("select", $field . "_13_24months", $label, $answerArray);
-		}							
-
-		$this->form->addElement('static', null, "<br/>");
-		$this->form->addElement("header", null, "Child Medical Events, 13-24 months");
-		$this->form->addElement('static', null, "<br/>");
-		$questionArray = $this->childMedicalEvents;
-		
-		foreach($questionArray as $field=>$label) {
-			$this->form->addElement("select", $field . "_13_24months", $label, $answerArray);
-		}
-
-		$this->form->addElement('static', null, "<br/>");
-    }
-    
-    function _page9() {
-
-//    function _page7() {
-                $answerArray = array(""=>NULL, "0_no"=>"0. No", "1_possible"=>"1. Possible", "2_definite"=>"2. Definite", "not_answered"=>"Not Answered");
-
-                $this->form->addElement("header", null, "Family Changes, 13-18 months");
-		$this->form->addElement('static', null, "<br/>");
-                $questionArray = $this->familyChanges;
-
-                foreach($questionArray as $field=>$label) {
-                        $this->form->addElement("select", $field . "_13_18months", $label, $answerArray);
-                }
-
-		$this->form->addElement('static', null, "<br/>");
-                $this->form->addElement("header", null, "Child Medical Events, 13-18 months");
-		$this->form->addElement('static', null, "<br/>");
-                $questionArray = $this->childMedicalEvents;
-
-                foreach($questionArray as $field=>$label) {
-                        $this->form->addElement("select", $field . "_13_18months", $label, $answerArray);
-                }
-
-		$this->form->addElement('static', null, "<br/>");
-    }
-
-    function _page10() {
-
-//    function _page7() {
-                $answerArray = array(""=>NULL, "0_no"=>"0. No", "1_possible"=>"1. Possible", "2_definite"=>"2. Definite", "not_answered"=>"Not Answered");
-
-                $this->form->addElement("header", null, "Family Changes, 19-24 months");
-		$this->form->addElement('static', null, "<br/>");
-                $questionArray = $this->familyChanges;
-
-                foreach($questionArray as $field=>$label) {
-                        $this->form->addElement("select", $field . "_19_24months", $label, $answerArray);
-                }
-
-		$this->form->addElement('static', null, "<br/>");
-                $this->form->addElement("header", null, "Child Medical Events, 19-24 months");
-		$this->form->addElement('static', null, "<br/>");
-                $questionArray = $this->childMedicalEvents;
-
-                foreach($questionArray as $field=>$label) {
-                        $this->form->addElement("select", $field . "_19_24months", $label, $answerArray);
-		}
-
-		$this->form->addElement('static', null, "<br/>");
+	    $this->form->addElement('static', null, "<br/>");
     }
 
 
@@ -614,9 +544,12 @@ INSERT INTO test_battery VALUES ('', 'edi', '1050', '1140', 'Y', 'Visit', '2');
 		$otherQuestions = array(8, 19, 33, 45, 58, 70, 82, 96);
 		$anchorPoints = array(1=>"0-3", 9=>"4-6", 20=>"7-9", 34=>"10-12", 46=>"13-15", 59=>"16-18", 71=>"19-21", 83=>"22-24");
 		$questionArray = array_slice($this->questionArray, $qNum - 1, $questionCount);
-		foreach($questionArray as $label) {
+        foreach($questionArray as $label) {
 			if(array_key_exists($qNum, $anchorPoints) == TRUE) {
 				$this->form->addElement('static', null, "<br/>");
+                              if($anchorPoints[$qNum] == "0-3"){
+                                $this->form->addElement('header', null, "Please ensure that Pregrnancy Events page is also complete");
+                                }
 				$this->form->addElement("header", null, $anchorPoints[$qNum] . " months");
 				$this->form->addElement('static', null, "<br/>");
 			}

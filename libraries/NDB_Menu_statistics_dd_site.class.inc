@@ -14,6 +14,7 @@ class NDB_Menu_statistics_dd_site extends NDB_Menu_statistics_site
             case "vineland_subject":
             case "vineland_proband":
             case "radiology_review":
+            case "csbs_sponteneity":
                 return false;
             default: return true;
         }
