@@ -1,4 +1,4 @@
-table{@}FMS
+table{@}FamilyEnvironmentScales
 title{@}Family Environment Scales
 date{@}Date_taken{@}Date of Administration{@}2006{@}2012
 static{@}Candidate_Age{@}Candidate Age (Months)
@@ -8,127 +8,118 @@ header{@}{@}Family Environment Scales
 select{@}family_member{@}Please indicate your position in the family (choose one):{@}NULL=>''{-}'mother(wife)'=>'Mother(wife)'{-}'father(husband)'=>'Father(husband)'{-}'sonordaughter'=>'SonORDaughter'{-}'other'=>'Other'{-}'not_answered'=>'Not Answered'
 text{@}family_member_other{@}Please Specify:
 select{@}family_member_other_status{@}{@}NULL=>''{-}'not_answered'=>'Not Answered'
-header{@}{@}C
-static{@}c_raw_score{@}C Raw Score
-static{@}c_std_score{@}C Standard Score
-header{@}{@}Ex
-static{@}ex_raw_score{@}Ex Raw Score
-static{@}ex_std_score{@}Ex Standard Score
-header{@}{@}Con
-static{@}con_raw_score{@}Con Raw Score
-static{@}con_std_score{@}Con Standard Score
-header{@}{@}Ind
-static{@}ind_raw_score{@}Ind Raw Score
-static{@}ind_std_score{@}Ind Standard Score
-header{@}{@}AO
-static{@}ao_raw_score{@}AO Raw Score
-static{@}ao_std_score{@}AO Standard Score
-header{@}{@}ICO
-static{@}ico_raw_score{@}ICO Raw score
-static{@}ico_std_score{@}ICO Standard score
-header{@}{@}ARO
-static{@}aro_raw_score{@}ARO Raw Score
-static{@}aro_std_score{@}ARO Standard Score
-header{@}{@}MRE
-static{@}mre_raw_score{@}MRE Raw Score
-static{@}mre_std_score{@}MRE Standard Score
-header{@}{@}Org
-static{@}org_raw_score{@}Org Raw Score
-static{@}org_std_score{@}Org Standard Score
-header{@}{@}Ctl
-static{@}ctl_raw_score{@}Ctl Raw Score
-static{@}ctl_std_score{@}Ctl Standard Score
+header{@}{@}Scores
+static{@}c_raw_score{@}Cohesion Raw Score
+static{@}c_std_score{@}Cohesion Standard Score
+static{@}ex_raw_score{@}Expressiveness Raw Score
+static{@}ex_std_score{@}Expresiveness Standard Score
+static{@}con_raw_score{@}Conflict Raw Score
+static{@}con_std_score{@}Conflict Standard Score
+static{@}ind_raw_score{@}Independence Raw Score
+static{@}ind_std_score{@}Independence Standard Score
+static{@}ao_raw_score{@}Orientation Raw Score
+static{@}ao_std_score{@}Orientation Standard Score
+static{@}ico_raw_score{@}Intellectual-Cultural Orientation Raw score
+static{@}ico_std_score{@}Intellectual-Cultutal Orientation Standard score
+static{@}aro_raw_score{@}Active-Recreational Orientation Raw Score
+static{@}aro_std_score{@}Active-Recreational Orientation Standard Score
+static{@}mre_raw_score{@}Moral-Religious Emphasis Raw Score
+static{@}mre_std_score{@}Moral-Religious Emphasis Standard Score
+static{@}org_raw_score{@}Organization Raw Score
+static{@}org_std_score{@}Organization Standard Score
+static{@}ctl_raw_score{@}Control Raw Score
+static{@}ctl_std_score{@}Control Standard Score
 page{@}{@}Page1
-select{@}q1_fam_helpsupport{@}Family members help and support one another.{@}NULL=>''{-}'true'=>'True'{-}'false'=>'False'{-}'not_answered'=>'Not Answered'
-select{@}q2_keep_feelings{@}Family members often keep their feelings to themselves.{@}NULL=>''{-}'true'=>'True'{-}'false'=>'False'{-}'not_answered'=>'Not Answered'
-select{@}q3_fightalot{@}We fight a lot in our family.{@}NULL=>''{-}'true'=>'True'{-}'false'=>'False'{-}'not_answered'=>'Not Answered'
-select{@}q4_notour_own{@}We don't do things on our own very often in our family.{@}NULL=>''{-}'true'=>'True'{-}'false'=>'False'{-}'not_answered'=>'Not Answered'
-select{@}q5_imporatant_best{@}We feel it is important to be the best at whatever we do.{@}NULL=>''{-}'true'=>'True'{-}'false'=>'False'{-}'not_answered'=>'Not Answered'
-select{@}q6_talk_politicsocial_prob{@}We often talk about political and social problems{@}NULL=>''{-}'true'=>'True'{-}'false'=>'False'{-}'not_answered'=>'Not Answered'
-select{@}q7_eveningweekend_home{@}We spend most weekends and evenings at home.{@}NULL=>''{-}'true'=>'True'{-}'false'=>'False'{-}'not_answered'=>'Not Answered'
-select{@}q8_attend_churchsynagogue{@}Family members attend church, synagogue or Sunday School fairly often.{@}NULL=>''{-}'true'=>'True'{-}'false'=>'False'{-}'not_answered'=>'Not Answered'
-select{@}q9_activity_planned{@}Activities in our family are pretty carefully planned.{@}NULL=>''{-}'true'=>'True'{-}'false'=>'False'{-}'not_answered'=>'Not Answered'
-select{@}q10_rarely_ordered{@}Family memebers are rarely ordered around.{@}NULL=>''{-}'true'=>'True'{-}'false'=>'False'{-}'not_answered'=>'Not Answered'
-select{@}q11_killtime_home{@}We often seem to be killing time at home.{@}NULL=>''{-}'true'=>'True'{-}'false'=>'False'{-}'not_answered'=>'Not Answered'
-select{@}q12_sayanything{@}We say anything we want around home.{@}NULL=>''{-}'true'=>'True'{-}'false'=>'False'{-}'not_answered'=>'Not Answered'
-select{@}q13_rarelyangry{@}Family members rarely become openly angry,{@}NULL=>''{-}'true'=>'True'{-}'false'=>'False'{-}'not_answered'=>'Not Answered'
-select{@}q14_encourage_independence{@}In our family, we are strongly encouraged to be independent.{@}NULL=>''{-}'true'=>'True'{-}'false'=>'False'{-}'not_answered'=>'Not Answered'
-select{@}q15_gettingahead{@}Getting ahead in life is very important in our family.{@}NULL=>''{-}'true'=>'True'{-}'false'=>'False'{-}'not_answered'=>'Not Answered'
-select{@}q16_rare_lecturesplays{@}We rarely go to lectures, plays or concerts.{@}NULL=>''{-}'true'=>'True'{-}'false'=>'False'{-}'not_answered'=>'Not Answered'
-select{@}q17_dinnerinvite{@}Friends often come over for dinner or to visit.{@}NULL=>''{-}'true'=>'True'{-}'false'=>'False'{-}'not_answered'=>'Not Answered'
-select{@}q18_noprayer{@}We don't say prayers in our family.{@}NULL=>''{-}'true'=>'True'{-}'false'=>'False'{-}'not_answered'=>'Not Answered'
-select{@}q19_neat_order{@}We are generally very neat and orderly.{@}NULL=>''{-}'true'=>'True'{-}'false'=>'False'{-}'not_answered'=>'Not Answered'
-select{@}q20_few_rules{@}There are very few rules to follow in our family.{@}NULL=>''{-}'true'=>'True'{-}'false'=>'False'{-}'not_answered'=>'Not Answered'
-select{@}q21_lotofenergy{@}We put a lot of energy into what we do at home.{@}NULL=>''{-}'true'=>'True'{-}'false'=>'False'{-}'not_answered'=>'Not Answered'
-select{@}q22_blowoffsteam{@}It's hard to "blow of steam" at home without upsetting somebody.{@}NULL=>''{-}'true'=>'True'{-}'false'=>'False'{-}'not_answered'=>'Not Answered'
-select{@}q23_throwthings{@}Family memebers sometimes get so angry they throw things.{@}NULL=>''{-}'true'=>'True'{-}'false'=>'False'{-}'not_answered'=>'Not Answered'
-select{@}q24_think _ourselves{@}We think things out for ourselves in our family.{@}NULL=>''{-}'true'=>'True'{-}'false'=>'False'{-}'not_answered'=>'Not Answered'
-select{@}q25_money_notimp{@}How much money a person makes is not very important to us.{@}NULL=>''{-}'true'=>'True'{-}'false'=>'False'{-}'not_answered'=>'Not Answered'
-select{@}q26_learningnew_imp{@}Learning about new and different things is very important in our family.{@}NULL=>''{-}'true'=>'True'{-}'false'=>'False'{-}'not_answered'=>'Not Answered'
-select{@}q27_not_active{@}Nobody in our family is active in sports, Little League, bowling etc.{@}NULL=>''{-}'true'=>'True'{-}'false'=>'False'{-}'not_answered'=>'Not Answered'
-select{@}q28_religious_meaning{@}We often talk about the religious meaning of Christmas, Passover or other holidays.{@}NULL=>''{-}'true'=>'True'{-}'false'=>'False'{-}'not_answered'=>'Not Answered'
-select{@}q29_hardtofind{@}It's often hard to find things when you need them in our household{@}NULL=>''{-}'true'=>'True'{-}'false'=>'False'{-}'not_answered'=>'Not Answered'
-select{@}q30_one_makedecision{@}There is one family memeber who makes most of the decisions.{@}NULL=>''{-}'true'=>'True'{-}'false'=>'False'{-}'not_answered'=>'Not Answered'
+select{@}q1_fam_helpsupport{@}1. Family members help and support one another.{@}NULL=>''{-}'true'=>'True'{-}'false'=>'False'{-}'not_answered'=>'Not Answered'
+select{@}q2_keep_feelings{@}2. Family members often keep their feelings to themselves.{@}NULL=>''{-}'true'=>'True'{-}'false'=>'False'{-}'not_answered'=>'Not Answered'
+select{@}q3_fightalot{@}3. We fight a lot in our family.{@}NULL=>''{-}'true'=>'True'{-}'false'=>'False'{-}'not_answered'=>'Not Answered'
+select{@}q4_notour_own{@}4. We don't do things on our own very often in our family.{@}NULL=>''{-}'true'=>'True'{-}'false'=>'False'{-}'not_answered'=>'Not Answered'
+select{@}q5_imporatant_best{@}5. We feel it is important to be the best at whatever we do.{@}NULL=>''{-}'true'=>'True'{-}'false'=>'False'{-}'not_answered'=>'Not Answered'
+select{@}q6_talk_politicsocial_prob{@}6. We often talk about political and social problems{@}NULL=>''{-}'true'=>'True'{-}'false'=>'False'{-}'not_answered'=>'Not Answered'
+select{@}q7_eveningweekend_home{@}7. We spend most weekends and evenings at home.{@}NULL=>''{-}'true'=>'True'{-}'false'=>'False'{-}'not_answered'=>'Not Answered'
+select{@}q8_attend_churchsynagogue{@}8. Family members attend church, synagogue or Sunday School fairly often.{@}NULL=>''{-}'true'=>'True'{-}'false'=>'False'{-}'not_answered'=>'Not Answered'
+select{@}q9_activity_planned{@}9. Activities in our family are pretty carefully planned.{@}NULL=>''{-}'true'=>'True'{-}'false'=>'False'{-}'not_answered'=>'Not Answered'
+select{@}q10_rarely_ordered{@}10. Family memebers are rarely ordered around.{@}NULL=>''{-}'true'=>'True'{-}'false'=>'False'{-}'not_answered'=>'Not Answered'
+select{@}q11_killtime_home{@}11. We often seem to be killing time at home.{@}NULL=>''{-}'true'=>'True'{-}'false'=>'False'{-}'not_answered'=>'Not Answered'
+select{@}q12_sayanything{@}12. We say anything we want around home.{@}NULL=>''{-}'true'=>'True'{-}'false'=>'False'{-}'not_answered'=>'Not Answered'
+select{@}q13_rarelyangry{@}13. Family members rarely become openly angry,{@}NULL=>''{-}'true'=>'True'{-}'false'=>'False'{-}'not_answered'=>'Not Answered'
+select{@}q14_encourage_independence{@}14. In our family, we are strongly encouraged to be independent.{@}NULL=>''{-}'true'=>'True'{-}'false'=>'False'{-}'not_answered'=>'Not Answered'
+select{@}q15_gettingahead{@}15. Getting ahead in life is very important in our family.{@}NULL=>''{-}'true'=>'True'{-}'false'=>'False'{-}'not_answered'=>'Not Answered'
+select{@}q16_rare_lecturesplays{@}16. We rarely go to lectures, plays or concerts.{@}NULL=>''{-}'true'=>'True'{-}'false'=>'False'{-}'not_answered'=>'Not Answered'
+select{@}q17_dinnerinvite{@}17. Friends often come over for dinner or to visit.{@}NULL=>''{-}'true'=>'True'{-}'false'=>'False'{-}'not_answered'=>'Not Answered'
+select{@}q18_noprayer{@}18. We don't say prayers in our family.{@}NULL=>''{-}'true'=>'True'{-}'false'=>'False'{-}'not_answered'=>'Not Answered'
+select{@}q19_neat_order{@}19. We are generally very neat and orderly.{@}NULL=>''{-}'true'=>'True'{-}'false'=>'False'{-}'not_answered'=>'Not Answered'
+select{@}q20_few_rules{@}20. There are very few rules to follow in our family.{@}NULL=>''{-}'true'=>'True'{-}'false'=>'False'{-}'not_answered'=>'Not Answered'
+select{@}q21_lotofenergy{@}21. We put a lot of energy into what we do at home.{@}NULL=>''{-}'true'=>'True'{-}'false'=>'False'{-}'not_answered'=>'Not Answered'
+select{@}q22_blowoffsteam{@}22. It's hard to "blow of steam" at home without upsetting somebody.{@}NULL=>''{-}'true'=>'True'{-}'false'=>'False'{-}'not_answered'=>'Not Answered'
+select{@}q23_throwthings{@}23. Family memebers sometimes get so angry they throw things.{@}NULL=>''{-}'true'=>'True'{-}'false'=>'False'{-}'not_answered'=>'Not Answered'
+select{@}q24_think_ourselves{@}24. We think things out for ourselves in our family.{@}NULL=>''{-}'true'=>'True'{-}'false'=>'False'{-}'not_answered'=>'Not Answered'
+select{@}q25_money_notimp{@}25. How much money a person makes is not very important to us.{@}NULL=>''{-}'true'=>'True'{-}'false'=>'False'{-}'not_answered'=>'Not Answered'
+select{@}q26_learningnew_imp{@}26. Learning about new and different things is very important in our family.{@}NULL=>''{-}'true'=>'True'{-}'false'=>'False'{-}'not_answered'=>'Not Answered'
+select{@}q27_not_active{@}27. Nobody in our family is active in sports, Little League, bowling etc.{@}NULL=>''{-}'true'=>'True'{-}'false'=>'False'{-}'not_answered'=>'Not Answered'
+select{@}q28_religious_meaning{@}28. We often talk about the religious meaning of Christmas, Passover or other holidays.{@}NULL=>''{-}'true'=>'True'{-}'false'=>'False'{-}'not_answered'=>'Not Answered'
+select{@}q29_hardtofind{@}29. It's often hard to find things when you need them in our household{@}NULL=>''{-}'true'=>'True'{-}'false'=>'False'{-}'not_answered'=>'Not Answered'
+select{@}q30_one_makedecision{@}30. There is one family memeber who makes most of the decisions.{@}NULL=>''{-}'true'=>'True'{-}'false'=>'False'{-}'not_answered'=>'Not Answered'
 page{@}{@}Page2
-select{@}q31_feel_togetherness{@}There is a feeling of togetherness in our family.{@}NULL=>''{-}'true'=>'True'{-}'false'=>'False'{-}'not_answered'=>'Not Answered'
-select{@}q32_tell_personalprob{@}We tell each other about our personal problems.{@}NULL=>''{-}'true'=>'True'{-}'false'=>'False'{-}'not_answered'=>'Not Answered'
-select{@}q33_no_temper{@}Family memebers hardly ever lose their tempers{@}NULL=>''{-}'true'=>'True'{-}'false'=>'False'{-}'not_answered'=>'Not Answered'
-select{@}q34_comego_aswish{@}We come and go as we want to in our family.{@}NULL=>''{-}'true'=>'True'{-}'false'=>'False'{-}'not_answered'=>'Not Answered'
-select{@}q35_believecompetition{@}We believe in competition and "may the best man win."{@}NULL=>''{-}'true'=>'True'{-}'false'=>'False'{-}'not_answered'=>'Not Answered'
-select{@}q36_no_culturalact{@}We are not that interested in cultural activities.{@}NULL=>''{-}'true'=>'True'{-}'false'=>'False'{-}'not_answered'=>'Not Answered'
-select{@}q37_often_moviessports{@}We often go to the movies, sports events, camping etc.{@}NULL=>''{-}'true'=>'True'{-}'false'=>'False'{-}'not_answered'=>'Not Answered'
-select{@}q38_notbelieve_heavenhell{@}We don't believe in heaven or hell.{@}NULL=>''{-}'true'=>'True'{-}'false'=>'False'{-}'not_answered'=>'Not Answered'
-select{@}q39_ontime_imp{@}Being on time is very important in our family.{@}NULL=>''{-}'true'=>'True'{-}'false'=>'False'{-}'not_answered'=>'Not Answered'
-select{@}q40_set_ways{@}There are set ways of doing things at home.{@}NULL=>''{-}'true'=>'True'{-}'false'=>'False'{-}'not_answered'=>'Not Answered'
-select{@}q41_rarely_volunteer{@}We rarely volunteer when something has to be done at home.{@}NULL=>''{-}'true'=>'True'{-}'false'=>'False'{-}'not_answered'=>'Not Answered'
-select{@}q42_spur_moment{@}If we feel like doing something on the spur of the momement we often pick up and go.{@}NULL=>''{-}'true'=>'True'{-}'false'=>'False'{-}'not_answered'=>'Not Answered'
-select{@}q43_oten_criticize{@}Family members often criticize each other.{@}NULL=>''{-}'true'=>'True'{-}'false'=>'False'{-}'not_answered'=>'Not Answered'
-select{@}q44_little_privacy{@}There is very little privacy in our family,{@}NULL=>''{-}'true'=>'True'{-}'false'=>'False'{-}'not_answered'=>'Not Answered'
-select{@}q45_better_nexttime{@}We always strive to do things just a little better the next time.{@}NULL=>''{-}'true'=>'True'{-}'false'=>'False'{-}'not_answered'=>'Not Answered'
-select{@}q46_rare_intellectual{@}We rarely have intellectual discussions.{@}NULL=>''{-}'true'=>'True'{-}'false'=>'False'{-}'not_answered'=>'Not Answered'
-select{@}q47_all_hobby{@}Everyone in our family has a hobby or two.{@}NULL=>''{-}'true'=>'True'{-}'false'=>'False'{-}'not_answered'=>'Not Answered'
-select{@}q48_strict_rightwrong{@}Family members have strict ideas about what is right or wrong.{@}NULL=>''{-}'true'=>'True'{-}'false'=>'False'{-}'not_answered'=>'Not Answered'
-select{@}q49_changemind{@}People change their minds often in our family.{@}NULL=>''{-}'true'=>'True'{-}'false'=>'False'{-}'not_answered'=>'Not Answered'
-select{@}q50_strong_rules{@}There is a strong emphasis on rules in our family.{@}NULL=>''{-}'true'=>'True'{-}'false'=>'False'{-}'not_answered'=>'Not Answered'
-select{@}q51_backup_eachother{@}Family memebers really back each other up.{@}NULL=>''{-}'true'=>'True'{-}'false'=>'False'{-}'not_answered'=>'Not Answered'
-select{@}q52_upset_complain{@}Someone ususally gets upset if you complain in our family.{@}NULL=>''{-}'true'=>'True'{-}'false'=>'False'{-}'not_answered'=>'Not Answered'
-select{@}q53_sometimes_hit{@}Family memebers sometimes hit each other.{@}NULL=>''{-}'true'=>'True'{-}'false'=>'False'{-}'not_answered'=>'Not Answered'
-select{@}q54_relyown_prob{@}Family members almost always rely on themselves when a problem comes up.{@}NULL=>''{-}'true'=>'True'{-}'false'=>'False'{-}'not_answered'=>'Not Answered'
-select{@}q55_rarelyworry_jobgrades{@}Family members rarely worry about job promotions, school grades etc{@}NULL=>''{-}'true'=>'True'{-}'false'=>'False'{-}'not_answered'=>'Not Answered'
-select{@}q56_one_playinstrument{@}Someone in our family plays a musical instrument.{@}NULL=>''{-}'true'=>'True'{-}'false'=>'False'{-}'not_answered'=>'Not Answered'
-select{@}q57_notinvolved_outsidework{@}Family memebers are not very involved in recreational activities outside work or school.{@}NULL=>''{-}'true'=>'True'{-}'false'=>'False'{-}'not_answered'=>'Not Answered'
-select{@}q58_havefaith{@}We believe there are some things you just have to take on faith.{@}NULL=>''{-}'true'=>'True'{-}'false'=>'False'{-}'not_answered'=>'Not Answered'
-select{@}q59_rooms_neat{@}Family memebers make sure their rooms are neat.{@}NULL=>''{-}'true'=>'True'{-}'false'=>'False'{-}'not_answered'=>'Not Answered'
-select{@}q60_equalsay{@}Everyone has an equal say in family decisions.{@}NULL=>''{-}'true'=>'True'{-}'false'=>'False'{-}'not_answered'=>'Not Answered'
+select{@}q31_feel_togetherness{@}31. There is a feeling of togetherness in our family.{@}NULL=>''{-}'true'=>'True'{-}'false'=>'False'{-}'not_answered'=>'Not Answered'
+select{@}q32_tell_personalprob{@}32. We tell each other about our personal problems.{@}NULL=>''{-}'true'=>'True'{-}'false'=>'False'{-}'not_answered'=>'Not Answered'
+select{@}q33_no_temper{@}33. Family memebers hardly ever lose their tempers{@}NULL=>''{-}'true'=>'True'{-}'false'=>'False'{-}'not_answered'=>'Not Answered'
+select{@}q34_comego_aswish{@}34. We come and go as we want to in our family.{@}NULL=>''{-}'true'=>'True'{-}'false'=>'False'{-}'not_answered'=>'Not Answered'
+select{@}q35_believecompetition{@}35. We believe in competition and "may the best man win."{@}NULL=>''{-}'true'=>'True'{-}'false'=>'False'{-}'not_answered'=>'Not Answered'
+select{@}q36_no_culturalact{@}36. We are not that interested in cultural activities.{@}NULL=>''{-}'true'=>'True'{-}'false'=>'False'{-}'not_answered'=>'Not Answered'
+select{@}q37_often_moviessports{@}37. We often go to the movies, sports events, camping etc.{@}NULL=>''{-}'true'=>'True'{-}'false'=>'False'{-}'not_answered'=>'Not Answered'
+select{@}q38_notbelieve_heavenhell{@}38. We don't believe in heaven or hell.{@}NULL=>''{-}'true'=>'True'{-}'false'=>'False'{-}'not_answered'=>'Not Answered'
+select{@}q39_ontime_imp{@}39. Being on time is very important in our family.{@}NULL=>''{-}'true'=>'True'{-}'false'=>'False'{-}'not_answered'=>'Not Answered'
+select{@}q40_set_ways{@}40. There are set ways of doing things at home.{@}NULL=>''{-}'true'=>'True'{-}'false'=>'False'{-}'not_answered'=>'Not Answered'
+select{@}q41_rarely_volunteer{@}41. We rarely volunteer when something has to be done at home.{@}NULL=>''{-}'true'=>'True'{-}'false'=>'False'{-}'not_answered'=>'Not Answered'
+select{@}q42_spur_moment{@}42. If we feel like doing something on the spur of the momement we often pick up and go.{@}NULL=>''{-}'true'=>'True'{-}'false'=>'False'{-}'not_answered'=>'Not Answered'
+select{@}q43_oten_criticize{@}43. Family members often criticize each other.{@}NULL=>''{-}'true'=>'True'{-}'false'=>'False'{-}'not_answered'=>'Not Answered'
+select{@}q44_little_privacy{@}44. There is very little privacy in our family,{@}NULL=>''{-}'true'=>'True'{-}'false'=>'False'{-}'not_answered'=>'Not Answered'
+select{@}q45_better_nexttime{@}45. We always strive to do things just a little better the next time.{@}NULL=>''{-}'true'=>'True'{-}'false'=>'False'{-}'not_answered'=>'Not Answered'
+select{@}q46_rare_intellectual{@}46. We rarely have intellectual discussions.{@}NULL=>''{-}'true'=>'True'{-}'false'=>'False'{-}'not_answered'=>'Not Answered'
+select{@}q47_all_hobby{@}47. Everyone in our family has a hobby or two.{@}NULL=>''{-}'true'=>'True'{-}'false'=>'False'{-}'not_answered'=>'Not Answered'
+select{@}q48_strict_rightwrong{@}48. Family members have strict ideas about what is right or wrong.{@}NULL=>''{-}'true'=>'True'{-}'false'=>'False'{-}'not_answered'=>'Not Answered'
+select{@}q49_changemind{@}49. People change their minds often in our family.{@}NULL=>''{-}'true'=>'True'{-}'false'=>'False'{-}'not_answered'=>'Not Answered'
+select{@}q50_strong_rules{@}50. There is a strong emphasis on rules in our family.{@}NULL=>''{-}'true'=>'True'{-}'false'=>'False'{-}'not_answered'=>'Not Answered'
+select{@}q51_backup_eachother{@}51. Family memebers really back each other up.{@}NULL=>''{-}'true'=>'True'{-}'false'=>'False'{-}'not_answered'=>'Not Answered'
+select{@}q52_upset_complain{@}52. Someone ususally gets upset if you complain in our family.{@}NULL=>''{-}'true'=>'True'{-}'false'=>'False'{-}'not_answered'=>'Not Answered'
+select{@}q53_sometimes_hit{@}53. Family memebers sometimes hit each other.{@}NULL=>''{-}'true'=>'True'{-}'false'=>'False'{-}'not_answered'=>'Not Answered'
+select{@}q54_relyown_prob{@}54. Family members almost always rely on themselves when a problem comes up.{@}NULL=>''{-}'true'=>'True'{-}'false'=>'False'{-}'not_answered'=>'Not Answered'
+select{@}q55_rarelyworry_jobgrades{@}55. Family members rarely worry about job promotions, school grades etc{@}NULL=>''{-}'true'=>'True'{-}'false'=>'False'{-}'not_answered'=>'Not Answered'
+select{@}q56_one_playinstrument{@}56. Someone in our family plays a musical instrument.{@}NULL=>''{-}'true'=>'True'{-}'false'=>'False'{-}'not_answered'=>'Not Answered'
+select{@}q57_notinvolved_outsidework{@}57. Family memebers are not very involved in recreational activities outside work or school.{@}NULL=>''{-}'true'=>'True'{-}'false'=>'False'{-}'not_answered'=>'Not Answered'
+select{@}q58_havefaith{@}58. We believe there are some things you just have to take on faith.{@}NULL=>''{-}'true'=>'True'{-}'false'=>'False'{-}'not_answered'=>'Not Answered'
+select{@}q59_rooms_neat{@}59. Family memebers make sure their rooms are neat.{@}NULL=>''{-}'true'=>'True'{-}'false'=>'False'{-}'not_answered'=>'Not Answered'
+select{@}q60_equalsay{@}60. Everyone has an equal say in family decisions.{@}NULL=>''{-}'true'=>'True'{-}'false'=>'False'{-}'not_answered'=>'Not Answered'
 page{@}{@}Page3
-select{@}q61_nogroup_spirit{@}There is very little group spirit in our family.{@}NULL=>''{-}'true'=>'True'{-}'false'=>'False'{-}'not_answered'=>'Not Answered'
-select{@}q62_money_talk{@}Money and paying bills is openly talked about in our family,{@}NULL=>''{-}'true'=>'True'{-}'false'=>'False'{-}'not_answered'=>'Not Answered'
-select{@}q63_tryto_keeppeace{@}If there's a disagreement in our family, we try hard to smooth things over and keep the peace.{@}NULL=>''{-}'true'=>'True'{-}'false'=>'False'{-}'not_answered'=>'Not Answered'
-select{@}q64_standup_rights{@}Family members strongly encourage each other to stand up for their rights,{@}NULL=>''{-}'true'=>'True'{-}'false'=>'False'{-}'not_answered'=>'Not Answered'
-select{@}q65_nottry_succeed{@}In our family, we don't try hard to succeed.{@}NULL=>''{-}'true'=>'True'{-}'false'=>'False'{-}'not_answered'=>'Not Answered'
-select{@}q66_oftengo_library{@}Family memebers often go to library.{@}NULL=>''{-}'true'=>'True'{-}'false'=>'False'{-}'not_answered'=>'Not Answered'
-select{@}q67_courses_interest{@}Family members often attend courses or take lessons for some hobby or interest (outside of school){@}NULL=>''{-}'true'=>'True'{-}'false'=>'False'{-}'not_answered'=>'Not Answered'
-select{@}q68_diffidea_rightwrong{@}In our family each person has different ideas about right and wrong.{@}NULL=>''{-}'true'=>'True'{-}'false'=>'False'{-}'not_answered'=>'Not Answered'
-select{@}q69_duties_defined{@}Each person's duties are clearly defined in our family.{@}NULL=>''{-}'true'=>'True'{-}'false'=>'False'{-}'not_answered'=>'Not Answered'
-select{@}q70_do_aswish{@}We can do whatever we want to in our family.{@}NULL=>''{-}'true'=>'True'{-}'false'=>'False'{-}'not_answered'=>'Not Answered'
-select{@}q71_getalong_well{@}We really get along well with each other.{@}NULL=>''{-}'true'=>'True'{-}'false'=>'False'{-}'not_answered'=>'Not Answered'
-select{@}q72_careful_saytoother{@}We are usually careful about what we say to each other.{@}NULL=>''{-}'true'=>'True'{-}'false'=>'False'{-}'not_answered'=>'Not Answered'
-select{@}q73_oneup_outdo{@}Family memebers often try to one-up or out-do each other.{@}NULL=>''{-}'true'=>'True'{-}'false'=>'False'{-}'not_answered'=>'Not Answered'
-select{@}q74_byyourself_hurtother{@}It's hard to be by yourself without hurting someone's feelings in our household.{@}NULL=>''{-}'true'=>'True'{-}'false'=>'False'{-}'not_answered'=>'Not Answered'
-select{@}q75_workbeforeplay{@}"Work before play" is the rule on our family.{@}NULL=>''{-}'true'=>'True'{-}'false'=>'False'{-}'not_answered'=>'Not Answered'
-select{@}q76_tv_imp{@}Watching TV is more important than reading in our family.{@}NULL=>''{-}'true'=>'True'{-}'false'=>'False'{-}'not_answered'=>'Not Answered'
-select{@}q77_goout{@}Family memebers go out a lot.{@}NULL=>''{-}'true'=>'True'{-}'false'=>'False'{-}'not_answered'=>'Not Answered'
-select{@}q78_bible_imp{@}The bible is a very important book in our home.{@}NULL=>''{-}'true'=>'True'{-}'false'=>'False'{-}'not_answered'=>'Not Answered'
-select{@}q79_notcareful_money{@}Money is not handled very carefully in our family.{@}NULL=>''{-}'true'=>'True'{-}'false'=>'False'{-}'not_answered'=>'Not Answered'
-select{@}q80_rules_inflexible{@}Rules are pretty inflexible in our household.{@}NULL=>''{-}'true'=>'True'{-}'false'=>'False'{-}'not_answered'=>'Not Answered'
-select{@}q81_timeattention_all{@}There is plently of time and attention for everyone in our family.{@}NULL=>''{-}'true'=>'True'{-}'false'=>'False'{-}'not_answered'=>'Not Answered'
-select{@}q82_spontaneous_discussionl{@}There are a lot of spontaneous discussions in our family.{@}NULL=>''{-}'true'=>'True'{-}'false'=>'False'{-}'not_answered'=>'Not Answered'
-select{@}q83_no_raisingvoice{@}In our family, we believe you don't get anywhere by raising your voice.{@}NULL=>''{-}'true'=>'True'{-}'false'=>'False'{-}'not_answered'=>'Not Answered'
-select{@}q84_not_speakup{@}We are not really encouraged to speak up for ourselves in our family.{@}NULL=>''{-}'true'=>'True'{-}'false'=>'False'{-}'not_answered'=>'Not Answered'
-select{@}q85_compare{@}Family members are often compared with others as to how well they are doing at work or school.{@}NULL=>''{-}'true'=>'True'{-}'false'=>'False'{-}'not_answered'=>'Not Answered'
-select{@}q86_like_musicart{@}Family memebers really like music, art and literature.{@}NULL=>''{-}'true'=>'True'{-}'false'=>'False'{-}'not_answered'=>'Not Answered'
-select{@}q87_watchtv{@}Our main form of entertainment is watching TV or listening to the radio.{@}NULL=>''{-}'true'=>'True'{-}'false'=>'False'{-}'not_answered'=>'Not Answered'
-select{@}q88_sin_punished{@}Family members believe tha tif you sin you will be punished.{@}NULL=>''{-}'true'=>'True'{-}'false'=>'False'{-}'not_answered'=>'Not Answered'
-select{@}q89_dishesdone{@}Dishes are usually done immediately after eating.{@}NULL=>''{-}'true'=>'True'{-}'false'=>'False'{-}'not_answered'=>'Not Answered'
-select{@}q90_cantgetaway{@}You can't get away with much in our family.{@}NULL=>''{-}'true'=>'True'{-}'false'=>'False'{-}'not_answered'=>'Not Answered'
+select{@}q61_nogroup_spirit{@}61. There is very little group spirit in our family.{@}NULL=>''{-}'true'=>'True'{-}'false'=>'False'{-}'not_answered'=>'Not Answered'
+select{@}q62_money_talk{@}62. Money and paying bills is openly talked about in our family,{@}NULL=>''{-}'true'=>'True'{-}'false'=>'False'{-}'not_answered'=>'Not Answered'
+select{@}q63_tryto_keeppeace{@}63. If there's a disagreement in our family, we try hard to smooth things over and keep the peace.{@}NULL=>''{-}'true'=>'True'{-}'false'=>'False'{-}'not_answered'=>'Not Answered'
+select{@}q64_standup_rights{@}64. Family members strongly encourage each other to stand up for their rights,{@}NULL=>''{-}'true'=>'True'{-}'false'=>'False'{-}'not_answered'=>'Not Answered'
+select{@}q65_nottry_succeed{@}65. In our family, we don't try hard to succeed.{@}NULL=>''{-}'true'=>'True'{-}'false'=>'False'{-}'not_answered'=>'Not Answered'
+select{@}q66_oftengo_library{@}66. Family memebers often go to library.{@}NULL=>''{-}'true'=>'True'{-}'false'=>'False'{-}'not_answered'=>'Not Answered'
+select{@}q67_courses_interest{@}67. Family members often attend courses or take lessons for some hobby or interest (outside of school){@}NULL=>''{-}'true'=>'True'{-}'false'=>'False'{-}'not_answered'=>'Not Answered'
+select{@}q68_diffidea_rightwrong{@}68. In our family each person has different ideas about right and wrong.{@}NULL=>''{-}'true'=>'True'{-}'false'=>'False'{-}'not_answered'=>'Not Answered'
+select{@}q69_duties_defined{@}69. Each person's duties are clearly defined in our family.{@}NULL=>''{-}'true'=>'True'{-}'false'=>'False'{-}'not_answered'=>'Not Answered'
+select{@}q70_do_aswish{@}70. We can do whatever we want to in our family.{@}NULL=>''{-}'true'=>'True'{-}'false'=>'False'{-}'not_answered'=>'Not Answered'
+select{@}q71_getalong_well{@}71. We really get along well with each other.{@}NULL=>''{-}'true'=>'True'{-}'false'=>'False'{-}'not_answered'=>'Not Answered'
+select{@}q72_careful_saytoother{@}72. We are usually careful about what we say to each other.{@}NULL=>''{-}'true'=>'True'{-}'false'=>'False'{-}'not_answered'=>'Not Answered'
+select{@}q73_oneup_outdo{@}73. Family memebers often try to one-up or out-do each other.{@}NULL=>''{-}'true'=>'True'{-}'false'=>'False'{-}'not_answered'=>'Not Answered'
+select{@}q74_byyourself_hurtother{@}74. It's hard to be by yourself without hurting someone's feelings in our household.{@}NULL=>''{-}'true'=>'True'{-}'false'=>'False'{-}'not_answered'=>'Not Answered'
+select{@}q75_workbeforeplay{@}75. "Work before play" is the rule on our family.{@}NULL=>''{-}'true'=>'True'{-}'false'=>'False'{-}'not_answered'=>'Not Answered'
+select{@}q76_tv_imp{@}76. Watching TV is more important than reading in our family.{@}NULL=>''{-}'true'=>'True'{-}'false'=>'False'{-}'not_answered'=>'Not Answered'
+select{@}q77_goout{@}77. Family memebers go out a lot.{@}NULL=>''{-}'true'=>'True'{-}'false'=>'False'{-}'not_answered'=>'Not Answered'
+select{@}q78_bible_imp{@}78. The bible is a very important book in our home.{@}NULL=>''{-}'true'=>'True'{-}'false'=>'False'{-}'not_answered'=>'Not Answered'
+select{@}q79_notcareful_money{@}79. Money is not handled very carefully in our family.{@}NULL=>''{-}'true'=>'True'{-}'false'=>'False'{-}'not_answered'=>'Not Answered'
+select{@}q80_rules_inflexible{@}80. Rules are pretty inflexible in our household.{@}NULL=>''{-}'true'=>'True'{-}'false'=>'False'{-}'not_answered'=>'Not Answered'
+select{@}q81_timeattention_all{@}81. There is plently of time and attention for everyone in our family.{@}NULL=>''{-}'true'=>'True'{-}'false'=>'False'{-}'not_answered'=>'Not Answered'
+select{@}q82_spontaneous_discussionl{@}82. There are a lot of spontaneous discussions in our family.{@}NULL=>''{-}'true'=>'True'{-}'false'=>'False'{-}'not_answered'=>'Not Answered'
+select{@}q83_no_raisingvoice{@}83. In our family, we believe you don't get anywhere by raising your voice.{@}NULL=>''{-}'true'=>'True'{-}'false'=>'False'{-}'not_answered'=>'Not Answered'
+select{@}q84_not_speakup{@}84. We are not really encouraged to speak up for ourselves in our family.{@}NULL=>''{-}'true'=>'True'{-}'false'=>'False'{-}'not_answered'=>'Not Answered'
+select{@}q85_compare{@}85. Family members are often compared with others as to how well they are doing at work or school.{@}NULL=>''{-}'true'=>'True'{-}'false'=>'False'{-}'not_answered'=>'Not Answered'
+select{@}q86_like_musicart{@}86. Family memebers really like music, art and literature.{@}NULL=>''{-}'true'=>'True'{-}'false'=>'False'{-}'not_answered'=>'Not Answered'
+select{@}q87_watchtv{@}87. Our main form of entertainment is watching TV or listening to the radio.{@}NULL=>''{-}'true'=>'True'{-}'false'=>'False'{-}'not_answered'=>'Not Answered'
+select{@}q88_sin_punished{@}88. Family members believe tha tif you sin you will be punished.{@}NULL=>''{-}'true'=>'True'{-}'false'=>'False'{-}'not_answered'=>'Not Answered'
+select{@}q89_dishesdone{@}89. Dishes are usually done immediately after eating.{@}NULL=>''{-}'true'=>'True'{-}'false'=>'False'{-}'not_answered'=>'Not Answered'
+select{@}q90_cantgetaway{@}90. You can't get away with much in our family.{@}NULL=>''{-}'true'=>'True'{-}'false'=>'False'{-}'not_answered'=>'Not Answered'
 
