@@ -12,7 +12,7 @@ if(PEAR::isError($db)) {
             exit(1);
 }
 
-$query = "SELECT * from HandPreference WHERE CommentID = :CommentID";
+$query = "SELECT * from FamilyEnvironmentScales WHERE CommentID = :CommentID";
 
 $WhereCriteria = array('CommentID'=>$CommentID);
 $result = $db->pselectRow($query, $WhereCriteria);
@@ -23,7 +23,7 @@ if(PEAR::isError($result)){
 $c = array('q1','q11','q21','q31','q41','q51','q61','q71','q81');
 $ex= array('q2','q12','q22','q32','q42','q52','q62','q72','q82');
 $con= array('q3','q13','q23','q33','q43','q53','q63','q73','q83');
-$ind= aray('q4','q14','q24','q34','q44','q54','q64','q74','q84');
+$ind= array('q4','q14','q24','q34','q44','q54','q64','q74','q84');
 $ao = array('q5','q15','q25','q35','q45','q55','q65','q75','q85');
 $ico = array('q6','q16','q26','q36','q46','q56','q66','q76','q86');
 $aro = array('q7','q17','q27','q37','q47','q57','q67','q77','q87');
@@ -32,84 +32,39 @@ $org= array('q9','q19','q29','q39','q49','q59','q69','q79','q89');
 $ctl= array('q10','q20','q30','q40','q50','q60','q70','q80','q90');
 $scores = array();
 
-foreach ($record as $field=>$value) {
+$achievement = array('c'=>$c,'ex'=>$ex,'con'=>$con,'ind'=>$ind,'ao'=>$ao,'ico'=>$ico,'aro'=>$aro,'mre'=>$mre,'org'=>$org,'ctl'=>$ctl);
+foreach ($result as $field=>$value) {
      $qstn = explode("_",$field);
-     
-     //Communication scores
-     if(in_array($qstn[0], $c){
-         if($value == 'true'){
-             $scores['c_raw_score'] += 1;    
-         } 
-     }
     
-    //Ex scores
-     if(in_array($qstn[0], $ex){
+    foreach($achievement as $key=>$qstn_array){
+     $score_field = $key."_raw_score";
+     if(in_array($qstn[0], $qstn_array)){
          if($value == 'true'){
-             $scores['ex_raw_score'] += 1;    
+             $scores[$score_field] += 1;    
          } 
      }
-    
-    //Con scores
-     if(in_array($qstn[0], $con){
-         if($value == 'true'){
-             $scores['con_raw_score'] += 1;    
-         } 
-     }
+    }
 
-     //Ind scores
-     if(in_array($qstn[0], $ind){
-         if($value == 'true'){
-             $scores['ind_raw_score'] += 1;    
-         } 
-     }
-
-     //Ao scores
-     if(in_array($qstn[0], $ao){
-         if($value == 'true'){
-             $scores['ao_raw_score'] += 1;    
-         } 
-     }
-    
-    //ICO scores
-     if(in_array($qstn[0], $ico){
-         if($value == 'true'){
-             $scores['ico_raw_score'] += 1;    
-         } 
-     }
-
-     //ARO scores
-     if(in_array($qstn[0], $aro){
-         if($value == 'true'){
-             $scores['aro_raw_score'] += 1;    
-         } 
-     }
-     
-     //MRE scores
-     if(in_array($qstn[0], $mre){
-         if($value == 'true'){
-             $scores['mre_raw_score'] += 1;    
-         } 
-     }
-
-     //Org scores
-     if(in_array($qstn[0], $org){
-         if($value == 'true'){
-             $scores['org_raw_score'] += 1;    
-         } 
-     }
-    
-    //Ctl scores
-     if(in_array($qstn[0], $ctl){
-         if($value == 'true'){
-             $scores['ctl_raw_score'] += 1;    
-         } 
-     }
-
-
+}
+foreach($achievement as $key=>$value){
+    $score_query_field = $key."_raw_score";
+    $query_score = "SELECT Percentile from fes_lookup WHERE Rawscore = :raw_score AND Achievement = :criteria";
+    $WhereCriteria_p = array('raw_score'=>$scores[$score_query_field],'criteria'=>$key);
+    $percentile = $db->pselectOne($query_score, $WhereCriteria_p);
+    if(Utility::isErrorX($percentile)){
+        print "Query has failed to select: ".$percentile->getMessage();
+            exit(2);
+    }
+    $score_field = $key."_std_score";
+    if($percentile != NULL){
+    $scores[$score_field] = $percentile;
+    }else{
+        $scores[$score_field] = 'N/A';    
+    }
 }
 
 //save scores
-$result = $db->update('aims', $scores, $WhereCriteria);
+$result = $db->update('FamilyEnvironmentScales', $scores, $WhereCriteria);
 if($db->isError($result)) {
                 print "Could not save total score: ". $result->getMessage();
                                         exit(3);
