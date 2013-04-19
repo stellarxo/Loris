@@ -1909,7 +1909,7 @@ work or with social relationships?", $questionOptions);
         $query_array = array($query_adhd, $query_alcohol_abuse, $query_alcohol_nicotine,$query_alcohol_drug_substance,$query_asp, $query_depression,$query_mania,$query_ocd, $query_paranoid_personality,$query_psychosis_schizophrenia, $query_tic_tourettes);
         $final_query='';
         foreach($query_array as $key=>$val){
-            if(!empty($val) && $key > 0){
+            if(!empty($val) && $key > 0 && $final_query != ''){
               $final_query .= ",";
             }
             $final_query .= $val;
