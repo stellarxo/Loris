@@ -1856,7 +1856,7 @@ work or with social relationships?", $questionOptions);
         }
         $query = "SELECT * from figs_year3_relatives WHERE CommentID=:cID";
         $getData = $db->pselectRow($query, $param);
-         if ($this->isError($getData)) {
+         if (Utility::isErrorX($getData)) {
             return $this->raiseError("DB Error, failed to retrieve data\n".$getData->getMessage());
         }
         // GET per-instrument scores
