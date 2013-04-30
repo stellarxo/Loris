@@ -13,7 +13,7 @@ class ProjectUtility extends PEAR
         $All = Utility::getAllInstruments();
         $Scored = array();
         $Nothing = array();
-        foreach($All as $Instrument) {
+        foreach($All as $Instrument => $Full_Name) {
             if(ProjectUtility::getScoreColsForInstrument($Instrument) != $Nothing) {
                 $Scored[] = $Instrument;
             }
