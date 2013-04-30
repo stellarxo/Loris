@@ -145,7 +145,7 @@ INSERT INTO instrument_subtests VALUES('', 'seq', 'seq_page3', 'General and Adde
     */
 	function _setupForm(){
 		if(preg_match("/seq(_page[0-9]+)/",$this->page,$matches)){
-			call_user_method($matches[1], &$this);
+			call_user_method($matches[1], $this);
 		} else {
 			$this->_main();
 		}

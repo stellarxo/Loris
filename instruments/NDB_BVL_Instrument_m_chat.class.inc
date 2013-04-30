@@ -25,7 +25,7 @@ class NDB_BVL_Instrument_m_chat extends NDB_BVL_Instrument
     */
 	function _setupForm(){
 		if(preg_match("/m_chat(_page[0-9]+)/",$this->page,$matches)){
-			call_user_method($matches[1], &$this);
+			call_user_method($matches[1], $this);
 		} else {
 			$this->_main();
 		}

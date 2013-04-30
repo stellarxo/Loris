@@ -49,7 +49,7 @@ class NDB_BVL_Instrument_vineland extends NDB_BVL_Instrument
      */
      function _setupForm(){
          if(preg_match("/" . $this->testName . "(_page[0-9]+)/",$this->page,$matches)){
-             call_user_method($matches[1], &$this);
+             call_user_method($matches[1], $this);
          } else {
              $this->_main();
          }
@@ -417,7 +417,7 @@ class NDB_BVL_Instrument_vineland extends NDB_BVL_Instrument
           if(isset($values['Date_taken'])) {
               $Date_taken = $values['Date_taken'];
               $values['Date_taken'] = sprintf("%04d-%02d-%02d", $Date_taken['Y'], $Date_taken['M'], $Date_taken['d']);
-              $this->_saveCandidateAge(&$values);
+              $this->_saveCandidateAge($values);
           }
 
           require_once "File_Upload.class.inc";
@@ -427,7 +427,7 @@ class NDB_BVL_Instrument_vineland extends NDB_BVL_Instrument
           $file->registerForm($this->form);
 
           //Tell File_Upload what file handlers to use.
-          $file->setFileHandler("vineland_file", &$this);
+          $file->setFileHandler("vineland_file", $this);
                     
           //Set the target directory that you want files moved into once they are validated and processed.
           $config = NDB_Config::singleton();

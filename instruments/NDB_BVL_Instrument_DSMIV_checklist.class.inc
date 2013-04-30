@@ -80,7 +80,7 @@ class NDB_BVL_Instrument_DSMIV_checklist extends NDB_BVL_Instrument
 
         //determine page to display
         if(preg_match("/DSMIV_checklist(_page[1-9]+)/",$this->page,$matches)){
-            call_user_method($matches[1], &$this);
+            call_user_method($matches[1], $this);
         } else {
             $this->_main();
         }

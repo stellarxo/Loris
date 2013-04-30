@@ -106,7 +106,7 @@ class NDB_BVL_Instrument_figs_year3 extends NDB_BVL_Instrument
             }
         }
 
-        $db->select("SELECT * FROM figs_year3_relatives WHERE CommentID='" . $this->getCommentID() . "'", &$this_RelatedData);
+        $this_RelatedData = $db->pselect("SELECT * FROM figs_year3_relatives WHERE CommentID=:CID", array('CID' => $this->getCommentID()));
         foreach($this_RelatedData as $relative) {
             foreach ($relative as $key=>$value) {
             $db->selectRow("SELECT * FROM figs_year3_relatives WHERE CommentID='" . $otherInstrument->getCommentID() . "' AND RelativeCode='" . $relative['RelativeCode'] . "'", $other_RelatedData);
@@ -291,11 +291,11 @@ class NDB_BVL_Instrument_figs_year3 extends NDB_BVL_Instrument
     */
     function _saveValues($values)
     {
-        $this->_nullStatus(&$values);
+        $this->_nullStatus($values);
         if(isset($values['Date_taken'])) {
             $Date_taken = $values['Date_taken'];
             $values['Date_taken'] = $this->_getDatabaseDate($Date_taken);
-            $this->_saveCandidateAge(&$values);
+            $this->_saveCandidateAge($values);
 
         }
         

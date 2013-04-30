@@ -50,7 +50,7 @@ INSERT INTO test_battery VALUES ('', 'head_measurements', '1050', '1140', 'Y', '
     */
     function _setupForm(){
         if(preg_match("/head_measurements (_page[0-9]+)/",$this->page,$matches)){
-            call_user_method($matches[1], &$this);
+            call_user_method($matches[1], $this);
         } else {
             $this->_main();
         }

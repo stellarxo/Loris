@@ -116,7 +116,7 @@ INSERT INTO instrument_subtests VALUES('', 'csbs_sponteneity', 'csbs_sponteneity
     */
     function _setupForm(){
         if(preg_match("/csbs_sponteneity(_page[0-9]+)/",$this->page,$matches)){
-            call_user_method($matches[1], &$this);
+            call_user_method($matches[1], $this);
         } else {
             $this->_main();
         }

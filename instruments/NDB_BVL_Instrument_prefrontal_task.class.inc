@@ -66,7 +66,7 @@ INSERT INTO test_battery VALUES ('', 'prefrontal_task', '300', '780', 'Y', 'Visi
     */
     function _setupForm(){
         if(preg_match("/prefrontal_task(_page[0-9]+)/",$this->page,$matches)){
-            call_user_method($matches[1], &$this);
+            call_user_method($matches[1], $this);
         } else {
             $this->_main();
         }

@@ -90,7 +90,7 @@ class NDB_BVL_Instrument_EARLI_interview_revised extends NDB_BVL_Instrument_EARL
 
 		if(preg_match("/EARLI_interview(_page[0-9]+)_revised/", $this->page, $matches))
 		{
-			call_user_method($matches[1], &$this);
+			call_user_method($matches[1], $this);
 		}	
 
 		else

@@ -93,7 +93,7 @@ class NDB_BVL_Instrument_EARLI_interview_PART_3 extends NDB_BVL_Instrument_EARLI
 
 		if(preg_match("/EARLI_interview(_page[0-9]+)/", $this->page, $matches))
 		{
-			call_user_method($matches[1], &$this);
+			call_user_method($matches[1], $this);
 		}	
 
 		else
@@ -1361,7 +1361,7 @@ class NDB_BVL_Instrument_EARLI_interview_PART_3 extends NDB_BVL_Instrument_EARLI
                     return PEAR::raiseError ("Could not connect to database: ". $db->getMessage());
                 }
 
-                $db->selectRow("SELECT q8_32_c, q8_32_d FROM EARLI_interview_PART_3 WHERE CommentID='".$this->getCommentID()."'", &$answer);
+                $db->selectRow("SELECT q8_32_c, q8_32_d FROM EARLI_interview_PART_3 WHERE CommentID='".$this->getCommentID()."'", $answer);
 
 
                 function multSelect($fields, $question1, $question2)
@@ -1765,7 +1765,7 @@ class NDB_BVL_Instrument_EARLI_interview_PART_3 extends NDB_BVL_Instrument_EARLI
                     return PEAR::raiseError ("Could not connect to database: ". $db->getMessage());
                 }
 
-                $db->selectRow("SELECT q8_32_e, q8_32_f, q8_32_g FROM EARLI_interview_PART_3 WHERE CommentID='".$this->getCommentID()."'", &$answer);
+                $db->selectRow("SELECT q8_32_e, q8_32_f, q8_32_g FROM EARLI_interview_PART_3 WHERE CommentID='".$this->getCommentID()."'", $answer);
 
 
                 if ($answer["q8_32_e"] == "01_yes")
@@ -2256,7 +2256,7 @@ class NDB_BVL_Instrument_EARLI_interview_PART_3 extends NDB_BVL_Instrument_EARLI
 	            return PEAR::raiseError ("Could not connect to database: ".$db->getMessage());
         	}
 
-		$db->selectRow("SELECT q8_5, q8_6_9 FROM EARLI_interview_PART_3 WHERE CommentID='".$this->getCommentID()."'", &$occupation); 
+		$db->selectRow("SELECT q8_5, q8_6_9 FROM EARLI_interview_PART_3 WHERE CommentID='".$this->getCommentID()."'", $occupation); 
 
 		$options = array("a", "b", "c", "d", "e", "f", "g", "h");
 
@@ -2804,7 +2804,7 @@ class NDB_BVL_Instrument_EARLI_interview_PART_3 extends NDB_BVL_Instrument_EARLI
                     return PEAR::raiseError ("Could not connect to database: ". $db->getMessage());
                 }
 
-                $db->selectRow("SELECT q8_5, q8_6_1, q8_6_2, q8_6_3, q8_6_4, q8_6_5, q8_6_7, q8_6_8, q8_6_9 FROM EARLI_interview_PART_3 WHERE CommentID='".$this->getCommentID()."'", &$occupation);
+                $db->selectRow("SELECT q8_5, q8_6_1, q8_6_2, q8_6_3, q8_6_4, q8_6_5, q8_6_7, q8_6_8, q8_6_9 FROM EARLI_interview_PART_3 WHERE CommentID='".$this->getCommentID()."'", $occupation);
 
 
 		$options = array("a", "b", "c", "d", "e", "f", "g");
@@ -3683,7 +3683,7 @@ class NDB_BVL_Instrument_EARLI_interview_PART_3 extends NDB_BVL_Instrument_EARLI
                     return PEAR::raiseError ("Could not connect to database: ". $db->getMessage());
                 }
 
-                $db->selectRow("SELECT q8_5, q8_6_1, q8_6_2, q8_6_3, q8_6_4, q8_6_5, q8_6_6, q8_6_7, q8_6_8, q8_6_9 FROM EARLI_interview_PART_3 WHERE CommentID='".$this->getCommentID()."'", &$occupation);
+                $db->selectRow("SELECT q8_5, q8_6_1, q8_6_2, q8_6_3, q8_6_4, q8_6_5, q8_6_6, q8_6_7, q8_6_8, q8_6_9 FROM EARLI_interview_PART_3 WHERE CommentID='".$this->getCommentID()."'", $occupation);
 
 
 		$options = array("a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l");

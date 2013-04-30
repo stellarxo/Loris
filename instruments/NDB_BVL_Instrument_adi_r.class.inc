@@ -138,7 +138,7 @@ abstract class NDB_BVL_Instrument_adi_r extends NDB_BVL_Instrument
         }
         
         if(preg_match("/(_page[0-9]+)/",$this->page,$matches)){
-            call_user_method($matches[1], &$this);
+            call_user_method($matches[1], $this);
         } else {
             $this->_main();
         }

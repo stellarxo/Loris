@@ -88,7 +88,7 @@ class NDB_BVL_Instrument_neuro_screen extends NDB_BVL_Instrument
     */
     function _setupForm(){
         if(preg_match("/neuro_screen(_page[0-9]+)/",$this->page,$matches)){
-            call_user_method($matches[1], &$this);
+            call_user_method($matches[1], $this);
         } else {
             $this->_main();
         }

@@ -111,7 +111,7 @@ class NDB_BVL_Instrument_EARLI_interview_PART_1 extends NDB_BVL_Instrument_EARLI
 
         if(preg_match("/EARLI_interview(_page[0-9]+)/", $this->page, $matches))
         {
-            call_user_method($matches[1], &$this);
+            call_user_method($matches[1], $this);
         }	
 
         else

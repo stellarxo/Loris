@@ -98,7 +98,7 @@ class NDB_BVL_Instrument_macarthur_words_gestures extends NDB_BVL_Instrument
     */
     function _setupForm(){
         if(preg_match("/macarthur_words_gestures(_page[0-9]+)/",$this->page,$matches)){
-            call_user_method($matches[1], &$this);
+            call_user_method($matches[1], $this);
         } else {
             $this->_main();
         }
@@ -425,7 +425,7 @@ class NDB_BVL_Instrument_macarthur_words_gestures extends NDB_BVL_Instrument
         );
 
         foreach($SectionQuestions as $section => $words) {
-            $this->SumWords($words, $record, "I_D_" . $section . "_", &$understands[$section], &$says_and_understands[$section]);
+            $this->SumWords($words, $record, "I_D_" . $section . "_", $understands[$section], $says_and_understands[$section]);
         }
         $scores["words_produced_number"] = array_sum($says_and_understands);
         $scores["words_understood_number"] = array_sum($understands) + $scores["words_produced_number"];

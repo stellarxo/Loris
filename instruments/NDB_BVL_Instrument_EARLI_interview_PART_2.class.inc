@@ -113,7 +113,7 @@ class NDB_BVL_Instrument_EARLI_interview_PART_2 extends NDB_BVL_Instrument_EARLI
 
         if(preg_match("/EARLI_interview(_page[0-9]+)/", $this->page, $matches))
         {
-            call_user_method($matches[1], &$this);
+            call_user_method($matches[1], $this);
         }	
 
         else
@@ -623,7 +623,7 @@ class NDB_BVL_Instrument_EARLI_interview_PART_2 extends NDB_BVL_Instrument_EARLI
             return PEAR::raiseError ("Could not connect to database: ".$db->getMessage());
         }
 
-        $db->selectRow("SELECT q5_16 FROM EARLI_interview_PART_2 WHERE CommentID='".$this->getCommentID()."'", &$answer);
+        $db->selectRow("SELECT q5_16 FROM EARLI_interview_PART_2 WHERE CommentID='".$this->getCommentID()."'", $answer);
 
         //print_r($fields);
 
@@ -972,11 +972,11 @@ class NDB_BVL_Instrument_EARLI_interview_PART_2 extends NDB_BVL_Instrument_EARLI
         }
 
 
-        $db->selectRow("SELECT q5_16 FROM EARLI_interview_PART_2 WHERE CommentID='".$this->getCommentID()."'", &$answer);
+        $db->selectRow("SELECT q5_16 FROM EARLI_interview_PART_2 WHERE CommentID='".$this->getCommentID()."'", $answer);
 
         $otherCommentID = $db->selectOne("SELECT CommentID from flag where Test_name='EARLI_interview_PART_1' and SessionID=" . $this->getSessionID());
 
-        $db->selectRow("SELECT q4a_1 FROM EARLI_interview_PART_1 WHERE CommentID='". $otherCommentID."'", &$answ);
+        $db->selectRow("SELECT q4a_1 FROM EARLI_interview_PART_1 WHERE CommentID='". $otherCommentID."'", $answ);
 
 
         //	print_r($fields);
