@@ -90,10 +90,14 @@ class NDB_Breadcrumb extends PEAR
         // set the crumb text
         if (!is_null($text)) {
             $this->_breadcrumb[$this->_lastIndex]['text'] = $text;
-        } elseif (!is_null($parameter)) {
+        } elseif (!is_null($parameter) && isset($this->_parameters[$parameter])) {
             $this->_breadcrumb[$this->_lastIndex]['text'] = ucwords(str_replace('_', ' ', $this->_parameters[$parameter]));
         } else {
-            $this->_breadcrumb[$this->_lastIndex]['text'] = $this->_userFriendlyNames[$this->_parameters['test_name']];
+            if(isset($this->_userFriendlyNames[$this->_parameters['test_name']])) {
+                $this->_breadcrumb[$this->_lastIndex]['text'] = $this->_userFriendlyNames[$this->_parameters['test_name']];
+            } else {
+                $this->_breadcrumb[$this->_lastIndex]['text'] = '';
+            }
         }
 
         // set the next crumb's test name
@@ -248,7 +252,13 @@ class NDB_Breadcrumb extends PEAR
                 if($this->_parameters['test_name'] == 'aosi_reliability' && $this->_parameters['blind']) {
                     $this->_addCrumb('blind_coding', $crumbOrder[$this->_parameters['test_name']]['unset']);
                 } else {
-                    $this->_addCrumb($crumbOrder[$this->_parameters['test_name']]['next'], $crumbOrder[$this->_parameters['test_name']]['unset']);
+                    $test_name = $this->_parameters['test_name'];
+                    $next = $crumbOrder[$test_name]['next'];
+                    $unsetCrumb = '';
+                    if(isset($crumbOrder[$test_name]['unset'])) {
+                        $unsetCrumb = $crumbOrder[$test_name]['unset'];
+                    }
+                    $this->_addCrumb($next, $unsetCrumb);
                 }
             }
         } else {

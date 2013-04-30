@@ -48,11 +48,27 @@ class NDB_Menu_statistics extends NDB_Menu
 
 
             if(array_search($vl, $visits) !== FALSE && array_search($subcat, $subcats) !== FALSE && $this->_inCenter($center, $centres) !== FALSE) {
-                $tpl_data['data'][$subproj][$vl][$subcat] += $row['val'];
-                $tpl_data['data'][$subproj][$vl]['total'] += $row['val'];
-                $tpl_data['data'][$subproj][$subcat] += $row['val'];
-                $tpl_data['data'][$vl][$subcat] += $row['val'];
-                $tpl_data['data'][$vl]['total'] += $row['val'];
+                if(isset($tpl_data['data'][$subproj][$vl])) {
+                    $tpl_data['data'][$subproj][$vl]['total'] += $row['val'];
+                } else {
+                    $tpl_data['data'][$subproj][$vl] = array('total' => $row['val']);
+                }
+                if(isset($tpl_data['data'][$subproj][$vl][$subcat])) {
+                    $tpl_data['data'][$subproj][$vl][$subcat] += $row['val'];
+                } else {
+                    $tpl_data['data'][$subproj][$vl][$subcat] = $row['val'];
+                }
+
+                if(isset($tpl_data['data'][$vl])) {
+                    $tpl_data['data'][$vl]['total'] += $row['val'];
+                } else {
+                    $tpl_data['data'][$vl] = array('total' => $row['val']);
+                }
+                if(isset($tpl_data['data'][$vl][$subcat])) {
+                    $tpl_data['data'][$vl][$subcat] += $row['val'];
+                } else {
+                    $tpl_data['data'][$vl][$subcat] = $row['val'];
+                }
                 $tpl_data['data'][$subproj]['C' . $center][$vl][$subcat] = $row['val'];
                 $tpl_data['data']['Cat' . $subcat] += $row['val'];
                 $tpl_data['data'][$subproj]['C' . $center][$subcat] += $row['val'];
@@ -417,7 +433,11 @@ class NDB_Menu_statistics extends NDB_Menu
             $c =& $this->tpl_data['mri_total'][$cohort]['C' . $center];
 
             $c[$vl] += $row['val'];
-            $this->tpl_data['mri_total']['C' . $center][$vl]['total'] += $row['val'];
+            if(isset($this->tpl_data['mri_total']['C' . $center][$vl])) {
+                $this->tpl_data['mri_total']['C' . $center][$vl]['total'] += $row['val'];
+            } else {
+                $this->tpl_data['mri_total']['C' . $center][$vl] = array('total' => $row['val']);
+            }
             $this->tpl_data['mri_total'][$cohort]['total'] += $row['val'];
             $this->tpl_data['mri_total']['total'] += $row['val'];
 
