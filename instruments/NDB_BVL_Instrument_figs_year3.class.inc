@@ -235,7 +235,10 @@ class NDB_BVL_Instrument_figs_year3 extends NDB_BVL_Instrument
         }
         
         // get saved data to pre-populate form
-        if(!empty($this->relativeID)) $relativeWhere = "AND RelativeID='".$this->relativeID."'";
+        $relativeWhere = '';
+        if(!empty($this->relativeID)) {
+            $relativeWhere = "AND RelativeID='".$this->relativeID."'";
+        }
         $GLOBALS['DB']->select("SELECT * FROM $this->table WHERE CommentID='".$this->getCommentID()."' $relativeWhere", $defaults);
         if($this->isError($defaults)) {
             return $this->raiseError('Could not get default values for form');
@@ -273,10 +276,17 @@ class NDB_BVL_Instrument_figs_year3 extends NDB_BVL_Instrument
         $Date_taken = explode('-', $defaults['Date_taken']);
         $defaults['Date_taken'] = array('Y'=>$Date_taken[0], 'M'=>$Date_taken[1], 'd'=>$Date_taken[2]);
         
-        $date = explode('-', $defaults['Face_BirthDate']);
-        $defaults['Face_BirthDate'] = array('Y'=>$date[0], 'M'=>$date[1], 'd'=>$date[2]);
-        if($defaults['Face_BirthDate']['Y'] == '0000') $defaults['Face_BirthDate']['Y'] = NULL; 
-                // return the defaults array ready for $form->setDefaults
+        if(isset($defaults['Face_BirthDate'])) {
+            $date = explode('-', $defaults['Face_BirthDate']);
+            if(count($date) >= 2) {
+                $defaults['Face_BirthDate'] = array('Y'=>$date[0], 'M'=>$date[1], 'd'=>$date[2]);
+            }
+
+            if($defaults['Face_BirthDate']['Y'] == '0000') {
+                $defaults['Face_BirthDate']['Y'] = NULL; 
+            }
+        }
+        // return the defaults array ready for $form->setDefaults
         return $defaults;
     }
     
@@ -485,8 +495,12 @@ class NDB_BVL_Instrument_figs_year3 extends NDB_BVL_Instrument
 
         $db->select($query, $incompleteRelatives);
         foreach($incompleteRelatives AS $incompleteRelative) {
-            if(!empty($this->localDefaults['incompleteRelatives'])) 
+            if(!isset($this->localDefaults['incompleteRelatives'])) {
+                $this->localDefaults['incompleteRelatives'] = '';
+            }
+            if(!empty($this->localDefaults['incompleteRelatives'])) {
                 $this->localDefaults['incompleteRelatives'] .= ', ';        
+            }
             $this->localDefaults['incompleteRelatives'] .= $incompleteRelative['RelativeCode'];
         }
 
