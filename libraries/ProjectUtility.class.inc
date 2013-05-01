@@ -23,6 +23,7 @@ class ProjectUtility extends PEAR
     function getScoreColsForInstrument($inst) {
          require_once "NDB_BVL_Instrument.class.inc";
          $i = NDB_BVL_Instrument::factory($inst, '', '', true);
+         $score = null;
          if(isset($i->scoreLabels)) {
              $score = $i->scoreLabels;
          } elseif(isset($i->scoreCols)) {

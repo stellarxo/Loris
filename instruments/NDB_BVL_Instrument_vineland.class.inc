@@ -71,7 +71,14 @@ class NDB_BVL_Instrument_vineland extends NDB_BVL_Instrument
 
          // display test name
          $this->form->addElement('header', 'instrument_title', $this->getFullName());
-         $this->form->updateAttributes(array('action'=>'main.php?test_name='.$_REQUEST['test_name'].'&candID='.$_REQUEST['candID'].'&sessionID=' .          $_REQUEST['sessionID'].'&commentID='.$this->getCommentID()));
+         $testName = isset($_REQUEST['test_name']) ? $_REQUEST['test_name'] : '';
+         $candID = isset($_REQUEST['candID']) ? $_REQUEST['candID'] : '';
+         $sessionID = isset($_REQUEST['sessionID']) ? $_REQUEST['sessionID'] : '';
+         $this->form->updateAttributes(
+             array(
+                 'action' =>"main.php?test_name=$testName&candID=$candID&sessionID=$sessionID&commentID=".$this->getCommentID()
+             )
+         );
 
          // add examiner & date of administration
          //$this->form->addElement('static', 'Date_taken_display', 'Date of Administration');

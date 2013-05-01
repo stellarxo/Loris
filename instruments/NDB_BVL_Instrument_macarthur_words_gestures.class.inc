@@ -147,15 +147,15 @@ class NDB_BVL_Instrument_macarthur_words_gestures extends NDB_BVL_Instrument
 	$this->form->addElement("static",null,null);
 	$this->form->addElement("static",null,null);
 
-	$group[]= &$this->form->createElement("static", I_A_1, null);
+	$group[]= &$this->form->createElement("static", 'I_A_1', null);
  	$this->form->addGroup($group, null, "Responds when name is called:", $this->_GUIDelimiter, false);
         unset($group);
 
-	$group[]= &$this->form->createElement("static", I_A_2, null);
+	$group[]= &$this->form->createElement("static", 'I_A_2', null);
  	$this->form->addGroup($group, null, "Responds to 'no no':", $this->_GUIDelimiter, false);
         unset($group);
 
-	$group[]= &$this->form->createElement("static", I_A_3, null);
+	$group[]= &$this->form->createElement("static", 'I_A_3', null);
  	$this->form->addGroup($group, null, "Responds to 'there's mommy/daddy':", $this->_GUIDelimiter, false);
         unset($group);
 
@@ -168,8 +168,8 @@ class NDB_BVL_Instrument_macarthur_words_gestures extends NDB_BVL_Instrument
 	$this->form->addElement("static",null,null);
 	$this->form->addElement("static",null,null);
 
-	$group[]= &$this->form->createElement("static", phrases_understood_number, null);
-	$group[]= &$this->form->createElement("static", phrases_understood_percentile, null);
+	$group[]= &$this->form->createElement("static", 'phrases_understood_number', null);
+	$group[]= &$this->form->createElement("static", 'phrases_understood_percentile', null);
  	$this->form->addGroup($group, null, "<b>PHRASES UNDERSTOOD:</b>", $this->_GUIDelimiter, false);
         unset($group);
 
@@ -187,11 +187,11 @@ class NDB_BVL_Instrument_macarthur_words_gestures extends NDB_BVL_Instrument
 	$this->form->addElement("static",null,null);
 	$this->form->addElement("static",null,null);
 
-	$group[]= &$this->form->createElement("static", I_C_1_score, null);
+	$group[]= &$this->form->createElement("static", 'I_C_1_score', null);
  	$this->form->addGroup($group, null, "Imitation:", $this->_GUIDelimiter, false);
         unset($group);
 
-	$group[]= &$this->form->createElement("static", I_C_2_score, null);
+	$group[]= &$this->form->createElement("static", 'I_C_2_score', null);
  	$this->form->addGroup($group, null, "Labeling:", $this->_GUIDelimiter, false);
         unset($group);
 
@@ -209,13 +209,13 @@ class NDB_BVL_Instrument_macarthur_words_gestures extends NDB_BVL_Instrument
 	$this->form->addElement("static",null,null);
 	$this->form->addElement("static",null,null);
 
-	$group[]= &$this->form->createElement("static", words_understood_number, null);
-	$group[]= &$this->form->createElement("static", words_understood_percentile, null);
+	$group[]= &$this->form->createElement("static", 'words_understood_number', null);
+	$group[]= &$this->form->createElement("static", 'words_understood_percentile', null);
  	$this->form->addGroup($group, null, "Words Understood:", $this->_GUIDelimiter, false);
         unset($group);
 
-	$group[]= &$this->form->createElement("static", words_produced_number, null);
-	$group[]= &$this->form->createElement("static", words_produced_percentile, null);
+	$group[]= &$this->form->createElement("static", 'words_produced_number', null);
+	$group[]= &$this->form->createElement("static", 'words_produced_percentile', null);
  	$this->form->addGroup($group, null, "Words Produced:", $this->_GUIDelimiter, false);
         unset($group);
 
@@ -235,18 +235,18 @@ class NDB_BVL_Instrument_macarthur_words_gestures extends NDB_BVL_Instrument
 	$this->form->addElement("static",null,null);
 	$this->form->addElement("static",null,null);
 
-	$group[]= &$this->form->createElement("static", early_gestures_number, null);
-	$group[]= &$this->form->createElement("static", early_gestures_percentile, null);
+	$group[]= &$this->form->createElement("static", 'early_gestures_number', null);
+	$group[]= &$this->form->createElement("static", 'early_gestures_percentile', null);
  	$this->form->addGroup($group, null, "<b>Early Gestures (Sections A & B):</b>", $this->_GUIDelimiter, false);
         unset($group);
 
-	$group[]= &$this->form->createElement("static", later_gestures_number, null);
-	$group[]= &$this->form->createElement("static", later_gestures_percentile, null);
+	$group[]= &$this->form->createElement("static", 'later_gestures_number', null);
+	$group[]= &$this->form->createElement("static", 'later_gestures_percentile', null);
  	$this->form->addGroup($group, null, "<b>Later Gestures (Sections C through E):</b>", $this->_GUIDelimiter, false);
         unset($group);
 
-	$group[]= &$this->form->createElement("static", total_gestures_number, null);
-	$group[]= &$this->form->createElement("static", total_gestures_percentile, null);
+	$group[]= &$this->form->createElement("static", 'total_gestures_number', null);
+	$group[]= &$this->form->createElement("static", 'total_gestures_percentile', null);
  	$this->form->addGroup($group, null, "<b>Total Gestures (Sections A through E):</b>", $this->_GUIDelimiter, false);
         unset($group);
 

@@ -16,7 +16,11 @@ class NDB_BVL_Instrument_tsi_followup extends NDB_BVL_Instrument
 	{
 		$db =& Database::singleton();
 	
- 		$sessionid = $db->selectOne("SELECT ID FROM session WHERE CandID='".$_REQUEST['candID']."' and Visit_label LIKE '%06'");
+        $candID = isset($_REQUEST['candID']) ? $_REQUEST['candID'] : '';
+ 		$sessionid = $db->pselectOne("SELECT ID FROM session WHERE CandID=:cndID and Visit_label LIKE '%06'", array('cndID' => $candID));
+        if($sessionid == array()) {
+            return null;
+        }
 		return $sessionid;
 	}
 
@@ -24,7 +28,10 @@ class NDB_BVL_Instrument_tsi_followup extends NDB_BVL_Instrument
 	{
 		$db =& Database::singleton();
 	
- 		$commentid = $db->selectOne("SELECT CommentID FROM flag WHERE SessionID='$sessionid' and Test_name = 'tsi' and CommentID NOT LIKE 'DDE%'");
+ 		$commentid = $db->pselectOne("SELECT CommentID FROM flag WHERE SessionID=:SID and Test_name = 'tsi' and CommentID NOT LIKE 'DDE%'", array('SID' => $sessionid));
+        if($commentid == array()) {
+            return null;
+        }
 		
 		return $commentid;
 	}
@@ -185,8 +192,13 @@ class NDB_BVL_Instrument_tsi_followup extends NDB_BVL_Instrument
 
 		$sessionid = $this->getSession();
 		$commentid = $this->getComment($sessionid);
-		$url = "main.php?test_name=tsi&candID=".$_REQUEST['candID']."&sessionID=".$sessionid."&commentID=".$commentid;
-                $this->form->addElement("link", null, "City of Birth:", $url, 'Click here to verify or enter this data in the TSI');
+        $url = '';
+        if(isset($_REQUEST['candID'])) {
+            $url = "main.php?test_name=tsi&candID=".$_REQUEST['candID']."&sessionID=".$sessionid."&commentID=".$commentid;
+            $this->form->addElement("link", null, "City of Birth:", $url, 'Click here to verify or enter this data in the TSI');
+        } else {
+            $this->form->addElement("link", null, "City of Birth:", '', 'Error: No Candidate specified');
+        }
 		$this->form->addElement("static", null, "Candidate Ethnicity:");		
 
 //		$this->form->addElement("link", null, "Candidate Ethnicity:", $url, 'Click here to verify or enter this data in the TSI'); 

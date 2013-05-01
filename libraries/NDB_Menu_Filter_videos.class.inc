@@ -198,7 +198,11 @@ class NDB_Menu_Filter_videos extends NDB_Menu_Filter
                 $this->tpl_data['items'][$x][$i]['name'] = $key;
                 
                 if ($key == 'For_site'){
-                    $this->tpl_data['items'][$x][$i]['value'] = $site_names[$val];
+                    if(isset($site_names[$val])) {
+                        $this->tpl_data['items'][$x][$i]['value'] = $site_names[$val];
+                    } else {
+                        $this->tpl_data['items'][$x][$i]['value'] = '';
+                    }
                 }else{
                   $this->tpl_data['items'][$x][$i]['value'] = $val;
                 }

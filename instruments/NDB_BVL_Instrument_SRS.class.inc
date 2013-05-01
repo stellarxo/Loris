@@ -205,21 +205,17 @@ class NDB_BVL_Instrument_SRS extends NDB_BVL_Instrument
 /*     }
 
     function _page($pageNum) { */
-        $this->form->addElement('header', 'instrument_title', "Social Responsiveness Scale Page (SRS) - Page $pageNum");
+        //$this->form->addElement('header', 'instrument_title', "Social Responsiveness Scale Page (SRS) - Page $pageNum");
+        $this->form->addElement('header', 'instrument_title', "Social Responsiveness Scale Page (SRS)");
         $this->form->addElement('static', '', '<br />');
         $this->form->addElement('static', '', '<br />');
 
         $qNum = 1;
-        foreach ($this->questions as $pagenum => $page_questions) {
-        //$page_questions = $this->questions[$pageNum];
-        for($prevPage = $pageNum-1; $prevPage > 0; $prevPage--) {
-            $qNum += count($this->questions[$prevPage]);
-        }
+        $page_questions = $this->questions[1];
 
         foreach($page_questions as $field => $question) {
             $this->_addDropdown($field, $qNum . '. ' . $question);
             $qNum++;
-        }
         }
     }
 

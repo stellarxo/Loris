@@ -149,7 +149,11 @@ class NDB_Menu_Filter_blind_coding extends NDB_Menu_Filter
         // a Menu_Filter_Form base class for instances like this or the conflict resolver, but as
         // things stand you either need to work with the $_POST array/DB directly in a Menu_Filter,
         // or rewrite/imitate the Menu_Filter in an NDB_Form. -- Dave
-        if($_POST['swap'] == 'Swap Candidates' || $_POST['swap'] == 'swap') {
+        $swap = '';
+        if(isset($_POST['swap'])) {
+            $swap = $_POST['swap'];
+        }
+        if($swap == 'Swap Candidates' || $swap == 'swap') {
             $message = $this->_swap_candidates();
             if(isset($message['error'])) {
                 $this->form->addElement('static', 'error', $message['error']);
@@ -157,7 +161,7 @@ class NDB_Menu_Filter_blind_coding extends NDB_Menu_Filter
             if(isset($message['message'])) {
                 $this->form->addElement('static', 'message', $message['message']);
             }
-        } else if($_POST['swap'] == "Add Candidate" || $_POST['swap'] == 'addnew') {
+        } else if($swap == "Add Candidate" || $swap == 'addnew') {
             $message = $this->_addCandidate();
             if(isset($message['error'])) {
                 $this->form->addElement('static', 'error', $message['error']);

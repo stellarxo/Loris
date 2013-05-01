@@ -147,7 +147,9 @@ class NDB_BVL_Instrument_figs_year3 extends NDB_BVL_Instrument
         }
         $this->form->addElement('header', 'instrument_title', $this->getFullName().$titleSuffix);
         
-        $url = "main.php?test_name=figs_year3&candID=".$_REQUEST['candID']."&sessionID=".$_REQUEST['sessionID']."&commentID=".$this->getCommentID();
+        $candID = isset($_REQUEST['candID']) ? $_REQUEST['candID'] : '';
+        $sessionID = isset($_REQUEST['sessionID']) ? $_REQUEST['sessionID'] : '';
+        $url = "main.php?test_name=figs_year3&candID=$candID&sessionID=$sessionID&commentID=".$this->getCommentID();
         
         // checklists display
         if($this->page == 'checklists') {
@@ -219,7 +221,10 @@ class NDB_BVL_Instrument_figs_year3 extends NDB_BVL_Instrument
     */
     function display()
     {
-    	$formAttribsArray = 'main.php?test_name='.$_REQUEST['test_name'].'&candID='.$_REQUEST['candID'].'&sessionID='.$_REQUEST['sessionID'].'&commentID='.$this->getCommentID();
+        $testName = isset($_REQUEST['test_name']) ? $_REQUEST['test_name'] : '';
+        $candID= isset($_REQUEST['candID']) ? $_REQUEST['candID'] : '';
+        $sessionID= isset($_REQUEST['sessionID']) ? $_REQUEST['sessionID'] : '';
+    	$formAttribsArray = "main.php?test_name=$testName&candID=$candID&sessionID=$sessionID&commentID=".$this->getCommentID();
         if (!empty($this->relativeID)) {
         	$formAttribsArray .= '&relativeID='.$this->relativeID;
         }
@@ -476,8 +481,10 @@ class NDB_BVL_Instrument_figs_year3 extends NDB_BVL_Instrument
         }
         
         // listing of existing relatives
+        $candID = isset($_REQUEST['candID']) ? $_REQUEST['candID'] : '';
+        $sessionID = isset($_REQUEST['sessionID']) ? $_REQUEST['sessionID'] : '';
         $this->form->addElement('header', null, 'View checklists');
-        $url = "main.php?test_name=figs_year3&candID=".$_REQUEST['candID']."&sessionID=".$_REQUEST['sessionID']."&commentID=".$this->getCommentID();
+        $url = "main.php?test_name=figs_year3&candID=$candID&sessionID=$sessionID&commentID=".$this->getCommentID();
         if(is_array($relatives)) {
             foreach($relatives AS $relativeID=>$relativeCode) {
                 $this->form->addElement('link', null, $relativeCode, "$url&relativeID=$relativeID&checklist=checklists", 'open');

@@ -70,12 +70,36 @@ class NDB_Menu_statistics extends NDB_Menu
                     $tpl_data['data'][$vl][$subcat] = $row['val'];
                 }
                 $tpl_data['data'][$subproj]['C' . $center][$vl][$subcat] = $row['val'];
-                $tpl_data['data']['Cat' . $subcat] += $row['val'];
-                $tpl_data['data'][$subproj]['C' . $center][$subcat] += $row['val'];
-                $tpl_data['data']['C' . $center][$vl][$subcat] += $row['val'];
-                $tpl_data['data'][$subproj]['total'] += $row['val'];
-                $tpl_data['data']['C' . $center][$subcat] += $row['val'];
-                $tpl_data['data']['total'] += $row['val'];
+                if(isset($tpl_data['data']['Cat' . $subcat])) {
+                    $tpl_data['data']['Cat' . $subcat] += $row['val'];
+                } else {
+                    $tpl_data['data']['Cat' . $subcat] = $row['val'];
+                }
+                if(isset($tpl_data['data'][$subproj]['C' . $center][$subcat])) {
+                    $tpl_data['data'][$subproj]['C' . $center][$subcat] += $row['val'];
+                } else {
+                    $tpl_data['data'][$subproj]['C' . $center][$subcat] = $row['val'];
+                }
+                if(isset($tpl_data['data']['C' . $center][$vl][$subcat])) {
+                    $tpl_data['data']['C' . $center][$vl][$subcat] += $row['val'];
+                } else {
+                    $tpl_data['data']['C' . $center][$vl][$subcat] = $row['val'];
+                }
+                if(isset($tpl_data['data'][$subproj]['total'])) {
+                    $tpl_data['data'][$subproj]['total'] += $row['val'];
+                } else {
+                    $tpl_data['data'][$subproj]['total'] = $row['val'];
+                }
+                if(isset($tpl_data['data']['C' . $center][$subcat])) {
+                    $tpl_data['data']['C' . $center][$subcat] += $row['val'];
+                } else {
+                    $tpl_data['data']['C' . $center][$subcat] = $row['val'];
+                }
+                if(isset($tpl_data['data']['total'])) {
+                    $tpl_data['data']['total'] += $row['val'];
+                } else {
+                    $tpl_data['data']['total'] = $row['val'];
+                }
             }
 
         }
@@ -105,6 +129,11 @@ class NDB_Menu_statistics extends NDB_Menu
         }
         $this->tpl_data['Subprojects'] = $subprojects;
         $this->tpl_data['Projects'] = $projects;
+
+        $this->tpl_data['registered'] = array(
+            'visittotal' => 0,
+            'total' => 0
+        );
         $DB->select("SELECT s.subprojectid as rowid, 
                             COUNT(DISTINCT(c.PSCID)) as val 
                      FROM candidate as c LEFT JOIN session s ON (s.CandID=c.CandID) 
@@ -148,6 +177,7 @@ class NDB_Menu_statistics extends NDB_Menu
                 AND s.Current_stage <> 'Recycling Bin'
                 $ExtraSite_Criteria
         GROUP BY s.SubprojectID", $result);
+        $this->tpl_data['edi'] = array('complete' => 0);
         foreach($result as $row) {
             $this->tpl_data['edi'][$row['rowid']]['complete'] = $row['val'];
             $this->tpl_data['edi']['complete'] += $row['val'];
@@ -164,6 +194,7 @@ class NDB_Menu_statistics extends NDB_Menu
                 AND s.Current_stage <> 'Recycling Bin'
                 $ExtraSite_Criteria
              GROUP BY s.SubprojectID", $result);
+        $this->tpl_data['scanned'] = array('complete' => 0);
         foreach($result as $row) {
             $this->tpl_data['scanned'][$row['rowid']]['complete'] = $row['val'];
             $this->tpl_data['scanned']['complete'] += $row['val'];
@@ -182,7 +213,7 @@ class NDB_Menu_statistics extends NDB_Menu
         $this->tpl_data['Sites'] = array('' => 'All Sites');
         foreach ($centers as $row) {
             $this->tpl_data['Sites'][$row['NumericID']] = $row['LongName'];
-            if($_REQUEST['site'] == $row['NumericID']) {
+            if(isset($_REQUEST['site']) && $_REQUEST['site'] == $row['NumericID']) {
                 $this->tpl_data['CurrentSite'] = array('ID' => $row['NumericID'], 'Name' => $row['LongName']);
             }
            
@@ -292,6 +323,20 @@ class NDB_Menu_statistics extends NDB_Menu
             $vl = $row['VLabel'];
             $c =& $this->tpl_data['behaviour']['C' . $center];
 
+            if(!isset($c[$vl])) {
+                $c[$vl] = array(
+                    'total' => 0,
+                    'complete' => 0,
+                    'percent' => 0
+                );
+            }
+            if(!isset($c['all'])) {
+                $c['all'] = array(
+                    'total' => 0,
+                    'complete' => 0,
+                    'percent' => 0
+                );
+            }
             $c[$vl]['total'] += $row['val'];
             $c['all']['total'] += $row['val'];
             if($row['Data_Entry'] == 'Complete') {
@@ -333,6 +378,18 @@ class NDB_Menu_statistics extends NDB_Menu
             $vl = $row['VLabel'];
             $c =& $this->tpl_data['dde']['C' . $center];
 
+            if(!isset($c[$vl])) {
+                $c[$vl] = array(
+                    'total' => 0,
+                    'complete' => 0
+                );
+            }
+            if(!isset($c['all'])) {
+                $c['all'] = array(
+                    'total' => 0,
+                    'complete' => 0
+                );
+            }
             $c[$vl]['total'] += $row['val'];
             $c['all']['total'] += $row['val'];
             if($row['Data_Entry'] == 'Complete') {
@@ -357,7 +414,7 @@ class NDB_Menu_statistics extends NDB_Menu
             'BOLD' => 'BOLD',
             'Spectroscopy' => 'Spectroscopy'
         );
-        if($_REQUEST['mri_type']) {
+        if(isset($_REQUEST['mri_type']) && $_REQUEST['mri_type']) {
             $MRI_Type = $_REQUEST['mri_type'];
             $MRI_Type_Field = $_REQUEST['mri_type'] . "_Scan_Done";
             $MRIHeader = "$MRI_Type Breakdown";
@@ -432,21 +489,36 @@ class NDB_Menu_statistics extends NDB_Menu
             $vl = $row['VLabel'];
             $c =& $this->tpl_data['mri_total'][$cohort]['C' . $center];
 
-            $c[$vl] += $row['val'];
-            if(isset($this->tpl_data['mri_total']['C' . $center][$vl])) {
+            if(isset($c[$vl])) {
+                $c[$vl] += $row['val'];
+            } else {
+                $c[$vl] = $row['val'];
+            }
+            if(isset($this->tpl_data['mri_total']['C' . $center][$vl]['total'])) {
                 $this->tpl_data['mri_total']['C' . $center][$vl]['total'] += $row['val'];
             } else {
                 $this->tpl_data['mri_total']['C' . $center][$vl] = array('total' => $row['val']);
             }
-            $this->tpl_data['mri_total'][$cohort]['total'] += $row['val'];
-            $this->tpl_data['mri_total']['total'] += $row['val'];
+
+            if(isset($this->tpl_data['mri_total'][$cohort]['total'])) {
+                $this->tpl_data['mri_total'][$cohort]['total'] += $row['val'];
+            } else {
+                $this->tpl_data['mri_total'][$cohort]['total'] = $row['val'];
+            }
+            if(isset($this->tpl_data['mri_total']['total'])) {
+                $this->tpl_data['mri_total']['total'] += $row['val'];
+            } else {
+                $this->tpl_data['mri_total']['total'] = $row['val'];
+            }
 
         }
         // Enrollment stats
 
+        $siteID = '';
+        $projectid = '';
         if(isset($_REQUEST['site']) && $_REQUEST['site'] != '') {
             $siteID = $_REQUEST['site'];
-        } 
+        }  
         if(isset($_REQUEST['project']) && $_REQUEST['project'] != '') {
                 $projectid = $_REQUEST['project'];
                 $this->tpl_data['CurrentProject'] =  array('ID' => $projectid, 'Name' => $projects[$projectid]);

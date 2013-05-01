@@ -122,7 +122,7 @@ abstract class NDB_BVL_Instrument_adi_r extends NDB_BVL_Instrument
         if($this->respondentAgeYears < 4) {
             foreach($underFourDefaults as $field=>$value) {
                 //Defaults apply only to empty database fields
-                if($record[$field] == null) {
+                if(isset($record[$field]) && $record[$field] == null) {
                     $this->localDefaults[$field] = $value;
                 }
             }
@@ -131,7 +131,7 @@ abstract class NDB_BVL_Instrument_adi_r extends NDB_BVL_Instrument
         if($this->respondentAgeYears < 5) {
             foreach($atOlderThanFiveDefaults as $field=>$value) {
                 //Defaults apply only to empty database fields
-                if($record[$field] == null) {
+                if(!isset($record[$field]) || $record[$field] == null) {
                     $this->localDefaults[$field] = $value;
                 }
             }
@@ -1118,9 +1118,13 @@ e skills first apparent");               // $this->form->addElement('select', 'q
         $db =& Database::singleton();
 
         $centerID = $db->pselectOne("SELECT session.CenterID FROM session, flag WHERE session.ID=flag.SessionID and flag.CommentID=:cmnt_id", array('cmnt_id'=>$this->getCommentID()));
+        if($centerID == array()) {
+            $centerID = null;
+        }
 
         //get examiner certifications for profiles part of IBIS2
-        $project = $db->pselectOne("SELECT ProjectID from candidate where CandID =:cnd_id", array('cnd_id'=>$_REQUEST["candID"]));
+        $candID = isset($_REQUEST['candID']) ? $_REQUEST['candID'] : '';
+        $project = $db->pselectOne("SELECT ProjectID from candidate where CandID =:cnd_id", array('cnd_id'=>$candID));
 
         list($CertificationEnabled, $CertificationProjects, $CertificationInstruments) = $this->_getCertificationConfig();
         if ($CertificationEnabled && in_array($project, $CertificationProjects)

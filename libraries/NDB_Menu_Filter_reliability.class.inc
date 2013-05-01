@@ -75,7 +75,7 @@ class NDB_Menu_Filter_reliability extends NDB_Menu_Filter
         $this->_populate_reliability_table();
 
         // the base query
-        if($_REQUEST['EARLI'] == 1) {
+        if(isset($_REQUEST['EARLI']) && $_REQUEST['EARLI'] == 1) {
             $extra_where = " AND EARLI_Candidate='yes'";
         } else {
             $extra_where = " AND EARLI_Candidate='no'";
@@ -211,7 +211,8 @@ class NDB_Menu_Filter_reliability extends NDB_Menu_Filter
         // a Menu_Filter_Form base class for instances like this or the conflict resolver, but as
         // things stand you either need to work with the $_POST array/DB directly in a Menu_Filter,
         // or rewrite/imitate the Menu_Filter in an NDB_Form. -- Dave
-        if($_POST['swap'] == 'Swap Candidates' || $_POST['swap'] == 'swap') {
+        $swap = isset($_POST['swap']) ? $_POST['swap'] : '';
+        if($swap == 'Swap Candidates' || $swap == 'swap') {
             $message = $this->_swap_candidates();
             if(isset($message['error'])) {
                 $this->form->addElement('static', 'error', $message['error']);
@@ -219,7 +220,7 @@ class NDB_Menu_Filter_reliability extends NDB_Menu_Filter
             if(isset($message['message'])) {
                 $this->form->addElement('static', 'message', $message['message']);
             }
-        } else if($_POST['swap'] == "Add Candidate" || $_POST['swap'] == 'addnew') {
+        } else if($swap == "Add Candidate" || $swap == 'addnew') {
             $message = $this->_addCandidate();
             if(isset($message['error'])) {
                 $this->form->addElement('static', 'error', $message['error']);
@@ -334,6 +335,7 @@ class NDB_Menu_Filter_reliability extends NDB_Menu_Filter
     }
     
     function within_site_flagging($instrument, $ratio, $current_site, $db){
+        $phi_site_clause = '';
         if($current_site == "PHI" && ($instrument == "adi_r_subject" || $instrument == "adi_r_proband")){
           $phi_site_clause = " AND Date_taken >= '2009-11-11' ";
         }
@@ -379,10 +381,12 @@ class NDB_Menu_Filter_reliability extends NDB_Menu_Filter
         // in $reliability_sites.. so shuffle the array to eliminate the bias
         shuffle($reliability_sites);
         
+        $query_extra = '';
         if($instrument == "adi_r_subject"){
           $query_extra = " AND (s.visit_label='v24' OR s.visit_label='v36')";
         }
         
+        $phi_site_clause = '';
         if($current_site == "PHI" && ($instrument == "adi_r_subject" || $instrument == "adi_r_proband")){
           $phi_site_clause = " AND Date_taken >= '2009-11-11' ";
         }

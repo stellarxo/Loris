@@ -129,8 +129,8 @@ INSERT INTO test_battery VALUES ('', 'intervention_history', '1053', '1179', 'Y'
         // automatically adds examiner & date of administration
         $this->_addMetadataFields();
         $this->form->addElement("static", null, "<br/>");
-        $this->form->addElement("select", "q_respondent_$i", "Respondent", array(null=>'', 'mom'=>'Mom', 'dad'=>'Dad', "teacher"=>"Teacher", "other"=>"Other", "not_answered"=>"Not Answered"));
-        $this->addTextElement("respondent_other_$i", "Other respondent (please specify):", array("respondent_$i{@}=={@}other"));
+        $this->form->addElement("select", "q_respondent_", "Respondent", array(null=>'', 'mom'=>'Mom', 'dad'=>'Dad', "teacher"=>"Teacher", "other"=>"Other", "not_answered"=>"Not Answered"));
+        $this->addTextElement("respondent_other_", "Other respondent (please specify):", array("respondent_{@}=={@}other"));
         $this->form->addElement("static", null, "<br/>");
 
 

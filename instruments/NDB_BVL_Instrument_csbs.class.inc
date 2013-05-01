@@ -225,7 +225,7 @@ INSERT INTO instrument_subtests VALUES('', 'csbs', 'csbs_page2', 'Symbolic Behav
 	$group[]= &$this->form->createElement("static", "raw_weighted", null);
         $group[]= &$this->form->createElement("static", "standard_score", null);
         $group[]= &$this->form->createElement("static", "percentile_rank", null);
-  	$this->form->addGroup($group, null, Subscale, $this->_GUIDelimiter, false);
+  	$this->form->addGroup($group, null, 'Subscale', $this->_GUIDelimiter, false);
         unset($group);
 	
 
@@ -237,7 +237,7 @@ INSERT INTO instrument_subtests VALUES('', 'csbs', 'csbs_page2', 'Symbolic Behav
 
 	
 
-	$group[]= &$this->form->createElement("static", "communication_weighted", $scores['communication_weighted']);
+        $group[]= &$this->form->createElement("static", "communication_weighted", null);
         $group[]= &$this->form->createElement("static", "communication_standard", null);
         $group[]= &$this->form->createElement("static", "communication_percentile", null);
   	$this->form->addGroup($group, null, "Communication", $this->_GUIDelimiter, false);

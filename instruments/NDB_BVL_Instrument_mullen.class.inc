@@ -507,7 +507,7 @@ class NDB_BVL_Instrument_mullen extends NDB_BVL_Instrument
         if(!empty($dob) && !empty($record['Date_taken'])) {
             $age = Utility::calculateAge($dob, $record["Date_taken"]);
         } 
-        if(!$this->isError($age)) {
+        if(isset($age) && !$this->isError($age) && is_array($age)) {
           $age_months = $age['year'] * 12 + $age['mon'];
           $this->localDefaults = array_merge($this->localDefaults, array('age_months' => $age_months));
           $this->localDefaults = array_merge($this->localDefaults, $this->band_of_error($age_months));
@@ -608,7 +608,9 @@ class NDB_BVL_Instrument_mullen extends NDB_BVL_Instrument
           $this->form->addElement("static", 'composite_error_95', "95% Band of Error (+/-)");
 
          $this->form->addElement("header", null, "Gross Motor Scores");
-          if($this->localDefaults['age_months'] <= 33){
+          if(isset($this->localDefaults['age_months'])
+              && $this->localDefaults['age_months'] <= 33
+          ) {
              $this->form->addElement("static", 'gross_motor_raw', "Raw Score");
              $this->form->addElement("static", 'gross_motor_t', "T Score");
              $this->form->addElement("static", 'gross_motor_percentile', "Percentile");
@@ -1525,8 +1527,12 @@ class NDB_BVL_Instrument_mullen extends NDB_BVL_Instrument
         $db =& Database::singleton();
 
         $centerID = $db->pselectOne("SELECT session.CenterID FROM session, flag WHERE session.ID=flag.SessionID and flag.CommentID=:cmnt_id", array('cmnt_id'=>$this->getCommentID()));
+        if(is_array($centerID)) {
+            $centerID = null;
+        }
+        $candID = isset($_REQUEST['candID']) ? $_REQUEST['candID'] : '';
 
-         $project = $db->pselectOne("SELECT ProjectID from candidate where CandID =:cnd_id", array('cnd_id'=>$_REQUEST["candID"]));
+         $project = $db->pselectOne("SELECT ProjectID from candidate where CandID =:cnd_id", array('cnd_id'=>$candID));
          list($CertificationEnabled, $CertificationProjects, $CertificationInstruments) = $this->_getCertificationConfig();
 
          if($CertificationEnabled && in_array($project, $CertificationProjects)
