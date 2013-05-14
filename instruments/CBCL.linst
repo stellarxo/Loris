@@ -13,178 +13,178 @@ static{@}{@}<br />
 static{@}{@}Scores
 static{@}{@}<br />
 static{@}emotional_raw{@}Emotionally Reactive Raw Score
-static{@}emotional{@}Emotionally Reactive T Score
+static{@}emotional_t{@}Emotionally Reactive T Score
 static{@}emotional_perc{@}Emotionally Reactive Percentile
 static{@}anxious_raw{@}Anxious Depressed Raw Score
-static{@}anxious{@}Anxious Depressed T Score
+static{@}anxious_t{@}Anxious Depressed T Score
 static{@}anxious_perc{@}Anxious Depressed Percentile
 static{@}somatic_c_raw{@}Somatic Complaints Raw Score
 static{@}somatic_c{@}Somatic Complaints T Score
 static{@}somatic_c_perc{@}Somatic Complaints Percentile
 static{@}withdrawn_raw{@}Withdrawn Raw Score
-static{@}withdrawn{@}Withdrawn T Score
+static{@}withdrawn_t{@}Withdrawn T Score
 static{@}withdrawn_perc{@}Withdrawn Percentile
 static{@}sleep_raw{@}Sleep Problems Raw Score
-static{@}sleep{@}Sleep Problems T Score
+static{@}sleep_t{@}Sleep Problems T Score
 static{@}sleep_perc{@}Sleep Problems Percentile
 static{@}attention_raw{@}Attention Problems Raw Score
-static{@}attention{@}Attention Problems T Score
+static{@}attention_t{@}Attention Problems T Score
 static{@}attention_perc{@}Attention Problems Percentile
 static{@}aggressive_raw{@}Aggressive Behavior Raw Score
-static{@}aggressive{@}Aggressive Behavior T Score
+static{@}aggressive_t{@}Aggressive Behavior T Score
 static{@}aggressive_perc{@}Aggressive Behavior Percentile
 static{@}internal_raw{@}Internalizing Problems Raw Score
-static{@}internal{@}Internalizing Problems T Score
+static{@}internal_t{@}Internalizing Problems T Score
 static{@}internal_perc{@}Internalizing Problems Percentile
 static{@}external_raw{@}Externalizing Problems Raw Score
-static{@}external{@}Externalizing Problems T Score
+static{@}external_t{@}Externalizing Problems T Score
 static{@}external_perc{@}Externalizing Problems Percentile
 static{@}affective_raw{@}Affective Problems Raw Score
-static{@}affective{@}Affective Problems T Score
+static{@}affective_t{@}Affective Problems T Score
 static{@}affective_perc{@}Affective Problems Percentile
 static{@}anxiety_raw{@}Anxiety Problems Raw Score
-static{@}anxiety{@}Anxiety Problems T Score
+static{@}anxiety_t{@}Anxiety Problems T Score
 static{@}anxiety_perc{@}Anxiety Problems Percentile
 static{@}pervasive_raw{@}Pervasive Developmental Problems Raw Score
-static{@}pervasive{@}Pervasive Developmental Problems T Score
+static{@}pervasive_t{@}Pervasive Developmental Problems T Score
 static{@}pervasive_perc{@}Pervasive Developmental Problems Percentile
 static{@}adhd_raw{@}Attention Deficit/Hyperactivity Raw Score
-static{@}adhd{@}Attention Deficit/Hyperactivity T Score
+static{@}adhd_t{@}Attention Deficit/Hyperactivity T Score
 static{@}adhd_perc{@}Attention Deficit/Hyperactivity Percentile
 static{@}oppositional_raw{@}Oppositional Defiant Problems Raw Score
-static{@}oppositional{@}Oppositional Defiant Problems T Score
+static{@}oppositional_t{@}Oppositional Defiant Problems T Score
 static{@}oppositional_perc{@}Oppositional Defiant Problems Percentile
 static{@}total_raw{@}Total Problems Raw Score
-static{@}total{@}Total Problems T Score
+static{@}total_t{@}Total Problems T Score
 static{@}total_perc{@}Total Problems Percentile
 page{@}{@}Questions (Page 1 of 4)
 static{@}{@}<br />
-select{@}q_1{@}1. Aches or pains (without medical cause; do not include stomach or headaches){@}NULL=>''{-}'0_not_true'=>'0. Not True'{-}'1_somewhat_or_sometimes_true'=>'1. Somewhat or Sometimes True'{-}'2_very_true_or_often_true'=>'2. Very True or Often True'{-}'not_answered'=>'Not Answered'
-select{@}q_2{@}2. Acts too young for age{@}NULL=>''{-}'0_not_true'=>'0. Not True'{-}'1_somewhat_or_sometimes_true'=>'1. Somewhat or Sometimes True'{-}'2_very_true_or_often_true'=>'2. Very True or Often True'{-}'not_answered'=>'Not Answered'
-select{@}q_3{@}3. Afraid to try new things{@}NULL=>''{-}'0_not_true'=>'0. Not True'{-}'1_somewhat_or_sometimes_true'=>'1. Somewhat or Sometimes True'{-}'2_very_true_or_often_true'=>'2. Very True or Often True'{-}'not_answered'=>'Not Answered'
-select{@}q_4{@}4. Avoids looking others in the eye{@}NULL=>''{-}'0_not_true'=>'0. Not True'{-}'1_somewhat_or_sometimes_true'=>'1. Somewhat or Sometimes True'{-}'2_very_true_or_often_true'=>'2. Very True or Often True'{-}'not_answered'=>'Not Answered'
-select{@}q_5{@}5. Can't concentrate, can't pay attention for long{@}NULL=>''{-}'0_not_true'=>'0. Not True'{-}'1_somewhat_or_sometimes_true'=>'1. Somewhat or Sometimes True'{-}'2_very_true_or_often_true'=>'2. Very True or Often True'{-}'not_answered'=>'Not Answered'
-select{@}q_6{@}6. Can't sit still, restless, or hyperactive{@}NULL=>''{-}'0_not_true'=>'0. Not True'{-}'1_somewhat_or_sometimes_true'=>'1. Somewhat or Sometimes True'{-}'2_very_true_or_often_true'=>'2. Very True or Often True'{-}'not_answered'=>'Not Answered'
-select{@}q_7{@}7. Can't stand having things out of place{@}NULL=>''{-}'0_not_true'=>'0. Not True'{-}'1_somewhat_or_sometimes_true'=>'1. Somewhat or Sometimes True'{-}'2_very_true_or_often_true'=>'2. Very True or Often True'{-}'not_answered'=>'Not Answered'
-select{@}q_8{@}8. Can't stand waiting; wants everything now{@}NULL=>''{-}'0_not_true'=>'0. Not True'{-}'1_somewhat_or_sometimes_true'=>'1. Somewhat or Sometimes True'{-}'2_very_true_or_often_true'=>'2. Very True or Often True'{-}'not_answered'=>'Not Answered'
-select{@}q_9{@}9. Chews on things that aren't edible{@}NULL=>''{-}'0_not_true'=>'0. Not True'{-}'1_somewhat_or_sometimes_true'=>'1. Somewhat or Sometimes True'{-}'2_very_true_or_often_true'=>'2. Very True or Often True'{-}'not_answered'=>'Not Answered'
-select{@}q_10{@}10. Clings to adults or too dependent{@}NULL=>''{-}'0_not_true'=>'0. Not True'{-}'1_somewhat_or_sometimes_true'=>'1. Somewhat or Sometimes True'{-}'2_very_true_or_often_true'=>'2. Very True or Often True'{-}'not_answered'=>'Not Answered'
-select{@}q_11{@}11. Constantly seeks help{@}NULL=>''{-}'0_not_true'=>'0. Not True'{-}'1_somewhat_or_sometimes_true'=>'1. Somewhat or Sometimes True'{-}'2_very_true_or_often_true'=>'2. Very True or Often True'{-}'not_answered'=>'Not Answered'
-select{@}q_12{@}12. Constipated, doesn't move bowels (when not sick){@}NULL=>''{-}'0_not_true'=>'0. Not True'{-}'1_somewhat_or_sometimes_true'=>'1. Somewhat or Sometimes True'{-}'2_very_true_or_often_true'=>'2. Very True or Often True'{-}'not_answered'=>'Not Answered'
-select{@}q_13{@}13. Cries a lot{@}NULL=>''{-}'0_not_true'=>'0. Not True'{-}'1_somewhat_or_sometimes_true'=>'1. Somewhat or Sometimes True'{-}'2_very_true_or_often_true'=>'2. Very True or Often True'{-}'not_answered'=>'Not Answered'
-select{@}q_14{@}14. Cruel to animals{@}NULL=>''{-}'0_not_true'=>'0. Not True'{-}'1_somewhat_or_sometimes_true'=>'1. Somewhat or Sometimes True'{-}'2_very_true_or_often_true'=>'2. Very True or Often True'{-}'not_answered'=>'Not Answered'
-select{@}q_15{@}15. Defiant{@}NULL=>''{-}'0_not_true'=>'0. Not True'{-}'1_somewhat_or_sometimes_true'=>'1. Somewhat or Sometimes True'{-}'2_very_true_or_often_true'=>'2. Very True or Often True'{-}'not_answered'=>'Not Answered'
-select{@}q_16{@}16. Demands must be met immediately{@}NULL=>''{-}'0_not_true'=>'0. Not True'{-}'1_somewhat_or_sometimes_true'=>'1. Somewhat or Sometimes True'{-}'2_very_true_or_often_true'=>'2. Very True or Often True'{-}'not_answered'=>'Not Answered'
-select{@}q_17{@}17. Destroys his/her own things{@}NULL=>''{-}'0_not_true'=>'0. Not True'{-}'1_somewhat_or_sometimes_true'=>'1. Somewhat or Sometimes True'{-}'2_very_true_or_often_true'=>'2. Very True or Often True'{-}'not_answered'=>'Not Answered'
-select{@}q_18{@}18. Destroys things belonging to his/her family or other children{@}NULL=>''{-}'0_not_true'=>'0. Not True'{-}'1_somewhat_or_sometimes_true'=>'1. Somewhat or Sometimes True'{-}'2_very_true_or_often_true'=>'2. Very True or Often True'{-}'not_answered'=>'Not Answered'
-select{@}q_19{@}19. Diarrhea or loose bowels (when not sick){@}NULL=>''{-}'0_not_true'=>'0. Not True'{-}'1_somewhat_or_sometimes_true'=>'1. Somewhat or Sometimes True'{-}'2_very_true_or_often_true'=>'2. Very True or Often True'{-}'not_answered'=>'Not Answered'
-select{@}q_20{@}20. Disobedient{@}NULL=>''{-}'0_not_true'=>'0. Not True'{-}'1_somewhat_or_sometimes_true'=>'1. Somewhat or Sometimes True'{-}'2_very_true_or_often_true'=>'2. Very True or Often True'{-}'not_answered'=>'Not Answered'
-select{@}q_21{@}21. Disturbed by any change in routine{@}NULL=>''{-}'0_not_true'=>'0. Not True'{-}'1_somewhat_or_sometimes_true'=>'1. Somewhat or Sometimes True'{-}'2_very_true_or_often_true'=>'2. Very True or Often True'{-}'not_answered'=>'Not Answered'
-select{@}q_22{@}22. Doesn't want to sleep alone{@}NULL=>''{-}'0_not_true'=>'0. Not True'{-}'1_somewhat_or_sometimes_true'=>'1. Somewhat or Sometimes True'{-}'2_very_true_or_often_true'=>'2. Very True or Often True'{-}'not_answered'=>'Not Answered'
-select{@}q_23{@}23. Doesn't answer when people talk to him/her{@}NULL=>''{-}'0_not_true'=>'0. Not True'{-}'1_somewhat_or_sometimes_true'=>'1. Somewhat or Sometimes True'{-}'2_very_true_or_often_true'=>'2. Very True or Often True'{-}'not_answered'=>'Not Answered'
-select{@}q_24{@}24. Doesn't eat well{@}NULL=>''{-}'0_not_true'=>'0. Not True'{-}'1_somewhat_or_sometimes_true'=>'1. Somewhat or Sometimes True'{-}'2_very_true_or_often_true'=>'2. Very True or Often True'{-}'not_answered'=>'Not Answered'
-text{@}q_24_describe{@}Describe
-select{@}q_24_describe_status{@}{@}NULL=>''{-}'not_answered'=>'Not Answered'
-select{@}q_25{@}25. Doesn't get along with other children{@}NULL=>''{-}'0_not_true'=>'0. Not True'{-}'1_somewhat_or_sometimes_true'=>'1. Somewhat or Sometimes True'{-}'2_very_true_or_often_true'=>'2. Very True or Often True'{-}'not_answered'=>'Not Answered'
+select{@}q1_aches{@}1. Aches or pains (without medical cause; do not include stomach or headaches){@}NULL=>''{-}'0_not_true'=>'0. Not True'{-}'1_somewhat_or_sometimes_true'=>'1. Somewhat or Sometimes True'{-}'2_very_true_or_often_true'=>'2. Very True or Often True'{-}'not_answered'=>'Not Answered'
+select{@}q2_young{@}2. Acts too young for age{@}NULL=>''{-}'0_not_true'=>'0. Not True'{-}'1_somewhat_or_sometimes_true'=>'1. Somewhat or Sometimes True'{-}'2_very_true_or_often_true'=>'2. Very True or Often True'{-}'not_answered'=>'Not Answered'
+select{@}q3_afraid{@}3. Afraid to try new things{@}NULL=>''{-}'0_not_true'=>'0. Not True'{-}'1_somewhat_or_sometimes_true'=>'1. Somewhat or Sometimes True'{-}'2_very_true_or_often_true'=>'2. Very True or Often True'{-}'not_answered'=>'Not Answered'
+select{@}q4_eye{@}4. Avoids looking others in the eye{@}NULL=>''{-}'0_not_true'=>'0. Not True'{-}'1_somewhat_or_sometimes_true'=>'1. Somewhat or Sometimes True'{-}'2_very_true_or_often_true'=>'2. Very True or Often True'{-}'not_answered'=>'Not Answered'
+select{@}q5_attention{@}5. Can't concentrate, can't pay attention for long{@}NULL=>''{-}'0_not_true'=>'0. Not True'{-}'1_somewhat_or_sometimes_true'=>'1. Somewhat or Sometimes True'{-}'2_very_true_or_often_true'=>'2. Very True or Often True'{-}'not_answered'=>'Not Answered'
+select{@}q6_hyperactive{@}6. Can't sit still, restless, or hyperactive{@}NULL=>''{-}'0_not_true'=>'0. Not True'{-}'1_somewhat_or_sometimes_true'=>'1. Somewhat or Sometimes True'{-}'2_very_true_or_often_true'=>'2. Very True or Often True'{-}'not_answered'=>'Not Answered'
+select{@}q7_out{@}7. Can't stand having things out of place{@}NULL=>''{-}'0_not_true'=>'0. Not True'{-}'1_somewhat_or_sometimes_true'=>'1. Somewhat or Sometimes True'{-}'2_very_true_or_often_true'=>'2. Very True or Often True'{-}'not_answered'=>'Not Answered'
+select{@}q8_wait{@}8. Can't stand waiting; wants everything now{@}NULL=>''{-}'0_not_true'=>'0. Not True'{-}'1_somewhat_or_sometimes_true'=>'1. Somewhat or Sometimes True'{-}'2_very_true_or_often_true'=>'2. Very True or Often True'{-}'not_answered'=>'Not Answered'
+select{@}q9_chew{@}9. Chews on things that aren't edible{@}NULL=>''{-}'0_not_true'=>'0. Not True'{-}'1_somewhat_or_sometimes_true'=>'1. Somewhat or Sometimes True'{-}'2_very_true_or_often_true'=>'2. Very True or Often True'{-}'not_answered'=>'Not Answered'
+select{@}q10_dependent{@}10. Clings to adults or too dependent{@}NULL=>''{-}'0_not_true'=>'0. Not True'{-}'1_somewhat_or_sometimes_true'=>'1. Somewhat or Sometimes True'{-}'2_very_true_or_often_true'=>'2. Very True or Often True'{-}'not_answered'=>'Not Answered'
+select{@}q11_help{@}11. Constantly seeks help{@}NULL=>''{-}'0_not_true'=>'0. Not True'{-}'1_somewhat_or_sometimes_true'=>'1. Somewhat or Sometimes True'{-}'2_very_true_or_often_true'=>'2. Very True or Often True'{-}'not_answered'=>'Not Answered'
+select{@}q12_constipated{@}12. Constipated, doesn't move bowels (when not sick){@}NULL=>''{-}'0_not_true'=>'0. Not True'{-}'1_somewhat_or_sometimes_true'=>'1. Somewhat or Sometimes True'{-}'2_very_true_or_often_true'=>'2. Very True or Often True'{-}'not_answered'=>'Not Answered'
+select{@}q13_cries{@}13. Cries a lot{@}NULL=>''{-}'0_not_true'=>'0. Not True'{-}'1_somewhat_or_sometimes_true'=>'1. Somewhat or Sometimes True'{-}'2_very_true_or_often_true'=>'2. Very True or Often True'{-}'not_answered'=>'Not Answered'
+select{@}q14_cruel{@}14. Cruel to animals{@}NULL=>''{-}'0_not_true'=>'0. Not True'{-}'1_somewhat_or_sometimes_true'=>'1. Somewhat or Sometimes True'{-}'2_very_true_or_often_true'=>'2. Very True or Often True'{-}'not_answered'=>'Not Answered'
+select{@}q15_defiant{@}15. Defiant{@}NULL=>''{-}'0_not_true'=>'0. Not True'{-}'1_somewhat_or_sometimes_true'=>'1. Somewhat or Sometimes True'{-}'2_very_true_or_often_true'=>'2. Very True or Often True'{-}'not_answered'=>'Not Answered'
+select{@}q16_demands{@}16. Demands must be met immediately{@}NULL=>''{-}'0_not_true'=>'0. Not True'{-}'1_somewhat_or_sometimes_true'=>'1. Somewhat or Sometimes True'{-}'2_very_true_or_often_true'=>'2. Very True or Often True'{-}'not_answered'=>'Not Answered'
+select{@}q17_destroy{@}17. Destroys his/her own things{@}NULL=>''{-}'0_not_true'=>'0. Not True'{-}'1_somewhat_or_sometimes_true'=>'1. Somewhat or Sometimes True'{-}'2_very_true_or_often_true'=>'2. Very True or Often True'{-}'not_answered'=>'Not Answered'
+select{@}q18_destroy_other{@}18. Destroys things belonging to his/her family or other children{@}NULL=>''{-}'0_not_true'=>'0. Not True'{-}'1_somewhat_or_sometimes_true'=>'1. Somewhat or Sometimes True'{-}'2_very_true_or_often_true'=>'2. Very True or Often True'{-}'not_answered'=>'Not Answered'
+select{@}q19_diarrhea{@}19. Diarrhea or loose bowels (when not sick){@}NULL=>''{-}'0_not_true'=>'0. Not True'{-}'1_somewhat_or_sometimes_true'=>'1. Somewhat or Sometimes True'{-}'2_very_true_or_often_true'=>'2. Very True or Often True'{-}'not_answered'=>'Not Answered'
+select{@}q20_disobedient{@}20. Disobedient{@}NULL=>''{-}'0_not_true'=>'0. Not True'{-}'1_somewhat_or_sometimes_true'=>'1. Somewhat or Sometimes True'{-}'2_very_true_or_often_true'=>'2. Very True or Often True'{-}'not_answered'=>'Not Answered'
+select{@}q21_routine{@}21. Disturbed by any change in routine{@}NULL=>''{-}'0_not_true'=>'0. Not True'{-}'1_somewhat_or_sometimes_true'=>'1. Somewhat or Sometimes True'{-}'2_very_true_or_often_true'=>'2. Very True or Often True'{-}'not_answered'=>'Not Answered'
+select{@}q22_sleepalone{@}22. Doesn't want to sleep alone{@}NULL=>''{-}'0_not_true'=>'0. Not True'{-}'1_somewhat_or_sometimes_true'=>'1. Somewhat or Sometimes True'{-}'2_very_true_or_often_true'=>'2. Very True or Often True'{-}'not_answered'=>'Not Answered'
+select{@}q23_answer{@}23. Doesn't answer when people talk to him/her{@}NULL=>''{-}'0_not_true'=>'0. Not True'{-}'1_somewhat_or_sometimes_true'=>'1. Somewhat or Sometimes True'{-}'2_very_true_or_often_true'=>'2. Very True or Often True'{-}'not_answered'=>'Not Answered'
+select{@}q24_eat{@}24. Doesn't eat well{@}NULL=>''{-}'0_not_true'=>'0. Not True'{-}'1_somewhat_or_sometimes_true'=>'1. Somewhat or Sometimes True'{-}'2_very_true_or_often_true'=>'2. Very True or Often True'{-}'not_answered'=>'Not Answered'
+text{@}q24_eat_describe{@}Describe
+select{@}q24_eat_describe_status{@}{@}NULL=>''{-}'not_answered'=>'Not Answered'
+select{@}q25_getalong{@}25. Doesn't get along with other children{@}NULL=>''{-}'0_not_true'=>'0. Not True'{-}'1_somewhat_or_sometimes_true'=>'1. Somewhat or Sometimes True'{-}'2_very_true_or_often_true'=>'2. Very True or Often True'{-}'not_answered'=>'Not Answered'
 page{@}{@}Questions (Page 2 of 4)
 static{@}{@}<br />
-select{@}q_26{@}26. Doesn't know how to have fun; acts like a little adult{@}NULL=>''{-}'0_not_true'=>'0. Not True'{-}'1_somewhat_or_sometimes_true'=>'1. Somewhat or Sometimes True'{-}'2_very_true_or_often_true'=>'2. Very True or Often True'{-}'not_answered'=>'Not Answered'
-select{@}q_27{@}27. Doesn't seem to feel guilty after misbehaving{@}NULL=>''{-}'0_not_true'=>'0. Not True'{-}'1_somewhat_or_sometimes_true'=>'1. Somewhat or Sometimes True'{-}'2_very_true_or_often_true'=>'2. Very True or Often True'{-}'not_answered'=>'Not Answered'
-select{@}q_28{@}28. Doesn't want to go out of home{@}NULL=>''{-}'0_not_true'=>'0. Not True'{-}'1_somewhat_or_sometimes_true'=>'1. Somewhat or Sometimes True'{-}'2_very_true_or_often_true'=>'2. Very True or Often True'{-}'not_answered'=>'Not Answered'
-select{@}q_29{@}29. Easily frustrated{@}NULL=>''{-}'0_not_true'=>'0. Not True'{-}'1_somewhat_or_sometimes_true'=>'1. Somewhat or Sometimes True'{-}'2_very_true_or_often_true'=>'2. Very True or Often True'{-}'not_answered'=>'Not Answered'
-select{@}q_30{@}30. Easily jealous{@}NULL=>''{-}'0_not_true'=>'0. Not True'{-}'1_somewhat_or_sometimes_true'=>'1. Somewhat or Sometimes True'{-}'2_very_true_or_often_true'=>'2. Very True or Often True'{-}'not_answered'=>'Not Answered'
-select{@}q_31{@}31. Eats or drinks things that are not food (don't include sweets){@}NULL=>''{-}'0_not_true'=>'0. Not True'{-}'1_somewhat_or_sometimes_true'=>'1. Somewhat or Sometimes True'{-}'2_very_true_or_often_true'=>'2. Very True or Often True'{-}'not_answered'=>'Not Answered'
-text{@}q_31_describe{@}Describe
-select{@}q_31_describe_status{@}{@}NULL=>''{-}'not_answered'=>'Not Answered'
-select{@}q_32{@}32. Fears certain animals, situations, or places{@}NULL=>''{-}'0_not_true'=>'0. Not True'{-}'1_somewhat_or_sometimes_true'=>'1. Somewhat or Sometimes True'{-}'2_very_true_or_often_true'=>'2. Very True or Often True'{-}'not_answered'=>'Not Answered'
-text{@}q_32_describe{@}Describe
-select{@}q_32_describe_status{@}{@}NULL=>''{-}'not_answered'=>'Not Answered'
-select{@}q_33{@}33. Feelings are easily hurt{@}NULL=>''{-}'0_not_true'=>'0. Not True'{-}'1_somewhat_or_sometimes_true'=>'1. Somewhat or Sometimes True'{-}'2_very_true_or_often_true'=>'2. Very True or Often True'{-}'not_answered'=>'Not Answered'
-select{@}q_34{@}34. Gets hurt a lot, accident-prone{@}NULL=>''{-}'0_not_true'=>'0. Not True'{-}'1_somewhat_or_sometimes_true'=>'1. Somewhat or Sometimes True'{-}'2_very_true_or_often_true'=>'2. Very True or Often True'{-}'not_answered'=>'Not Answered'
-select{@}q_35{@}35. Gets in many fights{@}NULL=>''{-}'0_not_true'=>'0. Not True'{-}'1_somewhat_or_sometimes_true'=>'1. Somewhat or Sometimes True'{-}'2_very_true_or_often_true'=>'2. Very True or Often True'{-}'not_answered'=>'Not Answered'
-select{@}q_36{@}36. Gets into everything{@}NULL=>''{-}'0_not_true'=>'0. Not True'{-}'1_somewhat_or_sometimes_true'=>'1. Somewhat or Sometimes True'{-}'2_very_true_or_often_true'=>'2. Very True or Often True'{-}'not_answered'=>'Not Answered'
-select{@}q_37{@}37. Gets too upset when separated from parents{@}NULL=>''{-}'0_not_true'=>'0. Not True'{-}'1_somewhat_or_sometimes_true'=>'1. Somewhat or Sometimes True'{-}'2_very_true_or_often_true'=>'2. Very True or Often True'{-}'not_answered'=>'Not Answered'
-select{@}q_38{@}38. Has trouble getting to sleep{@}NULL=>''{-}'0_not_true'=>'0. Not True'{-}'1_somewhat_or_sometimes_true'=>'1. Somewhat or Sometimes True'{-}'2_very_true_or_often_true'=>'2. Very True or Often True'{-}'not_answered'=>'Not Answered'
-select{@}q_39{@}39. Headaches (without medical cause){@}NULL=>''{-}'0_not_true'=>'0. Not True'{-}'1_somewhat_or_sometimes_true'=>'1. Somewhat or Sometimes True'{-}'2_very_true_or_often_true'=>'2. Very True or Often True'{-}'not_answered'=>'Not Answered'
-select{@}q_40{@}40. Hits others{@}NULL=>''{-}'0_not_true'=>'0. Not True'{-}'1_somewhat_or_sometimes_true'=>'1. Somewhat or Sometimes True'{-}'2_very_true_or_often_true'=>'2. Very True or Often True'{-}'not_answered'=>'Not Answered'
-select{@}q_41{@}41. Holds his/her breath{@}NULL=>''{-}'0_not_true'=>'0. Not True'{-}'1_somewhat_or_sometimes_true'=>'1. Somewhat or Sometimes True'{-}'2_very_true_or_often_true'=>'2. Very True or Often True'{-}'not_answered'=>'Not Answered'
-select{@}q_42{@}42. Hurts animals or people without meaning to{@}NULL=>''{-}'0_not_true'=>'0. Not True'{-}'1_somewhat_or_sometimes_true'=>'1. Somewhat or Sometimes True'{-}'2_very_true_or_often_true'=>'2. Very True or Often True'{-}'not_answered'=>'Not Answered'
-select{@}q_43{@}43. Looks unhappy without good reason{@}NULL=>''{-}'0_not_true'=>'0. Not True'{-}'1_somewhat_or_sometimes_true'=>'1. Somewhat or Sometimes True'{-}'2_very_true_or_often_true'=>'2. Very True or Often True'{-}'not_answered'=>'Not Answered'
-select{@}q_44{@}44. Angry moods{@}NULL=>''{-}'0_not_true'=>'0. Not True'{-}'1_somewhat_or_sometimes_true'=>'1. Somewhat or Sometimes True'{-}'2_very_true_or_often_true'=>'2. Very True or Often True'{-}'not_answered'=>'Not Answered'
-select{@}q_45{@}45. Nausea, feels sick (without medical cause){@}NULL=>''{-}'0_not_true'=>'0. Not True'{-}'1_somewhat_or_sometimes_true'=>'1. Somewhat or Sometimes True'{-}'2_very_true_or_often_true'=>'2. Very True or Often True'{-}'not_answered'=>'Not Answered'
-select{@}q_46{@}46. Nervous movements or twitching{@}NULL=>''{-}'0_not_true'=>'0. Not True'{-}'1_somewhat_or_sometimes_true'=>'1. Somewhat or Sometimes True'{-}'2_very_true_or_often_true'=>'2. Very True or Often True'{-}'not_answered'=>'Not Answered'
-text{@}q_46_describe{@}Describe
-select{@}q_46_describe_status{@}{@}NULL=>''{-}'not_answered'=>'Not Answered'
-select{@}q_47{@}47. Nervous, highstrung, or tense{@}NULL=>''{-}'0_not_true'=>'0. Not True'{-}'1_somewhat_or_sometimes_true'=>'1. Somewhat or Sometimes True'{-}'2_very_true_or_often_true'=>'2. Very True or Often True'{-}'not_answered'=>'Not Answered'
-select{@}q_48{@}48. Nightmares{@}NULL=>''{-}'0_not_true'=>'0. Not True'{-}'1_somewhat_or_sometimes_true'=>'1. Somewhat or Sometimes True'{-}'2_very_true_or_often_true'=>'2. Very True or Often True'{-}'not_answered'=>'Not Answered'
-select{@}q_49{@}49. Overeating{@}NULL=>''{-}'0_not_true'=>'0. Not True'{-}'1_somewhat_or_sometimes_true'=>'1. Somewhat or Sometimes True'{-}'2_very_true_or_often_true'=>'2. Very True or Often True'{-}'not_answered'=>'Not Answered'
-select{@}q_50{@}50. Overtired{@}NULL=>''{-}'0_not_true'=>'0. Not True'{-}'1_somewhat_or_sometimes_true'=>'1. Somewhat or Sometimes True'{-}'2_very_true_or_often_true'=>'2. Very True or Often True'{-}'not_answered'=>'Not Answered'
+select{@}q26_fun{@}26. Doesn't know how to have fun; acts like a little adult{@}NULL=>''{-}'0_not_true'=>'0. Not True'{-}'1_somewhat_or_sometimes_true'=>'1. Somewhat or Sometimes True'{-}'2_very_true_or_often_true'=>'2. Very True or Often True'{-}'not_answered'=>'Not Answered'
+select{@}q27_guilty{@}27. Doesn't seem to feel guilty after misbehaving{@}NULL=>''{-}'0_not_true'=>'0. Not True'{-}'1_somewhat_or_sometimes_true'=>'1. Somewhat or Sometimes True'{-}'2_very_true_or_often_true'=>'2. Very True or Often True'{-}'not_answered'=>'Not Answered'
+select{@}q28_home{@}28. Doesn't want to go out of home{@}NULL=>''{-}'0_not_true'=>'0. Not True'{-}'1_somewhat_or_sometimes_true'=>'1. Somewhat or Sometimes True'{-}'2_very_true_or_often_true'=>'2. Very True or Often True'{-}'not_answered'=>'Not Answered'
+select{@}q29_frustrated{@}29. Easily frustrated{@}NULL=>''{-}'0_not_true'=>'0. Not True'{-}'1_somewhat_or_sometimes_true'=>'1. Somewhat or Sometimes True'{-}'2_very_true_or_often_true'=>'2. Very True or Often True'{-}'not_answered'=>'Not Answered'
+select{@}q30_jealous{@}30. Easily jealous{@}NULL=>''{-}'0_not_true'=>'0. Not True'{-}'1_somewhat_or_sometimes_true'=>'1. Somewhat or Sometimes True'{-}'2_very_true_or_often_true'=>'2. Very True or Often True'{-}'not_answered'=>'Not Answered'
+select{@}q31_eatdrink{@}31. Eats or drinks things that are not food (don't include sweets){@}NULL=>''{-}'0_not_true'=>'0. Not True'{-}'1_somewhat_or_sometimes_true'=>'1. Somewhat or Sometimes True'{-}'2_very_true_or_often_true'=>'2. Very True or Often True'{-}'not_answered'=>'Not Answered'
+text{@}q31_eatdrink_describe{@}Describe
+select{@}q31_eatdrink_describe_status{@}{@}NULL=>''{-}'not_answered'=>'Not Answered'
+select{@}q32_fear{@}32. Fears certain animals, situations, or places{@}NULL=>''{-}'0_not_true'=>'0. Not True'{-}'1_somewhat_or_sometimes_true'=>'1. Somewhat or Sometimes True'{-}'2_very_true_or_often_true'=>'2. Very True or Often True'{-}'not_answered'=>'Not Answered'
+text{@}q32_fear_describe{@}Describe
+select{@}q32_fear_describe_status{@}{@}NULL=>''{-}'not_answered'=>'Not Answered'
+select{@}q33_feelings{@}33. Feelings are easily hurt{@}NULL=>''{-}'0_not_true'=>'0. Not True'{-}'1_somewhat_or_sometimes_true'=>'1. Somewhat or Sometimes True'{-}'2_very_true_or_often_true'=>'2. Very True or Often True'{-}'not_answered'=>'Not Answered'
+select{@}q34_accident{@}34. Gets hurt a lot, accident-prone{@}NULL=>''{-}'0_not_true'=>'0. Not True'{-}'1_somewhat_or_sometimes_true'=>'1. Somewhat or Sometimes True'{-}'2_very_true_or_often_true'=>'2. Very True or Often True'{-}'not_answered'=>'Not Answered'
+select{@}q35_fights{@}35. Gets in many fights{@}NULL=>''{-}'0_not_true'=>'0. Not True'{-}'1_somewhat_or_sometimes_true'=>'1. Somewhat or Sometimes True'{-}'2_very_true_or_often_true'=>'2. Very True or Often True'{-}'not_answered'=>'Not Answered'
+select{@}q36_getsinto{@}36. Gets into everything{@}NULL=>''{-}'0_not_true'=>'0. Not True'{-}'1_somewhat_or_sometimes_true'=>'1. Somewhat or Sometimes True'{-}'2_very_true_or_often_true'=>'2. Very True or Often True'{-}'not_answered'=>'Not Answered'
+select{@}q37_upset{@}37. Gets too upset when separated from parents{@}NULL=>''{-}'0_not_true'=>'0. Not True'{-}'1_somewhat_or_sometimes_true'=>'1. Somewhat or Sometimes True'{-}'2_very_true_or_often_true'=>'2. Very True or Often True'{-}'not_answered'=>'Not Answered'
+select{@}q38_sleeptrouble{@}38. Has trouble getting to sleep{@}NULL=>''{-}'0_not_true'=>'0. Not True'{-}'1_somewhat_or_sometimes_true'=>'1. Somewhat or Sometimes True'{-}'2_very_true_or_often_true'=>'2. Very True or Often True'{-}'not_answered'=>'Not Answered'
+select{@}q39_headaches{@}39. Headaches (without medical cause){@}NULL=>''{-}'0_not_true'=>'0. Not True'{-}'1_somewhat_or_sometimes_true'=>'1. Somewhat or Sometimes True'{-}'2_very_true_or_often_true'=>'2. Very True or Often True'{-}'not_answered'=>'Not Answered'
+select{@}q40_hits{@}40. Hits others{@}NULL=>''{-}'0_not_true'=>'0. Not True'{-}'1_somewhat_or_sometimes_true'=>'1. Somewhat or Sometimes True'{-}'2_very_true_or_often_true'=>'2. Very True or Often True'{-}'not_answered'=>'Not Answered'
+select{@}q41_breath{@}41. Holds his/her breath{@}NULL=>''{-}'0_not_true'=>'0. Not True'{-}'1_somewhat_or_sometimes_true'=>'1. Somewhat or Sometimes True'{-}'2_very_true_or_often_true'=>'2. Very True or Often True'{-}'not_answered'=>'Not Answered'
+select{@}q42_hurts{@}42. Hurts animals or people without meaning to{@}NULL=>''{-}'0_not_true'=>'0. Not True'{-}'1_somewhat_or_sometimes_true'=>'1. Somewhat or Sometimes True'{-}'2_very_true_or_often_true'=>'2. Very True or Often True'{-}'not_answered'=>'Not Answered'
+select{@}q43_lookunhappy{@}43. Looks unhappy without good reason{@}NULL=>''{-}'0_not_true'=>'0. Not True'{-}'1_somewhat_or_sometimes_true'=>'1. Somewhat or Sometimes True'{-}'2_very_true_or_often_true'=>'2. Very True or Often True'{-}'not_answered'=>'Not Answered'
+select{@}q44_angry{@}44. Angry moods{@}NULL=>''{-}'0_not_true'=>'0. Not True'{-}'1_somewhat_or_sometimes_true'=>'1. Somewhat or Sometimes True'{-}'2_very_true_or_often_true'=>'2. Very True or Often True'{-}'not_answered'=>'Not Answered'
+select{@}q45_nausea{@}45. Nausea, feels sick (without medical cause){@}NULL=>''{-}'0_not_true'=>'0. Not True'{-}'1_somewhat_or_sometimes_true'=>'1. Somewhat or Sometimes True'{-}'2_very_true_or_often_true'=>'2. Very True or Often True'{-}'not_answered'=>'Not Answered'
+select{@}q46_nervmovement{@}46. Nervous movements or twitching{@}NULL=>''{-}'0_not_true'=>'0. Not True'{-}'1_somewhat_or_sometimes_true'=>'1. Somewhat or Sometimes True'{-}'2_very_true_or_often_true'=>'2. Very True or Often True'{-}'not_answered'=>'Not Answered'
+text{@}q46_nervmovement_describe{@}Describe
+select{@}q46_nervmovement_describe_status{@}{@}NULL=>''{-}'not_answered'=>'Not Answered'
+select{@}q47_nervous{@}47. Nervous, highstrung, or tense{@}NULL=>''{-}'0_not_true'=>'0. Not True'{-}'1_somewhat_or_sometimes_true'=>'1. Somewhat or Sometimes True'{-}'2_very_true_or_often_true'=>'2. Very True or Often True'{-}'not_answered'=>'Not Answered'
+select{@}q48_nightmares{@}48. Nightmares{@}NULL=>''{-}'0_not_true'=>'0. Not True'{-}'1_somewhat_or_sometimes_true'=>'1. Somewhat or Sometimes True'{-}'2_very_true_or_often_true'=>'2. Very True or Often True'{-}'not_answered'=>'Not Answered'
+select{@}q49_overeating{@}49. Overeating{@}NULL=>''{-}'0_not_true'=>'0. Not True'{-}'1_somewhat_or_sometimes_true'=>'1. Somewhat or Sometimes True'{-}'2_very_true_or_often_true'=>'2. Very True or Often True'{-}'not_answered'=>'Not Answered'
+select{@}q50_overtired{@}50. Overtired{@}NULL=>''{-}'0_not_true'=>'0. Not True'{-}'1_somewhat_or_sometimes_true'=>'1. Somewhat or Sometimes True'{-}'2_very_true_or_often_true'=>'2. Very True or Often True'{-}'not_answered'=>'Not Answered'
 page{@}{@}Questions (Page 3 of 4)
 static{@}{@}<br />
-select{@}q_51{@}51. Shows panic for no good reason{@}NULL=>''{-}'0_not_true'=>'0. Not True'{-}'1_somewhat_or_sometimes_true'=>'1. Somewhat or Sometimes True'{-}'2_very_true_or_often_true'=>'2. Very True or Often True'{-}'not_answered'=>'Not Answered'
-select{@}q_52{@}52. Painful bowel movements (without medical cause){@}NULL=>''{-}'0_not_true'=>'0. Not True'{-}'1_somewhat_or_sometimes_true'=>'1. Somewhat or Sometimes True'{-}'2_very_true_or_often_true'=>'2. Very True or Often True'{-}'not_answered'=>'Not Answered'
-select{@}q_53{@}53. Physically attacks people{@}NULL=>''{-}'0_not_true'=>'0. Not True'{-}'1_somewhat_or_sometimes_true'=>'1. Somewhat or Sometimes True'{-}'2_very_true_or_often_true'=>'2. Very True or Often True'{-}'not_answered'=>'Not Answered'
-select{@}q_54{@}54. Picks nose, skin, or other parts of body{@}NULL=>''{-}'0_not_true'=>'0. Not True'{-}'1_somewhat_or_sometimes_true'=>'1. Somewhat or Sometimes True'{-}'2_very_true_or_often_true'=>'2. Very True or Often True'{-}'not_answered'=>'Not Answered'
-text{@}q_54_describe{@}Describe
-select{@}q_54_describe_status{@}{@}NULL=>''{-}'not_answered'=>'Not Answered'
-select{@}q_55{@}55. Plays with own sex parts too much{@}NULL=>''{-}'0_not_true'=>'0. Not True'{-}'1_somewhat_or_sometimes_true'=>'1. Somewhat or Sometimes True'{-}'2_very_true_or_often_true'=>'2. Very True or Often True'{-}'not_answered'=>'Not Answered'
-select{@}q_56{@}56. Poorly coordinated or clumsy{@}NULL=>''{-}'0_not_true'=>'0. Not True'{-}'1_somewhat_or_sometimes_true'=>'1. Somewhat or Sometimes True'{-}'2_very_true_or_often_true'=>'2. Very True or Often True'{-}'not_answered'=>'Not Answered'
-select{@}q_57{@}57. Problems with eyes (without medical cause){@}NULL=>''{-}'0_not_true'=>'0. Not True'{-}'1_somewhat_or_sometimes_true'=>'1. Somewhat or Sometimes True'{-}'2_very_true_or_often_true'=>'2. Very True or Often True'{-}'not_answered'=>'Not Answered'
-text{@}q_57_describe{@}Describe
-select{@}q_57_describe_status{@}{@}NULL=>''{-}'not_answered'=>'Not Answered'
-select{@}q_58{@}58. Punishment doesn't change his/her behavior{@}NULL=>''{-}'0_not_true'=>'0. Not True'{-}'1_somewhat_or_sometimes_true'=>'1. Somewhat or Sometimes True'{-}'2_very_true_or_often_true'=>'2. Very True or Often True'{-}'not_answered'=>'Not Answered'
-select{@}q_59{@}59. Quickly shifts from one activity to another{@}NULL=>''{-}'0_not_true'=>'0. Not True'{-}'1_somewhat_or_sometimes_true'=>'1. Somewhat or Sometimes True'{-}'2_very_true_or_often_true'=>'2. Very True or Often True'{-}'not_answered'=>'Not Answered'
-select{@}q_60{@}60. Rashes or other skin problems (without medical cause){@}NULL=>''{-}'0_not_true'=>'0. Not True'{-}'1_somewhat_or_sometimes_true'=>'1. Somewhat or Sometimes True'{-}'2_very_true_or_often_true'=>'2. Very True or Often True'{-}'not_answered'=>'Not Answered'
-select{@}q_61{@}61. Refuses to eat{@}NULL=>''{-}'0_not_true'=>'0. Not True'{-}'1_somewhat_or_sometimes_true'=>'1. Somewhat or Sometimes True'{-}'2_very_true_or_often_true'=>'2. Very True or Often True'{-}'not_answered'=>'Not Answered'
-select{@}q_62{@}62. Refuses to play active games{@}NULL=>''{-}'0_not_true'=>'0. Not True'{-}'1_somewhat_or_sometimes_true'=>'1. Somewhat or Sometimes True'{-}'2_very_true_or_often_true'=>'2. Very True or Often True'{-}'not_answered'=>'Not Answered'
-select{@}q_63{@}63. Repeatedly rocks head or body{@}NULL=>''{-}'0_not_true'=>'0. Not True'{-}'1_somewhat_or_sometimes_true'=>'1. Somewhat or Sometimes True'{-}'2_very_true_or_often_true'=>'2. Very True or Often True'{-}'not_answered'=>'Not Answered'
-select{@}q_64{@}64. Resists going to bed at night{@}NULL=>''{-}'0_not_true'=>'0. Not True'{-}'1_somewhat_or_sometimes_true'=>'1. Somewhat or Sometimes True'{-}'2_very_true_or_often_true'=>'2. Very True or Often True'{-}'not_answered'=>'Not Answered'
-select{@}q_65{@}65. Resists toilet training{@}NULL=>''{-}'0_not_true'=>'0. Not True'{-}'1_somewhat_or_sometimes_true'=>'1. Somewhat or Sometimes True'{-}'2_very_true_or_often_true'=>'2. Very True or Often True'{-}'not_answered'=>'Not Answered'
-text{@}q_65_describe{@}Describe
-select{@}q_65_describe_status{@}{@}NULL=>''{-}'not_answered'=>'Not Answered'
-select{@}q_66{@}66. Screams a lot{@}NULL=>''{-}'0_not_true'=>'0. Not True'{-}'1_somewhat_or_sometimes_true'=>'1. Somewhat or Sometimes True'{-}'2_very_true_or_often_true'=>'2. Very True or Often True'{-}'not_answered'=>'Not Answered'
-select{@}q_67{@}67. Seems unresponsive to affection{@}NULL=>''{-}'0_not_true'=>'0. Not True'{-}'1_somewhat_or_sometimes_true'=>'1. Somewhat or Sometimes True'{-}'2_very_true_or_often_true'=>'2. Very True or Often True'{-}'not_answered'=>'Not Answered'
-select{@}q_68{@}68. Self-conscious or easily embarrassed{@}NULL=>''{-}'0_not_true'=>'0. Not True'{-}'1_somewhat_or_sometimes_true'=>'1. Somewhat or Sometimes True'{-}'2_very_true_or_often_true'=>'2. Very True or Often True'{-}'not_answered'=>'Not Answered'
-select{@}q_69{@}69. Selfish or won't share{@}NULL=>''{-}'0_not_true'=>'0. Not True'{-}'1_somewhat_or_sometimes_true'=>'1. Somewhat or Sometimes True'{-}'2_very_true_or_often_true'=>'2. Very True or Often True'{-}'not_answered'=>'Not Answered'
-select{@}q_70{@}70. Shows little affection toward people{@}NULL=>''{-}'0_not_true'=>'0. Not True'{-}'1_somewhat_or_sometimes_true'=>'1. Somewhat or Sometimes True'{-}'2_very_true_or_often_true'=>'2. Very True or Often True'{-}'not_answered'=>'Not Answered'
-select{@}q_71{@}71. Shows little interest in things around him/her{@}NULL=>''{-}'0_not_true'=>'0. Not True'{-}'1_somewhat_or_sometimes_true'=>'1. Somewhat or Sometimes True'{-}'2_very_true_or_often_true'=>'2. Very True or Often True'{-}'not_answered'=>'Not Answered'
-select{@}q_72{@}72. Shows too little fear of getting hurt{@}NULL=>''{-}'0_not_true'=>'0. Not True'{-}'1_somewhat_or_sometimes_true'=>'1. Somewhat or Sometimes True'{-}'2_very_true_or_often_true'=>'2. Very True or Often True'{-}'not_answered'=>'Not Answered'
-select{@}q_73{@}73. Too shy or timid{@}NULL=>''{-}'0_not_true'=>'0. Not True'{-}'1_somewhat_or_sometimes_true'=>'1. Somewhat or Sometimes True'{-}'2_very_true_or_often_true'=>'2. Very True or Often True'{-}'not_answered'=>'Not Answered'
-select{@}q_74{@}74. Sleeps less than most kids during day and/or night{@}NULL=>''{-}'0_not_true'=>'0. Not True'{-}'1_somewhat_or_sometimes_true'=>'1. Somewhat or Sometimes True'{-}'2_very_true_or_often_true'=>'2. Very True or Often True'{-}'not_answered'=>'Not Answered'
-text{@}q_74_describe{@}Describe
-select{@}q_74_describe_status{@}{@}NULL=>''{-}'not_answered'=>'Not Answered'
-select{@}q_75{@}75. Smears or plays with bowel movements{@}NULL=>''{-}'0_not_true'=>'0. Not True'{-}'1_somewhat_or_sometimes_true'=>'1. Somewhat or Sometimes True'{-}'2_very_true_or_often_true'=>'2. Very True or Often True'{-}'not_answered'=>'Not Answered'
+select{@}q51_panic{@}51. Shows panic for no good reason{@}NULL=>''{-}'0_not_true'=>'0. Not True'{-}'1_somewhat_or_sometimes_true'=>'1. Somewhat or Sometimes True'{-}'2_very_true_or_often_true'=>'2. Very True or Often True'{-}'not_answered'=>'Not Answered'
+select{@}q52_painbowel{@}52. Painful bowel movements (without medical cause){@}NULL=>''{-}'0_not_true'=>'0. Not True'{-}'1_somewhat_or_sometimes_true'=>'1. Somewhat or Sometimes True'{-}'2_very_true_or_often_true'=>'2. Very True or Often True'{-}'not_answered'=>'Not Answered'
+select{@}q53_attack{@}53. Physically attacks people{@}NULL=>''{-}'0_not_true'=>'0. Not True'{-}'1_somewhat_or_sometimes_true'=>'1. Somewhat or Sometimes True'{-}'2_very_true_or_often_true'=>'2. Very True or Often True'{-}'not_answered'=>'Not Answered'
+select{@}q54_picks{@}54. Picks nose, skin, or other parts of body{@}NULL=>''{-}'0_not_true'=>'0. Not True'{-}'1_somewhat_or_sometimes_true'=>'1. Somewhat or Sometimes True'{-}'2_very_true_or_often_true'=>'2. Very True or Often True'{-}'not_answered'=>'Not Answered'
+text{@}q54_picks_describe{@}Describe
+select{@}q54_picks_describe_status{@}{@}NULL=>''{-}'not_answered'=>'Not Answered'
+select{@}q55_sex{@}55. Plays with own sex parts too much{@}NULL=>''{-}'0_not_true'=>'0. Not True'{-}'1_somewhat_or_sometimes_true'=>'1. Somewhat or Sometimes True'{-}'2_very_true_or_often_true'=>'2. Very True or Often True'{-}'not_answered'=>'Not Answered'
+select{@}q56_clumsy{@}56. Poorly coordinated or clumsy{@}NULL=>''{-}'0_not_true'=>'0. Not True'{-}'1_somewhat_or_sometimes_true'=>'1. Somewhat or Sometimes True'{-}'2_very_true_or_often_true'=>'2. Very True or Often True'{-}'not_answered'=>'Not Answered'
+select{@}q57_eyeprob{@}57. Problems with eyes (without medical cause){@}NULL=>''{-}'0_not_true'=>'0. Not True'{-}'1_somewhat_or_sometimes_true'=>'1. Somewhat or Sometimes True'{-}'2_very_true_or_often_true'=>'2. Very True or Often True'{-}'not_answered'=>'Not Answered'
+text{@}q57_eyeprob_describe{@}Describe
+select{@}q57_eyeprob_describe_status{@}{@}NULL=>''{-}'not_answered'=>'Not Answered'
+select{@}q58_punishment{@}58. Punishment doesn't change his/her behavior{@}NULL=>''{-}'0_not_true'=>'0. Not True'{-}'1_somewhat_or_sometimes_true'=>'1. Somewhat or Sometimes True'{-}'2_very_true_or_often_true'=>'2. Very True or Often True'{-}'not_answered'=>'Not Answered'
+select{@}q59_shifts{@}59. Quickly shifts from one activity to another{@}NULL=>''{-}'0_not_true'=>'0. Not True'{-}'1_somewhat_or_sometimes_true'=>'1. Somewhat or Sometimes True'{-}'2_very_true_or_often_true'=>'2. Very True or Often True'{-}'not_answered'=>'Not Answered'
+select{@}q60_skin{@}60. Rashes or other skin problems (without medical cause){@}NULL=>''{-}'0_not_true'=>'0. Not True'{-}'1_somewhat_or_sometimes_true'=>'1. Somewhat or Sometimes True'{-}'2_very_true_or_often_true'=>'2. Very True or Often True'{-}'not_answered'=>'Not Answered'
+select{@}q61_refuseeat{@}61. Refuses to eat{@}NULL=>''{-}'0_not_true'=>'0. Not True'{-}'1_somewhat_or_sometimes_true'=>'1. Somewhat or Sometimes True'{-}'2_very_true_or_often_true'=>'2. Very True or Often True'{-}'not_answered'=>'Not Answered'
+select{@}q62_refuseplay{@}62. Refuses to play active games{@}NULL=>''{-}'0_not_true'=>'0. Not True'{-}'1_somewhat_or_sometimes_true'=>'1. Somewhat or Sometimes True'{-}'2_very_true_or_often_true'=>'2. Very True or Often True'{-}'not_answered'=>'Not Answered'
+select{@}q63_rocks{@}63. Repeatedly rocks head or body{@}NULL=>''{-}'0_not_true'=>'0. Not True'{-}'1_somewhat_or_sometimes_true'=>'1. Somewhat or Sometimes True'{-}'2_very_true_or_often_true'=>'2. Very True or Often True'{-}'not_answered'=>'Not Answered'
+select{@}q64_resbed{@}64. Resists going to bed at night{@}NULL=>''{-}'0_not_true'=>'0. Not True'{-}'1_somewhat_or_sometimes_true'=>'1. Somewhat or Sometimes True'{-}'2_very_true_or_often_true'=>'2. Very True or Often True'{-}'not_answered'=>'Not Answered'
+select{@}q65_restoilet{@}65. Resists toilet training{@}NULL=>''{-}'0_not_true'=>'0. Not True'{-}'1_somewhat_or_sometimes_true'=>'1. Somewhat or Sometimes True'{-}'2_very_true_or_often_true'=>'2. Very True or Often True'{-}'not_answered'=>'Not Answered'
+text{@}q65_restoilet_describe{@}Describe
+select{@}q65_restoilet_describe_status{@}{@}NULL=>''{-}'not_answered'=>'Not Answered'
+select{@}q66_screams{@}66. Screams a lot{@}NULL=>''{-}'0_not_true'=>'0. Not True'{-}'1_somewhat_or_sometimes_true'=>'1. Somewhat or Sometimes True'{-}'2_very_true_or_often_true'=>'2. Very True or Often True'{-}'not_answered'=>'Not Answered'
+select{@}q67_unresponsive{@}67. Seems unresponsive to affection{@}NULL=>''{-}'0_not_true'=>'0. Not True'{-}'1_somewhat_or_sometimes_true'=>'1. Somewhat or Sometimes True'{-}'2_very_true_or_often_true'=>'2. Very True or Often True'{-}'not_answered'=>'Not Answered'
+select{@}q68_selfconscious{@}68. Self-conscious or easily embarrassed{@}NULL=>''{-}'0_not_true'=>'0. Not True'{-}'1_somewhat_or_sometimes_true'=>'1. Somewhat or Sometimes True'{-}'2_very_true_or_often_true'=>'2. Very True or Often True'{-}'not_answered'=>'Not Answered'
+select{@}q69_selfish{@}69. Selfish or won't share{@}NULL=>''{-}'0_not_true'=>'0. Not True'{-}'1_somewhat_or_sometimes_true'=>'1. Somewhat or Sometimes True'{-}'2_very_true_or_often_true'=>'2. Very True or Often True'{-}'not_answered'=>'Not Answered'
+select{@}q70_litaffection{@}70. Shows little affection toward people{@}NULL=>''{-}'0_not_true'=>'0. Not True'{-}'1_somewhat_or_sometimes_true'=>'1. Somewhat or Sometimes True'{-}'2_very_true_or_often_true'=>'2. Very True or Often True'{-}'not_answered'=>'Not Answered'
+select{@}q71_litinterest{@}71. Shows little interest in things around him/her{@}NULL=>''{-}'0_not_true'=>'0. Not True'{-}'1_somewhat_or_sometimes_true'=>'1. Somewhat or Sometimes True'{-}'2_very_true_or_often_true'=>'2. Very True or Often True'{-}'not_answered'=>'Not Answered'
+select{@}q72_litfear{@}72. Shows too little fear of getting hurt{@}NULL=>''{-}'0_not_true'=>'0. Not True'{-}'1_somewhat_or_sometimes_true'=>'1. Somewhat or Sometimes True'{-}'2_very_true_or_often_true'=>'2. Very True or Often True'{-}'not_answered'=>'Not Answered'
+select{@}q73_shy{@}73. Too shy or timid{@}NULL=>''{-}'0_not_true'=>'0. Not True'{-}'1_somewhat_or_sometimes_true'=>'1. Somewhat or Sometimes True'{-}'2_very_true_or_often_true'=>'2. Very True or Often True'{-}'not_answered'=>'Not Answered'
+select{@}q74_sleepless{@}74. Sleeps less than most kids during day and/or night{@}NULL=>''{-}'0_not_true'=>'0. Not True'{-}'1_somewhat_or_sometimes_true'=>'1. Somewhat or Sometimes True'{-}'2_very_true_or_often_true'=>'2. Very True or Often True'{-}'not_answered'=>'Not Answered'
+text{@}q74_sleepless_describe{@}Describe
+select{@}q74_sleepless_describe_status{@}{@}NULL=>''{-}'not_answered'=>'Not Answered'
+select{@}q75_bowelplay{@}75. Smears or plays with bowel movements{@}NULL=>''{-}'0_not_true'=>'0. Not True'{-}'1_somewhat_or_sometimes_true'=>'1. Somewhat or Sometimes True'{-}'2_very_true_or_often_true'=>'2. Very True or Often True'{-}'not_answered'=>'Not Answered'
 page{@}{@}Questions (Page 4 of 4)
 static{@}{@}<br />
-select{@}q_76{@}76. Speech problem{@}NULL=>''{-}'0_not_true'=>'0. Not True'{-}'1_somewhat_or_sometimes_true'=>'1. Somewhat or Sometimes True'{-}'2_very_true_or_often_true'=>'2. Very True or Often True'{-}'not_answered'=>'Not Answered'
-text{@}q_76_describe{@}Describe
-select{@}q_76_describe_status{@}{@}NULL=>''{-}'not_answered'=>'Not Answered'
-select{@}q_77{@}77. Stares into space or seems preoccupied{@}NULL=>''{-}'0_not_true'=>'0. Not True'{-}'1_somewhat_or_sometimes_true'=>'1. Somewhat or Sometimes True'{-}'2_very_true_or_often_true'=>'2. Very True or Often True'{-}'not_answered'=>'Not Answered'
-select{@}q_78{@}78. Stomachaches or cramps (without medical cause){@}NULL=>''{-}'0_not_true'=>'0. Not True'{-}'1_somewhat_or_sometimes_true'=>'1. Somewhat or Sometimes True'{-}'2_very_true_or_often_true'=>'2. Very True or Often True'{-}'not_answered'=>'Not Answered'
-select{@}q_79{@}79. Rapid shifts between sadness and excitement{@}NULL=>''{-}'0_not_true'=>'0. Not True'{-}'1_somewhat_or_sometimes_true'=>'1. Somewhat or Sometimes True'{-}'2_very_true_or_often_true'=>'2. Very True or Often True'{-}'not_answered'=>'Not Answered'
-select{@}q_80{@}80. Strange behavior{@}NULL=>''{-}'0_not_true'=>'0. Not True'{-}'1_somewhat_or_sometimes_true'=>'1. Somewhat or Sometimes True'{-}'2_very_true_or_often_true'=>'2. Very True or Often True'{-}'not_answered'=>'Not Answered'
-text{@}q_80_describe{@}Describe
-select{@}q_80_describe_status{@}{@}NULL=>''{-}'not_answered'=>'Not Answered'
-select{@}q_81{@}81. Stubborn, sullen, or irritable{@}NULL=>''{-}'0_not_true'=>'0. Not True'{-}'1_somewhat_or_sometimes_true'=>'1. Somewhat or Sometimes True'{-}'2_very_true_or_often_true'=>'2. Very True or Often True'{-}'not_answered'=>'Not Answered'
-select{@}q_82{@}82. Sudden changes in mood or feelings{@}NULL=>''{-}'0_not_true'=>'0. Not True'{-}'1_somewhat_or_sometimes_true'=>'1. Somewhat or Sometimes True'{-}'2_very_true_or_often_true'=>'2. Very True or Often True'{-}'not_answered'=>'Not Answered'
-select{@}q_83{@}83. Sulks a lot{@}NULL=>''{-}'0_not_true'=>'0. Not True'{-}'1_somewhat_or_sometimes_true'=>'1. Somewhat or Sometimes True'{-}'2_very_true_or_often_true'=>'2. Very True or Often True'{-}'not_answered'=>'Not Answered'
-select{@}q_84{@}84. Talks or cries out in sleep{@}NULL=>''{-}'0_not_true'=>'0. Not True'{-}'1_somewhat_or_sometimes_true'=>'1. Somewhat or Sometimes True'{-}'2_very_true_or_often_true'=>'2. Very True or Often True'{-}'not_answered'=>'Not Answered'
-select{@}q_85{@}85. Temper tantrums or hot temper{@}NULL=>''{-}'0_not_true'=>'0. Not True'{-}'1_somewhat_or_sometimes_true'=>'1. Somewhat or Sometimes True'{-}'2_very_true_or_often_true'=>'2. Very True or Often True'{-}'not_answered'=>'Not Answered'
-select{@}q_86{@}86. Too concerned with neatness or cleanliness{@}NULL=>''{-}'0_not_true'=>'0. Not True'{-}'1_somewhat_or_sometimes_true'=>'1. Somewhat or Sometimes True'{-}'2_very_true_or_often_true'=>'2. Very True or Often True'{-}'not_answered'=>'Not Answered'
-select{@}q_87{@}87. Too fearful or anxious{@}NULL=>''{-}'0_not_true'=>'0. Not True'{-}'1_somewhat_or_sometimes_true'=>'1. Somewhat or Sometimes True'{-}'2_very_true_or_often_true'=>'2. Very True or Often True'{-}'not_answered'=>'Not Answered'
-select{@}q_88{@}88. Uncooperative{@}NULL=>''{-}'0_not_true'=>'0. Not True'{-}'1_somewhat_or_sometimes_true'=>'1. Somewhat or Sometimes True'{-}'2_very_true_or_often_true'=>'2. Very True or Often True'{-}'not_answered'=>'Not Answered'
-select{@}q_89{@}89. Underactive, slow moving, or lacks energy{@}NULL=>''{-}'0_not_true'=>'0. Not True'{-}'1_somewhat_or_sometimes_true'=>'1. Somewhat or Sometimes True'{-}'2_very_true_or_often_true'=>'2. Very True or Often True'{-}'not_answered'=>'Not Answered'
-select{@}q_90{@}90. Unhappy, sad, or depressed{@}NULL=>''{-}'0_not_true'=>'0. Not True'{-}'1_somewhat_or_sometimes_true'=>'1. Somewhat or Sometimes True'{-}'2_very_true_or_often_true'=>'2. Very True or Often True'{-}'not_answered'=>'Not Answered'
-select{@}q_91{@}91. Unusually loud{@}NULL=>''{-}'0_not_true'=>'0. Not True'{-}'1_somewhat_or_sometimes_true'=>'1. Somewhat or Sometimes True'{-}'2_very_true_or_often_true'=>'2. Very True or Often True'{-}'not_answered'=>'Not Answered'
-select{@}q_92{@}92. Upset by new people or situations{@}NULL=>''{-}'0_not_true'=>'0. Not True'{-}'1_somewhat_or_sometimes_true'=>'1. Somewhat or Sometimes True'{-}'2_very_true_or_often_true'=>'2. Very True or Often True'{-}'not_answered'=>'Not Answered'
-text{@}q_92_describe{@}Describe
-select{@}q_92_describe_status{@}{@}NULL=>''{-}'not_answered'=>'Not Answered'
-select{@}q_93{@}93. Vomiting, throwing up (without medical cause){@}NULL=>''{-}'0_not_true'=>'0. Not True'{-}'1_somewhat_or_sometimes_true'=>'1. Somewhat or Sometimes True'{-}'2_very_true_or_often_true'=>'2. Very True or Often True'{-}'not_answered'=>'Not Answered'
-select{@}q_94{@}94. Wakes up often at night{@}NULL=>''{-}'0_not_true'=>'0. Not True'{-}'1_somewhat_or_sometimes_true'=>'1. Somewhat or Sometimes True'{-}'2_very_true_or_often_true'=>'2. Very True or Often True'{-}'not_answered'=>'Not Answered'
-select{@}q_95{@}95. Wanders away{@}NULL=>''{-}'0_not_true'=>'0. Not True'{-}'1_somewhat_or_sometimes_true'=>'1. Somewhat or Sometimes True'{-}'2_very_true_or_often_true'=>'2. Very True or Often True'{-}'not_answered'=>'Not Answered'
-select{@}q_96{@}96. Wants a lot of attention{@}NULL=>''{-}'0_not_true'=>'0. Not True'{-}'1_somewhat_or_sometimes_true'=>'1. Somewhat or Sometimes True'{-}'2_very_true_or_often_true'=>'2. Very True or Often True'{-}'not_answered'=>'Not Answered'
-select{@}q_97{@}97. Whining{@}NULL=>''{-}'0_not_true'=>'0. Not True'{-}'1_somewhat_or_sometimes_true'=>'1. Somewhat or Sometimes True'{-}'2_very_true_or_often_true'=>'2. Very True or Often True'{-}'not_answered'=>'Not Answered'
-select{@}q_98{@}98. Withdrawn, doesn't get involved with others{@}NULL=>''{-}'0_not_true'=>'0. Not True'{-}'1_somewhat_or_sometimes_true'=>'1. Somewhat or Sometimes True'{-}'2_very_true_or_often_true'=>'2. Very True or Often True'{-}'not_answered'=>'Not Answered'
-select{@}q_99{@}99. Worries{@}NULL=>''{-}'0_not_true'=>'0. Not True'{-}'1_somewhat_or_sometimes_true'=>'1. Somewhat or Sometimes True'{-}'2_very_true_or_often_true'=>'2. Very True or Often True'{-}'not_answered'=>'Not Answered'
-text{@}q_100{@}100. Please write in any problems the child has that were not listed above
-select{@}q_100_status{@}{@}NULL=>''{-}'not_answered'=>'Not Answered'
+select{@}q76_speech{@}76. Speech problem{@}NULL=>''{-}'0_not_true'=>'0. Not True'{-}'1_somewhat_or_sometimes_true'=>'1. Somewhat or Sometimes True'{-}'2_very_true_or_often_true'=>'2. Very True or Often True'{-}'not_answered'=>'Not Answered'
+text{@}q76_speech_describe{@}Describe
+select{@}q76_speech_describe_status{@}{@}NULL=>''{-}'not_answered'=>'Not Answered'
+select{@}q77_preoccupied{@}77. Stares into space or seems preoccupied{@}NULL=>''{-}'0_not_true'=>'0. Not True'{-}'1_somewhat_or_sometimes_true'=>'1. Somewhat or Sometimes True'{-}'2_very_true_or_often_true'=>'2. Very True or Often True'{-}'not_answered'=>'Not Answered'
+select{@}q78_stomachaches{@}78. Stomachaches or cramps (without medical cause){@}NULL=>''{-}'0_not_true'=>'0. Not True'{-}'1_somewhat_or_sometimes_true'=>'1. Somewhat or Sometimes True'{-}'2_very_true_or_often_true'=>'2. Very True or Often True'{-}'not_answered'=>'Not Answered'
+select{@}q79_rapidshifts{@}79. Rapid shifts between sadness and excitement{@}NULL=>''{-}'0_not_true'=>'0. Not True'{-}'1_somewhat_or_sometimes_true'=>'1. Somewhat or Sometimes True'{-}'2_very_true_or_often_true'=>'2. Very True or Often True'{-}'not_answered'=>'Not Answered'
+select{@}q80_strange{@}80. Strange behavior{@}NULL=>''{-}'0_not_true'=>'0. Not True'{-}'1_somewhat_or_sometimes_true'=>'1. Somewhat or Sometimes True'{-}'2_very_true_or_often_true'=>'2. Very True or Often True'{-}'not_answered'=>'Not Answered'
+text{@}q80_strange_describe{@}Describe
+select{@}q80_strange_describe_status{@}{@}NULL=>''{-}'not_answered'=>'Not Answered'
+select{@}q81_stubborn{@}81. Stubborn, sullen, or irritable{@}NULL=>''{-}'0_not_true'=>'0. Not True'{-}'1_somewhat_or_sometimes_true'=>'1. Somewhat or Sometimes True'{-}'2_very_true_or_often_true'=>'2. Very True or Often True'{-}'not_answered'=>'Not Answered'
+select{@}q82_suddenchange{@}82. Sudden changes in mood or feelings{@}NULL=>''{-}'0_not_true'=>'0. Not True'{-}'1_somewhat_or_sometimes_true'=>'1. Somewhat or Sometimes True'{-}'2_very_true_or_often_true'=>'2. Very True or Often True'{-}'not_answered'=>'Not Answered'
+select{@}q83_sulks{@}83. Sulks a lot{@}NULL=>''{-}'0_not_true'=>'0. Not True'{-}'1_somewhat_or_sometimes_true'=>'1. Somewhat or Sometimes True'{-}'2_very_true_or_often_true'=>'2. Very True or Often True'{-}'not_answered'=>'Not Answered'
+select{@}q84_talksleep{@}84. Talks or cries out in sleep{@}NULL=>''{-}'0_not_true'=>'0. Not True'{-}'1_somewhat_or_sometimes_true'=>'1. Somewhat or Sometimes True'{-}'2_very_true_or_often_true'=>'2. Very True or Often True'{-}'not_answered'=>'Not Answered'
+select{@}q85_tantrum{@}85. Temper tantrums or hot temper{@}NULL=>''{-}'0_not_true'=>'0. Not True'{-}'1_somewhat_or_sometimes_true'=>'1. Somewhat or Sometimes True'{-}'2_very_true_or_often_true'=>'2. Very True or Often True'{-}'not_answered'=>'Not Answered'
+select{@}q86_neatconcern{@}86. Too concerned with neatness or cleanliness{@}NULL=>''{-}'0_not_true'=>'0. Not True'{-}'1_somewhat_or_sometimes_true'=>'1. Somewhat or Sometimes True'{-}'2_very_true_or_often_true'=>'2. Very True or Often True'{-}'not_answered'=>'Not Answered'
+select{@}q87_toofearful{@}87. Too fearful or anxious{@}NULL=>''{-}'0_not_true'=>'0. Not True'{-}'1_somewhat_or_sometimes_true'=>'1. Somewhat or Sometimes True'{-}'2_very_true_or_often_true'=>'2. Very True or Often True'{-}'not_answered'=>'Not Answered'
+select{@}q88_uncoop{@}88. Uncooperative{@}NULL=>''{-}'0_not_true'=>'0. Not True'{-}'1_somewhat_or_sometimes_true'=>'1. Somewhat or Sometimes True'{-}'2_very_true_or_often_true'=>'2. Very True or Often True'{-}'not_answered'=>'Not Answered'
+select{@}q89_underactive{@}89. Underactive, slow moving, or lacks energy{@}NULL=>''{-}'0_not_true'=>'0. Not True'{-}'1_somewhat_or_sometimes_true'=>'1. Somewhat or Sometimes True'{-}'2_very_true_or_often_true'=>'2. Very True or Often True'{-}'not_answered'=>'Not Answered'
+select{@}q90_unhappy{@}90. Unhappy, sad, or depressed{@}NULL=>''{-}'0_not_true'=>'0. Not True'{-}'1_somewhat_or_sometimes_true'=>'1. Somewhat or Sometimes True'{-}'2_very_true_or_often_true'=>'2. Very True or Often True'{-}'not_answered'=>'Not Answered'
+select{@}q91_loud{@}91. Unusually loud{@}NULL=>''{-}'0_not_true'=>'0. Not True'{-}'1_somewhat_or_sometimes_true'=>'1. Somewhat or Sometimes True'{-}'2_very_true_or_often_true'=>'2. Very True or Often True'{-}'not_answered'=>'Not Answered'
+select{@}q92_upsetnew{@}92. Upset by new people or situations{@}NULL=>''{-}'0_not_true'=>'0. Not True'{-}'1_somewhat_or_sometimes_true'=>'1. Somewhat or Sometimes True'{-}'2_very_true_or_often_true'=>'2. Very True or Often True'{-}'not_answered'=>'Not Answered'
+text{@}q92_upsetnew_describe{@}Describe
+select{@}q92_upsetnew_describe_status{@}{@}NULL=>''{-}'not_answered'=>'Not Answered'
+select{@}q93_vomit{@}93. Vomiting, throwing up (without medical cause){@}NULL=>''{-}'0_not_true'=>'0. Not True'{-}'1_somewhat_or_sometimes_true'=>'1. Somewhat or Sometimes True'{-}'2_very_true_or_often_true'=>'2. Very True or Often True'{-}'not_answered'=>'Not Answered'
+select{@}q94_wakesoften{@}94. Wakes up often at night{@}NULL=>''{-}'0_not_true'=>'0. Not True'{-}'1_somewhat_or_sometimes_true'=>'1. Somewhat or Sometimes True'{-}'2_very_true_or_often_true'=>'2. Very True or Often True'{-}'not_answered'=>'Not Answered'
+select{@}q95_wander{@}95. Wanders away{@}NULL=>''{-}'0_not_true'=>'0. Not True'{-}'1_somewhat_or_sometimes_true'=>'1. Somewhat or Sometimes True'{-}'2_very_true_or_often_true'=>'2. Very True or Often True'{-}'not_answered'=>'Not Answered'
+select{@}q96_wantattention{@}96. Wants a lot of attention{@}NULL=>''{-}'0_not_true'=>'0. Not True'{-}'1_somewhat_or_sometimes_true'=>'1. Somewhat or Sometimes True'{-}'2_very_true_or_often_true'=>'2. Very True or Often True'{-}'not_answered'=>'Not Answered'
+select{@}q97_whining{@}97. Whining{@}NULL=>''{-}'0_not_true'=>'0. Not True'{-}'1_somewhat_or_sometimes_true'=>'1. Somewhat or Sometimes True'{-}'2_very_true_or_often_true'=>'2. Very True or Often True'{-}'not_answered'=>'Not Answered'
+select{@}q98_withdrawn{@}98. Withdrawn, doesn't get involved with others{@}NULL=>''{-}'0_not_true'=>'0. Not True'{-}'1_somewhat_or_sometimes_true'=>'1. Somewhat or Sometimes True'{-}'2_very_true_or_often_true'=>'2. Very True or Often True'{-}'not_answered'=>'Not Answered'
+select{@}q99_worries{@}99. Worries{@}NULL=>''{-}'0_not_true'=>'0. Not True'{-}'1_somewhat_or_sometimes_true'=>'1. Somewhat or Sometimes True'{-}'2_very_true_or_often_true'=>'2. Very True or Often True'{-}'not_answered'=>'Not Answered'
+text{@}q100_otherproblems{@}100. Please write in any problems the child has that were not listed above
+select{@}q100_otherproblems_status{@}{@}NULL=>''{-}'not_answered'=>'Not Answered'
