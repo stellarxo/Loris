@@ -14,3 +14,4 @@ ALTER TABLE med_records_24 ADD test_results_ear enum('left_ear','right_ear','bil
 ALTER TABLE med_records_24 ADD test_results_severity enum('partial','total','not_answered') DEFAULT NULL;
 ALTER TABLE med_records_24 ADD equivocal_evaluation_results_specify text;
 ALTER TABLE med_records_24 ADD equivocal_evaluation_results_specify_status enum('not_answered') DEFAULT NULL;
+INSERT INTO instrument_subtests (Test_name,Subtest_name, Description,Order_number) VALUES ('med_records_24','med_records_24_page4','Audiology Report',4);
