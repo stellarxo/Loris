@@ -1,0 +1,75 @@
+#!/usr/bin/php
+<?php
+require_once "../tools/generic_includes.php";
+// set_include_path(get_include_path().":../libraries:../../php/libraries:");
+
+require_once "Database.class.inc";
+
+$CommentID = $argv[1];
+$db =& Database::singleton();
+if(PEAR::isError($db)) {
+        print "Could not connect to database: " . $db->getMessage();
+            exit(1);
+}
+
+$query = "SELECT * from FamilyEnvironmentScales WHERE CommentID = :CommentID";
+
+$WhereCriteria = array('CommentID'=>$CommentID);
+$result = $db->pselectRow($query, $WhereCriteria);
+if(PEAR::isError($result)){
+        print "Query has failed to select: ".$result->getMessage();
+            exit(2);
+}
+$c = array('q1','q11','q21','q31','q41','q51','q61','q71','q81');
+$ex= array('q2','q12','q22','q32','q42','q52','q62','q72','q82');
+$con= array('q3','q13','q23','q33','q43','q53','q63','q73','q83');
+$ind= array('q4','q14','q24','q34','q44','q54','q64','q74','q84');
+$ao = array('q5','q15','q25','q35','q45','q55','q65','q75','q85');
+$ico = array('q6','q16','q26','q36','q46','q56','q66','q76','q86');
+$aro = array('q7','q17','q27','q37','q47','q57','q67','q77','q87');
+$mre= array('q7','q17','q27','q37','q47','q57','q67','q77','q87');
+$org= array('q9','q19','q29','q39','q49','q59','q69','q79','q89');
+$ctl= array('q10','q20','q30','q40','q50','q60','q70','q80','q90');
+$scores = array();
+
+$achievement = array('c'=>$c,'ex'=>$ex,'con'=>$con,'ind'=>$ind,'ao'=>$ao,'ico'=>$ico,'aro'=>$aro,'mre'=>$mre,'org'=>$org,'ctl'=>$ctl);
+foreach ($result as $field=>$value) {
+     $qstn = explode("_",$field);
+    
+    foreach($achievement as $key=>$qstn_array){
+     $score_field = $key."_raw_score";
+     if(in_array($qstn[0], $qstn_array)){
+         if($value == 'true'){
+             $scores[$score_field] += 1;    
+         } 
+     }
+    }
+
+}
+foreach($achievement as $key=>$value){
+    $score_query_field = $key."_raw_score";
+    $query_score = "SELECT Percentile from fes_lookup WHERE Rawscore = :raw_score AND Achievement = :criteria";
+    $WhereCriteria_p = array('raw_score'=>$scores[$score_query_field],'criteria'=>$key);
+    $percentile = $db->pselectOne($query_score, $WhereCriteria_p);
+    if(Utility::isErrorX($percentile)){
+        print "Query has failed to select: ".$percentile->getMessage();
+            exit(2);
+    }
+    $score_field = $key."_std_score";
+    if($percentile != NULL){
+    $scores[$score_field] = $percentile;
+    }else{
+        $scores[$score_field] = 'N/A';    
+    }
+}
+
+//save scores
+$result = $db->update('FamilyEnvironmentScales', $scores, $WhereCriteria);
+if($db->isError($result)) {
+                print "Could not save total score: ". $result->getMessage();
+                                        exit(3);
+}
+
+
+exit(0);
+?>
