@@ -19,6 +19,8 @@ INSERT INTO instrument_subtests(Test_name,Subtest_name,Description,Order_number)
 INSERT INTO instrument_subtests(Test_name,Subtest_name,Description,Order_number) VALUES('edi2', 'edi2_page10', 'Childhood Events', 10);
 
 INSERT INTO test_battery(Test_name,AgeMinDays,AgeMaxDays,Active,Stage,SubprojectID) VALUES ('edi2', '1050', '1140', 'Y', 'Visit', '2');
+
+INSERT INTO help(hash, topic) VALUES (md5('edi2'),'EDI_IBIS2');
 */
 	
 	var $total_symptomAnchors = array("score_0_3_total_symptoms"=>"",
