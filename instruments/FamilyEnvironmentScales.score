@@ -16,7 +16,7 @@ $query = "SELECT * from FamilyEnvironmentScales WHERE CommentID = :CommentID";
 
 $WhereCriteria = array('CommentID'=>$CommentID);
 $result = $db->pselectRow($query, $WhereCriteria);
-if(PEAR::isError($result)){
+if(Utility::isErrorX($result)){
         print "Query has failed to select: ".$result->getMessage();
             exit(2);
 }
