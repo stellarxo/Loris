@@ -1,15 +1,16 @@
 table{@}BSRC
 title{@}BSRC Treatment form
-date{@}Date_taken{@}Date of Administration{@}2006{@}2014
 static{@}Candidate_Age{@}Candidate Age (Months)
 static{@}Window_Difference{@}Window Difference (+/- Days)
 select{@}Examiner{@}Examiner{@}NULL=>''
-date{@}Date_lastvisit{@}Date of Last Visit{@}2006{@}2014
-select{@}q1_earlyintervention_birthtothreeprg{@}1) Since your last visit, did a professional refer your child to an “early intervention” or “birth-to-three” program?   (Depending on where you live, these programs may have different names.){@}NULL=>''{-}'yes'=>'Yes'{-}'no'=>'No'{-}'not_answered'=>'Not Answered'
-select{@}q2_receive_earlyintervention_birthtothreeprg{@}2) Since your last visit, did your child receive any “early intervention” or “birth-to-three” program services?{@}NULL=>''{-}'yes'=>'Yes'{-}'no'=>'No'{-}'not_answered'=>'Not Answered'
-textarea{@}hrs_earlyintervention_birthtothreeprg{@}If Yes, Please specify Average Hours per week
+date{@}Date_lastvist{@}Date of Last Visit{@}2006{@}2014
+static{@}</BR>
+static{@}</BR>
+select{@}q1_earlyintervention_birthtothreeprg{@}1) Since your last visit, did a professional refer your child to an 'early intervention' or 'birth-to-three' program?(Depending on where you live, these programs may have different names.){@}NULL=>''{-}'yes'=>'Yes'{-}'no'=>'No'{-}'not_answered'=>'Not Answered'
+select{@}q2_receive_earlyintervention_birthtothreeprg{@}2) Since your last visit, did your child receive any 'early intervention' or 'birth-to-three' program services?{@}NULL=>''{-}'yes'=>'Yes'{-}'no'=>'No'{-}'not_answered'=>'Not Answered'
+numeric{@}hrs_earlyintervention_birthtothreeprg{@}If Yes, Please specify Average Hours per week
 select{@}hrs_earlyintervention_birthtothreeprg_status{@}{@}NULL=>''{-}'not_answered'=>'Not Answered'
-textarea{@}total_earlyintervention_birthtothreeprg{@}Total hours since last visit
+numeric{@}total_earlyintervention_birthtothreeprg{@}Total hours since last visit
 select{@}total_earlyintervention_birthtothreeprg_status{@}{@}NULL=>''{-}'not_answered'=>'Not Answered'
 select{@}q3_communityact{@}3) Since your last visit, did a professional recommend that your child attend any community based classes/activities designed to increase socialization  (eg.  MommyandMe, Gymboree, etc.){@}NULL=>''{-}'yes'=>'Yes'{-}'no'=>'No'{-}'not_answered'=>'Not Answered'
 select{@}q4_participate_social{@}4) Since your last visit, did your child participate in any classes/activities designed to increase socialization whether or not recommended by a professional (eg.  MommyandMe, Gymboree, etc.).{@}NULL=>''{-}'yes'=>'Yes'{-}'no'=>'No'{-}'not_answered'=>'Not Answered'
@@ -20,7 +21,7 @@ select{@}servicetype_occupationaltherapy{@}Recieved occupational therapy{@}NULL=
 text{@}startdate_occupationaltherapy{@}Date Started (mm/yy)
 select{@}startdate_occupationaltherapy_status{@}{@}NULL=>''{-}'not_answered'=>'Not Answered'
 select{@}continue_occupationaltherapy{@}Still receiving intervention?{@}NULL=>''{-}'yes'=>'Yes'{-}'no'=>'No'{-}'not_answered'=>'Not Answered'
-textarea{@}continue_occupationaltherapy_comment{@}If, NO, date stopped:
+text{@}continue_occupationaltherapy_comment{@}If, NO, date stopped (mm/yy):
 select{@}continue_occupationaltherapy_comment_status{@}{@}NULL=>''{-}'not_answered'=>'Not Answered'
 select{@}indgrp_occupationaltherapy{@}Individual or Group{@}NULL=>''{-}'individual_'=>'Individual '{-}'group_'=>'Group '{-}'not_answered'=>'Not Answered'
 select{@}setting_occupationaltherapy{@}Setting{@}NULL=>''{-}'office/clinic'=>'Office/Clinic'{-}'home'=>'Home'{-}'daycare/preschool'=>'Daycare/preschool'{-}'other'=>'Other'{-}'not_answered'=>'Not Answered'
@@ -30,10 +31,10 @@ text{@}avg_occupationaltherapy{@}Average hours per week
 select{@}avg_occupationaltherapy_status{@}{@}NULL=>''{-}'not_answered'=>'Not Answered'
 header{@}{@}Physical Therapy
 select{@}servicetype_physicaltherapy{@}Received physical therapy{@}NULL=>''{-}'yes'=>'Yes'{-}'no'=>'No'{-}'not_answered'=>'Not Answered'
-textarea{@}startdate_physicaltherapy{@}Date started (mm/yy)
+text{@}startdate_physicaltherapy{@}Date started (mm/yy)
 select{@}startdate_physicaltherapy_status{@}{@}NULL=>''{-}'not_answered'=>'Not Answered'
 select{@}continue_physicaltherapy{@}Still receiving intervention?{@}NULL=>''{-}'yes'=>'Yes'{-}'no'=>'No'{-}'not_answered'=>'Not Answered'
-text{@}continue_physicaltherapy_comment{@}If, NO, date stopped:
+text{@}continue_physicaltherapy_comment{@}If, NO, date stopped (mm/yy):
 select{@}continue_physicaltherapy_comment_status{@}{@}NULL=>''{-}'not_answered'=>'Not Answered'
 select{@}indgrp_physicaltherapy{@}Individual or Group{@}NULL=>''{-}'individual_'=>'Individual '{-}'group_'=>'Group '{-}'not_answered'=>'Not Answered'
 text{@}setting_physicaltherapy_other{@}Please specify Other:
@@ -42,10 +43,10 @@ text{@}avg_physicaltherapy_other{@}Average hours per week
 select{@}avg_physicaltherapy_other_status{@}{@}NULL=>''{-}'not_answered'=>'Not Answered'
 header{@}{@}Speech-language Therapy
 select{@}servicetype_speechlangtherapy{@}Received physical therapy{@}NULL=>''{-}'yes'=>'Yes'{-}'no'=>'No'{-}'not_answered'=>'Not Answered'
-textarea{@}startdate_speechlangtherapy{@}Date started (mm/yy)
+text{@}startdate_speechlangtherapy{@}Date started (mm/yy)
 select{@}startdate_speechlangtherapyy_status{@}{@}NULL=>''{-}'not_answered'=>'Not Answered'
-select{@}continue_physicaltherapy{@}Still receiving intervention?{@}NULL=>''{-}'yes'=>'Yes'{-}'no'=>'No'{-}'not_answered'=>'Not Answered'
-text{@}continue_speechlangtherapy_comment{@}If, NO, date stopped:
+select{@}continue_speechlangtherapy{@}Still receiving intervention?{@}NULL=>''{-}'yes'=>'Yes'{-}'no'=>'No'{-}'not_answered'=>'Not Answered'
+text{@}continue_speechlangtherapy_comment{@}If, NO, date stopped (mm/yy):
 select{@}continue_speechlangtherapy_comment_status{@}{@}NULL=>''{-}'not_answered'=>'Not Answered'
 select{@}indgrp_speechlangtherapy{@}Individual or Group{@}NULL=>''{-}'individual_'=>'Individual '{-}'group_'=>'Group '{-}'not_answered'=>'Not Answered'
 text{@}setting_speechlangtherapy_other{@}Please specify Other:
@@ -53,10 +54,10 @@ select{@}setting_speechlangtherapy_other_status{@}{@}NULL=>''{-}'not_answered'=>
 text{@}avg_speechlangtherapy_other{@}Average hours per week
 select{@}avg_speechlangtherapy_other_status{@}{@}NULL=>''{-}'not_answered'=>'Not Answered'
 header{@}{@}Comprehensive behavioral/educational interventions
-textarea{@}startdate_behaviorintervention{@}Date started (mm/yy)
+text{@}startdate_behaviorintervention{@}Date started (mm/yy)
 select{@}startdate_behaviorintervention_status{@}{@}NULL=>''{-}'not_answered'=>'Not Answered'
 select{@}continue_behaviorintervention{@}Still receiving intervention?{@}NULL=>''{-}'yes'=>'Yes'{-}'no'=>'No'{-}'not_answered'=>'Not Answered'
-text{@}continue_behaviorintervention_comment{@}If, NO, date stopped:
+text{@}continue_behaviorintervention_comment{@}If, NO, date stopped (mm/yy):
 select{@}continue_behaviorintervention_comment_status{@}{@}NULL=>''{-}'not_answered'=>'Not Answered'
 select{@}indgrp_behaviorintervention{@}Individual or Group{@}NULL=>''{-}'individual_'=>'Individual '{-}'group_'=>'Group '{-}'not_answered'=>'Not Answered'
 text{@}setting_behaviorintervention_other{@}Please specify Other:
@@ -65,10 +66,10 @@ text{@}avg_behaviorintervention_other{@}Average hours per week
 select{@}avg_behaviorintervention_other_status{@}{@}NULL=>''{-}'not_answered'=>'Not Answered'
 header{@}{@}Other
 select{@}servicetype_other{@}Received physical therapy{@}NULL=>''{-}'yes'=>'Yes'{-}'no'=>'No'{-}'not_answered'=>'Not Answered'
-textarea{@}startdate_other{@}Date started (mm/yy)
+text{@}startdate_other{@}Date started (mm/yy)
 select{@}startdate_other_status{@}{@}NULL=>''{-}'not_answered'=>'Not Answered'
 select{@}continue_other{@}Still receiving intervention?{@}NULL=>''{-}'yes'=>'Yes'{-}'no'=>'No'{-}'not_answered'=>'Not Answered'
-text{@}continue_other_comment{@}If, NO, date stopped:
+text{@}continue_other_comment{@}If, NO, date stopped (mm/yy):
 select{@}continue_other_comment_status{@}{@}NULL=>''{-}'not_answered'=>'Not Answered'
 select{@}indgrp_other{@}Individual or Group{@}NULL=>''{-}'individual_'=>'Individual '{-}'group_'=>'Group '{-}'not_answered'=>'Not Answered'
 text{@}setting_other{@}Please specify Other:
@@ -76,17 +77,17 @@ select{@}setting_other_status{@}{@}NULL=>''{-}'not_answered'=>'Not Answered'
 text{@}avg_other{@}Average hours per week
 select{@}avg_other_status{@}{@}NULL=>''{-}'not_answered'=>'Not Answered'
 static{@}{@}6) On average, how many hours per week has your child been in intervention
-textarea{@}q6_avgperweek_A{@}a. since your last visit to our research program?
+text{@}q6_avgperweek_A{@}a. since your last visit to our research program?
 select{@}q6_avgperweek_A_status{@}{@}NULL=>''{-}'not_answered'=>'Not Answered'
-textarea{@}q6_avgperweek_B{@}b. in the past year?
+text{@}q6_avgperweek_B{@}b. in the past year?
 select{@}q6_avgperweek_B_status{@}{@}NULL=>''{-}'not_answered'=>'Not Answered'
 select{@}q7_alt_therapy{@}7) At any point since your last visit, did your child receive complementary or alternative therapies used to treat symptoms of autism?{@}NULL=>''{-}'yes'=>'Yes'{-}'no'=>'No'{-}'not_answered'=>'Not Answered'
-textarea{@}q7_alt_therapy_other{@}If Yes, please specify:
+text{@}q7_alt_therapy_other{@}If Yes, please specify:
 select{@}q7_alt_therapy_other_status{@}{@}NULL=>''{-}'not_answered'=>'Not Answered'
 select{@}q8_medical_pharma{@}8) At any point since your last visit, did your child receive medical or pharmacological interventions used to treat symptoms of autism?{@}NULL=>''{-}'yes'=>'Yes'{-}'no'=>'No'{-}'not_answered'=>'Not Answered'
-textarea{@}q8_medical_pharma_other{@}If Yes, please specify:
+text{@}q8_medical_pharma_other{@}If Yes, please specify:
 select{@}q8_medical_pharma_other_status{@}{@}NULL=>''{-}'not_answered'=>'Not Answered'
-select{@}q9_continue_nextyr{@}9) If this is your child’s 36-month assessment, do you plan to continue your child’s enrollment in intervention during the next year?{@}NULL=>''{-}'yes'=>'Yes'{-}'no'=>'No'{-}'not_answered'=>'Not Answered'
-selectmultiple{@}q10_therapyoptions{@}10) If you checked yes in #9, please check all that apply below:{@}NULL=>''{-}'speech-language_therapy'=>'Speech-language therapy'{-}'occupational_therapy'=>'Occupational therapy'{-}'physical_therapy'=>'Physical therapy'{-}'comprehensive_behavioral_intervention/special_educational_servies'=>'Comprehensive behavioral intervention/special educational servies'{-}'other'=>'Other'{-}'not_answered'=>'Not Answered'
-textarea{@}general_comments{@}If there is anything else you would like to tell us about services your child has received, please write your comments:
+select{@}q9_continue_nextyr{@}9) If this is your child's 36-month assessment, do you plan to continue your child’s enrollment in intervention during the next year?{@}NULL=>''{-}'yes'=>'Yes'{-}'no'=>'No'{-}'not_answered'=>'Not Answered'
+selectmultiple{@}q10_therapyoptions{@}10) If you checked yes in #9, please select all that apply below:{@}NULL=>''{-}'speech-language_therapy'=>'Speech-language therapy'{-}'occupational_therapy'=>'Occupational therapy'{-}'physical_therapy'=>'Physical therapy'{-}'comprehensive_behavioral_intervention/special_educational_servies'=>'Comprehensive behavioral intervention/special educational servies'{-}'other'=>'Other'{-}'not_answered'=>'Not Answered'
+textarea{@}general_comments{@}If there is anything else you would like to tell us about services your child has received, please enter your comments:
 select{@}general_comments_status{@}{@}NULL=>''{-}'not_answered'=>'Not Answered'
