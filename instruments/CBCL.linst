@@ -13,50 +13,19 @@ static{@}{@}<br />
 static{@}{@}Scores
 static{@}{@}<br />
 static{@}emotional_raw{@}Emotionally Reactive Raw Score
-static{@}emotional_t{@}Emotionally Reactive T Score
-static{@}emotional_perc{@}Emotionally Reactive Percentile
 static{@}anxious_raw{@}Anxious Depressed Raw Score
-static{@}anxious_t{@}Anxious Depressed T Score
-static{@}anxious_perc{@}Anxious Depressed Percentile
 static{@}somatic_c_raw{@}Somatic Complaints Raw Score
-static{@}somatic_c{@}Somatic Complaints T Score
-static{@}somatic_c_perc{@}Somatic Complaints Percentile
 static{@}withdrawn_raw{@}Withdrawn Raw Score
-static{@}withdrawn_t{@}Withdrawn T Score
-static{@}withdrawn_perc{@}Withdrawn Percentile
 static{@}sleep_raw{@}Sleep Problems Raw Score
-static{@}sleep_t{@}Sleep Problems T Score
-static{@}sleep_perc{@}Sleep Problems Percentile
 static{@}attention_raw{@}Attention Problems Raw Score
-static{@}attention_t{@}Attention Problems T Score
-static{@}attention_perc{@}Attention Problems Percentile
 static{@}aggressive_raw{@}Aggressive Behavior Raw Score
-static{@}aggressive_t{@}Aggressive Behavior T Score
-static{@}aggressive_perc{@}Aggressive Behavior Percentile
-static{@}internal_raw{@}Internalizing Problems Raw Score
-static{@}internal_t{@}Internalizing Problems T Score
-static{@}internal_perc{@}Internalizing Problems Percentile
-static{@}external_raw{@}Externalizing Problems Raw Score
-static{@}external_t{@}Externalizing Problems T Score
-static{@}external_perc{@}Externalizing Problems Percentile
-static{@}affective_raw{@}Affective Problems Raw Score
-static{@}affective_t{@}Affective Problems T Score
-static{@}affective_perc{@}Affective Problems Percentile
-static{@}anxiety_raw{@}Anxiety Problems Raw Score
-static{@}anxiety_t{@}Anxiety Problems T Score
-static{@}anxiety_perc{@}Anxiety Problems Percentile
-static{@}pervasive_raw{@}Pervasive Developmental Problems Raw Score
-static{@}pervasive_t{@}Pervasive Developmental Problems T Score
-static{@}pervasive_perc{@}Pervasive Developmental Problems Percentile
-static{@}adhd_raw{@}Attention Deficit/Hyperactivity Raw Score
-static{@}adhd_t{@}Attention Deficit/Hyperactivity T Score
-static{@}adhd_perc{@}Attention Deficit/Hyperactivity Percentile
-static{@}oppositional_raw{@}Oppositional Defiant Problems Raw Score
-static{@}oppositional_t{@}Oppositional Defiant Problems T Score
-static{@}oppositional_perc{@}Oppositional Defiant Problems Percentile
+static{@}other_raw{@}Other Problems Raw Score
+static{@}internal_raw{@}Internal Problems Raw Score
+static{@}internal_t{@}Internal Problems T Score
+static{@}external_raw{@}External Problems Raw Score
+static{@}external_t{@}External Problems T Score
 static{@}total_raw{@}Total Problems Raw Score
-static{@}total_t{@}Total Problems T Score
-static{@}total_perc{@}Total Problems Percentile
+static{@}total_t{@}Total Problems T score
 page{@}{@}Questions (Page 1 of 4)
 static{@}{@}<br />
 select{@}q1_aches{@}1. Aches or pains (without medical cause; do not include stomach or headaches){@}NULL=>''{-}'0_not_true'=>'0. Not True'{-}'1_somewhat_or_sometimes_true'=>'1. Somewhat or Sometimes True'{-}'2_very_true_or_often_true'=>'2. Very True or Often True'{-}'not_answered'=>'Not Answered'
