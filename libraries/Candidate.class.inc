@@ -395,8 +395,8 @@ class Candidate
 		    return PEAR::raiseError("Could not connect to database: ".$db->getMessage());
 	    }
 	    $query = "SELECT Value as Plan FROM candidate c JOIN parameter_candidate pc ON (pc.CandID=c.CandID) LEFT JOIN parameter_type pt ON (pc.ParameterTypeID=pt.ParameterTypeID) WHERE c.CandID=:CandidateID AND pt.Name='candidate_plan';";
-        $param = array('CandidateID'=>$candID);
-        $plan = $db->pselectOne($query, $param);
+        $params = array('CandidateID'=>$candID);
+        $plan = $db->pselectOne($query, $params);
 	    if(Utility::isErrorX($plan)) {
 		    return PEAR::raiseError("Could not connect to database: ".$plan->getMessage());
 	    }
