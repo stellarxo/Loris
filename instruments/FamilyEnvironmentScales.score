@@ -19,7 +19,7 @@ require_once "Database.class.inc";
 
 $CommentID = $argv[1];
 $db        =& Database::singleton();
-if (PEAR::isError($db)) {
+if (Utility::isErrorX($db)) {
         print "Could not connect to database: " . $db->getMessage();
             exit(1);
 }
