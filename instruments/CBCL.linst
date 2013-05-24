@@ -5,16 +5,13 @@ static{@}Candidate_Age{@}Candidate Age (Months)
 static{@}Window_Difference{@}Window Difference (+/- Days)
 select{@}Examiner{@}Examiner{@}NULL=>''
 header{@}{@}CBCL
-static{@}{@}<br />
 select{@}relationship{@}Relationship of Respondent to Individual{@}NULL=>''{-}'mother'=>'Mother'{-}'father'=>'Father'{-}'other'=>'Other'{-}'not_answered'=>'Not Answered'
-text{@}If other, specify{@}If other, specify
-select{@}If other, specify_status{@}{@}NULL=>''{-}'not_answered'=>'Not Answered'
-static{@}{@}<br />
-static{@}{@}Scores
-static{@}{@}<br />
+text{@}relationship_other{@}If other, specify
+select{@}relationshop_other_status{@}{@}NULL=>''{-}'not_answered'=>'Not Answered'
+header{@}{@} Empirical Based Scales
 static{@}emotional_raw{@}Emotionally Reactive Raw Score
 static{@}anxious_raw{@}Anxious Depressed Raw Score
-static{@}somatic_c_raw{@}Somatic Complaints Raw Score
+static{@}somatic_raw{@}Somatic Complaints Raw Score
 static{@}withdrawn_raw{@}Withdrawn Raw Score
 static{@}sleep_raw{@}Sleep Problems Raw Score
 static{@}attention_raw{@}Attention Problems Raw Score
@@ -26,8 +23,13 @@ static{@}external_raw{@}External Problems Raw Score
 static{@}external_t{@}External Problems T Score
 static{@}total_raw{@}Total Problems Raw Score
 static{@}total_t{@}Total Problems T score
+header{@}{@} DSM-Oriented Scales
+static{@}dsm_affective_raw{@}Affective Problems Raw Score
+static{@}dsm_anxiety_raw{@}Anxiety Problems Raw Score
+static{@}dsm_mental_raw{@}Pervasive Developmental Problems Raw Score
+static{@}dsm_attention_raw{@}Attention Deficit/Hperactivity Problems Raw Score
+static{@}dsm_oppose_raw{@}Oppositional Definant Problems Raw Score
 page{@}{@}Page 1
-static{@}{@}<br />
 select{@}q1_aches{@}1. Aches or pains (without medical cause; do not include stomach or headaches){@}NULL=>''{-}'0_not_true'=>'0. Not True'{-}'1_somewhat_or_sometimes_true'=>'1. Somewhat or Sometimes True'{-}'2_very_true_or_often_true'=>'2. Very True or Often True'{-}'not_answered'=>'Not Answered'
 select{@}q2_young{@}2. Acts too young for age{@}NULL=>''{-}'0_not_true'=>'0. Not True'{-}'1_somewhat_or_sometimes_true'=>'1. Somewhat or Sometimes True'{-}'2_very_true_or_often_true'=>'2. Very True or Often True'{-}'not_answered'=>'Not Answered'
 select{@}q3_afraid{@}3. Afraid to try new things{@}NULL=>''{-}'0_not_true'=>'0. Not True'{-}'1_somewhat_or_sometimes_true'=>'1. Somewhat or Sometimes True'{-}'2_very_true_or_often_true'=>'2. Very True or Often True'{-}'not_answered'=>'Not Answered'
@@ -56,7 +58,6 @@ text{@}q24_eat_describe{@}Describe
 select{@}q24_eat_describe_status{@}{@}NULL=>''{-}'not_answered'=>'Not Answered'
 select{@}q25_getalong{@}25. Doesn't get along with other children{@}NULL=>''{-}'0_not_true'=>'0. Not True'{-}'1_somewhat_or_sometimes_true'=>'1. Somewhat or Sometimes True'{-}'2_very_true_or_often_true'=>'2. Very True or Often True'{-}'not_answered'=>'Not Answered'
 page{@}{@}Page 2 
-static{@}{@}<br />
 select{@}q26_fun{@}26. Doesn't know how to have fun; acts like a little adult{@}NULL=>''{-}'0_not_true'=>'0. Not True'{-}'1_somewhat_or_sometimes_true'=>'1. Somewhat or Sometimes True'{-}'2_very_true_or_often_true'=>'2. Very True or Often True'{-}'not_answered'=>'Not Answered'
 select{@}q27_guilty{@}27. Doesn't seem to feel guilty after misbehaving{@}NULL=>''{-}'0_not_true'=>'0. Not True'{-}'1_somewhat_or_sometimes_true'=>'1. Somewhat or Sometimes True'{-}'2_very_true_or_often_true'=>'2. Very True or Often True'{-}'not_answered'=>'Not Answered'
 select{@}q28_home{@}28. Doesn't want to go out of home{@}NULL=>''{-}'0_not_true'=>'0. Not True'{-}'1_somewhat_or_sometimes_true'=>'1. Somewhat or Sometimes True'{-}'2_very_true_or_often_true'=>'2. Very True or Often True'{-}'not_answered'=>'Not Answered'
@@ -89,7 +90,6 @@ select{@}q48_nightmares{@}48. Nightmares{@}NULL=>''{-}'0_not_true'=>'0. Not True
 select{@}q49_overeating{@}49. Overeating{@}NULL=>''{-}'0_not_true'=>'0. Not True'{-}'1_somewhat_or_sometimes_true'=>'1. Somewhat or Sometimes True'{-}'2_very_true_or_often_true'=>'2. Very True or Often True'{-}'not_answered'=>'Not Answered'
 select{@}q50_overtired{@}50. Overtired{@}NULL=>''{-}'0_not_true'=>'0. Not True'{-}'1_somewhat_or_sometimes_true'=>'1. Somewhat or Sometimes True'{-}'2_very_true_or_often_true'=>'2. Very True or Often True'{-}'not_answered'=>'Not Answered'
 page{@}{@}Page 3 
-static{@}{@}<br />
 select{@}q51_panic{@}51. Shows panic for no good reason{@}NULL=>''{-}'0_not_true'=>'0. Not True'{-}'1_somewhat_or_sometimes_true'=>'1. Somewhat or Sometimes True'{-}'2_very_true_or_often_true'=>'2. Very True or Often True'{-}'not_answered'=>'Not Answered'
 select{@}q52_painbowel{@}52. Painful bowel movements (without medical cause){@}NULL=>''{-}'0_not_true'=>'0. Not True'{-}'1_somewhat_or_sometimes_true'=>'1. Somewhat or Sometimes True'{-}'2_very_true_or_often_true'=>'2. Very True or Often True'{-}'not_answered'=>'Not Answered'
 select{@}q53_attack{@}53. Physically attacks people{@}NULL=>''{-}'0_not_true'=>'0. Not True'{-}'1_somewhat_or_sometimes_true'=>'1. Somewhat or Sometimes True'{-}'2_very_true_or_often_true'=>'2. Very True or Often True'{-}'not_answered'=>'Not Answered'
@@ -124,7 +124,6 @@ text{@}q74_sleepless_describe{@}Describe
 select{@}q74_sleepless_describe_status{@}{@}NULL=>''{-}'not_answered'=>'Not Answered'
 select{@}q75_bowelplay{@}75. Smears or plays with bowel movements{@}NULL=>''{-}'0_not_true'=>'0. Not True'{-}'1_somewhat_or_sometimes_true'=>'1. Somewhat or Sometimes True'{-}'2_very_true_or_often_true'=>'2. Very True or Often True'{-}'not_answered'=>'Not Answered'
 page{@}{@}Page 4 
-static{@}{@}<br />
 select{@}q76_speech{@}76. Speech problem{@}NULL=>''{-}'0_not_true'=>'0. Not True'{-}'1_somewhat_or_sometimes_true'=>'1. Somewhat or Sometimes True'{-}'2_very_true_or_often_true'=>'2. Very True or Often True'{-}'not_answered'=>'Not Answered'
 text{@}q76_speech_describe{@}Describe
 select{@}q76_speech_describe_status{@}{@}NULL=>''{-}'not_answered'=>'Not Answered'
