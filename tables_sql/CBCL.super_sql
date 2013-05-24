@@ -150,7 +150,7 @@ CREATE TABLE `CBCL` (
 PRIMARY KEY  (`CommentID`)
 );
 REPLACE INTO test_names (Test_name, Full_name, Sub_group) VALUES ('CBCL', 'Child Behavior Checklist (CBCL)', 1);
-INSERT INTO instrument_subtests (Test_name, Subtest_name, Description) VALUES ('CBCL', 'CBCL_page1', 'Questions (Page 1 of 4)');
-INSERT INTO instrument_subtests (Test_name, Subtest_name, Description) VALUES ('CBCL', 'CBCL_page2', 'Questions (Page 2 of 4)');
-INSERT INTO instrument_subtests (Test_name, Subtest_name, Description) VALUES ('CBCL', 'CBCL_page3', 'Questions (Page 3 of 4)');
-INSERT INTO instrument_subtests (Test_name, Subtest_name, Description) VALUES ('CBCL', 'CBCL_page4', 'Questions (Page 4 of 4)');
+INSERT INTO instrument_subtests (Test_name, Subtest_name, Description) VALUES ('CBCL', 'CBCL_page1', 'Page 1');
+INSERT INTO instrument_subtests (Test_name, Subtest_name, Description) VALUES ('CBCL', 'CBCL_page2', 'Page 2');
+INSERT INTO instrument_subtests (Test_name, Subtest_name, Description) VALUES ('CBCL', 'CBCL_page3', 'Page 3');
+INSERT INTO instrument_subtests (Test_name, Subtest_name, Description) VALUES ('CBCL', 'CBCL_page4', 'Page 4');
