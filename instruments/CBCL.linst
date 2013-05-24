@@ -26,7 +26,7 @@ static{@}external_raw{@}External Problems Raw Score
 static{@}external_t{@}External Problems T Score
 static{@}total_raw{@}Total Problems Raw Score
 static{@}total_t{@}Total Problems T score
-page{@}{@}Questions (Page 1 of 4)
+page{@}{@}Page 1
 static{@}{@}<br />
 select{@}q1_aches{@}1. Aches or pains (without medical cause; do not include stomach or headaches){@}NULL=>''{-}'0_not_true'=>'0. Not True'{-}'1_somewhat_or_sometimes_true'=>'1. Somewhat or Sometimes True'{-}'2_very_true_or_often_true'=>'2. Very True or Often True'{-}'not_answered'=>'Not Answered'
 select{@}q2_young{@}2. Acts too young for age{@}NULL=>''{-}'0_not_true'=>'0. Not True'{-}'1_somewhat_or_sometimes_true'=>'1. Somewhat or Sometimes True'{-}'2_very_true_or_often_true'=>'2. Very True or Often True'{-}'not_answered'=>'Not Answered'
@@ -55,7 +55,7 @@ select{@}q24_eat{@}24. Doesn't eat well{@}NULL=>''{-}'0_not_true'=>'0. Not True'
 text{@}q24_eat_describe{@}Describe
 select{@}q24_eat_describe_status{@}{@}NULL=>''{-}'not_answered'=>'Not Answered'
 select{@}q25_getalong{@}25. Doesn't get along with other children{@}NULL=>''{-}'0_not_true'=>'0. Not True'{-}'1_somewhat_or_sometimes_true'=>'1. Somewhat or Sometimes True'{-}'2_very_true_or_often_true'=>'2. Very True or Often True'{-}'not_answered'=>'Not Answered'
-page{@}{@}Questions (Page 2 of 4)
+page{@}{@}Page 2 
 static{@}{@}<br />
 select{@}q26_fun{@}26. Doesn't know how to have fun; acts like a little adult{@}NULL=>''{-}'0_not_true'=>'0. Not True'{-}'1_somewhat_or_sometimes_true'=>'1. Somewhat or Sometimes True'{-}'2_very_true_or_often_true'=>'2. Very True or Often True'{-}'not_answered'=>'Not Answered'
 select{@}q27_guilty{@}27. Doesn't seem to feel guilty after misbehaving{@}NULL=>''{-}'0_not_true'=>'0. Not True'{-}'1_somewhat_or_sometimes_true'=>'1. Somewhat or Sometimes True'{-}'2_very_true_or_often_true'=>'2. Very True or Often True'{-}'not_answered'=>'Not Answered'
@@ -88,7 +88,7 @@ select{@}q47_nervous{@}47. Nervous, highstrung, or tense{@}NULL=>''{-}'0_not_tru
 select{@}q48_nightmares{@}48. Nightmares{@}NULL=>''{-}'0_not_true'=>'0. Not True'{-}'1_somewhat_or_sometimes_true'=>'1. Somewhat or Sometimes True'{-}'2_very_true_or_often_true'=>'2. Very True or Often True'{-}'not_answered'=>'Not Answered'
 select{@}q49_overeating{@}49. Overeating{@}NULL=>''{-}'0_not_true'=>'0. Not True'{-}'1_somewhat_or_sometimes_true'=>'1. Somewhat or Sometimes True'{-}'2_very_true_or_often_true'=>'2. Very True or Often True'{-}'not_answered'=>'Not Answered'
 select{@}q50_overtired{@}50. Overtired{@}NULL=>''{-}'0_not_true'=>'0. Not True'{-}'1_somewhat_or_sometimes_true'=>'1. Somewhat or Sometimes True'{-}'2_very_true_or_often_true'=>'2. Very True or Often True'{-}'not_answered'=>'Not Answered'
-page{@}{@}Questions (Page 3 of 4)
+page{@}{@}Page 3 
 static{@}{@}<br />
 select{@}q51_panic{@}51. Shows panic for no good reason{@}NULL=>''{-}'0_not_true'=>'0. Not True'{-}'1_somewhat_or_sometimes_true'=>'1. Somewhat or Sometimes True'{-}'2_very_true_or_often_true'=>'2. Very True or Often True'{-}'not_answered'=>'Not Answered'
 select{@}q52_painbowel{@}52. Painful bowel movements (without medical cause){@}NULL=>''{-}'0_not_true'=>'0. Not True'{-}'1_somewhat_or_sometimes_true'=>'1. Somewhat or Sometimes True'{-}'2_very_true_or_often_true'=>'2. Very True or Often True'{-}'not_answered'=>'Not Answered'
@@ -123,7 +123,7 @@ select{@}q74_sleepless{@}74. Sleeps less than most kids during day and/or night{
 text{@}q74_sleepless_describe{@}Describe
 select{@}q74_sleepless_describe_status{@}{@}NULL=>''{-}'not_answered'=>'Not Answered'
 select{@}q75_bowelplay{@}75. Smears or plays with bowel movements{@}NULL=>''{-}'0_not_true'=>'0. Not True'{-}'1_somewhat_or_sometimes_true'=>'1. Somewhat or Sometimes True'{-}'2_very_true_or_often_true'=>'2. Very True or Often True'{-}'not_answered'=>'Not Answered'
-page{@}{@}Questions (Page 4 of 4)
+page{@}{@}Page 4 
 static{@}{@}<br />
 select{@}q76_speech{@}76. Speech problem{@}NULL=>''{-}'0_not_true'=>'0. Not True'{-}'1_somewhat_or_sometimes_true'=>'1. Somewhat or Sometimes True'{-}'2_very_true_or_often_true'=>'2. Very True or Often True'{-}'not_answered'=>'Not Answered'
 text{@}q76_speech_describe{@}Describe
