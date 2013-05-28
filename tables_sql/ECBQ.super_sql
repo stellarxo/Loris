@@ -230,3 +230,10 @@ CREATE TABLE `ECBQ` (
 `q_201_becomesad` enum('1_never','2_very_rarely','3_less_than_half','4_about_half','5_more_than_half','6_almost_always','7_always','does_not_apply','not_answered') default NULL,
 PRIMARY KEY  (`CommentID`)
 );
+INSERT INTO test_battery(Test_name,AgeMinDays,AgeMaxDays,Active,Stage,SubprojectID,Visit_label) VALUES ('ECBQ',0,0,'Y','Visit',9,'V24');
+INSERT INTO test_battery(Test_name,AgeMinDays,AgeMaxDays,Active,Stage,SubprojectID,Visit_label) VALUES ('ECBQ',0,0,'Y','Visit',10,'V24');
+INSERT INTO test_battery(Test_name,AgeMinDays,AgeMaxDays,Active,Stage,SubprojectID,Visit_label) VALUES ('ECBQ',0,0,'Y','Visit',9,'V15');
+INSERT INTO test_battery(Test_name,AgeMinDays,AgeMaxDays,Active,Stage,SubprojectID,Visit_label) VALUES ('ECBQ',0,0,'Y','Visit',10,'V15');
+INSERT INTO test_battery(Test_name,AgeMinDays,AgeMaxDays,Active,Stage,SubprojectID) VALUES ('ECBQ',660,780,'Y','Visit',1);
+INSERT INTO test_battery(Test_name,AgeMinDays,AgeMaxDays,Active,Stage,SubprojectID) VALUES ('ECBQ',660,780,'Y','Visit',2);
+INSERT INTO test_battery(Test_name,AgeMinDays,AgeMaxDays,Active,Stage,SubprojectID) VALUES ('ECBQ',660,780,'Y','Visit',3);
