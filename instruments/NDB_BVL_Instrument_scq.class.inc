@@ -3,7 +3,7 @@ class NDB_BVL_Instrument_scq extends NDB_BVL_Instrument
 {
 
 	var $yesNo = array(null=>"", "yes"=>"Yes", "no"=>"No", "not_answered"=>"Not Answered");
-
+    var $onlyYesNo = array("yes"=>"Yes","no"=>"No");
 	var $scoreCols = array("score", "scq_diagnosis");
 	
 	/**
@@ -82,7 +82,7 @@ class NDB_BVL_Instrument_scq extends NDB_BVL_Instrument
             array("" => "", "current" => "Current", "lifetime" => "Lifetime")
         );
 		$this->form->addElement("header", null, "Capable of phrase speech");
-		$this->form->addElement("select", "q1_talk_short_phrases", "1. Is she/he now able to talk using short phrases...", $this->yesNo);
+		$this->form->addElement("select", "q1_talk_short_phrases", "1. Is she/he now able to talk using short phrases...", $this->onlyYesNo);
 
 		//Phrase speech
 		$this->form->addElement("header", null, "Phrase speech");
