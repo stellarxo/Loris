@@ -38,6 +38,9 @@ static{@}org_std_score{@}Organization Standard Score
 static{@}{@}<br />
 static{@}ctl_raw_score{@}Control Raw Score
 static{@}ctl_std_score{@}Control Standard Score
+header{@}{@}Validity
+textarea{@}CommentValidity{@}Comments About Validity:
+select{@}CommentValidity_status{@}{@}NULL=>''{-}'not_answered'=>'Not Answered'
 page{@}{@}Page1
 select{@}q1_fam_helpsupport{@}1. Family members help and support one another.{@}NULL=>''{-}'true'=>'True'{-}'false'=>'False'{-}'not_answered'=>'Not Answered'
 select{@}q2_keep_feelings{@}2. Family members often keep their feelings to themselves.{@}NULL=>''{-}'true'=>'True'{-}'false'=>'False'{-}'not_answered'=>'Not Answered'
