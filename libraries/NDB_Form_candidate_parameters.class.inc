@@ -1,5 +1,6 @@
 <?php
 require_once "NDB_Form.class.inc";
+require_once "Utility.class.inc";
 
 /**
  * Candidate Parameter form
@@ -34,7 +35,7 @@ class NDB_Form_candidate_parameters extends NDB_Form
     {
   		$DB =& Database::singleton();
         //Get the default values
-        $DB->select("SELECT ParameterTypeID, Value FROM parameter_candidate WHERE CandID='".$this->identifier."'",&$value_results);
+        $DB->select("SELECT ParameterTypeID, Value FROM parameter_candidate WHERE CandID='".$this->identifier."'", $value_results);
         foreach($value_results AS $vresult){
         	$defaults["PTID_".$vresult['ParameterTypeID']]=$vresult['Value'];
         }
@@ -80,6 +81,24 @@ class NDB_Form_candidate_parameters extends NDB_Form
                     $value = $this->_getDatabaseDate($value);
                 }
                 $DB->update("candidate", array($key => $value), array('CandID' => $this->identifier));
+
+                if ($key == 'ProbandDoB') {
+                    $tests = $DB->pselect(
+                        "SELECT f.CommentID, f.Test_name 
+                        FROM flag f JOIN session s ON (f.SessionID=s.ID)
+                        JOIN candidate c ON (c.CandID=s.CandID)
+                        WHERE
+                        c.CandID=:CaID AND f.Test_name LIKE '%proband'
+                        ", array('CaID' => $this->identifier)
+                    );
+                    foreach ($tests as $test) {
+                        $inst = NDB_BVL_Instrument::factory($test['Test_name'], $test['CommentID'], null, false);
+                        $setValue = array('Date_taken' => $inst->getFieldValue('Date_taken'));
+                        $inst->_saveCandidateAge($setValue);
+                        $DB->update($test['Test_name'], $setValue, array('CommentID' => $test['CommentID']));
+                    }
+
+                }
             }
 
         }
@@ -129,7 +148,7 @@ class NDB_Form_candidate_parameters extends NDB_Form
         // candID
         $this->tpl_data['candID'] = $candidate->getData('CandID');
  		//Extract the fields from the parameter_type table
-        $DB->select("SELECT pt.ParameterTypeID, pt.Name, pt.Type, Description FROM parameter_type as pt, parameter_type_category as ptc, parameter_type_category_rel as ptcr WHERE pt.ParameterTypeID=ptcr.ParameterTypeID AND ptcr.ParameterTypeCategoryID=ptc.ParameterTypeCategoryID AND ptc.Name='Candidate Parameters' ORDER BY pt.ParameterTypeID, pt.name ASC", &$field_results);
+        $DB->select("SELECT pt.ParameterTypeID, pt.Name, pt.Type, Description FROM parameter_type as pt, parameter_type_category as ptc, parameter_type_category_rel as ptcr WHERE pt.ParameterTypeID=ptcr.ParameterTypeID AND ptcr.ParameterTypeCategoryID=ptc.ParameterTypeCategoryID AND ptc.Name='Candidate Parameters' ORDER BY pt.ParameterTypeID, pt.name ASC", $field_results);
         //If there are no defined fields pritn a message to that effect
         if(empty($field_results)){
         	$this->form->addElement('static', "static", "No candidate parameters have been defined for this study");
