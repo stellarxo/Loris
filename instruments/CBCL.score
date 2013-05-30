@@ -1,0 +1,135 @@
+#!/usr/bin/php
+<?php
+/**
+* CBCL Scoring
+*
+* PHP version 5
+*
+* @category Instrument
+* @package  CBCL_Instrument
+* @author   Rathi Gnanasekaran <sekaranrathi@gmail.com>
+* @license  Loris License
+* @link     https://github.com/aces/IBIS
+*/
+
+require_once "../tools/generic_includes.php";
+// set_include_path(get_include_path().":../libraries:../../php/libraries:");
+
+require_once "Database.class.inc";
+
+$CommentID = $argv[1];
+$db        =& Database::singleton();
+if (Utility::isErrorX($db)) {
+            print "Could not connect to database: " . $db->getMessage();
+                        exit(1);
+}
+
+$query = "SELECT * from CBCL WHERE CommentID = :CommentID";
+
+$WhereCriteria = array('CommentID'=>$CommentID);
+$result        = $db->pselectRow($query, $WhereCriteria);
+if (Utility::isErrorX($result)) {
+            print "Query has failed to select: ".$result->getMessage();
+                        exit(2);
+}
+
+$emotional     = array('q21','q46','q51','q79','q82','q83','q92','q97','q99');
+$anxious       = array('q10','q33','q37','q43','q47','q68','q87','q90');
+$somatic       = array('q1','q7','q12','q19','q24','q39','q45','q52','q78','q86',
+                       'q93');
+$withdrawn     = array('q2','q4','q23','q62','q67','q70','q71','q98');
+$sleep         = array('q22','q38','q48','q64','q74','q84','q94');
+$attention     = array('q5','q6','q56','q59','q95');
+$aggressive    = array('q8','q15','q16','q18','q20','q27','q29','q35','q40','q42',
+                       'q44','q53','q58','q66','q69','q81','q85','q88','q96');
+$other         = array('q3','q9','q11','q13','q14','q17','q25','q26','q28','q30',
+                       'q31','q32','q34','q36','q41','q49','q50','q54','q55','q57',
+                       'q60','q61','q63','q65','q72','q73','q75','q76','q77','q80',
+                       'q89','q91','q100');
+$dsm_affective = array('q13','q24','q38','q43','q49','q50','q71','q74','q89','q90');
+$dsm_anxiety   = array('q10','q22','q28','q32','q37','q47','q48','q51','q87','q99');
+$dsm_mental    = array('q3','q4','q7','q21','q23','q25','q63','q67','q70','q76','q80'
+                       ,'q92','q98');
+$dsm_attention = array('q5','q6','q8','q16','q36','q59');
+$dsm_oppose    = array('q15','q20','q44','q81','q85','q88');
+$scores        = array();
+
+foreach ($result as $field=>$val) {
+    $qstn  = explode("_", $field);
+    $num   = explode("_", $val);
+    $value = $num[0];
+    if (is_numeric($value)) {
+        if (in_array($qstn[0], $emotional)) {
+            $scores['emotional_raw'] += $value;  
+        }
+        if (in_array($qstn[0], $anxious)) {
+            $scores['anxious_raw'] += $value;  
+        }
+        if (in_array($qstn[0], $somatic)) {
+            $scores['somatic_raw'] += $value;  
+        }
+        if (in_array($qstn[0], $withdrawn)) {
+            $scores['withdrawn_raw'] += $value;  
+        }
+        if (in_array($qstn[0], $sleep)) {
+            $scores['sleep_raw'] += $value;  
+        }
+        if (in_array($qstn[0], $attention)) {
+            $scores['attention_raw'] += $value;  
+        }
+        if (in_array($qstn[0], $aggressive)) {
+            $scores['aggressive_raw'] += $value;  
+        }
+        if (in_array($qstn[0], $other)) {
+            $scores['other_raw'] += $value;  
+        }
+        if (in_array($qstn[0], $dsm_affective)) {
+            $scores['dsm_affective_raw'] += $value;  
+        }
+        if (in_array($qstn[0], $dsm_anxiety)) {
+            $scores['dsm_anxiety_raw'] += $value;  
+        }
+        if (in_array($qstn[0], $dsm_mental)) {
+            $scores['dsm_mental_raw'] += $value;  
+        }
+        if (in_array($qstn[0], $dsm_attention)) {
+            $scores['dsm_attention_raw'] += $value;  
+        }
+        if (in_array($qstn[0], $dsm_oppose)) {
+            $scores['dsm_oppose_raw'] += $value;  
+        }
+    }
+}
+$scores['internal_raw'] = $scores['emotional_raw'] + $scores['anxious_raw'] + 
+                          $scores['somatic_raw'] + $scores['withdrawn_raw'];
+$scores['external_raw'] = $scores['attention_raw'] + $scores['aggressive_raw'];
+$scores['total_raw']    = $scores['internal_raw'] + $scores['external_raw'] + 
+                          $scores['sleep_raw'] + $scores['other_raw'];
+
+$lookup_fields = array('internal'=>'Internal','external'=>'External',
+                        'total'=>'Total');
+
+foreach ($lookup_fields as $key=>$value) {
+    $score_field_query = $key."_raw";
+    $query_score       = "SELECT T from CBCL_lookup WHERE Raw = :raw_score 
+                             AND Type = :criteria";
+    $where             = array ('raw_score'=>$scores[$score_field_query],
+                                   'criteria'=>$value);
+    $score_field       = $key."_t";
+    $tscore            = $db->pselectOne($query_score, $where);
+    if (Utility::isErrorX($tscore)) {
+        print "Query has failed to select: ".$percentile->getMessage();
+        exit(2);
+    }  
+ 
+    $scores[$score_field] = $tscore;
+   
+}
+//save scores
+$result = $db->update('CBCL', $scores, $WhereCriteria);
+if ($db->isError($result)) {
+    print "Could not save total score: ". $result->getMessage();
+    exit(3);
+}
+exit(0);
+?>
