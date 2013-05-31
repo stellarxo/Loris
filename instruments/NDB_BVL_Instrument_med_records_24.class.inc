@@ -111,7 +111,7 @@ class NDB_BVL_Instrument_med_records_24 extends NDB_BVL_Instrument_med_records {
 
         $this->form->addElement('header', 'instrument_title', "Audiology Evaluation Results");
 
-        $this->form->addElement("select", "not_completed", "An audiology evaluation was not completed because...", array(null=>"", "non-asd"=>"Non-ASD", "other"=>"Other (please specify)"));
+        $this->form->addElement("select", "not_completed", "Status of audiology evaluation for this participant", array(null=>"", "complete"=>"Completed","not_complete"=>"Not Completed", "other"=>"Other (please specify)"));
         $this->XINRegisterRule("not_completed", array("not_completed{@}=={@}NEVER_REQUIRED"));
         $this->addTextElement("not_completed_other_specify", $this->indent . "If other, please specify", array("not_completed{@}=={@}other"), "Please specify.");
 
@@ -124,7 +124,7 @@ class NDB_BVL_Instrument_med_records_24 extends NDB_BVL_Instrument_med_records {
                 'addEmptyOption' => true,
                 'emptyOptionValue' => null
                 );
-        $this->addDateElement('hearing_screening', "Date of hearing screening:");
+        $this->addDateElement('hearing_screening', "Date of audiology evaluation:");
         $this->XINRegisterRule("hearing_screening_date", array("hearing_screening_date_status{@}=={@}", "not_completed{@}!={@}non-asd"), "Please specify date of hearing");
 
         $this->form->addElement("static", null);

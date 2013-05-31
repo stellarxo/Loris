@@ -1,4 +1,4 @@
-ALTER TABLE med_records_24 ADD not_completed enum('non-asd','other') DEFAULT NULL;
+ALTER TABLE med_records_24 ADD not_completed enum('complete','not_complete','other') DEFAULT NULL;
 ALTER TABLE med_records_24 ADD not_completed_other_specify varchar(255) DEFAULT NULL;
 ALTER TABLE med_records_24 ADD not_completed_other_specify_status enum('not_answered') DEFAULT NULL;
 ALTER TABLE med_records_24 ADD hearing_screening_date date DEFAULT NULL;
@@ -15,3 +15,4 @@ ALTER TABLE med_records_24 ADD test_results_severity enum('partial','total','not
 ALTER TABLE med_records_24 ADD equivocal_evaluation_results_specify text;
 ALTER TABLE med_records_24 ADD equivocal_evaluation_results_specify_status enum('not_answered') DEFAULT NULL;
 INSERT INTO instrument_subtests (Test_name,Subtest_name, Description,Order_number) VALUES ('med_records_24','med_records_24_page4','Audiology Report',4);
+INSERT INTO help(hash, topic, content) values (md5('med_records_24'),'Medical Records Data Extractions: 24 months','Under Construction');
