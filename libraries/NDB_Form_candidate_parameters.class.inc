@@ -54,11 +54,11 @@ class NDB_Form_candidate_parameters extends NDB_Form
         }
         $familyid = $DB->pselectOne("SELECT FamilyID from family where CandID=:CandidateID",array('CandidateID'=>$this->identifier));
         if(Utility::isErrorX($familyid)){
-            $relations = $DB->pselect("SELECT Relation_candID, Relation_code from family WHERE CandID=:CandidateID",array('CandidateID'=> $this->identifier));
+            $relations = $DB->pselect("SELECT Relation_CandID, Relation_code from family WHERE CandID=:CandidateID",array('CandidateID'=> $this->identifier));
 
         } else {
             $this->tpl_data['familyID'] = $familyid;
-            $relations = $DB->pselect("SELECT Relation_candID, Relation_code from family WHERE FamilyID=:fam_id",array('fam_id'=> $familyid));
+            $relations = $DB->pselect("SELECT Relation_CandID, Relation_code from family WHERE FamilyID=:fam_id",array('fam_id'=> $familyid));
 
         }
         $this->tpl_data['sibling_list'] = array();
@@ -243,14 +243,7 @@ class NDB_Form_candidate_parameters extends NDB_Form
     }
 
     function add_family(){
- $candidate =& Candidate::singleton($this->identifier);
-         if (PEAR::isError($candidate)) {
-                         return PEAR::raiseError("Candidate Error ($this->identifier): ".$candidate->getMessage());
-                                 }
-
-         $smarty = new Smarty_neurodb();
-        //$smarty->fetch("add_family.tpl");
-        $this->form->addElement('static','CandidateID','Candidate ID:' );
+        
         $this->form->addElement('text','SiblingID','Sibling ID:');
         $this->form->addElement('select','SiblingType','Relation', array(''=>'','brother'=>'Brother','sister'=>'Sister'));
         $this->form->addFormRule(array(&$this, '_validate_add_family'));
@@ -280,7 +273,7 @@ class NDB_Form_candidate_parameters extends NDB_Form
         $error = array();
         $set = array();
         $set['CandID'] = $_REQUEST['candID'];
-        $set['Relation_candID'] = $values['SiblingID'];
+        $set['Relation_CandID'] = $values['SiblingID'];
         $set['Relation_code'] = $values['SiblingType'];
         $set['FamilyID'] = $fid;
         $success = $DB->insert("family", $set);
