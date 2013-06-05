@@ -75,7 +75,7 @@
     <tr>
     <td nowrap="nowrap">{$form.SiblingID.label}</td>
     <td>
-     <a href="main.php?test_name=timepoint_list&candID={$candID}">
+     <a href="main.php?test_name=timepoint_list&candID={$sibling.Relation_CandID}">
          {$sibling.Relation_CandID}
       </a>
    </td>
