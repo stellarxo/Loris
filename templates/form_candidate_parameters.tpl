@@ -69,6 +69,29 @@
 		<td nowrap="nowrap">{$form.birth_city.label}</td>
 		<td nowrap="nowrap">{$form.birth_city.html}</td>
     </tr>
+    <tr>
+    <td nowrap="nowrap"><b>Sibling Infomation</b></td>
+       {foreach from=$sibling_list item=sibling key=keyid}
+    <tr>
+    <td nowrap="nowrap">{$form.SiblingID.label}</td>
+    <td>
+     <a href="main.php?test_name=timepoint_list&candID={$candID}">
+         {$sibling.Relation_CandID}
+      </a>
+   </td>
+    </tr>
+    <tr>
+    <td nowrap="nowrap">{$form.SiblingType.label}</td>
+    <td nowrap="nowrap">{$sibling.Relation_code}</td>
+    </tr>
+    {/foreach}
+    <td>
+    <a href="main.php?test_name=candidate_parameters&subtest=add_family&candID={$candID}&identifier={$candID}">
+    Add Sibling Information
+    </a>
+    </td>
+    </tr>
+    </br>
     {foreach from=$elements_list item=element}
 	<tr>
 		<td nowrap="nowrap">{$form.$element.label}</td>

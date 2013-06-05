@@ -52,7 +52,19 @@ class NDB_Form_candidate_parameters extends NDB_Form
         } else {
             $defaults['Age_Difference'] = $age['year']*12 + $age['mon']+ round($age['day']/30,2);
         }
+        $familyid = $DB->pselectOne("SELECT FamilyID from family where CandID=:CandidateID",array('CandidateID'=>$this->identifier));
+        if(Utility::isErrorX($familyid)){
+            $relations = $DB->pselect("SELECT Relation_candID, Relation_code from family WHERE CandID=:CandidateID",array('CandidateID'=> $this->identifier));
 
+        } else {
+            $this->tpl_data['familyID'] = $familyid;
+            $relations = $DB->pselect("SELECT Relation_candID, Relation_code from family WHERE FamilyID=:fam_id",array('fam_id'=> $familyid));
+
+        }
+        $this->tpl_data['sibling_list'] = array();
+        foreach($relations as $relation){
+            $this->tpl_data['sibling_list'][]= $relation;
+        }
         return $defaults;
     }
 
@@ -209,7 +221,8 @@ class NDB_Form_candidate_parameters extends NDB_Form
         $this->form->addElement('static', 'father_race', 'Father\'s Race:', $this->_getTSIinfo("father_race"));
         $this->form->addElement('static', 'birth_city', 'City of Birth:', $this->_getTSIinfo("city_of_birth"));
         $this->form->addElement('static', 'home_lang', 'Primary Language At Home:', $this->_getTSIinfo("primary_language"));
-
+        $this->form->addElement('static','SiblingID','Sibling ID:'); 
+        $this->form->addElement('select','SiblingType','Relation Type:', array(''=>'','broth'=>'Brother','siste'=>'Sister'));
     }
 
     /* This is taken from NDB_BVL_Instrument. It should be moved to NDB_Page once NDB_Page is merged. */
@@ -228,6 +241,61 @@ class NDB_Form_candidate_parameters extends NDB_Form
         }
         return $databaseValue;
     }
+
+    function add_family(){
+ $candidate =& Candidate::singleton($this->identifier);
+         if (PEAR::isError($candidate)) {
+                         return PEAR::raiseError("Candidate Error ($this->identifier): ".$candidate->getMessage());
+                                 }
+
+         $smarty = new Smarty_neurodb();
+        //$smarty->fetch("add_family.tpl");
+        $this->form->addElement('static','CandidateID','Candidate ID:' );
+        $this->form->addElement('text','SiblingID','Sibling ID:');
+        $this->form->addElement('select','SiblingType','Relation', array(''=>'','brother'=>'Brother','sister'=>'Sister'));
+        $this->form->addFormRule(array(&$this, '_validate_add_family'));
+        $this->tpl_data['candID'] = $_REQUEST['candID']; 
+
+
+    }
+
+    function _validate_add_family($values)
+    {    
+       $candidate =& Candidate::singleton($this->identifier);
+                 if (PEAR::isError($candidate)) {
+                                 return PEAR::raiseError("Candidate Error ($this->identifier): ".$candidate->getMessage());
+                                         }
+
+        if(!is_array($values) || count($values) ==0) {
+            return true;
+        }
+        $DB =& Database::singleton();
+        $fid = $candidate->getData('familyID');
+        if ($fid == null || $fid ==""){
+            $where = array();
+            $query = "SELECT max(FamilyID) from family";
+            $result = $DB->pselectOne($query, $where);
+            $fid = $result +1;
+        }
+        $error = array();
+        $set = array();
+        $set['CandID'] = $_REQUEST['candID'];
+        $set['Relation_candID'] = $values['SiblingID'];
+        $set['Relation_code'] = $values['SiblingType'];
+        $set['FamilyID'] = $fid;
+        $success = $DB->insert("family", $set);
+        if (PEAR::isError($success)) {
+            return PEAR::raiseError("DB Error: ".$success->getMessage());
+        }
+
+        $this->tpl_data['success'] = true;
+
+        // freeze it, just in case
+        $this->form->freeze();
+        
+        return $error;
+    }
+
 
 }
 ?>
