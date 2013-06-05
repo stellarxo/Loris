@@ -1878,8 +1878,6 @@ work or with social relationships?", $questionOptions);
         // GET per-instrument scores
         // from per-relative scores...
         $query_adhd='';
-        //print ($getData['Score_adhd_combined']);
-        //print_r($getData);
         if($relativeScores['Score_adhd_combined'] != NULL || $relativeScores['Score_adhd_inattentive'] != NULL || $relativeScores['Score_adhd_hyperactive'] != NULL){
             $query_adhd = "IF(((MAX(Score_adhd_combined)='Y' OR MAX(Score_adhd_inattentive)='Y'OR MAX(Score_adhd_hyperactive)='Y')), 'Y','N') AS ADHD";
         }
