@@ -1984,7 +1984,6 @@ work or with social relationships?", $questionOptions);
                 }
             }
         }
-        //print_r($scores);
         return $scores;
     }
 
