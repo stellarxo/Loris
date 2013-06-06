@@ -111,9 +111,7 @@ class NDB_BVL_Instrument_med_records_24 extends NDB_BVL_Instrument_med_records {
 
         $this->form->addElement('header', 'instrument_title', "Audiology Evaluation Results");
 
-        $this->form->addElement("select", "not_completed", "Status of audiology evaluation for this participant", array(null=>"", "complete"=>"Completed","not_complete"=>"Not Completed", "other"=>"Other (please specify)"));
-        $this->XINRegisterRule("not_completed", array("not_completed{@}=={@}NEVER_REQUIRED"));
-        $this->addTextElement("not_completed_other_specify", $this->indent . "If other, please specify", array("not_completed{@}=={@}other"), "Please specify.");
+        $this->form->addElement("select", "not_completed", "For this participant an audiology evaluation was", array(null=>"", "complete"=>"Completed","not_complete"=>"Not Completed", "other"=>"Not Answered"));
 
         $config =& NDB_Config::singleton();
         $this->dateOptions = array(
@@ -124,8 +122,10 @@ class NDB_BVL_Instrument_med_records_24 extends NDB_BVL_Instrument_med_records {
                 'addEmptyOption' => true,
                 'emptyOptionValue' => null
                 );
+		$this->form->addElement ( "static", null, "<BR>" ); //line space
+        $this->form->addElement("static",null,"If an audiology evaluation was completed, please provide the following information:");
         $this->addDateElement('hearing_screening', "Date of audiology evaluation:");
-        $this->XINRegisterRule("hearing_screening_date", array("hearing_screening_date_status{@}=={@}", "not_completed{@}!={@}non-asd"), "Please specify date of hearing");
+        $this->XINRegisterRule("hearing_screening_date", array("hearing_screening_date_status{@}=={@}", "not_completed{@}!={@}not_complete"), "Please specify date of hearing");
 
         $this->form->addElement("static", null);
         $this->form->addElement("header", null, "Methods used: (check all that apply)");
@@ -138,9 +138,9 @@ class NDB_BVL_Instrument_med_records_24 extends NDB_BVL_Instrument_med_records {
         $this->form->addElement("static", null);
         $this->form->addElement("header", null, "Test Results:");
         $this->form->addElement("select", "test_results", "Result", array(null=>"", "normal_hearing"=>"Normal hearing", "temporary_hearing_difficulty"=>"Temporary hearing difficulty", "equivocal_evaluation_results"=>"Equivocal evaluation results", "permanent_abnormal_hearing"=>"Permanent abnormal hearing", "not_answered"=>"Not Answered"));
-        $this->XINRegisterRule("test_results", array("not_completed{@}!={@}non-asd"), "Required");
+        $this->XINRegisterRule("test_results", array("not_completed{@}!={@}not_complete"), "Required");
         $this->form->addElement("select", "test_results_ear", $this->indent . "Ear", array(null=>"", "left_ear"=>"Left Ear", "right_ear"=>"Right Ear", "bilateral"=>"Bilateral", "not_answered"=>"Not answered"));
-        $this->XINRegisterRule("test_results_ear", array("test_results{@}!={@}normal_hearing", "not_completed{@}!={@}non-asd"), "Please specify and ear");
+        $this->XINRegisterRule("test_results_ear", array("test_results{@}!={@}normal_hearing", "not_completed{@}!={@}not_complete"), "Please specify and ear");
         $this->form->addElement("select", "test_results_severity", $this->indent . "Severity", array(null=>"", "partial"=>"Partial", "total"=>"Total", "not_answered"=>"Not Answered"));
         $this->XINRegisterRule("test_results_severity", array("test_results{@}=={@}temporary_hearing_difficulty|permanent_abnormal_hearing"), "Please indicate a severity");
         $this->addTextAreaElement("equivocal_evaluation_results_specify", $this->indent . $this->indent . "Equivocal evaluation results specify", array("test_results{@}=={@}equivocal_evaluation_results"), "This field is required for equivocal results");
