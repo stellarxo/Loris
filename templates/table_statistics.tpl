@@ -1,6 +1,5 @@
 {* Template to create a fancy stats table, such as the MRI breakdown
    or behavioural data breakdown.
-
     It requires the following variables to be set:
      - Header
      - DropdownOptions (options in the dropdown to change what you're seeing)
@@ -12,12 +11,21 @@
      - Visits (the visits to display)
      - Data (the data that populates the table)
  *}
-<h2 class="statsH2">{$Header}
- <form action="#{$Subsection|default:""}" onChange="$(this).submit();">
-    <input type="hidden" name="test_name" value="{$test_name}">
-    {html_options options=$DropdownOptions name="$DropdownName" selected=$DropdownSelected}
-    <input type="submit" />
-</form>
+<script type="text/javascript" src="js/modules/table_statistics.js"></script>
+
+<h2 class="statsH2">{$Header}</h2>
+
+{if $Subsection!="mri" }
+    {html_options id="instrument" options=$DropdownOptions name="$DropdownName" selected=$DropdownSelected}
+    <button onClick="updateDemographicInstrument()">Submit Query</button>
+{/if}
+
+{if $Subsection==mri }
+   {html_options id="mri_type" options=$DropdownOptions name="$DropdownName" selected=$DropdownSelected}
+    <button onClick="updateMRI()">Submit Query</button>
+{/if}
+
+
 </h2>
 <table class="data" width="50%">
     <tr>
