@@ -63,79 +63,89 @@ INSERT INTO instrument_subtests VALUES('', 'aosi', 'aosi_page2', 'General Observ
 	/**
 	 * Array of column names to be ignored by the double data entry conflict detector.
 	 */
-	$this->_doubleDataEntryDiffIgnoreColumns = array('CommentID', 'UserID', 'Testdate', 'Window_Difference', 'Candidate_Age',
-						       'q1_visual_tracking_notes',
-						       'q2_disengagement_of_attention_notes',
-						       'free_play_period_1_notes',
-						       'q3_orients_to_name_notes',
-						       'q4_differential_response_to_facial_emotion_notes',
-						       'q5_anticipatory_response_notes',
-						       'q6_imitation_of_actions_activity_1',
-						       'q6_imitation_of_actions_activity_2',
-						       'q6_imitation_of_actions_activity_3',
-						       'q6_imitation_of_actions_notes',
-						       'free_play_period_2_notes',
-						       'q7_social_babbling_notes',
-						       'q8_eye_contact_notes',
-						       'q9_reciprocal_social_smile_notes',
-						       'q10_coordination_of_eye_gaze_and_action_notes',
-						       'q11_reactivity_notes',
-						       'q14_social_interest_notes',
-						       'q15_transitions_notes',
-						       'q16_motor_control_and_behaviour_notes',
-						       'q17_atypical_motor_notes',
-						       'q18_atypical_sensory_notes',
-						       'q19_engagement_of_attention_notes',
-						       'q20_insistence_on_particular_objects_notes',
-						       'q21_social_referencing_notes',
-							 'q1_visual_tracking_notes',
-							 'q1_visual_tracking_notes_status',
-							 'q2_disengagement_of_attention_notes',
-							 'q2_disengagement_of_attention_notes_status',						       
-							 'free_play_period_1_notes',
-							 'free_play_period_1_notes_status',
-							 'q3_orients_to_name_notes',
-							 'q3_orients_to_name_notes_status',
-							 'q4_differential_response_to_facial_emotion_notes',
-							 'q4_differential_response_to_facial_emotion_notes_status',
-							 'q5_anticipatory_response_notes',
-							 'q5_anticipatory_response_notes_status',
-							 'q6_imitation_of_actions_activity_1',
-							 'q6_imitation_of_actions_activity_1_status',
-							 'q6_imitation_of_actions_activity_2',
-							 'q6_imitation_of_actions_activity_2_status',
-							 'q6_imitation_of_actions_activity_3',
-							 'q6_imitation_of_actions_activity_3_status',
-							 'q6_imitation_of_actions_notes',
-							 'q6_imitation_of_actions_notes_status',
-							 'free_play_period_2_notes',
-							 'free_play_period_2_notes_status',
-							 'q7_social_babbling_notes',
-							 'q7_social_babbling_notes_status',						       
-							 'q8_eye_contact_notes',
-							 'q8_eye_contact_notes_status',							
-							 'q9_reciprocal_social_smile_notes',
-							 'q9_reciprocal_social_smile_notes_status',
-							 'q10_coordination_of_eye_gaze_and_action_notes',
-							 'q10_coordination_of_eye_gaze_and_action_notes_status',
-							 'q11_reactivity_notes',
-							 'q11_reactivity_notes_status',
-							 'q14_social_interest_notes',
-							 'q14_social_interest_notes_status',
-							 'q15_transitions_notes',
-							 'q15_transitions_notes_status',
-							 'q16_motor_control_and_behaviour_notes',
-							 'q16_motor_control_and_behaviour_notes_status',
-							 'q17_atypical_motor_notes',
-							 'q17_atypical_motor_notes_status',
-							 'q18_atypical_sensory_notes',
-							 'q18_atypical_sensory_notes_status',
-							 'q19_engagement_of_attention_notes',
-							 'q19_engagement_of_attention_notes_status',
-							 'q20_insistence_on_particular_objects_notes',
-							 'q20_insistence_on_particular_objects_notes_status',
-							 'q21_social_referencing_notes',
-							 'q21_social_referencing_notes_status');
+        $this->_doubleDataEntryDiffIgnoreColumns = array('CommentID', 'UserID', 'Testdate', 'Window_Difference', 'Candidate_Age',
+                'q1_visual_tracking_notes',
+                'q2_disengagement_of_attention_notes',
+                'free_play_period_1_notes',
+                'q3_orients_to_name_notes',
+                'q4_differential_response_to_facial_emotion_notes',
+                'q5_anticipatory_response_notes',
+                'q6_imitation_of_actions_activity_1',
+                'q6_imitation_of_actions_activity_2',
+                'q6_imitation_of_actions_activity_3',
+                'q6_imitation_of_actions_notes',
+                'free_play_period_2_notes',
+                'q7_social_babbling_notes',
+                'q8_eye_contact_notes',
+                'q9_reciprocal_social_smile_notes',
+                'q10_coordination_of_eye_gaze_and_action_notes',
+                'q11_reactivity_notes',
+                'q14_social_interest_notes',
+                'q15_transitions_notes',
+                'q16_motor_control_and_behaviour_notes',
+                'q17_atypical_motor_notes',
+                'q18_atypical_sensory_notes',
+                'q19_engagement_of_attention_notes',
+                'q20_insistence_on_particular_objects_notes',
+                'q21_social_referencing_notes',
+                'q1_visual_tracking_notes',
+                'q1_visual_tracking_notes_status',
+                'q2_disengagement_of_attention_notes',
+                'q2_disengagement_of_attention_notes_status',						       
+                'free_play_period_1_notes',
+                'free_play_period_1_notes_status',
+                'q3_orients_to_name_notes',
+                'q3_orients_to_name_notes_status',
+                'q4_differential_response_to_facial_emotion_notes',
+                'q4_differential_response_to_facial_emotion_notes_status',
+                'q5_anticipatory_response_notes',
+                'q5_anticipatory_response_notes_status',
+                'q6_imitation_of_actions_activity_1',
+                'q6_imitation_of_actions_activity_1_status',
+                'q6_imitation_of_actions_activity_2',
+                'q6_imitation_of_actions_activity_2_status',
+                'q6_imitation_of_actions_activity_3',
+                'q6_imitation_of_actions_activity_3_status',
+                'q6_imitation_of_actions_notes',
+                'q6_imitation_of_actions_notes_status',
+                'free_play_period_2_notes',
+                'free_play_period_2_notes_status',
+                'q7_social_babbling_notes',
+                'q7_social_babbling_notes_status',						       
+                'q8_eye_contact_notes',
+                'q8_eye_contact_notes_status',							
+                'q9_reciprocal_social_smile_notes',
+                'q9_reciprocal_social_smile_notes_status',
+                'q10_coordination_of_eye_gaze_and_action_notes',
+                'q10_coordination_of_eye_gaze_and_action_notes_status',
+                'q11_reactivity_notes',
+                'q11_reactivity_notes_status',
+                'q14_social_interest_notes',
+                'q14_social_interest_notes_status',
+                'q15_transitions_notes',
+                'q15_transitions_notes_status',
+                'q16_motor_control_and_behaviour_notes',
+                'q16_motor_control_and_behaviour_notes_status',
+                'q17_atypical_motor_notes',
+                'q17_atypical_motor_notes_status',
+                'q18_atypical_sensory_notes',
+                'q18_atypical_sensory_notes_status',
+                'q19_engagement_of_attention_notes',
+                'q19_engagement_of_attention_notes_status',
+                'q20_insistence_on_particular_objects_notes',
+                'q20_insistence_on_particular_objects_notes_status',
+                'q21_social_referencing_notes',
+                'q21_social_referencing_notes_status',
+                'q1_visual_tracking_score',
+                'q2_disengagement_of_attention_score',
+                'q3_orients_to_name_score',
+                'q4_differential_response_to_facial_emotion_score',
+                'q5_anticipatory_response_score',
+                'q6_imitation_of_actions_score',
+                'total_score_1_18_override',
+                'total_score_1_18',
+                'number_of_markers_override',
+                'number_of_markers');
 
         // setup the form
         $this->_setupForm();
@@ -341,7 +351,10 @@ INSERT INTO instrument_subtests VALUES('', 'aosi', 'aosi_page2', 'General Observ
 
     
     function score() {
-        
+        if($this->_determineDataEntryCompletionStatus() == "Incomplete") {
+            return;
+        }
+
         //holds raw question values
         $score_record = array();
         
@@ -407,6 +420,7 @@ INSERT INTO instrument_subtests VALUES('', 'aosi', 'aosi_page2', 'General Observ
         //Question 3
         //calculate
             //2
+         if( $score_record[TrialName(1,1)] != NULL && $score_record[TrialName(2,1)] != NULL){   
             if($score_record[TrialName(1,1)] == "not_answered" ||
                 $score_record[TrialName(2,1)] == "not_answered") {
                 $this->scores["q3_orients_to_name_score"] = "Unable to score";
@@ -435,7 +449,9 @@ INSERT INTO instrument_subtests VALUES('', 'aosi', 'aosi_page2', 'General Observ
             else {
                 $this->scores["q3_orients_to_name_score"] = "Scoring error";
             }
-//        }
+        } else{
+                $this->scores["q3_orients_to_name_score"] = "Unable to score";
+            }
         
         //Question 4
         $this->scores["q4_differential_response_to_facial_emotion_score"] = $score_record["q4_differential_response_to_facial_emotion"];
