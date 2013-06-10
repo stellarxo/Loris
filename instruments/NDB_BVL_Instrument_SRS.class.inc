@@ -211,7 +211,7 @@ class NDB_BVL_Instrument_SRS extends NDB_BVL_Instrument
         $this->form->addElement('static', '', '<br />');
 
         $qNum = 1;
-        $page_questions = $this->questions[1];
+        $page_questions = array_merge($this->questions[1], $this->questions[2]);
 
         foreach($page_questions as $field => $question) {
             $this->_addDropdown($field, $qNum . '. ' . $question);
