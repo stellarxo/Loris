@@ -22,7 +22,7 @@
 
 {if $Subsection==mri }
    {html_options id="mri_type" options=$DropdownOptions name="$DropdownName" selected=$DropdownSelected}
-    <button onClick="updateMRI()">Submit Query</button>
+    <button onClick="updateMRITable()">Submit Query</button>
 {/if}
 
 
