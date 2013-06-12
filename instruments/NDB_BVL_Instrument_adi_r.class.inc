@@ -13,7 +13,8 @@ abstract class NDB_BVL_Instrument_adi_r extends NDB_BVL_Instrument
     */
     var $scoreCols = array("Total_A1", "Total_A2", "Total_A3", "Total_A4", "A_Total",
     						"Total_B1", "Total_B4", "Total_B2V", "Total_B3V", "BV_Total", "BNV_Total",
-    						"Total_C1", "Total_C2", "Total_C3", "Total_C4", "C_Total", "D_Total");
+    						"Total_C1", "Total_C2", "Total_C3", "Total_C4", "C_Total", "D_Total",
+                            "social_affect","repeat_restrict_behavior","imitation","reciprocal_interaction");
     						
     // Holds the algorithm score conversions
     var $scores = array();
@@ -179,7 +180,7 @@ abstract class NDB_BVL_Instrument_adi_r extends NDB_BVL_Instrument
             $this->form->addElement('date', 'DoB_proband', 'DoB Proband', $dateOptions);
         }
         
-        $this->form->addElement("header", null, "Scores");
+        $this->form->addElement("header", null, "Original Algorithm Scores");
 //        $this->form->addElement("static", null, "This scoring algorithm is currently in the testing phase.");
 //        $this->form->addElement("static", null, "Please inform the DCC of any oopsy daisies.");
         $this->form->addElement("static", null, "<BR>");
@@ -201,7 +202,8 @@ abstract class NDB_BVL_Instrument_adi_r extends NDB_BVL_Instrument
 							"Total_C4"=>"Total C4",
 							"C_Total"=>"C Total (cutoff = 3)",
 							"D_Total"=>"D Total (cutoff = 1)",
-							"summary_diagnosis"=>"Summary Diagnosis");
+							"summary_diagnosis"=>"Summary Diagnosis"
+                            );
 		foreach ($scoreLabels as $field=>$label) {
 			if(in_array($field, array("A_Total", "BV_Total", "BNV_Total", "C_Total", "D_Total")) == TRUE) {
 				$label = $this->indent . $this->indent . $label;
@@ -209,7 +211,18 @@ abstract class NDB_BVL_Instrument_adi_r extends NDB_BVL_Instrument
 	        $this->form->addElement("static", $field, $label);
 		}
 		$this->form->addElement('static', null, "<br /><br />");
+        $this->form->addElement("header", null, "Toddler Algorithm Scores");
+        $this->form->addElement("static", null, "<BR>");
+        $scoreLabels_toddler = array("social_affect" => "Social Affect",
+                                     "repeat_restrict_behavior" => "Repetitive & Restricted Behavior",
+                                     "imitation" => "Imitation, Gestures & Play Imitation",
+                                     "reciprocal_interaction" => "Reciprocal and Peer Interaction",
+                                     "toddler_summary_diagnosis" => "Summary of Toddler Diagnosis"
+                                     );
 
+        foreach ($scoreLabels_toddler as $field=>$label) {
+            $this->form->addElement("static", $field, $label);
+        }
     }
 
     function _score() {
@@ -226,7 +239,6 @@ abstract class NDB_BVL_Instrument_adi_r extends NDB_BVL_Instrument
         
         // null scores
         $this->_nullScores($this->scoreCols);
-
         // Get the item scores
         $query = "SELECT * FROM $this->table WHERE CommentID='".$this->getCommentID()."'";
         $record=array();
@@ -278,7 +290,6 @@ abstract class NDB_BVL_Instrument_adi_r extends NDB_BVL_Instrument
 									+ $this->scores["q_44_head_shaking_current_code"] + $this->scores["q_45_conventional_instr_gests_current_code"];
 			$scoreCols["Total_B4"] = $this->scores["q_47_spont_imit_current_code"] + $this->scores["q_48_imag_play_current_code"]
 									+ $this->scores["q_61_imit_soc_play_current_code"];
-//			if(substr($record["q_30_overall_level_of_language"], 0, 1) == 0) { //verbal subject
 			if($this->scores["q_30_overall_level_of_language"] == 0) { //verbal subject
 				$scoreCols["Total_B2V"] = $this->scores["q_34_social_verb_chat_current_code"] + $this->scores["q_35_recipr_convers_current_code"];
 				$scoreCols["Total_B3V"] = $this->scores["q_33_stereotyped_utterances_ever_code"] + $this->scores["q_36_inappropriate_qs_ever_code"]
@@ -352,7 +363,6 @@ abstract class NDB_BVL_Instrument_adi_r extends NDB_BVL_Instrument
 									+ $this->scores["q_44_head_shaking_most_abnormal_code"] + $this->scores["q_45_conventional_instr_gests_most_abnormal_code"];
 			$scoreCols["Total_B4"] = $this->scores["q_47_spont_imit_most_abnormal_code"] + $this->scores["q_48_imag_play_most_abnormal_code"]
 									+ $this->scores["q_61_imit_soc_play_most_abnormal_code"];
-//			if(substr($record["q_30_overall_level_of_language"], 0, 1) == 0) { //verbal subject
 			if($this->scores["q_30_overall_level_of_language"] == 0) { //verbal subject
 				$scoreCols["Total_B2V"] = $this->scores["q_34_social_verb_chat_ever_code"] + $this->scores["q_35_recipr_convers_ever_code"];
 				$scoreCols["Total_B3V"] = $this->scores["q_33_stereotyped_utterances_ever_code"] + $this->scores["q_36_inappropriate_qs_ever_code"]
@@ -407,7 +417,102 @@ abstract class NDB_BVL_Instrument_adi_r extends NDB_BVL_Instrument
 			     $scoreCols["D_Total"] += 1;
 			}
         }
+        $respondentAgeMonths = intval($this->respondentAgeYears*12);
+
+        if($respondentAgeMonths < 12 ){
+            $scoreCols["social_affect"] =" Respondent too young to score";
+            $scoreCols["repeat_restrict_behavior"] =" Respondent too young to score";
+            $scoreCols["imitation"] =" Respondent too young to score";
+
+        }elseif( $respondentAgeMonths > 47){
+            $scoreCols["social_affect"] =" Respondent too old to score";
+            $scoreCols["repeat_restrict_behavior"] =" Respondent too old to score";
+            $scoreCols["imitation"] =" Respondent too old to score";
+        } elseif( ($respondentAgeMonths >=12 && $respondentAgeMonths <= 20 ) || 
+             ($respondentAgeMonths >=21 && $respondentAgeMonths <= 47 && ($this->scores["q_30_overall_level_of_language"] == 0)) 
+            ) {
+           $toddler_algorithm = 1;       
+           $scoreCols["social_affect"]           =  $this->scores["q_46_attent_voice_current_code"] + 
+                                                    $this->scores["q_50_direct_gaze_current_code"]+ 
+                                                    $this->scores["q_51_social_smiling_current_code"] + 
+                                                    $this->scores["q_54_seek_share_enjoy_current_code"]+
+                                                    $this->scores["q_57_range_facial_expr_current_code"] +
+                                                    $this->scores["q_58_inappropriate_facial_current_code"] + 
+                                                    $this->scores["q_59_appropriat_resp_current_code"] + 
+                                                    $this->scores["q_62_inter_children_current_code"]+ 
+                                                    $this->scores["q_63_resp_approaches_current_code"];
+
+           $scoreCols["repeat_restrict_behavior"] = $this->scores["q_69_repet_use_objects_ever_code"]+ 
+                                                    $this->scores["q_77_hands_finger_manners_ever_code"]+
+                                                    $this->scores["q_78_oth_complex_manners_ever_code"]+ 
+                                                    $this->scores["q_71_unusual_sens_ints_ever_code"];
+
+           $scoreCols["imitation"]                = $this->scores["q_42_point_express_interest_current_code"]+ 
+                                                    $this->scores["q_45_conventional_instr_gests_current_code"]+
+                                                    $this->scores["q_47_spont_imit_current_code"]+
+                                                    $this->scores["q_53_offer_share_current_code"]+
+                                                    $this->scores["q_48_imag_play_current_code"] + 
+                                                    $this->scores["q_52_show_direct_atten_current_code"];
+            
+            $scoreCols["reciprocal_interaction"] ="N/A";
         
+        } elseif ($respondentAgeMonths >=21 && $respondentAgeMonths <= 47 && ($this->scores["q_30_overall_level_of_language"] == 1) ){
+            $toddler_algorithm = 2;       
+            $scoreCols["social_affect"]           = $this->scores["q_46_attent_voice_current_code"] + 
+                                                    $this->scores["q_50_direct_gaze_current_code"]+ 
+                                                    $this->scores["q_51_social_smiling_current_code"] +
+                                                    $this->scores["q_54_seek_share_enjoy_current_code"]+
+                                                    $this->scores["q_57_range_facial_expr_current_code"] +
+                                                    $this->scores["q_58_inappropriate_facial_current_code"] +
+                                                    $this->scores["q_59_appropriat_resp_current_code"] +
+                                                    $this->scores["q_62_inter_children_current_code"]+
+                                                    $this->scores["q_63_resp_approaches_current_code"]+ 
+                                                    $this->scores["q_56_qual_social_overts_current_code"] ;
+
+           $scoreCols["repeat_restrict_behavior"] = $this->scores["q_69_repet_use_objects_ever_code"]+
+                                                    $this->scores["q_77_hands_finger_manners_ever_code"]+
+                                                    $this->scores["q_78_oth_complex_manners_ever_code"]+
+                                                    $this->scores["q_71_unusual_sens_ints_ever_code"]+ 
+                                                    $this->scores["q_67_unusual_preoccupations_ever_code"]+
+                                                    $this->scores["q_70_compulsions_rituals_ever_code"];
+
+            $scoreCols["imitation"]               = $this->scores["q_42_point_express_interest_current_code"]+
+                                                    $this->scores["q_45_conventional_instr_gests_current_code"]+
+                                                    $this->scores["q_47_spont_imit_current_code"]+
+                                                    $this->scores["q_53_offer_share_current_code"]+
+                                                    $this->scores["q_48_imag_play_current_code"] ;
+
+            $scoreCols["reciprocal_interaction"] ="N/A";
+
+      } elseif ($respondentAgeMonths >=21 && $respondentAgeMonths <= 47 && ($this->scores["q_30_overall_level_of_language"] == 2) ){
+            $toddler_algorithm = 3;       
+            $scoreCols["social_affect"]           = $this->scores["q_46_attent_voice_current_code"] + 
+                                                    $this->scores["q_50_direct_gaze_current_code"]+ 
+                                                    $this->scores["q_43_nodding_current_code"] +
+                                                    $this->scores["q_54_seek_share_enjoy_current_code"]+
+                                                    $this->scores["q_57_range_facial_expr_current_code"] +
+                                                    $this->scores["q_55_offer_comf_current_code"]+
+                                                    $this->scores["q_42_point_express_interest_current_code"]+
+                                                    $this->scores["q_52_show_direct_atten_current_code"]+
+                                                    $this->scores["q_56_qual_social_overts_current_code"]+
+                                                    $this->scores["q_34_social_verb_chat_current_code"]+
+                                                    $this->scores["q_31_use_of_others_body_ever_code"];
+
+           $scoreCols["repeat_restrict_behavior"] = $this->scores["q_33_stereotyped_utterances_current_code"]+
+                                                    $this->scores["q_77_hands_finger_manners_ever_code"]+
+                                                    $this->scores["q_78_oth_complex_manners_ever_code"]+
+                                                    $this->scores["q_71_unusual_sens_ints_ever_code"]+ 
+                                                    $this->scores["q_67_unusual_preoccupations_ever_code"]+
+                                                    $this->scores["q_70_compulsions_rituals_ever_code"];
+
+            $scoreCols["reciprocal_interaction"] =  $this->scores["q_59_appropriat_resp_current_code"]+
+                                                    $this->scores["q_62_inter_children_current_code"]+
+                                                    $this->scores["q_63_resp_approaches_current_code"];
+           
+
+            $scoreCols["imitation"] ="N/A";
+             }
+//			if(substr($record["q_30_overall_level_of_language"], 0, 1) == 0) { //verbal subject
         //Summary Diagnosis
         if (is_string($scoreCols["A_Total"])) {
             $scoreCols["summary_diagnosis"] = "Respondent too young to score";
@@ -416,7 +521,41 @@ abstract class NDB_BVL_Instrument_adi_r extends NDB_BVL_Instrument
         } else {
             $scoreCols["summary_diagnosis"] = "ASD-";
         }
-        
+        $toddler_total = 0; 
+        //Summary Diagnosis toddler
+        if( is_string($scoreCols["social_affect"])) {
+            $scoreCols["toddler_summary_diagnosis"] = "Unable to diagnose";
+        } else {
+            $toddler_total = $scoreCols["social_affect"]+ $scoreCols["repeat_restrict_behavior"] ;
+            if($toddler_algorithm == 1){ 
+                if($toddler_total <= 10 && $toddler_total >=0){
+                    $scoreCols["toddler_summary_diagnosis"] = "Little-to-no concern";   
+                } elseif ($toddler_total <=13 && $toddler_total >=11){
+                    $scoreCols["toddler_summary_diagnosis"] = "Mild-to-Moderate concern";   
+                } elseif ($toddler_total >=14){
+                    $scoreCols["toddler_summary_diagnosis"] = "Moderate-to-Severe concern";   
+                }
+            }
+            if($toddler_algorithm == 2){ 
+                if($toddler_total <=7  && $toddler_total >=0){
+                    $scoreCols["toddler_summary_diagnosis"] = "Little-to-no concern";   
+                } elseif ($toddler_total <=13 && $toddler_total >=8){
+                    $scoreCols["toddler_summary_diagnosis"] = "Mild-to-Moderate concern";   
+                } elseif ($toddler_total >=14){
+                    $scoreCols["toddler_summary_diagnosis"] = "Moderate-to-Severe concern";   
+                }
+            }
+            if($toddler_algorithm == 3){ 
+                $toddler_total += $scoreCols["reciprocal_interaction"];
+                if($toddler_total <= 12 && $toddler_total >=0){
+                    $scoreCols["toddler_summary_diagnosis"] = "Little-to-no concern";   
+                } elseif ($toddler_total <=16 && $toddler_total >=13){
+                    $scoreCols["toddler_summary_diagnosis"] = "Mild-to-Moderate concern";   
+                } elseif ($toddler_total >=17){
+                    $scoreCols["toddler_summary_diagnosis"] = "Moderate-to-Severe concern";   
+                }
+            }
+        }
         // save the resultant total
         $result = $db->update($this->table, $scoreCols, array('CommentID'=>$this->getCommentID()));
         if($db->isError($result)) {
