@@ -14,6 +14,13 @@
                         Edit Candidate Info
 		{/if}
 	</li>
+        {if $isDCC}
+    <li>
+
+
+                        <a href="main.php?test_name=participant_status&candID={$candID}&identifier={$candID}">Edit Consent Info</a>
+        </li>
+        {/if}
 
 	<li>
     {*
