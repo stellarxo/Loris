@@ -423,11 +423,14 @@ abstract class NDB_BVL_Instrument_adi_r extends NDB_BVL_Instrument
             $scoreCols["social_affect"] =" Respondent too young to score";
             $scoreCols["repeat_restrict_behavior"] =" Respondent too young to score";
             $scoreCols["imitation"] =" Respondent too young to score";
+            $scoreCols["reciprocal_interaction"] ="Respondent too young to score";
 
         }elseif( $respondentAgeMonths > 47){
             $scoreCols["social_affect"] =" Respondent too old to score";
             $scoreCols["repeat_restrict_behavior"] =" Respondent too old to score";
             $scoreCols["imitation"] =" Respondent too old to score";
+            $scoreCols["reciprocal_interaction"] ="Respondent too old to score";
+
         } elseif( ($respondentAgeMonths >=12 && $respondentAgeMonths <= 20 ) || 
              ($respondentAgeMonths >=21 && $respondentAgeMonths <= 47 && ($this->scores["q_30_overall_level_of_language"] == 0)) 
             ) {
@@ -483,7 +486,7 @@ abstract class NDB_BVL_Instrument_adi_r extends NDB_BVL_Instrument
                                                     $this->scores["q_48_imag_play_current_code"] ;
 
             $scoreCols["reciprocal_interaction"] ="N/A";
-
+      
       } elseif ($respondentAgeMonths >=21 && $respondentAgeMonths <= 47 && ($this->scores["q_30_overall_level_of_language"] == 2) ){
             $toddler_algorithm = 3;       
             $scoreCols["social_affect"]           = $this->scores["q_46_attent_voice_current_code"] + 
