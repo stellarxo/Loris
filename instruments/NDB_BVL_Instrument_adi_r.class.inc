@@ -180,7 +180,7 @@ abstract class NDB_BVL_Instrument_adi_r extends NDB_BVL_Instrument
             $this->form->addElement('date', 'DoB_proband', 'DoB Proband', $dateOptions);
         }
         
-        $this->form->addElement("header", null, "Original Algorithm Scores");
+        $this->form->addElement("header", null, "Scores based on Original Algorithm");
 //        $this->form->addElement("static", null, "This scoring algorithm is currently in the testing phase.");
 //        $this->form->addElement("static", null, "Please inform the DCC of any oopsy daisies.");
         $this->form->addElement("static", null, "<BR>");
@@ -211,18 +211,18 @@ abstract class NDB_BVL_Instrument_adi_r extends NDB_BVL_Instrument
 	        $this->form->addElement("static", $field, $label);
 		}
 		$this->form->addElement('static', null, "<br /><br />");
-        $this->form->addElement("header", null, "Toddler Algorithm Scores");
+        $this->form->addElement("header", null, "Scores based on 2011 Algorithm");
         $this->form->addElement("static", null, "<BR>");
-        $scoreLabels_toddler = array("social_affect" => "Social Affect",
+        $scoreLabels_2011alg = array("social_affect" => "Social Affect",
                                      "repeat_restrict_behavior" => "Repetitive & Restricted Behavior",
                                      "imitation" => "Imitation, Gestures & Play Imitation",
                                      "reciprocal_interaction" => "Reciprocal and Peer Interaction",
-                                     "toddler_research_diag"  => "Research diagnosis",
-                                     "toddler_clinical_diag"  => "Clinical diagnosis",
-                                     "toddler_range_concern" => "Ranges of Concern"
+                                     "2011alg_research_diag"  => "Research diagnosis",
+                                     "2011alg_clinical_diag"  => "Clinical diagnosis",
+                                     "2011alg_range_concern" => "Ranges of Concern"
                                      );
 
-        foreach ($scoreLabels_toddler as $field=>$label) {
+        foreach ($scoreLabels_2011alg as $field=>$label) {
             $this->form->addElement("static", $field, $label);
         }
     }
@@ -436,7 +436,7 @@ abstract class NDB_BVL_Instrument_adi_r extends NDB_BVL_Instrument
         } elseif( ($respondentAgeMonths >=12 && $respondentAgeMonths <= 20 ) || 
              ($respondentAgeMonths >=21 && $respondentAgeMonths <= 47 && ($this->scores["q_30_overall_level_of_language"] == 0)) 
             ) {
-           $toddler_algorithm = 1;       
+           $2011alg_algorithm = 1;       
            $scoreCols["social_affect"]           =  $this->scores["q_46_attent_voice_current_code"] + 
                                                     $this->scores["q_50_direct_gaze_current_code"]+ 
                                                     $this->scores["q_51_social_smiling_current_code"] + 
@@ -462,7 +462,7 @@ abstract class NDB_BVL_Instrument_adi_r extends NDB_BVL_Instrument
             $scoreCols["reciprocal_interaction"] ="N/A";
         
         } elseif ($respondentAgeMonths >=21 && $respondentAgeMonths <= 47 && ($this->scores["q_30_overall_level_of_language"] == 1) ){
-            $toddler_algorithm = 2;       
+            $2011alg_algorithm = 2;       
             $scoreCols["social_affect"]           = $this->scores["q_46_attent_voice_current_code"] + 
                                                     $this->scores["q_50_direct_gaze_current_code"]+ 
                                                     $this->scores["q_51_social_smiling_current_code"] +
@@ -490,7 +490,7 @@ abstract class NDB_BVL_Instrument_adi_r extends NDB_BVL_Instrument
             $scoreCols["reciprocal_interaction"] ="N/A";
       
       } elseif ($respondentAgeMonths >=21 && $respondentAgeMonths <= 47 && ($this->scores["q_30_overall_level_of_language"] == 2) ){
-            $toddler_algorithm = 3;       
+            $2011alg_algorithm = 3;       
             $scoreCols["social_affect"]           = $this->scores["q_46_attent_voice_current_code"] + 
                                                     $this->scores["q_50_direct_gaze_current_code"]+ 
                                                     $this->scores["q_43_nodding_current_code"] +
@@ -526,70 +526,70 @@ abstract class NDB_BVL_Instrument_adi_r extends NDB_BVL_Instrument
         } else {
             $scoreCols["summary_diagnosis"] = "ASD-";
         }
-        $toddler_total = 0; 
-        //Summary Diagnosis toddler
+        $2011alg_total = 0; 
+        //Summary Diagnosis 2011alg
         if( is_string($scoreCols["social_affect"])) {
-            $scoreCols["toddler_research_diag"] = "Unable to diagnose";
-            $scoreCols["toddler_clinical_diag"] = "Unable to diagnose";
-            $scoreCols["toddler_range_concern"] = "Unable to diagnose";
+            $scoreCols["2011alg_research_diag"] = "Unable to diagnose";
+            $scoreCols["2011alg_clinical_diag"] = "Unable to diagnose";
+            $scoreCols["2011alg_range_concern"] = "Unable to diagnose";
         } else {
-            $toddler_total = $scoreCols["social_affect"]+ $scoreCols["repeat_restrict_behavior"] ;
-            if($toddler_algorithm == 1){ 
-                if($toddler_total <= 10 && $toddler_total >=0){
-                    $scoreCols["toddler_range_concern"] = "Little-to-no concern";   
-                } elseif ($toddler_total <=13 && $toddler_total >=11){
-                    $scoreCols["toddler_range_concern"] = "Mild-to-Moderate concern";   
-                } elseif ($toddler_total >=14){
-                    $scoreCols["toddler_range_concern"] = "Moderate-to-Severe concern";   
+            $2011alg_total = $scoreCols["social_affect"]+ $scoreCols["repeat_restrict_behavior"] ;
+            if($2011alg_algorithm == 1){ 
+                if($2011alg_total <= 10 && $2011alg_total >=0){
+                    $scoreCols["2011alg_range_concern"] = "Little-to-no concern";   
+                } elseif ($2011alg_total <=13 && $2011alg_total >=11){
+                    $scoreCols["2011alg_range_concern"] = "Mild-to-Moderate concern";   
+                } elseif ($2011alg_total >=14){
+                    $scoreCols["2011alg_range_concern"] = "Moderate-to-Severe concern";   
                 }
-                if($toddler_total > 13){
-                   $scoreCols["toddler_research_diag"] = "ASD+";    
+                if($2011alg_total >= 13){
+                   $scoreCols["2011alg_research_diag"] = "ASD+";    
                 } else {
-                   $scoreCols["toddler_research_diag"] = "ASD-";    
+                   $scoreCols["2011alg_research_diag"] = "ASD-";    
                 }
-                if($toddler_total > 11){
-                   $scoreCols["toddler_clinical_diag"] = "ASD+";    
+                if($2011alg_total >= 11){
+                   $scoreCols["2011alg_clinical_diag"] = "ASD+";    
                 } else {
-                   $scoreCols["toddler_clinical_diag"] = "ASD-";    
+                   $scoreCols["2011alg_clinical_diag"] = "ASD-";    
                 }
             }
-            if($toddler_algorithm == 2){ 
-                if($toddler_total <=7  && $toddler_total >=0){
-                    $scoreCols["toddler_range_concern"] = "Little-to-no concern";   
-                } elseif ($toddler_total <=13 && $toddler_total >=8){
-                    $scoreCols["toddler_range_concern"] = "Mild-to-Moderate concern";   
-                } elseif ($toddler_total >=14){
-                    $scoreCols["toddler_range_concern"] = "Moderate-to-Severe concern";   
+            if($2011alg_algorithm == 2){ 
+                if($2011alg_total <=7  && $2011alg_total >=0){
+                    $scoreCols["2011alg_range_concern"] = "Little-to-no concern";   
+                } elseif ($2011alg_total <=13 && $2011alg_total >=8){
+                    $scoreCols["2011alg_range_concern"] = "Mild-to-Moderate concern";   
+                } elseif ($2011alg_total >=14){
+                    $scoreCols["2011alg_range_concern"] = "Moderate-to-Severe concern";   
                 }
-                if($toddler_total > 13){
-                   $scoreCols["toddler_research_diag"] = "ASD+";    
+                if($2011alg_total >= 13){
+                   $scoreCols["2011alg_research_diag"] = "ASD+";    
                 } else {
-                   $scoreCols["toddler_research_diag"] = "ASD-";    
+                   $scoreCols["2011alg_research_diag"] = "ASD-";    
                 }
-                if($toddler_total > 8){
-                   $scoreCols["toddler_clinical_diag"] = "ASD+";    
+                if($2011alg_total >= 8){
+                   $scoreCols["2011alg_clinical_diag"] = "ASD+";    
                 } else {
-                   $scoreCols["toddler_clinical_diag"] = "ASD-";    
+                   $scoreCols["2011alg_clinical_diag"] = "ASD-";    
                 }
             }
-            if($toddler_algorithm == 3){ 
-                $toddler_total += $scoreCols["reciprocal_interaction"];
-                if($toddler_total <= 12 && $toddler_total >=0){
-                    $scoreCols["toddler_range_concern"] = "Little-to-no concern";   
-                } elseif ($toddler_total <=16 && $toddler_total >=13){
-                    $scoreCols["toddler_range_concern"] = "Mild-to-Moderate concern";   
-                } elseif ($toddler_total >=17){
-                    $scoreCols["toddler_range_concern"] = "Moderate-to-Severe concern";   
+            if($2011alg_algorithm == 3){ 
+                $2011alg_total += $scoreCols["reciprocal_interaction"];
+                if($2011alg_total <= 12 && $2011alg_total >=0){
+                    $scoreCols["2011alg_range_concern"] = "Little-to-no concern";   
+                } elseif ($2011alg_total <=16 && $2011alg_total >=13){
+                    $scoreCols["2011alg_range_concern"] = "Mild-to-Moderate concern";   
+                } elseif ($2011alg_total >=17){
+                    $scoreCols["2011alg_range_concern"] = "Moderate-to-Severe concern";   
                 }
-                if($toddler_total > 16){
-                   $scoreCols["toddler_research_diag"] = "ASD+";    
+                if($2011alg_total >= 16){
+                   $scoreCols["2011alg_research_diag"] = "ASD+";    
                 } else {
-                   $scoreCols["toddler_research_diag"] = "ASD-";    
+                   $scoreCols["2011alg_research_diag"] = "ASD-";    
                 }
-                if($toddler_total > 13){
-                   $scoreCols["toddler_clinical_diag"] = "ASD+";    
+                if($2011alg_total >= 13){
+                   $scoreCols["2011alg_clinical_diag"] = "ASD+";    
                 } else {
-                   $scoreCols["toddler_clinical_diag"] = "ASD-";    
+                   $scoreCols["2011alg_clinical_diag"] = "ASD-";    
                 }
             }
         }
