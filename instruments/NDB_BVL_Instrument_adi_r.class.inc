@@ -436,7 +436,7 @@ abstract class NDB_BVL_Instrument_adi_r extends NDB_BVL_Instrument
         } elseif( ($respondentAgeMonths >=12 && $respondentAgeMonths <= 20 ) || 
              ($respondentAgeMonths >=21 && $respondentAgeMonths <= 47 && ($this->scores["q_30_overall_level_of_language"] == 0)) 
             ) {
-           $2011alg_algorithm = 1;       
+           $alg_type = 1;       
            $scoreCols["social_affect"]           =  $this->scores["q_46_attent_voice_current_code"] + 
                                                     $this->scores["q_50_direct_gaze_current_code"]+ 
                                                     $this->scores["q_51_social_smiling_current_code"] + 
@@ -462,7 +462,7 @@ abstract class NDB_BVL_Instrument_adi_r extends NDB_BVL_Instrument
             $scoreCols["reciprocal_interaction"] ="N/A";
         
         } elseif ($respondentAgeMonths >=21 && $respondentAgeMonths <= 47 && ($this->scores["q_30_overall_level_of_language"] == 1) ){
-            $2011alg_algorithm = 2;       
+            $alg_type = 2;       
             $scoreCols["social_affect"]           = $this->scores["q_46_attent_voice_current_code"] + 
                                                     $this->scores["q_50_direct_gaze_current_code"]+ 
                                                     $this->scores["q_51_social_smiling_current_code"] +
@@ -490,7 +490,7 @@ abstract class NDB_BVL_Instrument_adi_r extends NDB_BVL_Instrument
             $scoreCols["reciprocal_interaction"] ="N/A";
       
       } elseif ($respondentAgeMonths >=21 && $respondentAgeMonths <= 47 && ($this->scores["q_30_overall_level_of_language"] == 2) ){
-            $2011alg_algorithm = 3;       
+            $alg_type = 3;       
             $scoreCols["social_affect"]           = $this->scores["q_46_attent_voice_current_code"] + 
                                                     $this->scores["q_50_direct_gaze_current_code"]+ 
                                                     $this->scores["q_43_nodding_current_code"] +
@@ -526,67 +526,67 @@ abstract class NDB_BVL_Instrument_adi_r extends NDB_BVL_Instrument
         } else {
             $scoreCols["summary_diagnosis"] = "ASD-";
         }
-        $2011alg_total = 0; 
+        $alg_total = 0; 
         //Summary Diagnosis 2011alg
         if( is_string($scoreCols["social_affect"])) {
             $scoreCols["2011alg_research_diag"] = "Unable to diagnose";
             $scoreCols["2011alg_clinical_diag"] = "Unable to diagnose";
             $scoreCols["2011alg_range_concern"] = "Unable to diagnose";
         } else {
-            $2011alg_total = $scoreCols["social_affect"]+ $scoreCols["repeat_restrict_behavior"] ;
-            if($2011alg_algorithm == 1){ 
-                if($2011alg_total <= 10 && $2011alg_total >=0){
+            $alg_total = $scoreCols["social_affect"]+ $scoreCols["repeat_restrict_behavior"] ;
+            if($alg_type == 1){ 
+                if($alg_total <= 10 && $alg_total >=0){
                     $scoreCols["2011alg_range_concern"] = "Little-to-no concern";   
-                } elseif ($2011alg_total <=13 && $2011alg_total >=11){
+                } elseif ($alg_total <=13 && $alg_total >=11){
                     $scoreCols["2011alg_range_concern"] = "Mild-to-Moderate concern";   
-                } elseif ($2011alg_total >=14){
+                } elseif ($alg_total >=14){
                     $scoreCols["2011alg_range_concern"] = "Moderate-to-Severe concern";   
                 }
-                if($2011alg_total >= 13){
+                if($alg_total >= 13){
                    $scoreCols["2011alg_research_diag"] = "ASD+";    
                 } else {
                    $scoreCols["2011alg_research_diag"] = "ASD-";    
                 }
-                if($2011alg_total >= 11){
+                if($alg_total >= 11){
                    $scoreCols["2011alg_clinical_diag"] = "ASD+";    
                 } else {
                    $scoreCols["2011alg_clinical_diag"] = "ASD-";    
                 }
             }
-            if($2011alg_algorithm == 2){ 
-                if($2011alg_total <=7  && $2011alg_total >=0){
+            if($alg_type == 2){ 
+                if($alg_total <=7  && $alg_total >=0){
                     $scoreCols["2011alg_range_concern"] = "Little-to-no concern";   
-                } elseif ($2011alg_total <=13 && $2011alg_total >=8){
+                } elseif ($alg_total <=13 && $alg_total >=8){
                     $scoreCols["2011alg_range_concern"] = "Mild-to-Moderate concern";   
-                } elseif ($2011alg_total >=14){
+                } elseif ($alg_total >=14){
                     $scoreCols["2011alg_range_concern"] = "Moderate-to-Severe concern";   
                 }
-                if($2011alg_total >= 13){
+                if($alg_total >= 13){
                    $scoreCols["2011alg_research_diag"] = "ASD+";    
                 } else {
                    $scoreCols["2011alg_research_diag"] = "ASD-";    
                 }
-                if($2011alg_total >= 8){
+                if($alg_total >= 8){
                    $scoreCols["2011alg_clinical_diag"] = "ASD+";    
                 } else {
                    $scoreCols["2011alg_clinical_diag"] = "ASD-";    
                 }
             }
-            if($2011alg_algorithm == 3){ 
-                $2011alg_total += $scoreCols["reciprocal_interaction"];
-                if($2011alg_total <= 12 && $2011alg_total >=0){
+            if($alg_type == 3){ 
+                $alg_total += $scoreCols["reciprocal_interaction"];
+                if($alg_total <= 12 && $alg_total >=0){
                     $scoreCols["2011alg_range_concern"] = "Little-to-no concern";   
-                } elseif ($2011alg_total <=16 && $2011alg_total >=13){
+                } elseif ($alg_total <=16 && $alg_total >=13){
                     $scoreCols["2011alg_range_concern"] = "Mild-to-Moderate concern";   
-                } elseif ($2011alg_total >=17){
+                } elseif ($alg_total >=17){
                     $scoreCols["2011alg_range_concern"] = "Moderate-to-Severe concern";   
                 }
-                if($2011alg_total >= 16){
+                if($alg_total >= 16){
                    $scoreCols["2011alg_research_diag"] = "ASD+";    
                 } else {
                    $scoreCols["2011alg_research_diag"] = "ASD-";    
                 }
-                if($2011alg_total >= 13){
+                if($alg_total >= 13){
                    $scoreCols["2011alg_clinical_diag"] = "ASD+";    
                 } else {
                    $scoreCols["2011alg_clinical_diag"] = "ASD-";    
