@@ -217,7 +217,9 @@ abstract class NDB_BVL_Instrument_adi_r extends NDB_BVL_Instrument
                                      "repeat_restrict_behavior" => "Repetitive & Restricted Behavior",
                                      "imitation" => "Imitation, Gestures & Play Imitation",
                                      "reciprocal_interaction" => "Reciprocal and Peer Interaction",
-                                     "toddler_summary_diagnosis" => "Summary of Toddler Diagnosis"
+                                     "toddler_research_diag"  => "Research diagnosis",
+                                     "toddler_clinical_diag"  => "Clinical diagnosis",
+                                     "toddler_range_concern" => "Ranges of Concern"
                                      );
 
         foreach ($scoreLabels_toddler as $field=>$label) {
@@ -527,35 +529,67 @@ abstract class NDB_BVL_Instrument_adi_r extends NDB_BVL_Instrument
         $toddler_total = 0; 
         //Summary Diagnosis toddler
         if( is_string($scoreCols["social_affect"])) {
-            $scoreCols["toddler_summary_diagnosis"] = "Unable to diagnose";
+            $scoreCols["toddler_research_diag"] = "Unable to diagnose";
+            $scoreCols["toddler_clinical_diag"] = "Unable to diagnose";
+            $scoreCols["toddler_range_concern"] = "Unable to diagnose";
         } else {
             $toddler_total = $scoreCols["social_affect"]+ $scoreCols["repeat_restrict_behavior"] ;
             if($toddler_algorithm == 1){ 
                 if($toddler_total <= 10 && $toddler_total >=0){
-                    $scoreCols["toddler_summary_diagnosis"] = "Little-to-no concern";   
+                    $scoreCols["toddler_range_concern"] = "Little-to-no concern";   
                 } elseif ($toddler_total <=13 && $toddler_total >=11){
-                    $scoreCols["toddler_summary_diagnosis"] = "Mild-to-Moderate concern";   
+                    $scoreCols["toddler_range_concern"] = "Mild-to-Moderate concern";   
                 } elseif ($toddler_total >=14){
-                    $scoreCols["toddler_summary_diagnosis"] = "Moderate-to-Severe concern";   
+                    $scoreCols["toddler_range_concern"] = "Moderate-to-Severe concern";   
+                }
+                if($toddler_total > 13){
+                   $scoreCols["toddler_research_diag"] = "ASD+";    
+                } else {
+                   $scoreCols["toddler_research_diag"] = "ASD-";    
+                }
+                if($toddler_total > 11){
+                   $scoreCols["toddler_clinical_diag"] = "ASD+";    
+                } else {
+                   $scoreCols["toddler_clinical_diag"] = "ASD-";    
                 }
             }
             if($toddler_algorithm == 2){ 
                 if($toddler_total <=7  && $toddler_total >=0){
-                    $scoreCols["toddler_summary_diagnosis"] = "Little-to-no concern";   
+                    $scoreCols["toddler_range_concern"] = "Little-to-no concern";   
                 } elseif ($toddler_total <=13 && $toddler_total >=8){
-                    $scoreCols["toddler_summary_diagnosis"] = "Mild-to-Moderate concern";   
+                    $scoreCols["toddler_range_concern"] = "Mild-to-Moderate concern";   
                 } elseif ($toddler_total >=14){
-                    $scoreCols["toddler_summary_diagnosis"] = "Moderate-to-Severe concern";   
+                    $scoreCols["toddler_range_concern"] = "Moderate-to-Severe concern";   
+                }
+                if($toddler_total > 13){
+                   $scoreCols["toddler_research_diag"] = "ASD+";    
+                } else {
+                   $scoreCols["toddler_research_diag"] = "ASD-";    
+                }
+                if($toddler_total > 8){
+                   $scoreCols["toddler_clinical_diag"] = "ASD+";    
+                } else {
+                   $scoreCols["toddler_clinical_diag"] = "ASD-";    
                 }
             }
             if($toddler_algorithm == 3){ 
                 $toddler_total += $scoreCols["reciprocal_interaction"];
                 if($toddler_total <= 12 && $toddler_total >=0){
-                    $scoreCols["toddler_summary_diagnosis"] = "Little-to-no concern";   
+                    $scoreCols["toddler_range_concern"] = "Little-to-no concern";   
                 } elseif ($toddler_total <=16 && $toddler_total >=13){
-                    $scoreCols["toddler_summary_diagnosis"] = "Mild-to-Moderate concern";   
+                    $scoreCols["toddler_range_concern"] = "Mild-to-Moderate concern";   
                 } elseif ($toddler_total >=17){
-                    $scoreCols["toddler_summary_diagnosis"] = "Moderate-to-Severe concern";   
+                    $scoreCols["toddler_range_concern"] = "Moderate-to-Severe concern";   
+                }
+                if($toddler_total > 16){
+                   $scoreCols["toddler_research_diag"] = "ASD+";    
+                } else {
+                   $scoreCols["toddler_research_diag"] = "ASD-";    
+                }
+                if($toddler_total > 13){
+                   $scoreCols["toddler_clinical_diag"] = "ASD+";    
+                } else {
+                   $scoreCols["toddler_clinical_diag"] = "ASD-";    
                 }
             }
         }
