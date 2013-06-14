@@ -1630,9 +1630,14 @@ class NDB_BVL_Instrument_EARLI_interview_PART_2 extends NDB_BVL_Instrument_EARLI
 
 
         //q5-85
-        $this->form->addElement("select", "q5_85", "5-85. Was medication taken for the illness?",  array(NULL=>"", "01_yes" => "01 Yes", "02" => "02 No ", "88_refused" => "88 Refused",  "99_Do_not_know"=>"99 Do not know", "Not_Answered"=>"Not Answered"));
+        $this->form->addElement("select", "q5_85", "5-85. Was medication taken for the first illness?",  array(NULL=>"", "01_yes" => "01 Yes", "02" => "02 No ", "88_refused" => "88 Refused",  "99_Do_not_know"=>"99 Do not know", "Not_Answered"=>"Not Answered"));
         $this->XINRegisterRule("q5_85", array("q5_85{@}=={@}NEVER_REQUIRED"));
+        $this->form->addElement("select", "q5_85_illness2", "5-85. Was medication taken for the second illness?",  array(NULL=>"", "01_yes" => "01 Yes", "02" => "02 No ", "88_refused" => "88 Refused",  "99_Do_not_know"=>"99 Do not know", "Not_Answered"=>"Not Answered"));
+        $this->XINRegisterRule("q5_85_illness2", array("q5_85_illness2{@}=={@}NEVER_REQUIRED"));
+        $this->form->addElement("select", "q5_85_illness3", "5-85. Was medication taken for the third illness?",  array(NULL=>"", "01_yes" => "01 Yes", "02" => "02 No ", "88_refused" => "88 Refused",  "99_Do_not_know"=>"99 Do not know", "Not_Answered"=>"Not Answered"));
+        $this->XINRegisterRule("q5_85_illness3", array("q5_85_illness3{@}=={@}NEVER_REQUIRED"));
         $this->form->addElement('static', null, $this->indent . "If you selected [No], [Refused] or [Don't Know] skip to question 5-88");
+
         $this->form->addElement('static', null, "<br/>");
         $this->form->addElement('static', null, "<br/>");
 
