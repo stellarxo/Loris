@@ -4,7 +4,7 @@ date{@}Date_taken{@}Date of Administration{@}2006{@}2014
 static{@}Candidate_Age{@}Candidate Age (Months)
 static{@}Window_Difference{@}Window Difference (+/- Days)
 select{@}Examiner{@}Examiner{@}NULL=>''
-date{@}Date_lastvist_date{@}Date of Last Visit{@}2006{@}2014
+date{@}Date_lastvist{@}Date of Last Visit{@}2006{@}2014
 static{@}{@}<br />
 static{@}{@}<br />
 select{@}q1_earlyintervention_birthtothreeprg{@}1) Since your last visit, did a professional refer your child to an 'early intervention' or 'birth-to-three' program?(Depending on where you live, these programs may have different names.){@}NULL=>''{-}'yes'=>'Yes'{-}'no'=>'No'{-}'not_answered'=>'Not Answered'
