@@ -4,31 +4,68 @@ date{@}Date_taken{@}Date of Administration{@}2006{@}2012
 static{@}Candidate_Age{@}Candidate Age (Months)
 static{@}Window_Difference{@}Window Difference (+/- Days)
 select{@}Examiner{@}Examiner{@}NULL=>''
-header{@}{@}CBCL
 select{@}relationship{@}Relationship of Respondent to Individual{@}NULL=>''{-}'mother'=>'Mother'{-}'father'=>'Father'{-}'other'=>'Other'{-}'not_answered'=>'Not Answered'
 text{@}relationship_other{@}If other, specify
-select{@}relationshop_other_status{@}{@}NULL=>''{-}'not_answered'=>'Not Answered'
+select{@}relationship_other_status{@}{@}NULL=>''{-}'not_answered'=>'Not Answered'
 header{@}{@} Empirical Based Scales
 static{@}emotional_raw{@}Emotionally Reactive Raw Score
+static{@}emotional_t{@}Emotionally Reactive T Score
+static{@}emotional_percentile{@}Emotionally Reactive Percentile
+static{@}{@}<br />
 static{@}anxious_raw{@}Anxious Depressed Raw Score
+static{@}anxious_t{@}Anxious Depressed T Score
+static{@}anxious_percentile{@}Anxious Depressed Percentile
+static{@}{@}<br />
 static{@}somatic_raw{@}Somatic Complaints Raw Score
+static{@}somatic_t{@}Somatic Complaints T Score
+static{@}somatic_percentile{@}Somatic Complaints Percentile
+static{@}{@}<br />
 static{@}withdrawn_raw{@}Withdrawn Raw Score
+static{@}withdrawn_t{@}Withdrawn T Score
+static{@}withdrawn_percentile{@}Withdrawn Percentile
+static{@}{@}<br />
 static{@}sleep_raw{@}Sleep Problems Raw Score
+static{@}sleep_t{@}Sleep Problems T Score
+static{@}sleep_percentile{@}Sleep Problems Percentile
+static{@}{@}<br />
 static{@}attention_raw{@}Attention Problems Raw Score
+static{@}attention_t{@}Attention Problems T Score
+static{@}attention_percentile{@}Attention Problems Percentile
+static{@}{@}<br />
 static{@}aggressive_raw{@}Aggressive Behavior Raw Score
+static{@}aggressive_t{@}Aggressive Behavior T Score
+static{@}aggressive_percentile{@}Aggressive Behavior Percentile
+static{@}{@}<br />
 static{@}other_raw{@}Other Problems Raw Score
+static{@}{@}<br />
 static{@}internal_raw{@}Internal Problems Raw Score
 static{@}internal_t{@}Internal Problems T Score
+static{@}{@}<br />
 static{@}external_raw{@}External Problems Raw Score
 static{@}external_t{@}External Problems T Score
+static{@}{@}<br />
 static{@}total_raw{@}Total Problems Raw Score
 static{@}total_t{@}Total Problems T score
 header{@}{@} DSM-Oriented Scales
 static{@}dsm_affective_raw{@}Affective Problems Raw Score
+static{@}dsm_affective_t{@}Affective Problems T Score
+static{@}dsm_affective_percentile{@}Affective Problems Percentile
+static{@}{@}<br />
 static{@}dsm_anxiety_raw{@}Anxiety Problems Raw Score
+static{@}dsm_anxiety_t{@}Anxiety Problems T Score
+static{@}dsm_anxiety_percentile{@}Anxiety Problems Percentile
+static{@}{@}<br />
 static{@}dsm_mental_raw{@}Pervasive Developmental Problems Raw Score
+static{@}dsm_mental_t{@}Pervasive Developmental Problems T Score
+static{@}dsm_mental_percentile{@}Pervasive Developmental Problems Percentile
+static{@}{@}<br />
 static{@}dsm_attention_raw{@}Attention Deficit/Hperactivity Problems Raw Score
+static{@}dsm_attention_t{@}Attention Deficit/Hperactivity Problems T Score
+static{@}dsm_attention_percentile{@}Attention Deficit/Hperactivity Problems Percentile
+static{@}{@}<br />
 static{@}dsm_oppose_raw{@}Oppositional Definant Problems Raw Score
+static{@}dsm_oppose_t{@}Oppositional Definant Problems T Score
+static{@}dsm_oppose_percentile{@}Oppositional Definant Problems Percentile
 page{@}{@}Page 1
 select{@}q1_aches{@}1. Aches or pains (without medical cause; do not include stomach or headaches){@}NULL=>''{-}'0_not_true'=>'0. Not True'{-}'1_somewhat_or_sometimes_true'=>'1. Somewhat or Sometimes True'{-}'2_very_true_or_often_true'=>'2. Very True or Often True'{-}'not_answered'=>'Not Answered'
 select{@}q2_young{@}2. Acts too young for age{@}NULL=>''{-}'0_not_true'=>'0. Not True'{-}'1_somewhat_or_sometimes_true'=>'1. Somewhat or Sometimes True'{-}'2_very_true_or_often_true'=>'2. Very True or Often True'{-}'not_answered'=>'Not Answered'

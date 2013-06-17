@@ -1,3 +1,4 @@
+DROP TABLE IF EXISTS CBCL;
 CREATE TABLE `CBCL` (
 `CommentID` varchar(255) NOT NULL default '',
                           `UserID` varchar(255) default NULL,
@@ -9,14 +10,28 @@ CREATE TABLE `CBCL` (
 `Window_Difference` varchar(255) default NULL,
 `relationship` enum('mother','father','other','not_answered') default NULL,
 `relationship_other` varchar(255) default NULL,
-`relationshop_other_status` enum('not_answered') default NULL,
+`relationship_other_status` enum('not_answered') default NULL,
 `emotional_raw` varchar(255) default NULL,
+`emotional_t` varchar(255) default NULL,
+`emotional_percentile` varchar(255) default NULL,
 `anxious_raw` varchar(255) default NULL,
+`anxious_t` varchar(255) default NULL,
+`anxious_percentile` varchar(255) default NULL,
 `somatic_raw` varchar(255) default NULL,
+`somatic_t` varchar(255) default NULL,
+`somatic_percentile` varchar(255) default NULL,
 `withdrawn_raw` varchar(255) default NULL,
+`withdrawn_t` varchar(255) default NULL,
+`withdrawn_percentile` varchar(255) default NULL,
 `sleep_raw` varchar(255) default NULL,
+`sleep_t` varchar(255) default NULL,
+`sleep_percentile` varchar(255) default NULL,
 `attention_raw` varchar(255) default NULL,
+`attention_t` varchar(255) default NULL,
+`attention_percentile` varchar(255) default NULL,
 `aggressive_raw` varchar(255) default NULL,
+`aggressive_t` varchar(255) default NULL,
+`aggressive_percentile` varchar(255) default NULL,
 `other_raw` varchar(255) default NULL,
 `internal_raw` varchar(255) default NULL,
 `internal_t` varchar(255) default NULL,
@@ -25,10 +40,20 @@ CREATE TABLE `CBCL` (
 `total_raw` varchar(255) default NULL,
 `total_t` varchar(255) default NULL,
 `dsm_affective_raw` varchar(255) default NULL,
+`dsm_affective_t` varchar(255) default NULL,
+`dsm_affective_percentile` varchar(255) default NULL,
 `dsm_anxiety_raw` varchar(255) default NULL,
+`dsm_anxiety_t` varchar(255) default NULL,
+`dsm_anxiety_percentile` varchar(255) default NULL,
 `dsm_mental_raw` varchar(255) default NULL,
+`dsm_mental_t` varchar(255) default NULL,
+`dsm_mental_percentile` varchar(255) default NULL,
 `dsm_attention_raw` varchar(255) default NULL,
+`dsm_attention_t` varchar(255) default NULL,
+`dsm_attention_percentile` varchar(255) default NULL,
 `dsm_oppose_raw` varchar(255) default NULL,
+`dsm_oppose_t` varchar(255) default NULL,
+`dsm_oppose_percentile` varchar(255) default NULL,
 `q1_aches` enum('0_not_true','1_somewhat_or_sometimes_true','2_very_true_or_often_true','not_answered') default NULL,
 `q2_young` enum('0_not_true','1_somewhat_or_sometimes_true','2_very_true_or_often_true','not_answered') default NULL,
 `q3_afraid` enum('0_not_true','1_somewhat_or_sometimes_true','2_very_true_or_often_true','not_answered') default NULL,
@@ -154,8 +179,3 @@ CREATE TABLE `CBCL` (
 `q100_otherproblems_status` enum('not_answered') default NULL,
 PRIMARY KEY  (`CommentID`)
 );
-REPLACE INTO test_names (Test_name, Full_name, Sub_group) VALUES ('CBCL', 'Child Behavior Checklist (CBCL)', 1);
-INSERT INTO instrument_subtests (Test_name, Subtest_name, Description) VALUES ('CBCL', 'CBCL_page1', 'Page 1');
-INSERT INTO instrument_subtests (Test_name, Subtest_name, Description) VALUES ('CBCL', 'CBCL_page2', 'Page 2');
-INSERT INTO instrument_subtests (Test_name, Subtest_name, Description) VALUES ('CBCL', 'CBCL_page3', 'Page 3');
-INSERT INTO instrument_subtests (Test_name, Subtest_name, Description) VALUES ('CBCL', 'CBCL_page4', 'Page 4');
