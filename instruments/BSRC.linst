@@ -1,11 +1,12 @@
 table{@}BSRC
 title{@}BSRC Treatment form
+date{@}Date_taken{@}Date of Administration{@}2006{@}2014
 static{@}Candidate_Age{@}Candidate Age (Months)
 static{@}Window_Difference{@}Window Difference (+/- Days)
 select{@}Examiner{@}Examiner{@}NULL=>''
-date{@}Date_lastvist{@}Date of Last Visit{@}2006{@}2014
-static{@}</BR>
-static{@}</BR>
+date{@}Date_lastvist_date{@}Date of Last Visit{@}2006{@}2014
+static{@}{@}<br />
+static{@}{@}<br />
 select{@}q1_earlyintervention_birthtothreeprg{@}1) Since your last visit, did a professional refer your child to an 'early intervention' or 'birth-to-three' program?(Depending on where you live, these programs may have different names.){@}NULL=>''{-}'yes'=>'Yes'{-}'no'=>'No'{-}'not_answered'=>'Not Answered'
 select{@}q2_receive_earlyintervention_birthtothreeprg{@}2) Since your last visit, did your child receive any 'early intervention' or 'birth-to-three' program services?{@}NULL=>''{-}'yes'=>'Yes'{-}'no'=>'No'{-}'not_answered'=>'Not Answered'
 numeric{@}hrs_earlyintervention_birthtothreeprg{@}If Yes, Please specify Average Hours per week
@@ -44,7 +45,7 @@ select{@}avg_physicaltherapy_other_status{@}{@}NULL=>''{-}'not_answered'=>'Not A
 header{@}{@}Speech-language Therapy
 select{@}servicetype_speechlangtherapy{@}Received physical therapy{@}NULL=>''{-}'yes'=>'Yes'{-}'no'=>'No'{-}'not_answered'=>'Not Answered'
 text{@}startdate_speechlangtherapy{@}Date started (mm/yy)
-select{@}startdate_speechlangtherapyy_status{@}{@}NULL=>''{-}'not_answered'=>'Not Answered'
+select{@}startdate_speechlangtherapy_status{@}{@}NULL=>''{-}'not_answered'=>'Not Answered'
 select{@}continue_speechlangtherapy{@}Still receiving intervention?{@}NULL=>''{-}'yes'=>'Yes'{-}'no'=>'No'{-}'not_answered'=>'Not Answered'
 text{@}continue_speechlangtherapy_comment{@}If, NO, date stopped (mm/yy):
 select{@}continue_speechlangtherapy_comment_status{@}{@}NULL=>''{-}'not_answered'=>'Not Answered'
