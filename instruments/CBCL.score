@@ -129,12 +129,7 @@ foreach ($lookup_fields as $key=>$value) {
     if (! in_array($key, $non_percent)){
         $score_field = $key."_percentile";
         $scores[$score_field] = $tscore['Percentile'];
-    }/* else {
-           $score_field = $key."_percentile";
-           $scores[$score_field] = $tscore['Percentile'];
-   
-     }
-   */
+    }
 }
 //save scores
 $result = $db->update('CBCL', $scores, $WhereCriteria);
