@@ -211,18 +211,18 @@ abstract class NDB_BVL_Instrument_adi_r extends NDB_BVL_Instrument
 	        $this->form->addElement("static", $field, $label);
 		}
 		$this->form->addElement('static', null, "<br /><br />");
-        $this->form->addElement("header", null, "Scores based on 2011 Algorithm");
+        $this->form->addElement("header", null, "Scores based on 2012 Algorithm");
         $this->form->addElement("static", null, "<BR>");
-        $scoreLabels_2011alg = array("social_affect" => "Social Affect",
+        $scoreLabels_2012alg = array("social_affect" => "Social Affect",
                                      "repeat_restrict_behavior" => "Repetitive & Restricted Behavior",
                                      "imitation" => "Imitation, Gestures & Play Imitation",
                                      "reciprocal_interaction" => "Reciprocal and Peer Interaction",
-                                     "2011alg_research_diag"  => "Research diagnosis",
-                                     "2011alg_clinical_diag"  => "Clinical diagnosis",
-                                     "2011alg_range_concern" => "Ranges of Concern"
+                                     "2012alg_research_diag"  => "Research diagnosis",
+                                     "2012alg_clinical_diag"  => "Clinical diagnosis",
+                                     "2012alg_range_concern" => "Ranges of Concern"
                                      );
 
-        foreach ($scoreLabels_2011alg as $field=>$label) {
+        foreach ($scoreLabels_2012alg as $field=>$label) {
             $this->form->addElement("static", $field, $label);
         }
     }
@@ -527,69 +527,69 @@ abstract class NDB_BVL_Instrument_adi_r extends NDB_BVL_Instrument
             $scoreCols["summary_diagnosis"] = "ASD-";
         }
         $alg_total = 0; 
-        //Summary Diagnosis 2011alg
+        //Summary Diagnosis 2012alg
         if( is_string($scoreCols["social_affect"])) {
-            $scoreCols["2011alg_research_diag"] = "Unable to diagnose";
-            $scoreCols["2011alg_clinical_diag"] = "Unable to diagnose";
-            $scoreCols["2011alg_range_concern"] = "Unable to diagnose";
+            $scoreCols["2012alg_research_diag"] = "Unable to diagnose";
+            $scoreCols["2012alg_clinical_diag"] = "Unable to diagnose";
+            $scoreCols["2012alg_range_concern"] = "Unable to diagnose";
         } else {
             $alg_total = $scoreCols["social_affect"]+ $scoreCols["repeat_restrict_behavior"] ;
             if($alg_type == 1){ 
                 if($alg_total <= 10 && $alg_total >=0){
-                    $scoreCols["2011alg_range_concern"] = "Little-to-no concern";   
+                    $scoreCols["2012alg_range_concern"] = "Little-to-no concern";   
                 } elseif ($alg_total <=13 && $alg_total >=11){
-                    $scoreCols["2011alg_range_concern"] = "Mild-to-Moderate concern";   
+                    $scoreCols["2012alg_range_concern"] = "Mild-to-Moderate concern";   
                 } elseif ($alg_total >=14){
-                    $scoreCols["2011alg_range_concern"] = "Moderate-to-Severe concern";   
+                    $scoreCols["2012alg_range_concern"] = "Moderate-to-Severe concern";   
                 }
                 if($alg_total >= 13){
-                   $scoreCols["2011alg_research_diag"] = "ASD+";    
+                   $scoreCols["2012alg_research_diag"] = "ASD+";    
                 } else {
-                   $scoreCols["2011alg_research_diag"] = "ASD-";    
+                   $scoreCols["2012alg_research_diag"] = "ASD-";    
                 }
                 if($alg_total >= 11){
-                   $scoreCols["2011alg_clinical_diag"] = "ASD+";    
+                   $scoreCols["2012alg_clinical_diag"] = "ASD+";    
                 } else {
-                   $scoreCols["2011alg_clinical_diag"] = "ASD-";    
+                   $scoreCols["2012alg_clinical_diag"] = "ASD-";    
                 }
             }
             if($alg_type == 2){ 
                 if($alg_total <=7  && $alg_total >=0){
-                    $scoreCols["2011alg_range_concern"] = "Little-to-no concern";   
+                    $scoreCols["2012alg_range_concern"] = "Little-to-no concern";   
                 } elseif ($alg_total <=13 && $alg_total >=8){
-                    $scoreCols["2011alg_range_concern"] = "Mild-to-Moderate concern";   
+                    $scoreCols["2012alg_range_concern"] = "Mild-to-Moderate concern";   
                 } elseif ($alg_total >=14){
-                    $scoreCols["2011alg_range_concern"] = "Moderate-to-Severe concern";   
+                    $scoreCols["2012alg_range_concern"] = "Moderate-to-Severe concern";   
                 }
                 if($alg_total >= 13){
-                   $scoreCols["2011alg_research_diag"] = "ASD+";    
+                   $scoreCols["2012alg_research_diag"] = "ASD+";    
                 } else {
-                   $scoreCols["2011alg_research_diag"] = "ASD-";    
+                   $scoreCols["2012alg_research_diag"] = "ASD-";    
                 }
                 if($alg_total >= 8){
-                   $scoreCols["2011alg_clinical_diag"] = "ASD+";    
+                   $scoreCols["2012alg_clinical_diag"] = "ASD+";    
                 } else {
-                   $scoreCols["2011alg_clinical_diag"] = "ASD-";    
+                   $scoreCols["2012alg_clinical_diag"] = "ASD-";    
                 }
             }
             if($alg_type == 3){ 
                 $alg_total += $scoreCols["reciprocal_interaction"];
                 if($alg_total <= 12 && $alg_total >=0){
-                    $scoreCols["2011alg_range_concern"] = "Little-to-no concern";   
+                    $scoreCols["2012alg_range_concern"] = "Little-to-no concern";   
                 } elseif ($alg_total <=16 && $alg_total >=13){
-                    $scoreCols["2011alg_range_concern"] = "Mild-to-Moderate concern";   
+                    $scoreCols["2012alg_range_concern"] = "Mild-to-Moderate concern";   
                 } elseif ($alg_total >=17){
-                    $scoreCols["2011alg_range_concern"] = "Moderate-to-Severe concern";   
+                    $scoreCols["2012alg_range_concern"] = "Moderate-to-Severe concern";   
                 }
                 if($alg_total >= 16){
-                   $scoreCols["2011alg_research_diag"] = "ASD+";    
+                   $scoreCols["2012alg_research_diag"] = "ASD+";    
                 } else {
-                   $scoreCols["2011alg_research_diag"] = "ASD-";    
+                   $scoreCols["2012alg_research_diag"] = "ASD-";    
                 }
                 if($alg_total >= 13){
-                   $scoreCols["2011alg_clinical_diag"] = "ASD+";    
+                   $scoreCols["2012alg_clinical_diag"] = "ASD+";    
                 } else {
-                   $scoreCols["2011alg_clinical_diag"] = "ASD-";    
+                   $scoreCols["2012alg_clinical_diag"] = "ASD-";    
                 }
             }
         }
