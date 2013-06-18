@@ -252,6 +252,7 @@ class NDB_Form_participant_status extends NDB_Form
      */
     function _validate($fields)
     {
+        $config =& NDB_Config::singleton();
         $errors=array();
         $options = $this->getParticipantStatusOptionsVerbose();
 
@@ -287,6 +288,44 @@ class NDB_Form_participant_status extends NDB_Form
             && (($options[$reasonID]['Description'])!='withdrawal')
         ) {
             $errors['withdrawal_reasons'] = 'Only specify if withdrawal';
+        }
+
+        // consent requirements
+        $consent = $config->getSetting('ConsentModule');
+        if ($consent['useConsent'] === 'true') {
+            foreach (Utility::asArray($consent['Consent']) as $consenttype) {
+                $fieldname = $consenttype['name'];
+                $consentVal = $fields[$fieldname];
+                $consentDate = $fields[$fieldname . '_date'];
+                $consentWithdrawal = $fields[$fieldname . '_withdrawal'];
+
+                if (
+                    $consentVal === 'yes' && (
+                        empty($consentDate)
+                        || empty($consentDate['Y'])
+                        || empty($consentDate['M'])
+                        || empty($consentDate['d'])
+                    )
+                ) {
+                    $errors[$fieldname . '_date'] = 'Required';
+                }
+                if (
+                    !empty($consentWithdrawal['Y'])
+                    && !empty($consentWithdrawal['M'])
+                    && !empty($consentWithdrawal['d'])
+                ) {
+                    $consent = date_create();
+                    $withdrawal = date_create();
+
+                    $consent->setDate($consentDate['Y'], $consentDate['M'], $consentDate['d']);
+                    $withdrawal->setDate($consentWithdrawal['Y'], $consentWithdrawal['M'], $consentWithdrawal['d']);
+                    $diff = date_diff($withdrawal, $consent);
+                    if ($withdrawal < $consent) {
+                        $errors[$fieldname . '_withdrawal'] = 'Must be after date of consent';
+                    }
+                }
+
+            }
         }
         return $errors;
     }

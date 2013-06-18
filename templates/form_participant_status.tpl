@@ -62,7 +62,12 @@
         {foreach from=$consent[question] item=row}
         <tr>
             <td>{$form.$row.label}</td>
-            <td>{$form.$row.html}</td>
+            <td>{$form.$row.html}
+
+            {if $form.$row.error}
+            <span class="error">{$form.$row.error}</span>
+            {/if}
+            </td>
         </tr>
         {/foreach}
         <tr>
