@@ -87,6 +87,8 @@ CREATE TABLE `BSRC` (
 `q10_therapyoptions` varchar(255) default NULL,
 `general_comments` text default NULL,
 `general_comments_status` enum('not_answered') default NULL,
+`CommentValidity` text default NULL,
+`CommentValidity_status` enum('not_answered') default NULL,
 PRIMARY KEY  (`CommentID`)
 );
 REPLACE INTO test_names (Test_name, Full_name, Sub_group) VALUES ('BSRC', 'BSRC Treatment form', 1);
