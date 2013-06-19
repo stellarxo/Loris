@@ -456,6 +456,11 @@ INSERT INTO help(hash, topic) VALUES (md5('edi2'),'EDI_IBIS2');
             $this->form->addGroup($group, "{$label}_group", $label, $this->_GUIDelimiter, FALSE);
             unset($group);
         }
+
+        $this->form->addElement('static',null,'<br>');
+        $this->form->addElement("textarea", "other_comments", "Comments about Validity:", array('cols'=>25, 'rows'=>4));
+        $this->XINRegisterRule("other_comments", array("{other_comments}{@}=={@}NEVER_REQUIRED"));
+
     }
      function _page1(){
         $this->generateQuestions(1, 8);
