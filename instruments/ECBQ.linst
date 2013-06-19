@@ -26,6 +26,9 @@ static{@}Sadness{@}Sadness
 static{@}Shyness{@}Shyness
 static{@}Sociability{@}Sociability
 static{@}Soothability{@}Soothability
+header{@}{@}Validity
+textarea{@}CommentValidity{@}Comments About Validity:
+select{@}CommentValidity_status{@}{@}NULL=>''{-}'not_answered'=>'Not Answered'
 page{@}{@}Page 1
 static{@}{@}<br />
 static{@}{@}When told that it was time for bed or a nap, how often did your child:

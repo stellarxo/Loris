@@ -14,3 +14,5 @@ ALTER TABLE neuro_screen ADD `other_comments` text;
 ALTER TABLE EARLI_interview_PART_1 ADD `other_comments` text;
 ALTER TABLE CBCL ADD `CommentValidity` text;
 ALTER TABLE CBCL ADD `CommentValidity_status` enum('not_answered');
+ALTER TABLE ECBQ ADD `CommentValidity` text;
+ALTER TABLE ECBQ ADD `CommentValidity_status` enum('not_answered');
