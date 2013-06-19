@@ -694,7 +694,7 @@ class NDB_Form_statistics extends NDB_Form
         );
         $this->tpl_data['scored_instruments'] = ProjectUtility::getScoredInstruments();
         $this->tpl_data['all_instruments'] = Utility::getAllInstruments();
-        if(isset($_REQUEST['instrument']) && $_REQUEST['instrument'] != '') {
+        if(isset($_REQUEST['DemographicInstrument']) && $_REQUEST['DemographicInstrument'] != '') {
             $Subcategories = array('Complete', 'Incomplete');
             $DB->select("SELECT count(*) as val, 
                 f.Data_entry as Subcat, 
@@ -709,7 +709,7 @@ class NDB_Form_statistics extends NDB_Form
                 ELSE lower(s.visit_label) END as VLabel
                 FROM session s JOIN candidate c ON (s.CandID=c.CandID)
                 JOIN flag f ON (f.SessionID=s.ID)
-                JOIN $_REQUEST[instrument] i USING(CommentID)
+                JOIN $_REQUEST[DemographicInstrument] i USING(CommentID)
                 WHERE s.Active='Y' AND
                 c.CenterID <> '1' AND f.Data_entry='Complete' AND
                 f.Administration='All' AND
@@ -727,12 +727,12 @@ class NDB_Form_statistics extends NDB_Form
                 ELSE lower(s.visit_label) END as VLabel
                 FROM session s JOIN candidate c USING(CandID) 
                 JOIN flag f ON (f.SessionID=s.ID) 
-                JOIN $_REQUEST[instrument] i USING(CommentID)
+                JOIN $_REQUEST[DemographicInstrument] i USING(CommentID)
                 WHERE s.Active='Y' and s.CenterID <> 1
                 AND f.CommentID NOT LIKE 'DDE%' AND (f.Data_entry IS NULL OR f.Data_entry <> 'Complete')
                 GROUP BY c.CenterID, SubprojectID, VLabel, Subcat
                 ", $result);
-            $this->tpl_data['RecruitsTable'] = $this->render_stats_table("Data Entry Completion Status for $_REQUEST[instrument]", $Subcategories, $Visits, "instrument", $instruments, $_REQUEST['instrument'], $centers, $result, "demographics");
+            $this->tpl_data['RecruitsTable'] = $this->render_stats_table("Data Entry Completion Status for $_REQUEST[DemographicInstrument]", $Subcategories, $Visits, "DemographicInstrument", $instruments, $_REQUEST['DemographicInstrument'], $centers, $result, "demographics");
         } else {
             $Subcategories = array('Male', 'Female');
             $DB->select("SELECT c.CenterID as CenterID, 
@@ -755,7 +755,7 @@ class NDB_Form_statistics extends NDB_Form
             if (Utility::isErrorX($result)) {
                 return PEAR::raiseError("DB Error: ".$result->getMessage());
             }
-            $this->tpl_data['RecruitsTable'] = $this->render_stats_table("Breakdown of Registered Candidates", $Subcategories, $Visits, "instrument", $instruments, '', $centers, $result, "demographics");
+            $this->tpl_data['RecruitsTable'] = $this->render_stats_table("Breakdown of Registered Candidates", $Subcategories, $Visits, "DemographicInstrument", $instruments, '', $centers, $result, "demographics");
 
         }
     }
