@@ -103,7 +103,7 @@ foreach ($record as $field => $value) {
 
                 } else {
                     if ($error_count['prone_above'] == 0) { 
-                        $scores['data_entry_error'] .= 'Prone:Error above 
+                        $scores['data_entry_error'] .= 'Prone:Error below 
                                                         window<br/>';
                         $error_count['prone_above']++;
                     }
@@ -123,7 +123,7 @@ foreach ($record as $field => $value) {
             } elseif ($qstn >$end_prone & $qstn <=21) {
                 if (!in_array($value, $out_window) & 
                     $error_count['prone_below'] ==0 ) {
-                    $scores['data_entry_error'] .= 'Prone:Error below 
+                    $scores['data_entry_error'] .= 'Prone:Error above 
                                                     window<br/>';
                     $error_count['prone_below']++;
                 }
@@ -145,7 +145,7 @@ foreach ($record as $field => $value) {
 
                 } else {
                     if ($error_count['supine_above']==0) { 
-                        $scores['data_entry_error'] .='Supine:Error above window<br/>';
+                        $scores['data_entry_error'] .='Supine:Error below window<br/>';
                         $error_count['supine_above']++;
                     }
                 }
@@ -163,7 +163,7 @@ foreach ($record as $field => $value) {
             } elseif ( isset($end_supine) & $qstn > $end_supine & $qstn <= 30) {
                 if (! in_array($value, $out_window) & 
                     $error_count['supine_below']==0) {
-                    $scores['data_entry_error'] .='Supine:Error below window<br/>';
+                    $scores['data_entry_error'] .='Supine:Error above window<br/>';
                     $error_count['supine_below']++;
                 }
             }
@@ -182,7 +182,7 @@ foreach ($record as $field => $value) {
 
                 } else {
                     if ($error_count['sit_above'] ==0) {
-                        $scores['data_entry_error'] .='Sitting:Error above window<br/>';
+                        $scores['data_entry_error'] .='Sitting:Error below window<br/>';
                         $error_count['sit_above']++;
                     } 
                 }
@@ -198,7 +198,7 @@ foreach ($record as $field => $value) {
                 }
             } elseif ($qstn >$end_sit & $qstn <=42) {
                 if (! in_array($value, $out_window) && $error_count['sit_below']==0) {
-                    $scores['data_entry_error'] .='Sitting:Error below window <br/>';
+                    $scores['data_entry_error'] .='Sitting:Error above window <br/>';
                     $error_count['sit_below']++;
                 }
             }
@@ -215,7 +215,7 @@ foreach ($record as $field => $value) {
                     $scores['stand_prev_itemscredited']++;
                 } else {
                     if ($error_count['stand_above'] ==0) { 
-                        $scores['data_entry_error'] .='Standing:Error above window<br/>';
+                        $scores['data_entry_error'] .='Standing:Error below window<br/>';
                         $error_count['stand_above']++;
                     }
                 } 
@@ -225,13 +225,13 @@ foreach ($record as $field => $value) {
                     $scores['stand_window_itemscredited']++;
                 } else {
                     if (!in_array($value, $in_window) && $error_count['stand_within'] ==0) {
-                        $scores['data_entry_error'] .='Standing:Within within window<br/>';
+                        $scores['data_entry_error'] .='Standing:Error within window<br/>';
                         $error_count['stand_within']++;
                     }
                 } 
             } elseif ($qstn > $end_stand & $qstn <=58) {
                 if (! in_array($value, $out_window) && $error_count['stand_below']==0) { 
-                    $scores['data_entry_error'] .= 'Standing:Error below window<br/>';
+                    $scores['data_entry_error'] .= 'Standing:Error above window<br/>';
                     $error_count['stand_below']++;
                 }
             }
