@@ -59,13 +59,16 @@ static{@}dsm_mental_raw{@}Pervasive Developmental Problems Raw Score
 static{@}dsm_mental_t{@}Pervasive Developmental Problems T Score
 static{@}dsm_mental_percentile{@}Pervasive Developmental Problems Percentile
 static{@}{@}<br />
-static{@}dsm_attention_raw{@}Attention Deficit/Hperactivity Problems Raw Score
-static{@}dsm_attention_t{@}Attention Deficit/Hperactivity Problems T Score
-static{@}dsm_attention_percentile{@}Attention Deficit/Hperactivity Problems Percentile
+static{@}dsm_attention_raw{@}Attention Deficit/Hyperactivity Problems Raw Score
+static{@}dsm_attention_t{@}Attention Deficit/Hyperactivity Problems T Score
+static{@}dsm_attention_percentile{@}Attention Deficit/Hyperactivity Problems Percentile
 static{@}{@}<br />
-static{@}dsm_oppose_raw{@}Oppositional Definant Problems Raw Score
-static{@}dsm_oppose_t{@}Oppositional Definant Problems T Score
-static{@}dsm_oppose_percentile{@}Oppositional Definant Problems Percentile
+static{@}dsm_oppose_raw{@}Oppositional Defiant Problems Raw Score
+static{@}dsm_oppose_t{@}Oppositional Defiant Problems T Score
+static{@}dsm_oppose_percentile{@}Oppositional Defiant Problems Percentile
+header{@}{@}Validity
+textarea{@}CommentValidity{@}Comments About Validity:
+select{@}CommentValidity_status{@}{@}NULL=>''{-}'not_answered'=>'Not Answered'
 page{@}{@}Page 1
 select{@}q1_aches{@}1. Aches or pains (without medical cause; do not include stomach or headaches){@}NULL=>''{-}'0_not_true'=>'0. Not True'{-}'1_somewhat_or_sometimes_true'=>'1. Somewhat or Sometimes True'{-}'2_very_true_or_often_true'=>'2. Very True or Often True'{-}'not_answered'=>'Not Answered'
 select{@}q2_young{@}2. Acts too young for age{@}NULL=>''{-}'0_not_true'=>'0. Not True'{-}'1_somewhat_or_sometimes_true'=>'1. Somewhat or Sometimes True'{-}'2_very_true_or_often_true'=>'2. Very True or Often True'{-}'not_answered'=>'Not Answered'

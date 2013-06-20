@@ -93,6 +93,11 @@ class NDB_BVL_Instrument_i3 extends NDB_BVL_Instrument{
             'addEmptyOption' => true,
             'emptyOptionValue' => null
     	);
+
+        $this->form->addElement('static',null,'<br>');
+        $this->form->addElement("textarea", "other_comments", "Comments about Validity:", array('cols'=>25, 'rows'=>4));
+        $this->XINRegisterRule("other_comments", array("{other_comments}{@}=={@}NEVER_REQUIRED"));
+
    
         }
         

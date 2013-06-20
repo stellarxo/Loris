@@ -225,6 +225,11 @@ abstract class NDB_BVL_Instrument_adi_r extends NDB_BVL_Instrument
         foreach ($scoreLabels_2012alg as $field=>$label) {
             $this->form->addElement("static", $field, $label);
         }
+
+	   $this->form->addElement('static', null, "<br /><br />");
+       $this->form->addElement("textarea", "other_comments", "Comments about Validity:", array('cols'=>25, 'rows'=>4));
+       $this->XINRegisterRule("other_comments", array("{other_comments}{@}=={@}NEVER_REQUIRED"));
+
     }
 
     function _score() {

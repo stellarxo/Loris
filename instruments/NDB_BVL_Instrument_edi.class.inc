@@ -434,6 +434,10 @@ INSERT INTO test_battery VALUES ('', 'edi', '1050', '1140', 'Y', 'Visit', '2');
             $this->form->addGroup($group, "{$label}_group", $label, $this->_GUIDelimiter, FALSE);
             unset($group);
         }
+        $this->form->addElement('static',null,'<br>');
+        $this->form->addElement("textarea", "other_comments", "Comments about Validity:", array('cols'=>25, 'rows'=>4));
+        $this->XINRegisterRule("other_comments", array("{other_comments}{@}=={@}NEVER_REQUIRED"));
+
     }
     
     function _page1(){
