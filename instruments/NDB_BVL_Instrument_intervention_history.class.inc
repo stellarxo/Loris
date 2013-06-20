@@ -132,6 +132,9 @@ INSERT INTO test_battery VALUES ('', 'intervention_history', '1053', '1179', 'Y'
         $this->form->addElement("select", "q_respondent_", "Respondent", array(null=>'', 'mom'=>'Mom', 'dad'=>'Dad', "teacher"=>"Teacher", "other"=>"Other", "not_answered"=>"Not Answered"));
         $this->addTextElement("respondent_other_", "Other respondent (please specify):", array("respondent_{@}=={@}other"));
         $this->form->addElement("static", null, "<br/>");
+        $this->form->addElement('static',null,'<br>');
+        $this->form->addElement("textarea", "other_comments", "Comments about Validity:", array('cols'=>25, 'rows'=>4));
+        $this->XINRegisterRule("other_comments", array("{other_comments}{@}=={@}NEVER_REQUIRED"));
 
 
     }

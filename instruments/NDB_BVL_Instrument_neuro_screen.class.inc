@@ -113,6 +113,10 @@ class NDB_BVL_Instrument_neuro_screen extends NDB_BVL_Instrument
 
         //which time version is being filled out?
         $this->form->addElement("select", "visit", "Visit", array(null=>"", "6month"=>"6 month", "12month"=>"12 month", "12month_nr"=>"12 month (new recruit)", "24month"=>"24 month"));
+        $this->form->addElement('static',null,'<br>');
+        $this->form->addElement("textarea", "other_comments", "Comments about Validity:", array('cols'=>25, 'rows'=>4));
+        $this->XINRegisterRule("other_comments", array("{other_comments}{@}=={@}NEVER_REQUIRED"));
+
     }
 
     function _page1(){
