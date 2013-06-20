@@ -16,3 +16,6 @@ ALTER TABLE CBCL ADD `CommentValidity` text;
 ALTER TABLE CBCL ADD `CommentValidity_status` enum('not_answered');
 ALTER TABLE ECBQ ADD `CommentValidity` text;
 ALTER TABLE ECBQ ADD `CommentValidity_status` enum('not_answered');
+ALTER TABLE vineland_proband ADD `other_comments` text;
+ALTER TABLE vineland_subject ADD `other_comments` text;
+
