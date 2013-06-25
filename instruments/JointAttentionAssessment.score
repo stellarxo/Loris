@@ -1,0 +1,104 @@
+#!/usr/bin/php
+<?php
+/**
+* JointAttentionAssessment Scoring
+*
+* PHP version 5
+*
+* @category Instrument
+* @package  Joint_Attention_Assessment_Instrument
+* @author   Rathi Gnanasekaran <sekaranrathi@gmail.com>
+* @license  Loris License
+* @link     https://github.com/aces/IBIS
+*/
+
+require_once "../tools/generic_includes.php";
+// set_include_path(get_include_path().":../libraries:../../php/libraries:");
+
+require_once "Database.class.inc";
+
+function standard_deviation($aValues, $bSample = false)
+{
+    $fMean = array_sum($aValues) / count($aValues);
+    $fVariance = 0.0;
+    foreach ($aValues as $i)
+    {
+        $fVariance += pow($i - $fMean, 2);
+    }
+    $fVariance /= ( $bSample ? count($aValues) - 1 : count($aValues) );
+    return (float) sqrt($fVariance);
+}
+$CommentID = $argv[1];
+$db        =& Database::singleton();
+if (Utility::isErrorX($db)) {
+                print "Could not connect to database: " . $db->getMessage();
+                                        exit(1);
+}
+
+$query = "SELECT * from JointAttentionAssessment WHERE CommentID = :CommentID";
+
+$WhereCriteria = array('CommentID'=>$CommentID);
+$result        = $db->pselectRow($query, $WhereCriteria);
+if (Utility::isErrorX($result)) {
+                print "Query has failed to select: ".$result->getMessage();
+                                        exit(2);
+}
+$valid_scores = array ('4points','3points','2points','1point','05points');
+$num_validresponse = 0;
+$total_rawscore = 0;
+$scoring_fields = array();
+foreach($result as $key=>$value){
+ 
+  if($key == 'series1' || $key == 'series2' || $key == 'series3' 
+      || $key == 'series4') {
+      if( in_array($value, $valid_scores))
+          $num_validresponse += 1;
+          if($value == '4points'){
+             $total_rawscore += 4;
+             array_push($scoring_fields, 4);    
+           }
+          if($value == '3points'){
+              $total_rawscore += 3;
+              array_push($scoring_fields, 3);    
+          }
+          if($value == '2points'){
+              $total_rawscore += 2;
+              array_push($scoring_fields, 2);    
+          }
+          if($value == '1point'){
+              $total_rawscore += 1;
+              array_push($scoring_fields, 1);    
+          }
+          if($value == '05points'){
+              $total_rawscore += 0.5;
+              array_push($scoring_fields, 0.5);    
+          }
+  } 
+    
+ }
+
+ if ($num_validresponse > 0){
+     $mean_score = $total_rawscore/$num_validresponse;
+ } else {
+     $mean_score = "Unable to score";
+    }
+ $std_deviation = standard_deviation($scoring_fields);
+ if ($mean_score >0 || $std_deviation >0) {
+     $coefficient_variation = $std_deviation / $mean_score;
+ }
+
+$scores['total_rawscore'] = $total_rawscore;
+$scores['mean_score'] = round($mean_score, 3);
+$scores['coefficient_variation'] = round($coefficient_variation,3);
+//save scores
+$result = $db->update('JointAttentionAssessment', $scores, $WhereCriteria);
+if ($db->isError($result)) {
+        print "Could not save total score: ". $result->getMessage();
+            exit(3);
+}
+
+
+exit(0);
+
+?>
+ 
