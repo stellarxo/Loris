@@ -88,7 +88,7 @@ select{@}q7_alt_therapy_other_status{@}{@}NULL=>''{-}'not_answered'=>'Not Answer
 select{@}q8_medical_pharma{@}8) At any point since your last visit, did your child receive medical or pharmacological interventions used to treat symptoms of autism?{@}NULL=>''{-}'yes'=>'Yes'{-}'no'=>'No'{-}'not_answered'=>'Not Answered'
 text{@}q8_medical_pharma_other{@}If Yes, please specify:
 select{@}q8_medical_pharma_other_status{@}{@}NULL=>''{-}'not_answered'=>'Not Answered'
-select{@}q9_continue_nextyr{@}9) If this is your child's 36-month assessment, do you plan to continue your child’s enrollment in intervention during the next year?{@}NULL=>''{-}'yes'=>'Yes'{-}'no'=>'No'{-}'not_answered'=>'Not Answered'
+select{@}q9_continue_nextyr{@}9) If this is your child's 36-month assessment, do you plan to continue your child's enrollment in intervention during the next year?{@}NULL=>''{-}'yes'=>'Yes'{-}'no'=>'No'{-}'not_answered'=>'Not Answered'
 selectmultiple{@}q10_therapyoptions{@}10) If you checked yes in #9, please select all that apply below:{@}NULL=>''{-}'speech-language_therapy'=>'Speech-language therapy'{-}'occupational_therapy'=>'Occupational therapy'{-}'physical_therapy'=>'Physical therapy'{-}'comprehensive_behavioral_intervention/special_educational_servies'=>'Comprehensive behavioral intervention/special educational servies'{-}'other'=>'Other'{-}'not_answered'=>'Not Answered'
 textarea{@}general_comments{@}If there is anything else you would like to tell us about services your child has received, please enter your comments:
 select{@}general_comments_status{@}{@}NULL=>''{-}'not_answered'=>'Not Answered'
