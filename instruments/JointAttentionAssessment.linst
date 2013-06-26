@@ -1,0 +1,27 @@
+table{@}JointAttentionAssessment
+title{@}JointAttentionAssessment
+date{@}Date_taken{@}Date of Administration{@}2012{@}2017
+static{@}Candidate_Age{@}Candidate Age (Months)
+static{@}Window_Difference{@}Window Difference (+/- Days)
+select{@}Examiner{@}Examiner{@}NULL=>''
+date{@}date_coded_date{@}Date Coded{@}2012{@}2017
+select{@}date_coded_date_status{@}{@}NULL=>''{-}'not_answered'=>'Not Answered'
+text{@}coder{@}Coder
+select{@}coder_status{@}{@}NULL=>''{-}'not_answered'=>'Not Answered'
+header{@}{@}Scores
+static{@}total_rawscore{@}Total Raw Score
+static{@}mean_score{@}Mean Score
+static{@}coefficient_variation{@}Coefficient of Variation
+header{@}{@}Dimensional Joint Attention Assessment (DJAA)
+static{@}{@}<br />
+select{@}series1{@}Series #1{@}NULL=>''{-}'4points'=>'4points'{-}'3points'=>'3points'{-}'2points'=>'2points'{-}'1point'=>'1point'{-}'05points'=>'0.5points'{-}'no_response'=>'No Response'{-}'not_valid'=>'Not Valid'{-}'not_applicable'=>'Not Applicable'
+static{@}{@}<br />
+select{@}series2{@}Series #2{@}NULL=>''{-}'4points'=>'4points'{-}'3points'=>'3points'{-}'2points'=>'2points'{-}'1point'=>'1point'{-}'05points'=>'0.5points'{-}'no_response'=>'No Response'{-}'not_valid'=>'Not Valid'{-}'not_applicable'=>'Not Applicable'
+static{@}{@}<br />
+select{@}series3{@}Series #3{@}NULL=>''{-}'4points'=>'4points'{-}'3points'=>'3points'{-}'2points'=>'2points'{-}'1point'=>'1point'{-}'05points'=>'0.5points'{-}'no_response'=>'No Response'{-}'not_valid'=>'Not Valid'{-}'not_applicable'=>'Not Applicable'
+static{@}{@}<br />
+select{@}series4{@}Series #4{@}NULL=>''{-}'4points'=>'4points'{-}'3points'=>'3points'{-}'2points'=>'2points'{-}'1point'=>'1point'{-}'05points'=>'0.5points'{-}'no_response'=>'No Response'{-}'not_valid'=>'Not Valid'{-}'not_applicable'=>'Not Applicable'
+header{@}{@}Validity
+textarea{@}CommentValidity{@}Comment About Validity:
+select{@}CommentValidity_status{@}{@}NULL=>''{-}'not_answered'=>'Not Answered'
+
