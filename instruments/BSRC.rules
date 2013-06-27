@@ -1,4 +1,4 @@
-rlyintervention_birthtothreeprg{-}Required{-}q2_receive_earlyintervention_birthtothreeprg{@}=={@}yes
+hrs_earlyintervention_birthtothreeprg{-}Required{-}q2_receive_earlyintervention_birthtothreeprg{@}=={@}yes
 total_earlyintervention_birthtothreeprg{-}Required{-}q2_receive_earlyintervention_birthtothreeprg{@}=={@}yes
 servicetype_occupationaltherapy{-}Required{-}q5_service_delay{@}=={@}yes
 startdate_occupationaltherapy{-}Required{-}servicetype_occupationaltherapy{@}=={@}yes
@@ -34,8 +34,8 @@ startdate_other{-}Required{-}servicetype_other{@}=={@}yes
 continue_other{-}Required{-}servicetype_other{@}=={@}yes
 continue_other_comment{-}Required{-}continue_other{@}=={@}no
 indgrp_other{-}Required{-}servicetype_other{@}=={@}yes
-setting_other_other{-}Required{-}servicetype_other{@}=={@}yes
-avg_other_other{-}Required{-}servicetype_other{@}=={@}yes
+setting_other{-}Required{-}servicetype_other{@}=={@}yes
+avg_other{-}Required{-}servicetype_other{@}=={@}yes
 q7_alt_therapy_other{-}Required{-}q7_alt_therapy{@}=={@}yes
 q8_medical_pharma_other{-}Required{-}q8_medical_pharma{@}=={@}yes
 q10_therapyoptions{-}Required{-}q9_continue_nextyr{@}=={@}yes
