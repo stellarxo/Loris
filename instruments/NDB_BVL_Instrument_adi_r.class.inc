@@ -275,7 +275,6 @@ abstract class NDB_BVL_Instrument_adi_r extends NDB_BVL_Instrument
 		$this->scores["q_10_first_phrases_code"] = $this->_cleanToDigits($record["q_10_first_phrases_code"]);
         $this->scores["q_87_interviewers_judgment"]	= $this->_cleanToDigits($record["q_87_interviewers_judgment"]);
         $this->scores["q_86_age_when_abnormality_first_evident"]	= $this->_cleanToDigits($record["q_86_age_when_abnormality_first_evident"]);
-		
 		//Age 2 years, 0 months through 3 years, 11 months.
         if ($this->respondentAgeYears < 1.75) {
             $scoreCols["A_Total"] = "Respondent too young to score";
@@ -439,7 +438,7 @@ abstract class NDB_BVL_Instrument_adi_r extends NDB_BVL_Instrument
             $scoreCols["reciprocal_interaction"] ="Respondent too old to score";
 
         } elseif( ($respondentAgeMonths >=12 && $respondentAgeMonths <= 20 ) || 
-             ($respondentAgeMonths >=21 && $respondentAgeMonths <= 47 && ($this->scores["q_30_overall_level_of_language"] == 0)) 
+             ($respondentAgeMonths >=21 && $respondentAgeMonths <= 47 && ($this->scores["q_30_overall_level_of_language"] == 2)) 
             ) {
            $alg_type = 1;       
            $scoreCols["social_affect"]           =  $this->scores["q_46_attent_voice_current_code"] + 
@@ -467,7 +466,7 @@ abstract class NDB_BVL_Instrument_adi_r extends NDB_BVL_Instrument
             $scoreCols["reciprocal_interaction"] ="N/A";
         
         } elseif ($respondentAgeMonths >=21 && $respondentAgeMonths <= 47 && ($this->scores["q_30_overall_level_of_language"] == 1) ){
-            $alg_type = 2;       
+         $alg_type = 2;       
             $scoreCols["social_affect"]           = $this->scores["q_46_attent_voice_current_code"] + 
                                                     $this->scores["q_50_direct_gaze_current_code"]+ 
                                                     $this->scores["q_51_social_smiling_current_code"] +
@@ -494,7 +493,7 @@ abstract class NDB_BVL_Instrument_adi_r extends NDB_BVL_Instrument
 
             $scoreCols["reciprocal_interaction"] ="N/A";
       
-      } elseif ($respondentAgeMonths >=21 && $respondentAgeMonths <= 47 && ($this->scores["q_30_overall_level_of_language"] == 2) ){
+      } elseif ($respondentAgeMonths >=21 && $respondentAgeMonths <= 47 && ($this->scores["q_30_overall_level_of_language"] == 0) ){
             $alg_type = 3;       
             $scoreCols["social_affect"]           = $this->scores["q_46_attent_voice_current_code"] + 
                                                     $this->scores["q_50_direct_gaze_current_code"]+ 
