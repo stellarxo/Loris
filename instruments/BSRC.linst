@@ -43,7 +43,7 @@ select{@}indgrp_physicaltherapy{@}Individual or Group{@}NULL=>''{-}'individual_'
 select{@}setting_physicaltherapy{@}Setting{@}NULL=>''{-}'office/clinic'=>'Office/Clinic'{-}'home'=>'Home'{-}'daycare/preschool'=>'Daycare/preschool'{-}'other'=>'Other'{-}'not_answered'=>'Not Answered'
 text{@}setting_physicaltherapy_other{@}Please specify Other:
 select{@}setting_physicaltherapy_other_status{@}{@}NULL=>''{-}'not_answered'=>'Not Answered'
-numeric{@}avg_physicaltherapy_other{@}Average hours per week{@}0{@}90
+numeric{@}avg_physicaltherapy{@}Average hours per week{@}0{@}90
 text{@}avg_physicaltherapy_other_status{@}{@}NULL=>''{-}'not_answered'=>'Not Answered'
 header{@}{@}Speech-language Therapy
 select{@}servicetype_speechlangtherapy{@}Received physical therapy{@}NULL=>''{-}'yes'=>'Yes'{-}'no'=>'No'{-}'not_answered'=>'Not Answered'
@@ -56,7 +56,7 @@ select{@}indgrp_speechlangtherapy{@}Individual or Group{@}NULL=>''{-}'individual
 select{@}setting_speechlangtherapy{@}Setting{@}NULL=>''{-}'office/clinic'=>'Office/Clinic'{-}'home'=>'Home'{-}'daycare/preschool'=>'Daycare/preschool'{-}'other'=>'Other'{-}'not_answered'=>'Not Answered'
 text{@}setting_speechlangtherapy_other{@}Please specify Other:
 select{@}setting_speechlangtherapy_other_status{@}{@}NULL=>''{-}'not_answered'=>'Not Answered'
-numeric{@}avg_speechlangtherapy_other{@}Average hours per week{@}0{@}90
+numeric{@}avg_speechlangtherapy{@}Average hours per week{@}0{@}90
 select{@}avg_speechlangtherapy_other_status{@}{@}NULL=>''{-}'not_answered'=>'Not Answered'
 header{@}{@}Comprehensive behavioral/educational interventions
 select{@}servicetype_behaviorintervention{@}Received Comprehensive behavioral/educational interventions{@}NULL=>''{-}'yes'=>'Yes'{-}'no'=>'No'{-}'not_answered'=>'Not Answered'
@@ -69,10 +69,10 @@ select{@}indgrp_behaviorintervention{@}Individual or Group{@}NULL=>''{-}'individ
 select{@}setting_behaviorintervention{@}Setting{@}NULL=>''{-}'office/clinic'=>'Office/Clinic'{-}'home'=>'Home'{-}'daycare/preschool'=>'Daycare/preschool'{-}'other'=>'Other'{-}'not_answered'=>'Not Answered'
 text{@}setting_behaviorintervention_other{@}Please specify Other:
 select{@}setting_behaviorintervention_other_status{@}{@}NULL=>''{-}'not_answered'=>'Not Answered'
-numeric{@}avg_behaviorintervention_other{@}Average hours per week{@}0{@}90
+numeric{@}avg_behaviorintervention{@}Average hours per week{@}0{@}90
 select{@}avg_behaviorintervention_other_status{@}{@}NULL=>''{-}'not_answered'=>'Not Answered'
 header{@}{@}Other
-select{@}servicetype_other{@}Received physical therapy{@}NULL=>''{-}'yes'=>'Yes'{-}'no'=>'No'{-}'not_answered'=>'Not Answered'
+select{@}servicetype_other{@}Received Other therapy{@}NULL=>''{-}'yes'=>'Yes'{-}'no'=>'No'{-}'not_answered'=>'Not Answered'
 text{@}startdate_other{@}Date started (mm/yy)
 select{@}startdate_other_status{@}{@}NULL=>''{-}'not_answered'=>'Not Answered'
 select{@}continue_other{@}Still receiving intervention?{@}NULL=>''{-}'yes'=>'Yes'{-}'no'=>'No'{-}'not_answered'=>'Not Answered'
@@ -101,7 +101,7 @@ select{@}q8_medical_pharma_other_status{@}{@}NULL=>''{-}'not_answered'=>'Not Ans
 static{@}{@}<br />
 select{@}q9_continue_nextyr{@}9) If this is your child's 36-month assessment, do you plan to continue your child's enrollment in intervention during the next year?{@}NULL=>''{-}'yes'=>'Yes'{-}'no'=>'No'{-}'not_applicable'=>'Not Applicable'{-}'not_answered'=>'Not Answered'
 static{@}{@}<br />
-selectmultiple{@}q10_therapyoptions{@}10) If you checked yes in #9, please select all that apply:<br />Ctrl+Click to check multiple options{@}NULL=>''{-}'speech-language_therapy'=>'Speech-language therapy'{-}'occupational_therapy'=>'Occupational therapy'{-}'physical_therapy'=>'Physical therapy'{-}'comprehensive_behavioral_intervention/special_educational_servies'=>'Comprehensive behavioral intervention/special educational servies'{-}'other'=>'Other'{-}'not_answered'=>'Not Answered'
+selectmultiple{@}q10_therapyoptions{@}10) If you checked yes in #9, please select all that apply:<br />Ctrl+Click to choose multiple options{@}NULL=>''{-}'speech-language_therapy'=>'Speech-language therapy'{-}'occupational_therapy'=>'Occupational therapy'{-}'physical_therapy'=>'Physical therapy'{-}'comprehensive_behavioral_intervention/special_educational_servies'=>'Comprehensive behavioral intervention/special educational servies'{-}'other'=>'Other'{-}'not_answered'=>'Not Answered'
 static{@}{@}<br />
 textarea{@}general_comments{@}If there is anything else you would like to tell us about services your child has received, please enter your comments:
 select{@}general_comments_status{@}{@}NULL=>''{-}'not_answered'=>'Not Answered'
