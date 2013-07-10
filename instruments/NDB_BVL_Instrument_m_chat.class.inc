@@ -134,7 +134,9 @@ class NDB_BVL_Instrument_m_chat extends NDB_BVL_Instrument
 		//Check correctness of all questions
 		//"not_answered" questions are, for now, considered as passes.
         $notAnswered = array('total_unanswered' => 0, 'critical_unanswered' => 0);
-		foreach ($scores as $question=>$answer) {
+		$calculatedScores["total_item_fails"] = 0 ;
+        $calculatedScores["total_critical_fails"] = 0;
+        foreach ($scores as $question=>$answer) {
 			$correctAnswer = in_array($question, $noQuestions) ? "no" : "yes";
             if($answer == 'not_answered') {
                 $notAnswered['total_unanswered']++;
