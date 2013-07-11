@@ -533,8 +533,8 @@ INSERT INTO instrument_subtests VALUES('', 'csbs', 'csbs_page2', 'Symbolic Behav
         $scores['understanding_standard']=($record_6['score_standard']);
         $scores['understanding_percentile']=($record_6['score_percentile']);
     } else {
-        $scores['understanding_standard']= null;
-        $scores['understanding_percentile']=null;
+        $scores['understanding_standard']= 'Unable to score';
+        $scores['understanding_percentile']= 'Unable to score';
     }
 
 
