@@ -448,24 +448,18 @@ INSERT INTO instrument_subtests VALUES('', 'csbs', 'csbs_page2', 'Symbolic Behav
 
         $scores["sounds_weighted"] = $scores["q_10_syllables_consonants_raw_score"] +
         2 * $scores["q_11_inventory_of_consonants_raw_score"];
-        if($scores["q_13_words_raw_score"] >0) {
-            $scores["words_weighted"] = number_format(($scores["q_12_words_raw_score"] + 
+        
+        $scores["words_weighted"] = number_format(($scores["q_12_words_raw_score"] + 
                                         ($scores["q_13_words_raw_score"]/2) +  
                                         $scores["q_14_word_combos_raw_score"] +
                                         $scores["q_15_word_combos_raw_score"]), 0);
-        } else {
-             $scores["words_weighted"] = number_format(($scores["q_12_words_raw_score"] +   
-                                        $scores["q_14_word_combos_raw_score"] +
-                                        $scores["q_15_word_combos_raw_score"]), 0);
-    
-        }
+        
         $scores["object_use_weighted"] = $scores["q_17_action_schemes_raw_score"] +
-        $scores["q_18_actions_towards_other_raw_score"] +
-        $scores["q_19_sequence_action_schemes_raw_score"] +
-        $scores["q_20_stacks_tower_raw_score"];
-
-	//calculate weighted raw composite scores
-	$scores["social_composite_score"] = $scores["emotion_eye_gaze_weighted"] +
+                                         $scores["q_18_actions_towards_other_raw_score"] +
+                                         $scores["q_19_sequence_action_schemes_raw_score"] +
+                                         $scores["q_20_stacks_tower_raw_score"];
+        //calculate weighted raw composite scores
+	    $scores["social_composite_score"] = $scores["emotion_eye_gaze_weighted"] +
         $scores["communication_weighted"] +
         $scores["gestures_weighted"];
 
