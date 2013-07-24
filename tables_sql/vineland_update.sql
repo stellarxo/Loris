@@ -61,7 +61,6 @@ ALTER TABLE vineland_proband CHANGE COLUMN `GMS_95%_CI` `GMS_95%_CI` varchar(2);
 ALTER TABLE vineland_subject CHANGE COLUMN FMS_VSCALE FMS_VSCALE varchar(2);
 ALTER TABLE vineland_proband CHANGE COLUMN FMS_VSCALE FMS_VSCALE varchar(2);
 ALTER TABLE vineland_subject CHANGE COLUMN FMS_RAW FMS_RAW varchar(3);
-
 ALTER TABLE vineland_proband CHANGE COLUMN FMS_RAW FMS_RAW varchar(3);
 ALTER TABLE vineland_subject CHANGE COLUMN `FMS_95%_CI` `FMS_95%_CI` varchar(2);
 ALTER TABLE vineland_proband CHANGE COLUMN `FMS_95%_CI` `FMS_95%_CI` varchar(2);
