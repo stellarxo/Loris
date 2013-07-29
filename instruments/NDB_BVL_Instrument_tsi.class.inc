@@ -89,7 +89,11 @@ class NDB_BVL_Instrument_tsi extends NDB_BVL_Instrument
 								 'med_his_q_10_nap_status',
 								 'med_his_q_11_nap_how_long',
 								 'med_his_q_11_nap_how_long_status',
-                                 'further_information');
+                                 'further_information',
+                                 'city_of_birth_status',
+                                 'further_information_status',
+                                 'Data_entry_completion_status',
+                                 'primary_language_status');
 		
 
 		// setup the form

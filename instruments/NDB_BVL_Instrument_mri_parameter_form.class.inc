@@ -34,6 +34,12 @@ class NDB_BVL_Instrument_mri_parameter_form extends NDB_BVL_Instrument
         $this->_requiredElements = array('Date_taken', 'Examiner'); //, 'CaregiverReport');
            
         $this->_selectMultipleElements = array("gre_fieldmap");
+        /**
+         * Array of column names to be ignored by the double data entry conflict detector.
+         */
+        $this->_doubleDataEntryDiffIgnoreColumns = array('DTI_comments_status', 'T1_comments_status', 
+              'T1_Scan_done_date_status','T2_comments_status','T2_scan_done_date_status', 
+              'total_duration_status', 'wait_time_status' );
 
         $config =& NDB_Config::singleton();
         $this->dateOptions = array(

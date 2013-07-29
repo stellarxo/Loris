@@ -51,7 +51,13 @@ class NDB_BVL_Instrument_ibq_r extends NDB_BVL_Instrument
         $this->_setupForm();
         // required fields for data entry completion status
         $this->_requiredElements = array('Examiner', 'q_1', 'q_32', 'q_90', 'q_149', 'q_174');
-        
+        /**
+         * Array of column names to be ignored by the double data entry conflict detector.
+         */
+        $this->_doubleDataEntryDiffIgnoreColumns = array('cuddlineness', 'distress_to_limitations',
+              'duration_of_orienting','falling_reactivity','fear','high_pleasure','low_pleasure',
+              'perceptual_sensitivity','activity_level','smiling_and_laughter','soothability', 
+              'sadness', 'approach', 'vocal_reactivity' );
         //
         $scoreHeader = array("scale"=>"Score");
         $this->localDefaults = array_merge($this->localDefaults, $scoreHeader);

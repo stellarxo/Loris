@@ -51,7 +51,15 @@ class NDB_BVL_Instrument_RSMS extends NDB_BVL_Instrument{
 
 		// required fields for data entry completion status
 		$this->_requiredElements = array('Examiner', 'Date_taken');
-	
+        $this->_doubleDataEntryDiffIgnoreColumns = array('q1_score',
+                                                         'q1_score_weighted',
+                                                         'q2_score',
+                                                         'q1_2_score',
+                                                         'q3_score',
+                                                         'q3_score_weighted',
+                                                         'q4_score',
+                                                         'q3_4_score',
+                                                         'q1_3_score');	
 		// setup the form
 	    $this->_setupForm();
         

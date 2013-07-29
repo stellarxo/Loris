@@ -42,7 +42,11 @@ class NDB_BVL_Instrument_macarthur_words_gestures extends NDB_BVL_Instrument
         "words_produced_percentile",
         "early_gestures_percentile",
         "later_gestures_percentile",
-        "total_gestures_percentile");
+        "total_gestures_percentile",
+        "I_C_1_score",
+        "I_C_2_score",
+        "II_F_replacement_comments_status",
+        "II_F_replacement_examples_status");
 
 
 

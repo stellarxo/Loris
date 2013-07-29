@@ -197,7 +197,12 @@ class NDB_BVL_Instrument_med_psych_hist extends NDB_BVL_Instrument
 						     'q17_f_other_defect_specify_status',
 						     'q18_other_chronic_a_specify_status',
 						     'q18_other_chronic_b_specify_status',
-						     'q18_other_chronic_c_specify_status');
+						     'q18_other_chronic_c_specify_status',
+                             'q11_apgar_1_minute_status', 
+                             'q11_apgar_5_minute_status', 
+                             'q14_child_hospitalised_hours_status', 
+                             'second_b_date_of_birth_date_status'
+                             );
 
     
 
