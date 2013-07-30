@@ -8,7 +8,21 @@
                         <img src="images/locked.gif" alt="" border="0" width="12" height="12" />&nbsp;Start Next Stage
 {/if}
 	    	</li>
+            <li>
+			{if $access.send_to_dcc===true}
+    				{if $send_to_dcc.set_submitted=='Check'}
+                        		<img src="images/{$send_to_dcc.icon|default:'default'}.gif" alt="" border="0" width="12" height="12" />&nbsp;<a href="main.php?test_name=timepoint_flag&subtest=check_timepoint_flag&identifier={$sessionID}">{$send_to_dcc.reverse|default:"Send To DCC"}</a><br>
+	    			{else}
+                        	<img src="images/{$send_to_dcc.icon|default:'default'}.gif" alt="" border="0" width="12" height="12" />&nbsp;<a href="main.php?test_name=instrument_list&candID={$candID}&sessionID={$sessionID}&setSubmitted={$send_to_dcc.set_submitted}">{$send_to_dcc.reverse|default:"Send To DCC"}</a>
+    				{/if}
+			{else}
+                        <span title='{$access.send_to_dcc_status_message}'><img src="images/{$send_to_dcc.icon|default:'locked'}.gif" alt="" border="0" width="12" height="12" />&nbsp;Send To DCC</span>
+			{/if}
+		</li>		
+        <li>
+              <img src="images/open.gif" alt="" border="0" width="12" height="12" />&nbsp;<a href="main.php?test_name=instrument_list&subtest=instrument_list&candID={$candID}&sessionID={$sessionID}&identifier={$sessionID}">Add Comment</a>
 
+        </li>
 	</ul>
 
 	<h3 class="controlPanelSection">Stage: {$current_stage}</h3>
@@ -24,22 +38,6 @@
 		{/section}
 
 	</ul>
-
-	<h3 class="controlPanelSection">Send Time Point</h3>
-	<ul class="controlPanel">
-		<li>
-			{if $access.send_to_dcc===true}
-    				{if $send_to_dcc.set_submitted=='Check'}
-                        		<img src="images/{$send_to_dcc.icon|default:'default'}.gif" alt="" border="0" width="12" height="12" />&nbsp;<a href="main.php?test_name=timepoint_flag&subtest=check_timepoint_flag&identifier={$sessionID}">{$send_to_dcc.reverse|default:"Send To DCC"}</a><br>
-	    			{else}
-                        	<img src="images/{$send_to_dcc.icon|default:'default'}.gif" alt="" border="0" width="12" height="12" />&nbsp;<a href="main.php?test_name=instrument_list&candID={$candID}&sessionID={$sessionID}&setSubmitted={$send_to_dcc.set_submitted}">{$send_to_dcc.reverse|default:"Send To DCC"}</a>
-    				{/if}
-			{else}
-                        <span title='{$access.send_to_dcc_status_message}'><img src="images/{$send_to_dcc.icon|default:'locked'}.gif" alt="" border="0" width="12" height="12" />&nbsp;Send To DCC</span>
-			{/if}
-		</li>		
-	</ul>
-
 
 	<h3 class="controlPanelSection">BVL QC Type</h3>
 	<ul class="controlPanel">
