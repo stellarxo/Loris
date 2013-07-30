@@ -106,8 +106,8 @@ class NDB_BVL_Instrument_ados_module1 extends NDB_BVL_Instrument
                              'social_affect_gotham_weighted',
                              'restricted_repetitive_gotham_weighted',
                              'gotham_weighted_score',
-                             'severity_score_lookup'
-       );
+                             'severity_score_lookup',
+                             'Data_entry_completion_status');
 
 
 

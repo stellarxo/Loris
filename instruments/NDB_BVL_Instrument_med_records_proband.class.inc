@@ -285,7 +285,8 @@ class NDB_BVL_Instrument_med_records_proband extends NDB_BVL_Instrument_med_reco
                                  'thirtyfive_measurement_weight_units_stat',
                                  'thirtyfive_weight_percentage',
                                  'thirtyfive_measurement_head_units_stat',
-                                 'thirtyfive_head_percentage'                         
+                                 'thirtyfive_head_percentage',
+                                 'Data_entry_completion_status'
                                  );
 	       
 

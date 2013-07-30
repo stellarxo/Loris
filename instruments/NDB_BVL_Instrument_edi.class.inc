@@ -323,7 +323,8 @@ INSERT INTO test_battery VALUES ('', 'edi', '1050', '1140', 'Y', 'Visit', '2');
                              'score_22_24_regulatory',
                              'score_22_24_social',
                              'score_22_24_communication',
-                             'score_22_24_repetitive_behaviour');
+                             'score_22_24_repetitive_behaviour',
+                             'Data_entry_completion_status');
 
 
         // setup the form

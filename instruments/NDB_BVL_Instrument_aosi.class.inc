@@ -145,7 +145,8 @@ INSERT INTO instrument_subtests VALUES('', 'aosi', 'aosi_page2', 'General Observ
                 'total_score_1_18',
                 'total_score_1_18_override',
                 'number_of_markers',
-                'number_of_markers_override');
+                'number_of_markers_override',
+                'Data_entry_completion_status');
 
         // setup the form
         $this->_setupForm();

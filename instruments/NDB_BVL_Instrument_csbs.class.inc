@@ -199,7 +199,8 @@ INSERT INTO instrument_subtests VALUES('', 'csbs', 'csbs_page2', 'Symbolic Behav
                            'emotion_eye_gaze_weighted',
                            'q_3_gaze_point_following_raw_score',
                            'q_2_shared_positive_affect_raw_score',
-                           'q_1_gaze_shifts_raw_score');
+                           'q_1_gaze_shifts_raw_score',
+                           'Data_entry_completion_status');
 
 
         // setup the form

@@ -54,10 +54,11 @@ class NDB_BVL_Instrument_ibq_r extends NDB_BVL_Instrument
         /**
          * Array of column names to be ignored by the double data entry conflict detector.
          */
-        $this->_doubleDataEntryDiffIgnoreColumns = array('cuddlineness', 'distress_to_limitations',
-              'duration_of_orienting','falling_reactivity','fear','high_pleasure','low_pleasure',
-              'perceptual_sensitivity','activity_level','smiling_and_laughter','soothability', 
-              'sadness', 'approach', 'vocal_reactivity' );
+        $this->_doubleDataEntryDiffIgnoreColumns = array('CommentID', 'UserID', 'Testdate', 'Window_Difference',
+                       'Candidate_Age','Data_entry_completion_status','cuddlineness', 'distress_to_limitations',
+                       'duration_of_orienting','falling_reactivity','fear','high_pleasure','low_pleasure',
+                       'perceptual_sensitivity','activity_level','smiling_and_laughter','soothability', 
+                       'sadness', 'approach', 'vocal_reactivity' );
         //
         $scoreHeader = array("scale"=>"Score");
         $this->localDefaults = array_merge($this->localDefaults, $scoreHeader);

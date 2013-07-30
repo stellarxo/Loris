@@ -201,7 +201,8 @@ class NDB_BVL_Instrument_med_psych_hist extends NDB_BVL_Instrument
                              'q11_apgar_1_minute_status', 
                              'q11_apgar_5_minute_status', 
                              'q14_child_hospitalised_hours_status', 
-                             'second_b_date_of_birth_date_status'
+                             'second_b_date_of_birth_date_status',
+                             'Data_entry_completion_status'
                              );
 
     

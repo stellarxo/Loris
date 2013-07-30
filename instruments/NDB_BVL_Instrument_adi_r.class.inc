@@ -51,7 +51,7 @@ class NDB_BVL_Instrument_adi_r extends NDB_BVL_Instrument
         								"q_41_cur_comm_speech_current_code", "q_50_direct_gaze_current_code",
         								"q_60_init_activities_current_code", "q_67_unusual_preoccupations_current_code",
         								"q_80_gait_current_code", "q_88_visuospatial_ability_current_code");
-        $this->_doubleDataEntryDiffIgnoreColumns = array_merge(array('CommentID', 'UserID', 'Testdate', 'Window_Difference', 'Candidate_Age'), $this->scoreCols);
+        $this->_doubleDataEntryDiffIgnoreColumns = array_merge(array('CommentID', 'UserID', 'Testdate', 'Window_Difference', 'Candidate_Age','Data_entry_completion_status','A_total','BNV_total','BV_total','C_total','D_total'), $this->scoreCols);
         // setup the form
         $this->_setupForm();
 

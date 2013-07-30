@@ -85,7 +85,7 @@ class NDB_BVL_Instrument_ados_module3 extends NDB_BVL_Instrument
                                  'd1_weighted',
                                  'd2_weighted',
                                  'd4_weighted',
-                                 );
+                                 'Data_entry_completion_status');
 
        // setup the form
         $this->_setupForm();

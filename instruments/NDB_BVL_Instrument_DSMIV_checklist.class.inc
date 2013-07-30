@@ -61,7 +61,8 @@ class NDB_BVL_Instrument_DSMIV_checklist extends NDB_BVL_Instrument
 							 'confidence_rating_specify_status',
 							 'name_assessor',
 							 'name_confirming_clinician',
-							 'equivocal_evaluation_results_specify');
+							 'equivocal_evaluation_results_specify',
+                             'Data_entry_completion_status');
 	
 
 

@@ -84,7 +84,8 @@ class NDB_BVL_Instrument_ados2_module2 extends NDB_BVL_Instrument
                                  'a5_weighted',
                                  'd1_weighted',
                                  'd2_weighted',
-                                 'd4_weighted');
+                                 'd4_weighted',
+                                 'Data_entry_completion_status');
 
 
 

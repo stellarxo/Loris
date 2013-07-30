@@ -47,7 +47,7 @@ class NDB_BVL_Instrument_neuro_screen extends NDB_BVL_Instrument
 	/**
 	 * Array of column names to be ignored by the double data entry conflict detector.
 	 */
-	$this->_doubleDataEntryDiffIgnoreColumns = array('CommentID', 'UserID', 'Testdate',  'Window_Difference', 'Candidate_Age',
+	$this->_doubleDataEntryDiffIgnoreColumns = array('CommentID', 'UserID', 'Testdate',  'Window_Difference', 'Candidate_Age','Data_entry_completion_status',
 							 'q1_strabismus_specify',
 							 'q2_specify',
 							 'q7_cleft_describe',
