@@ -1128,7 +1128,6 @@ INSERT INTO instrument_subtests VALUES('', 'csbs', 'csbs_page2', 'Symbolic Behav
                 }
             }
         }
-        print $score;
         return $score;
     }
     
