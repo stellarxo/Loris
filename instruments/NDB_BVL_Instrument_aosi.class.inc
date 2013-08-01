@@ -199,6 +199,9 @@ INSERT INTO instrument_subtests VALUES('', 'aosi', 'aosi_page2', 'General Observ
         $this->form->addElement('static', "total_score_1_18_override", "Total Score (Using Overrides) (items 1-18)");
         $this->form->addELement('static', "number_of_markers", "Number of Markers (Calculated) (non-zero items, 1-18)");
         $this->form->addELement('static', "number_of_markers_override", "Number of Markers (Using Overrides) (non-zero items, 1-18)");
+        $this->form->addElement('static',null,'<br>');
+        $this->form->addElement("textarea", "other_comments", "Comments about Validity:", array('cols'=>25, 'rows'=>4));
+        $this->XINRegisterRule("other_comments", array("{other_comments}{@}=={@}NEVER_REQUIRED"));
     }
    
     function _page1(){

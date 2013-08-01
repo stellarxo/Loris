@@ -1115,23 +1115,21 @@ class NDB_BVL_Instrument_mullen extends NDB_BVL_Instrument
          $db->selectRow($query, $score_record);
 
          if (PEAR::isError($score_record)) {
-            return PEAR::raiseError("Could not get scores: ".$score_record->getMessage());
+             return PEAR::raiseError("Could not get scores: ".$score_record->getMessage());
          }
 
          // Get the subject age in months for scoring
-         $age_months = $this->localDefaults['age_months'];
-         if($age_months == null) {
-             $timepoint =& TimePoint::singleton($this->getSessionID());
-             if($this->isError($timepoint)) {
-                 return PEAR::raiseError("Invalid timepoint.");
-             }
-             $dob = $timepoint->getEffectiveDateOfBirth();
-             $age = Utility::calculateAge($dob, $score_record["Date_taken"]);
-             if($this->isError($age)) {
-                 return PEAR::raiseError("Could not calculate age.");
-             }
-             $age_months = $age['year'] * 12 + $age['mon'];
+         $timepoint =& TimePoint::singleton($this->getSessionID());
+         if($this->isError($timepoint)) {
+             return PEAR::raiseError("Invalid timepoint.");
          }
+         $dob = $timepoint->getEffectiveDateOfBirth();
+         $age = Utility::calculateAge($dob, $score_record["Date_taken"]);
+         if($this->isError($age)) {
+             return PEAR::raiseError("Could not calculate age.");
+         }
+         $age_months = $age['year'] * 12 + $age['mon'];
+
 
          $calculatedScores = array();
 

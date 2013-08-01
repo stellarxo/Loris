@@ -318,6 +318,21 @@ class Candidate
         }
         return $visitLabelArray;
     }
+    function getNumVisits() {
+        $candID = $this->getCandID();
+        $db =& Database::singleton();
+        if(Utility::isErrorX($db)) {
+            return PEAR::raiseError("Could not connect to database: ".$db->getMessage());
+        }
+        $query  = "SELECT count(Visit_label) AS CountNum FROM session s JOIN candidate c ON (c.CandID = s.CandID) 
+                   WHERE c.CandID=:cid AND s.Current_stage <> 'Not Started'";
+        $where  = array('cid'=>$candID);
+        $numVisits = $db->pselectRow($query, $where);
+        if(Utility::isErrorX($numVisits)) {
+            return PEAR::raiseError("Could not connect to database: ".$numVisits->getMessage());
+        }
+        return $numVisits['CountNum'];
+    }
 
     /**
      * return the next visit number for the time point you are
