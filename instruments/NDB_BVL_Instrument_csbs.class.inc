@@ -371,8 +371,15 @@ INSERT INTO instrument_subtests VALUES('', 'csbs', 'csbs_page2', 'Symbolic Behav
         $scores["q_12_words_raw_score"] = $this->_countChecked($record, "q_12_words_");
         
         $scores["q_13_words_raw_score"] = $this->_countWords($record, "q_13_words_");
+        if(empty($scores["q_13_words_raw_score"])){
+            $scores["q_13_words_raw_score"]  = 0;   
+        }
         $scores["q_14_word_combos_raw_score"] = $this->_countChecked($record, "q_14_word_combos_");
         $scores["q_15_word_combos_raw_score"] = $this->_countWords($record, "q_15_word_combos_");
+        if(empty($scores["q_15_word_combos_raw_score"])){
+            $scores["q_15_word_combos_raw_score"]  = 0;   
+        }
+
         $scores["q_17_action_schemes_raw_score"] = $this->_countCheckedNone($record, "q_17_action_schemes_", "q_17_action_schemes_none");
        // $scores["q_17_action_schemes_raw_score"] = $this->_countChecked($record, "q_17_action_schemes_");
         $scores["q_18_actions_towards_other_raw_score"] = $this->_countActionTowardsOther($record, 6);
@@ -441,18 +448,18 @@ INSERT INTO instrument_subtests VALUES('', 'csbs', 'csbs_page2', 'Symbolic Behav
 
         $scores["sounds_weighted"] = $scores["q_10_syllables_consonants_raw_score"] +
         2 * $scores["q_11_inventory_of_consonants_raw_score"];
-
-        $scores["words_weighted"] = number_format(($scores["q_12_words_raw_score"] + ($scores["q_13_words_raw_score"]/2) +  
-        $scores["q_14_word_combos_raw_score"] +
-        $scores["q_15_word_combos_raw_score"]), 0);
-
+        
+        $scores["words_weighted"] = number_format(($scores["q_12_words_raw_score"] + 
+                                        ($scores["q_13_words_raw_score"]/2) +  
+                                        $scores["q_14_word_combos_raw_score"] +
+                                        $scores["q_15_word_combos_raw_score"]), 0);
+        
         $scores["object_use_weighted"] = $scores["q_17_action_schemes_raw_score"] +
-        $scores["q_18_actions_towards_other_raw_score"] +
-        $scores["q_19_sequence_action_schemes_raw_score"] +
-        $scores["q_20_stacks_tower_raw_score"];
-
-	//calculate weighted raw composite scores
-	$scores["social_composite_score"] = $scores["emotion_eye_gaze_weighted"] +
+                                         $scores["q_18_actions_towards_other_raw_score"] +
+                                         $scores["q_19_sequence_action_schemes_raw_score"] +
+                                         $scores["q_20_stacks_tower_raw_score"];
+        //calculate weighted raw composite scores
+	    $scores["social_composite_score"] = $scores["emotion_eye_gaze_weighted"] +
         $scores["communication_weighted"] +
         $scores["gestures_weighted"];
 
@@ -525,7 +532,7 @@ INSERT INTO instrument_subtests VALUES('', 'csbs', 'csbs_page2', 'Symbolic Behav
 
     if($scores['understanding_weighted'] !== "Unable to score") {
         $query_scores6 = "SELECT * FROM csbs_lookup WHERE age_months=".$age_months. " AND score_weighted=".$scores['understanding_weighted']." AND subscale='understanding_weighted'";
-            $record_6 = array();
+        $record_6 = array();
         $db->selectRow($query_scores6, $record_6);
             if (PEAR::isError($record_6)) {
                 return PEAR::raiseError("Could not retrieve scores: " . $record_6->getMessage());
@@ -533,8 +540,8 @@ INSERT INTO instrument_subtests VALUES('', 'csbs', 'csbs_page2', 'Symbolic Behav
         $scores['understanding_standard']=($record_6['score_standard']);
         $scores['understanding_percentile']=($record_6['score_percentile']);
     } else {
-        $scores['understanding_standard']= null;
-        $scores['understanding_percentile']=null;
+        $scores['understanding_standard']= 'Unable to score';
+        $scores['understanding_percentile']= 'Unable to score';
     }
 
 
