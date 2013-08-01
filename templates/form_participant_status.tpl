@@ -80,7 +80,6 @@
 		<td nowrap="nowrap" colspan="2">
     {if not $success}
         <input class="button" name="fire_away" value="Save" type="submit" />
-        <input class="button" value="Reset" type="reset" />
     {/if}
         <input class="button" onclick="location.href='main.php?test_name=timepoint_list&candID={$candID}'" value="Return to profile" type="button" />
         </td>
