@@ -298,6 +298,14 @@ class NDB_Form_participant_status extends NDB_Form
                 $consentVal = $fields[$fieldname];
                 $consentDate = $fields[$fieldname . '_date'];
                 $consentWithdrawal = $fields[$fieldname . '_withdrawal'];
+                $consent = date_create();
+                $today = date('Y-m-d'); 
+                $consent->setDate($consentDate['Y'], $consentDate['M'], $consentDate['d']);
+                $consent = $consent->format('Y-m-d'); 
+                if ($consent > $today) {
+                    $errors[$fieldname.'_date'] = 'Cannot be later than today';
+
+                }
 
                 if (
                     $consentVal === 'yes' && (
@@ -314,15 +322,17 @@ class NDB_Form_participant_status extends NDB_Form
                     && !empty($consentWithdrawal['M'])
                     && !empty($consentWithdrawal['d'])
                 ) {
-                    $consent = date_create();
                     $withdrawal = date_create();
-
-                    $consent->setDate($consentDate['Y'], $consentDate['M'], $consentDate['d']);
+                    
                     $withdrawal->setDate($consentWithdrawal['Y'], $consentWithdrawal['M'], $consentWithdrawal['d']);
-                    $diff = date_diff($withdrawal, $consent);
+                    $withdrawal = $withdrawal->format('Y-m-d'); 
+                    $diff = date_diff($withdrawal, $consent);                   
                     if ($withdrawal < $consent) {
                         $errors[$fieldname . '_withdrawal'] = 'Must be after date of consent';
-                    }
+                    } else if ($withdrawal > $today) {
+                        $errors[$fieldname . '_withdrawal'] = 'Cannot be later than today';
+
+                    } 
                 }
 
             }
