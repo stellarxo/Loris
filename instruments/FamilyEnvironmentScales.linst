@@ -13,7 +13,7 @@ static{@}c_raw_score{@}Cohesion Raw Score
 static{@}c_std_score{@}Cohesion Standard Score
 static{@}{@}<br />
 static{@}ex_raw_score{@}Expressiveness Raw Score
-static{@}ex_std_score{@}Expresiveness Standard Score
+static{@}ex_std_score{@}Expressiveness Standard Score
 static{@}{@}<br />
 static{@}con_raw_score{@}Conflict Raw Score
 static{@}con_std_score{@}Conflict Standard Score
@@ -25,7 +25,7 @@ static{@}ao_raw_score{@}Orientation Raw Score
 static{@}ao_std_score{@}Orientation Standard Score
 static{@}{@}<br />
 static{@}ico_raw_score{@}Intellectual-Cultural Orientation Raw score
-static{@}ico_std_score{@}Intellectual-Cultutal Orientation Standard score
+static{@}ico_std_score{@}Intellectual-Cultural Orientation Standard score
 static{@}{@}<br />
 static{@}aro_raw_score{@}Active-Recreational Orientation Raw Score
 static{@}aro_std_score{@}Active-Recreational Orientation Standard Score

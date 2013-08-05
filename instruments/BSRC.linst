@@ -20,7 +20,7 @@ static{@}{@}<br />
 static{@}{@}If YES to #5, please complete the following:
 static{@}{@}<br />
 header{@}{@}Occupational Therapy
-select{@}servicetype_occupationaltherapy{@}Recieved occupational therapy{@}NULL=>''{-}'yes'=>'Yes'{-}'no'=>'No'{-}'not_answered'=>'Not Answered'
+select{@}servicetype_occupationaltherapy{@}Received occupational therapy{@}NULL=>''{-}'yes'=>'Yes'{-}'no'=>'No'{-}'not_answered'=>'Not Answered'
 text{@}startdate_occupationaltherapy{@}Date Started (mm/yy)
 select{@}startdate_occupationaltherapy_status{@}{@}NULL=>''{-}'not_answered'=>'Not Answered'
 select{@}continue_occupationaltherapy{@}Still receiving intervention?{@}NULL=>''{-}'yes'=>'Yes'{-}'no'=>'No'{-}'not_answered'=>'Not Answered'
@@ -44,9 +44,9 @@ select{@}setting_physicaltherapy{@}Setting{@}NULL=>''{-}'office/clinic'=>'Office
 text{@}setting_physicaltherapy_other{@}Please specify Other:
 select{@}setting_physicaltherapy_other_status{@}{@}NULL=>''{-}'not_answered'=>'Not Answered'
 numeric{@}avg_physicaltherapy{@}Average hours per week{@}0{@}90
-text{@}avg_physicaltherapy_other_status{@}{@}NULL=>''{-}'not_answered'=>'Not Answered'
+text{@}avg_physicaltherapy_status{@}{@}NULL=>''{-}'not_answered'=>'Not Answered'
 header{@}{@}Speech-language Therapy
-select{@}servicetype_speechlangtherapy{@}Received physical therapy{@}NULL=>''{-}'yes'=>'Yes'{-}'no'=>'No'{-}'not_answered'=>'Not Answered'
+select{@}servicetype_speechlangtherapy{@}Received speech-language therapy{@}NULL=>''{-}'yes'=>'Yes'{-}'no'=>'No'{-}'not_answered'=>'Not Answered'
 text{@}startdate_speechlangtherapy{@}Date started (mm/yy)
 select{@}startdate_speechlangtherapy_status{@}{@}NULL=>''{-}'not_answered'=>'Not Answered'
 select{@}continue_speechlangtherapy{@}Still receiving intervention?{@}NULL=>''{-}'yes'=>'Yes'{-}'no'=>'No'{-}'not_answered'=>'Not Answered'
@@ -57,7 +57,7 @@ select{@}setting_speechlangtherapy{@}Setting{@}NULL=>''{-}'office/clinic'=>'Offi
 text{@}setting_speechlangtherapy_other{@}Please specify Other:
 select{@}setting_speechlangtherapy_other_status{@}{@}NULL=>''{-}'not_answered'=>'Not Answered'
 numeric{@}avg_speechlangtherapy{@}Average hours per week{@}0{@}90
-select{@}avg_speechlangtherapy_other_status{@}{@}NULL=>''{-}'not_answered'=>'Not Answered'
+select{@}avg_speechlangtherapy_status{@}{@}NULL=>''{-}'not_answered'=>'Not Answered'
 header{@}{@}Comprehensive behavioral/educational interventions
 select{@}servicetype_behaviorintervention{@}Received Comprehensive behavioral/educational interventions{@}NULL=>''{-}'yes'=>'Yes'{-}'no'=>'No'{-}'not_answered'=>'Not Answered'
 text{@}startdate_behaviorintervention{@}Date started (mm/yy)
@@ -70,7 +70,7 @@ select{@}setting_behaviorintervention{@}Setting{@}NULL=>''{-}'office/clinic'=>'O
 text{@}setting_behaviorintervention_other{@}Please specify Other:
 select{@}setting_behaviorintervention_other_status{@}{@}NULL=>''{-}'not_answered'=>'Not Answered'
 numeric{@}avg_behaviorintervention{@}Average hours per week{@}0{@}90
-select{@}avg_behaviorintervention_other_status{@}{@}NULL=>''{-}'not_answered'=>'Not Answered'
+select{@}avg_behaviorintervention_status{@}{@}NULL=>''{-}'not_answered'=>'Not Answered'
 header{@}{@}Other
 select{@}servicetype_other{@}Received Other therapy{@}NULL=>''{-}'yes'=>'Yes'{-}'no'=>'No'{-}'not_answered'=>'Not Answered'
 text{@}startdate_other{@}Date started (mm/yy)
