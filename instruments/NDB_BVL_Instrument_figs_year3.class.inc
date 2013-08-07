@@ -640,7 +640,7 @@ class NDB_BVL_Instrument_figs_year3 extends NDB_BVL_Instrument
         $questionOptions = array(null=>'', '0' => '0. No', '1' => '1. Yes', '9'=>'9. Unk', 'NA' => 'N/A');
         $question1f_Options = array(null=>'', '1' => '1. Good', '2'=>'2. Fair', '3'=>'3. Poor', 'NA' => 'N/A');
         $question1_1a_Options = array(null=>'','0'=>'0.No','1'=>'1.Yes','9'=>'9.Unknown','NA'=>'N/A');
-        $question1_1b_Options = array(null=>'','1'=>'1.Full mutation','2'=>'2.Pre-mutation','3'=>'3.Carrier','4'=>'4.Fragile X-associated Tremor/Ataxia syndrome','5'=>'5.Fragile X-associated Primary Ovarian Insufficiency','6'=>'6. Other','7'=>'7.Not Applicable','8'=>'8.Not Answered','9'=>'9.Unknown');
+        $question1_1b_Options = array(null=>'','1'=>'1.Full mutation','2'=>'2.Pre-mutation','3'=>'3.Carrier','4'=>'4.Fragile X-associated Tremor/Ataxia syndrome','5'=>'5.Fragile X-associated Primary Ovarian Insufficiency','6'=>'6. Other','7'=>'7.Not Applicable','8'=>'8.Not Answered','9'=>'9.Unknown','10'=>'10.Negative');
         $dateOptions =  array(
         'language' => 'en',
         'format'   => 'YMd',
