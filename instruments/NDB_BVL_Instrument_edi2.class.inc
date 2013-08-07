@@ -149,7 +149,7 @@ INSERT INTO help(hash, topic) VALUES (md5('edi2'),'EDI_IBIS2');
                                 "82. Anything else that gave you concern? (write in)",
                                 "83. Overly sensitive/lack of sensitivity to noise...?",
                                 "84. Repetitive/stereotyped motor movements?",
-                                "85. Lack of orienting name?",
+                                "85. Lack of orienting to name?",
                                 "86. Poor eye contact, difficult to catch his/her eye?",
                                 "87. Failure to follow point/gaze?",
                                 "88. Lack of pointing to express interest?",

@@ -21,7 +21,7 @@ class NDB_BVL_Instrument_SRS extends NDB_BVL_Instrument
      */
     var $questions = array(
             1 => array(
-                'q1_fidgety_social_situations'      => 'Seems much more fidgety in social situation than when alone',
+                'q1_fidgety_social_situations'      => 'Seems much more fidgety in social situations than when alone',
                 'q2_expressions_dont_match'         => "Expressions on his/her face don't match what he/she is saying",
                 'q3_seems_self_confident'           => 'Seems self confident when interacting with others',
                 'q4_auto_pilot_under_stress'        => 'When under stress, child seems to go on "auto-pilot"',
@@ -30,7 +30,7 @@ class NDB_BVL_Instrument_SRS extends NDB_BVL_Instrument
                 'q7_aware_others_feeling'           => 'Is aware of what others are thinking or feeling',
                 'q8_behaves_strange'                => "Behaves in ways which seem strange or bizarre",
                 'q9_clings_to_adults'               => "Clings to adults, seems too dependent on them",
-                "q10_unable_pickup_meaning"         => "Unable to pick up on any of the meaning of conversions of older children or adults",
+                "q10_unable_pickup_meaning"         => "Unable to pick up on any of the meaning of conversations of older children or adults",
                 "q11_good_self_confidence"          => "Has good self-confidence",
                 "q12_able_communicate_feelings"     => "Is able to communicate his or her feelings to others in words or gestures",
                 "q13_slow_turntaking_interactions"  => "Is slow or awkward in turn-taking interactions with peers",
@@ -69,7 +69,7 @@ class NDB_BVL_Instrument_SRS extends NDB_BVL_Instrument
             /* ),
             3 => array( */
                 "q43_separates_from_caregivers"     => "Separates easily from caregivers",
-                "q44_doesnt_understand_events"      => "Doesn't understand how events are related to one another the way other children his/her page do",
+                "q44_doesnt_understand_events"      => "Doesn't understand how events are related to one another the way other children his/her age do",
                 "q45_focuses_attention_others"      => "Focuses his/her attention to where others are looking or listening",
                 "q46_overly_serious_expressions"    => "Has overly serious facial expressions",
                 "q47_too_silly"                     => "Is too silly or laughs inappropriately",
