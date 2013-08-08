@@ -1,5 +1,5 @@
 <?php
-abstract class NDB_BVL_Instrument_adi_r extends NDB_BVL_Instrument
+class NDB_BVL_Instrument_adi_r extends NDB_BVL_Instrument
 {
 	//Commonly used level of indentation;
 	var $indent = "&nbsp;&nbsp;&nbsp;&nbsp;";
