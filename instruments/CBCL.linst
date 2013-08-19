@@ -194,5 +194,22 @@ select{@}q96_wantattention{@}96. Wants a lot of attention{@}NULL=>''{-}'0_not_tr
 select{@}q97_whining{@}97. Whining{@}NULL=>''{-}'0_not_true'=>'0. Not True'{-}'1_somewhat_or_sometimes_true'=>'1. Somewhat or Sometimes True'{-}'2_very_true_or_often_true'=>'2. Very True or Often True'{-}'not_answered'=>'Not Answered'
 select{@}q98_withdrawn{@}98. Withdrawn, doesn't get involved with others{@}NULL=>''{-}'0_not_true'=>'0. Not True'{-}'1_somewhat_or_sometimes_true'=>'1. Somewhat or Sometimes True'{-}'2_very_true_or_often_true'=>'2. Very True or Often True'{-}'not_answered'=>'Not Answered'
 select{@}q99_worries{@}99. Worries{@}NULL=>''{-}'0_not_true'=>'0. Not True'{-}'1_somewhat_or_sometimes_true'=>'1. Somewhat or Sometimes True'{-}'2_very_true_or_often_true'=>'2. Very True or Often True'{-}'not_answered'=>'Not Answered'
-text{@}q100_otherproblems{@}100. Please write in any problems the child has that were not listed above
-select{@}q100_otherproblems_status{@}{@}NULL=>''{-}'not_answered'=>'Not Answered'
+header{@}{@}100. Please write in any problems the child has that were not listed above
+static{@}{@}<br />
+static{@}{@}<b>Other Problem 1</b>
+text{@}q100_otherproblems_1{@}Specify Other Problem:
+select{@}q100_otherproblems_1_status{@}{@}NULL=>''{-}'not_answered'=>'Not Answered'
+select{@}q100_otherproblems_1_option{@}Score Problem {@}NULL=>''{-}'0_not_true'=>'0. Not True'{-}'1_somewhat_or_sometimes_true'=>'1. Somewhat or Sometimes True'{-}'2_very_true_or_often_true'=>'2. Very True or Often True'{-}'not_answered'=>'Not Answered'
+select{@}q100_otherproblems_1_parent{@}Problem was highlighted by parents:{@}NULL=>''{-}'yes'=>'Yes'{-}'no'=>'No'
+static{@}{@}<br />
+static{@}{@}<b>Other Problem 2</b>
+text{@}q100_otherproblems_2{@}Specify Other Problem:
+select{@}q100_otherproblems_2_status{@}{@}NULL=>''{-}'not_answered'=>'Not Answered'
+select{@}q100_otherproblems_2_option{@}Score Problem {@}NULL=>''{-}'0_not_true'=>'0. Not True'{-}'1_somewhat_or_sometimes_true'=>'1. Somewhat or Sometimes True'{-}'2_very_true_or_often_true'=>'2. Very True or Often True'{-}'not_answered'=>'Not Answered'
+select{@}q100_otherproblems_2_parent{@}Problem was highlighted by parents:{@}NULL=>''{-}'yes'=>'Yes'{-}'no'=>'No'
+static{@}{@}<br />
+static{@}{@}<b>Other Problem 3</b>
+text{@}q100_otherproblems_3{@}Specify Other Problem:
+select{@}q100_otherproblems_3_status{@}{@}NULL=>''{-}'not_answered'=>'Not Answered'
+select{@}q100_otherproblems_3_option{@}Score Problem {@}NULL=>''{-}'0_not_true'=>'0. Not True'{-}'1_somewhat_or_sometimes_true'=>'1. Somewhat or Sometimes True'{-}'2_very_true_or_often_true'=>'2. Very True or Often True'{-}'not_answered'=>'Not Answered'
+select{@}q100_otherproblems_3_parent{@}Problem was highlighted by parents:{@}NULL=>''{-}'yes'=>'Yes'{-}'no'=>'No'

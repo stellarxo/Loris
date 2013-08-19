@@ -10,4 +10,10 @@ q74_sleepless_describe{-}Required{-}q74_sleepless{@}=={@}1_somewhat_or_sometimes
 q76_speech_describe{-}Required{-}q76_speech{@}=={@}1_somewhat_or_sometimes_true|2_very_true_or_often_true
 q80_strange_describe{-}Required{-}q80_strange{@}=={@}1_somewhat_or_sometimes_true|2_very_true_or_often_true
 q92_upsetnew_describe{-}Required{-}q92_upsetnew{@}=={@}1_somewhat_or_sometimes_true|2_very_true_or_often_true
+q100_otherproblems_1_option{-}Required{-}q100_otherproblems_1_status{@}!={@}not_answered
+q100_otherproblems_1_parent{-}Required{-}q100_otherproblems_1_option{@}=={@}0_not_true|1_somewhat_or_sometimes_true|2_very_true_or_often_true
+q100_otherproblems_2_option{-}Required{-}q100_otherproblems_2_status{@}!={@}not_answered
+q100_otherproblems_2_parent{-}Required{-}q100_otherproblems_2_option{@}=={@}0_not_true|1_somewhat_or_sometimes_true|2_very_true_or_often_true
+q100_otherproblems_3_option{-}Required{-}q100_otherproblems_3_status{@}!={@}not_answered
+q100_otherproblems_3_parent{-}Required{-}q100_otherproblems_3_option{@}=={@}0_not_true|1_somewhat_or_sometimes_true|2_very_true_or_often_true
 
