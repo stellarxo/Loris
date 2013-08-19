@@ -1878,49 +1878,78 @@ work or with social relationships?", $questionOptions);
         // GET per-instrument scores
         // from per-relative scores...
         $query_adhd='';
-        if($relativeScores['Score_adhd_combined'] != NULL || $relativeScores['Score_adhd_inattentive'] != NULL || $relativeScores['Score_adhd_hyperactive'] != NULL){
+        if(array_key_exists('Score_adhd_combined',$relativeScores) || 
+            array_key_exists('Score_adhd_inattentive',$relativeScores)|| 
+            array_key_exists('Score_adhd_hyperactive',$relativeScores) ) {
+
+            if($relativeScores['Score_adhd_combined'] != NULL || $relativeScores['Score_adhd_inattentive'] != NULL ||
+               $relativeScores['Score_adhd_hyperactive'] != NULL){
             $query_adhd = "IF(((MAX(Score_adhd_combined)='Y' OR MAX(Score_adhd_inattentive)='Y'OR MAX(Score_adhd_hyperactive)='Y')), 'Y','N') AS ADHD";
+            }
         }
         $query_alcohol_abuse ='';
-        if($relativeScores['Score_alcohol_abuse'] != NULL || $relativeScores['Score_alcohol_dependence'] != NULL){
+        if(array_key_exists('Score_alcohol_abuse', $relativeScores) || 
+           array_key_exists('Score_alcohol_dependence',$relativeScores)) {
+           if($relativeScores['Score_alcohol_abuse'] != NULL || $relativeScores['Score_alcohol_dependence'] != NULL){
             $query_alcohol_abuse = "IF(((MAX(Score_alcohol_abuse)='Y' OR MAX(Score_alcohol_dependence)='Y')), 'Y', 'N') AS Alcohol";
+           }
         }
         $query_alcohol_nicotine ='';
-        if($relativeScores['Score_alcohol_nicotine'] != NULL){
+        if(array_key_exists('Score_alcohol_nicotine', $relativeScores) && $relativeScores['Score_alcohol_nicotine'] != NULL){
             $query_alcohol_nicotine =" IF(MAX(Score_alcohol_nicotine)='Y', 'Y', 'N') AS Nicotine";
         }
         $query_alcohol_drug_substance='';
-        if($relativeScores['Score_alcohol_drug_substance'] != NULL){
+        if(array_key_exists('Score_alcohol_drug_substance', $relativeScores) && 
+            $relativeScores['Score_alcohol_drug_substance'] != NULL){
             $query_alcohol_drug_substance= " IF(MAX(Score_alcohol_drug_substance)='Y', 'Y', 'N') AS Drug_substance";
         }
         $query_asp='';
-        if($relativeScores['Score_asp'] != NULL){
+        if(array_key_exists('Score_asp', $relativeScores) && $relativeScores['Score_asp'] != NULL){
             $query_asp= " IF(MAX(Score_asp)='Y', 'Y', 'N') AS ASP";
         }
         $query_depression='';
-        if($relativeScores['Score_depression']!= NULL || $relativeScores['Score_chronic_depression'] != NULL || $relativeScores['Score_recurrent_depression'] != NULL){
-            $query_depression = " IF(((MAX(Score_depression)='Y' OR MAX(Score_chronic_depression)='Y' OR MAX(Score_recurrent_depression)='Y')), 'Y', 'N') AS Depression";
+        if(array_key_exists('Score_depression',$relativeScores) || 
+            array_key_exists('Score_chronic_depression',$relativeScores) ||
+            array_key_exists('Score_recurrent_depression', $relativeScores)) {
+           if($relativeScores['Score_depression']!= NULL || $relativeScores['Score_chronic_depression'] != NULL || 
+               $relativeScores['Score_recurrent_depression'] != NULL){
+               $query_depression = " IF(((MAX(Score_depression)='Y' OR MAX(Score_chronic_depression)='Y' OR MAX(Score_recurrent_depression)='Y')), 'Y', 'N') AS Depression";
+           } 
         }
         $query_mania='';
-        if($relativeScores['Score_mania'] != NULL){
+        if( array_key_exists('Score_mania', $relativeScores) && $relativeScores['Score_mania'] != NULL){
             $query_mania=" IF((MAX(Score_mania)='Y'), 'Y', 'N') AS Mania";
         }
         $query_ocd='';
-        if($relativeScores['Score_ocd'] != NULL){
+        if(array_key_exists('Score_ocd', $relativeScores) && $relativeScores['Score_ocd'] != NULL){
             $query_ocd =" IF(MAX(Score_ocd)='Y', 'Y', 'N') AS OCD";
         }
         $query_paranoid_personality='';
-        if($relativeScores['Score_paranoid_personality'] != NULL || $relativeScores['Score_pervasive_development'] != NULL || $relativeScores['Score_schizoid'] != NULL || $relativeScores['Score_schizotypal'] != NULL){
+        if( array_key_exists('Score_paranoid_personality', $relativeScores) || 
+            array_key_exists('Score_pervasive_development', $relativeScores) || 
+            array_key_exists('Score_schizoid', $relativeScores) || array_key_exists('Score_schizotypal', $relativeScores)) {
+           if($relativeScores['Score_paranoid_personality'] != NULL || $relativeScores['Score_pervasive_development'] != NULL || $relativeScores['Score_schizoid'] != NULL || $relativeScores['Score_schizotypal'] != NULL){
        $query_paranoid_personality =" IF(((MAX(Score_paranoid_personality)='Y' OR MAX(Score_pervasive_development)='Y' OR MAX(Score_schizoid)='Y' OR MAX(Score_schizotypal)='Y')), 'Y', 'N') AS Paranoid";
             
+           }
         }
         $query_psychosis_schizophrenia='';
-        if($relativeScores['Score_psychosis_schizophrenia'] != NULL || $relativeScores['Score_psychosis_depression'] != NULL || $relativeScores['Score_psychosis_mania'] != NULL){
+        if(array_key_exists('Score_phychosis_schizophrenia', $relativeScores) || 
+            array_key_exists('Score_phychosis_depression', $relativeScores) || 
+            array_key_exists('Score_phychosis_mania', $relativeScores)) {
+            
+            if($relativeScores['Score_psychosis_schizophrenia'] != NULL || $relativeScores['Score_psychosis_depression'] != NULL || $relativeScores['Score_psychosis_mania'] != NULL){
              $query_psychosis_schizophrenia=" IF(((MAX(Score_psychosis_schizophrenia)='Y' OR MAX(Score_psychosis_depression)='Y' OR MAX(Score_psychosis_mania)='Y')),'Y', 'N') AS Psychosis";
+            } 
         }
         $query_tic_tourettes='';
-        if($relativeScores['Score_tic_tourettes'] != NULL || $relativeScores['Score_tic_motor_c'] != NULL || $relativeScores['Score_tic_vocal_c'] != NULL || $relativeScores['Score_tic_motor_t'] != NULL || $relativeScores['Score_tic_vocal_t'] != NULL){
+        if(array_key_exists('Score_tic_tourettes', $relativeScores) || 
+            array_key_exists('Score_tic_motor_c', $relativeScores) || 
+            array_key_exists('Score_tic_vocal_c', $relativeScores) ) {
+           
+           if($relativeScores['Score_tic_tourettes'] != NULL || $relativeScores['Score_tic_motor_c'] != NULL || $relativeScores['Score_tic_vocal_c'] != NULL || $relativeScores['Score_tic_motor_t'] != NULL || $relativeScores['Score_tic_vocal_t'] != NULL){
              $query_tic_tourettes=" IF(((MAX(Score_tic_tourettes)='Y' OR MAX(Score_tic_motor_c)='Y' OR MAX(Score_tic_vocal_c)='Y' OR MAX(Score_tic_motor_t)='Y' OR MAX(Score_tic_vocal_t)='Y')), 'Y', 'N') AS Tic";
+            }
         }
         $query_array = array($query_adhd, $query_alcohol_abuse, $query_alcohol_nicotine,$query_alcohol_drug_substance,$query_asp, $query_depression,$query_mania,$query_ocd, $query_paranoid_personality,$query_psychosis_schizophrenia, $query_tic_tourettes);
         $final_query='';
