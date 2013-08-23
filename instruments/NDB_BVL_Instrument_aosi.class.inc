@@ -394,6 +394,10 @@ INSERT INTO instrument_subtests VALUES('', 'aosi', 'aosi_page2', 'General Observ
             else {
                 $this->scores["q1_visual_tracking_score"] = "Unable to score";
             }
+
+            if($score_record["q1_visual_tracking_score_override"] == 8) {
+                 $this->scores["q1_visual_tracking_score"] = "N/A";
+            }
 //        }
 
         //Question 2
@@ -419,7 +423,9 @@ INSERT INTO instrument_subtests VALUES('', 'aosi', 'aosi_page2', 'General Observ
             else {
                 $this->scores["q2_disengagement_of_attention_score"] = "Unable to score";
             }
-        
+            if($score_record["q2_disengagement_of_attention_score_override"] == 8) {
+                $this->scores["q2_disengagement_of_attention_score"] = "N/A";
+            } 
         //Question 3
         //calculate
             //2
@@ -455,7 +461,9 @@ INSERT INTO instrument_subtests VALUES('', 'aosi', 'aosi_page2', 'General Observ
         } else{
                 $this->scores["q3_orients_to_name_score"] = "Unable to score";
             }
-        
+          if($score_record["q3_orients_to_name_score_override"] == 8) {
+              $this->scores["q3_orients_to_name_score"] = "N/A";
+          } 
         //Question 4
         $this->scores["q4_differential_response_to_facial_emotion_score"] = $score_record["q4_differential_response_to_facial_emotion"];
 
@@ -497,7 +505,11 @@ INSERT INTO instrument_subtests VALUES('', 'aosi', 'aosi_page2', 'General Observ
 		}
 	     }
 	}
-	
+	if($score_record["q6_imitation_of_actions_score_override"] == 8) {
+            $this->scores['q6_imitation_of_actions_score'] = "N/A";
+            
+        }
+
 	if ($nonNulls>0 && $na>0 && $nulls==0)
 		$this->scores["q6_imitation_of_actions_score"] = "Unable to score";
 
@@ -539,8 +551,7 @@ INSERT INTO instrument_subtests VALUES('', 'aosi', 'aosi_page2', 'General Observ
             'q17_atypical_motor'  => $score_record["q17_atypical_motor"],
             'q18_atypical_sensory'=> $score_record["q18_atypical_sensory"]
         );        
-
-        $this->scores["number_of_markers"] = 0;  //initialize
+                $this->scores["number_of_markers"] = 0;  //initialize
         $this->scores["number_of_markers_override"] = 0;  //initialize
         foreach($scorables as $key =>$value) {
             //change 8's to 0's for scoring purposes
