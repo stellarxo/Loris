@@ -1,0 +1,6 @@
+ALTER TABLE macarthur_words_gestures CHANGE phrases_understood_percentile phrases_understood_percentile varchar(255);
+ALTER TABLE macarthur_words_gestures CHANGE words_understood_percentile words_understood_percentile varchar(255);
+ALTER TABLE macarthur_words_gestures CHANGE  words_produced_percentile words_produced_percentile varchar(255);
+ALTER TABLE macarthur_words_gestures CHANGE early_gestures_percentile early_gestures_percentile varchar(255);
+ALTER TABLE macarthur_words_gestures CHANGE later_gestures_percentile later_gestures_percentile varchar(255);
+ALTER TABLE macarthur_words_gestures CHANGE total_gestures_percentile total_gestures_percentile varchar(255);

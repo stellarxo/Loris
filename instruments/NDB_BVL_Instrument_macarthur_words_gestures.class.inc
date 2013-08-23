@@ -479,12 +479,16 @@ class NDB_BVL_Instrument_macarthur_words_gestures extends NDB_BVL_Instrument
         //establish standard scores and percentile rank for subscales
         // This only has data for the ages 8-18 months. After that, percentile ranks only exist for Macarthur Words and Sentences scale, but we still use words and gestures in v24
         // to compare the subject against him/herself.
-        if($age_months >= 8 && $age_months <= 18) {
-            $Scales = array("phrases_understood", "words_understood", "words_produced", "early_gestures", "later_gestures", "total_gestures");
-            foreach($Scales as $scale) {
+        $Scales = array("phrases_understood", "words_understood", "words_produced", "early_gestures", "later_gestures", "total_gestures");
+        foreach($Scales as $scale) {
+            if($age_months >= 8 && $age_months <= 18) {
                 $this->CalculatePercentile($scale, $age_months, $gender, $scores);
+            } else {
+                $scale_percentile = $scale . "_percentile";
+                $scores[$scale_percentile] = "Candidate too old to score";
             }
-        } // end percentiles calculation
+        }
+        // end percentiles calculation
 
         // save scores
         $result = $db->update($this->table, $scores, array("CommentID"=>$this->getCommentID()));
