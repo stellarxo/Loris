@@ -1,0 +1,6 @@
+reason_decline{-}Required{-}family_consent{@}=={@}no
+reason_decline_other{-}Required{-}reason_decline{@}=={@}other
+recording_1_notused{-}Required{-}recording_1{@}=={@}recording_not_used_or_deleted{-}recording_1_notused_status{@}!={@}not_answered
+recording_2_notused{-}Required{-}recording_2{@}=={@}recording_not_used_or_deleted{-}recording_2_notused_status{@}!={@}not_answered
+recording_3_notused{-}Required{-}recording_3{@}=={@}recording_not_used_or_deleted{-}recording_3_notused_status{@}!={@}not_answered
+recording_4_notused{-}Required{-}recording_4{@}=={@}recording_not_used_or_deleted{-}recording_4_notused_status{@}!={@}not_answered

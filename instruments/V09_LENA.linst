@@ -1,0 +1,42 @@
+table{@}V09_LENA
+title{@}V09_LENA
+date{@}Date_taken{@}Date of Administration{@}2006{@}2017
+static{@}Candidate_Age{@}Candidate Age (Months)
+static{@}Window_Difference{@}Window Difference (+/- Days)
+select{@}Examiner{@}Examiner{@}NULL=>''
+header{@}{@}LENA Data Tracking Form
+header{@}{@}Section A. Data Submission
+select{@}family_consent{@}Did family agree to participate?{@}NULL=>''{-}'yes'=>'YES. If yes, skip to Section C.'{-}'no'=>'NO. If no, complete Section B only.'
+header{@}{@}Section B. Reason(s) For Decline (Check All That Apply)
+selectmultiple{@}reason_decline{@}Reasons for Decline<br/> Ctrl+Click or Command+Click to select multiple options{@}NULL=>''{-}'issues_related_to_privacy'=>'Issues related to privacy'{-}'time_consuming_or_burdensome'=>'Time consuming or burdensome'{-}'spouse_not_participate'=>'Spouse or partner of consenting parent/caregiver does not want to participate'{-}'lena_not_seen_as_beneficial'=>'LENA not seen as beneficial'{-}'just_not_interested'=>'Just not interested'{-}'other'=>'Other'{-}
+textarea{@}reason_decline_other{@}Please briefly indicate reason:
+select{@}reason_decline_other_status{@}{@}NULL=>''{-}'not_answered'=>'Not Answered'
+header{@}{@}Section C. DLP Tracking Information
+select{@}num_sessions{@}Number of recording sessions:{@}NULL=>''{-}'1'=>'1'{-}'2'=>'2'{-}'3'=>'3'{-}'4'=>'4'
+header{@}{@}Recording Session 1
+select{@}recording_1{@}Duration of recording session 1{@}NULL=>''{-}'full_day'=>'Full day (16hrs)'{-}'less_16hrs'=>'< 16hrs'{-}'recording_not_used_or_deleted'=>'Recording not used or deleted'
+textarea{@}recording_1_notused{@}Indicate why if not used:
+select{@}recording_1_notused_status{@}{@}NULL=>''{-}'not_answered'=>'Not Answered'
+textarea{@}recording_1_comments{@}Comments (e.g., did DLP malfunction?):
+select{@}recording_1_comments_status{@}{@}NULL=>''{-}'not_answered'=>'Not Answered'
+static{@}{@}<br />
+header{@}{@}Recording Session 2
+select{@}recording_2{@}Duration of recording session 2{@}NULL=>''{-}'full_day'=>'Full day (16hrs)'{-}'less_16hrs'=>'< 16hrs'{-}'recording_not_used_or_deleted'=>'Recording not used or deleted'
+textarea{@}recording_2_notused{@}Indicate why if not used:
+select{@}recording_2_notused_status{@}{@}NULL=>''{-}'not_answered'=>'Not Answered'
+textarea{@}recording_2_comments{@}Comments (e.g., did DLP malfunction?):
+select{@}recording_2_comments_status{@}{@}NULL=>''{-}'not_answered'=>'Not Answered'
+static{@}{@}<br />
+header{@}{@}Recording Session 3
+select{@}recording_3{@}Duration of recording session 3{@}NULL=>''{-}'full_day_(16hrs)'=>'Full day (16hrs)'{-}'less_16hrs'=>'< 16hrs'{-}'recording_not_used_or_deleted'=>'Recording not used or deleted'
+textarea{@}recording_3_notused{@}Indicate why if not used:
+select{@}recording_3_notused_status{@}{@}NULL=>''{-}'not_answered'=>'Not Answered'
+textarea{@}recording_3_comments{@}Comments (e.g., did DLP malfunction?):
+select{@}recording_3_comments_status{@}{@}NULL=>''{-}'not_answered'=>'Not Answered'
+static{@}{@}<br />
+header{@}{@}Recording Session 4 
+select{@}recording_4{@}Duration of recording session 4{@}NULL=>''{-}'full_day_(16hrs)'=>'Full day (16hrs)'{-}'less_16hrs'=>'< 16hrs'{-}'recording_not_used_or_deleted'=>'Recording not used or deleted'
+textarea{@}recording_4_notused{@}Indicate why if not used:
+select{@}recording_4_notused_status{@}{@}NULL=>''{-}'not_answered'=>'Not Answered'
+textarea{@}recording_4_comments{@}Comments (e.g., did DLP malfunction?):
+select{@}recording_4_comments_status{@}{@}NULL=>''{-}'not_answered'=>'Not Answered'
