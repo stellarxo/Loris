@@ -9,7 +9,7 @@ header{@}{@}Section A. Data Submission
 select{@}family_consent{@}Did family agree to participate?{@}NULL=>''{-}'yes'=>'YES. If yes, skip to Section C.'{-}'no'=>'NO. If no, complete Section B only.'
 header{@}{@}Section B. Reason(s) For Decline (Check All That Apply)
 selectmultiple{@}reason_decline{@}Reasons for Decline<br/> Ctrl+Click or Command+Click to select multiple options{@}NULL=>''{-}'issues_related_to_privacy'=>'Issues related to privacy'{-}'time_consuming_or_burdensome'=>'Time consuming or burdensome'{-}'spouse_not_participate'=>'Spouse or partner of consenting parent/caregiver does not want to participate'{-}'lena_not_seen_as_beneficial'=>'LENA not seen as beneficial'{-}'just_not_interested'=>'Just not interested'{-}'other'=>'Other'{-}
-textarea{@}reason_decline_other{@}Please briefly indicate reason:
+textarea{@}reason_decline_other{@}If Other, please briefly indicate reason:
 select{@}reason_decline_other_status{@}{@}NULL=>''{-}'not_answered'=>'Not Answered'
 header{@}{@}Section C. DLP Tracking Information
 select{@}num_sessions{@}Number of recording sessions:{@}NULL=>''{-}'1'=>'1'{-}'2'=>'2'{-}'3'=>'3'{-}'4'=>'4'
