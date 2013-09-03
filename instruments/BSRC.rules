@@ -3,7 +3,7 @@ total_earlyintervention_birthtothreeprg{-}Required{-}q2_receive_earlyinterventio
 servicetype_occupationaltherapy{-}Required{-}q5_service_delay{@}=={@}yes
 startdate_occupationaltherapy{-}Required{-}servicetype_occupationaltherapy{@}=={@}yes{-}startdate_occupationaltherapy_status{@}!={@}not_answered
 continue_occupationaltherapy{-}Required{-}servicetype_occupationaltherapy{@}=={@}yes
-continue_occupationaltherapy_comment{-}Required{-}continue_occupationaltherapy{@}=={@}no{-}continue_occupationaltherapy_comment_status{@}!={@}not_answered
+continue_occupationaltherapy_comment{-}Required{-}continue_occupationaltherapy{@}=={@}no
 indgrp_occupationaltherapy{-}Required{-}servicetype_occupationaltherapy{@}=={@}yes
 setting_occupationaltherapy{-}Required{-}servicetype_occupationaltherapy{@}=={@}yes
 setting_occupationaltherapy_other{-}Required{-}setting_occupationaltherapy{@}=={@}other{-}setting_occupationaltherapy_other_status{@}!={@}not_answered
@@ -11,7 +11,9 @@ avg_occupationaltherapy{-}Required{-}servicetype_occupationaltherapy{@}=={@}yes{
 servicetype_physicaltherapy{-}Required{-}q5_service_delay{@}=={@}yes
 startdate_physicaltherapy{-}Required{-}servicetype_physicaltherapy{@}=={@}yes{-}startdate_physicaltherapy_status{@}!={@}not_answered
 continue_physicaltherapy{-}Required{-}servicetype_physicaltherapy{@}=={@}yes
-continue_physicaltherapy_comment{-}Required{-}continue_physicaltherapy{@}=={@}no{-}continue_physicaltherapy_comment_status{@}!={@}not_answered
+continue_physicaltherapy_comment{-}Required{-}continue_physicaltherapy{@}=={@}no
+continue_physicaltherapy_comment{-}Must be MM/YY{-}continue_physicaltherapy_comment{@}=~{@}[01][0-9]\/[0-9][0-9]
+continue_physicaltherapy_comment{-}Required{-}continue_physicaltherapy_comment_status{@}!={@}not_answered
 indgrp_physicaltherapy{-}Required{-}servicetype_physicaltherapy{@}=={@}yes
 setting_physicaltherapy{-}Required{-}servicetype_physicaltherapy{@}=={@}yes
 setting_physicaltherapy_other{-}Required{-}setting_physicaltherapy{@}=={@}other{-}setting_physicaltherapy_other_status{@}!={@}not_answered
@@ -19,7 +21,7 @@ avg_physicaltherapy{-}Required{-}servicetype_physicaltherapy{@}=={@}yes{-}avg_ph
 servicetype_speechlangtherapy{-}Required{-}q5_service_delay{@}=={@}yes
 startdate_speechlangtherapy{-}Required{-}servicetype_speechlangtherapy{@}=={@}yes{-}startdate_speechlangtherapy_status{@}!={@}not_answered
 continue_speechlangtherapy{-}Required{-}servicetype_speechlangtherapy{@}=={@}yes
-continue_speechlangtherapy_comment{-}Required{-}continue_speechlangtherapy{@}=={@}no{-}continue_speechlangtherapy_comment_status{@}!={@}not_answered
+continue_speechlangtherapy_comment{-}Required{-}continue_speechlangtherapy{@}=={@}no{-}continue_speechlangtherapy_comment_status{@}!={@}not_answered{-}continue_speechlangtherapy_comment{@}=~{@}[01][0-9]\/[0-9][0-9]
 indgrp_speechlangtherapy{-}Required{-}servicetype_speechlangtherapy{@}=={@}yes
 setting_speechlangtherapy{-}Required{-}servicetype_speechlangtherapy{@}=={@}yes
 setting_speechlangtherapy_other{-}Required{-}setting_speechlangtherapy{@}=={@}other{-}setting_speechlangtherapy_other_status{@}!={@}not_answered
@@ -27,7 +29,7 @@ avg_speechlangtherapy{-}Required{-}servicetype_speechlangtherapy{@}=={@}yes{-}av
 servicetype_behaviorintervention{-}Required{-}q5_service_delay{@}=={@}yes
 startdate_behaviorintervention{-}Required{-}servicetype_behaviorintervention{@}=={@}yes{-}startdate_behaviorintervention_status{@}!={@}not_answered
 continue_behaviorintervention{-}Required{-}servicetype_behaviorintervention{@}=={@}yes
-continue_behaviorintervention_comment{-}Required{-}continue_behaviorintervention{@}=={@}no{-}continue_behaviorintervention_comment_status{@}!={@}not_answered
+continue_behaviorintervention_comment{-}Required{-}continue_behaviorintervention{@}=={@}no{-}continue_behaviorintervention_comment_status{@}!={@}not_answered{-}continue_behaviorintervention_comment{@}=~{@}[01][0-9]\/[0-9][0-9]
 indgrp_behaviorintervention{-}Required{-}servicetype_behaviorintervention{@}=={@}yes
 setting_behaviorintervention{-}Required{-}servicetype_behaviorintervention{@}=={@}yes
 setting_behaviorintervention_other{-}Required{-}setting_behaviorintervention{@}=={@}other{-}setting_behaviorintervention_other_status{@}!={@}not_answered
@@ -35,7 +37,7 @@ avg_behaviorintervention{-}Required{-}servicetype_behaviorintervention{@}=={@}ye
 servicetype_other{-}Required{-}q5_service_delay{@}=={@}yes
 startdate_other{-}Required{-}servicetype_other{@}=={@}yes{-}startdate_other_status{@}!={@}not_answered
 continue_other{-}Required{-}servicetype_other{@}=={@}yes
-continue_other_comment{-}Required{-}continue_other{@}=={@}no{-}continue_other_comment_status{@}!={@}not_answered
+continue_other_comment{-}Required{-}continue_other{@}=={@}no{-}continue_other_comment_status{@}!={@}not_answered{-}continue_other_comment{@}=~{@}[01][0-9]\/[0-9][0-9]
 indgrp_other{-}Required{-}servicetype_other{@}=={@}yes
 setting_otheroptions{-}Required{-}servicetype_other{@}=={@}yes
 setting_other{-}Required{-}setting_otheroptions{@}=={@}other{-}setting_other_status{@}!={@}
