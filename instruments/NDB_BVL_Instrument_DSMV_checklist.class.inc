@@ -40,7 +40,7 @@ class NDB_BVL_Instrument_DSMV_checklist extends NDB_BVL_Instrument
         //Any HTML_Quickform date elements must be listed here
         $this->dateTimeFields=array("Date_taken", "date_taken_diagnostic_assessor", "date_taken_confirming_clinician");
 
-        $this->_requiredElements = array('Examiner', 'Date_taken', 'qa1_deficit_reciprocity','"meet_dsm_asd');
+        $this->_requiredElements = array('Examiner', 'Date_taken', 'qa1_deficit_reciprocity','"meet_dsm_asd','dms5_confirmed_diagnosis');
         $config =& NDB_Config::singleton();
         $this->dateOptions = array(
         'language' => 'en',
@@ -86,7 +86,7 @@ class NDB_BVL_Instrument_DSMV_checklist extends NDB_BVL_Instrument
         if(Utility::isErrorX($db)) return PEAR::raiseError("Could not connect to database: ".$db->getMessage()."<br>\n");
         $query_asd ="SELECT meet_dsm_asd FROM DSMV_checklist WHERE CommentID=:cid";
         $where = array('cid'=>$this->getCommentID());
-        $result = $db->pselectOne($query_asd, $where);print "$$$$$$ $result";
+        $result = $db->pselectOne($query_asd, $where);
         if($result == 'no') {
             $query = "SELECT qa1_deficit_communication_social FROM $this->table WHERE CommentID=:CID";
             $val   = $db->pselectOne($query,array('CID' => $this->getCommentID()));
@@ -177,27 +177,21 @@ function _page2(){
         
             $this->form->addElement('header', null, "Social Communication Disorder");
             
-            $this->form->addElement("static", null, "<BR>If child does not meet criteria for an Autism Spectrum Disorder, then complete this checklist."); 
+            $this->form->addElement("static", null, "<BR><strong>If child does not meet criteria</strong> for an Autism Spectrum Disorder, then complete this checklist."); 
           
-            $this->form->addElement("static", null, "<strong>A. Persistent difficulties in the social use of verbal and nonverbal communication as manifested by deficits in all of the following:</strong><BR>"); //line space
-    
-           //$this->XINRegisterRule ( "qa1_deficit_communication_social", array ("meet_dsm_asd{@}=={@}no"), "Please complete this checklist" );
+            $this->form->addElement("static", null, "<BR><strong>A. Persistent difficulties in the social use of verbal and nonverbal communication as manifested by deficits in all of the following:</strong><BR>"); //line space
 
-            $this->form->addElement("select", "qa1_deficit_communication_social", "1. Deficits in using communication for social purposes, such as greeting and sharing information, in a manner that is appropriate to the social context.", $this->yesNo);
+            $this->form->addElement("select", "qa1_deficit_communication_social", "<BR>1. Deficits in using communication for social purposes, such as greeting and sharing information, in a manner that is appropriate to the social context.", $this->yesNo);
           
-            $this->form->addElement("select", "qa2_change_communication", "2. Deficits in changing communication to match context or the needs of the listener, such as speaking differently in a classroom than on a playground, communicating differently to a child than an adult, and avoiding the use of overly formal language.", $this->yesNo);
+            $this->form->addElement("select", "qa2_change_communication", "<BR>2. Deficits in changing communication to match context or the needs of the listener, such as speaking differently in a classroom than on a playground, communicating differently to a child than an adult, and avoiding the use of overly formal language.", $this->yesNo);
 
-           $this->XINRegisterRule ( "qa2_change_communication", array ("meet_dsm_asd{@}=={@}no"), "Please complete this checklist" );
-            $this->form->addElement("select", "qa3_deficit_followrules", "3. Deficits in the ability to follow rules for conversation and storytelling, such as taking turns in conversation, rephrasing when misunderstood, and knowing how to use verbal and nonverbal signals to regulate interaction.", $this->yesNo);
+            $this->form->addElement("select", "qa3_deficit_followrules", "<BR>3. Deficits in the ability to follow rules for conversation and storytelling, such as taking turns in conversation, rephrasing when misunderstood, and knowing how to use verbal and nonverbal signals to regulate interaction.", $this->yesNo);
             
-           $this->XINRegisterRule ( "qa3_deficit_followrules", array ("meet_dsm_asd{@}=={@}no"), "Please complete this checklist" );
-            $this->form->addElement("select", "qb_limit_communication", "<strong>B. The disturbance causes limitations in effective communication, social participation, social relationships, academic achievement, or occupational performance.</strong>", $this->yesNo);
+            $this->form->addElement("select", "qb_limit_communication", "<BR><strong>B. The disturbance causes limitations in effective communication, social participation, social relationships, academic achievement, or occupational performance.</strong>", $this->yesNo);
+            
+            $this->form->addElement("select", "qc_onset_earlychildhood", "<BR><strong>C. Onset in the early developmental period (but may not become fully manifest until social communication demands exceed limited capacities.)</strong>", $this->yesNo);
 
-           $this->XINRegisterRule ( "qb_limit_communication", array ("meet_dsm_asd{@}=={@}no"), "Please complete this checklist" );
-            $this->form->addElement("select", "qc_onset_earlychildhood", "<strong>C. Onset in the early developmental period (but may not become fully manifest until social communication demands exceed limited capacities.)</strong>", $this->yesNo);
-
-           $this->XINRegisterRule ( "qc_onset_earlychildhood", array ("meet_dsm_asd{@}=={@}no"), "Please complete this checklist" );
-           $this->form->addElement("static",null, "<strong>D. The symptoms are not attributable to another medical or neurological condition and are not better explained by low abilities in the domains of word structure and grammar, intellectual disability, global developmental delay, autism spectrum disorder, or another mental disorder. </strong>");
+           $this->form->addElement("static",null, "<BR><strong>D. The symptoms are not attributable to another medical or neurological condition and are not better explained by low abilities in the domains of word structure and grammar, intellectual disability, global developmental delay, autism spectrum disorder, or another mental disorder. </strong>");
 
            $this->form->addElement("select", "meet_dsm_scd", "<BR><strong>Meets DSM-V Criteria for Social Communication Disorder</strong><BR>$this->indent - All symptoms in category A present<BR>$this->indent - Symptoms limit communication, social relations, or other major functioning areas <BR>$this->indent - Not attributable or better explained by another DSM-V disorder or another medical or neurological condition", $this->yesNo);
             
@@ -209,31 +203,32 @@ function _page2(){
             $this->form->addElement("select", "dsm_scd_confidence", "Given all the data that you have on this child, how confident are you about the classification of this child based on the DSM-V SCD criteria?", $this->confidence);
             
                       
-            $this->addTextAreaElement("dsm_scd_comments", "Comments (required for a rating of 2 or 1)", array("confidence_rating{@}=={@}2_somewhat_confident|1_not_confident"), "This field is required or specify not answered."); 
+            $this->addTextAreaElement("dsm_scd_comments", "Comments (required for a rating of 2 or 1)", array("dsm_scd_confidence{@}=={@}2_somewhat_confident|1_not_confident"), "This field is required or specify not answered."); 
             
             $this->form->addElement("static", null, "<BR>"); //line space
-            
-         
-             $this->form->addElement("static", null, "<strong> Diagnostic Consensus </strong> <BR> This form confirms that this participant, based on clinical judgment and ADOS scores has been evaluated for an autism spectrum disorders.");
-         
-         	$this->form->addElement('text', "name_assessor", "<BR> Name of Diagnostic Assessor:");
-                 
-    	    $this->addDateElement('date_taken_assessor', "Date:");
-        
-                     
- $this->form->addElement("select", "confirmed_diagnosis", "<BR>A clinician, through live observation or video review confirms the status of the participant stated above. The clinician agrees with the assessor's decision on the inclusion or exclusion of the participant.", $this->yesNo);
-
-           	$this->form->addElement('text', "name_confirming_clinician", "Name of Confirming Clinician:");
-
-          	$this->form->addElement('date', "date_taken_confirming_clinician", "Date:", $dateOptions);
-          	
-            $this->XINRegisterRule("name_confirming_clinician", array("confirmed_diagnosis{@}=={@}yes|no"), "Please enter the name of the confirming clinician and the date confirmed.");          	
-          	
-          	 $this->XINRegisterRule("date_taken_confirming_clinician", array("confirmed_diagnosis{@}=={@}yes|no"), "Please enter the date");          	
-
-             $this->form->addElement("static", null, "<BR>"); //line space
-            
+                       
     }
+
+    function _page3(){
+  
+      $config =& NDB_Config::singleton();
+      $dateOptions = array(
+      'language' => 'en',
+      'format'   => 'YMd',
+      'minYear'  => $config->getSetting('startYear'), //allows for siblings up to 20 years older than candidate
+      'maxYear'  => $config->getSetting('endYear'),
+      'addEmptyOption' => true,
+      'emptyOptionValue' => null
+	     );
+        
+      $this->form->addElement('header', null, "Diagnostic Consensus");
+      
+      $this->form->addElement('static',null,"<BR>Consensus information for DSMV checklist is the same as for DSMIV checklist");
+      $this->form->addElement('static',null,"<br><strong>Additional consensus fields must be entered in DSMIV checklist</strong>");
+
+      $this->form->addElement("select", "dms5_confirmed_diagnosis", "<BR>A clinician, through live observation or video review confirms the status of the participant stated above. The clinician agrees with the assessor's decision on the inclusion or exclusion of the participant.", $this->yesNo);
+
+   } 
 }
 
 ?>
