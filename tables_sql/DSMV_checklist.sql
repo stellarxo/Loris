@@ -41,6 +41,7 @@ CREATE TABLE `DSMV_checklist` (
 `confirmed_diagnosis` enum('yes','no') default NULL,
 `name_confirming_clinician` varchar(255) default NULL,
 `date_taken_confirming_clinician` date default NULL,
-PRIMARY KEY  (`CommentID`)
-
-              );
+PRIMARY KEY  (`CommentID`));
+REPLACE INTO test_names (Test_name, Full_name, Sub_group) VALUES ('DSMV_checklist', 'DSMV_checklist', 1);
+INSERT INTO instrument_subtests (Test_name, Subtest_name, Description) VALUES ('DSMV_checklist', 'DSMV_checklist_page1', 'Autism Spectrum Disorder Checklist');
+INSERT INTO instrument_subtests (Test_name, Subtest_name, Description) VALUES ('DSMV_checklist', 'DSMV_checklist_page2', 'Social Communication Disorder');
