@@ -1,8 +1,8 @@
-ALTER TABLE BSRC CHANGE startdate_occupationaltherapy startdate_occupationaltherapy date;
-ALTER TABLE BSRC CHANGE startdate_physicaltherapy startdate_physicaltherapy date;
-ALTER TABLE BSRC CHANGE startdate_speechlangtherapy startdate_speechlangtherapy date;
-ALTER TABLE BSRC CHANGE startdate_other startdate_other date;
-ALTER TABLE BSRC CHANGE continue_occupationaltherapy_comment continue_occupationaltherapy_comment date;
-ALTER TABLE BSRC CHANGE continue_physicaltherapy_comment continue_physicaltherapy_comment date;
-ALTER TABLE BSRC CHANGE continue_speechlangtherapy_comment continue_speechlangtherapy_comment date;
-ALTER TABLE BSRC CHANGE continue_other_comment continue_other_comment date;
+ALTER TABLE BSRC CHANGE startdate_occupationaltherapy startdate_occupationaltherapy_date date;
+ALTER TABLE BSRC CHANGE startdate_physicaltherapy startdate_physicaltherapy_date date;
+ALTER TABLE BSRC CHANGE startdate_speechlangtherapy startdate_speechlangtherapy_date date;
+ALTER TABLE BSRC CHANGE startdate_other startdate_other_date date;
+ALTER TABLE BSRC CHANGE continue_occupationaltherapy_stop continue_occupationaltherapy_stop_date date;
+ALTER TABLE BSRC CHANGE continue_physicaltherapy_stop continue_physicaltherapy_stop_date date;
+ALTER TABLE BSRC CHANGE continue_speechlangtherapy_stop continue_speechlangtherapy_stop_date date;
+ALTER TABLE BSRC CHANGE continue_other_stop continue_other_stop_date date;

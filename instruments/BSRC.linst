@@ -21,9 +21,9 @@ static{@}{@}If YES to #5, please complete the following:
 static{@}{@}<br />
 header{@}{@}Occupational Therapy
 select{@}servicetype_occupationaltherapy{@}Received occupational therapy{@}NULL=>''{-}'yes'=>'Yes'{-}'no'=>'No'{-}'not_answered'=>'Not Answered'
-date{@}startdate_occupationaltherapy{@}Date Started {@}2006{@}2017
+date{@}startdate_occupationaltherapy_date{@}Date Started{@}2006{@}2017
 select{@}continue_occupationaltherapy{@}Still receiving intervention?{@}NULL=>''{-}'yes'=>'Yes'{-}'no'=>'No'{-}'not_answered'=>'Not Answered'
-date{@}continue_occupationaltherapy_comment{@}If, NO, date stopped:<br />(If day is unknown choose 01 from dropdown)
+date{@}continue_occupationaltherapy_stop_date{@}If, NO, date stopped:<br />(If day is unknown choose 01 from dropdown)
 select{@}indgrp_occupationaltherapy{@}Individual or Group{@}NULL=>''{-}'individual_'=>'Individual '{-}'group_'=>'Group'{-}'not_answered'=>'Not Answered'
 select{@}setting_occupationaltherapy{@}Setting{@}NULL=>''{-}'office/clinic'=>'Office/Clinic'{-}'home'=>'Home'{-}'daycare/preschool'=>'Daycare/preschool'{-}'other'=>'Other'{-}'not_answered'=>'Not Answered'
 text{@}setting_occupationaltherapy_other{@}Please specify Other:
@@ -32,9 +32,9 @@ numeric{@}avg_occupationaltherapy{@}Average hours per week{@}0{@}90
 select{@}avg_occupationaltherapy_status{@}{@}NULL=>''{-}'not_answered'=>'Not Answered'
 header{@}{@}Physical Therapy
 select{@}servicetype_physicaltherapy{@}Received physical therapy{@}NULL=>''{-}'yes'=>'Yes'{-}'no'=>'No'{-}'not_answered'=>'Not Answered'
-date{@}startdate_physicaltherapy{@}Date started {@}2006{@}2017
+date{@}startdate_physicaltherapy_date{@}Date started{@}2006{@}2017
 select{@}continue_physicaltherapy{@}Still receiving intervention?{@}NULL=>''{-}'yes'=>'Yes'{-}'no'=>'No'{-}'not_answered'=>'Not Answered'
-date{@}continue_physicaltherapy_comment{@}If, NO, date stopped :<br />If day is unknown choose 01 from dropdown
+date{@}continue_physicaltherapy_stop_date{@}If, NO, date stopped :<br />If day is unknown choose 01 from dropdown
 select{@}indgrp_physicaltherapy{@}Individual or Group{@}NULL=>''{-}'individual_'=>'Individual '{-}'group_'=>'Group '{-}'not_answered'=>'Not Answered'
 select{@}setting_physicaltherapy{@}Setting{@}NULL=>''{-}'office/clinic'=>'Office/Clinic'{-}'home'=>'Home'{-}'daycare/preschool'=>'Daycare/preschool'{-}'other'=>'Other'{-}'not_answered'=>'Not Answered'
 text{@}setting_physicaltherapy_other{@}Please specify Other:
@@ -43,9 +43,9 @@ numeric{@}avg_physicaltherapy{@}Average hours per week{@}0{@}90
 text{@}avg_physicaltherapy_status{@}{@}NULL=>''{-}'not_answered'=>'Not Answered'
 header{@}{@}Speech-language Therapy
 select{@}servicetype_speechlangtherapy{@}Received speech-language therapy{@}NULL=>''{-}'yes'=>'Yes'{-}'no'=>'No'{-}'not_answered'=>'Not Answered'
-date{@}startdate_speechlangtherapy{@}Date started {@}2006{@}2017
+date{@}startdate_speechlangtherapy_date{@}Date started{@}2006{@}2017
 select{@}continue_speechlangtherapy{@}Still receiving intervention?{@}NULL=>''{-}'yes'=>'Yes'{-}'no'=>'No'{-}'not_answered'=>'Not Answered'
-date{@}continue_speechlangtherapy_comment{@}If, NO, date stopped :<br /> (If day is unknown choose 01 from dropdown)
+date{@}continue_speechlangtherapy_stop_date{@}If, NO, date stopped :<br /> (If day is unknown choose 01 from dropdown)
 select{@}indgrp_speechlangtherapy{@}Individual or Group{@}NULL=>''{-}'individual_'=>'Individual '{-}'group_'=>'Group '{-}'not_answered'=>'Not Answered'
 select{@}setting_speechlangtherapy{@}Setting{@}NULL=>''{-}'office/clinic'=>'Office/Clinic'{-}'home'=>'Home'{-}'daycare/preschool'=>'Daycare/preschool'{-}'other'=>'Other'{-}'not_answered'=>'Not Answered'
 text{@}setting_speechlangtherapy_other{@}Please specify Other:
@@ -54,9 +54,9 @@ numeric{@}avg_speechlangtherapy{@}Average hours per week{@}0{@}90
 select{@}avg_speechlangtherapy_status{@}{@}NULL=>''{-}'not_answered'=>'Not Answered'
 header{@}{@}Comprehensive behavioral/educational interventions
 select{@}servicetype_behaviorintervention{@}Received Comprehensive behavioral/educational interventions{@}NULL=>''{-}'yes'=>'Yes'{-}'no'=>'No'{-}'not_answered'=>'Not Answered'
-date{@}startdate_behaviorintervention{@}Date started {@}2006{@}2017
+date{@}startdate_behaviorintervention_date{@}Date started{@}2006{@}2017
 select{@}continue_behaviorintervention{@}Still receiving intervention?{@}NULL=>''{-}'yes'=>'Yes'{-}'no'=>'No'{-}'not_answered'=>'Not Answered'
-date{@}continue_behaviorintervention_comment{@}If, NO, date stopped :<br /> (If day is unknown choose 01 from dropdown)
+date{@}continue_behaviorintervention_stop_date{@}If, NO, date stopped :<br /> (If day is unknown choose 01 from dropdown)
 select{@}indgrp_behaviorintervention{@}Individual or Group{@}NULL=>''{-}'individual_'=>'Individual '{-}'group_'=>'Group '{-}'not_answered'=>'Not Answered'
 select{@}setting_behaviorintervention{@}Setting{@}NULL=>''{-}'office/clinic'=>'Office/Clinic'{-}'home'=>'Home'{-}'daycare/preschool'=>'Daycare/preschool'{-}'other'=>'Other'{-}'not_answered'=>'Not Answered'
 text{@}setting_behaviorintervention_other{@}Please specify Other:
@@ -65,9 +65,9 @@ numeric{@}avg_behaviorintervention{@}Average hours per week{@}0{@}90
 select{@}avg_behaviorintervention_status{@}{@}NULL=>''{-}'not_answered'=>'Not Answered'
 header{@}{@}Other
 select{@}servicetype_other{@}Received Other therapy{@}NULL=>''{-}'yes'=>'Yes'{-}'no'=>'No'{-}'not_answered'=>'Not Answered'
-date{@}startdate_other{@}Date started {@}2006{@}2017
+date{@}startdate_other_date{@}Date started{@}2006{@}2017
 select{@}continue_other{@}Still receiving intervention?{@}NULL=>''{-}'yes'=>'Yes'{-}'no'=>'No'{-}'not_answered'=>'Not Answered'
-date{@}continue_other_comment{@}If, NO, date stopped :<br />(If day is unknown please choose 01 from dropdown)
+date{@}continue_other_stop_date{@}If, NO, date stopped :<br />(If day is unknown please choose 01 from dropdown)
 select{@}indgrp_other{@}Individual or Group{@}NULL=>''{-}'individual_'=>'Individual '{-}'group_'=>'Group '{-}'not_answered'=>'Not Answered'
 select{@}setting_otheroptions{@}Setting{@}NULL=>''{-}'office/clinic'=>'Office/Clinic'{-}'home'=>'Home'{-}'daycare/preschool'=>'Daycare/preschool'{-}'other'=>'Other'{-}'not_answered'=>'Not Answered'
 text{@}setting_other{@}Please specify Other:
