@@ -43,7 +43,7 @@ if (Utility::isErrorX($result)) {
                 print "Query has failed to select: ".$result->getMessage();
                                         exit(2);
 }
-$valid_scores = array ('4points','3points','2points','1point','05points');
+$valid_scores = array ('4points','3points','2points','1point','05points','no_response');
 $num_validresponse = 0;
 $total_rawscore = 0;
 $scoring_fields = array();
@@ -72,6 +72,10 @@ foreach($result as $key=>$value){
           if($value == '05points'){
               $total_rawscore += 0.5;
               array_push($scoring_fields, 0.5);    
+          }
+          if($value == 'no_response'){ 
+             $total_raw_score += 0;
+             array_push($scoring_fields,0);
           }
   } 
     
