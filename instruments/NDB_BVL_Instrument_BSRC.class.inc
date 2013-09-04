@@ -89,8 +89,10 @@ class NDB_BVL_Instrument_BSRC extends NDB_BVL_Instrument
         $this->addSelect("q1_earlyintervention_birthtothreeprg","<BR>1) Since your last visit did a professional refer your child to an <strong>early intervention or birth-to-three program </strong>? (Depending on where you live, these programs may have different names.)", $this->yesNo);
        $this->addSelect("q2_receive_earlyintervention_birthtothreeprg","<BR>2) Since your last visit, did your child <strong>receive any early intervention or birth-to-three program services?</strong>", $this->yesNo);
        $this->addNumericElement("hrs_earlyintervention_birthtothreeprg","Average hours per week");
+       $this->XINRegisterRule("hrs_earlyintervention_birthtothreeprg", array("hrs_earlyintervention_birthtothreeprg{@}=={@}NEVER_REQUIRED"));
        
        $this->addNumericElement("total_earlyintervention_birthtothreeprg","Total hours since last visit");
+       $this->XINRegisterRule("total_earlyintervention_birthtothreeprg", array("total_earlyintervention_birthtothreeprg{@}=={@}NEVER_REQUIRED"));
            
        $this->addSelect("q3_communityact","<BR>3) Since your last visit, did a <strong>professional recommend</strong> that your child attend any community based <strong>classes/activities designed to inscrease socialization</strong> (eg. MommyandMe, Gymboree, etc)",$this->yesNo);
  
@@ -102,7 +104,8 @@ class NDB_BVL_Instrument_BSRC extends NDB_BVL_Instrument
      
      $this->addHeader("<BR><strong>Occupational Therapy</strong>");
      $this->addSelect("servicetype_occupationaltherapy","Received occupational therapy",$this->yesNo);
-    // $this->addDateElement("startdate_occupationaltherapy","Date started");
+     $this->XINRegisterRule("servicetype_occupationaltherapy", array("servicetype_occupationaltherapy{@}=={@}NEVER_REQUIRED"));
+      
      $this->addBasicDate("startdate_occupationaltherapy", "Date:", $this->dateOptions);
 
      $this->XINRegisterRule("startdate_occupationaltherapy", array("servicetype_occupationaltherapy{@}=={@}yes"), "Required");
@@ -119,11 +122,14 @@ class NDB_BVL_Instrument_BSRC extends NDB_BVL_Instrument
      $this->XINRegisterRule("setting_occupationaltherapy", array("servicetype_occupationaltherapy{@}=={@}yes"), "Required");
 
      $this->addNumericElement("avg_occupationaltherapy","Average hours per week");
+     $this->XINRegisterRule("avg_occupationaltherapy", array("avg_occupationaltherapy{@}=={@}NEVER_REQUIRED"));
     
     //Physical Therapy
 
      $this->addHeader("<BR><strong>Physical Therapy</strong>");
      $this->addSelect("servicetype_physicaltherapy","Received physical therapy",$this->yesNo);
+     $this->XINRegisterRule("servicetype_physicaltherapy", array("servicetype_physicaltherapy{@}=={@}NEVER_REQUIRED"));
+      
      $this->addBasicDate("startdate_physicaltherapy", "Date:", $this->dateOptions);
 
      $this->XINRegisterRule("startdate_physicaltherapy", array("servicetype_physicaltherapy{@}=={@}yes"), "Required");
@@ -147,6 +153,8 @@ class NDB_BVL_Instrument_BSRC extends NDB_BVL_Instrument
      
      $this->addHeader("<BR><strong>Speech Language Therapy</strong>");
      $this->addSelect("servicetype_speechlangtherapy","Received speechlang therapy",$this->yesNo);
+     $this->XINRegisterRule("servicetype_speechlangtherapy", array("servicetype_speechlangtherapy{@}=={@}NEVER_REQUIRED"));
+      
      $this->addBasicDate("startdate_speechlangtherapy", "Date:", $this->dateOptions);
 
      $this->XINRegisterRule("startdate_speechlangtherapy", array("servicetype_speechlangtherapy{@}=={@}yes"), "Required");
@@ -170,6 +178,8 @@ class NDB_BVL_Instrument_BSRC extends NDB_BVL_Instrument
 
      $this->addHeader("<BR><strong>Comprehensive behavioral/educational interventions</strong>");
      $this->addSelect("servicetype_behaviorintervention","Received behaviorintervention therapy",$this->yesNo);
+     $this->XINRegisterRule("servicetype_behaviorintervention", array("servicetype_behaviorintervention{@}=={@}NEVER_REQUIRED"));
+      
      $this->addBasicDate("startdate_behaviorintervention", "Date:", $this->dateOptions);
 
      $this->XINRegisterRule("startdate_behaviorintervention", array("servicetype_behaviorintervention{@}=={@}yes"), "Required");
@@ -193,6 +203,8 @@ class NDB_BVL_Instrument_BSRC extends NDB_BVL_Instrument
      //Other
      $this->addHeader("<BR><strong>Other</strong>");
      $this->addSelect("servicetype_other","Received other therapy",$this->yesNo);
+     $this->XINRegisterRule("servicetype_other", array("servicetype_other{@}=={@}NEVER_REQUIRED"));
+
      $this->addBasicDate("startdate_other", "Date:", $this->dateOptions);
 
      $this->XINRegisterRule("startdate_other", array("servicetype_other{@}=={@}yes"), "Required");
@@ -299,11 +311,38 @@ class NDB_BVL_Instrument_BSRC extends NDB_BVL_Instrument
            
            $errors['avg_other_group']='Required';
        }
+       if($values['q2_receive_earlyintervention_birthtothreeprg'] == 'yes' 
+          && ($values['hrs_earlyintervention_birthtothreeprg']== null 
+              || $values['hrs_earlyintervention_birthtothreeprg'] =="")
+          &&($values['hrs_earlyintervention_birthtothreeprg_status']==null 
+             ||$values['hrs_earlyintervention_birthtothreeprg_status']=="" )) {
+           
+           $errors['hrs_earlyintervention_birthtothreeprg_group']='Required';    
+       }
+      
+      if($values['q2_receive_earlyintervention_birthtothreeprg'] == 'yes' 
+          && ($values['total_earlyintervention_birthtothreeprg']== null 
+              || $values['total_earlyintervention_birthtothreeprg'] =="")
+          &&($values['total_earlyintervention_birthtothreeprg_status']==null 
+             ||$values['total_earlyintervention_birthtothreeprg_status']=="" )) {
+           
+           $errors['total_earlyintervention_birthtothreeprg_group']='Required';    
+       }
+       $servicelist = array('servicetype_occupationaltherapy','servicetype_physicaltherapy',
+                            'servicetype_speechlangtherapy','servicetype_behaviorintervention',
+                            'servicetype_other');
+       /*
+       foreach($servicelist as $list) {
+           if($values['q5_service_delay']=='yes' 
+              && ($values[$list] == null || $values[$list]=="")) {
+               
+               $errors[$list] = "Required";
+           }
+       }
+*/
+               return $errors;
 
-
-       return $errors;
-   }
-
+      }
 
 }
 
