@@ -27,7 +27,12 @@ class NDB_BVL_Instrument_BSRC extends NDB_BVL_Instrument
 
        //The array of dates/timestamps to convert to database dates/timestamps
        //Any HTML_Quickform date elements must be listed here
-       $this->dateTimeFields=array("Date_taken");
+       $this->dateTimeFields=array("Date_taken",
+                                   "startdate_occupationaltherapy","stopdate_occupationaltherapy",
+                                   "startdate_physicaltherapy","stopdate_physicaltherapy",
+                                   "startdate_speechlangtherapy","stopdate_speechlangtherapy",
+                                   "startdate_behaviorintervention","stop_behaviorintervention",
+                                   "startdate_other","stopdate_other");
 
        //The array of selects with multiple answers allowed
        //Any HTML_Quickform multiple selects must be listed here
