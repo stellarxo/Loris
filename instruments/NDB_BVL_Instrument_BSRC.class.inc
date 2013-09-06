@@ -31,7 +31,7 @@ class NDB_BVL_Instrument_BSRC extends NDB_BVL_Instrument
                                    "startdate_occupationaltherapy","stopdate_occupationaltherapy",
                                    "startdate_physicaltherapy","stopdate_physicaltherapy",
                                    "startdate_speechlangtherapy","stopdate_speechlangtherapy",
-                                   "startdate_behaviorintervention","stop_behaviorintervention",
+                                   "startdate_behaviorintervention","stopdate_behaviorintervention",
                                    "startdate_other","stopdate_other");
 
        //The array of selects with multiple answers allowed
