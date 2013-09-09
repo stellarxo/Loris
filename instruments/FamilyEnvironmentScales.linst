@@ -5,7 +5,7 @@ static{@}Candidate_Age{@}Candidate Age (Months)
 static{@}Window_Difference{@}Window Difference (+/- Days)
 select{@}Examiner{@}Examiner{@}NULL=>''
 header{@}{@}Family Environment Scales
-select{@}family_member{@}Please indicate your position in the family (choose one):{@}NULL=>''{-}'mother(wife)'=>'Mother(wife)'{-}'father(husband)'=>'Father(husband)'{-}'sonordaughter'=>'SonORDaughter'{-}'other'=>'Other'{-}'not_answered'=>'Not Answered'
+select{@}family_member{@}Please indicate your position in the family (choose one):{@}NULL=>''{-}'mother(wife)'=>'Mother(wife)'{-}'father(husband)'=>'Father(husband)'{-}'sonordaughter'=>'Son Or Daughter'{-}'other'=>'Other'{-}'not_answered'=>'Not Answered'
 text{@}family_member_other{@}Please Specify:
 select{@}family_member_other_status{@}{@}NULL=>''{-}'not_answered'=>'Not Answered'
 header{@}{@}Scores
