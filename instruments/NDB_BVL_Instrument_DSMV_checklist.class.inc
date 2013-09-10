@@ -8,7 +8,7 @@ class NDB_BVL_Instrument_DSMV_checklist extends NDB_BVL_Instrument
 {
    
     var $yesNo = array(null=>"", 'yes'=>"Yes", 'no'=>"No");
-    var $asd_level = array(null=>"",'level3'=>'Level3 - Requiring very substantial support','level2'=>'Level2 - Requiring substantial support','level1'=>'Level1 - Requiring support','no_support'=>'No support Required','not_answered'=>'Not Answered');
+    var $asd_level = array(null=>"",'level3'=>'Level 3 - Requiring very substantial support','level2'=>'Level 2 - Requiring substantial support','level1'=>'Level 1 - Requiring support','no_support'=>'No Support Required','not_answered'=>'Not Answered');
     var $confidence = array(null=>"", '3_very_confident'=>"3-Very Confident", '2_somewhat_confident'=>"2-Somewhat Confident", '1_not_confident'=>"1-Not Confident");
 
     var $ValidityEnabled = false;
@@ -40,7 +40,7 @@ class NDB_BVL_Instrument_DSMV_checklist extends NDB_BVL_Instrument
         //Any HTML_Quickform date elements must be listed here
         $this->dateTimeFields=array("Date_taken", "date_taken_diagnostic_assessor", "date_taken_confirming_clinician");
 
-        $this->_requiredElements = array('Examiner', 'Date_taken', 'qa1_deficit_reciprocity','meet_dsm_asd','dms5_confirmed_diagnosis');
+        $this->_requiredElements = array('Examiner', 'Date_taken', 'qa1_deficit_reciprocity','meet_dsm_asd','dsm5_confirmed_diagnosis');
         $config =& NDB_Config::singleton();
         $this->dateOptions = array(
         'language' => 'en',
@@ -112,7 +112,7 @@ class NDB_BVL_Instrument_DSMV_checklist extends NDB_BVL_Instrument
     */
     function _main(){
         // display test name
-        $this->form->addElement('header', 'instrument_title', "DSM-IV Autistic Disorder Checklist");
+        $this->form->addElement('header', 'instrument_title', "DSM-V Autistic Disorder Checklist");
 
         // automatically adds examiner & date of administration
         $this->_addMetadataFields();
@@ -226,7 +226,7 @@ function _page2(){
       $this->form->addElement('static',null,"<BR>Consensus information for DSMV checklist is the same as for DSMIV checklist");
       $this->form->addElement('static',null,"<br><strong>Additional consensus fields must be entered in DSMIV checklist</strong>");
 
-      $this->form->addElement("select", "dms5_confirmed_diagnosis", "<BR>A clinician, through live observation or video review confirms the status of the participant stated above. The clinician agrees with the assessor's decision on the inclusion or exclusion of the participant.", $this->yesNo);
+      $this->form->addElement("select", "dsm5_confirmed_diagnosis", "<BR>A clinician, through live observation or video review confirms the status of the participant stated above. The clinician agrees with the assessor's decision on the inclusion or exclusion of the participant.", $this->yesNo);
 
    } 
 }
