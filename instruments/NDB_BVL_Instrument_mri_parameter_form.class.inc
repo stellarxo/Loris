@@ -173,10 +173,11 @@ class NDB_BVL_Instrument_mri_parameter_form extends NDB_BVL_Instrument
 
         $this->addTextAreaElement('Spectroscopy_Comments', 'Comments');
 
-
-
-
-
+        $this->form->addElement('header',null,'GRE Field Map');
+        $this->form->addElement('select','gre_accquired',"Was this sequence acquired",array(""=>NULL,"yes" => "Yes", "no"=>"No", 'not_answered'=>'Not Answered'));
+        $gre_options= array(""=>null,"25dir_dti"=>"25 direction DTI","65dir_dti"=>"65 direction DTI","bold"=>"BOLD","not_answered"=>"Not Answered");
+        $this->form->addElement('select','gre_fieldmap',"If yes, which field maps were acquired?", $gre_options);
+        $this->form->addFormRule(array(&$this, 'GRE_Rules'));
 
         $this->form->addElement('header', null, 'Direction File');
         
@@ -200,6 +201,14 @@ class NDB_BVL_Instrument_mri_parameter_form extends NDB_BVL_Instrument
     function MRI_Bold_Rules($values) {
         if(($values['BOLD_Scan_done'] == 'Complete' || $values['BOLD_Scan_done'] == 'Partial')&& $values['BOLD_Number_Complete_Runs'] == '') {
             return array('BOLD_Number_Complete_Runs' => 'Required if acquisition complete or partial');
+        }
+              return array();
+    }
+
+    function GRE_Rules($values) {
+         if($values['gre_accquired']=='yes' && ($values['gre_fieldmap']==null || $values['gre_fieldmap']=="") ){
+             return array('gre_fieldmap' => 'Required');
+                
         }
         return array();
     }
