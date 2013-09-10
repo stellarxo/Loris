@@ -177,8 +177,8 @@ class NDB_BVL_Instrument_mri_parameter_form extends NDB_BVL_Instrument
 
         $this->form->addElement('header',null,'GRE Field Map');
         $this->form->addElement('select','gre_accquired',"Was this sequence acquired",array(""=>NULL,"yes" => "Yes", "no"=>"No", 'not_answered'=>'Not Answered'));
-        $gre_options= array(""=>null,"25dir_dti"=>"25 direction DTI","65dir_dti"=>"65 direction DTI","bold"=>"BOLD","not_answered"=>"Not Answered");
-        $this->form->addElement('select','gre_fieldmap',"If yes, which field maps were acquired?", $gre_options,"multiple size='5'");
+        $gre_options= array(""=>null,"25dir_dti"=>"25 direction DTI","65dir_dti"=>"65 direction DTI","bold"=>"BOLD");
+        $this->form->addElement('select','gre_fieldmap',"If yes, which field maps were acquired?<BR>Cmd+Click or Ctrl+Click to select multiple options", $gre_options,"multiple size='4'");
         $this->form->addFormRule(array(&$this, 'GRE_Rules'));
 
         $this->form->addElement('header', null, 'Direction File');
