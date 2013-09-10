@@ -5,7 +5,7 @@ static{@}Candidate_Age{@}Candidate Age (Months)
 static{@}Window_Difference{@}Window Difference (+/- Days)
 select{@}Examiner{@}Examiner{@}NULL=>''
 header{@}{@}Family Environment Scales
-select{@}family_member{@}Please indicate your position in the family (choose one):{@}NULL=>''{-}'mother(wife)'=>'Mother(wife)'{-}'father(husband)'=>'Father(husband)'{-}'sonordaughter'=>'SonORDaughter'{-}'other'=>'Other'{-}'not_answered'=>'Not Answered'
+select{@}family_member{@}Please indicate your position in the family (choose one):{@}NULL=>''{-}'mother(wife)'=>'Mother(wife)'{-}'father(husband)'=>'Father(husband)'{-}'sonordaughter'=>'Son Or Daughter'{-}'other'=>'Other'{-}'not_answered'=>'Not Answered'
 text{@}family_member_other{@}Please Specify:
 select{@}family_member_other_status{@}{@}NULL=>''{-}'not_answered'=>'Not Answered'
 header{@}{@}Scores
@@ -94,7 +94,7 @@ select{@}q48_strict_rightwrong{@}48. Family members have strict ideas about what
 select{@}q49_changemind{@}49. People change their minds often in our family.{@}NULL=>''{-}'true'=>'True'{-}'false'=>'False'{-}'not_answered'=>'Not Answered'
 select{@}q50_strong_rules{@}50. There is a strong emphasis on rules in our family.{@}NULL=>''{-}'true'=>'True'{-}'false'=>'False'{-}'not_answered'=>'Not Answered'
 select{@}q51_backup_eachother{@}51. Family members really back each other up.{@}NULL=>''{-}'true'=>'True'{-}'false'=>'False'{-}'not_answered'=>'Not Answered'
-select{@}q52_upset_complain{@}52. Someone ususally gets upset if you complain in our family.{@}NULL=>''{-}'true'=>'True'{-}'false'=>'False'{-}'not_answered'=>'Not Answered'
+select{@}q52_upset_complain{@}52. Someone usually gets upset if you complain in our family.{@}NULL=>''{-}'true'=>'True'{-}'false'=>'False'{-}'not_answered'=>'Not Answered'
 select{@}q53_sometimes_hit{@}53. Family members sometimes hit each other.{@}NULL=>''{-}'true'=>'True'{-}'false'=>'False'{-}'not_answered'=>'Not Answered'
 select{@}q54_relyown_prob{@}54. Family members almost always rely on themselves when a problem comes up.{@}NULL=>''{-}'true'=>'True'{-}'false'=>'False'{-}'not_answered'=>'Not Answered'
 select{@}q55_rarelyworry_jobgrades{@}55. Family members rarely worry about job promotions, school grades etc.{@}NULL=>''{-}'true'=>'True'{-}'false'=>'False'{-}'not_answered'=>'Not Answered'
@@ -125,7 +125,7 @@ select{@}q78_bible_imp{@}78. The bible is a very important book in our home.{@}N
 select{@}q79_notcareful_money{@}79. Money is not handled very carefully in our family.{@}NULL=>''{-}'true'=>'True'{-}'false'=>'False'{-}'not_answered'=>'Not Answered'
 select{@}q80_rules_inflexible{@}80. Rules are pretty inflexible in our household.{@}NULL=>''{-}'true'=>'True'{-}'false'=>'False'{-}'not_answered'=>'Not Answered'
 select{@}q81_timeattention_all{@}81. There is plenty of time and attention for everyone in our family.{@}NULL=>''{-}'true'=>'True'{-}'false'=>'False'{-}'not_answered'=>'Not Answered'
-select{@}q82_spontaneous_discussionl{@}82. There are a lot of spontaneous discussions in our family.{@}NULL=>''{-}'true'=>'True'{-}'false'=>'False'{-}'not_answered'=>'Not Answered'
+select{@}q82_spontaneous_discussion{@}82. There are a lot of spontaneous discussions in our family.{@}NULL=>''{-}'true'=>'True'{-}'false'=>'False'{-}'not_answered'=>'Not Answered'
 select{@}q83_no_raisingvoice{@}83. In our family, we believe you don't get anywhere by raising your voice.{@}NULL=>''{-}'true'=>'True'{-}'false'=>'False'{-}'not_answered'=>'Not Answered'
 select{@}q84_not_speakup{@}84. We are not really encouraged to speak up for ourselves in our family.{@}NULL=>''{-}'true'=>'True'{-}'false'=>'False'{-}'not_answered'=>'Not Answered'
 select{@}q85_compare{@}85. Family members are often compared with others as to how well they are doing at work or school.{@}NULL=>''{-}'true'=>'True'{-}'false'=>'False'{-}'not_answered'=>'Not Answered'
