@@ -116,8 +116,8 @@ $this->form->addElement ( "select", "q7_29_p2_$i", $this->indent . "Product #2: 
      * @access    public
      */
     function isValid(&$file, $args){
-        $correct_filename = $args['values']['PSCID'] .'_'. $args['values']['candID'] .'_'. $args['values']['visit'];
- print_r($args);
+         $correct_filename = $args['PSCID'] .'_'. $args['candID'] .'_'. $args['visitLabel'];
+ 
         if(!preg_match("/^{$correct_filename}/i", $file->fileInfo['name']) ){
             $errors[]="Incorrect Filename: Filename begin with: " . $correct_filename;
             return $errors;
@@ -161,12 +161,14 @@ $this->form->addElement ( "select", "q7_29_p2_$i", $this->indent . "Product #2: 
         //set the the IDs to the handler functions.
         $user =& User::singleton();
         $file->setHandlerArgs(array("CommentID"=>$this->getCommentID(),
-                    $file->setHandlerArgs(array("CommentID"=>$this->getCommentID(),
-                            "candID"=>$candidate->getCandID(),
-                            "PSCID"=>$candidate->getPSCID(),
-                            "visitLabel"=>$timepoint->getVisitLabel(),
-                            "username"=>$user->getUsername(),
-                            "values"=>$values))));
+                    "candID"=>$candidate->getCandID(),
+                    "PSCID"=>$candidate->getPSCID(),
+                    "visitLabel"=>$timepoint->getVisitLabel(),
+                    "username"=>$user->getUsername(),
+                    "values"=>$values)
+                );
+
+
 
         //If the form is validated, call File_Upload::processFiles() which loops through the files and 
         //proccesses them (including verify, move, and import steps)
@@ -200,12 +202,12 @@ $this->form->addElement ( "select", "q7_29_p2_$i", $this->indent . "Product #2: 
                 'Data_dir'  =>$file->getDestinationDirectory()
                 );
 
-
+        $fields = array("Type","DLP","ProcessingFile","Timestamp","Duration","Meaningful","Distant","TV","TV.Pct","Noise","Silence","AWC.Actual","CTC.Actual","CVC.Actual","AVA_StdScore","AVA_StdScore_Pct");
         //Cycle through the lines and extract the data
         $lines=explode("\n",$contents);
         $keys = explode("\t", $lines[0]);
         $vals = explode("\t", $lines[1]);
-        print $keys."####".$vals;
+        print_r($keys); print "####";print_r($vals);
         
     }
     /**
