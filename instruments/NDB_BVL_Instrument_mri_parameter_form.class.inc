@@ -32,6 +32,8 @@ class NDB_BVL_Instrument_mri_parameter_form extends NDB_BVL_Instrument
         $this->dateTimeFields=array("Date_taken", "wait_time", "total_duration");
 
         $this->_requiredElements = array('Date_taken', 'Examiner'); //, 'CaregiverReport');
+           
+        $this->_selectMultipleElements = array("gre_fieldmap");
 
         $config =& NDB_Config::singleton();
         $this->dateOptions = array(
@@ -173,10 +175,11 @@ class NDB_BVL_Instrument_mri_parameter_form extends NDB_BVL_Instrument
 
         $this->addTextAreaElement('Spectroscopy_Comments', 'Comments');
 
-
-
-
-
+        $this->form->addElement('header',null,'GRE Field Map');
+        $this->form->addElement('select','gre_accquired',"Was this sequence acquired",array(""=>NULL,"yes" => "Yes", "no"=>"No", 'not_answered'=>'Not Answered'));
+        $gre_options= array(""=>null,"25dir_dti"=>"25 direction DTI","65dir_dti"=>"65 direction DTI","bold"=>"BOLD","not_answered"=>"Not Answered");
+        $this->form->addElement('select','gre_fieldmap',"If yes, which field maps were acquired?", $gre_options,"multiple size='5'");
+        $this->form->addFormRule(array(&$this, 'GRE_Rules'));
 
         $this->form->addElement('header', null, 'Direction File');
         
@@ -201,6 +204,14 @@ class NDB_BVL_Instrument_mri_parameter_form extends NDB_BVL_Instrument
         if(($values['BOLD_Scan_done'] == 'Complete' || $values['BOLD_Scan_done'] == 'Partial')&& $values['BOLD_Number_Complete_Runs'] == '') {
             return array('BOLD_Number_Complete_Runs' => 'Required if acquisition complete or partial');
         }
+              return array();
+    }
+
+    function GRE_Rules($values) {
+         if($values['gre_accquired']=='yes' && ($values['gre_fieldmap']==null || $values['gre_fieldmap']=="") ){
+             return array('gre_fieldmap' => 'Required');
+                
+        }
         return array();
     }
 
@@ -220,6 +231,14 @@ class NDB_BVL_Instrument_mri_parameter_form extends NDB_BVL_Instrument
               $timepoint =& TimePoint::singleton($this->getSessionID());
               $candidate =& Candidate::singleton($timepoint->getCandID());
               $this->_nullStatus($values);
+              //Convert select multiple elements into database storable values
+              if(!empty($this->_selectMultipleElements)){
+                  foreach($this->_selectMultipleElements AS $elname){
+                      if(isset($values[$elname]) && is_array($values[$elname])){
+                          $values[$elname]=implode("{@}",$values[$elname]);
+                      }
+                  }
+              }
 
               if(isset($values['Date_taken'])) {
                   $date = $values['Date_taken'];
