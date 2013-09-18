@@ -3,7 +3,8 @@ class NDB_BVL_Instrument_LENA_DailyActivityLog extends NDB_BVL_Instrument
 {
     var  $rate_day = array(""=>null,"typical"=>"A. typical/ordinary talk time",
                        "more_talkative"=>"B. more talkative than usual",
-                       "less_talkative"=>"C. less talkative than usual");
+                       "less_talkative"=>"C. less talkative than usual",
+                       "not_answered"=>"Not Answered");
 /*
     INSERT INTO test_names (Test_name,Full_name, Sub_group) VALUES ('LENA_DailyActivityLog','LENA Daily Activity Log',1);
 
@@ -37,11 +38,11 @@ class NDB_BVL_Instrument_LENA_DailyActivityLog extends NDB_BVL_Instrument
 
         //The array of dates/timestamps to convert to database dates/timestamps
         //Any HTML_Quickform date elements must be listed here
-        $this->dateTimeFields=array("Date_taken", "day1_date_completed","day2_date_complete","day3_date_completed",
+        $this->dateTimeFields=array("Date_taken","day1_date_completed","day2_date_completed","day3_date_completed",
                                     "day4_date_completed","day1_infection_date","day2_infection_date",
                                     "day3_infection_date","day4_infection_date");
 
-        $this->_requiredElements = array('Date_taken', 'Examiner'); 
+        $this->_requiredElements = array('Date_taken', 'Examiner','day1_child_sick'); 
 
         $config =& NDB_Config::singleton();
         $this->dateOptions = array(
@@ -78,7 +79,37 @@ class NDB_BVL_Instrument_LENA_DailyActivityLog extends NDB_BVL_Instrument
         //Defines the call back function for HTML Quickform to use when validating the form.
         $this->form->addFormRule(array(&$this,'XINValidate'));
     }
+    function getDataEntryCompletionStatus()
+    {
+        $db =& Database::singleton();
+        if(Utility::isErrorX($db)) return PEAR::raiseError("Could not connect to database: ".$db->getMessage()."<br>\n");
+        $query_lena ="SELECT day1_more_recordings,day2_more_recordings,day3_more_recordings FROM $this->table WHERE CommentID=:cid";
+        $where = array('cid'=>$this->getCommentID());
+        $result_recordings = $db->pselectRow($query_lena, $where);
+        $num_recording = 0;
+        foreach($result_recordings as $key=>$value){
+              if($value == 'yes'){
+                  $temp = explode("_",$key);
+                  $num_recording = intval( substr($temp[0], -1));   
+              }    
+        }
+        if($num_recording > 0) {
+            $num_max = $num_recording +1;
+            $field = "day".$num_max."_child_sick";
+            $query = "SELECT $field FROM $this->table WHERE CommentID=:cid";
+            $val   = $db->pselectOne($query,$where);
+            if(Utility::isErrorX($val)) return PEAR::raiseError("Could not select required elements from database: ".$val->getMessage()."<br>\n");
+            if(is_null($val) || $val === "" || empty($val)){ 
+                return 'Incomplete';
+            } else {
+                return 'Complete';   
+            }
 
+        } else {
+            $query = "SELECT Data_entry_completion_status FROM $this->table WHERE CommentID=:CID";
+            return $db->pselectOne($query, array('CID' => $this->getCommentID()));
+        }
+    }
     /**
      * generates the main page of the form.
      *
@@ -94,14 +125,23 @@ class NDB_BVL_Instrument_LENA_DailyActivityLog extends NDB_BVL_Instrument
     }
 
     function _page($page) {
-        
+        $config =& NDB_Config::singleton();
+        $dateOptions = array(
+                'language' => 'en',
+                'format'   => 'YMd',
+                'minYear'  => $config->getSetting('startYear'),
+                'maxYear'  => $config->getSetting('endYear'),
+                'addEmptyOption' => true,
+                'emptyOptionValue' => null
+                );
+
         $temp = substr($page,-1);
         $field = "day".$temp;
         $this->form->addElement("static", null, "<br><br>");
         $this->addHeader("Daily Activity Log $temp");
         $this->form->addElement("static", null, "<br><br>");
         
-        $group[] = &$this->form->createElement("date",$field."_date_completed",null,$this->dateOptions );
+        $group[] = &$this->form->createElement("date",$field."_date_completed",null,$dateOptions );
         $group[] = &$this->form->createElement("select",$field."_date_completed_status",null,array(""=>null,'not_answered'=>'Not Answered'));
         $this->form->addGroup($group,$field."_date_completed_group","<td colspan=1>Date</td>",$this->_GUIDelimiter, false);
 
@@ -121,7 +161,7 @@ class NDB_BVL_Instrument_LENA_DailyActivityLog extends NDB_BVL_Instrument
         $this->_addTableRow($field);
         $this->form->addElement("static", null, "<br><br>");
 
-        $group[] = &$this->form->createElement("select",$field."_child_sick",null,array(""=>null,"yes"=>"Yes","no"=>"No"));
+        $group[] = &$this->form->createElement("select",$field."_child_sick",null,array(""=>null,"yes"=>"Yes","no"=>"No","not_answered"=>"Not Answered"));
         $this->form->addGroup($group,$field."_child_sick_group","<td colspan=2>Is your child sick or not feeling well today?</td>",$this->_GUIDelimiter,false);
         unset($group);
         
@@ -134,7 +174,7 @@ class NDB_BVL_Instrument_LENA_DailyActivityLog extends NDB_BVL_Instrument
         unset($group);
 
         $this->form->addElement("static", null, "<br><br>");
-        $group[] = &$this->form->createElement("date",$field."_infection_date",null,$this->dateOptions );
+        $group[] = &$this->form->createElement("date",$field."_infection_date",null,$dateOptions );
         $group[] = &$this->form->createElement("select",$field."_infection_date_status",null,array(""=>null,'not_answered'=>'Not Answered'));
         $this->form->addGroup($group,$field."_infection_date_group","<td colspan=2>His/Her last ear infection was:</td>",$this->_GUIDelimiter, false);
         unset($group);
@@ -153,12 +193,12 @@ class NDB_BVL_Instrument_LENA_DailyActivityLog extends NDB_BVL_Instrument
         $this->XINRegisterRule ( $field."_comments", array("$comments_status_fieldname{@}!={@}not_answered"), "Please enter Comments, or select Not Answered",$field."_comments_group");
 
         unset($group);
-/*
+
 
         $this->form->addElement("static", null, "<br><br>");
         $group[]= &$this->form->createElement("select",$field."_more_recordings", null, array(""=>null,"yes"=>"Yes","no"=>"No"));
         $this->form->addGroup($group,$field."_more_recordings_group","<td colspan=2>Are there any more daily activity logs? </td>",$this->_GUIDelimiter, false );
-*/
+
 
     }
    
@@ -184,7 +224,7 @@ class NDB_BVL_Instrument_LENA_DailyActivityLog extends NDB_BVL_Instrument
 
         }
         $this->form->addGroup($group, $groupname, null, $this->_GUIDelimiter, false);
-unset($group);
+        unset($group);
        }
    }
 
