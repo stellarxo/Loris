@@ -9,6 +9,7 @@ require_once "Utility.class.inc";
 // turning the class into a subclass of NDB_Menu_Filter instead of redoing 
 // all of the features of an NDB_Menu_Filter by hands.
 class MRIMenuPage {
+    var $filter;
     function MRIMenuPage() {
         // create Database object
         $DB = Database::singleton();
@@ -58,7 +59,7 @@ class MRIMenuPage {
 
             $oldFilter = $_SESSION['State']->getProperty('filter');
             if(is_array($oldFilter)) {
-                $pending = $this->filter['pending'];
+                $pending = (isset($this->filter['pending']) && $this->filter['pending']);
                 $this->filter = array_merge($oldFilter, $this->filter);
                 // Since pending is a checkbox, if we just merge it'll get readded because of the way the HTML standard works for
                 // checkboxes (only gets sent by the browser if it's checked, otherwise send nothing). Therefore, unset it after 
@@ -74,16 +75,17 @@ class MRIMenuPage {
             $this->filter = $_SESSION['State']->getProperty('filter');
 
 
+            $extra_where_string = '';
             foreach($this->formToFilter as $varname=> $field) {
                 $extra_where_string .= $this->_addFilter($varname);
             }
 
 
-            if(is_array($this->filter['order'])) {
-                if($this->filter['order']['field'] != '' && $this->headers[$this->filter['order']['field']] != '')
+            $extra_orderby = '';
+            if(isset($this->filter['order']) && is_array($this->filter['order'])) {
+                if($this->filter['order']['field'] != '' && $this->headers[$this->filter['order']['field']] != '') {
                     $extra_orderby = $this->headers[$this->filter['order']['field']] . ' ' . $this->filter['order']['asc'] . ',';
-                else
-                    $extra_orderby = '';
+                }
             }
 
             $query = "SELECT s.ID AS sessionID,
@@ -156,6 +158,7 @@ class MRIMenuPage {
         $visit_tpl_data['numTimepoints'] = count($visit_tpl_data['timepoints']);
 
         // Go through each 
+        $filtered_sessionIDs = array();
         for($i=0; $i<$visit_tpl_data['numTimepoints']; $i++) {
             $minQCDate = $this->DB->selectOne("select min(QCLastChangeTime) from files left join files_qcstatus USING(FileID) where SessionID=".$visit_tpl_data['timepoints'][$i]['sessionID']." AND OutputType='native' AND AcquisitionProtocolID not in (1, 2, 3, 52) group by QCLastChangeTime order by QCLastChangeTime limit 1");
             // New data if not QCed
