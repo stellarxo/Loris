@@ -62,9 +62,13 @@ class NDB_Form_instrument_list extends NDB_Form
         if(!is_numeric($PTID)) {
             return PEAR::raiseError("Missing ParameterTypeID for VisitComment");
         }
+        //delete old values
+        $db->delete("parameter_session", array("SessionID"=>$this->identifier,'ParameterTypeID' => $PTID));
+
         $result = $db->insert("parameter_session", array('ParameterTypeID' => $PTID,
                     'SessionID' => $sessionID,
-                    'Value' => $values['Comment']
+                    'Value' => $values['Comment'],
+                    'InsertTime' => time()
                     ));
 
         if (Utility::isErrorX($result)) {
