@@ -305,7 +305,10 @@ class NDB_BVL_Instrument_figs_year3 extends NDB_BVL_Instrument
     * @access private
     */
     function _saveValues($values)
-    {
+    {   
+        if($values['ClearInstrument']== 1) {
+           return NULL; 
+        }
         $this->_nullStatus($values);
         if(isset($values['Date_taken'])) {
             $Date_taken = $values['Date_taken'];
@@ -1746,6 +1749,7 @@ work or with social relationships?", $questionOptions);
         foreach($results AS $row) {
             $relatives[$row['RelativeID']] = $row['RelativeCode'];
         }
+        
         return $relatives;
     }
 
@@ -3174,5 +3178,26 @@ ADHD_Q3g_Reliability
         
         return;
     }
+    function clearInstrument() {
+
+        $config = NDB_Config::singleton();
+        $dbconfig = $config->getSetting('database');
+        $db = Database::singleton();
+        $columns = $db->pselect("select COLUMN_NAME FROM information_schema.columns 
+                   WHERE TABLE_NAME=:table AND TABLE_SCHEMA=:db",
+                   array('table' => 'figs_year3', 'db' => $dbconfig['database'] ));
+        $values = array();
+        foreach ($columns as $row) {
+            if($row['COLUMN_NAME'] == 'CommentID' || $row['COLUMN_NAME'] == 'UserID') {
+                continue;
+            }
+            $values[$row['COLUMN_NAME']] = NULL;
+        }
+        $db->update('figs_year3', $values, array('CommentID' => $this->commentID));
+        $db->delete('figs_year3_relatives' , array('CommentID' => $this->commentID));
+        $prepQ = $db->prepare("DELETE FROM conflicts_unresolved WHERE (CommentId1=:CID OR CommentId2=:CID)");
+        $db->execute($prepQ, array('CID' => $this->commentID));
+    }
+
 } // End class
 ?>
