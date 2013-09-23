@@ -1749,7 +1749,6 @@ work or with social relationships?", $questionOptions);
         foreach($results AS $row) {
             $relatives[$row['RelativeID']] = $row['RelativeCode'];
         }
-        
         return $relatives;
     }
 
