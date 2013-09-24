@@ -124,7 +124,13 @@ class NDB_Menu_statistics_site extends NDB_Menu
         $visits = array();
 
         $data = array();
-        foreach($this->instruments as $instrument){           
+        $instrumentList = $DB->pselect("SELECT Test_name FROM test_names ORDER BY Test_name", array());
+        if(Utility::isErrorX($instrumentList)) {
+                        return PEAR::raiseError("DB Error: ".$instrumentList->getMessage());
+        }
+
+        foreach($instrumentList as $instruments){
+            $instrument = $instruments['Test_name'];
             $complete_count = $this->_CompleteCount($id, $instrument); 
 
             $results = $this->_GetResults($id, $instrument);
