@@ -132,7 +132,7 @@ $scores['other_raw']   += $max_q100;
 
 $scores['internal_raw'] = $scores['emotional_raw'] + $scores['anxious_raw'] + 
                           $scores['somatic_raw'] + $scores['withdrawn_raw'];
-}
+
 if(!empty($scores['attention_raw']) && !empty($scores['aggressive_raw'] )) {
    $scores['external_raw'] = $scores['attention_raw'] + $scores['aggressive_raw'];
 }
