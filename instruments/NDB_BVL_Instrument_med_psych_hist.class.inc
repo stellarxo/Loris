@@ -463,7 +463,7 @@ class NDB_BVL_Instrument_med_psych_hist extends NDB_BVL_Instrument
 
         $this->form->addElement("static", null, "Please specify when's");
         foreach($questionArray as $field=>$label) {
-            $this->form->addElement("select", "q6_{$field}_when_taken", $this->indent . "If $label were taken, when?:", array(""=>NULL, "0_before"=>"0 Before", "1_after"=>"1 After", "2_both"=>"2 Both", "not_answered"=>"Not Answered"));
+            $this->form->addElement("select", "q6_{$field}_when_taken", $this->indent . "If $label were taken, when?:", array(""=>NULL, "0_before"=>"0 Before", "1_after"=>"1 After", "2_both"=>"2 Both", "3_breastfeeding"=>"3 Breastfeeding","not_answered"=>"Not Answered"));
             $this->XINRegisterRule("q6_{$field}_when_taken", array("q6_pregnancy_meds{@}=={@}{$field}"), "Please specify when $label was taken");
         }
 
@@ -487,9 +487,11 @@ class NDB_BVL_Instrument_med_psych_hist extends NDB_BVL_Instrument
 
         //8.
         $this->form->addElement("select", "q8_pregnancy_alcohol_tobacco", "8. In this pregnancy, did you do any of the following activities?", array("a_drink_alcohol"=>"a. Drink alcohol", "b_smoke_cigarettes_or_tobacco"=>"b. Smoke cigarettes or tobacco"), "multiple");
-        $this->form->addElement("select", "q8_a_drink_alcohol_when_taken", $this->indent . "If alcohol was taken, when?:", array(""=>NULL, "0_before"=>"0 Before", "1_after"=>"1 After", "2_both"=>"2 Both", "not_answered"=>"Not Answered"));
+        $this->form->addElement("select", "q8_a_drink_alcohol_when_taken", $this->indent . "If alcohol was taken, when?:", array(""=>NULL, "0_before"=>"0 Before", "1_after"=>"1 After", "2_both"=>"2 Both","3_breastfeeding"=>"3 Breastfeeding", "not_answered"=>"Not Answered"));
         $this->XINRegisterRule("q8_a_drink_alcohol_when_taken", array("q8_pregnancy_alcohol_tobacco{@}=={@}a_drink_alcohol"), "Please specify when alcohol was taken");
-        $this->form->addElement("select", "q8_b_tobacco_when_taken", $this->indent . "If tobacco was taken, when?:", array(""=>NULL, "0_before"=>"0 Before", "1_after"=>"1 After", "2_both"=>"2 Both", "not_answered"=>"Not Answered"));
+        $this->form->addElement("select", "q8_a1_drink_quantity", $this->indent . "How many drinks did you usually have in one week?:", array(""=>NULL, "0"=>"0", "1_2"=>"1-2", "3_more"=>"3 or more","not_answered"=>"Not Answered"));
+        $this->addTextElement("q8_a2_drink_max_week","What is the maximum number of drinks you had in one week?");
+        $this->form->addElement("select", "q8_b_tobacco_when_taken", $this->indent . "If tobacco was taken, when?:", array(""=>NULL, "0_before"=>"0 Before", "1_after"=>"1 After", "2_both"=>"2 Both","3_breastfeeding"=>"3 Breastfeeding", "not_answered"=>"Not Answered"));
         $this->XINRegisterRule("q8_b_tobacco_when_taken", array("q8_pregnancy_alcohol_tobacco{@}=={@}b_smoke_cigarettes_or_tobacco"), "Please specify when tobacco was taken");
 
         //9.
