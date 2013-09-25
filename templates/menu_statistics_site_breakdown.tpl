@@ -14,7 +14,7 @@
    </tr>
    {section name=item loop=$data}
    <tr bgcolor="#FFFFFF">
-      <td>{$data[item].name}</td>
+      <td>{$data[item].fullname}</td>
       <td>{$data[item].count}</td>
       {foreach from=$AllVisits item=visit name=VisitLoop}
       <td>{foreach from=$data[item].completes[$visit] item=Candidate name=CandLoop}

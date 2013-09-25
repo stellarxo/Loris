@@ -7,64 +7,42 @@ require_once 'NDB_Menu.class.inc';
  */
 class NDB_Menu_statistics_site extends NDB_Menu
 {
-    var $instruments = array(
-            //      "EARLI_interview",
-            //"ace_medical_history",
-            "adi_r_proband",
-            "adi_r_subject",
-            "ados_module1",
-            "ados_module2",
-            "ados_module3",
-            "aosi",
-            "csbs", 
-            "csbs_sponteneity",
-            "DSMIV_checklist",
-            "EARLI_interview_PART_1",
-            "EARLI_interview_PART_2",
-            "EARLI_interview_PART_3",
-            "EARLI_interview_PART_4",
-            "EARLI_interview_S3_inserts",
-            "EARLI_interview_S7_inserts",
-            "edi",
-            "figs_year3",
-            "figs_year3_relatives",
-            "fyi",
-            "head_measurements_proband",
-            "head_measurements_subject",
-            "i3",
-            "ibq_r",
-            "intervention_history",
-            "m_chat_proband",
-            "m_chat_subject",
-            //    "macarthur_cdi",
-            "macarthur_words_gestures",
-            //    "med_extract_new_recruit",
-            "med_psych_hist",
-            "med_records_24",
-            "med_records_recruit",
-            "med_records_proband",
-            "mri_parameter_form",
-            "mullen",
-            "neuro_screen",
-            "prefrontal_task",
-            "radiology_review",
-            "rbs_r",
-            "RSMS",
-            "scq_proband",
-            "scq_subject",
-            "seq",
-            "SRS",
-            "tsi",
-            "tsi_followup",
-            "vineland_proband",
-            "vineland_subject" 
-    );
+    function __construct() {
+        $this->instruments = $this->_getInstrumentList();
+    }
+    function _getInstrumentList() {
+        $DB =& Database::singleton();
+        if(PEAR::isError($DB)) {
+            return PEAR::raiseError("Could not connect to database: ".$DB->getMessage());
+        }
 
+        $instrumentList = $DB->pselect("SELECT Test_name FROM test_names ORDER BY Test_name", array());
+        if(Utility::isErrorX($instrumentList)) {
+            return PEAR::raiseError("DB Error: ".$instrumentList->getMessage());
+        }
+        $instruments = array();
+        foreach($instrumentList as $list) {
+            $instruments[] = $list['Test_name'];    
+        }
+        return $instruments;
+
+    }
     // Helper function to get a friendlier version of the instrument name.
     // This is mostly used for the MRI site statistics, which uses 
     // names like "Tarchive_Missing" for "MRI Parameter Form Completed but Missing Tarchive Entry"
     function _getInstrumentName($instrument) {
-        return $instrument;
+
+        $DB =& Database::singleton();
+        if(PEAR::isError($DB)) {
+            return PEAR::raiseError("Could not connect to database: ".$DB->getMessage());
+        }
+
+        $instrumentName = $DB->pselectOne("SELECT Full_name FROM test_names WHERE Test_name=:tname", array('tname'=>$instrument));
+        if(Utility::isErrorX($instrumentName)) {
+            return PEAR::raiseError("DB Error: ".$instrumentName->getMessage());
+        }
+
+        return $instrumentName;
     }
     function _CompleteCount($id, $instrument) {
         $DB =& Database::singleton();
@@ -124,13 +102,8 @@ class NDB_Menu_statistics_site extends NDB_Menu
         $visits = array();
 
         $data = array();
-        $instrumentList = $DB->pselect("SELECT Test_name FROM test_names ORDER BY Test_name", array());
-        if(Utility::isErrorX($instrumentList)) {
-                        return PEAR::raiseError("DB Error: ".$instrumentList->getMessage());
-        }
-
-        foreach($instrumentList as $instruments){
-            $instrument = $instruments['Test_name'];
+        foreach($this->instruments as $instrument){
+           // $instrument = $instruments['Test_name'];
             $complete_count = $this->_CompleteCount($id, $instrument); 
 
             $results = $this->_GetResults($id, $instrument);
@@ -151,7 +124,9 @@ class NDB_Menu_statistics_site extends NDB_Menu
                         'PSCID' => $row['PSCID']
                         );
             }
-            $data[] = array('name' => $this->_getInstrumentName($instrument), 'count' => $complete_count, 'incompletes' => $results);
+            
+            $data[] = array('name' => $instrument, 'count' => $complete_count,
+                            'incompletes' => $results,'fullname'=> $this->_getInstrumentName($instrument));
         }
 
         $this->tpl_data["data"] = $data;

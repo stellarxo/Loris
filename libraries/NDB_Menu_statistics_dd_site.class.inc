@@ -20,6 +20,7 @@ class NDB_Menu_statistics_dd_site extends NDB_Menu_statistics_site
         }
     }
     function __construct() {
+        $this->instruments = $this->_getInstrumentList();
         $this->instruments = array_filter($this->instruments, array(&$this, 'notexcluded'));
     }
     function _CompleteCount($id, $instrument) {
