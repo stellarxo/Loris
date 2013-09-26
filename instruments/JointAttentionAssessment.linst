@@ -11,6 +11,7 @@ select{@}coder_status{@}{@}NULL=>''{-}'not_answered'=>'Not Answered'
 header{@}{@}Scores
 static{@}total_rawscore{@}Total Raw Score
 static{@}mean_score{@}Mean Score
+static{@}standard_deviation{@}Standard Deviation
 static{@}coefficient_variation{@}Coefficient of Variation
 header{@}{@}Dimensional Joint Attention Assessment (DJAA)
 static{@}{@}<br />
@@ -24,4 +25,3 @@ select{@}series4{@}Series #4{@}NULL=>''{-}'4points'=>'4points'{-}'3points'=>'3po
 header{@}{@}Validity
 textarea{@}CommentValidity{@}Comment About Validity:
 select{@}CommentValidity_status{@}{@}NULL=>''{-}'not_answered'=>'Not Answered'
-
