@@ -10,7 +10,7 @@ q74_sleepless_describe{-}Required{-}q74_sleepless_describe_status{@}!={@}not_ans
 q76_speech_describe{-}Required{-}q76_speech_describe_status{@}!={@}not_answered
 q80_strange_describe{-}Required{-}q80_strange_describe_status{@}!={@}not_answered
 q92_upsetnew_describe{-}Required{-}q92_upsetnew_describe_status{@}!={@}not_answered
-q100_otherproblems_1_option{-}Required{-}q100_otherproblems_1_status{@}!={@}not_answered
-q100_otherproblems_2_option{-}Required{-}q100_otherproblems_2_status{@}!={@}not_answered
-q100_otherproblems_3_option{-}Required{-}q100_otherproblems_3_status{@}!={@}not_answered
+q100_otherproblems_1_option{-}Required{-}q100_otherproblems_1_status{@}=={@}
+q100_otherproblems_2_option{-}Required{-}q100_otherproblems_2_status{@}=={@}
+q100_otherproblems_3_option{-}Required{-}q100_otherproblems_3_status{@}=={@}
 describe_illness{-}Required{-}child_illness{@}=={@}yes 

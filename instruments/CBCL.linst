@@ -202,6 +202,8 @@ select{@}q98_withdrawn{@}98. Withdrawn, doesn't get involved with others{@}NULL=
 select{@}q99_worries{@}99. Worries{@}NULL=>''{-}'0_not_true'=>'0. Not True'{-}'1_somewhat_or_sometimes_true'=>'1. Somewhat or Sometimes True'{-}'2_very_true_or_often_true'=>'2. Very True or Often True'{-}'not_answered'=>'Not Answered'
 static{@}{@}100. Please write in any problems the child has that were not listed above<br /> Score will be calculate based on response to Other Problem 1,2,3 below
 static{@}{@}<br />
+static{@}q100_raw_score{@}Q100 Raw Score 
+static{@}{@}<br />
 static{@}{@}<b>Other Problem 1</b>
 textarea{@}q100_otherproblems_1{@}Specify Other Problem:
 select{@}q100_otherproblems_1_status{@}{@}NULL=>''{-}'not_answered'=>'Not Answered'

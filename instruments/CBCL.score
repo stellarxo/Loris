@@ -101,15 +101,36 @@ foreach ($result as $field=>$val) {
     }
 }
 
-$max_q100 =explode('_', max($result['q100_otherproblems_1_option'], $result['q100_otherproblems_2_option'],
-                $result['q100_otherproblems_3_option']));
+if( !empty($result['q100_otherproblems_1_option']) && !empty($result['q100_otherproblems_2_option'])
+    && !empty($result['q100_otherproblems_3_option'])) {
+    $q100_1 = explode("_",$result['q100_otherproblems_1_option'] ); 
+    $q100_2 = explode("_",$result['q100_otherproblems_2_option'] );
+    $q100_3 = explode("_",$result['q100_otherproblems_3_option'] );
+    if ($q100_1[0] == "not" && $q100_2[0] == "not" && $q100_3[0] == "not") {
+        $scores['q100_raw_score'] ="N/A";    
+        $max_q100 =0;
+    } else {
+        if ($q100_1[0] == "not") {
+            $q100_1[0] = 0;    
+        }
+        if ($q100_2[0] == "not") {
+            $q100_2[0] = 0;    
+        }
+        if ($q100_3[0] == "not") {
+            $q100_3[0] = 0;    
+        }
+        $max_q100 =  max($q100_1[0],$q100_2[0],$q100_3[0]);
+        $scores['q100_raw_score'] = $max_q100;
+    }
 
-if(is_numeric($max_q100[0])) {
-   $scores['other_raw'] += $max_q100[0];    
+}  else {
+   $scores['q100_raw_score'] ="N/A"; 
+   $max_q100 =0;
 }
-if (!empty($scores['emotional_raw']) && !empty($scores['anxious_raw'])
-    && !empty($scores['somatic_raw']) && !empty($scores['withdrawn_raw'])){
-    $scores['internal_raw'] = $scores['emotional_raw'] + $scores['anxious_raw'] + 
+//print "VAL ".$scores['q100_raw_score']." MAX ".$max_q100;
+$scores['other_raw']   += $max_q100;   
+
+$scores['internal_raw'] = $scores['emotional_raw'] + $scores['anxious_raw'] + 
                           $scores['somatic_raw'] + $scores['withdrawn_raw'];
 }
 if(!empty($scores['attention_raw']) && !empty($scores['aggressive_raw'] )) {
