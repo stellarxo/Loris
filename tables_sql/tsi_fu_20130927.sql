@@ -1,0 +1,12 @@
+ALTER TABLE tsi_followup CHANGE COLUMN med_his_q_9_anethesia_problems med_his_q_9_anethesia_notes varchar(255);
+ALTER TABLE tsi_followup ADD COLUMN med_his_q_9_anethesia_notes_status enum('not_answered');
+ALTER TABLE tsi_followup CHANGE COLUMN med_his_q_9_anethesia_problems med_his_q_9_anethesia_notes varchar(255); 
+ALTER TABLE tsi_followup ADD COLUMN med_his_q_9_anethesia_notes_status enum('not_answered');
+ALTER TABLE tsi_followup CHANGE COLUMN med_his_q_8_brain_MRI_results med_his_q_8_brain_MRI_notes varchar(255);
+ALTER TABLE tsi_followup ADD COLUMN med_his_q_8_brain_MRI_notes_status enum('not_answered');
+ALTER TABLE tsi_followup ADD COLUMN med_his_q_8_brain_MRI_results enum('typical','atypical','not_answered'); 
+ALTER TABLE tsi_followup ADD COLUMN med_his_q_9_anethesia_problems enum('yes','no','not_answered');
+UPDATE tsi_followup SET neurological_problems_proband = seizures_disorders WHERE seizures_disorders='yes';
+ALTER TABLE tsi_followup DROP COLUMN med_his_q_9_anethesia_problems_status;
+ALTER TABLE tsi_followup DROP COLUMN med_his_q_8_brain_MRI_results_status;
+ALTER TABLE tsi_followup DROP COLUMN seizures_disorders;
