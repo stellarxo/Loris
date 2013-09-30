@@ -84,9 +84,7 @@ class NDB_BVL_Instrument_tsi extends NDB_BVL_Instrument
 								 'med_his_q_6_allergies_describe',
 								 'med_his_q_6_allergies_describe_status',
 								 'med_his_q_8_brain_MRI_results',
-								 'med_his_q_8_brain_MRI_results_status',								
 								 'med_his_q_9_anethesia_problems',
-								 'med_his_q_9_anethesia_problems_status',
 								 'med_his_q_10_nap',
 								 'med_his_q_10_nap_status',
 								 'med_his_q_11_nap_how_long',
@@ -268,7 +266,6 @@ class NDB_BVL_Instrument_tsi extends NDB_BVL_Instrument
 
 		$questionArray = array("neurological_problems_proband"=>"Any neurological problems such as cerebral palsy or tuberous sclerosis in PROBAND?",
 		"genetic_conditions_proband"=>"Diagnosed/suspected genetic conditions or syndromes?",
-		"seizures_disorders"=>"Seizures/other neurological disorder (tuberous sclerosis)?",
 		"relative_with_disorder"=>"1st degree relative w/ MR, schizophrenia, bipolar or psychosis?",
 		"cns"=>"CNS problem/injury such as a head injury or meningitis?",
 		"tested_for_fragile_x"=>"Tested for Fragile X syndrome?",
@@ -277,6 +274,8 @@ class NDB_BVL_Instrument_tsi extends NDB_BVL_Instrument
 			$this->form->addElement("select", $field, $label, $this->yesNo);
 		}
         $this->addNumericElement("gestation_proband","Number of weeks of gestation");
+        $this->form->addFormRule(array(&$this,'tsi_Rules'));
+
         $lb_options = array(null=>"",0=>"0 lbs",1=>"1 lbs",2=>"2 lbs",3=>"3 lbs",4=>"4 lbs",5=>"5 lbs",6=>"6 lbs",
                        7=>"7 lbs",8=>"8 lbs",9=>"9 lbs",10=>"10 lbs",11=>"11 lbs",12=>"12 lbs",13=>"13 lbs",14=>"14 lbs",15=>"15 lbs");
         $oz_options = array(null=>"",0=>"0 oz",1=>"1 oz",2=>"2 oz",3=>"3 oz",4=>"4 oz",5=>"5 oz",6=>"6 oz",
@@ -284,13 +283,13 @@ class NDB_BVL_Instrument_tsi extends NDB_BVL_Instrument
 
         $group[] =& $this->form->createElement("select", "birthweight_proband_lb", null, $lb_options);
 		$group[] =& $this->form->createElement("select", "birthweight_proband_oz", null, $oz_options);
-		$group[] =& $this->form->createElement("select", "birthweight_proband_status", null, array(null=>"","not_answered"=>"Not Answered"));
-        $this->form->addGroup($group,"weight_proband","Birth Weight? in lbs., oz.", $this->_GUIDelimiter, false);
-        $this->XINRegisterRule($birthweight_proband_lb, array("$birthweight_proband_status{@}!={@}not_answered"),"Required","weight_proband");
-        $this->XINRegisterRule($birthweight_proband_oz, array("$birthweight_proband_status{@}!={@}not_answered"),"Required","weight_proband");
+		$group[] =& $this->form->createElement("select", "birthweight_proband_lb_status", null, array(null=>"","not_answered"=>"Not Answered"));
+        $this->form->addGroup($group,"weight_proband_group","Birth Weight? in lbs., oz.", $this->_GUIDelimiter, false);
+        $this->XINRegisterRule("birthweight_proband_lb", array("birthweight_proband_lb_status{@}=={@}"),"Required lbs and oz","weight_proband_group");
+        $this->XINRegisterRule("birthweight_proband_oz", array("birthweight_proband_lb_status{@}=={@}"),"Required lbs and oz.","weight_proband_group");
         unset($group);
 
-        $this->form->addElement('select', "complcations_birth_proband", "Complications at birth?(ex. vaccum extraction)", $this->yesNo);
+        $this->form->addElement('select', "complications_birth_proband", "Complications at birth?(ex. vaccum extraction)", $this->yesNo);
         $this->form->addElement('select', "in_utero_exposure_proband", "Exposure in-utero to meds,tobacco, alcohol, or drugs<BR>(Rx or not including herbal and prenatal vitamins)?", $this->yesNo);
 		
         $questionArray = array("substance_proband"=>"Name of substance (get spelling):",
@@ -307,7 +306,7 @@ class NDB_BVL_Instrument_tsi extends NDB_BVL_Instrument
                 "substance_breastfed_amount_proband"=>"Amount of substance at one time:",
                 "time_exposure_breastfed_proband"=>"Time period of exposure (weeks of pregnancy):");
         foreach($questionArray as $field=>$label) {
-            $this->addTextElement("in_breastfeed_" . $field, $this->indent . $label, array("medication_in_breastfeed_proband{@}=={@}yes"), "This field is required if there was taken during breast feeding");
+            $this->addTextElement( $field, $this->indent . $label, array("medication_in_breastfeed_proband{@}=={@}yes"), "This field is required if there was taken during breast feeding");
         }
 
         
@@ -347,7 +346,7 @@ class NDB_BVL_Instrument_tsi extends NDB_BVL_Instrument
                 "substance_breastfed_amount_subject"=>"Amount of substance at one time:",
                 "time_exposure_breastfed_subject"=>"Time period of exposure (weeks of pregnancy):");
         foreach($questionArray as $field=>$label) {
-            $this->addTextElement("in_breastfeed_" . $field, $this->indent . $label, array("medication_in_breastfeed_subject{@}=={@}yes"), "This field is required if medication was taken during breast feeding");
+            $this->addTextElement($field, $this->indent . $label, array("medication_in_breastfeed_subject{@}=={@}yes"), "This field is required if medication was taken during breast feeding");
         }
 
 		$this->addTextAreaElement("further_information", "If yes to any of the above, obtain further information.");
@@ -368,9 +367,11 @@ class NDB_BVL_Instrument_tsi extends NDB_BVL_Instrument
 		$this->form->addElement("select", "med_his_q_8_brain_MRI", "8. Has X ever had an MRI of the brain?", $this->yesNo);
 		$this->form->addElement("select","med_his_q_8_brain_MRI_results", $this->indent . "If yes, what were the results?", array(null=>"","typical"=>"Typical","atypical"=>"Atypical","not_answered"=>"Not Answered"));
         $this->XINRegisterRule ( "med_his_q_8_brain_MRI_results", array("med_his_q_8_brain_MRI{@}=={@}yes"),"Please specify results");
+        $this->addTextElement("med_his_q_8_brain_MRI_notes", $this->indent . "Notes", array("med_his_q_8_brain_MRI_notes{@}=={@}NEVER_REQUIRED"));
 		$this->form->addElement("select", "med_his_q_9_anethesia", "9. Has X ever had anesthesia or other forms of sedation?", $this->yesNo);
 		$this->form->addElement("select","med_his_q_9_anethesia_problems", $this->indent . "Problems with sedation?",$this->yesNo);
         $this->XINRegisterRule ( "med_his_q_9_anethesia_problems", array("med_his_q_9_anethesia{@}=={@}yes"),"Please specify results");
+        $this->addTextElement("med_his_q_9_anethesia_notes", $this->indent . "Notes", array("med_his_q_9_anethesia_notes{@}=={@}NEVER_REQUIRED"));
 
 		$this->addTextElement("med_his_q_10_nap", "10. Does X nap during the day?");
 		$this->addTextElement("med_his_q_11_nap_how_long", "11. When & how long?");
@@ -396,6 +397,14 @@ class NDB_BVL_Instrument_tsi extends NDB_BVL_Instrument
 		$this->form->addElement("static", null, "Disposition");
 		$this->form->addElement("select", "disposition", "Proceed to next level beyond screening?", $this->yesNo);
 	}
-	
+    function tsi_Rules($values) {
+        $gestation = intval ($values["gestation_proband"]);
+        if($gestation < 0 || $gestation > 45){
+            return array('gestation_proband' => 'Please enter value between 0-45');
+
+        }
+        return array();
+    }
+
 }
 ?>
