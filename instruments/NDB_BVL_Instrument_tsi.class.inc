@@ -367,11 +367,11 @@ class NDB_BVL_Instrument_tsi extends NDB_BVL_Instrument
 		$this->form->addElement("select", "med_his_q_8_brain_MRI", "8. Has X ever had an MRI of the brain?", $this->yesNo);
 		$this->form->addElement("select","med_his_q_8_brain_MRI_results", $this->indent . "If yes, what were the results?", array(null=>"","typical"=>"Typical","atypical"=>"Atypical","not_answered"=>"Not Answered"));
         $this->XINRegisterRule ( "med_his_q_8_brain_MRI_results", array("med_his_q_8_brain_MRI{@}=={@}yes"),"Please specify results");
-        $this->addTextElement("med_his_q_8_brain_MRI_notes", $this->indent . "Notes", array("med_his_q_8_brain_MRI_notes{@}=={@}NEVER_REQUIRED"));
+        $this->addTextElement("med_his_q_8_brain_MRI_notes", $this->indent . "Notes", array("med_his_q_8_brain_MRI_results{@}=={@}atypical"));
 		$this->form->addElement("select", "med_his_q_9_anethesia", "9. Has X ever had anesthesia or other forms of sedation?", $this->yesNo);
 		$this->form->addElement("select","med_his_q_9_anethesia_problems", $this->indent . "Problems with sedation?",$this->yesNo);
         $this->XINRegisterRule ( "med_his_q_9_anethesia_problems", array("med_his_q_9_anethesia{@}=={@}yes"),"Please specify results");
-        $this->addTextElement("med_his_q_9_anethesia_notes", $this->indent . "Notes", array("med_his_q_9_anethesia_notes{@}=={@}NEVER_REQUIRED"));
+        $this->addTextElement("med_his_q_9_anethesia_notes", $this->indent . "Notes", array("med_his_q_9_anethesia_problems{@}=={@}yes"));
 
 		$this->addTextElement("med_his_q_10_nap", "10. Does X nap during the day?");
 		$this->addTextElement("med_his_q_11_nap_how_long", "11. When & how long?");

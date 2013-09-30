@@ -42,3 +42,4 @@ ALTER TABLE tsi ADD COLUMN med_his_q_9_anethesia_problems enum('yes','no','not_a
 UPDATE tsi SET neurological_problems_proband = seizures_disorders WHERE seizures_disorders='yes';
 ALTER TABLE tsi DROP COLUMN med_his_q_9_anethesia_problems_status;
 ALTER TABLE tsi DROP COLUMN med_his_q_8_brain_MRI_results_status;
+ALTER TABLE tsi DROP COLUMN seizures_disorders;
