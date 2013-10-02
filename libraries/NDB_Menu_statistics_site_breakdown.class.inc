@@ -11,7 +11,18 @@ class NDB_Menu_statistics_site_breakdown extends NDB_Menu
     // This is mostly used for the MRI site statistics, which uses
     // names like "Tarchive_Missing" for "MRI Parameter Form Completed but Missing Tarchive Entry"
     function _getInstrumentName($instrument) {
-        return $instrument;
+        $DB =& Database::singleton();
+        if(PEAR::isError($DB)) {
+            return PEAR::raiseError("Could not connect to database: ".$DB->getMessage());
+        }
+
+        $instrumentName = $DB->pselectOne("SELECT Full_name FROM test_names WHERE Test_name=:tname", array('tname'=>$instrument));
+        if(Utility::isErrorX($instrumentName)) {
+            return PEAR::raiseError("DB Error: ".$instrumentName->getMessage());
+        }
+
+        return $instrumentName;
+
     }
     function _CompleteCount($id, $instrument) {
         if($_REQUEST['DDE']) {
@@ -104,7 +115,8 @@ class NDB_Menu_statistics_site_breakdown extends NDB_Menu
                         'PSCID' => $row['PSCID']
                 );
             }
-            $data[] = array('name' => $this->_getInstrumentName($instrument), 'count' => $complete_count, 'completes' => $results);
+            $data[] = array('name' => $instrument, 'count' => $complete_count, 
+                            'completes' => $results, 'fullname'=> $this->_getInstrumentName($instrument));
         }
 
         $this->tpl_data["data"] = $data;

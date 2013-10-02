@@ -14,7 +14,7 @@
    </tr>
    {section name=item loop=$data}
    <tr bgcolor="#FFFFFF">
-      <td>{$data[item].name}</td>
+      <td>{$data[item].fullname}</td>
       <td>{$data[item].count}  <br />(<a href="main.php?test_name=statistics_site_breakdown&instrument={$data[item].name}&CenterID={$CenterID}&DDE=1">View list</a>)</td>
       {foreach from=$AllVisits item=visit name=VisitLoop}
       <td>{foreach from=$data[item].incompletes[$visit] item=Candidate name=CandLoop}
