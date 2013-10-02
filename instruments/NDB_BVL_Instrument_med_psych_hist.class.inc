@@ -463,7 +463,7 @@ class NDB_BVL_Instrument_med_psych_hist extends NDB_BVL_Instrument
 
         $this->form->addElement("static", null, "Please specify when's");
         foreach($questionArray as $field=>$label) {
-            $this->form->addElement("select", "q6_{$field}_when_taken", $this->indent . "If $label were taken, when?:", array(""=>NULL, "0_before"=>"0 Before", "1_after"=>"1 After", "2_both"=>"2 Both", "not_answered"=>"Not Answered"));
+            $this->form->addElement("select", "q6_{$field}_when_taken", $this->indent . "If $label were taken, when?:", array(""=>NULL, "0_before"=>"0 Before", "1_after"=>"1 After", "2_both"=>"2 Both", "3_breastfeeding"=>"3 Breastfeeding","not_answered"=>"Not Answered"));
             $this->XINRegisterRule("q6_{$field}_when_taken", array("q6_pregnancy_meds{@}=={@}{$field}"), "Please specify when $label was taken");
         }
 
@@ -487,10 +487,18 @@ class NDB_BVL_Instrument_med_psych_hist extends NDB_BVL_Instrument
 
         //8.
         $this->form->addElement("select", "q8_pregnancy_alcohol_tobacco", "8. In this pregnancy, did you do any of the following activities?", array("a_drink_alcohol"=>"a. Drink alcohol", "b_smoke_cigarettes_or_tobacco"=>"b. Smoke cigarettes or tobacco"), "multiple");
-        $this->form->addElement("select", "q8_a_drink_alcohol_when_taken", $this->indent . "If alcohol was taken, when?:", array(""=>NULL, "0_before"=>"0 Before", "1_after"=>"1 After", "2_both"=>"2 Both", "not_answered"=>"Not Answered"));
+        $this->form->addElement("select", "q8_a_drink_alcohol_when_taken", $this->indent . "If alcohol was taken, when?:", array(""=>NULL, "0_before"=>"0 Before", "1_after"=>"1 After", "2_both"=>"2 Both","3_breastfeeding"=>"3 Breastfeeding", "not_answered"=>"Not Answered"));
         $this->XINRegisterRule("q8_a_drink_alcohol_when_taken", array("q8_pregnancy_alcohol_tobacco{@}=={@}a_drink_alcohol"), "Please specify when alcohol was taken");
-        $this->form->addElement("select", "q8_b_tobacco_when_taken", $this->indent . "If tobacco was taken, when?:", array(""=>NULL, "0_before"=>"0 Before", "1_after"=>"1 After", "2_both"=>"2 Both", "not_answered"=>"Not Answered"));
+        $this->form->addElement("select", "q8_a1_drink_quantity", $this->indent . "How many drinks did you usually have in one week?:", array(""=>NULL, "0"=>"0", "1_2"=>"1-2", "3_more"=>"3 or more","not_answered"=>"Not Answered"));
+        $this->XINRegisterRule("q8_a1_drink_quantity", array("q8_pregnancy_alcohol_tobacco{@}=={@}a_drink_alcohol"), "Please specify when alcohol was taken");
+        $this->addNumericElement("q8_a2_drink_max_week", $this->indent . "What is the maximum number of drinks you had in one week?");
+        $this->XINRegisterRule("q8_a2_drink_max_week", array("q8_pregnancy_alcohol_tobacco{@}=={@}a_drink_alcohol"), "Please specify when alcohol was taken");
+        $this->form->addElement("select", "q8_b_tobacco_when_taken", $this->indent . "If tobacco was taken, when?:", array(""=>NULL, "0_before"=>"0 Before", "1_after"=>"1 After", "2_both"=>"2 Both","3_breastfeeding"=>"3 Breastfeeding", "not_answered"=>"Not Answered"));
         $this->XINRegisterRule("q8_b_tobacco_when_taken", array("q8_pregnancy_alcohol_tobacco{@}=={@}b_smoke_cigarettes_or_tobacco"), "Please specify when tobacco was taken");
+        $this->form->addElement("select", "q8_b1_cigarette_perday", $this->indent . "How many cigarettes did you smoke per day?:", array(""=>NULL, "0"=>"0", "5_10"=>"5-10", "10_more"=>"10 or more","not_answered"=>"Not Answered"));
+        $this->XINRegisterRule("q8_b1_cigarette_perday", array("q8_pregnancy_alcohol_tobacco{@}=={@}b_smoke_cigarettes_or_tobacco"), "Please specify number of cigarettes per day");
+        $this->form->addElement('static', null, null);
+
 
         //9.
         $questionArray = array("a_marijuana_hashish"=>"a. Smoke marijuana or hashish (THC)",
@@ -547,14 +555,14 @@ class NDB_BVL_Instrument_med_psych_hist extends NDB_BVL_Instrument
 
         //13.
         $this->form->addElement("select", "q13_neonatal_icu", "13. Did this child stay in the neonatal intensive care unit?", $this->yesNo);
-        $this->form->addElement("static", null, $this->indent . "If yes...");
-        $this->addTextElement("q13_neonatal_icu_days", $this->indent . $this->indent . "a. Number of days", array("q13_neonatal_icu{@}=={@}1_yes"), "Please indicate the number of days spent in the Neonatal ICU");
-        $this->addTextElement("q13_neonatal_icu_hours", $this->indent . $this->indent . "b. Number of hours", array("q13_neonatal_icu{@}=={@}1_yes"), "Please indicate the number of hours spent in the Neonatal ICU");
+        $this->addTextElement("q13_neonatal_icu_reason", $this->indent . $this->indent . "If yes, why did the child stay at NICU", array("q13_neonatal_icu{@}=={@}1_yes"), "Please indicate the reason why child was in the Neonatal ICU");
+        $this->addNumericElement("q13_neonatal_icu_days", $this->indent . $this->indent . "a. Number of days", array("q13_neonatal_icu{@}=={@}1_yes"), "Please indicate the number of days spent in the Neonatal ICU");
+        $this->addNumericElement("q13_neonatal_icu_hours", $this->indent . $this->indent . "b. Number of hours", array("q13_neonatal_icu{@}=={@}1_yes"), "Please indicate the number of hours spent in the Neonatal ICU");
 
         //14.
         $this->form->addElement("static", null, "14. How many days or hours total did this child stay in the hospital?");
-        $this->addTextElement("q14_child_hospitalised_days", $this->indent . "Number of days:");
-        $this->addTextElement("q14_child_hospitalised_hours", $this->indent . "Number of hours:");
+        $this->addNumericElement("q14_child_hospitalised_days", $this->indent . "Number of days:");
+        $this->addNumericElement("q14_child_hospitalised_hours", $this->indent . "Number of hours:");
     }
 
     function _page5() {

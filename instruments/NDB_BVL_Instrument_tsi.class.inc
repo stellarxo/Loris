@@ -84,9 +84,7 @@ class NDB_BVL_Instrument_tsi extends NDB_BVL_Instrument
 								 'med_his_q_6_allergies_describe',
 								 'med_his_q_6_allergies_describe_status',
 								 'med_his_q_8_brain_MRI_results',
-								 'med_his_q_8_brain_MRI_results_status',								
 								 'med_his_q_9_anethesia_problems',
-								 'med_his_q_9_anethesia_problems_status',
 								 'med_his_q_10_nap',
 								 'med_his_q_10_nap_status',
 								 'med_his_q_11_nap_how_long',
@@ -149,6 +147,7 @@ class NDB_BVL_Instrument_tsi extends NDB_BVL_Instrument
 		"Subject ID:",
 		"Date of Contact:", 
 		"Date of Birth:",
+        "Estimated Due Date: $this->indent Data entered during candidate registration",
 		"Contacted By:",
 		"Subject's Gender: $this->indent Subject's Age (in months):");
 		foreach ($nonAskedQuestions as $field) {
@@ -164,7 +163,8 @@ class NDB_BVL_Instrument_tsi extends NDB_BVL_Instrument
 		        $this->form->addElement('static', null, $field);
 		    }
 		}
-		
+        $this->form->addElement("select","is_infant_adopted","Is infant adopted?", $this->yesNo);
+        $this->form->addElement("select","is_infant_twin","Is infant a twin?", $this->yesNo);
 		//Ethnicity
 		$this->form->addElement("select", "child_ethnicity", "Candidate Ethnicity:", array(null=>"", "hispanic"=>"Hispanic", "non_hispanic"=>"Non-Hispanic", "not_answered"=>"Not Answered"));
 
@@ -264,38 +264,67 @@ class NDB_BVL_Instrument_tsi extends NDB_BVL_Instrument
 
 		$this->form->addElement('header', null, "Exclusionary Factors - ASD PROBANDs only");
 
-		$questionArray = array("neurological_problems_proband"=>"Any neurological problems in PROBAND?",
+		$questionArray = array("neurological_problems_proband"=>"Any neurological problems such as cerebral palsy or tuberous sclerosis in PROBAND?",
 		"genetic_conditions_proband"=>"Diagnosed/suspected genetic conditions or syndromes?",
-		"seizures_disorders"=>"Seizures/other neurological disorder (tuberous sclerosis)?",
 		"relative_with_disorder"=>"1st degree relative w/ MR, schizophrenia, bipolar or psychosis?",
-		"cns"=>"CNS problem/injury?",
-		"tested_for_fragile_x"=>"Tested for Fragile X syndrome?");
+		"cns"=>"CNS problem/injury such as a head injury or meningitis?",
+		"tested_for_fragile_x"=>"Tested for Fragile X syndrome?",
+        "premature_birth_proband"=>"Premature birth (< 37 weeks)?");
 		foreach($questionArray as $field=>$label) {
 			$this->form->addElement("select", $field, $label, $this->yesNo);
 		}
+        $this->addNumericElement("gestation_proband","Number of weeks of gestation");
+        $this->form->addFormRule(array(&$this,'tsi_Rules'));
 
-		$this->form->addElement('select', "in_utero_exposure_proband", "Exposure in-utero to meds, alcohol, or drugs (Rx or non)?", $this->yesNo);
+        $lb_options = array(null=>"",0=>"0 lbs",1=>"1 lbs",2=>"2 lbs",3=>"3 lbs",4=>"4 lbs",5=>"5 lbs",6=>"6 lbs",
+                       7=>"7 lbs",8=>"8 lbs",9=>"9 lbs",10=>"10 lbs",11=>"11 lbs",12=>"12 lbs",13=>"13 lbs",14=>"14 lbs",15=>"15 lbs");
+        $oz_options = array(null=>"",0=>"0 oz",1=>"1 oz",2=>"2 oz",3=>"3 oz",4=>"4 oz",5=>"5 oz",6=>"6 oz",
+                       7=>"7 oz",8=>"8 oz",9=>"9 oz",10=>"10 oz",11=>"11 oz",12=>"12 oz",13=>"13 oz",14=>"14 oz",15=>"15 oz");
 
-		$questionArray = array("substance_proband"=>"Name of substance (get spelling):",
+        $group[] =& $this->form->createElement("select", "birthweight_proband_lb", null, $lb_options);
+		$group[] =& $this->form->createElement("select", "birthweight_proband_oz", null, $oz_options);
+		$group[] =& $this->form->createElement("select", "birthweight_proband_lb_status", null, array(null=>"","not_answered"=>"Not Answered"));
+        $this->form->addGroup($group,"weight_proband_group","Birth Weight? in lbs., oz.", $this->_GUIDelimiter, false);
+        $this->XINRegisterRule("birthweight_proband_lb", array("birthweight_proband_lb_status{@}=={@}"),"Required lbs and oz","weight_proband_group");
+        $this->XINRegisterRule("birthweight_proband_oz", array("birthweight_proband_lb_status{@}=={@}"),"Required lbs and oz.","weight_proband_group");
+        unset($group);
+
+        $this->form->addElement('select', "complications_birth_proband", "Complications at birth?(ex. vaccum extraction)", $this->yesNo);
+        $this->form->addElement('select', "in_utero_exposure_proband", "Exposure in-utero to meds,tobacco, alcohol, or drugs<BR>(Rx or not including herbal and prenatal vitamins)?", $this->yesNo);
+		
+        $questionArray = array("substance_proband"=>"Name of substance (get spelling):",
 		"substance_amount_proband"=>"Amount of substance at one time:",
 		"time_exposure_proband"=>"Time period of exposure (weeks of pregnancy):");
 		foreach($questionArray as $field=>$label) {
 			$this->addTextElement("in_utero_" . $field, $this->indent . $label, array("in_utero_exposure_proband{@}=={@}yes"), "This field is required if there was in-utero exposure");
 		}
+        $this->form->addElement('select', "breastfed_proband", "Was the proband breastfed?", $this->yesNo);
+        $this->addTextElement("breastfed_duration_proband","If yes, how long?");
+        $this->form->addElement('select', "medication_in_breastfeed_proband", "Medications while breastfeeding(Rx or not including vitamins)?", $this->yesNo);
 
-		$this->addTextAreaElement("asd_further_information", "If yes to any of the above, obtain further information.", array("typical_or_asd_subject{@}=={@}asd"));
+        $questionArray = array("substance_breastfed_proband"=>"Name of substance (get spelling):",
+                "substance_breastfed_amount_proband"=>"Amount of substance at one time:",
+                "time_exposure_breastfed_proband"=>"Time period of exposure (weeks of pregnancy):");
+        foreach($questionArray as $field=>$label) {
+            $this->addTextElement( $field, $this->indent . $label, array("medication_in_breastfeed_proband{@}=={@}yes"), "This field is required if there was taken during breast feeding");
+        }
+
+        
+        $this->addTextAreaElement("asd_further_information", "If yes to any of the above, obtain further information.", array("typical_or_asd_subject{@}=={@}asd"));
 
 		$this->form->addElement("header", null, "Exclusionary Factors - Infant subjects");
 		$questionArray = array(
 		"neurological_problems_subject"=>"Any neurological problems in SUBJECT?",
 		"genetic_conditions_subject"=>"Diagnosed/suspected genetic conditions or syndromes?",
-		"seizures_or_neuro_disorder"=>"Seizures or other neurological disorder?",
+		"seizures_or_neuro_disorder"=>"Do they have or have had they had seizures?",
 		"cns_problems"=>"CNS problems?",
 		"congenital_heart_problems"=>"Congenital heart problems?",
 		"hearing_vision_impairments"=>"Significant hearing/vision problems?",
 		"diabetes"=>"Diabetes or gestational diabetes?",
+        "pregnancy_complication_subject"=>"Any complication during pregnancy?<BR>(toxemia, high blood pressure, thyroid disorder)",
 		"complications_birth" => "Any complications at birth?",
 		"premature_birth"=>"Premature birth (<37 weeks )?",
+        "jaundice_subject"=>"Diagnosed with jaundice(hyperbilirubinemia)?",
 		"low_birth_weight"=>"Birth weight <4lbs. 6oz. (2000 grams)?",
 		"tested_for_fragile_x_subject"=>"Tested for Fragile X syndrome?",
 		"delivery_problems"=>"Problems during delivery?");
@@ -304,16 +333,22 @@ class NDB_BVL_Instrument_tsi extends NDB_BVL_Instrument
 			if ($field == 'premature_birth') {
 			    $this->addTextElement('weeks_gestation', $this->indent . "Number of weeks gestation", array("premature_birth{@}=={@}yes"), "If premature, how many gestational weeks?");
 			}
-		}
+            if ($field == 'jaundice_subject') {
+                $this->addTextElement('lightherapy_subject', $this->indent . "If yes, light therapy required? # of days<BR>(exclusionary if >3days of lights;requiring transfusion;or due to maternal/fetal RH incompatibility)", array("jaundice_subject{@}=={@}yes"), "If diagnosed with jaundice,how many days of light therapy?");
+            }
 
-		$this->form->addElement('select', "in_utero_exposure", "Exposure in-utero to meds, alcohol, or drugs (Rx or non)?", $this->yesNo);
-
-		$questionArray = array("substance"=>"Name of substance (get spelling):",
-		"substance_amount"=>"Amount of substance at one time:",
-		"time_exposure"=>"Time period of exposure (weeks of pregnancy):");
-		foreach($questionArray as $field=>$label) {
-			$this->addTextElement("in_utero_" . $field, $this->indent . $label, array("in_utero_exposure{@}=={@}yes"), "This field is required if there was in-utero exposure");
 		}
+        $this->form->addElement('select', "breastfed_subject", "Did you or are you breastfeeding your infant?", $this->yesNo);
+        $this->addTextElement("breastfed_duration_subject","If finished, how long did you breastfeed?");
+        $this->form->addElement('select', "medication_in_breastfeed_subject", "Medications while breastfeeding(Rx or not including vitamins)?", $this->yesNo);
+
+        $questionArray = array("substance_breastfed_subject"=>"Name of substance (get spelling):",
+                "substance_breastfed_amount_subject"=>"Amount of substance at one time:",
+                "time_exposure_breastfed_subject"=>"Time period of exposure (weeks of pregnancy):");
+        foreach($questionArray as $field=>$label) {
+            $this->addTextElement($field, $this->indent . $label, array("medication_in_breastfeed_subject{@}=={@}yes"), "This field is required if medication was taken during breast feeding");
+        }
+
 		$this->addTextAreaElement("further_information", "If yes to any of the above, obtain further information.");
 	}
 
@@ -330,9 +365,14 @@ class NDB_BVL_Instrument_tsi extends NDB_BVL_Instrument
 		$this->addTextElement("med_his_q_6_allergies_describe", $this->indent . "If yes, describe:", array("med_his_q_6_allergies{@}=={@}yes"), "This field is required if there are allergies");
 		$this->form->addElement("select", "med_his_q_7_doctor", "7. Has X seen a doctor over the last 12 months?", $this->yesNo);
 		$this->form->addElement("select", "med_his_q_8_brain_MRI", "8. Has X ever had an MRI of the brain?", $this->yesNo);
-		$this->addTextElement("med_his_q_8_brain_MRI_results", $this->indent . "If yes, what were the results?", array("med_his_q_8_brain_MRI{@}=={@}yes"), "This field is required if a brain MRI was done.");
+		$this->form->addElement("select","med_his_q_8_brain_MRI_results", $this->indent . "If yes, what were the results?", array(null=>"","typical"=>"Typical","atypical"=>"Atypical","not_answered"=>"Not Answered"));
+        $this->XINRegisterRule ( "med_his_q_8_brain_MRI_results", array("med_his_q_8_brain_MRI{@}=={@}yes"),"Please specify results");
+        $this->addTextElement("med_his_q_8_brain_MRI_notes", $this->indent . "Notes", array("med_his_q_8_brain_MRI_results{@}=={@}atypical"));
 		$this->form->addElement("select", "med_his_q_9_anethesia", "9. Has X ever had anesthesia or other forms of sedation?", $this->yesNo);
-		$this->addTextElement("med_his_q_9_anethesia_problems", $this->indent . "Problems with sedation?", array("med_his_q_9_anethesia{@}=={@}yes"), "This field is required if there were sedation problems.");
+		$this->form->addElement("select","med_his_q_9_anethesia_problems", $this->indent . "Problems with sedation?",$this->yesNo);
+        $this->XINRegisterRule ( "med_his_q_9_anethesia_problems", array("med_his_q_9_anethesia{@}=={@}yes"),"Please specify results");
+        $this->addTextElement("med_his_q_9_anethesia_notes", $this->indent . "Notes", array("med_his_q_9_anethesia_problems{@}=={@}yes"));
+
 		$this->addTextElement("med_his_q_10_nap", "10. Does X nap during the day?");
 		$this->addTextElement("med_his_q_11_nap_how_long", "11. When & how long?");
 		$this->form->addElement("select", "med_his_q_12_likelihood_sleep", "12. On a scale of 1-10, please rate the likelihood of your child sleeping through a scan.", array(null=>"", 1=>"1", 2=>"2",  3=>"3", 4=>"4", 5=>"5", 6=>"6", 7=>"7", 8=>"8", 9=>"9", 10=>"10", "not_answered"=>"Not Answered"));
@@ -357,6 +397,14 @@ class NDB_BVL_Instrument_tsi extends NDB_BVL_Instrument
 		$this->form->addElement("static", null, "Disposition");
 		$this->form->addElement("select", "disposition", "Proceed to next level beyond screening?", $this->yesNo);
 	}
-	
+    function tsi_Rules($values) {
+        $gestation = intval ($values["gestation_proband"]);
+        if($gestation < 0 || $gestation > 45){
+            return array('gestation_proband' => 'Please enter value between 0-45');
+
+        }
+        return array();
+    }
+
 }
 ?>
