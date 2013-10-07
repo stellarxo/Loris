@@ -1,7 +1,10 @@
     <div id="demographics">
-        <h2 class="statsH2">General statistics{if $CurrentSite} for {$CurrentSite.Name}{/if}</h2>
+        <h2 class="statsH2">General statistics{if $CurrentSite} for {$CurrentSite.Name}{/if}
+             {if $CurrentProject} for {$CurrentProject.Name} {/if}</h2>
         
        {html_options id="DemographicSite" options=$Sites name="DemographicSite" selected=$CurrentSite.ID}
+       {html_options id="DemographicProject" options=$Projects name="DemographicProject" selected=$CurrentProject.ID}
+
         <script type="text/javascript" src="js/modules/form_stats_demographic.js"></script>
         <button  onClick="updateDemographicTab()">Submit Query</button>
         <table class="data generalStats">
