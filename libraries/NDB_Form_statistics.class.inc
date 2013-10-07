@@ -27,7 +27,7 @@ class NDB_Form_statistics extends NDB_Form
         return FALSE;
     }
 
-    function render_stats_table($header, $subcats, $visits, $dropdown_name, $dropdown_opt, $dropdown_selected, $centres, $data, $Subsection="") {
+    function render_stats_table($header, $subcats, $visits, $dropdown_name, $dropdown_opt, $dropdown_selected, $centres, $data, $Subsection="",$projectID=null) {
         $tpl_data = array();
         $tpl_data['test_name'] = $_REQUEST['test_name'];
         $tpl_data['Subsection'] = $Subsection;
@@ -35,7 +35,7 @@ class NDB_Form_statistics extends NDB_Form
         $smarty = new Smarty_neurodb();
         $tpl_data['Header'] = $header;
         $tpl_data['Subcategories'] = $subcats;
-        $tpl_data['Subprojects'] = Utility::getSubprojectList(); //array('1' => '6 Month Recruit', '2' => '12 Month Recruit', '3' => 'Control');
+        $tpl_data['Subprojects'] = Utility::getSubprojectsForProject($projectID); //array('1' => '6 Month Recruit', '2' => '12 Month Recruit', '3' => 'Control');
         $tpl_data['DropdownName'] = $dropdown_name;
         $tpl_data['DropdownOptions'] = $dropdown_opt;
         $tpl_data['DropdownSelected'] = $dropdown_selected;
@@ -591,15 +591,27 @@ class NDB_Form_statistics extends NDB_Form
         foreach(Utility::getProjectList() as $key => $value) {
             $projects[$key] = $value;
         }
-        $subprojects = Utility::getSubprojectList(); //array('1' => '6 Month Recruit', '2' => '12 Month Recruit', '3' => 'Control');
         if(isset($_REQUEST['DemographicSite']) && $_REQUEST['DemographicSite'] != '') {
             $ExtraSite_Criteria = 'AND (c.CenterID IS NULL OR c.CenterID=' . $_REQUEST['DemographicSite'] . ')';
         }
         else {
             $ExtraSite_Criteria = '';
         }
+        $currentProject = null;
+        if(isset($_REQUEST['DemographicProject']) && $_REQUEST['DemographicProject'] != '') { 
+            $ExtraProject_Criteria = ' AND (c.ProjectID IS NULL OR c.ProjectID=' . $_REQUEST['DemographicProject'] . ')';
+            $currentProject = $_REQUEST['DemographicProject'];
+            $this->tpl_data['CurrentProject'] = array('ID' => $currentProject, 'Name' => $projects[$currentProject]);
 
+        } else {
+            $ExtraProject_Criteria = '';
+        }
+        $subprojects = Utility::getSubprojectsForProject($currentProject); //array('1' => '6 Month Recruit', '2' => '12 Month Recruit', '3' => 'Control');
         $this->tpl_data['Subprojects'] = $subprojects;
+        foreach($subprojects as $key=>$val) {
+           $subprojList .= $key.",";    
+        }
+        $subprojList = substr($subprojList, 0, -1);
         $this->tpl_data['Projects'] = $projects;
         $DB->select("SELECT s.subprojectid as rowid, 
             COUNT(DISTINCT(c.PSCID)) as val 
@@ -609,7 +621,7 @@ class NDB_Form_statistics extends NDB_Form
             AND (s.Current_stage IN ('Visit', 'Screening')) 
             AND COALESCE(s.Screening,'') NOT IN ('Failure', 'Withdrawal')
             AND COALESCE(s.Visit,'') NOT IN ('Failure', 'Withdrawal')
-            $ExtraSite_Criteria
+            $ExtraSite_Criteria $ExtraProject_Criteria
             GROUP BY s.subprojectid", $result);
         foreach($result as $row) {
             $this->tpl_data['registered'][$row['rowid']]['visit'] = $row['val'];
@@ -617,14 +629,14 @@ class NDB_Form_statistics extends NDB_Form
 
 
 
-            $DB->select("SELECT s.subprojectid as rowid, count(DISTINCT(c.PSCID)) as val from candidate as c left join session s ON (s.CandID=c.CandID) WHERE coalesce(s.active, 'Y')='Y' AND c.CenterID <> '1' and c.PSCID <> 'scanner' and coalesce(s.visit_label, 'v06') in ('v06', 'v12', 'v18', 'v24', 'v36') AND c.Active='Y' $ExtraSite_Criteria group by s.subprojectid", $result);
+            $DB->select("SELECT s.subprojectid as rowid, count(DISTINCT(c.PSCID)) as val from candidate as c left join session s ON (s.CandID=c.CandID) WHERE coalesce(s.active, 'Y')='Y' AND c.CenterID <> '1' and c.PSCID <> 'scanner' and coalesce(s.visit_label, 'v06') in ('v06', 'v12', 'v18', 'v24', 'v36') AND c.Active='Y' $ExtraSite_Criteria $ExtraProject_Criteria group by s.subprojectid", $result);
             foreach($result as $row) {
                 $this->tpl_data['registered'][$row['rowid']]['total'] = $row['val'];
                 $this->tpl_data['registered']['total'] += $row['val'];
             }
 
             // Total, explicitly calculated instead of added in the loop to ensure there's no one double registered in 2 different cohorts
-            $DB->select("SELECT count(distinct(c.PSCID)) from candidate as c WHERE c.PSCID<>'scanner' AND c.CenterID<>'1' AND c.Active='Y' $ExtraSite_Criteria", $total);
+            $DB->select("SELECT count(distinct(c.PSCID)) from candidate as c WHERE c.PSCID<>'scanner' AND c.CenterID<>'1' AND c.Active='Y' $ExtraSite_Criteria $ExtraProject_Criteria", $total);
             if (Utility::isErrorX($total)) {
                 return PEAR::raiseError("DB Error: ".$total->getMessage());
             }
@@ -643,7 +655,7 @@ class NDB_Form_statistics extends NDB_Form
                 AND c.Active='Y'
                 AND (f.Administration = 'All' OR f.Administration='Partial')
                 AND s.Current_stage <> 'Recycling Bin'
-                $ExtraSite_Criteria
+                $ExtraSite_Criteria $ExtraProject_Criteria
                 GROUP BY s.SubprojectID", $result);
             foreach($result as $row) {
                 $this->tpl_data['edi'][$row['rowid']]['complete'] = $row['val'];
@@ -659,7 +671,7 @@ class NDB_Form_statistics extends NDB_Form
                 AND f.Administration <> 'None'
                 AND mp.T1_Scan_done='Complete'
                 AND s.Current_stage <> 'Recycling Bin'
-                $ExtraSite_Criteria
+                $ExtraSite_Criteria $ExtraProject_Criteria
                 GROUP BY s.SubprojectID", $result);
             foreach($result as $row) {
                 $this->tpl_data['scanned'][$row['rowid']]['complete'] = $row['val'];
@@ -679,15 +691,19 @@ class NDB_Form_statistics extends NDB_Form
         $this->tpl_data['Sites'] = array('' => 'All Sites');
         foreach ($centers as $row) {
             $this->tpl_data['Sites'][$row['NumericID']] = $row['LongName'];
+            $siteList .= $row['NumericID'].",";
             if($_REQUEST['DemographicSite'] == $row['NumericID']) {
                 $this->tpl_data['CurrentSite'] = array('ID' => $row['NumericID'], 'Name' => $row['LongName']);
+                 $currentSite['ID'] = $row['LongName'];
+
             }
 
         }
-        $this->tpl_data['Subprojects'] = Utility::getSubprojectList(); //array('1' => '6 Month Recruit', '2' => '12 Month Recruit', '3' => 'Control');
+        $siteList = substr($siteList, 0, -1);
+
+       // $this->tpl_data['Subprojects'] = Utility::getSubprojectList(); //array('1' => '6 Month Recruit', '2' => '12 Month Recruit', '3' => 'Control');
         $Visits = array ('6 Month' => 'v06', '12 Month' => 'v12', '18 Month' => 'v18', '24 Month' => 'v24', '36 Month' => 'v36');
         $this->tpl_data['Visits'] = $Visits;
-
         $instruments  = array_merge(
             array( '' => 'Recruit Gender Breakdown'),
             Utility::getAllInstruments()
@@ -732,7 +748,7 @@ class NDB_Form_statistics extends NDB_Form
                 AND f.CommentID NOT LIKE 'DDE%' AND (f.Data_entry IS NULL OR f.Data_entry <> 'Complete')
                 GROUP BY c.CenterID, SubprojectID, VLabel, Subcat
                 ", $result);
-            $this->tpl_data['RecruitsTable'] = $this->render_stats_table("Data Entry Completion Status for $_REQUEST[DemographicInstrument]", $Subcategories, $Visits, "DemographicInstrument", $instruments, $_REQUEST['DemographicInstrument'], $centers, $result, "demographics");
+            $this->tpl_data['RecruitsTable'] = $this->render_stats_table("Data Entry Completion Status for $projects[$currentProject] $_REQUEST[DemographicInstrument]", $Subcategories, $Visits, "DemographicInstrument", $instruments, $_REQUEST['DemographicInstrument'], $centers, $result, "demographics",$currentProject);
         } else {
             $Subcategories = array('Male', 'Female');
             $DB->select("SELECT c.CenterID as CenterID, 
@@ -748,14 +764,14 @@ class NDB_Form_statistics extends NDB_Form
                     FROM session s JOIN candidate c ON (s.CandID=c.CandID) 
                     WHERE s.active='Y' AND s.CenterID <> '1'
                     AND ((s.Current_stage IN ('Visit', 'Screening')
-                    AND s.SubprojectID IN (1, 2)) OR s.SubprojectID=3) 
+                    AND s.SubprojectID IN ($subprojList))) 
                     AND COALESCE(s.Screening,'') NOT IN ('Failure', 'Withdrawal')
                     AND COALESCE(s.Visit,'') NOT IN ('Failure', 'Withdrawal')
                     GROUP BY c.CenterID, SubprojectID, VLabel, Subcat", $result);
             if (Utility::isErrorX($result)) {
                 return PEAR::raiseError("DB Error: ".$result->getMessage());
             }
-            $this->tpl_data['RecruitsTable'] = $this->render_stats_table("Breakdown of Registered Candidates", $Subcategories, $Visits, "DemographicInstrument", $instruments, '', $centers, $result, "demographics");
+            $this->tpl_data['RecruitsTable'] = $this->render_stats_table("Breakdown of Registered Candidates $projects[$currentProject]", $Subcategories, $Visits, "DemographicInstrument", $instruments, '', $centers, $result, "demographics",$currentProject);
 
         }
     }
