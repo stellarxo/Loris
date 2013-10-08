@@ -27,17 +27,16 @@ class NDB_BVL_Instrument_BSRC extends NDB_BVL_Instrument
 
        //The array of dates/timestamps to convert to database dates/timestamps
        //Any HTML_Quickform date elements must be listed here
-       $this->dateTimeFields=array("Date_taken",
-                                   "startdate_occupationaltherapy","stopdate_occupationaltherapy",
-                                   "startdate_physicaltherapy","stopdate_physicaltherapy",
-                                   "startdate_speechlangtherapy","stopdate_speechlangtherapy",
-                                   "startdate_behaviorintervention","stopdate_behaviorintervention",
-                                   "startdate_other","stopdate_other");
+       $this->dateTimeFields=array("Date_taken");
 
        //The array of selects with multiple answers allowed
        //Any HTML_Quickform multiple selects must be listed here
        $this->_selectMultipleElements = array('q10_therapyoptions');
-
+       $this->monthYearFields = array("startdate_occupationaltherapy","stopdate_occupationaltherapy",
+               "startdate_physicaltherapy","stopdate_physicaltherapy",
+               "startdate_speechlangtherapy","stopdate_speechlangtherapy",
+               "startdate_behaviorintervention","stopdate_behaviorintervention",
+               "startdate_other","stopdate_other");
        // required fields for data entry completion status
        $this->_requiredElements = array('Examiner', "Date_taken");
 
@@ -88,7 +87,7 @@ class NDB_BVL_Instrument_BSRC extends NDB_BVL_Instrument
                'addEmptyOption' => true,
                'emptyOptionValue' => null
                );
-       $this->monthYearOptions = array(
+       $monthYearOptions = array(
                'language' => 'en',
                'format'   => 'YM',
                'minYear'  => $config->getSetting('startYear'),
@@ -120,13 +119,13 @@ class NDB_BVL_Instrument_BSRC extends NDB_BVL_Instrument
      $this->addSelect("servicetype_occupationaltherapy","Received occupational therapy",$this->yesNo);
      $this->XINRegisterRule("servicetype_occupationaltherapy", array("q5_service_delay{@}=={@}yes"));
       
-     $this->addMonthYear("startdate_occupationaltherapy", "Date:", $this->monthYearOptions);
+     $this->addMonthYear("startdate_occupationaltherapy", "Date:", $monthYearOptions);
 
      $this->XINRegisterRule("startdate_occupationaltherapy", array("servicetype_occupationaltherapy{@}=={@}yes"), "Required");
 
      $this->addSelect("continue_occupationaltherapy","Still receiving intervention?",$this->yesNo);
      $this->XINRegisterRule("continue_occupationaltherapy",array("continue_occupationaltherapy{@}=={@}NEVER_REQUIRED"));
-     $this->addMonthYear("stopdate_occupationaltherapy","If, No, date stopped",$this->monthYearOptions);
+     $this->addMonthYear("stopdate_occupationaltherapy","If, No, date stopped",$monthYearOptions);
      $this->XINRegisterRule("stopdate_occupationaltherapy", array("continue_occupationaltherapy{@}=={@}no"), "Required");
 
      $this->addSelect("indgrp_occupationaltherapy","Individual or Group",$this->indgrp);
@@ -144,14 +143,14 @@ class NDB_BVL_Instrument_BSRC extends NDB_BVL_Instrument
      $this->addSelect("servicetype_physicaltherapy","Received physical therapy",$this->yesNo);
      $this->XINRegisterRule("servicetype_physicaltherapy", array("servicetype_physicaltherapy{@}=={@}NEVER_REQUIRED"));
       
-     $this->addMonthYear("startdate_physicaltherapy", "Date:", $this->monthYearOptions);
+     $this->addMonthYear("startdate_physicaltherapy", "Date:", $monthYearOptions);
 
      $this->XINRegisterRule("startdate_physicaltherapy", array("servicetype_physicaltherapy{@}=={@}yes"), "Required");
 
      $this->addSelect("continue_physicaltherapy","Still receiving intervention?",$this->yesNo);
      $this->XINRegisterRule("continue_physicaltherapy", array("continue_physicaltherapy{@}=={@}NEVER_REQUIRED"), "Required");
 
-     $this->addMonthYear("stopdate_physicaltherapy","If, No, date stopped",$this->monthYearOptions);
+     $this->addMonthYear("stopdate_physicaltherapy","If, No, date stopped",$monthYearOptions);
      $this->XINRegisterRule("stopdate_physicaltherapy", array("continue_physicaltherapy{@}=={@}no"), "Required");
 
      $this->addSelect("indgrp_physicaltherapy","Individual or Group",$this->indgrp);
@@ -169,14 +168,14 @@ class NDB_BVL_Instrument_BSRC extends NDB_BVL_Instrument
      $this->addSelect("servicetype_speechlangtherapy","Received speechlang therapy",$this->yesNo);
      $this->XINRegisterRule("servicetype_speechlangtherapy", array("servicetype_speechlangtherapy{@}=={@}NEVER_REQUIRED"));
       
-     $this->addMonthYear("startdate_speechlangtherapy", "Date:", $this->monthYearOptions);
+     $this->addMonthYear("startdate_speechlangtherapy", "Date:", $monthYearOptions);
 
      $this->XINRegisterRule("startdate_speechlangtherapy", array("servicetype_speechlangtherapy{@}=={@}yes"), "Required");
 
      $this->addSelect("continue_speechlangtherapy","Still receiving intervention?",$this->yesNo);
      $this->XINRegisterRule("continue_speechlangtherapy", array("continue_speechlangtherapy{@}=={@}NEVER_REQUIRED"), "Required");
 
-     $this->addMonthYear("stopdate_speechlangtherapy","If, No, date stopped",$this->monthYearOptions);
+     $this->addMonthYear("stopdate_speechlangtherapy","If, No, date stopped",$monthYearOptions);
      $this->XINRegisterRule("stopdate_speechlangtherapy", array("continue_speechlangtherapy{@}=={@}no"), "Required");
 
      $this->addSelect("indgrp_speechlangtherapy","Individual or Group",$this->indgrp);
@@ -194,14 +193,14 @@ class NDB_BVL_Instrument_BSRC extends NDB_BVL_Instrument
      $this->addSelect("servicetype_behaviorintervention","Received behaviorintervention therapy",$this->yesNo);
      $this->XINRegisterRule("servicetype_behaviorintervention", array("servicetype_behaviorintervention{@}=={@}NEVER_REQUIRED"));
       
-     $this->addMonthYear("startdate_behaviorintervention", "Date:", $this->monthYearOptions);
+     $this->addMonthYear("startdate_behaviorintervention", "Date:", $monthYearOptions);
 
      $this->XINRegisterRule("startdate_behaviorintervention", array("servicetype_behaviorintervention{@}=={@}yes"), "Required");
 
      $this->addSelect("continue_behaviorintervention","Still receiving intervention?",$this->yesNo);
      $this->XINRegisterRule("continue_behaviorintervention", array("continue_behaviorintervention{@}=={@}NEVER_REQUIRED"), "Required");
 
-     $this->addMonthYear("stopdate_behaviorintervention","If, No, date stopped",$this->monthYearOptions);
+     $this->addMonthYear("stopdate_behaviorintervention","If, No, date stopped",$monthYearOptions);
      $this->XINRegisterRule("stopdate_behaviorintervention", array("continue_behaviorintervention{@}=={@}no"), "Required");
 
      $this->addSelect("indgrp_behaviorintervention","Individual or Group",$this->indgrp);
@@ -219,14 +218,14 @@ class NDB_BVL_Instrument_BSRC extends NDB_BVL_Instrument
      $this->addSelect("servicetype_other","Received other therapy",$this->yesNo);
      $this->XINRegisterRule("servicetype_other", array("servicetype_other{@}=={@}NEVER_REQUIRED"));
 
-     $this->addMonthYear("startdate_other", "Date:", $this->monthYearOptions);
+     $this->addMonthYear("startdate_other", "Date:", $monthYearOptions);
 
      $this->XINRegisterRule("startdate_other", array("servicetype_other{@}=={@}yes"), "Required");
 
      $this->addSelect("continue_other","Still receiving intervention?",$this->yesNo);
      $this->XINRegisterRule("continue_other", array("continue_other{@}=={@}NEVER_REQUIRED"), "Required");
 
-     $this->addMonthYear("stopdate_other","If, No, date stopped",$this->monthYearOptions);
+     $this->addMonthYear("stopdate_other","If, No, date stopped",$monthYearOptions);
      $this->XINRegisterRule("stopdate_other", array("continue_other{@}=={@}no"), "Required");
 
      $this->addSelect("indgrp_other","Individual or Group",$this->indgrp);
@@ -374,65 +373,7 @@ class NDB_BVL_Instrument_BSRC extends NDB_BVL_Instrument
                return $errors;
 
       }
-      function _saveValues($values)
-      {
-          if(!empty($this->_selectMultipleElements)){
-              foreach($this->_selectMultipleElements AS $elname){
-                  if(isset($values[$elname]) && is_array($values[$elname])){
-                      $values[$elname]=implode("{@}",$values[$elname]);
-                  }
-              }
-          }
-
-          if(isset($values['Date_taken'])) {
-              $date = $values['Date_taken'];
-              if(!empty($date['Y']) && !empty($date['M']) && !empty($date['d'])) {
-                  $values['Date_taken'] = $this->_getDatabaseDate($date); 
-                  $this->_saveCandidateAge($values);
-              }  else {
-                  unset($values['Date_taken']);
-              }
-          }
-          
-          if(isset($values['date_lastVisit_date'])) {
-              $date = $values['date_lastVisit_date'];
-              if(!empty($date['Y']) && !empty($date['M']) && !empty($date['d'])) {
-                  $values['date_lastVisit_date'] = $this->_getDatabaseDate($date); 
-              }  else {
-                  unset($values['date_lastVisit_date']);
-              }
-          }
-          $servicelist = array('occupationaltherapy','physicaltherapy',
-                               'speechlangtherapy','behaviorintervention','other');
-          foreach($servicelist as $list ) {
-              $start = 'startdate_'.$list;
-              $stop  = 'stopdate_'.$list;
-              if(isset($values[$start])) {
-                  $date = $values[$start];
-                  $date['d'] = 15;
-                  if(!empty($date['Y']) && !empty($date['M']) && !empty($date['d'])) {
-                      $values[$start] = $this->_getDatabaseDate($date); 
-                  }  else {
-                      unset($values[$start]);
-                  }
-              }
-              if(isset($values[$stop])) {
-                  $date = $values[$stop];
-                  if(!empty($date['Y']) && !empty($date['M']) && !empty($date['d'])) {
-                      $values[$stop] = $this->_getDatabaseDate($date);
-                  }  else {
-                      unset($values[$stop]);
-                  }
-              }
-
-          }
-            unset($values['candID'], $values['sessionID'], $values['commentID'], $values['test_name'], $values['page'], $values['fire_away'], $values['subtest'], $values['MAX_FILE_SIZE'], $values['directions_file']);
-
-          $this->_save($values);
-
-      }
-
-}
+   }
 
 
 ?>
