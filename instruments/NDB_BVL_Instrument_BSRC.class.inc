@@ -36,7 +36,7 @@ class NDB_BVL_Instrument_BSRC extends NDB_BVL_Instrument
 
        //The array of selects with multiple answers allowed
        //Any HTML_Quickform multiple selects must be listed here
-       $this->_selectMultipleElements = array();
+       $this->_selectMultipleElements = array('q10_therapyoptions');
 
        // required fields for data entry completion status
        $this->_requiredElements = array('Examiner', "Date_taken");
@@ -88,36 +88,45 @@ class NDB_BVL_Instrument_BSRC extends NDB_BVL_Instrument
                'addEmptyOption' => true,
                'emptyOptionValue' => null
                );
+       $this->monthYearOptions = array(
+               'language' => 'en',
+               'format'   => 'YM',
+               'minYear'  => $config->getSetting('startYear'),
+               'maxYear'  => $config->getSetting('endYear'),
+               'addEmptyOption' => true,
+               'emptyOptionValue' => null
+               );
+
 
         $this->addDateElement('date_lastVisit', "<BR>Date of Last Visit");
          
-        $this->addSelect("q1_earlyintervention_birthtothreeprg","<BR>1) Since your last visit did a professional refer your child to an <strong>early intervention or birth-to-three program </strong>? (Depending on where you live, these programs may have different names.)", $this->yesNo);
-       $this->addSelect("q2_receive_earlyintervention_birthtothreeprg","<BR>2) Since your last visit, did your child <strong>receive any early intervention or birth-to-three program services?</strong>", $this->yesNo);
+        $this->addSelect("q1_earlyintervention_birthtothreeprg","<BR><strong>1)</strong> Since your last visit did a professional refer your child to an early intervention or birth-to-three program? (Depending on where you live, these programs may have different names.)", $this->yesNo);
+       $this->addSelect("q2_receive_earlyintervention_birthtothreeprg","<BR><strong>2)</strong> Since your last visit, did your child receive any early intervention or birth-to-three program services?", $this->yesNo);
        $this->addNumericElement("hrs_earlyintervention_birthtothreeprg","Average hours per week");
        $this->XINRegisterRule("hrs_earlyintervention_birthtothreeprg", array("hrs_earlyintervention_birthtothreeprg{@}=={@}NEVER_REQUIRED"));
        
        $this->addNumericElement("total_earlyintervention_birthtothreeprg","Total hours since last visit");
        $this->XINRegisterRule("total_earlyintervention_birthtothreeprg", array("total_earlyintervention_birthtothreeprg{@}=={@}NEVER_REQUIRED"));
            
-       $this->addSelect("q3_communityact","<BR>3) Since your last visit, did a <strong>professional recommend</strong> that your child attend any community based <strong>classes/activities designed to inscrease socialization</strong> (eg. MommyandMe, Gymboree, etc)",$this->yesNo);
+       $this->addSelect("q3_communityact","<BR><strong>3)</strong> Since your last visit, did a professional recommend that your child attend any community based classes/activities designed to inscrease socialization (eg. MommyandMe, Gymboree, etc)",$this->yesNo);
  
-      $this->addSelect("q4_participate_social","<BR>4) Since your last visit did your child <strong>participate</strong> in any classes/activities designed to increase socialization whether or not recommended by a professional(eg. MommyandMe, Gymboree etc.)",$this->yesNo);
+      $this->addSelect("q4_participate_social","<BR><strong>4)</strong> Since your last visit did your child participate in any classes/activities designed to increase socialization whether or not recommended by a professional(eg. MommyandMe, Gymboree etc.)",$this->yesNo);
  
-     $this->addSelect("q5_service_delay","<BR>5) Since your last visit, did your child receive services for developmental delays of any kind (such as motor orlanguage delays) or concerns about delay?",$this->yesNo);
+     $this->addSelect("q5_service_delay","<BR><strong>5)</strong> Since your last visit, did your child receive services for developmental delays of any kind (such as motor orlanguage delays) or concerns about delay?",$this->yesNo);
 
-     $this->addLabel("<BR> <strong>If YES to #5, please complete the following:</strong>");
+     $this->addLabel("<BR> If YES to #5, please complete the following:");
      
-     $this->addHeader("<BR><strong>Occupational Therapy</strong>");
+     $this->addHeader("<BR>Occupational Therapy");
      $this->addSelect("servicetype_occupationaltherapy","Received occupational therapy",$this->yesNo);
-     $this->XINRegisterRule("servicetype_occupationaltherapy", array("servicetype_occupationaltherapy{@}=={@}NEVER_REQUIRED"));
+     $this->XINRegisterRule("servicetype_occupationaltherapy", array("q5_service_delay{@}=={@}yes"));
       
-     $this->addBasicDate("startdate_occupationaltherapy", "Date:", $this->dateOptions);
+     $this->addMonthYear("startdate_occupationaltherapy", "Date:", $this->monthYearOptions);
 
      $this->XINRegisterRule("startdate_occupationaltherapy", array("servicetype_occupationaltherapy{@}=={@}yes"), "Required");
 
      $this->addSelect("continue_occupationaltherapy","Still receiving intervention?",$this->yesNo);
-     $this->XINRegisterRule("continue_occupationaltherapy",array("servicetype_occupationaltherapy{@}=={@}yes"));
-     $this->addBasicDate("stopdate_occupationaltherapy","If, No, date stopped",$this->dateOptions);
+     $this->XINRegisterRule("continue_occupationaltherapy",array("continue_occupationaltherapy{@}=={@}NEVER_REQUIRED"));
+     $this->addMonthYear("stopdate_occupationaltherapy","If, No, date stopped",$this->monthYearOptions);
      $this->XINRegisterRule("stopdate_occupationaltherapy", array("continue_occupationaltherapy{@}=={@}no"), "Required");
 
      $this->addSelect("indgrp_occupationaltherapy","Individual or Group",$this->indgrp);
@@ -131,18 +140,18 @@ class NDB_BVL_Instrument_BSRC extends NDB_BVL_Instrument
     
     //Physical Therapy
 
-     $this->addHeader("<BR><strong>Physical Therapy</strong>");
+     $this->addHeader("<BR>Physical Therapy");
      $this->addSelect("servicetype_physicaltherapy","Received physical therapy",$this->yesNo);
      $this->XINRegisterRule("servicetype_physicaltherapy", array("servicetype_physicaltherapy{@}=={@}NEVER_REQUIRED"));
       
-     $this->addBasicDate("startdate_physicaltherapy", "Date:", $this->dateOptions);
+     $this->addMonthYear("startdate_physicaltherapy", "Date:", $this->monthYearOptions);
 
      $this->XINRegisterRule("startdate_physicaltherapy", array("servicetype_physicaltherapy{@}=={@}yes"), "Required");
 
      $this->addSelect("continue_physicaltherapy","Still receiving intervention?",$this->yesNo);
-     $this->XINRegisterRule("continue_physicaltherapy", array("servicetype_physicaltherapy{@}=={@}yes"), "Required");
+     $this->XINRegisterRule("continue_physicaltherapy", array("continue_physicaltherapy{@}=={@}NEVER_REQUIRED"), "Required");
 
-     $this->addBasicDate("stopdate_physicaltherapy","If, No, date stopped",$this->dateOptions);
+     $this->addMonthYear("stopdate_physicaltherapy","If, No, date stopped",$this->monthYearOptions);
      $this->XINRegisterRule("stopdate_physicaltherapy", array("continue_physicaltherapy{@}=={@}no"), "Required");
 
      $this->addSelect("indgrp_physicaltherapy","Individual or Group",$this->indgrp);
@@ -156,18 +165,18 @@ class NDB_BVL_Instrument_BSRC extends NDB_BVL_Instrument
 
      //Speech-language therapy
      
-     $this->addHeader("<BR><strong>Speech Language Therapy</strong>");
+     $this->addHeader("<BR>Speech Language Therapy");
      $this->addSelect("servicetype_speechlangtherapy","Received speechlang therapy",$this->yesNo);
      $this->XINRegisterRule("servicetype_speechlangtherapy", array("servicetype_speechlangtherapy{@}=={@}NEVER_REQUIRED"));
       
-     $this->addBasicDate("startdate_speechlangtherapy", "Date:", $this->dateOptions);
+     $this->addMonthYear("startdate_speechlangtherapy", "Date:", $this->monthYearOptions);
 
      $this->XINRegisterRule("startdate_speechlangtherapy", array("servicetype_speechlangtherapy{@}=={@}yes"), "Required");
 
      $this->addSelect("continue_speechlangtherapy","Still receiving intervention?",$this->yesNo);
-     $this->XINRegisterRule("continue_speechlangtherapy", array("servicetype_speechlangtherapy{@}=={@}yes"), "Required");
+     $this->XINRegisterRule("continue_speechlangtherapy", array("continue_speechlangtherapy{@}=={@}NEVER_REQUIRED"), "Required");
 
-     $this->addBasicDate("stopdate_speechlangtherapy","If, No, date stopped",$this->dateOptions);
+     $this->addMonthYear("stopdate_speechlangtherapy","If, No, date stopped",$this->monthYearOptions);
      $this->XINRegisterRule("stopdate_speechlangtherapy", array("continue_speechlangtherapy{@}=={@}no"), "Required");
 
      $this->addSelect("indgrp_speechlangtherapy","Individual or Group",$this->indgrp);
@@ -181,18 +190,18 @@ class NDB_BVL_Instrument_BSRC extends NDB_BVL_Instrument
 
      //Comprehensive behavioral educational interventions
 
-     $this->addHeader("<BR><strong>Comprehensive behavioral/educational interventions</strong>");
+     $this->addHeader("<BR>Comprehensive behavioral/educational interventions");
      $this->addSelect("servicetype_behaviorintervention","Received behaviorintervention therapy",$this->yesNo);
      $this->XINRegisterRule("servicetype_behaviorintervention", array("servicetype_behaviorintervention{@}=={@}NEVER_REQUIRED"));
       
-     $this->addBasicDate("startdate_behaviorintervention", "Date:", $this->dateOptions);
+     $this->addMonthYear("startdate_behaviorintervention", "Date:", $this->monthYearOptions);
 
      $this->XINRegisterRule("startdate_behaviorintervention", array("servicetype_behaviorintervention{@}=={@}yes"), "Required");
 
      $this->addSelect("continue_behaviorintervention","Still receiving intervention?",$this->yesNo);
-     $this->XINRegisterRule("continue_behaviorintervention", array("servicetype_behaviorintervention{@}=={@}yes"), "Required");
+     $this->XINRegisterRule("continue_behaviorintervention", array("continue_behaviorintervention{@}=={@}NEVER_REQUIRED"), "Required");
 
-     $this->addBasicDate("stopdate_behaviorintervention","If, No, date stopped",$this->dateOptions);
+     $this->addMonthYear("stopdate_behaviorintervention","If, No, date stopped",$this->monthYearOptions);
      $this->XINRegisterRule("stopdate_behaviorintervention", array("continue_behaviorintervention{@}=={@}no"), "Required");
 
      $this->addSelect("indgrp_behaviorintervention","Individual or Group",$this->indgrp);
@@ -206,18 +215,18 @@ class NDB_BVL_Instrument_BSRC extends NDB_BVL_Instrument
 
 
      //Other
-     $this->addHeader("<BR><strong>Other</strong>");
+     $this->addHeader("<BR>Other");
      $this->addSelect("servicetype_other","Received other therapy",$this->yesNo);
      $this->XINRegisterRule("servicetype_other", array("servicetype_other{@}=={@}NEVER_REQUIRED"));
 
-     $this->addBasicDate("startdate_other", "Date:", $this->dateOptions);
+     $this->addMonthYear("startdate_other", "Date:", $this->monthYearOptions);
 
      $this->XINRegisterRule("startdate_other", array("servicetype_other{@}=={@}yes"), "Required");
 
      $this->addSelect("continue_other","Still receiving intervention?",$this->yesNo);
-     $this->XINRegisterRule("continue_other", array("servicetype_other{@}=={@}yes"), "Required");
+     $this->XINRegisterRule("continue_other", array("continue_other{@}=={@}NEVER_REQUIRED"), "Required");
 
-     $this->addBasicDate("stopdate_other","If, No, date stopped",$this->dateOptions);
+     $this->addMonthYear("stopdate_other","If, No, date stopped",$this->monthYearOptions);
      $this->XINRegisterRule("stopdate_other", array("continue_other{@}=={@}no"), "Required");
 
      $this->addSelect("indgrp_other","Individual or Group",$this->indgrp);
@@ -230,18 +239,18 @@ class NDB_BVL_Instrument_BSRC extends NDB_BVL_Instrument
      $this->XINRegisterRule("avg_other", array("avg_other{@}=={@}NEVER_REQUIRED"));
 
 
-     $this->addLabel("<BR>6) On average, how many hours per week has your child been in intervention");
+     $this->addLabel("<BR><strong>6)</strong> On average, how many hours per week has your child been in intervention");
      $this->addNumericElement("q6_avgperweek_A","a. since your last visit to our research program?");
      $this->addNumericElement("q6_avgperweek_B","b. in the past year");
      
-     $this->addSelect("q7_alt_therapy","<BR>7) At any point since your last visit, did your child <strong>receive complementary or alternative therapies used to treat symptoms of autism?</strong>",$this->yesNo);
+     $this->addSelect("q7_alt_therapy","<BR><strong>7)</strong> At any point since your last visit, did your child receive complementary or alternative therapies used to treat symptoms of autism?",$this->yesNo);
     $this->addTextAreaElement("q7_alt_therapy_specify","If YES, please specify", array("q7_alt_therapy{@}=={@}yes"),"If Yes, please specify:");
 
-     $this->addSelect("q8_medical_pharma","<BR>8) At any point since your last visit, did your child <strong>receive medical or pharmacological interventions used to treat symptoms of autism? </strong>",$this->yesNo);
+     $this->addSelect("q8_medical_pharma","<BR><strong>8)</strong> At any point since your last visit, did your child receive medical or pharmacological interventions used to treat symptoms of autism? ",$this->yesNo);
      $this->addTextAreaElement("q8_medical_pharma_specify","If YES, please specify", array("q8_medical_pharma{@}=={@}yes"),"If Yes, please specify:");
-     $this->addSelect("q9_continue_nextyr","<BR>9) If this is your child's 36-month assessment, do you plan to continue your child's enrollment in intervention during next year?",$this->yesNo2);
+     $this->addSelect("q9_continue_nextyr","<BR><strong>9)</strong> If this is your child's 36-month assessment, do you plan to continue your child's enrollment in intervention during next year?",$this->yesNo2);
      
-     $this->addSelect("q10_therapyoptions", "10) If you checked yes in #9, please check all that apply", $this->intervention, "multiple size='6'");
+     $this->addSelect("q10_therapyoptions", "<strong>10)</strong> If you checked yes in #9, please check all that apply", $this->intervention, "multiple size='6'");
      $this->XINRegisterRule("q10_therapyoptions", array("q9_continue_nextyr{@}=={@}yes"),"Required");
      
      $this->addTextAreaElement("general_comments","Is there anything else you would like to tell us about services your child has received,please write your comments");
@@ -333,19 +342,93 @@ class NDB_BVL_Instrument_BSRC extends NDB_BVL_Instrument
            
            $errors['total_earlyintervention_birthtothreeprg_group']='Required';    
        }
-       $servicelist = array('servicetype_occupationaltherapy','servicetype_physicaltherapy',
-                            'servicetype_speechlangtherapy','servicetype_behaviorintervention',
-                            'servicetype_other');
-       /*
+       $servicelist = array('occupationaltherapy','physicaltherapy',
+                            'speechlangtherapy','behaviorintervention','other');
+       
        foreach($servicelist as $list) {
+           $service = 'servicetype_'.$list;
            if($values['q5_service_delay']=='yes' 
-              && ($values[$list] == null || $values[$list]=="")) {
+              && ($values[$service] == null || $values[$service]=="")) {
                
-               $errors[$list] = "Required";
+               $errors[$service] = "Required";
            }
+           $continue = 'continue_'.$list;
+           if($values['q5_service_delay']=='yes' && $values[$service] == 'yes' 
+                   && ($values[$continue] == null || $values[$continue]=="")) {
+
+               $errors[$continue] = "Required";
+           }
+           $start = $values['startdate_'.$list];
+           $stop  = $values['stopdate_'.$list];
+           if(!empty($start['Y']) && !empty($stop['Y']) && !empty($start['M']) && !empty($stop['M']) ) {
+               if($start['Y'] > $stop['Y']){
+                   $errors['stopdate_'.$list] = "Intervention stop date should be after intervention start date";
+               } 
+               if( ($start['Y'] === $stop['Y']) && $start['M'] > $stop['M']){
+                   $errors['stopdate_'.$list] = "Intervention stop date should be after intervention start date";
+               }
+           }
+
        }
-*/
+
                return $errors;
+
+      }
+      function _saveValues($values)
+      {
+          if(!empty($this->_selectMultipleElements)){
+              foreach($this->_selectMultipleElements AS $elname){
+                  if(isset($values[$elname]) && is_array($values[$elname])){
+                      $values[$elname]=implode("{@}",$values[$elname]);
+                  }
+              }
+          }
+
+          if(isset($values['Date_taken'])) {
+              $date = $values['Date_taken'];
+              if(!empty($date['Y']) && !empty($date['M']) && !empty($date['d'])) {
+                  $values['Date_taken'] = $this->_getDatabaseDate($date); 
+                  $this->_saveCandidateAge($values);
+              }  else {
+                  unset($values['Date_taken']);
+              }
+          }
+          
+          if(isset($values['date_lastVisit_date'])) {
+              $date = $values['date_lastVisit_date'];
+              if(!empty($date['Y']) && !empty($date['M']) && !empty($date['d'])) {
+                  $values['date_lastVisit_date'] = $this->_getDatabaseDate($date); 
+              }  else {
+                  unset($values['date_lastVisit_date']);
+              }
+          }
+          $servicelist = array('occupationaltherapy','physicaltherapy',
+                               'speechlangtherapy','behaviorintervention','other');
+          foreach($servicelist as $list ) {
+              $start = 'startdate_'.$list;
+              $stop  = 'stopdate_'.$list;
+              if(isset($values[$start])) {
+                  $date = $values[$start];
+                  $date['d'] = 15;
+                  if(!empty($date['Y']) && !empty($date['M']) && !empty($date['d'])) {
+                      $values[$start] = $this->_getDatabaseDate($date); 
+                  }  else {
+                      unset($values[$start]);
+                  }
+              }
+              if(isset($values[$stop])) {
+                  $date = $values[$stop];
+                  if(!empty($date['Y']) && !empty($date['M']) && !empty($date['d'])) {
+                      $values[$stop] = $this->_getDatabaseDate($date);
+                  }  else {
+                      unset($values[$stop]);
+                  }
+              }
+
+          }
+            unset($values['candID'], $values['sessionID'], $values['commentID'], $values['test_name'], $values['page'], $values['fire_away'], $values['subtest'], $values['MAX_FILE_SIZE'], $values['directions_file']);
+
+          $this->_save($values);
 
       }
 
