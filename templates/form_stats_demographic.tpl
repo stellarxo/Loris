@@ -25,7 +25,10 @@
                 {foreach from=$Subprojects item=proj key=keyid}
                 <td>{$registered[$keyid].total}</td>
                 {/foreach}
-                <td class="total">{$registered.total}{if $registered.total-$Total_candidates neq 0} ({$registered.total-$Total_candidates} require DCC review){/if}</td>
+               {* 
+                <td class="total">{$registered.total}{if $registered.total-$Total_candidates neq 0} ({$Total_candidates -$registered.total} require DCC review){/if}</td>*}
+                
+                <td class="total">{$registered.total}</td>
             </tr>
             <tr>
                 <td colspan="2">Registered candidates currently in or passed screening</td>
