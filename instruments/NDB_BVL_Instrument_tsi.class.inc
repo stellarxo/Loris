@@ -290,6 +290,9 @@ class NDB_BVL_Instrument_tsi extends NDB_BVL_Instrument
         unset($group);
 
         $this->form->addElement('select', "complications_birth_proband", "Complications at birth?(ex. vaccum extraction)", $this->yesNo);
+        $this->form->addElement('select', "jaundice_proband", "Diagnosed with jaundice (hyperbilirubinemia)", $this->yesNo);
+        $this->form->addElement('select', "lighttherapy_proband",$this->indent. "If yes, light therapy required?", $this->yesNo);
+        $this->addNumericElement('lighttherapy_days_proband', $this->indent."#days light therapy".$this->indent."<BR> (exclusionary if >3 days of lights; requiring transfustion;or due to materal/fetal RH incompatibility?)");
         $this->form->addElement('select', "in_utero_exposure_proband", "Exposure in-utero to meds,tobacco, alcohol, or drugs<BR>(Rx or not including herbal and prenatal vitamins)?", $this->yesNo);
 		
         $questionArray = array("substance_proband"=>"Name of substance (get spelling):",
@@ -299,7 +302,8 @@ class NDB_BVL_Instrument_tsi extends NDB_BVL_Instrument
 			$this->addTextElement("in_utero_" . $field, $this->indent . $label, array("in_utero_exposure_proband{@}=={@}yes"), "This field is required if there was in-utero exposure");
 		}
         $this->form->addElement('select', "breastfed_proband", "Was the proband breastfed?", $this->yesNo);
-        $this->addTextElement("breastfed_duration_proband","If yes, how long?");
+        $this->addNumericElement("breastfed_proband_months",$this->indent."If yes, how long? Months:");
+        $this->addNumericElement("breastfed_proband_weeks",$this->indent."Weeks:");
         $this->form->addElement('select', "medication_in_breastfeed_proband", "Medications while breastfeeding(Rx or not including vitamins)?", $this->yesNo);
 
         $questionArray = array("substance_breastfed_proband"=>"Name of substance (get spelling):",
@@ -339,7 +343,9 @@ class NDB_BVL_Instrument_tsi extends NDB_BVL_Instrument
 
 		}
         $this->form->addElement('select', "breastfed_subject", "Did you or are you breastfeeding your infant?", $this->yesNo);
-        $this->addTextElement("breastfed_duration_subject","If finished, how long did you breastfeed?");
+        $this->addNumericElement("breastfed_subject_months",$this->indent."If yes, how long? Months:");
+        $this->addNumericElement("breastfed_subject_weeks",$this->indent."Weeks:");
+
         $this->form->addElement('select', "medication_in_breastfeed_subject", "Medications while breastfeeding(Rx or not including vitamins)?", $this->yesNo);
 
         $questionArray = array("substance_breastfed_subject"=>"Name of substance (get spelling):",
