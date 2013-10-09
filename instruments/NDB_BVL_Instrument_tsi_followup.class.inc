@@ -320,7 +320,7 @@ class NDB_BVL_Instrument_tsi_followup extends NDB_BVL_Instrument
 		$questionArray = array(
 		"neurological_problems_subject"=>"Any neurological problems such as Cerebral Palsy or Tuber Sclerosis in SUBJECT?",
 		"genetic_conditions_subject"=>"Diagnosed/suspected genetic conditions or syndromes?",
-		"seizures_or_neuro_disorder"=>"Seizures or other neurological disorder?",
+		"seizures_or_neuro_disorder"=>"Do they have or have had any seizures?",
 		"cns_problems"=>"CNS problems such as head injury or meningitis?",
 		"congenital_heart_problems"=>"Congenital heart problems?",
 		"hearing_vision_impairments"=>"Significant hearing/vision problems?",
@@ -343,11 +343,11 @@ class NDB_BVL_Instrument_tsi_followup extends NDB_BVL_Instrument
 		$this->form->addElement("select", "med_his_q_3_surgery", "3. Surgery of any type?", $this->yesNo);
 		$this->addTextElement("med_his_q_3_surgery_describe", $this->indent . "Describe:", array("med_his_q_3_surgery{@}=={@}yes"), "This field is required if there was surgery");
 		$this->form->addElement("select", "med_his_q_4_metal", "4. Does X have any metal plates, clips, etc. from surgery?", $this->yesNo);
-		$this->form->addElement("select", "med_his_q_5_medications", "5. Has X taken any medications over the last 12 months?", $this->yesNo);
+		$this->form->addElement("select", "med_his_q_5_medications", "5. Has X taken any medications since their last visit?", $this->yesNo);
 		$this->addTextElement("med_his_q_5_medications_describe", $this->indent . "If yes, list medications:", array("med_his_q_5_medications{@}=={@}yes"), "This field is required if there were medications");
 		$this->form->addElement("select", "med_his_q_6_allergies", "6. Does X have any allergies to medicines?", $this->yesNo);
 		$this->addTextElement("med_his_q_6_allergies_describe", $this->indent . "If yes, describe:", array("med_his_q_6_allergies{@}=={@}yes"), "This field is required if there are allergies");
-		$this->form->addElement("select", "med_his_q_7_doctor", "7. Has X seen a doctor over the last 12 months?", $this->yesNo);
+		$this->form->addElement("select", "med_his_q_7_doctor", "7. Has X seen a doctor since their last visit?", $this->yesNo);
         $this->form->addElement("select", "med_his_q_8_brain_MRI", "8. Has X ever had an MRI of the brain?", $this->yesNo);
         $this->form->addElement("select","med_his_q_8_brain_MRI_results", $this->indent . "If yes, what were the results?", array(null=>"","typical"=>"Typical","atypical"=>"Atypical","not_answered"=>"Not Answered"));
         $this->XINRegisterRule ( "med_his_q_8_brain_MRI_results", array("med_his_q_8_brain_MRI{@}=={@}yes"),"Please specify results");
@@ -360,7 +360,31 @@ class NDB_BVL_Instrument_tsi_followup extends NDB_BVL_Instrument
         $this->addTextElement("med_his_q_10_nap", "10. Does X nap during the day?");
 		$this->addTextElement("med_his_q_11_nap_how_long", "11. When & how long?");
 		$this->form->addElement("select", "med_his_q_12_likelihood_sleep", "12. On a scale of 1-10, please rate the likelihood of your child sleeping through a scan.", array(null=>"", 1=>"1", 2=>"2",  3=>"3", 4=>"4", 5=>"5", 6=>"6", 7=>"7", 8=>"8", 9=>"9", 10=>"10", "not_answered"=>"Not Answered"));
-		
+	    $this->form->addElement("select","med_overall_concern","Do you have overall or specific concerns about your child's development at this time?", $this->yesNo);
+        $this->addTextElement("med_overall_concern_notes", $this->indent . "If yes, what are they?", array("med_overall_concern{@}=={@}yes"));
+        $serviceList = array('Behavioral','Physical','Speech','Occupational');
+        $this->form->addElement("static", null, '<br />');
+
+        $this->form->addElement("static", null, 'Has the Infant SIB received any therapies?<BR>(Ask only at 6,9,12,15m visits) (24 and 36m get intervention history form)');
+        $group[] = &$this->form->createElement("static", null, null, "Age of SIB");
+        $group[] = &$this->form->createElement("static", null, null, "Duration of therapy");
+        $group[] = &$this->form->createElement("static", null, null, "Was the therapy effective?");
+
+        $this->form->addGroup($group, "infant_therapy_info", "Therapy" . $this->indent, $this->_GUIDelimiter, false);
+        unset($group);
+        foreach($serviceList as $service) {
+            $age = 'age_'.$service;
+            $duration = 'duration_'.$service;
+            $effective = 'effective_'.$service;
+            $group[] =& $this->form->createElement("text", $age);
+            $group[] =& $this->form->createElement("text", $duration);
+            $group[] =& $this->form->createElement("text", $effective);
+
+            $this->form->addGroup($group, $service."_group", $service . $this->indent, $this->_GUIDelimiter, false);
+            unset($group);
+
+        }
+
 	}
 
 	function _page3() {
