@@ -1,5 +1,10 @@
 <div id="data_entry">
-<h2 class="statsH2">Data Entry Statistics:</h2>
+<h2 class="statsH2">Data Entry Statistics {if $CurrentProject} for {$CurrentProject.Name} {/if}</h2>
+{html_options id="BehaviouralProject" options=$Projects name="BehaviouralProject" selected=$CurrentProject.ID}
+<script type="text/javascript" src="js/modules/form_stats_behavioural.js"></script>
+<button  onClick="updateBehaviouralTab()">Submit Query</button>
+
+
 <table class="data">
          <tr>
             <th rowspan="2">Site</th>

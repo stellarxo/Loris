@@ -2,7 +2,12 @@
 
 <h2 class = "statsH2">MRI Statistics:</h2>
 
-<h2 class="statsH2">General MRI Statistics</h2>
+<h2 class="statsH2">General MRI Statistics  {if $CurrentProject} for {$CurrentProject.Name} {/if}</h2>
+
+{html_options id="MRIProject" options=$Projects name="MRIProject" selected=$CurrentProject.ID}
+<script type="text/javascript" src="js/modules/form_stats_MRI.js"></script>
+<button  onClick="updateMRITab()">Submit Query</button>
+
 <table class="data generalStats">
     <thead>
          <tr>
@@ -26,6 +31,7 @@
     </tbody>
 </table>
 
+{if $showTable}
 <h2 class="statsH2">Candidates That Have Completed Scans at All Three Timepoints (V06, V12, and V24):</h2>
 <table class="data generalStats">
     <thead>
@@ -50,6 +56,7 @@
         {/section}
     </tbody>
 </table>
+{/if}
 {assign var="Subsection" value="mri"}
 {$MRI_Done_Table}
 
