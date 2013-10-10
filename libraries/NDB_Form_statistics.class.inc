@@ -457,7 +457,7 @@ class NDB_Form_statistics extends NDB_Form
                           WHERE v12.Active='Y' AND v12.Visit_label='v12' AND v06.CandID=v12.CandID AND m12.T1_Scan_Done='Complete') 
                       AND EXISTS (SELECT 'x' FROM session v24 join flag f24 ON (f24.SessionID=v24.ID and Test_name='mri_parameter_form' AND CommentID NOT LIKE 'DDE%') join mri_parameter_form m24 ON (f24.CommentID=m24.CommentID)
                           WHERE v24.Active='Y' AND v24.Visit_label='v24' AND v06.CandID=v24.CandID and m24.T1_Scan_Done='Complete') 
-                      AND v06.CenterID='{$id}' $ExtraProject_Criteria AND s.SubprojectID IN ($subprojList) ");
+                      AND v06.CenterID='{$id}' $ExtraProject_Criteria AND v06.SubprojectID IN ($subprojList) ");
 
               $mri_data[] = array('name' => $name,  'work_station_count' => $work_station_count, 'claimed_count' => $claimed_count, 'forms_count' => $forms_count, 'all_three_scans' => $three_scans);
 
