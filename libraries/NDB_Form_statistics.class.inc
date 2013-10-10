@@ -451,7 +451,7 @@ class NDB_Form_statistics extends NDB_Form
               }
               list(,$result25)=each($result25[0]);
               $forms_count = $result25;
-              $three_scans = $DB->selectOne("SELECT count(distinct CandID) FROM session v06  join flag f06 ON (f06.SessionID=v06.ID and Test_name='mri_parameter_form' AND CommentID NOT LIKE 'DDE%') join mri_parameter_form m06 ON (f06.CommentID=m06.CommentID) 
+              $three_scans = $DB->selectOne("SELECT count(distinct c.CandID) FROM session v06  join flag f06 ON (f06.SessionID=v06.ID and Test_name='mri_parameter_form' AND CommentID NOT LIKE 'DDE%') join candidate c ON (v06.CandID=c.CandID) join mri_parameter_form m06 ON (f06.CommentID=m06.CommentID) 
                       WHERE v06.Active='Y' AND v06.Visit_label='v06' and m06.T1_Scan_Done='Complete'
                       AND EXISTS (SELECT 'x' FROM session v12 join flag f12 ON (f12.SessionID=v12.ID and Test_name='mri_parameter_form' AND CommentID NOT LIKE 'DDE%') join mri_parameter_form m12 ON (f12.CommentID=m12.CommentID)
                           WHERE v12.Active='Y' AND v12.Visit_label='v12' AND v06.CandID=v12.CandID AND m12.T1_Scan_Done='Complete') 
