@@ -1,0 +1,11 @@
+ALTER TABLE tsi ADD COLUMN jaundice_proband enum('yes','no','not_answered');
+ALTER TABLE tsi ADD COLUMN lighttherapy_proband enum('yes','no','not_answered');
+ALTER TABLE tsi ADD COLUMN lighttherapy_days_proband varchar(255);
+ALTER TABLE tsi ADD COLUMN breastfed_proband_months varchar(255);
+ALTER TABLE tsi ADD COLUMN breastfed_proband_weeks varchar(255);
+ALTER TABLE tsi ADD COLUMN breastfed_subject_months varchar(255);
+ALTER TABLE tsi ADD COLUMN breastfed_subject_weeks varchar(255);
+ALTER TABLE tsi DROP COLUMN breastfed_duration_proband;
+ALTER TABLE tsi DROP COLUMN breastfed_duration_proband_status;
+ALTER TABLE tsi DROP COLUMN breastfed_duration_subject;
+ALTER TABLE tsi DROP COLUMN breastfed_duration_subject_status;
