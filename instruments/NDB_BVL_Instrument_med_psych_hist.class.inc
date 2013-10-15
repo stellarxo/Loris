@@ -516,7 +516,7 @@ class NDB_BVL_Instrument_med_psych_hist extends NDB_BVL_Instrument
 
         $this->form->addElement("static", null, "Please specify when the drugs were taken");
         foreach($questionArray as $field=>$label) {
-            $this->form->addElement("select", "q9_{$field}_when_taken", $this->indent . "If $label were taken, when?:", array(""=>NULL, "0_before"=>"0 Before", "1_after"=>"1 After", "2_both"=>"2 Both", "not_answered"=>"Not Answered"));
+            $this->form->addElement("select", "q9_{$field}_when_taken", $this->indent . "If $label were taken, when?:", array(""=>NULL, "0_before"=>"0 Before", "1_after"=>"1 After", "2_both"=>"2 Both", "3_breastfeeding"=>"3 Breastfeeding", "not_answered"=>"Not Answered"));
             $this->XINRegisterRule("q9_{$field}_when_taken", array("q9_pregnancy_drugs{@}=={@}{$field}"), "Please specify when $label was taken");
         }
         $this->addTextElement("q9_i_other_specify", $this->indent . $this->indent ."If other drugs, please specify", array("q9_pregnancy_drugs{@}=={@}i_other"), "If other drugs were taken, please specify");
