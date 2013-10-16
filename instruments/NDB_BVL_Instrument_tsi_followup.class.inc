@@ -351,44 +351,21 @@ class NDB_BVL_Instrument_tsi_followup extends NDB_BVL_Instrument
         $this->form->addElement("select", "med_his_q_8_brain_MRI", "8. Has X ever had an MRI of the brain?", $this->yesNo);
         $this->form->addElement("select","med_his_q_8_brain_MRI_results", $this->indent . "If yes, what were the results?", array(null=>"","typical"=>"Typical","atypical"=>"Atypical","not_answered"=>"Not Answered"));
         $this->XINRegisterRule ( "med_his_q_8_brain_MRI_results", array("med_his_q_8_brain_MRI{@}=={@}yes"),"Please specify results");
-        $this->addTextElement("med_his_q_8_brain_MRI_notes", $this->indent . "Notes", array("med_his_q_8_brain_MRI_results{@}=={@}atypical"));
+        $this->addTextAreaElement("med_his_q_8_brain_MRI_notes", $this->indent . "Notes", array("med_his_q_8_brain_MRI_results{@}=={@}atypical"));
         $this->form->addElement("select", "med_his_q_9_anethesia", "9. Has X ever had anesthesia or other forms of sedation?", $this->yesNo);
         $this->form->addElement("select","med_his_q_9_anethesia_problems", $this->indent . "Problems with sedation?",$this->yesNo);
-        $this->XINRegisterRule ( "med_his_q_9_anethesia_problems", array("med_his_q_9_anethesia{@}=={@}yes"),"Please specify results");
-        $this->addTextElement("med_his_q_9_anethesia_notes", $this->indent . "Notes", array("med_his_q_9_anethesia_problems{@}=={@}yes"));
+        $this->XINRegisterRule ( "med_his_q_9_anethesia_problems", array("med_his_q_9_anethesia{@}=={@}yes"),"Please specify if there were problems");
+        $this->addTextAreaElement("med_his_q_9_anethesia_notes", $this->indent . "Notes", array("med_his_q_9_anethesia_problems{@}=={@}yes"));
 
         $this->addTextElement("med_his_q_10_nap", "10. Does X nap during the day?");
 		$this->addTextElement("med_his_q_11_nap_how_long", "11. When & how long?");
 		$this->form->addElement("select", "med_his_q_12_likelihood_sleep", "12. On a scale of 1-10, please rate the likelihood of your child sleeping through a scan.", array(null=>"", 1=>"1", 2=>"2",  3=>"3", 4=>"4", 5=>"5", 6=>"6", 7=>"7", 8=>"8", 9=>"9", 10=>"10", "not_answered"=>"Not Answered"));
-	    $this->form->addElement("select","med_overall_concern","Do you have overall or specific concerns about your child's development at this time?", $this->yesNo);
-        $this->addTextElement("med_overall_concern_notes", $this->indent . "If yes, what are they?", array("med_overall_concern{@}=={@}yes"));
-        $serviceList = array('Behavioral','Physical','Speech','Occupational');
-        $this->form->addElement("static", null, '<br />');
-
-        $this->form->addElement("static", null, 'Has the Infant SIB received any therapies?<BR>(Ask only at 6,9,12,15m visits) (24 and 36m get intervention history form)');
-        $group[] = &$this->form->createElement("static", null, null, "Age of SIB");
-        $group[] = &$this->form->createElement("static", null, null, "Duration of therapy");
-        $group[] = &$this->form->createElement("static", null, null, "Was the therapy effective?");
-
-        $this->form->addGroup($group, "infant_therapy_info", "Therapy" . $this->indent, $this->_GUIDelimiter, false);
-        unset($group);
-        foreach($serviceList as $service) {
-            $age = 'age_'.$service;
-            $duration = 'duration_'.$service;
-            $effective = 'effective_'.$service;
-            $group[] =& $this->form->createElement("text", $age);
-            $group[] =& $this->form->createElement("text", $duration);
-            $group[] =& $this->form->createElement("text", $effective);
-
-            $this->form->addGroup($group, $service."_group", $service . $this->indent, $this->_GUIDelimiter, false);
-            unset($group);
-
-        }
+     
 
 	}
 
 	function _page3() {
-		$this->form->addElement("header", null, "Medical Records");
+		$this->form->addElement("header", null, "Additional Information");
 /*
   		$sessionid = $this->getSession();
                 $commentid = $this->getComment($sessionid);
@@ -406,7 +383,7 @@ class NDB_BVL_Instrument_tsi_followup extends NDB_BVL_Instrument
             		'addEmptyOption' => true,
             		'emptyOptionValue' => null
         	);
-
+/*
 		$this->form->addElement("static", null, '<br />');
 		$this->form->addElement("select", "diagnoses", "Has X had any diagnoses?", array(NULL=>"", "yes"=>"Yes", "no"=>"No", "not_answered"=>"Not Answered"));
 		$this->form->addElement("static", null, "If you answered yes, please specify dates and locations:");
@@ -455,7 +432,10 @@ class NDB_BVL_Instrument_tsi_followup extends NDB_BVL_Instrument
 				$this->XINRegisterRule("who_evaluation$i", array("who_evaluation$i{@}=={@}NEVER_REQUIRED"));
 			}
                 }
-
+*/
+      	$this->form->addElement("select","med_overall_concern","Do you have overall or specific concerns about your child's development at this time?", $this->yesNo);
+        $this->addTextAreaElement("med_overall_concern_notes", $this->indent . "If yes, what are they?", array("med_overall_concern{@}=={@}yes"));
+  
 		$this->form->addElement("static", null, '<br />');
 
 		$this->form->addElement("static", null, "Has the Infant SIB received any therapies (e.g. behavioral, physical, speech, occupational)?");

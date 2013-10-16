@@ -11,4 +11,5 @@ ALTER TABLE tsi_followup DROP COLUMN med_his_q_9_anethesia_problems_status;
 ALTER TABLE tsi_followup DROP COLUMN med_his_q_8_brain_MRI_results_status;
 ALTER TABLE tsi_followup ADD COLUMN med_overall_concern enum('yes','no','not_answered');
 ALTER TABLE tsi_followup ADD COLUMN med_overall_concern_notes varchar(255);
-ALTER TABLE tsi_followup ADD COLUMN med_overall_concern_notes enum('not_answered');
+ALTER TABLE tsi_followup ADD COLUMN med_overall_concern_notes_status enum('not_answered');
+UPDATE instrument_subtests SET Description='Additional Information' where Test_name = 'tsi_followup' AND Subtest_name ='tsi_followup_page3';
