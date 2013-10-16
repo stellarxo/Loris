@@ -292,7 +292,11 @@ class NDB_BVL_Instrument_tsi extends NDB_BVL_Instrument
         $this->form->addElement('select', "complications_birth_proband", "Complications at birth?(ex. vaccum extraction)", $this->yesNo);
         $this->form->addElement('select', "jaundice_proband", "Diagnosed with jaundice (hyperbilirubinemia)", $this->yesNo);
         $this->form->addElement('select', "lighttherapy_proband",$this->indent. "If yes, light therapy required?", $this->yesNo);
+        $this->XINRegisterRule("lighttherapy_proband", array("lighttherapy_proband{@}=={@}NEVER_REQUIRED"));
+
         $this->addNumericElement('lighttherapy_days_proband', $this->indent."#days light therapy".$this->indent."<BR> (exclusionary if >3 days of lights; requiring transfustion;or due to materal/fetal RH incompatibility?)");
+        $this->XINRegisterRule("lighttherapy_days_proband", array("lighttherapy_days_proband{@}=={@}NEVER_REQUIRED"));
+
         $this->form->addElement('select', "in_utero_exposure_proband", "Exposure in-utero to meds,tobacco, alcohol, or drugs<BR>(Rx or not including herbal and prenatal vitamins)?", $this->yesNo);
 		
         $questionArray = array("substance_proband"=>"Name of substance (get spelling):",
@@ -303,7 +307,11 @@ class NDB_BVL_Instrument_tsi extends NDB_BVL_Instrument
 		}
         $this->form->addElement('select', "breastfed_proband", "Was the proband breastfed?", $this->yesNo);
         $this->addNumericElement("breastfed_proband_months",$this->indent."If yes, how long? Months:");
+        $this->XINRegisterRule("breastfed_proband_months", array("breastfed_proband_months{@}=={@}NEVER_REQUIRED"));
+
         $this->addNumericElement("breastfed_proband_weeks",$this->indent."Weeks:");
+        $this->XINRegisterRule("breastfed_proband_weeks", array("breastfed_proband_weeks{@}=={@}NEVER_REQUIRED"));
+
         $this->form->addElement('select', "medication_in_breastfeed_proband", "Medications while breastfeeding(Rx or not including vitamins)?", $this->yesNo);
 
         $questionArray = array("substance_breastfed_proband"=>"Name of substance (get spelling):",
@@ -338,13 +346,20 @@ class NDB_BVL_Instrument_tsi extends NDB_BVL_Instrument
 			    $this->addTextElement('weeks_gestation', $this->indent . "Number of weeks gestation", array("premature_birth{@}=={@}yes"), "If premature, how many gestational weeks?");
 			}
             if ($field == 'jaundice_subject') {
-                $this->addTextElement('lightherapy_subject', $this->indent . "If yes, light therapy required? # of days<BR>(exclusionary if >3days of lights;requiring transfusion;or due to maternal/fetal RH incompatibility)", array("jaundice_subject{@}=={@}yes"), "If diagnosed with jaundice,how many days of light therapy?");
+                $this->form->addElement("select",'lighttherapy_subject',$this->indent."If yes, light therapy required?", $this->yesNo);
+                 $this->XINRegisterRule("lighttherapy_subject", array("lighttherapy_subject{@}=={@}NEVER_REQUIRED"));
+
+                $this->addNumericElement('lighttherapy_days_subject', $this->indent . "# of days<BR>(exclusionary if >3days of lights;requiring transfusion;or due to maternal/fetal RH incompatibility)");
+                 $this->XINRegisterRule("lighttherapy_days_subject", array("lighttherapy_days_subject{@}=={@}NEVER_REQUIRED"));
+
             }
 
 		}
         $this->form->addElement('select', "breastfed_subject", "Did you or are you breastfeeding your infant?", $this->yesNo);
         $this->addNumericElement("breastfed_subject_months",$this->indent."If yes, how long? Months:");
+        $this->XINRegisterRule("breastfed_subject_months", array("breastfed_subject_months{@}=={@}NEVER_REQUIRED"));
         $this->addNumericElement("breastfed_subject_weeks",$this->indent."Weeks:");
+        $this->XINRegisterRule("breastfed_subject_weeks", array("breastfed_subject_weeks{@}=={@}NEVER_REQUIRED"));
 
         $this->form->addElement('select', "medication_in_breastfeed_subject", "Medications while breastfeeding(Rx or not including vitamins)?", $this->yesNo);
 
@@ -356,6 +371,8 @@ class NDB_BVL_Instrument_tsi extends NDB_BVL_Instrument
         }
 
 		$this->addTextAreaElement("further_information", "If yes to any of the above, obtain further information.");
+        $this->form->addFormRule(array(&$this, 'tsi_Rules'));
+
 	}
 
 	function _page2() {
@@ -404,12 +421,54 @@ class NDB_BVL_Instrument_tsi extends NDB_BVL_Instrument
 		$this->form->addElement("select", "disposition", "Proceed to next level beyond screening?", $this->yesNo);
 	}
     function tsi_Rules($values) {
+        $errors = array();
         $gestation = intval ($values["gestation_proband"]);
         if($gestation < 0 || $gestation > 45){
-            return array('gestation_proband' => 'Please enter value between 0-45');
+            $errors['gestation_proband'] = 'Please enter value between 0-45';
 
         }
-        return array();
+        if( ($values["lighttherapy_days_proband"] == null || $values["lighttherapy_days_proband"] == '')
+            && ($values["lighttherapy_days_proband_status"] == null || $values["lighttherapy_days_proband_status"] == '')
+            && $values["lighttherapy_proband"] == "yes") {
+            $errors['lighttherapy_days_proband_group'] = 'Required' ;    
+        }
+        if(($values["lighttherapy_proband"] == null || $values["lighttherapy_proband"] == '')
+                && $values["jaundice_proband"] === "yes") {
+            $errors['lighttherapy_proband'] = 'Required' ;
+        }
+        
+        if($values["breastfed_proband"] == "yes" &&
+           ($values["breastfed_proband_months"] == null || $values["breastfed_proband_months"] == '') &&
+           ($values["breastfed_proband_months_status"] == null || $values["breastfed_proband_months_status"] == '')) {
+           $errors['breastfed_proband_months_group'] = 'Required';   
+         }
+        if($values["breastfed_proband"] == "yes" &&
+           ($values["breastfed_proband_weeks"] == null || $values["breastfed_proband_weeks"] == '') &&
+           ($values["breastfed_proband_weeks_status"] == null || $values["breastfed_proband_weeks_status"] == "")) {
+            $errors['breastfed_proband_weeks_group'] = 'Required';
+        }
+        if($values["breastfed_subject"] == "yes" &&
+           ($values["breastfed_subject_months"] == null || $values["breastfed_subject_months"] == "" )&&
+           ($values["breastfed_subject_months_status"] == null || $values["breastfed_subject_months_status"] == "")) {
+            $errors['breastfed_subject_months_group']  = 'Required';
+        }
+        if($values["breastfed_subject"] == "yes" &&
+           ($values["breastfed_subject_weeks"] == null || $values["breastfed_subject_weeks"] == "") &&
+           ($values["breastfed_subject_weeks_status"] == null || $values["breastfed_subject_weeks_status"] == "")) {
+            $errors['breastfed_subject_weeks_group'] = 'Required';
+        }
+        if( ($values["lighttherapy_days_subject"] == null || $values["lighttherapy_days_subject"] == '')
+             && ($values["lighttherapy_days_subject_status"] == null || $values["lighttherapy_days_subject_status"] == '')
+             && $values["lighttherapy_subject"] == "yes") {
+            $errors['lighttherapy_days_subject_group'] = 'Required' ;
+        }
+        if(($values["lighttherapy_subject"] == null || $values["lighttherapy_subject"] == '')
+                && $values["jaundice_subject"] === "yes") {
+            $errors['lighttherapy_subject'] = 'Required' ;
+        }
+
+
+        return $errors;
     }
 
 }
