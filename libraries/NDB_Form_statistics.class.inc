@@ -127,7 +127,7 @@ class NDB_Form_statistics extends NDB_Form
 
         $Visits = array ('6 Month' => 'v06', '12 Month' => 'v12','24 Month' => 'v24', '36 Month' => 'v36');  
         if($currentProject == 2) {
-         $Visits = array ('Screening'=>'Screening','3 month'=>'v03','6 Month' => 'v06','9 month'=>'v09', 
+         $Visits = array ('Screening'=>'screening','3 month'=>'v03','6 Month' => 'v06','9 month'=>'v09', 
                           '12 Month' => 'v12','15 month'=>'v15','18 Month' => 'v18', '24 Month' => 'v24',
                           '36 Month' => 'v36');
 
@@ -276,7 +276,7 @@ class NDB_Form_statistics extends NDB_Form
           }
           $Visits = array ('6 Month' => 'v06', '12 Month' => 'v12', '18 Month' => 'v18', '24 Month' => 'v24', '36 Month' => 'v36');
           if($currentProject == 2) {
-              $Visits = array ('Screening'=>'Screening','3 Month'=>'v03','6 Month' => 'v06','9 Month'=>'v09', '12 Month' => 'v12',
+              $Visits = array ('Screening'=>'screening','3 Month'=>'v03','6 Month' => 'v06','9 Month'=>'v09', '12 Month' => 'v12',
                       '15 Month'=>'v15','18 Month' => 'v18', '24 Month' => 'v24', '36 Month' => 'v36');
           }
 
@@ -342,7 +342,7 @@ class NDB_Form_statistics extends NDB_Form
                   GROUP BY Subcat, s.SubprojectID, c.CenterID, s.Visit_label", $result);
           $M_Visits = array ('6 Month' => 'v06', '12 Month' => 'v12', '24 Month' => 'v24');
           if($currentProject == 2) {
-              $M_Visits = array ('Screening'=>'Screening','3 Month'=>'v03','6 Month' => 'v06','9 Month'=>'v09', '12 Month' => 'v12',
+              $M_Visits = array ('Screening'=>'screening','3 Month'=>'v03','6 Month' => 'v06','9 Month'=>'v09', '12 Month' => 'v12',
                       '15 Month'=>'v15','18 Month' => 'v18', '24 Month' => 'v24', '36 Month' => 'v36');
           }
 
@@ -785,7 +785,7 @@ class NDB_Form_statistics extends NDB_Form
        $Visits = array ('6 Month' => 'v06', '12 Month' => 'v12', '18 Month' => 'v18', '24 Month' => 'v24', '36 Month' => 'v36');
 
         if($currentProject == 2) {
-            $Visits = array ('Screening'=>'Screening','3 Month'=>'v03','6 Month' => 'v06','9 Month'=>'v09', 
+            $Visits = array ('Screening'=>'screening','3 Month'=>'v03','6 Month' => 'v06','9 Month'=>'v09', 
                       '12 Month' => 'v12','15 Month'=>'v15','18 Month' => 'v18', '24 Month' => 'v24', '36 Month' => 'v36');
         }
         $this->tpl_data['Visits'] = $Visits;
