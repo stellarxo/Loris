@@ -125,12 +125,16 @@ class NDB_Form_statistics extends NDB_Form
         }
         $subprojList = substr($subprojList, 0, -1);
 
-        $Visits = array ('6 Month' => 'v06', '12 Month' => 'v12', '18 Month' => 'v18', '24 Month' => 'v24', '36 Month' => 'v36');  
+        $Visits = array ('6 Month' => 'v06', '12 Month' => 'v12','24 Month' => 'v24', '36 Month' => 'v36');  
         if($currentProject == 2) {
-         $Visits = array ('3 month'=>'v03','6 Month' => 'v06','9 month'=>'v09', '12 Month' => 'v12','15 month'=>'v15', 
-                          '18 Month' => 'v18', '24 Month' => 'v24', '36 Month' => 'v36');  
-            
+         $Visits = array ('Screening'=>'Screening','3 month'=>'v03','6 Month' => 'v06','9 month'=>'v09', 
+                          '12 Month' => 'v12','15 month'=>'v15','18 Month' => 'v18', '24 Month' => 'v24',
+                          '36 Month' => 'v36');
+
+         $vlabel_criteria = " AND s.Visit_Label IN ('Screening', 'V03','V06','V09','V12','V15','V18','V24','V36')"; 
         }
+        $vlabel_criteria = " AND s.Visit_Label IN ('V06','V12','V24','V36')";
+
         $this->tpl_data['Visits'] = $Visits;
 
         //---- BEHAVIORAL STATS -----
@@ -153,6 +157,8 @@ class NDB_Form_statistics extends NDB_Form
                 AND f.CommentID NOT LIKE 'DDE%' 
                 AND s.SubprojectID IN ($subprojList)
                 $ExtraProject_Criteria
+                $vlabel_criteria
+                AND s.CenterID <> '1'
                 GROUP by s.CenterID, VLabel, f.Data_Entry",
                 $result);
 
@@ -198,6 +204,8 @@ class NDB_Form_statistics extends NDB_Form
                     AND f.Test_name NOT LIKE '%radiological%' 
                     AND f.Test_name NOT LIKE '%vineland%')
                 $ExtraProject_Criteria AND s.SubprojectID IN ($subprojList)
+                $vlabel_criteria
+                AND s.CenterID <> '1'
                 GROUP BY s.CenterID, VLabel, f.Data_Entry ORDER BY c.PSCID;",
                 $result);
         foreach($result as $row) {
@@ -267,6 +275,11 @@ class NDB_Form_statistics extends NDB_Form
 
           }
           $Visits = array ('6 Month' => 'v06', '12 Month' => 'v12', '18 Month' => 'v18', '24 Month' => 'v24', '36 Month' => 'v36');
+          if($currentProject == 2) {
+              $Visits = array ('Screening'=>'Screening','3 Month'=>'v03','6 Month' => 'v06','9 Month'=>'v09', '12 Month' => 'v12',
+                      '15 Month'=>'v15','18 Month' => 'v18', '24 Month' => 'v24', '36 Month' => 'v36');
+          }
+
           $this->tpl_data['Visits'] = $Visits;
 
 
@@ -328,6 +341,11 @@ class NDB_Form_statistics extends NDB_Form
                   $ExtraProject_Criteria
                   GROUP BY Subcat, s.SubprojectID, c.CenterID, s.Visit_label", $result);
           $M_Visits = array ('6 Month' => 'v06', '12 Month' => 'v12', '24 Month' => 'v24');
+          if($currentProject == 2) {
+              $M_Visits = array ('Screening'=>'Screening','3 Month'=>'v03','6 Month' => 'v06','9 Month'=>'v09', '12 Month' => 'v12',
+                      '15 Month'=>'v15','18 Month' => 'v18', '24 Month' => 'v24', '36 Month' => 'v36');
+          }
+
           $this->tpl_data['MRI_Done_Table'] = $this->render_stats_table($MRIHeader, $MRISubcategories, $M_Visits, "mri_type", $MRIOptions, $MRI_Type, $centers, $result, "mri",$currentProject);
 
           $DB->select("SELECT s.SubprojectID, 
@@ -764,7 +782,12 @@ class NDB_Form_statistics extends NDB_Form
         $siteList = substr($siteList, 0, -1);
 
        // $this->tpl_data['Subprojects'] = Utility::getSubprojectList(); //array('1' => '6 Month Recruit', '2' => '12 Month Recruit', '3' => 'Control');
-        $Visits = array ('6 Month' => 'v06', '12 Month' => 'v12', '18 Month' => 'v18', '24 Month' => 'v24', '36 Month' => 'v36');
+       $Visits = array ('6 Month' => 'v06', '12 Month' => 'v12', '18 Month' => 'v18', '24 Month' => 'v24', '36 Month' => 'v36');
+
+        if($currentProject == 2) {
+            $Visits = array ('Screening'=>'Screening','3 Month'=>'v03','6 Month' => 'v06','9 Month'=>'v09', 
+                      '12 Month' => 'v12','15 Month'=>'v15','18 Month' => 'v18', '24 Month' => 'v24', '36 Month' => 'v36');
+        }
         $this->tpl_data['Visits'] = $Visits;
         $instruments  = array_merge(
             array( '' => 'Recruit Gender Breakdown'),
