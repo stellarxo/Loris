@@ -98,10 +98,8 @@ class NDB_BVL_Instrument_neuro_screen extends NDB_BVL_Instrument
                              '27_cafe_au_lait_spots_describe_status',
                              'q27_cafe_au_lait_spots_describe_status',
                              '28_cutaneous_nodules_describe_status',
-                             'q28_cutaneous_nodules_describe_status');
-
-
-
+                             'q28_cutaneous_nodules_describe_status',
+                             'other_comments_status');
 
 
         // setup the form

@@ -57,36 +57,40 @@ class NDB_BVL_Instrument_ados_module2 extends NDB_BVL_Instrument
 		/**
 		 * Array of column names to be ignored by the double data entry conflict detector.
 		 */
-		$this->_doubleDataEntryDiffIgnoreColumns = array('CommentID', 'UserID', 'Testdate', 'Window_Difference', 'Candidate_Age',
-                                 // Text entry columns
-								 'd1_specify',
-								 'd1_specify_status',
-								 'd2_specify',
-								 'd2_specify_status',
-								 'd4_specify',
-								 'd4_specify_status',
-                                 // Scored columns
-                                 'social_affect_total',
-                                 'restricted_repetitive_behavior_total',
-                                 'social_affect_restricted_repetitive_behavior_total',
-                                 'ADOS_classification',
-                                 'b1_weighted',
-                                 'b10_weighted',
-                                 'b2_weighted',
-                                 'b11_weighted',
-                                 'b3_weighted',
-                                 'b8_weighted',
-                                 'a7_weighted',
-                                 'a8_weighted',
-                                 'b5_weighted',
-                                 'b6_weighted',
-                                 'a5_weighted',
-                                 'd1_weighted',
-                                 'd2_weighted',
-                                 'd4_weighted',
-                                 'Data_entry_completion_status'
-                                 );
-
+        $this->_doubleDataEntryDiffIgnoreColumns = array('CommentID', 'UserID', 'Testdate', 'Window_Difference', 
+                'Candidate_Age',
+                // Text entry columns
+                'd1_specify',
+                'd1_specify_status',
+                'd2_specify',
+                'd2_specify_status',
+                'd4_specify',
+                'd4_specify_status',
+                // Scored columns
+                "ADOS_classification",
+                "social_affect_total",
+                "restricted_repetitive_behavior_total",
+                "social_affect_restricted_repetitive_behavior_total",
+                'a2_weighted',
+                'a3_weighted',
+                'a8_weighted',
+                'b1_weighted',
+                'b3_weighted',
+                'b4_weighted',
+                'b5_weighted',
+                'b9_weighted',
+                'b10_weighted',
+                'b11_weighted',
+                'b12_weighted',
+                'd1_weighted',
+                'd2_weighted',
+                'd4_weighted',
+                'social_affect_gotham_weighted',
+                'restricted_repetitive_gotham_weighted',
+                'gotham_weighted_score',
+                'severity_score_lookup',
+                'Data_entry_completion_status',
+                'other_comments_status');
 
 
        // setup the form

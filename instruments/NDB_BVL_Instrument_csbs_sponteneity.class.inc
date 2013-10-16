@@ -80,12 +80,30 @@ INSERT INTO instrument_subtests VALUES('', 'csbs_sponteneity', 'csbs_sponteneity
     /**
      * Array of column names to be ignored by the double data entry conflict detector.
      */
-    $this->_doubleDataEntryDiffIgnoreColumns = array('CommentID', 'UserID', 'Testdate', 'Window_Difference', 'Candidate_Age',
-						     'relationship_to_child',
-						     'relationship_to_child_status',
-						     'comments',
-						     'comments_status',
-						   'q_19_sequence_action_schemes_6');
+        $this->_doubleDataEntryDiffIgnoreColumns = array('CommentID', 'UserID', 'Testdate', 'Window_Difference',
+                'Candidate_Age',
+                'relationship_to_child',
+                'relationship_to_child_status',
+                'comments',
+                'comments_status',
+                'q_19_sequence_action_schemes_6',
+                'free_total_NC',
+                'free_response_to_prompt',
+                'free_SC_yes',
+                'free_non_prompted_yes',
+                'free_average_prompt',
+                'free_total_prompts',
+                'structured_total_NC',
+                'structured_response_to_prompt',
+                'structured_SC_yes',
+                'structured_non_prompted_yes',
+                'structured_average_prompt',
+                'structured_total_prompts',
+                'overall_total_prompts',
+                'overall_average_prompts',
+                'overall_yes_NP',
+                'overall_yes_SC',
+                'overall_NC');
 
              //date formats
 

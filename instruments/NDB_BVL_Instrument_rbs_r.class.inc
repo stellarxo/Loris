@@ -122,6 +122,20 @@ INSERT INTO instrument_subtests VALUES('', 'rbs_r', 'rbs_r_page1', 'Subscales', 
 
 		$this->localDefaults = array_merge($this->localDefaults, array('endorsed'=>"Number endorsed", 'total_score'=>"Subscale score"));
 
+        $this->_doubleDataEntryDiffIgnoreColumns = array('CommentID', 'UserID', 'Testdate', 'Window_Difference',
+                'Candidate_Age',
+                'Data_entry_completion_status',
+                'I_stereotyped_score', 'I_stereotyped_endorsed',
+                'II_self_injurious_score', 'II_self_injurious_endorsed',
+                'III_compulsive_score', 'III_compulsive_endorsed',
+                'IV_ritualistic_score', 'IV_ritualistic_endorsed',
+                'V_sameness_score', 'V_sameness_endorsed',
+                'VI_restricted_score', 'VI_restricted_endorsed',
+                'respondent_specify',
+                'overall_endorsed',
+                'overall_score');
+
+
 	}
 
 	//If the instrument is not paged, remove the switch from the _setupForm method and add all the form Elements in this function.

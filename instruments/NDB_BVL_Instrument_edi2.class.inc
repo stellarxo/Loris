@@ -325,8 +325,8 @@ INSERT INTO help(hash, topic) VALUES (md5('edi2'),'EDI_IBIS2');
                              'score_22_24_social',
                              'score_22_24_communication',
                              'score_22_24_repetitive_behaviour',
-                             'Data_entry_completion_status'
-                             );
+                             'Data_entry_completion_status',
+                             'other_comments_status');
 
 
         // setup the form

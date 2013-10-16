@@ -289,7 +289,9 @@ class NDB_BVL_Instrument_med_records_24 extends NDB_BVL_Instrument_med_records {
                                  'thirtyfive_weight_percentage',
                                  'thirtyfive_measurement_head_units_stat',
                                  'thirtyfive_head_percentage',
-                                 'hearing_screening_date_status');
+                                 'hearing_screening_date_status',
+                                 'comments_status',
+                                 'Data_entry_completion_status');
 		
 	
 

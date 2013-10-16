@@ -34,7 +34,8 @@ class NDB_BVL_Instrument_scq extends NDB_BVL_Instrument
 
 		// required fields for data entry completion status
 		$this->_requiredElements = array('Examiner', "q1_talk_short_phrases");
-
+        
+        $this->_doubleDataEntryDiffIgnoreColumns = array('CommentID', 'UserID', 'Testdate', 'Window_Difference', 'Candidate_Age','Data_entry_completion_status','score','scq_diagnosis');
 		// setup the form
 		$this->_setupForm();
 

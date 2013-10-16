@@ -107,7 +107,8 @@ class NDB_BVL_Instrument_ados_module1 extends NDB_BVL_Instrument
                              'restricted_repetitive_gotham_weighted',
                              'gotham_weighted_score',
                              'severity_score_lookup',
-                             'Data_entry_completion_status');
+                             'Data_entry_completion_status',
+                             'other_comments_status');
 
 
 

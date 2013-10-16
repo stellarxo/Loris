@@ -149,6 +149,8 @@ class NDB_BVL_Instrument_SRS extends NDB_BVL_Instrument
 
         //MODIFY THIS WHEN THE SCORING IS IMPLEMENTED
 
+        $this->_doubleDataEntryDiffIgnoreColumns = array('CommentID', 'UserID', 'Testdate', 'Window_Difference', 'Candidate_Age','Data_entry_completion_status','srs_score','completed_by_other_status');
+
         // setup the form
         $this->_setupForm();
 
