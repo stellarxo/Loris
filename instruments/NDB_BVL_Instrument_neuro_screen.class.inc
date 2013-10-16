@@ -64,7 +64,8 @@ class NDB_BVL_Instrument_neuro_screen extends NDB_BVL_Instrument
 							 'q24_ash_leaf_macules_describe',
 							 'q25_shagreen_patches_describe',
 							 'q27_cafe_au_lait_spots_describe',
-							 'q28_cutaneous_nodules_describe',
+							 'q28_cutaneous_nodules_describe');
+                             /* Commenting out: waiting for approval to add *_status fields
                              '1_strabismus_specify_status',
                              'q1_strabismus_specify_status',
                              '2_specify_status',
@@ -100,6 +101,7 @@ class NDB_BVL_Instrument_neuro_screen extends NDB_BVL_Instrument
                              '28_cutaneous_nodules_describe_status',
                              'q28_cutaneous_nodules_describe_status',
                              'other_comments_status');
+                             */
 
 
         // setup the form

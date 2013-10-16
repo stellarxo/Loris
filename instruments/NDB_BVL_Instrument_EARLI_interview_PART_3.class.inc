@@ -47,6 +47,9 @@ class NDB_BVL_Instrument_EARLI_interview_PART_3 extends NDB_BVL_Instrument_EARLI
 		$this->table = 'EARLI_interview_PART_3';              // name of table containing data keyed by commentID
 		$this->commentID = $commentID;
 		$this->requiredElements = array('interviewer', 'q8_1', 'q8_21', 'q8_41', 'q8_76', 'q8_98', 'q8_127_a', 'q8_152_a'); 
+          
+          /* Commenting out: waiting for approval to remove *_status fields  
+
         $this->_doubleDataEntryDiffIgnoreColumns = array('CommentID', 'UserID', 'Testdate',
                                                          'Window_Difference', 'Candidate_Age',
                                                          'Data_entry_completion_status',
@@ -325,6 +328,7 @@ class NDB_BVL_Instrument_EARLI_interview_PART_3 extends NDB_BVL_Instrument_EARLI
                                                          'q8_193_numberf_status',
                                                          'interview_date_date_status'
                                                          );
+        */
 
 		//The array of dates/timestamps to convert to database dates/timestamps
 		$this->dateTimeFields=array("interview_date");

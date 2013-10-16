@@ -62,7 +62,9 @@ class NDB_BVL_Instrument_EARLI_interview_PART_4 extends NDB_BVL_Instrument_EARLI
                 'addEmptyOption' => true,
                 'emptyOptionValue' => null
                 );
-		
+	
+      /* Commenting out: waiting for approval to remove *_status fields  
+
         $this->_doubleDataEntryDiffIgnoreColumns = array('CommentID', 'UserID', 'Testdate',
                                                          'Window_Difference', 'Candidate_Age',
                                                          'Data_entry_completion_status',
@@ -324,6 +326,7 @@ class NDB_BVL_Instrument_EARLI_interview_PART_4 extends NDB_BVL_Instrument_EARLI
                                                          'interview_date_date_status',
                                                          'interview_end_date_date_status'
                                                          );
+        */
 		// setup the form
 		$this->_setupForm();
 				        

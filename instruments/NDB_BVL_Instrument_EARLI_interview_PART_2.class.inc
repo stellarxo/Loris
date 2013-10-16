@@ -70,7 +70,7 @@ class NDB_BVL_Instrument_EARLI_interview_PART_2 extends NDB_BVL_Instrument_EARLI
 
         $oneToSeventy = array_combine(range(1, 70), range(1, 70));
         $this->oneToSeventyComplete = array(null=>"") + ($oneToSeventy) + array("88_Refused" => "88 Refused", "99_Do_not_know" => "99 Do not know", "not_answered" => "Not Answered");
-         
+        /* Commenting out: waiting for approval to remove *_status fields  
         $this->_doubleDataEntryDiffIgnoreColumns = array('CommentID', 'UserID', 'Testdate',
                                                          'Window_Difference', 'Candidate_Age',
                                                          'Data_entry_completion_status',
@@ -378,6 +378,7 @@ class NDB_BVL_Instrument_EARLI_interview_PART_2 extends NDB_BVL_Instrument_EARLI
                                                          'q5_86_3_other2_status',
                                                          'q5_86_3_other3_status'
                                                          );
+        */
         // setup the form
         $this->_setupForm();
 

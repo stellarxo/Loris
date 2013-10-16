@@ -125,7 +125,8 @@ INSERT INTO instrument_subtests VALUES('', 'seq', 'seq_page3', 'General and Adde
 							 'q29_uneasy_dizzy_what_do',
 							 'q30_flap_arms_what_do',
 							 'q31_free_time',
-							 'q32_seem_happiest',
+							 'q32_seem_happiest');
+                             /* Commenting out: waiting for approval to include *_status fields
                              '1_react_sensitively_what_do_status',
                              'q1_react_sensitively_what_do_status',
                              '2_enjoy_music_what_do_status',
@@ -207,7 +208,7 @@ INSERT INTO instrument_subtests VALUES('', 'seq', 'seq_page3', 'General and Adde
                              '43_notice_change_status',
                              'q43_notice_change_status'
                              );
-
+                          */
 
 
 

@@ -127,7 +127,9 @@ class NDB_BVL_Instrument_tsi_followup extends NDB_BVL_Instrument
 								 'med_his_q_11_nap_how_long',
 								 'med_his_q_11_nap_how_long_status',
                                  'further_information',
-                                 'Data_entry_completion_status',
+                                 'Data_entry_completion_status');
+          /* Commenting out: waiting for approval to remove *_status fields  
+
                                  'primary_language_status',
                                  'mother_occupation_status',
                                  'mother_dob_date_status',
@@ -176,7 +178,7 @@ class NDB_BVL_Instrument_tsi_followup extends NDB_BVL_Instrument
                                  'other_therapy6_status',
                                  'agetx6_status',
                                  'durationtx6_status',
-                                 'therapy_notes6_status');
+                                 'therapy_notes6_status');*/
 
 
 		// setup the form
