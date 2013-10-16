@@ -187,8 +187,6 @@ class NDB_BVL_Instrument_tsi_followup extends NDB_BVL_Instrument
 		foreach ($nonAskedQuestions as $field) {
 		        $this->form->addElement('static', null, $field);
 		    }
-	    $this->form->addElement("select","is_infant_adopted","Is infant adopted?", $this->yesNo);
-        $this->form->addElement("select","is_infant_twin","Is infant a twin?", $this->yesNo);
 		//Ethnicity
 		$this->form->addElement("static", null, "<br/><b>The following information does not change across time. Please ensure that it is entered in the TSI.</b>");
 
