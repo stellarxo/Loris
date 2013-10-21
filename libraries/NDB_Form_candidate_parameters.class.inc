@@ -245,7 +245,8 @@ class NDB_Form_candidate_parameters extends NDB_Form
     function add_family(){
         
         $this->form->addElement('text','SiblingID','Sibling ID:');
-        $this->form->addElement('select','SiblingType','Relation', array(''=>'','brother'=>'Brother','sister'=>'Sister'));
+        $this->form->addElement('select','SiblingType','Relation', array(null=>'','full_sibling'=>'Full Sibling',
+                                'half_sibling'=>'Half Sibling','1st_cousin'=>'First Cousin'));
         $this->form->addFormRule(array(&$this, '_validate_add_family'));
         $this->tpl_data['candID'] = $_REQUEST['candID']; 
 
@@ -254,10 +255,10 @@ class NDB_Form_candidate_parameters extends NDB_Form
 
     function _validate_add_family($values)
     {    
-       $candidate =& Candidate::singleton($this->identifier);
-                 if (PEAR::isError($candidate)) {
-                                 return PEAR::raiseError("Candidate Error ($this->identifier): ".$candidate->getMessage());
-                                         }
+        $candidate =& Candidate::singleton($this->identifier);
+        if (PEAR::isError($candidate)) {
+            return PEAR::raiseError("Candidate Error ($this->identifier): ".$candidate->getMessage());
+        }
 
         if(!is_array($values) || count($values) ==0) {
             return true;
