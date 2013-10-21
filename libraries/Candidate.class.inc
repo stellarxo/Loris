@@ -61,7 +61,8 @@ class Candidate
         }
 
         if (!is_array($row) || sizeof($row) == 0) {
-            return PEAR::raiseError("Could not select Candidate data from the database (DCCID: $candID)", CANDIDATE_INVALID);
+            return PEAR::raiseError("Could not select Candidate data from the database (DCCID: $candID)", 
+                                     CANDIDATE_INVALID);
         }
 
         // store user data in object property
