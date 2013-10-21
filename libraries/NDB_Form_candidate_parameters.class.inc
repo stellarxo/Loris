@@ -264,20 +264,26 @@ class NDB_Form_candidate_parameters extends NDB_Form
             return true;
         }
         $DB =& Database::singleton();
-        $fid = $candidate->getData('familyID');
-        if ($fid == null || $fid ==""){
-            $where = array();
-            $query = "SELECT max(FamilyID) from family";
-            $result = $DB->pselectOne($query, $where);
-            $fid = $result +1;
+
+        $fid = $DB->pselectOne("SELECT FamilyID from family where CandID:CaID",array('CaID' => $this->identifier));
+        if (PEAR::isError($fid)) {
+            return PEAR::raiseError("Could not family id: ".$fid->getMessage());
         }
-        $error = array();
-        $set = array();
-        $set['CandID'] = $_REQUEST['candID'];
-        $set['Relation_CandID'] = $values['SiblingID'];
-        $set['Relation_code'] = $values['SiblingType'];
-        $set['FamilyID'] = $fid;
-        $success = $DB->insert("family", $set);
+        if(empty($fid)){
+            $famID = $DB->pselectOne("SELECT max(FamilyID) from family");
+            if (PEAR::isError($famID)) {
+                return PEAR::raiseError("Could not family id: ".$famID->getMessage());
+            }
+            if(empty($famID)) {
+                $famID = 0;
+            }
+            $fid = $famID+1;
+        }
+        $success = $DB->insert('family',array('CandID'=>$cand,'FamilyID'=>$fid,'Relationship_type'=>$values['relation_type']));
+        if (PEAR::isError($success)) {
+            return PEAR::raiseError("DB Error: ".$success->getMessage());
+        }
+        $success = $DB->insert('family',array('CandID'=>$value,'FamilyID'=>$fid,'Relationship_type'=>$values['relation_type']));
         if (PEAR::isError($success)) {
             return PEAR::raiseError("DB Error: ".$success->getMessage());
         }
