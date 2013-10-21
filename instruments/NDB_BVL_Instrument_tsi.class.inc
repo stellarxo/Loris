@@ -294,10 +294,10 @@ class NDB_BVL_Instrument_tsi extends NDB_BVL_Instrument
         $this->form->addElement('select', "lighttherapy_proband",$this->indent. "If yes, light therapy required?", $this->yesNo);
         $this->XINRegisterRule("lighttherapy_proband", array("lighttherapy_proband{@}=={@}NEVER_REQUIRED"));
 
-        $this->addNumericElement('lighttherapy_days_proband', $this->indent."#days light therapy".$this->indent."<BR> (exclusionary if >3 days of lights; requiring transfustion;or due to materal/fetal RH incompatibility?)");
+        $this->addNumericElement('lighttherapy_days_proband', $this->indent."#days light therapy".$this->indent."<BR> (exclusionary if >3 days of lights; requiring transfusion;or due to maternal/fetal RH incompatibility?)");
         $this->XINRegisterRule("lighttherapy_days_proband", array("lighttherapy_days_proband{@}=={@}NEVER_REQUIRED"));
 
-        $this->form->addElement('select', "in_utero_exposure_proband", "Exposure in-utero to meds,tobacco, alcohol, or drugs<BR>(Rx or not including herbal and prenatal vitamins)?", $this->yesNo);
+        $this->form->addElement('select', "in_utero_exposure_proband", "Exposure during pregnancy to meds,tobacco, alcohol, or drugs<BR>(Rx or not including herbal and prenatal vitamins)?", $this->yesNo);
 		
         $questionArray = array("substance_proband"=>"Name of substance (get spelling):",
 		"substance_amount_proband"=>"Amount of substance at one time:",
@@ -326,20 +326,20 @@ class NDB_BVL_Instrument_tsi extends NDB_BVL_Instrument
 
 		$this->form->addElement("header", null, "Exclusionary Factors - Infant subjects");
 		$questionArray = array(
-		"neurological_problems_subject"=>"Any neurological problems in SUBJECT?",
+		"neurological_problems_subject"=>"Any neurological problems such as cerebral palsy or tuberous sclerosis in SUBJECT?",
 		"genetic_conditions_subject"=>"Diagnosed/suspected genetic conditions or syndromes?",
 		"seizures_or_neuro_disorder"=>"Do they have or have had they had seizures?",
-		"cns_problems"=>"CNS problems?",
+		"cns_problems"=>"CNS problems/injury such as head injury or meningitis?",
 		"congenital_heart_problems"=>"Congenital heart problems?",
 		"hearing_vision_impairments"=>"Significant hearing/vision problems?",
 		"diabetes"=>"Diabetes or gestational diabetes?",
         "pregnancy_complication_subject"=>"Any complication during pregnancy?<BR>(toxemia, high blood pressure, thyroid disorder)",
-		"complications_birth" => "Any complications at birth?",
+		"complications_birth" => "Any complications at birth?(Ex: vaccum extraction?)",
 		"premature_birth"=>"Premature birth (<37 weeks )?",
         "jaundice_subject"=>"Diagnosed with jaundice(hyperbilirubinemia)?",
 		"low_birth_weight"=>"Birth weight <4lbs. 6oz. (2000 grams)?",
-		"tested_for_fragile_x_subject"=>"Tested for Fragile X syndrome?",
-		"delivery_problems"=>"Problems during delivery?");
+	    "delivery_problems"=>"Problems during delivery?",
+		"tested_for_fragile_x_subject"=>"Tested for Fragile X syndrome?");
 		foreach($questionArray as $field=>$label) {
 			$this->form->addElement("select", $field, $label, $this->yesNo);
 			if ($field == 'premature_birth') {
@@ -355,6 +355,15 @@ class NDB_BVL_Instrument_tsi extends NDB_BVL_Instrument
             }
 
 		}
+        $this->form->addElement('select', "pregnancy_exposure_subject", "Exposure during pregnancy to meds,tobacco, alcohol, or drugs<BR>(Rx or not including herbal and prenatal vitamins)?", $this->yesNo);
+
+        $questionArray = array("substance_subject"=>"Name of substance (get spelling):",
+                "substance_amount_subject"=>"Amount of substance at one time:",
+                "time_exposure_subject"=>"Time period of exposure (weeks of pregnancy):");
+        foreach($questionArray as $field=>$label) {
+            $this->addTextElement("pregnancy_" . $field, $this->indent . $label, array("pregnancy_exposure_subject{@}=={@}yes"), "This field is required if there was exposure during pregnancy");
+        }
+
         $this->form->addElement('select', "breastfed_subject", "Did you or are you breastfeeding your infant?", $this->yesNo);
         $this->addNumericElement("breastfed_subject_months",$this->indent."If yes, how long? Months:");
         $this->XINRegisterRule("breastfed_subject_months", array("breastfed_subject_months{@}=={@}NEVER_REQUIRED"));
