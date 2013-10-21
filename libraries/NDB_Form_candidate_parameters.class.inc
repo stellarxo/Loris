@@ -14,7 +14,7 @@ class NDB_Form_candidate_parameters extends NDB_Form
     {
         // create user object
         $user =& User::singleton();
-        if(PEAR::isError($user)) {
+        if(Utility::isErrorX($user)) {
             return PEAR::raiseError("User Error: ".$user->getMessage());
         }
 
@@ -24,7 +24,7 @@ class NDB_Form_candidate_parameters extends NDB_Form
         }
 
         $candidate =& Candidate::singleton($this->identifier);
-        if (PEAR::isError($candidate)) {
+        if (Utility::isErrorX($candidate)) {
             return PEAR::raiseError("Candidate Error ($this->identifier): ".$candidate->getMessage());
         }
 
@@ -120,12 +120,12 @@ class NDB_Form_candidate_parameters extends NDB_Form
         }
        } else {
            $fid = $DB->pselectOne("SELECT FamilyID from family where CandID=:CaID",array('CaID' => $this->identifier));
-           if (PEAR::isError($fid)) {
+           if (Utility::isErrorX($fid)) {
                return PEAR::raiseError("Could not family id: ".$fid->getMessage());
            }
            if(empty($fid)){
                $famID = $DB->pselectOne("SELECT max(FamilyID) from family");
-               if (PEAR::isError($famID)) {
+               if (Utility::isErrorX($famID)) {
                    return PEAR::raiseError("Could not family id: ".$famID->getMessage());
                }
                if(empty($famID)) {
@@ -134,7 +134,7 @@ class NDB_Form_candidate_parameters extends NDB_Form
                $fid = $famID+1;
                $success = $DB->insert('family',array('CandID'=>$this->identifier,'FamilyID'=>$fid,
                            'Relationship_type'=>$values['relation_type']));
-               if (PEAR::isError($success)) {
+               if (Utility::isErrorX($success)) {
                    return PEAR::raiseError("DB Error: ".$success->getMessage());
                }
 
@@ -143,7 +143,7 @@ class NDB_Form_candidate_parameters extends NDB_Form
            $value = $values['SiblingID'];
            $success = $DB->insert('family',array('CandID'=>$value,'FamilyID'=>$fid,
                                                  'Relationship_type'=>$values['relation_type']));
-           if (PEAR::isError($success)) {
+           if (Utility::isErrorX($success)) {
                return PEAR::raiseError("DB Error: ".$success->getMessage());
            }
 
@@ -180,14 +180,14 @@ class NDB_Form_candidate_parameters extends NDB_Form
 
         $ethnicityList = array(null=>'');
         $success = Utility::getEthnicityList();
-        if (PEAR::isError($success)) {
+        if (Utility::isErrorX($success)) {
         	return PEAR::raiseError("Utility::getEthnicityList error: ".$success->getMessage());
         }
         $ethnicityList = array_merge($ethnicityList,$success);
         unset($success);
         
         $candidate =& Candidate::singleton($this->identifier);
-        if (PEAR::isError($candidate)) {
+        if (Utility::isErrorX($candidate)) {
             return PEAR::raiseError("Candidate Error ($this->identifier): ".$candidate->getMessage());
         }
 
