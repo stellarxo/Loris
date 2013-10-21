@@ -23,8 +23,8 @@
 <td nowrap="nowrap">{$form.SiblingID.html}</td>
 </tr>
 <tr>
-<td nowrap="nowrap">{$form.SiblingType.label}</td>
-<td nowrap="nowrap">{$form.SiblingType.html}</td>
+<td nowrap="nowrap">{$form.relation_type.label}</td>
+<td nowrap="nowrap">{$form.relation_type.html}</td>
 </tr>
 <tr>
 <td nowrap="nowrap">&nbsp;</td>

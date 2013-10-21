@@ -8,7 +8,8 @@ require_once "Utility.class.inc";
  */
 class NDB_Form_candidate_parameters extends NDB_Form
 {
-    
+    var $relationType =  array(null=>'','full_sibling'=>'Full Sibling',
+                               'half_sibling'=>'Half Sibling','1st_cousin'=>'First Cousin');
     function _hasAccess()
     {
         // create user object
@@ -58,11 +59,14 @@ class NDB_Form_candidate_parameters extends NDB_Form
 
         } else {
             $this->tpl_data['familyID'] = $familyid;
-            $relations = $DB->pselect("SELECT Relation_CandID, Relation_code from family WHERE FamilyID=:fam_id",array('fam_id'=> $familyid));
+            $relations = $DB->pselect("SELECT CandID, Relationship_type from family WHERE FamilyID=:fam_id
+                                       AND CandID <> '$this->identifier'" ,array('fam_id'=> $familyid));
 
         }
         $this->tpl_data['sibling_list'] = array();
-        foreach($relations as $relation){
+        foreach($relations as $relation)
+        {
+            $relation['Relationship_type'] = $this->relationType[$relation['Relationship_type']];
             $this->tpl_data['sibling_list'][]= $relation;
         }
         return $defaults;
@@ -75,7 +79,7 @@ class NDB_Form_candidate_parameters extends NDB_Form
         }
         
         $DB =& Database::singleton();
-        
+       if(!isset($values['SiblingID'])){ 
         //delete old values
         $DB->delete("parameter_candidate", array("CandID"=>$this->identifier));
         
@@ -114,7 +118,37 @@ class NDB_Form_candidate_parameters extends NDB_Form
             }
 
         }
+       } else {
+           $fid = $DB->pselectOne("SELECT FamilyID from family where CandID=:CaID",array('CaID' => $this->identifier));
+           if (PEAR::isError($fid)) {
+               return PEAR::raiseError("Could not family id: ".$fid->getMessage());
+           }
+           if(empty($fid)){
+               $famID = $DB->pselectOne("SELECT max(FamilyID) from family");
+               if (PEAR::isError($famID)) {
+                   return PEAR::raiseError("Could not family id: ".$famID->getMessage());
+               }
+               if(empty($famID)) {
+                   $famID = 0;
+               }
+               $fid = $famID+1;
+               $success = $DB->insert('family',array('CandID'=>$this->identifier,'FamilyID'=>$fid,
+                           'Relationship_type'=>$values['relation_type']));
+               if (PEAR::isError($success)) {
+                   return PEAR::raiseError("DB Error: ".$success->getMessage());
+               }
 
+           }
+
+           $value = $values['SiblingID'];
+           $success = $DB->insert('family',array('CandID'=>$value,'FamilyID'=>$fid,
+                                                 'Relationship_type'=>$values['relation_type']));
+           if (PEAR::isError($success)) {
+               return PEAR::raiseError("DB Error: ".$success->getMessage());
+           }
+
+          
+        }
         $this->tpl_data['success'] = true;
 
         // freeze it, just in case
@@ -221,7 +255,7 @@ class NDB_Form_candidate_parameters extends NDB_Form
         $this->form->addElement('static', 'father_race', 'Father\'s Race:', $this->_getTSIinfo("father_race"));
         $this->form->addElement('static', 'birth_city', 'City of Birth:', $this->_getTSIinfo("city_of_birth"));
         $this->form->addElement('static', 'home_lang', 'Primary Language At Home:', $this->_getTSIinfo("primary_language"));
-        $this->form->addElement('static','SiblingID','Sibling ID:'); 
+        $this->form->addElement('static','SiblingcID','Sibling ID:'); 
         $this->form->addElement('select','SiblingType','Relation Type:', array(''=>'','broth'=>'Brother','siste'=>'Sister'));
     }
 
@@ -245,8 +279,7 @@ class NDB_Form_candidate_parameters extends NDB_Form
     function add_family(){
         
         $this->form->addElement('text','SiblingID','Sibling ID:');
-        $this->form->addElement('select','SiblingType','Relation', array(null=>'','full_sibling'=>'Full Sibling',
-                                'half_sibling'=>'Half Sibling','1st_cousin'=>'First Cousin'));
+        $this->form->addElement('select','relation_type','Relation Type', $this->relationType);
         $this->form->addFormRule(array(&$this, '_validate_add_family'));
         $this->tpl_data['candID'] = $_REQUEST['candID']; 
 
@@ -254,46 +287,31 @@ class NDB_Form_candidate_parameters extends NDB_Form
     }
 
     function _validate_add_family($values)
-    {    
-        $candidate =& Candidate::singleton($this->identifier);
-        if (PEAR::isError($candidate)) {
-            return PEAR::raiseError("Candidate Error ($this->identifier): ".$candidate->getMessage());
-        }
-
+    {   
         if(!is_array($values) || count($values) ==0) {
             return true;
         }
+        $cand = $values['SiblingID'];
         $DB =& Database::singleton();
-
-        $fid = $DB->pselectOne("SELECT FamilyID from family where CandID:CaID",array('CaID' => $this->identifier));
-        if (PEAR::isError($fid)) {
-            return PEAR::raiseError("Could not family id: ".$fid->getMessage());
+        $errors = array();
+        $results = $DB->pselect("SELECT CandID from candidate where Active='Y'" ,array());
+        $activeCandidates = array();
+        foreach($results as $row) {
+            $activeCandidates[] = $row['CandID'];
         }
-        if(empty($fid)){
-            $famID = $DB->pselectOne("SELECT max(FamilyID) from family");
-            if (PEAR::isError($famID)) {
-                return PEAR::raiseError("Could not family id: ".$famID->getMessage());
-            }
-            if(empty($famID)) {
-                $famID = 0;
-            }
-            $fid = $famID+1;
+        if(!in_array($cand, $activeCandidates)){
+            $errors['SiblingID']= 'Candidate should be part of study. Please enter correct CandID';
         }
-        $success = $DB->insert('family',array('CandID'=>$cand,'FamilyID'=>$fid,'Relationship_type'=>$values['relation_type']));
-        if (PEAR::isError($success)) {
-            return PEAR::raiseError("DB Error: ".$success->getMessage());
+        $familyID = $DB->pselectOne("SELECT FamilyID from family WHERE CandID=:cid",array('cid'=>$this->identifier));
+        $relatives = $DB->pselect("SELECT CandID from family WHERE FamilyID=:fid",array('fid'=>$familyID));
+        $active_family = array();
+        foreach($relatives as $relative){
+            $active_family[] = $relative['CandID'];    
         }
-        $success = $DB->insert('family',array('CandID'=>$value,'FamilyID'=>$fid,'Relationship_type'=>$values['relation_type']));
-        if (PEAR::isError($success)) {
-            return PEAR::raiseError("DB Error: ".$success->getMessage());
+        if(in_array($cand, $active_family)){
+            $errors['SiblingID'] = 'CandID already entered as Sibling';    
         }
-
-        $this->tpl_data['success'] = true;
-
-        // freeze it, just in case
-        $this->form->freeze();
-        
-        return $error;
+        return $errors;
     }
 
 
