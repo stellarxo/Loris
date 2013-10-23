@@ -44,7 +44,7 @@ class NDB_Menu_statistics_site extends NDB_Menu
 
         return $instrumentName;
     }
-    function _CompleteCount($id, $instrument) {
+    function _CompleteCount($id, $instrument,$projectID) {
         $DB =& Database::singleton();
         $count = $DB->selectOne(
                 "SELECT count(s.CandID)  FROM session as s, 
@@ -54,7 +54,8 @@ class NDB_Menu_statistics_site extends NDB_Menu
                 AND s.Cancelled='N' AND s.Active='Y' 
                 AND s.CenterID={$id} AND f.Data_entry='Complete' 
                 AND s.Current_stage <> 'Recycling Bin'
-                AND f.Administration='All' 
+                AND f.Administration='All'
+                AND c.ProjectID={$projectID}
                 AND i.CommentID NOT LIKE 'DDE%';");
         if (PEAR::isError($result)) {
             return PEAR::raiseError("DB Error: ".$result->getMessage());
@@ -62,7 +63,7 @@ class NDB_Menu_statistics_site extends NDB_Menu
         return $count;
 
     }
-    function _GetResults($id, $instrument) {
+    function _GetResults($id, $instrument,$projectID) {
         $DB =& Database::singleton();
         $DB->select("SELECT s.CandID, f.SessionID, i.CommentID, c.PSCID, 
                 lower(s.Visit_label) as Visit_label
@@ -73,7 +74,8 @@ class NDB_Menu_statistics_site extends NDB_Menu
                 AND s.Cancelled='N' AND s.Active='Y' 
                 AND s.Current_stage <> 'Recycling Bin'
                 AND s.CenterID={$id} 
-                AND (f.Data_entry is NULL OR f.Data_entry<>'Complete') 
+                AND (f.Data_entry is NULL OR f.Data_entry<>'Complete')
+                AND c.ProjectID={$projectID}
                 AND i.CommentID NOT LIKE 'DDE%' ORDER BY s.Visit_label, c.PSCID;", $result);
         if (PEAR::isError($result)) {
             return PEAR::raiseError("DB Error: ".$result->getMessage());
@@ -95,6 +97,11 @@ class NDB_Menu_statistics_site extends NDB_Menu
         $DB->selectRow("SELECT CenterID as ID, PSCArea as Name FROM psc WHERE CenterID=" . $_REQUEST['CenterID'], $center);
         $id = $center['ID'];
         $name = $center['Name'];
+        foreach(Utility::getProjectList() as $key => $value) {
+            $projects[$key] = $value;
+        }
+        $projectName = $projects[$_REQUEST['projectID']];
+        $projectID = $_REQUEST['projectID'];
         // List of all visits. Add to it any time a new one is seen, so
         // that we can iterate over it to display later, and leave blank
         // cells for ones that are missing for a given instrument in the 
@@ -104,9 +111,9 @@ class NDB_Menu_statistics_site extends NDB_Menu
         $data = array();
         foreach($this->instruments as $instrument){
            // $instrument = $instruments['Test_name'];
-            $complete_count = $this->_CompleteCount($id, $instrument); 
+            $complete_count = $this->_CompleteCount($id, $instrument,$projectID); 
 
-            $results = $this->_GetResults($id, $instrument);
+            $results = $this->_GetResults($id, $instrument,$projectID);
 
             $test_url = $instrument;
             if(substr($test_url, 0, 10) == "figs_year3"){
@@ -132,6 +139,7 @@ class NDB_Menu_statistics_site extends NDB_Menu
         $this->tpl_data["data"] = $data;
         $this->tpl_data["SiteName"] = $name;
         $this->tpl_data["CenterID"] = $id;
+        $this->tpl_data["ProjectName"] = $projectName;
         sort($visits);
         $this->tpl_data['AllVisits'] = $visits;
         $this->tpl_data['NumVisitLabels'] = count($visits);
