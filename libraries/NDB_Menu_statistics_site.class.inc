@@ -44,7 +44,7 @@ class NDB_Menu_statistics_site extends NDB_Menu
 
         return $instrumentName;
     }
-    function _CompleteCount($id, $instrument,$projectID) {
+    function _CompleteCount($id, $instrument,$ExtraProject_Criteria) {
         $DB =& Database::singleton();
         $count = $DB->selectOne(
                 "SELECT count(s.CandID)  FROM session as s, 
@@ -55,7 +55,7 @@ class NDB_Menu_statistics_site extends NDB_Menu
                 AND s.CenterID={$id} AND f.Data_entry='Complete' 
                 AND s.Current_stage <> 'Recycling Bin'
                 AND f.Administration='All'
-                AND c.ProjectID={$projectID}
+                $ExtraProject_Criteria
                 AND i.CommentID NOT LIKE 'DDE%';");
         if (PEAR::isError($result)) {
             return PEAR::raiseError("DB Error: ".$result->getMessage());
@@ -63,7 +63,7 @@ class NDB_Menu_statistics_site extends NDB_Menu
         return $count;
 
     }
-    function _GetResults($id, $instrument,$projectID) {
+    function _GetResults($id, $instrument,$ExtraProject_Criteria) {
         $DB =& Database::singleton();
         $DB->select("SELECT s.CandID, f.SessionID, i.CommentID, c.PSCID, 
                 lower(s.Visit_label) as Visit_label
@@ -75,7 +75,7 @@ class NDB_Menu_statistics_site extends NDB_Menu
                 AND s.Current_stage <> 'Recycling Bin'
                 AND s.CenterID={$id} 
                 AND (f.Data_entry is NULL OR f.Data_entry<>'Complete')
-                AND c.ProjectID={$projectID}
+                $ExtraProject_Criteria
                 AND i.CommentID NOT LIKE 'DDE%' ORDER BY s.Visit_label, c.PSCID;", $result);
         if (PEAR::isError($result)) {
             return PEAR::raiseError("DB Error: ".$result->getMessage());
@@ -100,8 +100,16 @@ class NDB_Menu_statistics_site extends NDB_Menu
         foreach(Utility::getProjectList() as $key => $value) {
             $projects[$key] = $value;
         }
-        $projectName = $projects[$_REQUEST['projectID']];
-        $projectID = $_REQUEST['projectID'];
+       if(isset($_REQUEST['projectID']) && $_REQUEST['projectID'] != '') {
+            $ExtraProject_Criteria = ' AND (c.ProjectID IS NULL OR c.ProjectID=' . $_REQUEST['projectID'] . ')';
+            $projectName = $projects[$_REQUEST['projectID']];
+            $projectID = $_REQUEST['projectID'];
+ 
+
+        } else {
+            $ExtraProject_Criteria = '';
+        }
+
         // List of all visits. Add to it any time a new one is seen, so
         // that we can iterate over it to display later, and leave blank
         // cells for ones that are missing for a given instrument in the 
@@ -111,9 +119,9 @@ class NDB_Menu_statistics_site extends NDB_Menu
         $data = array();
         foreach($this->instruments as $instrument){
            // $instrument = $instruments['Test_name'];
-            $complete_count = $this->_CompleteCount($id, $instrument,$projectID); 
+            $complete_count = $this->_CompleteCount($id, $instrument,$ExtraProject_Criteria); 
 
-            $results = $this->_GetResults($id, $instrument,$projectID);
+            $results = $this->_GetResults($id, $instrument,$ExtraProject_Criteria);
 
             $test_url = $instrument;
             if(substr($test_url, 0, 10) == "figs_year3"){
