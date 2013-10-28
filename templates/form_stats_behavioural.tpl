@@ -36,7 +36,7 @@
             <td class="total">{$behaviour[$center.ID].all.complete|default:"0"}</td>
             <td class="total">{$behaviour[$center.ID].all.total|default:"0"}</td>
             <td class="total">{$behaviour[$center.ID].all.percent|default:"0"}%</td>
-            <td> <a href='main.php?test_name=statistics_site&CenterID={$center.NumericID}'>Please Click Here</a></td>
+            <td> <a href='main.php?test_name=statistics_site&CenterID={$center.NumericID}&projectID={$CurrentProject.ID}'>Please Click Here</a></td>
          </tr>
          {/foreach}
 </table>

@@ -40,6 +40,7 @@ class NDB_Form_statistics extends NDB_Form
         $tpl_data['DropdownOptions'] = $dropdown_opt;
         $tpl_data['DropdownSelected'] = $dropdown_selected;
         $tpl_data['Centers'] = $centres;
+        $tpl_data['Project'] = $projectID;
         foreach($data as $row) {
             $subproj = $row['SubprojectID'];
             $vl = $row['VLabel'];
