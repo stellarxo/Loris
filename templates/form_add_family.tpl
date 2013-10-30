@@ -1,15 +1,14 @@
 {if $success}
 
 <p>Family added successful<br /></p>
-<br>
+<br />
 {/if}
 
-<br />
 
 <form method="post" name="add_family" id="add_family" enctype="multipart/form-data">
+{if not $success}
 <table class="std">
 <!-- table title -->
-{if not $success}
 <tr><th colspan="2">Add Family Member Information</th></tr>
 
 {foreach from=$form.errors item=error}

@@ -10,6 +10,7 @@ class NDB_Form_candidate_parameters extends NDB_Form
 {
     var $relationType =  array(null=>'','full_sibling'=>'Full Sibling',
                                'half_sibling'=>'Half Sibling','1st_cousin'=>'First Cousin');
+    var $indent = "&nbsp;&nbsp;&nbsp;&nbsp;";
     function _hasAccess()
     {
         // create user object
@@ -69,6 +70,8 @@ class NDB_Form_candidate_parameters extends NDB_Form
             $relation['Relationship_type'] = $this->relationType[$relation['Relationship_type']];
             $this->tpl_data['sibling_list'][]= $relation;
         }
+        $defaults['flagged_caveatemptor'] = $DB->pselectOne("SELECT flagged_caveatemptor FROM candidate WHERE CandID=:CandidateID", array('CandidateID' => $this->identifier));
+        $defaults['flagged_info'] = $DB->pselectOne("SELECT flagged_info FROM candidate WHERE CandID=:CandidateID", array('CandidateID' => $this->identifier));
         return $defaults;
     }
 
@@ -92,7 +95,8 @@ class NDB_Form_candidate_parameters extends NDB_Form
                 $set['Value']=$value;
                 $set['InsertTime']=time();
                 $DB->insert("parameter_candidate", $set);
-            } else if($key == 'CandidateGUID' || $key == "ProbandGUID" || $key == 'ProbandDoB' || $key == 'ProbandGender') {
+            } else if($key == 'CandidateGUID' || $key == "ProbandGUID" || $key == 'ProbandDoB' || $key == 'ProbandGender'
+                      || $key =='flagged_caveatemptor' || $key == 'flagged_info') {
                 if($key == 'ProbandDoB') {
                     $value = $this->_getDatabaseDate($value);
                 }
@@ -256,7 +260,12 @@ class NDB_Form_candidate_parameters extends NDB_Form
         $this->form->addElement('static', 'birth_city', 'City of Birth:', $this->_getTSIinfo("city_of_birth"));
         $this->form->addElement('static', 'home_lang', 'Primary Language At Home:', $this->_getTSIinfo("primary_language"));
         $this->form->addElement('static','SiblingcID','Sibling ID:'); 
-        $this->form->addElement('select','SiblingType','Relation Type:', array(''=>'','broth'=>'Brother','siste'=>'Sister'));
+        $this->form->addElement('select','flagged_caveatemptor','Candidate flagged for Caveat Emptor', 
+                                 array(''=>'','true'=>'True','false'=>'False'));
+        $this->form->addElement('select','flagged_info',$this->indent.'Please provide additional information',
+                                 array(''=>'','older_sibling_autism'=>'Older Sibling diagnosed with autism. Child moved from LR to HR', 'family_excluded'=>'Family met exclusionary criteria after enrollment in study'));
+        $this->form->addFormRule(array(&$this, '_validate_caveat'));
+
     }
 
     /* This is taken from NDB_BVL_Instrument. It should be moved to NDB_Page once NDB_Page is merged. */
@@ -311,7 +320,21 @@ class NDB_Form_candidate_parameters extends NDB_Form
         if(in_array($cand, $active_family)){
             $errors['SiblingID'] = 'CandID already entered as Sibling';    
         }
+        if(empty($values['relation_type'])) {
+            $errors['relation_type'] = 'Please specify relationship type';    
+        }
+        if(empty($values['SiblingID'])) {
+            $errors['relation_type'] = 'Please specify relationship type';    
+        }
         return $errors;
+    }
+    
+    function _validate_caveat($values){
+        
+        if($values['flagged_caveatemptor']=='true' && empty($values['flagged_info'])){
+            return array('flagged_info'=>'Please provide additional information for flagging candidate as Caveat Emptor');    
+        }
+        
     }
 
 
