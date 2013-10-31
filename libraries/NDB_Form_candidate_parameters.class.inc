@@ -11,6 +11,7 @@ class NDB_Form_candidate_parameters extends NDB_Form
     var $relationType =  array(null=>'','full_sibling'=>'Full Sibling',
                                'half_sibling'=>'Half Sibling','1st_cousin'=>'First Cousin');
     var $indent = "&nbsp;&nbsp;&nbsp;&nbsp;";
+
     function _hasAccess()
     {
         // create user object
@@ -44,7 +45,9 @@ class NDB_Form_candidate_parameters extends NDB_Form
         $defaults['CandidateGUID'] = $DB->pselectOne("SELECT CandidateGUID FROM candidate WHERE CandID=:CandidateID", array('CandidateID' => $this->identifier));
         $defaults['ProbandGUID'] = $DB->pselectOne("SELECT ProbandGUID FROM candidate WHERE CandID=:CandidateID", array('CandidateID' => $this->identifier));
         $defaults['ProbandDoB'] = $DB->pselectOne("SELECT ProbandDoB FROM candidate WHERE CandID=:CandidateID", array('CandidateID' => $this->identifier));
-        
+        if( $defaults['ProbandDoB']=== '0000-00-00') {
+            $defaults['ProbandDoB'] = '';
+        }
         $defaults['ProbandGender'] = $DB->pselectOne("SELECT ProbandGender FROM candidate WHERE CandID=:CandidateID", array('CandidateID' => $this->identifier));
         $candidate_dob = $DB->pselectOne("SELECT DoB FROM candidate WHERE CandID=:CandidateID", array('CandidateID' => $this->identifier));
 
@@ -105,7 +108,10 @@ class NDB_Form_candidate_parameters extends NDB_Form
             $id = $currentUser->getData("UserID");
             $values['entry_staff'] = $id;
         }
-                //insert new values
+        //delete old values
+        $DB->delete("parameter_candidate", array("CandID"=>$this->identifier));
+
+        //insert new values
         while(list($key, $value)=each($values)){
         	$set="";
             if(strpos($key, "PTID_") === 0) {
@@ -113,15 +119,11 @@ class NDB_Form_candidate_parameters extends NDB_Form
                 $set['CandID']=$this->identifier;
                 $set['Value']=$value;
                 $set['InsertTime']=time();
-                
-                //delete old values
-                $DB->delete("parameter_candidate", array("CandID"=>$this->identifier));
-
                 $DB->insert("parameter_candidate", $set);
             } else if($key == 'CandidateGUID' || $key == "ProbandGUID" || $key == 'ProbandDoB' || $key == 'ProbandGender'
                       || $key =='flagged_caveatemptor' || $key == 'flagged_info') {
                 if($key == 'ProbandDoB') {
-                    $value = $this->_getDatabaseDate($value);
+                    $value = $this->_getQuickformDate($value);
                 }
                 $DB->update("candidate", array($key => $value), array('CandID' => $this->identifier));
 
@@ -307,6 +309,8 @@ class NDB_Form_candidate_parameters extends NDB_Form
         }
         $this->form->addElement('text', 'CandidateGUID', 'Candidate GUID:');
         $this->form->addElement('text', 'ProbandGUID', 'Proband GUID:');
+        
+        $config =& NDB_Config::singleton();
         $probandDateOptions = array(
             'language' => 'en',
             'format'   => 'YMd',
@@ -466,7 +470,7 @@ class NDB_Form_candidate_parameters extends NDB_Form
         $options = $this->getParticipantStatusOptionsVerbose();
 
         $DB =& Database::singleton();
-print_r($fields);
+//print_r($fields);
              // consent requirements
         $consent = $config->getSetting('ConsentModule');
         if ($consent['useConsent'] === 'true') {
@@ -519,13 +523,13 @@ print_r($fields);
         }
         if ($options[$fields['participant_statusID']]['Required'] == true) {
             $fields['participant_subOptions'] = trim($fields['participant_subOptions']);
-            if(empty($fields['participant_subOptions'])) { print "LLLLLLL";
+            if(empty($fields['participant_subOptions'])) {
                 $errors['reason_specify'] = "Please specify the status";
             }        
         }
 
 
-print_r($errors); 
+//print_r($errors); 
         return $errors;
     }
 
@@ -590,6 +594,28 @@ print_r($errors);
         return $databaseValue;
     }
 
-*/
+ */
+    /**
+     * Convert a database date or timestamp into a QuickForm acceptable date or time
+     *
+     * @param string  $databaseValue        the date or timestamp from the database
+     * @return array   $formDateValue       the quickform date/timestamp array
+     * @access private
+     */
+    function _getQuickformDate($databaseValue){
+        $formDateValue = null;
+        if(!empty($databaseValue)){
+            if(strstr($databaseValue,":")){
+                $formDateValue=explode(":",$databaseValue);
+                $formDateValue=array("H"=>$formDateValue[0],"i"=>$formDateValue[1]);  //handle time
+            } else {
+                // split mysql Date_taken field into array
+                $formDateValue = explode('-', $databaseValue);
+                $formDateValue = array('Y'=>$formDateValue[0], 'M'=>$formDateValue[1], 'd'=>$formDateValue[2]);  //handle date
+            }
+        }
+        return $formDateValue;
+    }
+
 }
 ?>
