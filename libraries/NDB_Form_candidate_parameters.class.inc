@@ -72,21 +72,40 @@ class NDB_Form_candidate_parameters extends NDB_Form
         }
         $defaults['flagged_caveatemptor'] = $DB->pselectOne("SELECT flagged_caveatemptor FROM candidate WHERE CandID=:CandidateID", array('CandidateID' => $this->identifier));
         $defaults['flagged_info'] = $DB->pselectOne("SELECT flagged_info FROM candidate WHERE CandID=:CandidateID", array('CandidateID' => $this->identifier));
+
+        // Getting participant status default values
+
+        $ps_info = $DB->pselectRow("SELECT * FROM participant_status WHERE CandID = :cid", 
+                                    array('cid'=>$this->identifier));
+        foreach($ps_info as $key => &$val) {
+            if($key == 'participant_subOptions') {
+                $defaults[$key] = $DB->pselectOne("SELECT Description from participant_status_options WHERE ID = :pid",
+                        array('pid'=>$val));
+
+            }
+            if($val === '0000-00-00') {
+                $val = '';
+            }
+            $defaults[$key] = $val;
+        }
         return $defaults;
     }
 
     function _process($values)
-    {
+    {   
         if(!is_array($values) || count($values) ==0) {
         	return true;
         }
         
         $DB =& Database::singleton();
-       if(!isset($values['SiblingID'])){ 
-        //delete old values
-        $DB->delete("parameter_candidate", array("CandID"=>$this->identifier));
-        
-        //insert new values
+        $values['CandID'] = $this->identifier;
+
+        if (!(is_null($_SESSION['State']))) {
+            $currentUser =& User::singleton($_SESSION['State']->getUsername());
+            $id = $currentUser->getData("UserID");
+            $values['entry_staff'] = $id;
+        }
+                //insert new values
         while(list($key, $value)=each($values)){
         	$set="";
             if(strpos($key, "PTID_") === 0) {
@@ -94,6 +113,10 @@ class NDB_Form_candidate_parameters extends NDB_Form
                 $set['CandID']=$this->identifier;
                 $set['Value']=$value;
                 $set['InsertTime']=time();
+                
+                //delete old values
+                $DB->delete("parameter_candidate", array("CandID"=>$this->identifier));
+
                 $DB->insert("parameter_candidate", $set);
             } else if($key == 'CandidateGUID' || $key == "ProbandGUID" || $key == 'ProbandDoB' || $key == 'ProbandGender'
                       || $key =='flagged_caveatemptor' || $key == 'flagged_info') {
@@ -120,9 +143,20 @@ class NDB_Form_candidate_parameters extends NDB_Form
 
                 }
             }
-
+            if(strrpos($key, "consent_date") !== FALSE || strrpos($key, "consent_withdrawal") !== FALSE || 
+               strrpos($key,"_consent") !== FALSE ) {
+               
+                if(strrpos($key, "consent_date") !== FALSE || strrpos($key, "consent_withdrawal") !== FALSE) {
+                $value = $this->_getDatabaseDate($value);
+                    if($value === '--') {
+                        $value = '';
+                    }
+                } 
+                $DB->update("participant_status", array($key =>$value), array('CandID' => $this->identifier));    
+            }
         }
-       } else {
+
+       if(isset($values['SiblingID'])) { 
            $fid = $DB->pselectOne("SELECT FamilyID from family where CandID=:CaID",array('CaID' => $this->identifier));
            if (Utility::isErrorX($fid)) {
                return PEAR::raiseError("Could not family id: ".$fid->getMessage());
@@ -150,9 +184,41 @@ class NDB_Form_candidate_parameters extends NDB_Form
            if (Utility::isErrorX($success)) {
                return PEAR::raiseError("DB Error: ".$success->getMessage());
            }
-
+           
           
-        }
+       }
+       if(isset($values['participant_statusID'])) {
+           $participant_vals = array();
+           $participant_vals['participant_statusID'] = $values['participant_statusID'];
+           $sub_reasonID = $DB->pselectOne("SELECT ID FROM participant_status_options WHERE Description=:sub_desc", 
+                   array('sub_desc' =>$values['participant_subOptions']));
+
+           $participant_vals['participant_subOptions'] = $sub_reasonID;
+           $participant_vals['reason_specify'] = $values['reason_specify'];
+           $participant_vals['reason_specify_status'] = $values['reason_specify_status'];
+           // save the values
+           //if it exists update it
+           $ParticipantCount = $DB->pselectOne(
+                   "SELECT COUNT(*) FROM participant_status WHERE CandID = :cid", 
+                   array("cid"=>$values['CandID'])
+                   );
+           if ($ParticipantCount > 0) {
+               $success = $DB->update(
+                       "participant_status", 
+                       $participant_vals,
+                       array("CandID"=>$values['CandID'])
+                       );
+           } else {
+               //insert it
+               $success = $DB->insert("participant_status", $participant_vals);
+           }
+
+           if (Utility::isErrorX($success)) {
+               return PEAR::raiseError(
+                       "NDB_Form_candidate_parameters::_process: ".$success->getMessage()
+                       );
+           }
+       }
         $this->tpl_data['success'] = true;
 
         // freeze it, just in case
@@ -264,8 +330,61 @@ class NDB_Form_candidate_parameters extends NDB_Form
                                  array(''=>'','true'=>'True','false'=>'False'));
         $this->form->addElement('select','flagged_info',$this->indent.'Please provide additional information',
                                  array(''=>'','older_sibling_autism'=>'Older Sibling diagnosed with autism. Child moved from LR to HR', 'family_excluded'=>'Family met exclusionary criteria after enrollment in study'));
-        $this->form->addFormRule(array(&$this, '_validate_caveat'));
 
+        //participant status 
+
+        //entry staff info
+        $this->addScoreColumn('entry_staff', 'Data Entry Staff');
+        $this->addScoreColumn('data_entry_date', 'Date of last Data entry');
+
+        $pscid = $DB->pselectone(
+                'SELECT PSCID FROM candidate where CandID = :candid',
+                array('candid'=>$this->identifier)
+                );
+        $this->addScoreColumn('pscid', 'PSCID');
+        $this->tpl_data['pscid'] = $pscid;
+
+        $options = $this->getParticipantStatusOptions();
+        $options = array('') + $options;
+        $this->tpl_data['pstatus_options'] = $options;
+        $this->tpl_data['pstat'] = $_REQUEST['participant_statusID'];
+
+        $this->addTextAreaGroup('reason_specify', $this->indent.'Other Comments',
+                array(null=>null,'not_answered'=>'Not Answered')); 
+        // Add questions about consent
+        $consent = $config->getSetting('ConsentModule');
+        if ($consent['useConsent'] === 'true') {
+            $config =& NDB_Config::singleton();
+            $dateOptions = array(
+                    'language' => 'en',
+                    'format'   => 'YMd',
+                    'minYear'  => $config->getSetting('startYear'),
+                    'maxYear'  => $config->getSetting('endYear'),
+                    'addEmptyOption' => true,
+                    'emptyOptionValue' => null
+                    );
+
+            $consentQuestions = array();
+            foreach (Utility::asArray($consent['Consent']) as $question) {
+                $yesno = $this->addSelect($question['name'], $question['label'], 
+                        array('' => '',
+                            'yes' => 'yes',
+                            'no' => 'no')
+                        ); 
+                $withdrew = $this->addBasicDate($question['name'] . '_date', 
+                        "Date of $question[label] (required)", $dateOptions);
+                $withdrew = $this->addBasicDate($question['name'] . '_withdrawal', 
+                        "Date of withdrawal of $question[label] (optional)", $dateOptions);
+                $consentQuestions[] = array(
+                        $question['name'],
+                        $question['name'] . '_date',
+                        $question['name'] . '_withdrawal'
+                        );
+            }
+            $this->tpl_data['consent'] = $consentQuestions;
+        }
+
+        $this->form->addFormRule(array(&$this,'_validate'));
     }
 
     /* This is taken from NDB_BVL_Instrument. It should be moved to NDB_Page once NDB_Page is merged. */
@@ -329,14 +448,148 @@ class NDB_Form_candidate_parameters extends NDB_Form
         return $errors;
     }
     
-    function _validate_caveat($values){
-        
-        if($values['flagged_caveatemptor']=='true' && empty($values['flagged_info'])){
-            return array('flagged_info'=>'Please provide additional information for flagging candidate as Caveat Emptor');    
+
+    /** 
+     * This function is for validation of user input, depending on
+     * the questions answered.
+     *
+     * @param array $fields The list of input to the form submitted by
+     *                      smarty.
+     *
+     * @return array An array of elements with errors. An empty array if
+     *               all elements are valid.
+     */
+    function _validate($fields)
+    {
+        $config =& NDB_Config::singleton();
+        $errors=array();
+        $options = $this->getParticipantStatusOptionsVerbose();
+
+        $DB =& Database::singleton();
+print_r($fields);
+             // consent requirements
+        $consent = $config->getSetting('ConsentModule');
+        if ($consent['useConsent'] === 'true') {
+            foreach (Utility::asArray($consent['Consent']) as $consenttype) {
+                $fieldname = $consenttype['name'];
+                $consentVal = $fields[$fieldname];
+                $consentDate = $fields[$fieldname . '_date'];
+                $consentWithdrawal = $fields[$fieldname . '_withdrawal'];
+                $consent = date_create();
+                $today = date('Y-m-d'); 
+                $consent->setDate($consentDate['Y'], $consentDate['M'], $consentDate['d']);
+                $consent = $consent->format('Y-m-d'); 
+                if ($consent > $today) {
+                    $errors[$fieldname.'_date'] = 'Cannot be later than today';
+
+                }
+
+                if (
+                        $consentVal === 'yes' && (
+                            empty($consentDate)
+                            || empty($consentDate['Y'])
+                            || empty($consentDate['M'])
+                            || empty($consentDate['d'])
+                            )
+                   ) {
+                    $errors[$fieldname . '_date'] = 'Required';
+                }
+                if (
+                        !empty($consentWithdrawal['Y'])
+                        && !empty($consentWithdrawal['M'])
+                        && !empty($consentWithdrawal['d'])
+                   ) {
+                    $withdrawal = date_create();
+
+                    $withdrawal->setDate($consentWithdrawal['Y'], $consentWithdrawal['M'], $consentWithdrawal['d']);
+                    $withdrawal = $withdrawal->format('Y-m-d'); 
+                    $diff = date_diff($withdrawal, $consent);                   
+                    if ($withdrawal < $consent) {
+                        $errors[$fieldname . '_withdrawal'] = 'Must be after date of consent';
+                    } else if ($withdrawal > $today) {
+                        $errors[$fieldname . '_withdrawal'] = 'Cannot be later than today';
+
+                    } 
+                }
+
+            }
         }
-        
+        if($fields['flagged_caveatemptor']=='true' && empty($fields['flagged_info'])){
+            $errors['flagged_info'] = 'Please provide additional information for flagging candidate as Caveat Emptor';    
+        }
+        if ($options[$fields['participant_statusID']]['Required'] == true) {
+            $fields['participant_subOptions'] = trim($fields['participant_subOptions']);
+            if(empty($fields['participant_subOptions'])) { print "LLLLLLL";
+                $errors['reason_specify'] = "Please specify the status";
+            }        
+        }
+
+
+print_r($errors); 
+        return $errors;
     }
 
+    /**
+     * Gets the participant_status options from participant_status_options
+     * getParticipantStatusOptions()
+     *
+     * @return array Options array suitable for use in QuickForm select
+     *               element
+     */
+    function getParticipantStatusOptions()
+    {
+        $DB =& Database::singleton();
+        $options = $DB->pselect(
+                "SELECT ID,Description FROM participant_status_options WHERE parentID IS NULL",
+                array()
+                );
+        $option_array = array();
+        foreach ($options as $option) {
+            $option_array[$option['ID']] = $option['Description'];
+        }
+        return $option_array;
+    }
 
+    /**
+     * Get the participant_status options as an array, where each row
+     * is an array
+     *
+     * @return array An array of options, where each row is an array containing
+     *               the entire row from participant_status_options instead of
+     *               only the description
+     */
+    function getParticipantStatusOptionsVerbose()
+    {
+        $DB =& Database::singleton();
+        $options = $DB->pselect(
+                "SELECT * FROM participant_status_options",
+                array()
+                );
+
+        $option_array = array();
+        foreach ($options as $option) {
+            $ID = $option['ID'];
+            unset($option['ID']);
+            $option_array[$ID] = $option;
+        }
+        return $option_array;
+    }
+/*
+    function _getDatabaseDate($formDateValue){
+        if(!empty($formDateValue)){
+            // check if it's already formatted correctly
+            if(is_string($formDateValue) && preg_match("/^[\d]{4}-[\d]{2}-[\d]{2}$/", $formDateValue)) {
+                return $formDateValue;
+            }
+            if(count($formDateValue)==2){
+                $databaseValue = "$formDateValue[H]:$formDateValue[i]";  //handle time (HH:MM:SS)
+            } else {
+                $databaseValue = "$formDateValue[Y]-$formDateValue[M]-$formDateValue[d]";  //handle     date (YYYY/MM/DD)
+            }
+        }
+        return $databaseValue;
+    }
+
+*/
 }
 ?>
