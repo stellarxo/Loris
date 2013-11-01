@@ -73,7 +73,7 @@
                 <td class="total">{$dde[$center.ID].all.complete|default:"0"}</td>
                 <td class="total">{$dde[$center.ID].all.total|default:"0"}</td>
                 <td class="total">{$dde[$center.ID].all.percent|default:"0"}%</td>
-            <td> <a href='main.php?test_name=statistics_dd_site&CenterID={$center.NumericID}'>Please Click Here</a></td>
+            <td> <a href='main.php?test_name=statistics_dd_site&CenterID={$center.NumericID}&projectID={$CurrentProject.ID}'>Please Click Here</a></td>
          </tr>
          {/foreach}
       </table>
