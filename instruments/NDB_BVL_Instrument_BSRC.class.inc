@@ -255,7 +255,7 @@ class NDB_BVL_Instrument_BSRC extends NDB_BVL_Instrument
      $this->addTextAreaElement("general_comments","Is there anything else you would like to tell us about services your child has received,please write your comments");
 
      $this->addTextAreaElement("other_comments", "Comments about Validity:" );
-     $this->XINRegisterRule("other_comments", array("{other_comments}{@}=={@}NEVER_REQUIRED"));
+    // $this->XINRegisterRule("other_comments", array("{other_comments}{@}=={@}NEVER_REQUIRED"));
      $this->form->addFormRule(array(&$this, 'Range_Allowed'));
 
    }
