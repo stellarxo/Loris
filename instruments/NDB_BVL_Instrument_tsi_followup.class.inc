@@ -322,7 +322,7 @@ class NDB_BVL_Instrument_tsi_followup extends NDB_BVL_Instrument
 		"cns_problems"=>"CNS problems such as head injury or meningitis?",
 		"congenital_heart_problems"=>"Congenital heart problems?",
 		"hearing_vision_impairments"=>"Significant hearing/vision problems?",
-		"diabetes"=>"Diabetes or gestational diabetes?",
+		"diabetes"=>"Diabetes?",
 		"tested_for_fragile_x_subject"=>"Tested for Fragile X syndrome?");
 		foreach($questionArray as $field=>$label) {
 			$this->form->addElement("select", $field, $label, $this->yesNo);
@@ -346,7 +346,7 @@ class NDB_BVL_Instrument_tsi_followup extends NDB_BVL_Instrument
 		$this->form->addElement("select", "med_his_q_6_allergies", "6. Does X have any allergies to medicines?", $this->yesNo);
 		$this->addTextElement("med_his_q_6_allergies_describe", $this->indent . "If yes, describe:", array("med_his_q_6_allergies{@}=={@}yes"), "This field is required if there are allergies");
 		$this->form->addElement("select", "med_his_q_7_doctor", "7. Has X seen a doctor since their last visit?", $this->yesNo);
-        $this->form->addElement("select", "med_his_q_8_brain_MRI", "8. Has X ever had an MRI of the brain?", $this->yesNo);
+        $this->form->addElement("select", "med_his_q_8_brain_MRI", "8. Has X ever had an MRI of the brain outside of IBIS?", $this->yesNo);
         $this->form->addElement("select","med_his_q_8_brain_MRI_results", $this->indent . "If yes, what were the results?", array(null=>"","typical"=>"Typical","atypical"=>"Atypical","not_answered"=>"Not Answered"));
         $this->XINRegisterRule ( "med_his_q_8_brain_MRI_results", array("med_his_q_8_brain_MRI{@}=={@}yes"),"Please specify results");
         $this->addTextAreaElement("med_his_q_8_brain_MRI_notes", $this->indent . "Notes", array("med_his_q_8_brain_MRI_results{@}=={@}atypical"));
