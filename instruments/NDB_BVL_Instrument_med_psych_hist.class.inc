@@ -429,7 +429,7 @@ class NDB_BVL_Instrument_med_psych_hist extends NDB_BVL_Instrument
         "a_fever_over_101_or_infection"=>"a.   Fever over 101 F or infection",
         "b_seizures"=>"b. Seizures",
         "c_viral_illness"=>"c. Viral illness",
-        "d_diabetes"=>"d. Diabetes",
+        " "=>"d.Question Removed", 
         "e_preterm_labor"=>"e. Preterm labor requiring treatment",
         "f_other_major_illness_or_injury"=>"f. Other major illness or injury",
         "g_vaginal_bleeding"=>"g. Vaginal Bleeding",
@@ -496,7 +496,10 @@ class NDB_BVL_Instrument_med_psych_hist extends NDB_BVL_Instrument
         $this->form->addElement("select", "q8_b_tobacco_when_taken", $this->indent . "If tobacco was taken, when?:", array(""=>NULL, "0_before"=>"0 Before", "1_after"=>"1 After", "2_both"=>"2 Both","3_breastfeeding"=>"3 Breastfeeding", "not_answered"=>"Not Answered"));
         $this->XINRegisterRule("q8_b_tobacco_when_taken", array("q8_pregnancy_alcohol_tobacco{@}=={@}b_smoke_cigarettes_or_tobacco"), "Please specify when tobacco was taken");
         $this->form->addElement("select", "q8_b1_cigarette_perday", $this->indent . "How many cigarettes did you smoke per day?:", array(""=>NULL, "0"=>"0", "5_10"=>"5-10", "10_more"=>"10 or more","not_answered"=>"Not Answered"));
-        $this->XINRegisterRule("q8_b1_cigarette_perday", array("q8_pregnancy_alcohol_tobacco{@}=={@}b_smoke_cigarettes_or_tobacco"), "Please specify number of cigarettes per day");
+        $this->XINRegisterRule("q8_b1_cigarette_perday", array("q8_b1_cigarette_perday{@}=={@}NEVER_REQUIRED"));
+
+        $this->form->addFormRule(array(&$this, 'Med_Rules'));
+
         $this->form->addElement('static', null, null);
 
 
@@ -615,6 +618,17 @@ class NDB_BVL_Instrument_med_psych_hist extends NDB_BVL_Instrument
             $this->form->addElement("select", "q18_other_chronic_{$abcth}_hospitalized", $this->indent . $this->indent . "1. Was the child hospitalized for medical problem #{$nth}?", $this->yesNo);
             $this->XINRegisterRule("q18_other_chronic_{$abcth}_hospitalized", array("q18_other_chronic_{$abcth}_specify{@}!={@}"), "Please indicate whether hospitalization occured");
         }
+    }
+
+    function Med_Rules($values) {
+        $errors = array();
+        if($values['q8_pregnancy_alcohol_tobacco'] == 'b_smoke_cigarettes_or_tobacco' 
+           || isset($values['q8_b_tobacco_when_taken'])) {
+            
+            $errors['q8_b1_cigarette_perday'] = 'Please specify number of cigarettes per day'; 
+        }
+        
+        return $errors;
     }
 
 }
