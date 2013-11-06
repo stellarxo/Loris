@@ -622,8 +622,9 @@ class NDB_BVL_Instrument_med_psych_hist extends NDB_BVL_Instrument
 
     function Med_Rules($values) {
         $errors = array();
-        if($values['q8_pregnancy_alcohol_tobacco'] == 'b_smoke_cigarettes_or_tobacco' 
-           || isset($values['q8_b_tobacco_when_taken'])) {
+        if( ($values['q8_pregnancy_alcohol_tobacco'] == 'b_smoke_cigarettes_or_tobacco') 
+           || ($values['q8_b_tobacco_when_taken'] != null)
+           && ($values['q8_b1_cigarette_perday']) == null) {
             
             $errors['q8_b1_cigarette_perday'] = 'Please specify number of cigarettes per day'; 
         }
