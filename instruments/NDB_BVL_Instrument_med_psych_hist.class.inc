@@ -429,7 +429,7 @@ class NDB_BVL_Instrument_med_psych_hist extends NDB_BVL_Instrument
         "a_fever_over_101_or_infection"=>"a.   Fever over 101 F or infection",
         "b_seizures"=>"b. Seizures",
         "c_viral_illness"=>"c. Viral illness",
-        " "=>"d.Question Removed", 
+        ""=>"d.Question Removed", 
         "e_preterm_labor"=>"e. Preterm labor requiring treatment",
         "f_other_major_illness_or_injury"=>"f. Other major illness or injury",
         "g_vaginal_bleeding"=>"g. Vaginal Bleeding",
