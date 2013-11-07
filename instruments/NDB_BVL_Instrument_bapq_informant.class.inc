@@ -64,7 +64,7 @@ class NDB_BVL_Instrument_bapq_informant extends NDB_BVL_Instrument
 
         $this->addNumericElement('informant_age','Your Age:<BR>(Please indicate your age in years)');
 
-        $this->addSelect('informant',"Relationship to Candidate", $this->informant);
+        $this->addSelect('informant',"Relationship to respondent/participant", $this->informant);
         $this->addTextElement('informant_other',$this->indent."If Other please specify",
                               array("informant{@}=={@}other"),"Please specify relationship");
 

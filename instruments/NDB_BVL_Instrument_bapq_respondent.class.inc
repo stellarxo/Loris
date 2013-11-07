@@ -65,7 +65,7 @@ class NDB_BVL_Instrument_bapq_respondent extends NDB_BVL_Instrument
 
         $this->addNumericElement('respondent_age','Your Age:<BR>(Please indicate your age in years)');
 
-        $this->addSelect('respondent',"Relationship to Candidate", $this->respondent);
+        $this->addSelect('respondent',"Relationship to child", $this->respondent);
         $this->addTextElement('respondent_other',$this->indent."If Other please specify",
                               array("respondent{@}=={@}other"),"Please specify relationship");
 
