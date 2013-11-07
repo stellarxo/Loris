@@ -44,7 +44,11 @@ class NDB_BVL_Instrument_bapq_respondent extends NDB_BVL_Instrument
      */
     function _setupForm(){
 
-        $this->_main();
+        if(preg_match("/bapq_respondent(_page[0-9]+)/",$this->page,$matches)){
+            call_user_method($matches[1], $this);
+        } else {
+            $this->_main();
+        }
 
         //Defines the call back function for HTML Quickform to use when validating the form.
         $this->form->addFormRule(array(&$this,'XINValidate'));
@@ -81,8 +85,20 @@ class NDB_BVL_Instrument_bapq_respondent extends NDB_BVL_Instrument
                            "q9_enjoy_socialsituations"=>"9. I enjoy being in social situations",
                            "q10_voice_flat_monotone"=>"10. My voice has a flat or monotone sound to it",
                            "q11_disconnected_outofsync_convo"=>"11. I feel disconnected or 'out of sync' in conversations with others",
-                           "q12_easy_approach"=>"12. People find it easy to approach me",
-                           "q13_strongneed_sameness"=>"13. I feel a strong need for sameness from day to day",
+                           "q12_easy_approach"=>"12. People find it easy to approach me");
+
+        foreach($questions as $field=>$label) {
+            $this->addSelect($field, $label, $this->rating);
+        }
+   
+        $this->form->addFormRule(array(&$this, 'BAPQ_Rules'));
+
+    }
+
+    function _page2(){
+         $this->form->addElement('header', 'instrument_title', "BAPQ-PSPQ : Personality Styles and Preferences Questionnaire Page2");
+         $this->form->addElement('static', null, "<br /><br />");
+         $questions = array("q13_strongneed_sameness"=>"13. I feel a strong need for sameness from day to day",
                            "q14_others_dont_understand"=>"14. People ask me to repeat things I've said because they don't understand",
                            "q15_flexible"=>"15. I am flexible about how things should be done",
                            "q16_situations_meetnew_people"=>"16. I look forward to situations where I can meet new people",
@@ -93,8 +109,18 @@ class NDB_BVL_Instrument_bapq_respondent extends NDB_BVL_Instrument
                            "q21_tell_someone_not_interested"=>"21. I can tell when someone is not interested in what I am saying",
                            "q22_hardtime_change_routine"=>"22. I have a hard time dealing with changes in my routine",
                            "q23_good_smalltalk"=>"23. I am good at making small talk",
-                           "q24_act_myways"=>"24. I act very set in my ways",
-                           "q25_connecting_people"=>"25. I feel like I am really connecting with other people",
+                           "q24_act_myways"=>"24. I act very set in my ways");
+
+        foreach($questions as $field=>$label) {
+            $this->addSelect($field, $label, $this->rating);
+        }
+
+    }
+    
+    function _page3(){
+         $this->form->addElement('header', 'instrument_title', "BAPQ-PSPQ : Personality Styles and Preferences Questionnaire Page3");
+         $this->form->addElement('static', null, "<br /><br />");
+         $questions = array("q25_connecting_people"=>"25. I feel like I am really connecting with other people",
                            "q26_peoplefrustrated"=>"26. People get frustrated by my unwillingness to bend",
                            "q27_conversation_boresme"=>"27. Conversation bores me",
                            "q28_warmfriendly_others"=>"28. I am warm and friendly in my interactions with others",
@@ -111,9 +137,10 @@ class NDB_BVL_Instrument_bapq_respondent extends NDB_BVL_Instrument
             $this->addSelect($field, $label, $this->rating);
         }
    
-        $this->form->addFormRule(array(&$this, 'BAPQ_Rules'));
+
 
     }
+
 
     function BAPQ_Rules($values) {
        $errors = array();

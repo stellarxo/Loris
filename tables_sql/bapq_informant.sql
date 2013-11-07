@@ -53,4 +53,5 @@ PRIMARY KEY  (`CommentID`)
 
               );
 INSERT INTO test_names(Test_name, Full_name,Sub_group) VALUES ('bapq_informant','BAPQ (Broad Autism Phenotype Questionnaire)[Informant]',1);
-
+INSERT INTO instrument_subtests (Test_name, Subtest_name, Description, Order_number) VALUES ('bapq_informant','bapq_informant_page2','BAPQ Informant Page2', 1);
+INSERT INTO instrument_subtests (Test_name, Subtest_name, Description, Order_number) VALUES ('bapq_informant','bapq_informant_page3','BAPQ Informant Page3', 2);
