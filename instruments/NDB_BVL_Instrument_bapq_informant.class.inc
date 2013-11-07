@@ -70,7 +70,7 @@ class NDB_BVL_Instrument_bapq_informant extends NDB_BVL_Instrument
 
         $this->form->addElement('static', null, "<br /><br />");
         $questions = array("q1_like_being_otherpeople" => "1. He/She likes being around other people",
-                           "q2_hard_wordsout_smoothly" =>"2. He/She finds it hard to get my words out smoothly",
+                           "q2_hard_wordsout_smoothly" =>"2. He/She finds it hard to get his/her words out smoothly",
                            "q3_comfortable_unexpectedchanges"=>"3. He/She is comfortable with unexpected changes in plans",
                            "q4_hard_avoid_sidetrack"=>"4. It's hard for him/her to avoid getting sidetracked in conversations",
                            "q5_information_than_socialize"=>"5. He/She would rather talk to people to get information that to socialize",
@@ -85,13 +85,13 @@ class NDB_BVL_Instrument_bapq_informant extends NDB_BVL_Instrument
                            "q14_others_dont_understand"=>"14. People ask him/her to repeat things he/she has said because they don't understand",
                            "q15_flexible"=>"15. He/She is flexible about how things should be done",
                            "q16_situations_meetnew_people"=>"16. He/She looks forward to situations where he/she can meet new people",
-                           "q17_talktoomuch_certain_topics"=>"17. He/She has been told that he/she talk too much about certain topics",
+                           "q17_talktoomuch_certain_topics"=>"17. He/She has been told that he/she talks too much about certain topics",
                            "q18_conversation_tobe_polite"=>"18. When he/she makes conversation it is just to be polite",
                            "q19_lookforward_newthings"=>"19. He/She looks foward to trying new things",
                            "q20_speak_tooloud_softly"=>"20. He/She speaks too loudly or softly",
                            "q21_tell_someone_not_interested"=>"21. He/She can tell when someone is not interested in what he/she is saying",
                            "q22_hardtime_change_routine"=>"22. He/She has a hard time dealing with changes in his/her routine",
-                           "q23_good_smalltalk"=>"23. He/She am good at making small talk",
+                           "q23_good_smalltalk"=>"23. He/She is good at making small talk",
                            "q24_act_myways"=>"24. He/She acts very set in his/her ways",
                            "q25_connecting_people"=>"25. He/She feel like he/she is really connecting with other people",
                            "q26_peoplefrustrated"=>"26. People get frustrated by his/her unwillingness to bend",
@@ -103,7 +103,7 @@ class NDB_BVL_Instrument_bapq_informant extends NDB_BVL_Instrument
                            "q32_losetrack_talking"=>"32. He/She loses track of his/her original point when talking to people",
                            "q33_follow_routine"=>"33. He/She likes to closely follow a routine while working",
                            "q34_change_topic"=>"34. He/She can tell when it is time to change topics in conversation",
-                           "q35_doingthings_knownway"=>"35. He/She keep doing things the way he/she know, even if another way might be better",
+                           "q35_doingthings_knownway"=>"35. He/She keeps doing things the way he/she know, even if another way might be better",
                            "q36_enjoy_chatting"=>"36. He/She enjoys chatting with people");
 
         foreach($questions as $field=>$label) {
