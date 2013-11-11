@@ -16,6 +16,10 @@
     </tr>
     {/if}
     <tr>
+        <td nowrap="nowrap" >{$form.pscid.label}</td>
+        <td nowrap="nowrap" id="pscid">{$pscid}</td>
+    </tr>
+    <tr>
         <td nowrap="nowrap">{$form.CandidateGUID.label}</td>
         <td nowrap="nowrap">{$form.CandidateGUID.html}</td>
     </tr>
@@ -27,6 +31,11 @@
       <td nowrap="nowrap">{$form.flagged_info.label}</td>
       <td nowrap="nowrap">{$form.flagged_info.html}</td>
     </tr>
+    <tr>
+      <td nowrap="nowrap">{$form.flagged_other_group.label}</td>
+      <td nowrap="nowrap">{$form.flagged_other_group.html}</td>
+    </tr>
+
   </br>
 
     {foreach from=$elements_list item=element}
@@ -102,19 +111,12 @@
     </td>
   
 <tr><th colspan="2">Participant Status</th></tr>
-<tr>
-<td nowrap="nowrap">{$form.entry_staff.label}</td>
-<td nowrap="nowrap">{$form.entry_staff.html}</td>
-</tr>
-
-<tr>
-<td nowrap="nowrap">{$form.data_entry_date.label}</td>
-<td nowrap="nowrap">{$form.data_entry_date.html}</td>
-</tr>
+{*
 <tr>
 <td nowrap="nowrap" >{$form.pscid.label}</td>
 <td nowrap="nowrap" id="pscid">{$pscid}</td>
 </tr>
+*}
 <tr>
 
     <td nowrap="nowrap">Participant Status</td>
@@ -181,11 +183,23 @@ Specify Reason
 </td>
 </tr>
 {/foreach}
+
 <tr>
 <td colspan="2">&nbsp;</td>
 </tr>
 {/section}
 {/if}
+<tr><th colspan="2">Additional Information</th></tr>
+<tr>
+<td nowrap="nowrap">{$form.entry_staff.label}</td>
+<td nowrap="nowrap">{$form.entry_staff.html}</td>
+</tr>
+
+<tr>
+<td nowrap="nowrap">{$form.data_entry_date.label}</td>
+<td nowrap="nowrap">{$form.data_entry_date.html}</td>
+</tr>
+
 <tr>
 <!--td nowrap="nowrap" colspan="1">&nbsp;</td -->
 <td nowrap="nowrap" colspan="2" align="right">
