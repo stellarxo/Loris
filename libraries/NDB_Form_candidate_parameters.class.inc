@@ -88,11 +88,16 @@ class NDB_Form_candidate_parameters extends NDB_Form
                         array('pid'=>$val));
 
             }
+            if($key == 'participant_status') {
+                $this->tpl_data['pstat'] = $val;
+
+            }
             if($val === '0000-00-00') {
                 $val = '';
-            }
+            } 
             $defaults[$key] = $val;
         }
+
         return $defaults;
     }
 
@@ -149,7 +154,7 @@ class NDB_Form_candidate_parameters extends NDB_Form
                 }
             }
             if(strrpos($key, "consent_date") !== FALSE || strrpos($key, "consent_withdrawal") !== FALSE || 
-               strrpos($key,"_consent") !== FALSE ) {
+               strrpos($key,"_consent") !== FALSE  || strrpos($key, "participant_")) {
                
                 if(strrpos($key, "consent_date") !== FALSE || strrpos($key, "consent_withdrawal") !== FALSE) {
                 $value = $this->_getDatabaseDate($value);
@@ -192,9 +197,9 @@ class NDB_Form_candidate_parameters extends NDB_Form
            
           
        }
-       if(isset($values['participant_statusID'])) {
+       if(isset($values['participant_status'])) {
            $participant_vals = array();
-           $participant_vals['participant_statusID'] = $values['participant_statusID'];
+           $participant_vals['participant_status'] = $values['participant_status'];
            $sub_reasonID = $DB->pselectOne("SELECT ID FROM participant_status_options WHERE Description=:sub_desc", 
                    array('sub_desc' =>$values['participant_subOptions']));
 
@@ -357,7 +362,7 @@ class NDB_Form_candidate_parameters extends NDB_Form
         $options = $this->getParticipantStatusOptions();
         $options = array('') + $options;
         $this->tpl_data['pstatus_options'] = $options;
-        $this->tpl_data['pstat'] = $_REQUEST['participant_statusID'];
+        $this->tpl_data['pstat'] = $_REQUEST['participant_status'];
 
         $this->addTextAreaGroup('reason_specify', $this->indent.'Other Comments',
                 array(null=>null,'not_answered'=>'Not Answered')); 
@@ -532,7 +537,7 @@ class NDB_Form_candidate_parameters extends NDB_Form
             $errors['flagged_other_group'] = 'If Other, please specify details for cavear emptor';
         }
 
-        if ($options[$fields['participant_statusID']]['Required'] == true) {
+        if ($options[$fields['participant_status']]['Required'] == true) {
             $fields['participant_subOptions'] = trim($fields['participant_subOptions']);
             if(empty($fields['participant_subOptions'])) {
                 $errors['reason_specify'] = "Please specify the status";

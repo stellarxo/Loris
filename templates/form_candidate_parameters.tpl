@@ -121,7 +121,7 @@
 
     <td nowrap="nowrap">Participant Status</td>
     <td>
-{html_options id="participant_statusID" options=$pstatus_options name="participant_statusID" selected=$pstat}
+{html_options id="participant_status" options=$pstatus_options name="participant_status" selected=$pstat}
 </td>
 <tr>
 <td>
