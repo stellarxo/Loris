@@ -75,6 +75,8 @@ class NDB_Form_candidate_parameters extends NDB_Form
         }
         $defaults['flagged_caveatemptor'] = $DB->pselectOne("SELECT flagged_caveatemptor FROM candidate WHERE CandID=:CandidateID", array('CandidateID' => $this->identifier));
         $defaults['flagged_info'] = $DB->pselectOne("SELECT flagged_info FROM candidate WHERE CandID=:CandidateID", array('CandidateID' => $this->identifier));
+        $defaults['flagged_other'] = $DB->pselectOne("SELECT flagged_other FROM candidate WHERE CandID=:CandidateID", array('CandidateID' => $this->identifier));
+        $defaults['flagged_other_status'] = $DB->pselectOne("SELECT flagged_other_status FROM candidate WHERE CandID=:CandidateID", array('CandidateID' => $this->identifier));
 
         // Getting participant status default values
 
@@ -121,7 +123,8 @@ class NDB_Form_candidate_parameters extends NDB_Form
                 $set['InsertTime']=time();
                 $DB->insert("parameter_candidate", $set);
             } else if($key == 'CandidateGUID' || $key == "ProbandGUID" || $key == 'ProbandDoB' || $key == 'ProbandGender'
-                      || $key =='flagged_caveatemptor' || $key == 'flagged_info') {
+                      || $key =='flagged_caveatemptor' || $key == 'flagged_info' || $key == 'flagged_other'
+                      || $key == 'flagged_other_status') {
                 if($key == 'ProbandDoB') {
                     $value = $this->_getQuickformDate($value);
                 }
@@ -324,7 +327,7 @@ class NDB_Form_candidate_parameters extends NDB_Form
         $this->form->addElement('select', 'ProbandGender', 'Proband gender:', array('' => '','Male' => 'Male', 'Female' => 'Female') );
         $this->form->addElement('static', 'dob_proband_adi_r', 'DoB of Proband (ADI-R):', $DoB_ADI_R);
         $this->form->addElement('static', 'dob_proband_vineland', 'DoB of Proband (Vineland):', $DoB_Vineland);
-        $this->form->addElement('static', 'Age_Difference','Age Difference (in months):');
+        $this->form->addElement('static', 'Age_Difference','Age Difference between candidate and proband (in months):');
         $this->form->addElement('static', 'mother_race', 'Mother\'s Race:', $this->_getTSIinfo("mother_race"));
         $this->form->addElement('static', 'father_race', 'Father\'s Race:', $this->_getTSIinfo("father_race"));
         $this->form->addElement('static', 'birth_city', 'City of Birth:', $this->_getTSIinfo("city_of_birth"));
@@ -333,7 +336,9 @@ class NDB_Form_candidate_parameters extends NDB_Form
         $this->form->addElement('select','flagged_caveatemptor','Candidate flagged for Caveat Emptor', 
                                  array(''=>'','true'=>'True','false'=>'False'));
         $this->form->addElement('select','flagged_info',$this->indent.'Please provide additional information',
-                                 array(''=>'','older_sibling_autism'=>'Older Sibling diagnosed with autism. Child moved from LR to HR', 'family_excluded'=>'Family met exclusionary criteria after enrollment in study'));
+                                 array(''=>'','older_sibling_autism'=>'Older Sibling diagnosed with autism. Child moved from LR to HR', 'family_excluded'=>'Family met exclusionary criteria after enrollment in study','other'=>'Other'));
+         $this->addTextAreaGroup('flagged_other',$this->indent.'If Other, please specify',
+                                          array(null=>'','not_answered'=>'Not Answered'));
 
         //participant status 
 
@@ -345,6 +350,7 @@ class NDB_Form_candidate_parameters extends NDB_Form
                 'SELECT PSCID FROM candidate where CandID = :candid',
                 array('candid'=>$this->identifier)
                 );
+
         $this->addScoreColumn('pscid', 'PSCID');
         $this->tpl_data['pscid'] = $pscid;
 
@@ -521,6 +527,11 @@ class NDB_Form_candidate_parameters extends NDB_Form
         if($fields['flagged_caveatemptor']=='true' && empty($fields['flagged_info'])){
             $errors['flagged_info'] = 'Please provide additional information for flagging candidate as Caveat Emptor';    
         }
+        $fields['flagged_other'] =trim($fields['flagged_other']);
+        if($fields['flagged_info']=='other' && empty($fields['flagged_other'])){
+            $errors['flagged_other_group'] = 'If Other, please specify details for cavear emptor';
+        }
+
         if ($options[$fields['participant_statusID']]['Required'] == true) {
             $fields['participant_subOptions'] = trim($fields['participant_subOptions']);
             if(empty($fields['participant_subOptions'])) {
@@ -528,8 +539,6 @@ class NDB_Form_candidate_parameters extends NDB_Form
             }        
         }
 
-
-//print_r($errors); 
         return $errors;
     }
 
