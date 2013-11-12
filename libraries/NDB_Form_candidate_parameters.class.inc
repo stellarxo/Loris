@@ -82,14 +82,27 @@ class NDB_Form_candidate_parameters extends NDB_Form
 
         $ps_info = $DB->pselectRow("SELECT * FROM participant_status WHERE CandID = :cid", 
                                     array('cid'=>$this->identifier));
+
+        if(empty($ps_info)) {
+            //set candidate to active by default
+          $this->tpl_data['pstat'] = $DB->pselectOne("SELECT ID FROM participant_status_options WHERE 
+                                                        Description=:desc", array('desc'=>'Active')); 
+
+        }
         foreach($ps_info as $key => &$val) {
             if($key == 'participant_suboptions') {
-                $defaults[$key] = $DB->pselectOne("SELECT Description from participant_status_options WHERE ID = :pid",
+                $defaults[$key] = $DB->pselectOne("SELECT Description FROM participant_status_options WHERE ID = :pid",
                         array('pid'=>$val));
 
             }
             if($key == 'participant_status') {
-                $this->tpl_data['pstat'] = $val;
+                if(empty($val)) {
+                     //set candidate to active by default
+                   $this->tpl_data['pstat'] = $DB->pselectOne("SELECT ID FROM participant_status_options WHERE 
+                                              Description=:desc", array('desc'=>'Active')); 
+                } else {
+                   $this->tpl_data['pstat'] = $val;
+                }
 
             }
             if($val === '0000-00-00') {
