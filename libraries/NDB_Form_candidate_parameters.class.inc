@@ -110,7 +110,7 @@ class NDB_Form_candidate_parameters extends NDB_Form
             } 
             $defaults[$key] = $val;
         }
-
+//print_r($defaults);
         return $defaults;
     }
 
@@ -166,7 +166,7 @@ class NDB_Form_candidate_parameters extends NDB_Form
 
                 }
             }
-            if(strrpos($key, "consent_date") !== FALSE || strrpos($key, "consent_withdrawal") !== FALSE || 
+           /* if(strrpos($key, "consent_date") !== FALSE || strrpos($key, "consent_withdrawal") !== FALSE || 
                strrpos($key,"_consent") !== FALSE  || strrpos($key, "participant_")) {
                
                 if(strrpos($key, "consent_date") !== FALSE || strrpos($key, "consent_withdrawal") !== FALSE) {
@@ -174,9 +174,9 @@ class NDB_Form_candidate_parameters extends NDB_Form
                     if($value === '--') {
                         $value = '';
                     }
-                } 
+                }
                 $DB->update("participant_status", array($key =>$value), array('CandID' => $this->identifier));    
-            }
+            }*/
         }
 
        if(isset($values['SiblingID'])) { 
@@ -215,11 +215,26 @@ class NDB_Form_candidate_parameters extends NDB_Form
            $participant_vals['participant_status'] = $values['participant_status'];
            $sub_reasonID = $DB->pselectOne("SELECT ID FROM participant_status_options WHERE Description=:sub_desc", 
                    array('sub_desc' =>$values['participant_suboptions']));
-
-           $participant_vals['participant_suboptions'] = $sub_reasonID;
+           if(empty($sub_reasonID)) {
+               $participant_vals['participant_suboptions'] = NULL;
+           } else {
+               $participant_vals['participant_suboptions'] = $sub_reasonID;
+           }
            $participant_vals['reason_specify'] = $values['reason_specify'];
            $participant_vals['reason_specify_status'] = $values['reason_specify_status'];
-           // save the values
+           $participant_vals['study_consent'] = $values['study_consent'];
+           $participant_vals['ndar_consent'] = $values['ndar_consent'];
+           $consent_dates = array('study_consent_date','study_consent_withdrawal','ndar_consent_date',
+                                  'ndar_consent_withdrawal');
+           foreach($consent_dates as $field) {
+               $value = $this->_getDatabaseDate($values[$field]);
+               if($value === '--') {
+                   $value = '';
+               }
+               $participant_vals[$field] = $value;  
+           }
+           //print_r($participant_vals);
+                    // save the values
            //if it exists update it
            $ParticipantCount = $DB->pselectOne(
                    "SELECT COUNT(*) FROM participant_status WHERE CandID = :cid", 
@@ -232,8 +247,9 @@ class NDB_Form_candidate_parameters extends NDB_Form
                        array("CandID"=>$values['CandID'])
                        );
            } else {
+               $participant_vals['CandID'] = $values['CandID'];
                //insert it
-               $success = $DB->insert("participant_status", $participant_vals);
+               $success = $DB->insert("participant_status",$participant_vals);
            }
 
            if (Utility::isErrorX($success)) {
