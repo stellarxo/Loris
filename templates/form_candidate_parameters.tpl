@@ -129,7 +129,7 @@ Specify Reason
 </td>
 <td>
 <div>
-<select name="participant_subOptions" id="participant_subOptions">
+<select name="participant_suboptions" id="participant_suboptions">
 </select>
 </div>
 </td>

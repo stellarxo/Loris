@@ -83,7 +83,7 @@ class NDB_Form_candidate_parameters extends NDB_Form
         $ps_info = $DB->pselectRow("SELECT * FROM participant_status WHERE CandID = :cid", 
                                     array('cid'=>$this->identifier));
         foreach($ps_info as $key => &$val) {
-            if($key == 'participant_subOptions') {
+            if($key == 'participant_suboptions') {
                 $defaults[$key] = $DB->pselectOne("SELECT Description from participant_status_options WHERE ID = :pid",
                         array('pid'=>$val));
 
@@ -201,9 +201,9 @@ class NDB_Form_candidate_parameters extends NDB_Form
            $participant_vals = array();
            $participant_vals['participant_status'] = $values['participant_status'];
            $sub_reasonID = $DB->pselectOne("SELECT ID FROM participant_status_options WHERE Description=:sub_desc", 
-                   array('sub_desc' =>$values['participant_subOptions']));
+                   array('sub_desc' =>$values['participant_suboptions']));
 
-           $participant_vals['participant_subOptions'] = $sub_reasonID;
+           $participant_vals['participant_suboptions'] = $sub_reasonID;
            $participant_vals['reason_specify'] = $values['reason_specify'];
            $participant_vals['reason_specify_status'] = $values['reason_specify_status'];
            // save the values
@@ -538,8 +538,8 @@ class NDB_Form_candidate_parameters extends NDB_Form
         }
 
         if ($options[$fields['participant_status']]['Required'] == true) {
-            $fields['participant_subOptions'] = trim($fields['participant_subOptions']);
-            if(empty($fields['participant_subOptions'])) {
+            $fields['participant_suboptions'] = trim($fields['participant_suboptions']);
+            if(empty($fields['participant_suboptions'])) {
                 $errors['reason_specify'] = "Please specify the status";
             }        
         }
