@@ -253,8 +253,7 @@ class NDB_BVL_Instrument_tsi extends NDB_BVL_Instrument
 		"Parent's Address:",
 		"$this->indent a) Older sibling",
 		"$this->indent b) other siblings:",
-		"Nature of Referral:",
-		"SUBJECT  Ever been a patient at UNC?");
+		"Nature of Referral:");
 		foreach ($nonAskedQuestions as $field) {
 			$this->form->addElement('static', null, $field);
 		}
