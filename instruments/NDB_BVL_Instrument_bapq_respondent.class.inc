@@ -145,7 +145,7 @@ class NDB_BVL_Instrument_bapq_respondent extends NDB_BVL_Instrument
     function BAPQ_Rules($values) {
        $errors = array();
        if(intval($values['respondent_age']) > 100) {
-           $errors['respondent_age'] = "Specify age between 0 and 100";    
+           $errors['respondent_age_group'] = "Specify age between 0 and 100";    
        }
        return $errors;
     }
