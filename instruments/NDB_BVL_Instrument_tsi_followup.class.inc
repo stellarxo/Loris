@@ -17,7 +17,17 @@ class NDB_BVL_Instrument_tsi_followup extends NDB_BVL_Instrument
 		$db =& Database::singleton();
 	
         $candID = isset($_REQUEST['candID']) ? $_REQUEST['candID'] : '';
- 		$sessionid = $db->pselectOne("SELECT ID FROM session WHERE CandID=:cndID and Visit_label LIKE '%06'", array('cndID' => $candID));
+        $candidate =& Candidate::singleton($candID);
+        $projID = $candidate->getProjectID();
+
+        if ($projID == 2) {
+            //for IBIS2 tsi is part of Screening visit
+            $sessionid = $db->pselectOne("SELECT ID FROM session WHERE CandID=:cndID and Visit_label LIKE '%screening%'", 
+                                          array('cndID' => $candID));
+        } else { 
+ 		    $sessionid = $db->pselectOne("SELECT ID FROM session WHERE CandID=:cndID and Visit_label LIKE '%06'", 
+                                          array('cndID' => $candID));
+        }
         if($sessionid == array()) {
             return null;
         }
