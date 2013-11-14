@@ -463,7 +463,7 @@ class NDB_BVL_Instrument_ados2_module3 extends NDB_BVL_Instrument
             if (PEAR::isError($record_lookup)) {
                 return PEAR::raiseError("Could not retrieve scores: " . $record_lookup->getMessage());
             }
-            if($sevscore == null) {
+            if(empty($sevscore)) {
                 $scoreCols['severity_score_lookup']= "N/A";
             } else {
                 $scoreCols['severity_score_lookup']=$sevscore;
