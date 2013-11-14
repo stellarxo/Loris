@@ -271,26 +271,9 @@ INSERT INTO help(hash, topic) VALUES (md5('edi2'),'EDI_IBIS2');
 						     'other_1_month', 
 						     'other_2_month', 
 						     'comnt',
-						     'EDI8ot_status', 
-						     'EDI19ot_status', 
-						     'EDIT33ot_status',
-						     'EDI45ot_status', 
-						     'EDI58ot_status', 
-						     'EDI70ot_status', 
-						     'EDI82ot_status', 
-						     'EDI96ot_status', 
-						     'inj_month_status',
-						     'dear_month_status', 
-						     'conf_month_status', 
-						     'legl_month_status', 
-						     'emp_month_status', 
-						     'crim_month_status',
-						     'other_1_month_status', 
-						     'other_2_month_status', 
-						     'comnt_status',
                              'EDI33ot',
-                             'other_1', 'other_2',
-                             'EDI33ot_status',
+                             'other_1',
+                             'other_2',
                              'score_0_3_total_symptoms',
                              'score_0_3_regulatory',
                              'score_4_6_total_symptoms',
@@ -325,8 +308,7 @@ INSERT INTO help(hash, topic) VALUES (md5('edi2'),'EDI_IBIS2');
                              'score_22_24_social',
                              'score_22_24_communication',
                              'score_22_24_repetitive_behaviour',
-                             'Data_entry_completion_status',
-                             'other_comments_status');
+                             'Data_entry_completion_status');
 
 
         // setup the form

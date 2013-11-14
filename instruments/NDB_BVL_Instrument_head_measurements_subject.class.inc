@@ -21,26 +21,7 @@ INSERT INTO test_battery VALUES ('', 'head_measurements_subject', '1050', '1140'
         $this->testName = "head_measurements_subject";           // test_names.Test_name
         $this->table = 'head_measurements_subject';              // name of database table corresponding to instrument
         $this->_doubleDataEntryDiffIgnoreColumns = array('CommentID', 'UserID', 'Testdate', 'Window_Difference',
-                'Candidate_Age','Data_entry_completion_status',
-                'head_circumference1_status',
-                'head_circumference2_status',
-                'length1_status',
-                'length2_status',
-                'weight1_status',
-                'weight2_status',
-                'head_circumference1_mother_status',
-                'head_circumference2_mother_status',
-                'length1_mother_status',
-                'length2_mother_status',
-                'weight1_mother_status',
-                'weight2_mother_status',
-                'head_circumference1_father_status',
-                'head_circumference2_father_status',
-                'length1_father_status',
-                'length2_father_status',
-                'weight1_father_status',
-                'weight2_father_status',
-                'comments_status'); 
+                'Candidate_Age','Data_entry_completion_status'); 
         $this->_setup($commentID, $page);
     }   
 

@@ -56,7 +56,6 @@ class NDB_BVL_Instrument_neuro_screen extends NDB_BVL_Instrument
 							 'q13_tone_symmetrical_abnormality_specify',
 							 'q14_tone_asymmetrical_abnormality_specify',
 							 'q15_appearance_specify',
-							 'q16_power_upper_limb_specify_status',
 							 'q17_power_lower_limb_specify',
 							 'q18_other_limb_hand_dysmorphic_describe',
 							 'q19_other_physical_abnormalities',
@@ -65,43 +64,7 @@ class NDB_BVL_Instrument_neuro_screen extends NDB_BVL_Instrument
 							 'q25_shagreen_patches_describe',
 							 'q27_cafe_au_lait_spots_describe',
 							 'q28_cutaneous_nodules_describe');
-                             /* Commenting out: waiting for approval to add *_status fields
-                             '1_strabismus_specify_status',
-                             'q1_strabismus_specify_status',
-                             '2_specify_status',
-                             'q2_specify_status',
-                             '7_cleft_describe_status',
-                             'q7_cleft_describe_status',
-                             '8_craniofacial_dysmorphic_describe_status',
-                             'q8_craniofacial_dysmorphic_describe_status',
-                             '11_symmetrical_gait_abnormality_specify_status',
-                             'q11_symmetrical_gait_abnormality_specify_status',
-                             '12_asymemtrical_gait_abnormality_specify_status',
-                             'q12_asymemtrical_gait_abnormality_specify_status',
-                             '13_tone_symmetrical_abnormality_specify_status',
-                             'q13_tone_symmetrical_abnormality_specify_status',
-                             '14_tone_asymmetrical_abnormality_specify_status',
-                             'q14_tone_asymmetrical_abnormality_specify_status',
-                             '15_appearance_specify_status',
-                             'q15_appearance_specify_status',
-                             '16_power_upper_limb_specify_status',
-                             'q16_power_upper_limb_specify_status',
-                             '17_power_lower_limb_specify_status',
-                             'q17_power_lower_limb_specify_status',
-                             '18_other_limb_hand_dysmorphic_describe_status',
-                             'q18_other_limb_hand_dysmorphic_describe_status',
-                             '23_adenoma_sebaceum_describe_status',
-                             'q23_adenoma_sebaceum_describe_status',
-                             '24_ash_leaf_macules_describe_status',
-                             'q24_ash_leaf_macules_describe_status',
-                             '25_shagreen_patches_describe_status',
-                             'q25_shagreen_patches_describe_status',
-                             '27_cafe_au_lait_spots_describe_status',
-                             'q27_cafe_au_lait_spots_describe_status',
-                             '28_cutaneous_nodules_describe_status',
-                             'q28_cutaneous_nodules_describe_status',
-                             'other_comments_status');
-                             */
+                             
 
 
         // setup the form

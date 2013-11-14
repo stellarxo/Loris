@@ -62,11 +62,8 @@ class NDB_BVL_Instrument_ados2_module3 extends NDB_BVL_Instrument
                 'Candidate_Age',
                 // Text entry columns
                 'd1_specify',
-                'd1_specify_status',
                 'd2_specify',
-                'd2_specify_status',
                 'd4_specify',
-                'd4_specify_status',
                 // Scored columns
                 "ADOS_classification",
                 "social_affect_total",
@@ -90,8 +87,7 @@ class NDB_BVL_Instrument_ados2_module3 extends NDB_BVL_Instrument
                 'restricted_repetitive_gotham_weighted',
                 'gotham_weighted_score',
                 'severity_score_lookup',
-                'Data_entry_completion_status',
-                'other_comments_status');
+                'Data_entry_completion_status');
 
         // setup the form
         $this->_setupForm();

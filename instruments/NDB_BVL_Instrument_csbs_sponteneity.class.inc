@@ -83,9 +83,7 @@ INSERT INTO instrument_subtests VALUES('', 'csbs_sponteneity', 'csbs_sponteneity
         $this->_doubleDataEntryDiffIgnoreColumns = array('CommentID', 'UserID', 'Testdate', 'Window_Difference',
                 'Candidate_Age',
                 'relationship_to_child',
-                'relationship_to_child_status',
                 'comments',
-                'comments_status',
                 'q_19_sequence_action_schemes_6',
                 'free_total_NC',
                 'free_response_to_prompt',
@@ -103,7 +101,8 @@ INSERT INTO instrument_subtests VALUES('', 'csbs_sponteneity', 'csbs_sponteneity
                 'overall_average_prompts',
                 'overall_yes_NP',
                 'overall_yes_SC',
-                'overall_NC');
+                'overall_NC',
+                'Data_entry_completion_status');
 
              //date formats
 

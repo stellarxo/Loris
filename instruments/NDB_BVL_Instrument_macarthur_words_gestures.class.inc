@@ -45,8 +45,6 @@ class NDB_BVL_Instrument_macarthur_words_gestures extends NDB_BVL_Instrument
         "total_gestures_percentile",
         "I_C_1_score",
         "I_C_2_score",
-        "II_F_replacement_comments_status",
-        "II_F_replacement_examples_status",
         "Data_entry_completion_status");
 
 
