@@ -20,8 +20,10 @@ INSERT INTO test_battery VALUES ('', 'head_measurements_subject', '1050', '1140'
         // set the object properties
         $this->testName = "head_measurements_subject";           // test_names.Test_name
         $this->table = 'head_measurements_subject';              // name of database table corresponding to instrument
+        /*Commenting out, this will be inherited from base class
         $this->_doubleDataEntryDiffIgnoreColumns = array('CommentID', 'UserID', 'Testdate', 'Window_Difference',
                 'Candidate_Age','Data_entry_completion_status'); 
+        */
         $this->_setup($commentID, $page);
     }   
 

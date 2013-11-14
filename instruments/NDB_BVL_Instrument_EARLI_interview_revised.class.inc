@@ -53,11 +53,12 @@ class NDB_BVL_Instrument_EARLI_interview_revised extends NDB_BVL_Instrument_EARL
                 'emptyOptionValue' => null
                 );
 
-
+       /* Commenting out, this will be inherited from base class
         $this->_doubleDataEntryDiffIgnoreColumns = array('CommentID', 'UserID', 'Testdate',
                                                          'Window_Difference', 'Candidate_Age',
                                                          'Data_entry_completion_status'                                                                                             );
-		// setup the form
+		*/
+        // setup the form
 		$this->_setupForm();
 				        
 		$this->localDefaults = array();
