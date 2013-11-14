@@ -81,11 +81,8 @@ class NDB_BVL_Instrument_ados2_module1 extends NDB_BVL_Instrument
 	    $this->_doubleDataEntryDiffIgnoreColumns = array('CommentID', 'UserID', 'Testdate', 'Window_Difference', 'Candidate_Age',
                              // Text entry columns
 							 'd1_specify',
-							 'd1_specify_status',
 							 'd2_specify',
-							 'd2_specify_status',
 							 'd4_specify',
-							 'd4_specify_status',
                              // Scored columns
                              "ADOS_classification",
                              "social_affect_total", 
@@ -108,8 +105,8 @@ class NDB_BVL_Instrument_ados2_module1 extends NDB_BVL_Instrument
                              'social_affect_gotham_weighted',
                              'restricted_repetitive_gotham_weighted',
                              'gotham_weighted_score',
-                             'severity_score_lookup'
-       );
+                             'severity_score_lookup',
+                             'Data_entry_completion_status');
 
 
 

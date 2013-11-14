@@ -34,7 +34,6 @@ class NDB_BVL_Instrument_mri_parameter_form extends NDB_BVL_Instrument
         $this->_requiredElements = array('Date_taken', 'Examiner'); //, 'CaregiverReport');
            
         $this->_selectMultipleElements = array("gre_fieldmap");
-
         $config =& NDB_Config::singleton();
         $this->dateOptions = array(
         'language' => 'en',

@@ -47,7 +47,7 @@ class NDB_BVL_Instrument_neuro_screen extends NDB_BVL_Instrument
 	/**
 	 * Array of column names to be ignored by the double data entry conflict detector.
 	 */
-	$this->_doubleDataEntryDiffIgnoreColumns = array('CommentID', 'UserID', 'Testdate',  'Window_Difference', 'Candidate_Age',
+	$this->_doubleDataEntryDiffIgnoreColumns = array('CommentID', 'UserID', 'Testdate',  'Window_Difference', 'Candidate_Age','Data_entry_completion_status',
 							 'q1_strabismus_specify',
 							 'q2_specify',
 							 'q7_cleft_describe',
@@ -56,7 +56,6 @@ class NDB_BVL_Instrument_neuro_screen extends NDB_BVL_Instrument
 							 'q13_tone_symmetrical_abnormality_specify',
 							 'q14_tone_asymmetrical_abnormality_specify',
 							 'q15_appearance_specify',
-							 'q16_power_upper_limb_specify_status',
 							 'q17_power_lower_limb_specify',
 							 'q18_other_limb_hand_dysmorphic_describe',
 							 'q19_other_physical_abnormalities',
@@ -65,9 +64,7 @@ class NDB_BVL_Instrument_neuro_screen extends NDB_BVL_Instrument
 							 'q25_shagreen_patches_describe',
 							 'q27_cafe_au_lait_spots_describe',
 							 'q28_cutaneous_nodules_describe');
-
-
-
+                             
 
 
         // setup the form

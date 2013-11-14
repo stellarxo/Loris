@@ -40,8 +40,10 @@ class NDB_BVL_Instrument_m_chat_proband extends NDB_BVL_Instrument_m_chat
 
 		// required fields for data entry completion status
 		$this->_requiredElements = array('Examiner', "q1_swung_on_knee");
-
-		// setup the form
+       
+        $this->_doubleDataEntryDiffIgnoreColumns = array('CommentID', 'UserID', 'Testdate', 'Window_Difference', 'Candidate_Age','Data_entry_completion_status','total_item_fails','total_critical_fails','score');
+		
+        // setup the form
 		$this->_setupForm();
 
 	}
