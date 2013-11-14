@@ -475,7 +475,11 @@ class NDB_BVL_Instrument_ados_module2 extends NDB_BVL_Instrument
             if (PEAR::isError($record_lookup)) {
                 return PEAR::raiseError("Could not retrieve scores: " . $record_lookup->getMessage());
             }
-            $scoreCols['severity_score_lookup']=$sevscore;
+            if(empty($sevscore)) {
+                $scoreCols['severity_score_lookup']= "N/A";
+            } else {
+                $scoreCols['severity_score_lookup']=$sevscore;
+            }
         }
 
         // Weightings from Gotham, Risi, Pickles and Lord 2008 Table 2
