@@ -74,7 +74,7 @@ class NDB_BVL_Instrument_EARLI_interview_PART_1 extends NDB_BVL_Instrument_EARLI
                                                           'Window_Difference', 'Candidate_Age',
                                                           'Data_entry_completion_status',
                                                           'mother_id_status'
-         */                                                 );
+                                                          );*/
         // setup the form
         $this->_setupForm();
 

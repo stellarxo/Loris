@@ -16,8 +16,9 @@ class NDB_BVL_Instrument_tsi_followup extends NDB_BVL_Instrument
 	{
 		$db =& Database::singleton();
 	
-        $candID = isset($_REQUEST['candID']) ? $_REQUEST['candID'] : '';
-        $candidate =& Candidate::singleton($candID);
+        $timepoint =& TimePoint::singleton($this->getSessionID());
+        $candidate =& Candidate::singleton($timepoint->getCandID());
+        $candID = $timepoint->getCandID(); 
         $projID = $candidate->getProjectID();
 
         if ($projID == 2) {
