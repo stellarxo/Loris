@@ -125,7 +125,7 @@
 </td>
 <tr>
 <td>
-Specify Reason
+Specify Reason</br>(Required only for status Inactive/Incomplete)
 </td>
 <td>
 <div>
