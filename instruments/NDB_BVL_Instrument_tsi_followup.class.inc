@@ -305,7 +305,11 @@ class NDB_BVL_Instrument_tsi_followup extends NDB_BVL_Instrument
 
 		$questionArray = array("neurological_problems_proband"=>"Any neurological problems such as Cerebral Palsy or Tuber Sclerosis in PROBAND?",
 		"genetic_conditions_proband"=>"Diagnosed/suspected genetic conditions or syndromes?",
-		"relative_with_disorder"=>"1st degree relative w/ MR, schizophrenia, bipolar or psychosis?",
+	//	"relative_with_disorder"=>"1st degree relative w/ MR, schizophrenia, bipolar or psychosis?",
+        "relative_mri" =>$this->indent."MRI?",
+        "relative_schizophrenia"=>$this->indent."Schizophrenia?",
+        "relative_bipolar"=>$this->indent."Bipolar?",
+        "relative_psychosis"=>$this->indent."Psychosis?",
 		"cns"=>"CNS problem/injury such as a head injury or meningitis?",
 		"tested_for_fragile_x"=>"Tested for Fragile X syndrome?");
 		foreach($questionArray as $field=>$label) {
