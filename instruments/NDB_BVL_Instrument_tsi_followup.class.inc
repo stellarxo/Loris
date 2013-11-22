@@ -469,10 +469,37 @@ class NDB_BVL_Instrument_tsi_followup extends NDB_BVL_Instrument
 		$this->form->addElement("select", "exc_inc_meets_criteria", "1. This proband meets any of the medical or neurological exclusion criteria for this study. (see Section A)", $this->yesNo);
 		$this->form->addElement("select", "exc_inc_subject_meets_criteria", "2. This subject meets any of the medical or neurological exclusion criteria for this study. (see Section B)", $this->yesNo);
 		$this->form->addElement("select", "exc_inc_contraindication", "3. This subject has evidence for contraindication to MRI. (see Section B)", $this->yesNo);
-		$this->form->addElement("static", null, '<br />');
+	/*
+        $this->form->addElement("static", null, '<br />');
 		$this->form->addElement("static", null, "Disposition");
 		$this->form->addElement("select", "disposition", "Proceed to next level beyond screening?", $this->yesNo);
-	}
-	
+	*/
+    }
+
+	function score() {
+        $db =& Database::singleton();
+        if(PEAR::isError($db)) {
+            return PEAR::raiseError ("Could not connect to database: ".$db->getMessage());
+        }
+        // Get the item scores
+        $query = "SELECT * FROM $this->table WHERE CommentID='".$this->getCommentID()."'";
+        $record=array();
+        $db->selectRow($query, $record);
+        if (PEAR::isError($record)) {
+            return PEAR::raiseError("Could not get scores: ".$record->getMessage());
+        }
+        $score = array();
+
+        if($record['relative_mr'] == 'yes' || $record['relative_schizophrenia']== 'yes' 
+           || $record['relative_bipolar']=='yes' || $record['relative_psychosis']== 'yes')  {
+            $score['relative_with_disorder'] = 'yes';
+            $result = $db->update($this->table, $score, array('CommentID'=>$this->getCommentID()));
+            if($db->isError($result)) {
+                return PEAR::raiseError("Could not save total score: ".$result->getMessage());
+            }
+
+        }
+
+   }
 }
 ?>
