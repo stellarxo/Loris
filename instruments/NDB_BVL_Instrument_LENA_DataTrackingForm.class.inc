@@ -47,27 +47,51 @@ class NDB_BVL_Instrument_LENA_DataTrackingForm extends NDB_BVL_Instrument
         );
         
         $db =& Database::singleton();
-        if(PEAR::isError($db)) {
+        if(Utility::isErrorX($db)) {
             return PEAR::raiseError ("Could not connect to database: ".$db->getMessage());
         }
         $query = "SELECT * FROM ".$this->table." WHERE CommentID='".$this->getCommentID()."'";
         $db->selectRow($query, $record);
 
-        if (PEAR::isError($record)) {
+        if (Utility::isErrorX($record)) {
             $record = array();
         }
-         $fields = array("Type","DLP","ProcessingFile","Timestamp","Duration","Meaningful","Distant","TV","Noise","Silence","CTC_Actual","CVC_Actual","AVA_StdScore","AVA_StdScore_Pct");
-        for($i = 1; $i <= 9; $i++) {
+        $query2 = "SELECT * FROM LENA_DataTrackingForm2  WHERE CommentID='".$this->getCommentID()."'";
+        $db->selectRow($query, $record2);
+
+        if (Utility::isErrorX($record2)) {
+            $record2 = array();
+        }
+
+      /*   $fields = array("Type","DLP","ProcessingFile","Timestamp","Duration","Meaningful","Distant","TV","Noise","Silence","CTC_Actual","CVC_Actual","AVA_StdScore","AVA_StdScore_Pct");*/
+       $fields = array('Type','ChildKey','Id','DLP','ProcessingFile','Timestamp','Duration','Meaningful','Distant','TV','TV_Pct','Noise','Silence','AWC_Actual','AWC_Proj','AWC_Pct','CTC_Actual','CTC_Proj','CTC_Pct','CVC_Actual','CVC_Proj','CVC_Pct','AVA_StdScore','AVA_StdScore_Pct');
+
+        for($i = 1; $i <= 32; $i++) {
             foreach($fields as $field) {
               $key = $field."_".$i;
               $this->localDefaults[$key] = $record[$key];
-              if($this->localDefaults[$key] == "AVA_StdScore_Pct") {
+              if($this->localDefaults[$key] == "AVA_StdScore_Pct" || 
+                 $this->localDefaults[$key] == "TV_Pct" ||
+                 $this->localDefaults[$key] == "AWC_Pct" ||
+                 $this->localDefaults[$key] == "CTC_Pct" ||
+                 $this->localDefaults[$key] == "CVC_Pct") {
                    $this->localDefaults[$key] = $record[$key]."%";
               }
             }
-                
         }
-
+        for($i = 33; $i <= 64; $i++) {
+            foreach($fields as $field) {
+              $key = $field."_".$i;
+              $this->localDefaults[$key] = $record2[$key];
+              if($this->localDefaults[$key] == "AVA_StdScore_Pct" || 
+                 $this->localDefaults[$key] == "TV_Pct" ||
+                 $this->localDefaults[$key] == "AWC_Pct" || 
+                 $this->localDefaults[$key] == "CTC_Pct" ||
+                 $this->localDefaults[$key] == "CVC_Pct") {
+                     $this->localDefaults[$key] = $record2[$key]."%";
+              }
+            }
+        }
         // setup the form
         $this->_setupForm();
 
@@ -269,14 +293,15 @@ class NDB_BVL_Instrument_LENA_DataTrackingForm extends NDB_BVL_Instrument
                 'Data_dir'  =>$file->getDestinationDirectory()
                 );
 
-         $upload_values = array();
+         $upload_values = array(); //uploading values to LENA_DataTrackingForm table
+         $upload_values2 = array(); //uploading values to LENA_DataTrackingForm table
          $fields = array("Type","DLP","ProcessingFile","Timestamp","Duration","Meaningful","Distant","TV","Noise","Silence","CTC.Actual","CVC.Actual","AVA_StdScore","AVA_StdScore_Pct");//removed TV.Pct, AWC.Actual for testing purposes
         //Cycle through the lines and extract the data
         $lines=explode("\n",$contents);
         $keys = explode("\t", $lines[0]);
         $vals = explode("\t", $lines[1]);
         $header = explode(",",$keys[0]);
-        for($i=1; $i<= 9; $i++) {
+        for($i=1; $i< sizeof($lines); $i++) {
             foreach($header as $id=>$value) {
                 $newline = explode("\t",$lines[$i]);
                 $data = explode(",", $newline[0]);
@@ -284,21 +309,28 @@ class NDB_BVL_Instrument_LENA_DataTrackingForm extends NDB_BVL_Instrument
                     $value = str_replace('.','_',$value);
                     $field = $value."_".$i;
                     $data[$id] = preg_replace('/\s+/','',$data[$id]);
-                    $upload_values[$field] = $data[$id];
+                    if($i <=32) {
+                        $upload_values[$field] = $data[$id];
+                    } else {
+                        $upload_values2[$field] = $data[$id];
+
+                    }
                 }
             }   
         }
+        $upload_values2['CommentID'] = $args['CommentID'];
         $db=& Database::singleton();
 
         ///Setting trackchanges to false because getting error messages
         $db->_trackChanges = false;
         ////////////////////////////////////////////////////////////////
-
+//print_r($upload_values);
         $result = $db->update($this->testName, $upload_values, array('CommentID'=>$args['CommentID']));
-        if($this->isError($result)) {
+        if(Utility::isErrorX($result)) {
             print $result->getMessage();
             return $this->raiseError('Could not save to database');
         }
+        $ok = $db->insert("LENA_DataTrackingForm2", $upload_values2);
         return true;
 
     }
