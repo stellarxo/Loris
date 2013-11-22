@@ -257,7 +257,7 @@ class NDB_BVL_Instrument_tsi extends NDB_BVL_Instrument
 		$questionArray = array("neurological_problems_proband"=>"Any neurological problems such as cerebral palsy or tuberous sclerosis in PROBAND?",
 		"genetic_conditions_proband"=>"Diagnosed/suspected genetic conditions or syndromes?",
 	//	"relative_with_disorder"=>"1st degree relative w/ MR, schizophrenia, bipolar or psychosis?",
-        "relative_mri" =>$this->indent."MRI?",
+        "relative_mr" =>$this->indent."MR?",
         "relative_schizophrenia"=>$this->indent."Schizophrenia?",
         "relative_bipolar"=>$this->indent."Bipolar?",
         "relative_psychosis"=>$this->indent."Psychosis?",
