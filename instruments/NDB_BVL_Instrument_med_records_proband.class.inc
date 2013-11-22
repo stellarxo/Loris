@@ -36,7 +36,7 @@ class NDB_BVL_Instrument_med_records_proband extends NDB_BVL_Instrument_med_reco
 								 'clinician_background_specify',
 								 'age_diagnosis_months',
 								 'other_diagnoses_specify',
-								 'other_genetic_tests_completed_specify'
+								 'other_genetic_tests_completed_specify',
                                  'Data_entry_completion_status',
                                  'first_percentage_length',
                                  'first_weight_percentage',
