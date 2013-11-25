@@ -15,8 +15,11 @@ class NDB_BVL_Instrument_tsi_followup extends NDB_BVL_Instrument
 	function getSession()
 	{
 		$db =& Database::singleton();
-	
-        $timepoint =& TimePoint::singleton($this->getSessionID());
+        $sessionid = $this->getSessionID();
+        if($sessionid === false){
+           return null;    
+        }
+        $timepoint =& TimePoint::singleton($sessionid);
         $candidate =& Candidate::singleton($timepoint->getCandID());
         $candID = $timepoint->getCandID(); 
         $projID = $candidate->getProjectID();
