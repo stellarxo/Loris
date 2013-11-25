@@ -126,29 +126,15 @@ class NDB_Form_statistics extends NDB_Form
         }
         $subprojList = substr($subprojList, 0, -1);
 
-        $Visits = array ('6 Month' => 'v06', '12 Month' => 'v12','24 Month' => 'v24', '36 Month' => 'v36');  
-        if($currentProject == 2) {
-         $Visits = array ('Screening'=>'screening','3 month'=>'v03','6 Month' => 'v06','9 month'=>'v09', 
-                          '12 Month' => 'v12','15 month'=>'v15','18 Month' => 'v18', '24 Month' => 'v24',
-                          '36 Month' => 'v36');
-
-         $vlabel_criteria = " AND s.Visit_Label IN ('Screening', 'V03','V06','V09','V12','V15','V18','V24','V36')"; 
-        }
-        $vlabel_criteria = " AND s.Visit_Label IN ('V06','V12','V24','V36')";
-
+        $Visits = Utility::getExistingVisitLabels($currentProject);  
+        
         $this->tpl_data['Visits'] = $Visits;
 
         //---- BEHAVIORAL STATS -----
-        $sites = array('2' => 'sea', '3' => 'phi', '4' => 'stl', '5' => 'unc');
         $mri_data = array();
         $DB->select("SELECT s.CenterID,
                 f.Data_Entry as Data_Entry,
-                CASE s.visit_label
-                WHEN '6mo' THEN 'v06'
-                WHEN '12m' THEN 'v12'
-                WHEN '18mo' THEN 'v18'
-                WHEN '24mo' THEN 'v24'
-                ELSE lower(s.visit_label) END as VLabel,
+                s.visit_label as VLabel,
                 COUNT(s.CandID) as val
                 FROM session s JOIN candidate c ON (s.CandID=c.CandID)
                 JOIN flag f ON (f.SessionID=s.ID)
@@ -189,12 +175,7 @@ class NDB_Form_statistics extends NDB_Form
         // DDE STATS
         $DB->select("SELECT s.CenterID, 
                 f.Data_Entry as Data_Entry, 
-                CASE s.visit_label
-                WHEN '6mo' THEN 'v06'
-                WHEN '12m' THEN 'v12'
-                WHEN '18mo' THEN 'v18'
-                WHEN '24mo' THEN 'v24'
-                ELSE lower(s.visit_label) END as VLabel,
+                s.visit_label as VLabel,
                 COUNT(s.CandID) as val
                 FROM session as s JOIN candidate as c ON (s.CandID=c.CandID) JOIN flag as f ON (f.SessionID=s.ID) 
                 WHERE s.Active='Y' 
@@ -275,11 +256,7 @@ class NDB_Form_statistics extends NDB_Form
           }
 
           }
-          $Visits = array ('6 Month' => 'v06', '12 Month' => 'v12', '18 Month' => 'v18', '24 Month' => 'v24', '36 Month' => 'v36');
-          if($currentProject == 2) {
-              $Visits = array ('Screening'=>'screening','3 Month'=>'v03','6 Month' => 'v06','9 Month'=>'v09', '12 Month' => 'v12',
-                      '15 Month'=>'v15','18 Month' => 'v18', '24 Month' => 'v24', '36 Month' => 'v36');
-          }
+          $Visits = Utility::getExistingVisitLabels($currentProject);
 
           $this->tpl_data['Visits'] = $Visits;
 
@@ -341,22 +318,13 @@ class NDB_Form_statistics extends NDB_Form
                   AND s.SubprojectID IN ($subprojList)
                   $ExtraProject_Criteria
                   GROUP BY Subcat, s.SubprojectID, c.CenterID, s.Visit_label", $result);
-          $M_Visits = array ('6 Month' => 'v06', '12 Month' => 'v12', '24 Month' => 'v24');
-          if($currentProject == 2) {
-              $M_Visits = array ('Screening'=>'screening','3 Month'=>'v03','6 Month' => 'v06','9 Month'=>'v09', '12 Month' => 'v12',
-                      '15 Month'=>'v15','18 Month' => 'v18', '24 Month' => 'v24', '36 Month' => 'v36');
-          }
+          $M_Visits = Utility::getExistingVisitLabels($currentProject);
 
           $this->tpl_data['MRI_Done_Table'] = $this->render_stats_table($MRIHeader, $MRISubcategories, $M_Visits, "mri_type", $MRIOptions, $MRI_Type, $centers, $result, "mri",$currentProject);
 
           $DB->select("SELECT s.SubprojectID, 
                   c.CenterID, 
-                  CASE s.visit_label
-                  WHEN '6mo' THEN 'v06'
-                  WHEN '12m' THEN 'v12'
-                  WHEN '18mo' THEN 'v18'
-                  WHEN '24mo' THEN 'v24'
-                  ELSE lower(s.visit_label) END as VLabel,
+                  s.visit_label as VLabel,
                   COUNT(*) as val 
                   FROM mri_parameter_form m JOIN flag f USING (CommentID) 
                   JOIN session s ON (f.SessionID=s.ID) 
@@ -647,7 +615,8 @@ class NDB_Form_statistics extends NDB_Form
             }
         }
         $this->tpl_data['Subprojects'] = Utility::getSubprojectList(); //array('1' => '6 Month Recruit', '2' => '12 Month Recruit', '3' => 'Control');
-        $Visits = array ('6 Month' => 'v06', '12 Month' => 'v12', '18 Month' => 'v18', '24 Month' => 'v24', '36 Month' => 'v36');
+        $Visits = Utility::getExistingVisitLabels($currentProject);
+
         $this->tpl_data['Visits'] = $Visits;
 
         $this->tpl_data['all_instruments'] = Utility::getAllInstruments();
@@ -783,13 +752,8 @@ class NDB_Form_statistics extends NDB_Form
         $siteList = substr($siteList, 0, -1);
 
        // $this->tpl_data['Subprojects'] = Utility::getSubprojectList(); //array('1' => '6 Month Recruit', '2' => '12 Month Recruit', '3' => 'Control');
-       $Visits = array ('6 Month' => 'v06', '12 Month' => 'v12', '18 Month' => 'v18', '24 Month' => 'v24', '36 Month' => 'v36');
-
-        if($currentProject == 2) {
-            $Visits = array ('Screening'=>'screening','3 Month'=>'v03','6 Month' => 'v06','9 Month'=>'v09', 
-                      '12 Month' => 'v12','15 Month'=>'v15','18 Month' => 'v18', '24 Month' => 'v24', '36 Month' => 'v36');
-        }
-        $this->tpl_data['Visits'] = $Visits;
+       $Visits = Utility::getExistingVisitLabels($currentProject);
+       $this->tpl_data['Visits'] = $Visits;
         $instruments  = array_merge(
             array( '' => 'Recruit Gender Breakdown'),
             Utility::getAllInstruments()
@@ -802,13 +766,7 @@ class NDB_Form_statistics extends NDB_Form
                 f.Data_entry as Subcat, 
                 c.CenterID as CenterID, 
                 s.SubprojectID as SubprojectID,
-                CASE s.visit_label
-                WHEN 'v6' THEN 'v06'
-                WHEN '6mo' THEN 'v06'
-                WHEN '12m' THEN 'v12'
-                WHEN '18mo' THEN 'v18'
-                WHEN '24mo' THEN 'v24'
-                ELSE lower(s.visit_label) END as VLabel
+                s.visit_label as VLabel
                 FROM session s JOIN candidate c ON (s.CandID=c.CandID)
                 JOIN flag f ON (f.SessionID=s.ID)
                 JOIN $_REQUEST[DemographicInstrument] i USING(CommentID)
@@ -821,12 +779,7 @@ class NDB_Form_statistics extends NDB_Form
                 SELECT count(*) as val, 'Incomplete' as Subcat, 
                 c.CenterID as CenterID, 
                 s.SubprojectID as SubprojectID,
-                CASE s.visit_label
-                WHEN '6mo' THEN 'v06'
-                WHEN '12m' THEN 'v12'
-                WHEN '18mo' THEN 'v18'
-                WHEN '24mo' THEN 'v24'
-                ELSE lower(s.visit_label) END as VLabel
+                s.visit_label as VLabel
                 FROM session s JOIN candidate c USING(CandID) 
                 JOIN flag f ON (f.SessionID=s.ID) 
                 JOIN $_REQUEST[DemographicInstrument] i USING(CommentID)
@@ -839,12 +792,7 @@ class NDB_Form_statistics extends NDB_Form
             $Subcategories = array('Male', 'Female');
             $DB->select("SELECT c.CenterID as CenterID, 
                 s.SubprojectID as SubprojectID, 
-                CASE s.visit_label
-                WHEN '6mo' THEN 'v06'
-                WHEN '12m' THEN 'v12'
-                WHEN '18mo' THEN 'v18'
-                WHEN '24mo' THEN 'v24'
-                ELSE lower(s.visit_label) END as VLabel,
+                s.visit_label as VLabel,
                     c.gender as Subcat,
                     count(s.CandID) as val
                     FROM session s JOIN candidate c ON (s.CandID=c.CandID) 
