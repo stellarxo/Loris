@@ -28,8 +28,8 @@
       <td nowrap="nowrap">{$form.flagged_caveatemptor.html}</td>
     </tr>
     <tr>
-      <td nowrap="nowrap">{$form.flagged_info.label}</td>
-      <td nowrap="nowrap">{$form.flagged_info.html}</td>
+      <td nowrap="nowrap">{$form.flagged_reason.label}</td>
+      <td nowrap="nowrap">{$form.flagged_reason.html}</td>
     </tr>
     <tr>
       <td nowrap="nowrap">{$form.flagged_other_group.label}</td>
@@ -58,6 +58,11 @@
         <td nowrap="nowrap">{$form.ProbandDoB.label}</td>
         <td nowrap="nowrap">{$form.ProbandDoB.html}</td>
     </tr>
+    <tr>
+       <td nowrap="nowrap">{$form.ProbandDoB2.label}</td>
+       <td nowrap="nowrap">{$form.ProbandDoB2.html}</td>
+    </tr>
+
     <tr>
         <td nowrap="nowrap">{$form.dob_proband_adi_r.label}</td>
         <td nowrap="nowrap">{$form.dob_proband_adi_r.html}</td>
@@ -138,14 +143,6 @@ Specify Reason</br>(Required only for status Inactive/Incomplete)
 
 </tr>
 <tr>
-<td nowrap="nowrap">{$form.reason_specify_group.label}</td>
-<td nowrap="nowrap">{$form.reason_specify_group.html}
-{if $form.reason_specify_group.error}
-<span class='error'>{$form.reason_specify_group.error}</span>
-{/if}
-</td>
-</tr>
-<tr>
 <td nowrap="nowrap">{$form.withdrawal_reasons.label}</td>
 <td nowrap="nowrap">{$form.withdrawal_reasons.html}
 {if $form.withdrawal_reasons.error}
@@ -189,7 +186,7 @@ Specify Reason</br>(Required only for status Inactive/Incomplete)
 </tr>
 {/section}
 {/if}
-<tr><th colspan="2">Additional Information</th></tr>
+<tr><th colspan="2">Data Entry Information</th></tr>
 <tr>
 <td nowrap="nowrap">{$form.entry_staff.label}</td>
 <td nowrap="nowrap">{$form.entry_staff.html}</td>

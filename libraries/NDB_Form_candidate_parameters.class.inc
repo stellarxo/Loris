@@ -48,6 +48,7 @@ class NDB_Form_candidate_parameters extends NDB_Form
         if( $defaults['ProbandDoB']=== '0000-00-00') {
             $defaults['ProbandDoB'] = '';
         }
+        $defaults['ProbandDoB2']= $defaults['ProbandDoB'];
         $defaults['ProbandGender'] = $DB->pselectOne("SELECT ProbandGender FROM candidate WHERE CandID=:CandidateID", array('CandidateID' => $this->identifier));
         $candidate_dob = $DB->pselectOne("SELECT DoB FROM candidate WHERE CandID=:CandidateID", array('CandidateID' => $this->identifier));
 
@@ -73,8 +74,9 @@ class NDB_Form_candidate_parameters extends NDB_Form
             $relation['Relationship_type'] = $this->relationType[$relation['Relationship_type']];
             $this->tpl_data['sibling_list'][]= $relation;
         }
+       
         $defaults['flagged_caveatemptor'] = $DB->pselectOne("SELECT flagged_caveatemptor FROM candidate WHERE CandID=:CandidateID", array('CandidateID' => $this->identifier));
-        $defaults['flagged_info'] = $DB->pselectOne("SELECT flagged_info FROM candidate WHERE CandID=:CandidateID", array('CandidateID' => $this->identifier));
+        $defaults['flagged_reason'] = $DB->pselectOne("SELECT flagged_reason FROM candidate WHERE CandID=:CandidateID", array('CandidateID' => $this->identifier));
         $defaults['flagged_other'] = $DB->pselectOne("SELECT flagged_other FROM candidate WHERE CandID=:CandidateID", array('CandidateID' => $this->identifier));
         $defaults['flagged_other_status'] = $DB->pselectOne("SELECT flagged_other_status FROM candidate WHERE CandID=:CandidateID", array('CandidateID' => $this->identifier));
 
@@ -110,19 +112,39 @@ class NDB_Form_candidate_parameters extends NDB_Form
             } 
             $defaults[$key] = $val;
         }
-//print_r($defaults);
+        $config =& NDB_Config::singleton();
+        $consent = $config->getSetting('ConsentModule');
+        if ($consent['useConsent'] === 'true') {
+
+            foreach (Utility::asArray($consent['Consent']) as $question) {
+                $defaults[$question['name'].'_date2'] = $defaults[$question['name'].'_date'] ;
+                $defaults[$question['name'].'_withdrawal2'] =  $defaults[$question['name'].'_withdrawal'] ;
+            }
+        }
+
         return $defaults;
     }
 
     function _process($values)
     {   
         if(!is_array($values) || count($values) ==0) {
+            print "got";
         	return true;
         }
-        
         $DB =& Database::singleton();
+        print_r($values); 
         $values['CandID'] = $this->identifier;
+        unset($values['ProbandDoB2']);
+        $config =& NDB_Config::singleton();
+        $consent = $config->getSetting('ConsentModule');
+        if ($consent['useConsent'] === 'true') {
 
+            foreach (Utility::asArray($consent['Consent']) as $question) {
+                unset($values[$question['name'].'_date2']);
+                unset($values[$question['name'].'_withdrawal2']);
+            }
+        }
+        print_r($values); 
         if (!(is_null($_SESSION['State']))) {
             $currentUser =& User::singleton($_SESSION['State']->getUsername());
             $id = $currentUser->getData("UserID");
@@ -141,10 +163,11 @@ class NDB_Form_candidate_parameters extends NDB_Form
                 $set['InsertTime']=time();
                 $DB->insert("parameter_candidate", $set);
             } else if($key == 'CandidateGUID' || $key == "ProbandGUID" || $key == 'ProbandDoB' || $key == 'ProbandGender'
-                      || $key =='flagged_caveatemptor' || $key == 'flagged_info' || $key == 'flagged_other'
+                      || $key =='flagged_caveatemptor' || $key == 'flagged_reason' || $key == 'flagged_other'
                       || $key == 'flagged_other_status') {
                 if($key == 'ProbandDoB') {
-                    $value = $this->_getQuickformDate($value);
+                    $value = $this->_getDatabaseDate($value);
+                print "HERE" .$value;
                 }
                 $DB->update("candidate", array($key => $value), array('CandID' => $this->identifier));
 
@@ -207,10 +230,12 @@ class NDB_Form_candidate_parameters extends NDB_Form
            if (Utility::isErrorX($success)) {
                return PEAR::raiseError("DB Error: ".$success->getMessage());
            }
-           
           
        }
-       if(isset($values['participant_status'])) {
+       if(isset($values['participant_status']) || isset($values['study_consent_date'])
+          || isset($values['study_consent_withdrawal']) || isset($values['ndar_consent_date'])
+          || isset($values['ndar_consent_withdrawal']) || isset($values['study_consent'])
+          || isset($values['ndar_consent']) ) {
            $participant_vals = array();
            $participant_vals['participant_status'] = $values['participant_status'];
            $sub_reasonID = $DB->pselectOne("SELECT ID FROM participant_status_options WHERE Description=:sub_desc", 
@@ -220,8 +245,6 @@ class NDB_Form_candidate_parameters extends NDB_Form
            } else {
                $participant_vals['participant_suboptions'] = $sub_reasonID;
            }
-           $participant_vals['reason_specify'] = $values['reason_specify'];
-           $participant_vals['reason_specify_status'] = $values['reason_specify_status'];
            $participant_vals['study_consent'] = $values['study_consent'];
            $participant_vals['ndar_consent'] = $values['ndar_consent'];
            $consent_dates = array('study_consent_date','study_consent_withdrawal','ndar_consent_date',
@@ -358,6 +381,7 @@ class NDB_Form_candidate_parameters extends NDB_Form
         );
 
         $this->form->addElement('date', 'ProbandDoB', 'DoB Proband:', $probandDateOptions);
+        $this->form->addElement('date', 'ProbandDoB2', 'Confirm DoB Proband:', $probandDateOptions);
         $this->form->addElement('select', 'ProbandGender', 'Proband gender:', array('' => '','Male' => 'Male', 'Female' => 'Female') );
         $this->form->addElement('static', 'dob_proband_adi_r', 'DoB of Proband (ADI-R):', $DoB_ADI_R);
         $this->form->addElement('static', 'dob_proband_vineland', 'DoB of Proband (Vineland):', $DoB_Vineland);
@@ -367,11 +391,16 @@ class NDB_Form_candidate_parameters extends NDB_Form
         $this->form->addElement('static', 'birth_city', 'City of Birth:', $this->_getTSIinfo("city_of_birth"));
         $this->form->addElement('static', 'home_lang', 'Primary Language At Home:', $this->_getTSIinfo("primary_language"));
         $this->form->addElement('static','SiblingcID','Sibling ID:'); 
-        $this->form->addElement('select','flagged_caveatemptor','Candidate flagged for Caveat Emptor', 
+        $caveat_options = array(''=>null);
+        $options = $DB->pselect("SELECT ID, Description FROM caveat_options");
+        foreach($options as $row) {
+            $caveat_options[$row['ID']] = $row['Description'];
+        }
+        $this->form->addElement('select','flagged_caveatemptor','Caveat Emptor flag for candidate', 
                                  array(''=>'','true'=>'True','false'=>'False'));
-        $this->form->addElement('select','flagged_info',$this->indent.'Please provide additional information',
-                                 array(''=>'','older_sibling_autism'=>'Older Sibling diagnosed with autism. Child moved from LR to HR', 'family_excluded'=>'Family met exclusionary criteria after enrollment in study','other'=>'Other'));
-         $this->addTextAreaGroup('flagged_other',$this->indent.'If Other, please specify',
+        $this->form->addElement('select','flagged_reason',$this->indent.'Reason for Cavear Emptor flag',
+                                $caveat_options);
+        $this->addTextAreaGroup('flagged_other',$this->indent.'If Other, please specify',
                                           array(null=>'','not_answered'=>'Not Answered'));
 
         //participant status 
@@ -393,8 +422,6 @@ class NDB_Form_candidate_parameters extends NDB_Form
         $this->tpl_data['pstatus_options'] = $options;
         $this->tpl_data['pstat'] = $_REQUEST['participant_status'];
 
-        $this->addTextAreaGroup('reason_specify', $this->indent.'Other Comments',
-                array(null=>null,'not_answered'=>'Not Answered')); 
         // Add questions about consent
         $consent = $config->getSetting('ConsentModule');
         if ($consent['useConsent'] === 'true') {
@@ -417,12 +444,19 @@ class NDB_Form_candidate_parameters extends NDB_Form
                         ); 
                 $withdrew = $this->addBasicDate($question['name'] . '_date', 
                         "Date of $question[label] (required)", $dateOptions);
+                $withdrew2 = $this->addBasicDate($question['name'] . '_date2', 
+                        "Confirmation Date of $question[label] (required)", $dateOptions);
+
                 $withdrew = $this->addBasicDate($question['name'] . '_withdrawal', 
                         "Date of withdrawal of $question[label] (optional)", $dateOptions);
+                $withdrew2 = $this->addBasicDate($question['name'] . '_withdrawal2', 
+                        "Confirmation Date of withdrawal of $question[label] (optional)", $dateOptions);
                 $consentQuestions[] = array(
                         $question['name'],
                         $question['name'] . '_date',
-                        $question['name'] . '_withdrawal'
+                        $question['name'] . '_date2',
+                        $question['name'] . '_withdrawal',
+                        $question['name'] . '_withdrawal2'
                         );
             }
             $this->tpl_data['consent'] = $consentQuestions;
@@ -504,13 +538,19 @@ class NDB_Form_candidate_parameters extends NDB_Form
      *               all elements are valid.
      */
     function _validate($fields)
-    {
+    { 
         $config =& NDB_Config::singleton();
         $errors=array();
         $options = $this->getParticipantStatusOptionsVerbose();
 
         $DB =& Database::singleton();
-//print_r($fields);
+        if($fields['ProbandDoB']['M'] != $fields['ProbandDoB2']['M'] ||
+                $fields['ProbandDoB']['d'] != $fields['ProbandDoB2']['d'] ||
+                $fields['ProbandDoB']['Y'] != $fields['ProbandDoB2']['Y'])
+        { 
+            $errors['ProbandDoB'] = 'Date of Birth Proband fields must match.';
+        }
+
              // consent requirements
         $consent = $config->getSetting('ConsentModule');
         if ($consent['useConsent'] === 'true') {
@@ -555,24 +595,36 @@ class NDB_Form_candidate_parameters extends NDB_Form
 
                     } 
                 }
+                if($fields[$fieldname.'_withdrawal']['M'] != $fields[$fieldname.'_withdrawal2']['M'] ||
+                        $fields[$fieldname.'_withdrawal']['d'] != $fields[$fieldname.'_withdrawal2']['d'] ||
+                        $fields[$fieldname.'_withdrawal']['Y'] != $fields[$fieldname.'_withdrawal2']['Y'])
+                {
+                    $errors[$fieldname.'_withdrawal'] = 'Date of withdrawal fields must match.';
+                }
+                if($fields[$fieldname.'_date']['M'] != $fields[$fieldname.'_date2']['M'] ||
+                        $fields[$fieldname.'_date']['d'] != $fields[$fieldname.'_date2']['d'] ||
+                        $fields[$fieldname.'_date']['Y'] != $fields[$fieldname.'_date2']['Y'])
+                {
+                    $errors[$fieldname.'_date'] = 'Date of consent fields must match.';
+                }
+
 
             }
         }
-        if($fields['flagged_caveatemptor']=='true' && empty($fields['flagged_info'])){
-            $errors['flagged_info'] = 'Please provide additional information for flagging candidate as Caveat Emptor';    
+        if($fields['flagged_caveatemptor']=='true' && empty($fields['flagged_reason'])){
+            $errors['flagged_reason'] = 'Please provide additional information for flagging candidate as Caveat Emptor';    
         }
         $fields['flagged_other'] =trim($fields['flagged_other']);
-        if($fields['flagged_info']=='other' && empty($fields['flagged_other'])){
+        if($fields['flagged_reason']== 3 && empty($fields['flagged_other'])){
             $errors['flagged_other_group'] = 'If Other, please specify details for cavear emptor';
         }
 
         if ($options[$fields['participant_status']]['Required'] == true) {
             $fields['participant_suboptions'] = trim($fields['participant_suboptions']);
             if(empty($fields['participant_suboptions'])) {
-                $errors['reason_specify'] = "Please specify the status";
+                $errors['participant_suboptions'] = "Please specify the status";
             }        
         }
-
         return $errors;
     }
 
@@ -621,44 +673,7 @@ class NDB_Form_candidate_parameters extends NDB_Form
         }
         return $option_array;
     }
-/*
-    function _getDatabaseDate($formDateValue){
-        if(!empty($formDateValue)){
-            // check if it's already formatted correctly
-            if(is_string($formDateValue) && preg_match("/^[\d]{4}-[\d]{2}-[\d]{2}$/", $formDateValue)) {
-                return $formDateValue;
-            }
-            if(count($formDateValue)==2){
-                $databaseValue = "$formDateValue[H]:$formDateValue[i]";  //handle time (HH:MM:SS)
-            } else {
-                $databaseValue = "$formDateValue[Y]-$formDateValue[M]-$formDateValue[d]";  //handle     date (YYYY/MM/DD)
-            }
-        }
-        return $databaseValue;
-    }
 
- */
-    /**
-     * Convert a database date or timestamp into a QuickForm acceptable date or time
-     *
-     * @param string  $databaseValue        the date or timestamp from the database
-     * @return array   $formDateValue       the quickform date/timestamp array
-     * @access private
-     */
-    function _getQuickformDate($databaseValue){
-        $formDateValue = null;
-        if(!empty($databaseValue)){
-            if(strstr($databaseValue,":")){
-                $formDateValue=explode(":",$databaseValue);
-                $formDateValue=array("H"=>$formDateValue[0],"i"=>$formDateValue[1]);  //handle time
-            } else {
-                // split mysql Date_taken field into array
-                $formDateValue = explode('-', $databaseValue);
-                $formDateValue = array('Y'=>$formDateValue[0], 'M'=>$formDateValue[1], 'd'=>$formDateValue[2]);  //handle date
-            }
-        }
-        return $formDateValue;
-    }
 
 }
 ?>
