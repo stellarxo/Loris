@@ -475,28 +475,27 @@ class NDB_BVL_Instrument_tsi extends NDB_BVL_Instrument
     }
     function score() {
         $db =& Database::singleton();
-        if(PEAR::isError($db)) {
-            return PEAR::raiseError ("Could not connect to database: ".$db->getMessage());
+        if (Utility::isErrorX($db)) {
+                print "Could not connect to database: " . $db->getMessage();
         }
+
         // Get the item scores
-        $query = "SELECT * FROM $this->table WHERE CommentID='".$this->getCommentID()."'";
-        $record=array();
-        $db->selectRow($query, $record);
-        if (PEAR::isError($record)) {
-            return PEAR::raiseError("Could not get scores: ".$record->getMessage());
+        $record= $db->pselectRow("SELECT * FROM $this->table WHERE CommentID=:cid", array('cid'=>$this->getCommentID()));
+        if (Utility::isErrorX($record)) {
+            print "Query has failed to select: ".$record->getMessage();
         }
         $score = array();
 
         if($record['relative_mr'] == 'yes' || $record['relative_schizophrenia']== 'yes' 
            || $record['relative_bipolar']=='yes' || $record['relative_psychosis']== 'yes')  {
             $score['relative_with_disorder'] = 'yes';
-            $result = $db->update($this->table, $score, array('CommentID'=>$this->getCommentID()));
-            if($db->isError($result)) {
-                return PEAR::raiseError("Could not save total score: ".$result->getMessage());
-            }
-
+        } else {
+            $score['relative_with_disorder'] = 'no';
         }
-
+        $result = $db->update($this->table, $score, array('CommentID'=>$this->getCommentID()));
+        if(Utility::isErrorX($result)) {
+            print "Could not save total score: ".$result->getMessage();
+        }
    }
 
 }
