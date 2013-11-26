@@ -1,4 +1,3 @@
-DROP TABLE LENA_DataTrackingForm;
 CREATE TABLE `LENA_DataTrackingForm` (
 `CommentID` varchar(255) NOT NULL default '',
                           `UserID` varchar(255) default NULL,
