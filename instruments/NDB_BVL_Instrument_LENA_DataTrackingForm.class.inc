@@ -56,8 +56,8 @@ class NDB_BVL_Instrument_LENA_DataTrackingForm extends NDB_BVL_Instrument
         if (Utility::isErrorX($record)) {
             $record = array();
         }
-        $query2 = "SELECT * FROM LENA_DataTrackingForm2  WHERE CommentID='".$this->getCommentID()."'";
-        $db->selectRow($query, $record2);
+        $record2 = $db->pselectRow("SELECT * FROM LENA_DataTrackingForm2  WHERE CommentID=:cid", 
+                                   array('cid'=>$this->getCommentID()));
 
         if (Utility::isErrorX($record2)) {
             $record2 = array();
