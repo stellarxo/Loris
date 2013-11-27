@@ -138,25 +138,16 @@ Specify Reason</br>(Required only for status Inactive/Incomplete)
 </select>
 </div>
 </td>
-
 <tr>
-
+<td nowrap="nowrap" >{$form.reason_specify_group.label}</td>
+<td nowrap="nowrap" >{$form.reason_specify_group.html}</td>
 </tr>
 <tr>
-<td nowrap="nowrap">{$form.withdrawal_reasons.label}</td>
-<td nowrap="nowrap">{$form.withdrawal_reasons.html}
-{if $form.withdrawal_reasons.error}
-<span class='error'>{$form.withdrawal_reasons.error}</span>
-{/if}
-</td>
-</tr>
-<tr>
-<td nowrap="nowrap">{$form.withdrawal_reasons_other_specify_group.label}</td>
-<td nowrap="nowrap">{$form.withdrawal_reasons_other_specify_group.html}
-{if $form.withdrawal_reasons_other_specify_group.error}
-<span class='error'>{$form.withdrawal_reasons_other_specify_group.error}</span>
-{/if}
-</td>
+<td></td>
+<td>
+     <a href="main.php?test_name=candidate_parameters&subtest=participant_status_history&candID={$candID}&identifier={$candID}">See Participant status history </a>
+                       </td>
+
 </tr>
 
 

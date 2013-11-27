@@ -195,17 +195,7 @@ class NDB_Form_candidate_parameters extends NDB_Form
 
                 }
             }
-           /* if(strrpos($key, "consent_date") !== FALSE || strrpos($key, "consent_withdrawal") !== FALSE || 
-               strrpos($key,"_consent") !== FALSE  || strrpos($key, "participant_")) {
-               
-                if(strrpos($key, "consent_date") !== FALSE || strrpos($key, "consent_withdrawal") !== FALSE) {
-                $value = $this->_getDatabaseDate($value);
-                    if($value === '--') {
-                        $value = '';
-                    }
-                }
-                $DB->update("participant_status", array($key =>$value), array('CandID' => $this->identifier));    
-            }*/
+           
         }
 
        if(isset($values['SiblingID'])) { 
@@ -241,7 +231,8 @@ class NDB_Form_candidate_parameters extends NDB_Form
        if(isset($values['participant_status']) || isset($values['study_consent_date'])
           || isset($values['study_consent_withdrawal']) || isset($values['ndar_consent_date'])
           || isset($values['ndar_consent_withdrawal']) || isset($values['study_consent'])
-          || isset($values['ndar_consent']) ) {
+          || isset($values['ndar_consent']) || isset($values['reason_specify'])
+          || isset($values['reason_specify_status'])) {
            $participant_vals = array();
            $participant_vals['participant_status'] = $values['participant_status'];
            $sub_reasonID = $DB->pselectOne("SELECT ID FROM participant_status_options WHERE Description=:sub_desc", 
@@ -254,6 +245,9 @@ class NDB_Form_candidate_parameters extends NDB_Form
            $participant_vals['study_consent'] = $values['study_consent'];
            $participant_vals['ndar_consent'] = $values['ndar_consent'];
            $participant_vals['entry_staff'] = $id;
+           $participant_vals['reason_specify']= $values['reason_specify'];
+           $participant_vals['reason_specify_status']= $values['reason_specify_status'];
+           $participant_vals['CandID'] = $values['CandID'];
            $consent_dates = array('study_consent_date','study_consent_withdrawal','ndar_consent_date',
                                   'ndar_consent_withdrawal');
            foreach($consent_dates as $field) {
@@ -277,7 +271,6 @@ class NDB_Form_candidate_parameters extends NDB_Form
                        array("CandID"=>$values['CandID'])
                        );
            } else {
-               $participant_vals['CandID'] = $values['CandID'];
                //insert it
                $success = $DB->insert("participant_status",$participant_vals);
            }
@@ -289,13 +282,16 @@ class NDB_Form_candidate_parameters extends NDB_Form
            }
 
            $current_status = $DB->pselectOne("SELECT participant_status FROM participant_status_history
-                                             WHERE CandID = :cid", array("cid"=>$values['CandID']) );
+                                              WHERE CandID = :cid ORDER BY data_entry_date DESC", 
+                                              array("cid"=>$values['CandID']) );
            if($current_status != $participant_vals['participant_status']) {
                $success = $DB->insert("participant_status_history", 
                           array('participant_status'=>$participant_vals['participant_status'], 
                                 'participant_suboptions'=>$participant_vals['participant_suboptions'],
                                 'entry_staff'=>$participant_vals['entry_staff'],
-                                'CandID' => $participant_vals['CandID']));
+                                'CandID' => $participant_vals['CandID'],
+                                'reason_specify'=>$participant_vals['reason_specify'],
+                                'reason_specify_status'=>$participant_vals['reason_specify_status']));
                if (Utility::isErrorX($success)) {
                    return PEAR::raiseError(
                            "NDB_Form_candidate_parameters::_process: ".$success->getMessage()
@@ -446,7 +442,7 @@ class NDB_Form_candidate_parameters extends NDB_Form
         $options = array('') + $options;
         $this->tpl_data['pstatus_options'] = $options;
         $this->tpl_data['pstat'] = $_REQUEST['participant_status'];
-
+        $this->addTextAreaGroup('reason_specify',"Comments",array(null=>'','not_answered'=>'Not Answered'));
         // Add questions about consent
         $consent = $config->getSetting('ConsentModule');
         if ($consent['useConsent'] === 'true') {
@@ -521,21 +517,25 @@ class NDB_Form_candidate_parameters extends NDB_Form
         $this->tpl_data['candID'] = $_REQUEST['candID'];
         $this->addHeader('Paricipant Status History for Candidate');
         $DB =& Database::singleton();
+        $pscid = $DB->pselectone(
+                'SELECT PSCID FROM candidate where CandID = :candid',
+                array('candid'=>$this->identifier)
+                );
 
-        $result = $DB->pselect("SELECT participant_status, entry_staff, data_entry_date FROM participant_status_history
-                WHERE CandID=:cid", array('cid'=>$this->identifier));
+        $this->tpl_data['pscid'] = $pscid;
 
-        $group[] = &$this->form->createElement ("static",null,null, "Participant Status");
-        $group[] = &$this->form->createElement ("static",null,null, "Data Entry Staff");
-        $group[] = &$this->form->createElement ("static",null,null, "Timestamp");
-        $this->form->addGroup($group, 'header_group',"", $this->_GUIDelimiter, FALSE);
-        unset($group);
 
-        foreach($result as $row) {
-             $this->tpl_data['history_list']['participant_status']= $row['participant_status'];
-             $this->tpl_data['history_list']['entry_staff']= $row['entry_staff'];
-             $this->tpl_data['history_list']['data_entry_date']= $row['data_entry_date'];
-        }
+        $result = $DB->pselect("SELECT po.Description, entry_staff, data_entry_date,reason_specify
+                  FROM participant_status_history p join participant_status_options po on (po.ID = p.participant_status)
+                  WHERE CandID=:cid", array('cid'=>$this->identifier));
+        for($i = 0; $i< sizeof($result); $i++) {
+            if($result[$i]['Description']=='Active' && empty($result[$i]['entry_staff']))
+            {
+                $result[$i]['entry_staff'] = 'Enrollment';
+            }    
+            
+        }  
+        $this->tpl_data['history_list'] = $result;
 
     }
 
