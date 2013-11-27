@@ -472,10 +472,38 @@ class NDB_BVL_Instrument_tsi_followup extends NDB_BVL_Instrument
 		$this->form->addElement("select", "exc_inc_meets_criteria", "1. This proband meets any of the medical or neurological exclusion criteria for this study. (see Section A)", $this->yesNo);
 		$this->form->addElement("select", "exc_inc_subject_meets_criteria", "2. This subject meets any of the medical or neurological exclusion criteria for this study. (see Section B)", $this->yesNo);
 		$this->form->addElement("select", "exc_inc_contraindication", "3. This subject has evidence for contraindication to MRI. (see Section B)", $this->yesNo);
-		$this->form->addElement("static", null, '<br />');
+	/*
+        $this->form->addElement("static", null, '<br />');
 		$this->form->addElement("static", null, "Disposition");
 		$this->form->addElement("select", "disposition", "Proceed to next level beyond screening?", $this->yesNo);
-	}
-	
+     */
+        }
+     
+     function score() {
+            $db =& Database::singleton();
+            if (Utility::isErrorX($db)) {
+                print "Could not connect to database: " . $db->getMessage();
+            }
+
+            // Get the item scores
+            $record= $db->pselectRow("SELECT * FROM $this->table WHERE CommentID=:cid", array('cid'=>$this->getCommentID()));
+            if (Utility::isErrorX($record)) {
+                print "Query has failed to select: ".$record->getMessage();
+            }
+            $score = array();
+
+            if($record['relative_mr'] == 'yes' || $record['relative_schizophrenia']== 'yes'
+                    || $record['relative_bipolar']=='yes' || $record['relative_psychosis']== 'yes')  {
+                $score['relative_with_disorder'] = 'yes';
+            } else {
+                $score['relative_with_disorder'] = 'no';
+            }
+            $result = $db->update($this->table, $score, array('CommentID'=>$this->getCommentID()));
+            if(Utility::isErrorX($result)) {
+                print "Could not save total score: ".$result->getMessage();
+            }
+        }
+
+
 }
 ?>
