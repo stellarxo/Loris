@@ -121,6 +121,16 @@ class NDB_Form_candidate_parameters extends NDB_Form
                 $defaults[$question['name'].'_withdrawal2'] =  $defaults[$question['name'].'_withdrawal'] ;
             }
         }
+        $result = $DB->pselect("SELECT participant_status, entry_staff, data_entry_date FROM participant_status_history
+                                WHERE CandID=:cid", array('cid'=>$this->identifier));
+        for($i=0; $i < sizeof($result); $i++) {
+            $row = $result[$i];
+            $desc = $DB->pselectOne("SELECT Description FROM participant_status_options WHERE ID=:pid",
+                                     array('pid'=>$row['participant_status']));
+            $this->participant_history["status".$i] = $desc;
+            $this->participant_history["staff".$i]  = $row['entry_staff'];
+            $this->participant_history["timestamp".$i] = $row['data_entry_date'];
+        }
 
         return $defaults;
     }
@@ -128,11 +138,9 @@ class NDB_Form_candidate_parameters extends NDB_Form
     function _process($values)
     {   
         if(!is_array($values) || count($values) ==0) {
-            print "got";
         	return true;
         }
         $DB =& Database::singleton();
-        print_r($values); 
         $values['CandID'] = $this->identifier;
         unset($values['ProbandDoB2']);
         $config =& NDB_Config::singleton();
@@ -144,7 +152,6 @@ class NDB_Form_candidate_parameters extends NDB_Form
                 unset($values[$question['name'].'_withdrawal2']);
             }
         }
-        print_r($values); 
         if (!(is_null($_SESSION['State']))) {
             $currentUser =& User::singleton($_SESSION['State']->getUsername());
             $id = $currentUser->getData("UserID");
@@ -167,7 +174,6 @@ class NDB_Form_candidate_parameters extends NDB_Form
                       || $key == 'flagged_other_status') {
                 if($key == 'ProbandDoB') {
                     $value = $this->_getDatabaseDate($value);
-                print "HERE" .$value;
                 }
                 $DB->update("candidate", array($key => $value), array('CandID' => $this->identifier));
 
@@ -247,6 +253,7 @@ class NDB_Form_candidate_parameters extends NDB_Form
            }
            $participant_vals['study_consent'] = $values['study_consent'];
            $participant_vals['ndar_consent'] = $values['ndar_consent'];
+           $participant_vals['entry_staff'] = $id;
            $consent_dates = array('study_consent_date','study_consent_withdrawal','ndar_consent_date',
                                   'ndar_consent_withdrawal');
            foreach($consent_dates as $field) {
@@ -279,6 +286,22 @@ class NDB_Form_candidate_parameters extends NDB_Form
                return PEAR::raiseError(
                        "NDB_Form_candidate_parameters::_process: ".$success->getMessage()
                        );
+           }
+
+           $current_status = $DB->pselectOne("SELECT participant_status FROM participant_status_history
+                                             WHERE CandID = :cid", array("cid"=>$values['CandID']) );
+           if($current_status != $participant_vals['participant_status']) {
+               $success = $DB->insert("participant_status_history", 
+                          array('participant_status'=>$participant_vals['participant_status'], 
+                                'participant_suboptions'=>$participant_vals['participant_suboptions'],
+                                'entry_staff'=>$participant_vals['entry_staff'],
+                                'CandID' => $participant_vals['CandID']));
+               if (Utility::isErrorX($success)) {
+                   return PEAR::raiseError(
+                           "NDB_Form_candidate_parameters::_process: ".$success->getMessage()
+                           );
+               }
+
            }
        }
         $this->tpl_data['success'] = true;
@@ -391,6 +414,8 @@ class NDB_Form_candidate_parameters extends NDB_Form
         $this->form->addElement('static', 'birth_city', 'City of Birth:', $this->_getTSIinfo("city_of_birth"));
         $this->form->addElement('static', 'home_lang', 'Primary Language At Home:', $this->_getTSIinfo("primary_language"));
         $this->form->addElement('static','SiblingcID','Sibling ID:'); 
+        $this->form->addElement('static','relation_type','Relationship:');
+
         $caveat_options = array(''=>null);
         $options = $DB->pselect("SELECT ID, Description FROM caveat_options");
         foreach($options as $row) {
@@ -489,6 +514,28 @@ class NDB_Form_candidate_parameters extends NDB_Form
         $this->form->addFormRule(array(&$this, '_validate_add_family'));
         $this->tpl_data['candID'] = $_REQUEST['candID']; 
 
+
+    }
+    function participant_status_history(){
+        
+        $this->tpl_data['candID'] = $_REQUEST['candID'];
+        $this->addHeader('Paricipant Status History for Candidate');
+        $DB =& Database::singleton();
+
+        $result = $DB->pselect("SELECT participant_status, entry_staff, data_entry_date FROM participant_status_history
+                WHERE CandID=:cid", array('cid'=>$this->identifier));
+
+        $group[] = &$this->form->createElement ("static",null,null, "Participant Status");
+        $group[] = &$this->form->createElement ("static",null,null, "Data Entry Staff");
+        $group[] = &$this->form->createElement ("static",null,null, "Timestamp");
+        $this->form->addGroup($group, 'header_group',"", $this->_GUIDelimiter, FALSE);
+        unset($group);
+
+        foreach($result as $row) {
+             $this->tpl_data['history_list']['participant_status']= $row['participant_status'];
+             $this->tpl_data['history_list']['entry_staff']= $row['entry_staff'];
+             $this->tpl_data['history_list']['data_entry_date']= $row['data_entry_date'];
+        }
 
     }
 
