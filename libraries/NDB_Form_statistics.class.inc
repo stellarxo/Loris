@@ -304,7 +304,7 @@ class NDB_Form_statistics extends NDB_Form
           }
           $DB->select("SELECT s.SubprojectID, 
                   c.CenterID, 
-                  lower(s.Visit_label) as VLabel,
+                  s.Visit_label as VLabel,
                   $CaseStatement as Subcat,
                   COUNT(*) as val 
                   FROM mri_parameter_form m JOIN flag f USING (CommentID) 
