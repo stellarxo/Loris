@@ -40,9 +40,9 @@ class NDB_Form_candidate_parameters extends NDB_Form
         //Get the default values
         $DB->select("SELECT ParameterTypeID, Value FROM parameter_candidate WHERE CandID='".$this->identifier."'", $value_results);
         foreach($value_results AS $vresult){
-        	$defaults["PTID_".$vresult['ParameterTypeID']]=$vresult['Value'];
+        	$cand_info["PTID_".$vresult['ParameterTypeID']]=$vresult['Value'];
         }
-        $defaults['CandidateGUID'] = $DB->pselectOne("SELECT CandidateGUID FROM candidate WHERE CandID=:CandidateID", array('CandidateID' => $this->identifier));
+        $cand_info['CandidateGUID'] = $DB->pselectOne("SELECT CandidateGUID FROM candidate WHERE CandID=:CandidateID", array('CandidateID' => $this->identifier));
         $defaults['ProbandGUID'] = $DB->pselectOne("SELECT ProbandGUID FROM candidate WHERE CandID=:CandidateID", array('CandidateID' => $this->identifier));
         $defaults['ProbandDoB'] = $DB->pselectOne("SELECT ProbandDoB FROM candidate WHERE CandID=:CandidateID", array('CandidateID' => $this->identifier));
         if( $defaults['ProbandDoB']=== '0000-00-00') {
@@ -75,14 +75,25 @@ class NDB_Form_candidate_parameters extends NDB_Form
             $this->tpl_data['sibling_list'][]= $relation;
         }
        
-        $defaults['flagged_caveatemptor'] = $DB->pselectOne("SELECT flagged_caveatemptor FROM candidate WHERE CandID=:CandidateID", array('CandidateID' => $this->identifier));
-        $defaults['flagged_reason'] = $DB->pselectOne("SELECT flagged_reason FROM candidate WHERE CandID=:CandidateID", array('CandidateID' => $this->identifier));
-        $defaults['flagged_other'] = $DB->pselectOne("SELECT flagged_other FROM candidate WHERE CandID=:CandidateID", array('CandidateID' => $this->identifier));
-        $defaults['flagged_other_status'] = $DB->pselectOne("SELECT flagged_other_status FROM candidate WHERE CandID=:CandidateID", array('CandidateID' => $this->identifier));
-
-        // Getting participant status default values
-
-        $ps_info = $DB->pselectRow("SELECT * FROM participant_status WHERE CandID = :cid", 
+        $cand_info['flagged_caveatemptor'] = $DB->pselectOne("SELECT flagged_caveatemptor FROM candidate 
+                                             WHERE CandID=:CandidateID",
+                                             array('CandidateID' => $this->identifier));
+        $desc = $DB->pselectOne("SELECT Description AS Reason FROM candidate c join caveat_options o on 
+                (o.ID = c.flagged_reason) WHERE CandID=:CandidateID",array('CandidateID' => $this->identifier));
+        if(!empty($desc)) {
+           $cand_info['flagged_reason'] = $desc;
+           if($cand_info['flagged_reason'] == 'Other') {
+               $cand_info['flagged_other'] = $DB->pselectOne("SELECT flagged_other FROM candidate 
+                       WHERE CandID=:CandidateID",array('CandidateID' => $this->identifier));
+           }
+        }
+        
+        $this->tpl_data['params_list'] = $cand_info;
+       
+       // Getting participant status default values
+        $ps_info = $DB->pselectRow("SELECT study_consent,study_consent_date,study_consent_withdrawal,
+                                    ndar_consent,ndar_consent_date,ndar_consent_withdrawal 
+                                    FROM participant_status WHERE CandID = :cid", 
                                     array('cid'=>$this->identifier));
 
         if(empty($ps_info)) {
@@ -92,35 +103,18 @@ class NDB_Form_candidate_parameters extends NDB_Form
 
         }
         foreach($ps_info as $key => &$val) {
-            if($key == 'participant_suboptions') {
-                $defaults[$key] = $DB->pselectOne("SELECT Description FROM participant_status_options WHERE ID = :pid",
-                        array('pid'=>$val));
-
-            }
-            if($key == 'participant_status') {
-                if(empty($val)) {
-                     //set candidate to active by default
-                   $this->tpl_data['pstat'] = $DB->pselectOne("SELECT ID FROM participant_status_options WHERE 
-                                              Description=:desc", array('desc'=>'Active')); 
-                } else {
-                   $this->tpl_data['pstat'] = $val;
-                }
-
-            }
+         
             if($val === '0000-00-00') {
                 $val = '';
-            } 
-            $defaults[$key] = $val;
+            }
+            if(!empty($ps_info[$key])) {
+                $consent_info[$key] = $val;
+            }
         }
         $config =& NDB_Config::singleton();
         $consent = $config->getSetting('ConsentModule');
-        if ($consent['useConsent'] === 'true') {
-
-            foreach (Utility::asArray($consent['Consent']) as $question) {
-                $defaults[$question['name'].'_date2'] = $defaults[$question['name'].'_date'] ;
-                $defaults[$question['name'].'_withdrawal2'] =  $defaults[$question['name'].'_withdrawal'] ;
-            }
-        }
+        $this->tpl_data['display_consent'] = $consent['useConsent'];  
+        $this->tpl_data['consent_info'] = $consent_info;
         $result = $DB->pselect("SELECT participant_status, entry_staff, data_entry_date FROM participant_status_history
                                 WHERE CandID=:cid", array('cid'=>$this->identifier));
         for($i=0; $i < sizeof($result); $i++) {
@@ -131,7 +125,10 @@ class NDB_Form_candidate_parameters extends NDB_Form
             $this->participant_history["staff".$i]  = $row['entry_staff'];
             $this->participant_history["timestamp".$i] = $row['data_entry_date'];
         }
-
+        $defaults['entry_staff'] = $DB->pselectOne("SELECT entry_staff from participant_status WHERE CandID=:cid",
+                                                    array('cid'=>$this->identifier));
+        $defaults['data_entry_date'] = $DB->pselectOne("SELECT data_entry_date from participant_status WHERE CandID=:cid",
+                                                    array('cid'=>$this->identifier));
         return $defaults;
     }
 
@@ -352,7 +349,6 @@ class NDB_Form_candidate_parameters extends NDB_Form
         	return;
         }
         
-        
         //Loop through the fields and add them appropriately
         foreach($field_results AS $fresult) {
         	switch(substr($fresult['Type'],0,3)) {
@@ -411,19 +407,6 @@ class NDB_Form_candidate_parameters extends NDB_Form
         $this->form->addElement('static', 'home_lang', 'Primary Language At Home:', $this->_getTSIinfo("primary_language"));
         $this->form->addElement('static','SiblingcID','Sibling ID:'); 
         $this->form->addElement('static','relation_type','Relationship:');
-
-        $caveat_options = array(''=>null);
-        $options = $DB->pselect("SELECT ID, Description FROM caveat_options");
-        foreach($options as $row) {
-            $caveat_options[$row['ID']] = $row['Description'];
-        }
-        $this->form->addElement('select','flagged_caveatemptor','Caveat Emptor flag for candidate', 
-                                 array(''=>'','true'=>'True','false'=>'False'));
-        $this->form->addElement('select','flagged_reason',$this->indent.'Reason for Cavear Emptor flag',
-                                $caveat_options);
-        $this->addTextAreaGroup('flagged_other',$this->indent.'If Other, please specify',
-                                          array(null=>'','not_answered'=>'Not Answered'));
-
         //participant status 
 
         //entry staff info
@@ -443,7 +426,118 @@ class NDB_Form_candidate_parameters extends NDB_Form
         $this->tpl_data['pstatus_options'] = $options;
         $this->tpl_data['pstat'] = $_REQUEST['participant_status'];
         $this->addTextAreaGroup('reason_specify',"Comments",array(null=>'','not_answered'=>'Not Answered'));
-        // Add questions about consent
+        
+        //Consent Information
+        $result = $DB->pselect("SELECT po.Description, entry_staff, data_entry_date,reason_specify
+                FROM participant_status_history p join participant_status_options po on (po.ID = p.participant_status)
+                WHERE CandID=:cid", array('cid'=>$this->identifier));
+        for($i = 0; $i< sizeof($result); $i++) {
+            if($result[$i]['Description']=='Active' && empty($result[$i]['entry_staff']))
+            {
+                $result[$i]['entry_staff'] = 'Enrollment';
+            }
+
+        }
+        $this->tpl_data['history_list'] = $result;
+        
+        $study_consent = $DB->pselect("SELECT study_consent,study_consent_date,study_consent_withdrawal FROM 
+                                consent_info_history WHERE CandID=:cid", array('cid'=>$this->identifier));
+        $ndar_consent = $DB->pselect("SELECT ndar_consent,ndar_consent_date,ndar_consent_withdrawal FROM 
+                                consent_info_history WHERE CandID=:cid", array('cid'=>$this->identifier));
+        $this->tpl_data['study_consent_history'] = $study_consent;
+        $this->tpl_data['ndar_consent_history'] = $ndar_consent;
+        
+        $this->form->addFormRule(array(&$this,'_validate'));
+    }
+
+    /* This is taken from NDB_BVL_Instrument. It should be moved to NDB_Page once NDB_Page is merged. */
+
+    function _getDatabaseDate($formDateValue) {
+        if(!empty($formDateValue)){
+            // check if it's already formatted correctly
+            if(is_string($formDateValue) && preg_match("/^[\d]{4}-[\d]{2}-[\d]{2}$/", $formDateValue)) {
+                return $formDateValue;
+            }
+            if(count($formDateValue)==2) {
+                $databaseValue = "$formDateValue[H]:$formDateValue[i]";  //handle time (HH:MM:SS)
+            } else {
+                $databaseValue = "$formDateValue[Y]-$formDateValue[M]-$formDateValue[d]";  //handle date (YYYY/MM/DD)
+            }
+        }
+        return $databaseValue;
+    }
+
+    function add_family(){
+        
+        $this->form->addElement('text','SiblingID','Sibling ID:');
+        $this->form->addElement('select','relation_type','Relation Type', $this->relationType);
+        $this->form->addFormRule(array(&$this, '_validate_add_family'));
+        $this->tpl_data['candID'] = $this->identifier; 
+
+
+    }
+
+    function update_participant_status() { 
+        
+        $DB =& Database::singleton();
+        $pscid = $DB->pselectone(
+                'SELECT PSCID FROM candidate where CandID = :candid',
+                array('candid'=>$this->identifier)
+                );
+        $this->addScoreColumn('pscid', 'PSCID');
+        $this->tpl_data['candID'] = $this->identifier;
+
+        $this->tpl_data['pscid'] = $pscid;
+
+        $options = $this->getParticipantStatusOptions();
+        $options = array('') + $options;
+        $this->tpl_data['pstatus_options'] = $options;
+        //$this->tpl_data['pstat'] = $_REQUEST['participant_status'];
+        $this->addTextAreaGroup('reason_specify',"Comments",array(null=>'','not_answered'=>'Not Answered'));
+
+    } 
+
+    function update_candidate_info() {
+        
+        $DB =& Database::singleton();
+        $pscid = $DB->pselectone(
+                'SELECT PSCID FROM candidate where CandID = :candid',
+                array('candid'=>$this->identifier)
+                );
+        $this->addScoreColumn('pscid', 'PSCID');
+        $this->tpl_data['candID'] = $this->identifier;
+
+        $this->tpl_data['pscid'] = $pscid;
+
+        $caveat_options = array(''=>null);
+        $options = $DB->pselect("SELECT ID, Description FROM caveat_options");
+        foreach($options as $row) {
+            $caveat_options[$row['ID']] = $row['Description'];
+        }
+        $this->form->addElement('select','flagged_caveatemptor','Caveat Emptor flag for candidate', 
+                                 array(''=>'','true'=>'True','false'=>'False'));
+        $this->form->addElement('select','flagged_reason',$this->indent.'Reason for Cavear Emptor flag',
+                                $caveat_options);
+        $this->addTextAreaGroup('flagged_other',$this->indent.'If Other, please specify',
+                                          array(null=>'','not_answered'=>'Not Answered'));
+        
+        $this->form->addFormRule(array(&$this,'_validate'));
+
+    }
+
+    function update_consent_info() {
+        $DB =& Database::singleton();
+        $pscid = $DB->pselectone(
+                'SELECT PSCID FROM candidate where CandID = :candid',
+                array('candid'=>$this->identifier)
+                );
+        $this->addScoreColumn('pscid', 'PSCID');
+        $this->tpl_data['candID'] = $this->identifier;
+
+        $this->tpl_data['pscid'] = $pscid;
+       
+       // Add questions about consent
+        $config =& NDB_Config::singleton();
         $consent = $config->getSetting('ConsentModule');
         if ($consent['useConsent'] === 'true') {
             $config =& NDB_Config::singleton();
@@ -482,36 +576,10 @@ class NDB_Form_candidate_parameters extends NDB_Form
             }
             $this->tpl_data['consent'] = $consentQuestions;
         }
-
         $this->form->addFormRule(array(&$this,'_validate'));
-    }
-
-    /* This is taken from NDB_BVL_Instrument. It should be moved to NDB_Page once NDB_Page is merged. */
-
-    function _getDatabaseDate($formDateValue) {
-        if(!empty($formDateValue)){
-            // check if it's already formatted correctly
-            if(is_string($formDateValue) && preg_match("/^[\d]{4}-[\d]{2}-[\d]{2}$/", $formDateValue)) {
-                return $formDateValue;
-            }
-            if(count($formDateValue)==2) {
-                $databaseValue = "$formDateValue[H]:$formDateValue[i]";  //handle time (HH:MM:SS)
-            } else {
-                $databaseValue = "$formDateValue[Y]-$formDateValue[M]-$formDateValue[d]";  //handle date (YYYY/MM/DD)
-            }
-        }
-        return $databaseValue;
-    }
-
-    function add_family(){
-        
-        $this->form->addElement('text','SiblingID','Sibling ID:');
-        $this->form->addElement('select','relation_type','Relation Type', $this->relationType);
-        $this->form->addFormRule(array(&$this, '_validate_add_family'));
-        $this->tpl_data['candID'] = $_REQUEST['candID']; 
-
 
     }
+    
     function participant_status_history(){
         
         $this->tpl_data['candID'] = $_REQUEST['candID'];
