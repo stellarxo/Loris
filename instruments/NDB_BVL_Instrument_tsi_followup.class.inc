@@ -116,7 +116,7 @@ class NDB_BVL_Instrument_tsi_followup extends NDB_BVL_Instrument
 		$this->_selectMultipleElements = array('candidate_race', 'mother_race', 'father_race');
 
 		// required fields for data entry completion status
-		$this->_requiredElements = array("ses_income", "neurological_problems_subject", "med_his_q_1_med_surgical_problems", "diagnoses", "exc_inc_meets_criteria" );
+		$this->_requiredElements = array("ses_income", "neurological_problems_subject", "med_his_q_1_med_surgical_problems", "exc_inc_meets_criteria" );
 		$this->_doubleDataEntryDiffIgnoreColumns = array('CommentID', 'UserID', 'Testdate',  'Window_Difference', 'Candidate_Age',
 								 'in_utero_substance_proband',
 								 'in_utero_substance_amount_proband',
