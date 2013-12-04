@@ -30,7 +30,7 @@
 <td nowrap="nowrap" colspan="2">
 <input class="button" name="fire_away" value="Save" type="submit" />
 {/if}
-<input class="button" onclick="location.href='main.php?test_name=timepoint_list&candID={$candID}'" value="Return to profile" type="button" />
+<input class="button" onclick="location.href='main.php?test_name=candidate_parameters&candID={$candID}&identifier={$candID}'" value="Return to profile" type="button" />
 
 </td>
 </tr>

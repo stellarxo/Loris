@@ -1,13 +1,13 @@
 {if $success}
 
-<p>Participant Status was updated successful<br /></p>
+<p>Candidate Information was updated successful<br /></p>
 <br />
 {/if}
 <form method="post" name="update_candidate_info" id="update_candidate_info" enctype="multipart/form-data">
 {if not $success}
 <table class="std">
 <!-- table title -->
-<tr><th colspan="2">Update Participant Status</th></tr>
+<tr><th colspan="2">Update Candidate Information</th></tr>
 
 {foreach from=$form.errors item=error}
 <tr>
@@ -52,7 +52,7 @@
     <td nowrap="nowrap" colspan="2">
     <input class="button" name="fire_away" value="Save" type="submit" />
 {/if}
-<input class="button" onclick="location.href='main.php?test_name=timepoint_list&candID={$candID}'" value="Return to profile" type="button" />
+<input class="button" onclick="location.href='main.php?test_name=candidate_parameters&candID={$candID}&identifier={$candID}'" value="Return to profile" type="button" />
 
 </td>
 </tr>

@@ -38,26 +38,24 @@ class NDB_Form_candidate_parameters extends NDB_Form
     {
   		$DB =& Database::singleton();
         //Get the default values
-        $DB->select("SELECT ParameterTypeID, Value FROM parameter_candidate WHERE CandID='".$this->identifier."'", $value_results);
-        foreach($value_results AS $vresult){
-        	$cand_info["PTID_".$vresult['ParameterTypeID']]=$vresult['Value'];
-        }
+       
         $cand_info['CandidateGUID'] = $DB->pselectOne("SELECT CandidateGUID FROM candidate WHERE CandID=:CandidateID", array('CandidateID' => $this->identifier));
-        $defaults['ProbandGUID'] = $DB->pselectOne("SELECT ProbandGUID FROM candidate WHERE CandID=:CandidateID", array('CandidateID' => $this->identifier));
-        $defaults['ProbandDoB'] = $DB->pselectOne("SELECT ProbandDoB FROM candidate WHERE CandID=:CandidateID", array('CandidateID' => $this->identifier));
-        if( $defaults['ProbandDoB']=== '0000-00-00') {
-            $defaults['ProbandDoB'] = '';
+        $proband_info['ProbandGUID'] = $DB->pselectOne("SELECT ProbandGUID FROM candidate WHERE CandID=:CandidateID", array('CandidateID' => $this->identifier));
+        $proband_info['ProbandDoB'] = $DB->pselectOne("SELECT ProbandDoB FROM candidate WHERE CandID=:CandidateID", array('CandidateID' => $this->identifier));
+        if( $proband_info['ProbandDoB']=== '0000-00-00') {
+            $proband_info['ProbandDoB'] = '';
         }
-        $defaults['ProbandDoB2']= $defaults['ProbandDoB'];
-        $defaults['ProbandGender'] = $DB->pselectOne("SELECT ProbandGender FROM candidate WHERE CandID=:CandidateID", array('CandidateID' => $this->identifier));
+        $proband_info['ProbandGender'] = $DB->pselectOne("SELECT ProbandGender FROM candidate WHERE CandID=:CandidateID", array('CandidateID' => $this->identifier));
         $candidate_dob = $DB->pselectOne("SELECT DoB FROM candidate WHERE CandID=:CandidateID", array('CandidateID' => $this->identifier));
 
-        $age = Utility::calculateAge($defaults['ProbandDoB'],$candidate_dob ); 
+        $age = Utility::calculateAge($proband_info['ProbandDoB'],$candidate_dob ); 
         if(Utility::isErrorX($age)) {
             $defaults['Age_Difference'] = 'Could not calculate age';
         } else {
             $defaults['Age_Difference'] = $age['year']*12 + $age['mon']+ round($age['day']/30,2);
         }
+        $this->tpl_data['proband_info'] = $proband_info;
+
         $familyid = $DB->pselectOne("SELECT FamilyID from family where CandID=:CandidateID",array('CandidateID'=>$this->identifier));
         if(Utility::isErrorX($familyid)){
             $relations = $DB->pselect("SELECT Relation_CandID, Relation_code from family WHERE CandID=:CandidateID",array('CandidateID'=> $this->identifier));
@@ -87,7 +85,12 @@ class NDB_Form_candidate_parameters extends NDB_Form
                        WHERE CandID=:CandidateID",array('CandidateID' => $this->identifier));
            }
         }
-        
+         $DB->select("SELECT ParameterTypeID, Value FROM parameter_candidate WHERE CandID='".$this->identifier."'", $value_results);
+        foreach($value_results AS $vresult){
+            if(!empty($vresult['Value'])) {
+        	    $cand_info["PTID_".$vresult['ParameterTypeID']]=$vresult['Value'];
+            }
+        }
         $this->tpl_data['params_list'] = $cand_info;
        
        // Getting participant status default values
@@ -125,10 +128,6 @@ class NDB_Form_candidate_parameters extends NDB_Form
             $this->participant_history["staff".$i]  = $row['entry_staff'];
             $this->participant_history["timestamp".$i] = $row['data_entry_date'];
         }
-        $defaults['entry_staff'] = $DB->pselectOne("SELECT entry_staff from participant_status WHERE CandID=:cid",
-                                                    array('cid'=>$this->identifier));
-        $defaults['data_entry_date'] = $DB->pselectOne("SELECT data_entry_date from participant_status WHERE CandID=:cid",
-                                                    array('cid'=>$this->identifier));
         return $defaults;
     }
 
@@ -172,8 +171,9 @@ class NDB_Form_candidate_parameters extends NDB_Form
                 if($key == 'ProbandDoB') {
                     $value = $this->_getDatabaseDate($value);
                 }
-                $DB->update("candidate", array($key => $value), array('CandID' => $this->identifier));
-
+                if(!empty($value)) {
+                    $DB->update("candidate", array($key => $value), array('CandID' => $this->identifier));
+                }
                 if ($key == 'ProbandDoB') {
                     $tests = $DB->pselect(
                         "SELECT f.CommentID, f.Test_name 
@@ -296,6 +296,52 @@ class NDB_Form_candidate_parameters extends NDB_Form
                }
 
            }
+           $current_studyconsent = $DB->pselectRow("SELECT study_consent, study_consent_date, study_consent_withdrawal,
+                                     ndar_consent, ndar_consent_date, ndar_consent_withdrawal FROM consent_info_history
+                                     WHERE CandID = :cid ORDER BY data_entry_date DESC",
+                                     array("cid"=>$values['CandID']));
+           if(Utility::isErrorX($current_studyconsent)) {
+                print "Error querying ". $current_studyconsent->getMessage();    
+           }
+           if(empty($current_studyconsent)) {
+               $success = $DB->insert("consent_info_history", 
+                       array('study_consent'=>$participant_vals['study_consent'],
+                           'study_consent_date'=>$participant_vals['study_consent_date'],
+                           'study_consent_withdrawal'=>$participant_vals['study_consent_withdrawal'],
+                           'ndar_consent'=>$participant_vals['ndar_consent'],
+                           'ndar_consent_date'=>$participant_vals['ndar_consent_date'],
+                           'ndar_consent_withdrawal'=>$participant_vals['ndar_consent_withdrawal'],
+                           'entry_staff'=>$participant_vals['entry_staff'],
+                           'CandID' => $participant_vals['CandID'])); 
+               if (Utility::isErrorX($success)) {
+                   return PEAR::raiseError(
+                           "NDB_Form_candidate_parameters::_process: ".$success->getMessage()
+                           );
+               }
+           
+           }
+
+           foreach($current_studyconsent as $key=>$value) {
+               if( $participant_vals[$key] != $current_consent[$key]) {
+                   $success = $DB->insert("consent_info_history", 
+                           array('study_consent'=>$participant_vals['study_consent'],
+                               'study_consent_date'=>$participant_vals['study_consent_date'],
+                               'study_consent_withdrawal'=>$participant_vals['study_consent_withdrawal'],
+                               'ndar_consent'=>$participant_vals['ndar_consent'],
+                               'ndar_consent_date'=>$participant_vals['ndar_consent_date'],
+                               'ndar_consent_withdrawal'=>$participant_vals['ndar_consent_withdrawal'],
+                               'entry_staff'=>$participant_vals['entry_staff'],
+                               'CandID' => $participant_vals['CandID'])); 
+                   if (Utility::isErrorX($success)) {
+                       return PEAR::raiseError(
+                               "NDB_Form_candidate_parameters::_process: ".$success->getMessage()
+                               );
+                   }
+
+               break;
+              }
+               
+           }
        }
         $this->tpl_data['success'] = true;
 
@@ -341,9 +387,20 @@ class NDB_Form_candidate_parameters extends NDB_Form
 
         // candID
         $this->tpl_data['candID'] = $candidate->getData('CandID');
+
+        $DoB_ADI_R = $this->_getADIRinfo("DoB_proband");
+        $DoB_Vineland = $this->_getInstrumentInfo("vineland_proband", "BIRTH_DATE");
+        if($DoB_ADI_R != $DoB_Vineland) {
+            $this->form->addElement('static', 'dob_error', 'Date of Birth from Vineland and ADI-R do not match');
+        }
+        $this->form->addElement('static', 'CandidateGUID', 'Candidate GUID:');
+        $this->form->addElement('static','flagged_caveatemptor','Caveat Emptor flag for Candidate');
+        $this->form->addElement('static','flagged_reason',$this->indent.'Reason for Caveat Emptor flag');
+        $this->form->addElement('static','flagged_other', $this->indent.'Additional Comments for Caveat Emptor ');
+
  		//Extract the fields from the parameter_type table
         $DB->select("SELECT pt.ParameterTypeID, pt.Name, pt.Type, Description FROM parameter_type as pt, parameter_type_category as ptc, parameter_type_category_rel as ptcr WHERE pt.ParameterTypeID=ptcr.ParameterTypeID AND ptcr.ParameterTypeCategoryID=ptc.ParameterTypeCategoryID AND ptc.Name='Candidate Parameters' ORDER BY pt.ParameterTypeID, pt.name ASC", $field_results);
-        //If there are no defined fields pritn a message to that effect
+        //If there are no defined fields print a message to that effect
         if(empty($field_results)){
         	$this->form->addElement('static', "static", "No candidate parameters have been defined for this study");
         	return;
@@ -351,60 +408,21 @@ class NDB_Form_candidate_parameters extends NDB_Form
         
         //Loop through the fields and add them appropriately
         foreach($field_results AS $fresult) {
-        	switch(substr($fresult['Type'],0,3)) {
-        		case "enu":
-        			$options=substr($fresult['Type'],4);
-        			$options=trim($options,"()");
-        			$options=Utility::explodeEncapsulated(",", "'", $options);
-                    $elOptions = array('' => '');
-                    foreach($options as $option) {
-                        $elOptions[$option] = $option;
-                    }
-        			$this->form->addElement('select', "PTID_".$fresult['ParameterTypeID'], $fresult['Description'], $elOptions);
-        		break;
-        		
-        		case "dat":
-        			$this->form->addElement('date', "PTID_".$fresult['ParameterTypeID'], $fresult['Description'], $dateOptions);
-        		break;
-        		
-        		case "int":
-        		case "var":
-        		case "tex":
-            default:
-        			$this->form->addElement('textarea', "PTID_".$fresult['ParameterTypeID'], $fresult['Description']);
-        		
-        	}
-        	$this->tpl_data['elements_list'][]="PTID_".$fresult['ParameterTypeID'];
+            $this->form->addElement('static', "PTID_".$fresult['ParameterTypeID'], $fresult['Description']);
         }
-
-        $DoB_ADI_R = $this->_getADIRinfo("DoB_proband");
-        $DoB_Vineland = $this->_getInstrumentInfo("vineland_proband", "BIRTH_DATE");
-        if($DoB_ADI_R != $DoB_Vineland) {
-            $this->form->addElement('static', 'dob_error', 'Date of Birth from Vineland and ADI-R do not match');
-        }
-        $this->form->addElement('text', 'CandidateGUID', 'Candidate GUID:');
-        $this->form->addElement('text', 'ProbandGUID', 'Proband GUID:');
-        
-        $config =& NDB_Config::singleton();
-        $probandDateOptions = array(
-            'language' => 'en',
-            'format'   => 'YMd',
-            'minYear'  => $config->getSetting('startYear') - 20, //allows for proband siblings up to 20 years older than candidate
-            'maxYear'  => $config->getSetting('endYear'),
-            'addEmptyOption' => true,
-            'emptyOptionValue' => null
-        );
-
-        $this->form->addElement('date', 'ProbandDoB', 'DoB Proband:', $probandDateOptions);
-        $this->form->addElement('date', 'ProbandDoB2', 'Confirm DoB Proband:', $probandDateOptions);
-        $this->form->addElement('select', 'ProbandGender', 'Proband gender:', array('' => '','Male' => 'Male', 'Female' => 'Female') );
-        $this->form->addElement('static', 'dob_proband_adi_r', 'DoB of Proband (ADI-R):', $DoB_ADI_R);
-        $this->form->addElement('static', 'dob_proband_vineland', 'DoB of Proband (Vineland):', $DoB_Vineland);
-        $this->form->addElement('static', 'Age_Difference','Age Difference between candidate and proband (in months):');
+        /*
         $this->form->addElement('static', 'mother_race', 'Mother\'s Race:', $this->_getTSIinfo("mother_race"));
         $this->form->addElement('static', 'father_race', 'Father\'s Race:', $this->_getTSIinfo("father_race"));
         $this->form->addElement('static', 'birth_city', 'City of Birth:', $this->_getTSIinfo("city_of_birth"));
         $this->form->addElement('static', 'home_lang', 'Primary Language At Home:', $this->_getTSIinfo("primary_language"));
+        */
+        $this->form->addElement('static', 'ProbandGUID', 'Proband GUID:');
+        $this->form->addElement('static', 'ProbandDoB', 'DoB Proband:');
+        $this->form->addElement('static', 'ProbandGender', 'Proband gender:');
+        $this->form->addElement('static', 'dob_proband_adi_r', 'DoB of Proband (ADI-R):', $DoB_ADI_R);
+        $this->form->addElement('static', 'dob_proband_vineland', 'DoB of Proband (Vineland):', $DoB_Vineland);
+        $this->form->addElement('static', 'Age_Difference','Age Difference between candidate<BR> and proband (in months):');
+
         $this->form->addElement('static','SiblingcID','Sibling ID:'); 
         $this->form->addElement('static','relation_type','Relationship:');
         //participant status 
@@ -440,12 +458,28 @@ class NDB_Form_candidate_parameters extends NDB_Form
         }
         $this->tpl_data['history_list'] = $result;
         
-        $study_consent = $DB->pselect("SELECT study_consent,study_consent_date,study_consent_withdrawal FROM 
-                                consent_info_history WHERE CandID=:cid", array('cid'=>$this->identifier));
-        $ndar_consent = $DB->pselect("SELECT ndar_consent,ndar_consent_date,ndar_consent_withdrawal FROM 
-                                consent_info_history WHERE CandID=:cid", array('cid'=>$this->identifier));
-        $this->tpl_data['study_consent_history'] = $study_consent;
-        $this->tpl_data['ndar_consent_history'] = $ndar_consent;
+        $study_consent = $DB->pselect("SELECT study_consent,study_consent_date,study_consent_withdrawal,entry_staff,
+                         data_entry_date FROM consent_info_history WHERE CandID=:cid", 
+                         array('cid'=>$this->identifier));
+        $ndar_consent = $DB->pselect("SELECT ndar_consent,ndar_consent_date,ndar_consent_withdrawal,entry_staff,
+                         data_entry_date FROM consent_info_history WHERE CandID=:cid", 
+                         array('cid'=>$this->identifier));
+        for($i=0; $i<sizeof($study_consent); $i++ ){
+            foreach($study_consent[$i] as $key=>$value) {
+                if(!empty($study_consent[$i]['study_consent'])) {
+                    $study_consent_hist[$i][$key] = $value;   
+                }    
+            }
+        }
+        for($i=0; $i<sizeof($ndar_consent); $i++ ){
+            foreach($ndar_consent[$i] as $key=>$value) {
+                if( !empty($ndar_consent[$i]['ndar_consent'])) {
+                    $ndar_consent_hist[$i][$key] = $value;   
+                }    
+            }
+        }
+        $this->tpl_data['study_consent_history'] = $study_consent_hist;
+        $this->tpl_data['ndar_consent_history'] = $ndar_consent_hist;
         
         $this->form->addFormRule(array(&$this,'_validate'));
     }
@@ -514,17 +548,82 @@ class NDB_Form_candidate_parameters extends NDB_Form
         foreach($options as $row) {
             $caveat_options[$row['ID']] = $row['Description'];
         }
+        $this->form->addElement('text', 'CandidateGUID', 'Candidate GUID:');
         $this->form->addElement('select','flagged_caveatemptor','Caveat Emptor flag for candidate', 
                                  array(''=>'','true'=>'True','false'=>'False'));
-        $this->form->addElement('select','flagged_reason',$this->indent.'Reason for Cavear Emptor flag',
+        $this->form->addElement('select','flagged_reason',$this->indent.'Reason for Caveat Emptor flag',
                                 $caveat_options);
         $this->addTextAreaGroup('flagged_other',$this->indent.'If Other, please specify',
                                           array(null=>'','not_answered'=>'Not Answered'));
+        //Extract the fields from the parameter_type table
+        $DB->select("SELECT pt.ParameterTypeID, pt.Name, pt.Type, Description FROM parameter_type as pt, parameter_type_category as ptc, parameter_type_category_rel as ptcr WHERE pt.ParameterTypeID=ptcr.ParameterTypeID AND ptcr.ParameterTypeCategoryID=ptc.ParameterTypeCategoryID AND ptc.Name='Candidate Parameters' ORDER BY pt.ParameterTypeID, pt.name ASC", $field_results);
+        //If there are no defined fields pritn a message to that effect
+        if(empty($field_results)){
+        	$this->form->addElement('static', "static", "No candidate parameters have been defined for this study");
+        	return;
+        }
         
+        //Loop through the fields and add them appropriately
+        foreach($field_results AS $fresult) {
+        	switch(substr($fresult['Type'],0,3)) {
+        		case "enu":
+        			$options=substr($fresult['Type'],4);
+        			$options=trim($options,"()");
+        			$options=Utility::explodeEncapsulated(",", "'", $options);
+                    $elOptions = array('' => '');
+                    foreach($options as $option) {
+                        $elOptions[$option] = $option;
+                    }
+        			$this->form->addElement('select', "PTID_".$fresult['ParameterTypeID'], $fresult['Description'], $elOptions);
+        		break;
+        		
+        		case "dat":
+        			$this->form->addElement('date', "PTID_".$fresult['ParameterTypeID'], $fresult['Description'], $dateOptions);
+        		break;
+        		
+        		case "int":
+        		case "var":
+        		case "tex":
+            default:
+        			$this->form->addElement('textarea', "PTID_".$fresult['ParameterTypeID'], $fresult['Description']);
+        		
+        	}
+        	$this->tpl_data['elements_list'][]="PTID_".$fresult['ParameterTypeID'];
+        }
         $this->form->addFormRule(array(&$this,'_validate'));
 
     }
+ 
+    function update_proband_info() {
 
+        $DB =& Database::singleton();
+        $pscid = $DB->pselectone(
+                'SELECT PSCID FROM candidate where CandID = :candid',
+                array('candid'=>$this->identifier)
+                );
+        $this->addScoreColumn('pscid', 'PSCID');
+        $this->tpl_data['candID'] = $this->identifier;
+
+        $this->tpl_data['pscid'] = $pscid;
+        
+        $this->form->addElement('text', 'ProbandGUID', 'Proband GUID:');
+        
+        $config =& NDB_Config::singleton();
+        $probandDateOptions = array(
+            'language' => 'en',
+            'format'   => 'YMd',
+            'minYear'  => $config->getSetting('startYear') - 20, //allows for proband siblings up to 20 years older than candidate
+            'maxYear'  => $config->getSetting('endYear'),
+            'addEmptyOption' => true,
+            'emptyOptionValue' => null
+        );
+
+        $this->form->addElement('date', 'ProbandDoB', 'DoB Proband:', $probandDateOptions);
+        $this->form->addElement('date', 'ProbandDoB2', 'Confirm DoB Proband:', $probandDateOptions);
+        $this->form->addElement('select', 'ProbandGender', 'Proband gender:', array('' => '','Male' => 'Male', 'Female' => 'Female') );
+        
+        $this->form->addFormRule(array(&$this,'_validate'));
+    }
     function update_consent_info() {
         $DB =& Database::singleton();
         $pscid = $DB->pselectone(
