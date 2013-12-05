@@ -73,7 +73,7 @@ class NDB_BVL_Instrument_BSRC extends NDB_BVL_Instrument
     */
    function _main(){
        // display test name
-       $this->addHeader("BSRC Treatment Form");
+       $this->addHeader("BSRC Intervention History Form");
 
        // automatically adds examiner & date of administration
        $this->_addMetadataFields();
@@ -165,7 +165,7 @@ class NDB_BVL_Instrument_BSRC extends NDB_BVL_Instrument
      //Speech-language therapy
      
      $this->addHeader("<BR>Speech Language Therapy");
-     $this->addSelect("servicetype_speechlangtherapy","Received speechlang therapy",$this->yesNo);
+     $this->addSelect("servicetype_speechlangtherapy","Received speech language therapy",$this->yesNo);
      $this->XINRegisterRule("servicetype_speechlangtherapy", array("servicetype_speechlangtherapy{@}=={@}NEVER_REQUIRED"));
       
      $this->addMonthYear("startdate_speechlangtherapy", "Date:", $monthYearOptions);
@@ -189,8 +189,8 @@ class NDB_BVL_Instrument_BSRC extends NDB_BVL_Instrument
 
      //Comprehensive behavioral educational interventions
 
-     $this->addHeader("<BR>Comprehensive behavioral/educational interventions");
-     $this->addSelect("servicetype_behaviorintervention","Received behaviorintervention therapy",$this->yesNo);
+     $this->addHeader("<BR>Comprehensive behavioural/educational interventions");
+     $this->addSelect("servicetype_behaviorintervention","Received behaviour intervention therapy",$this->yesNo);
      $this->XINRegisterRule("servicetype_behaviorintervention", array("servicetype_behaviorintervention{@}=={@}NEVER_REQUIRED"));
       
      $this->addMonthYear("startdate_behaviorintervention", "Date:", $monthYearOptions);
