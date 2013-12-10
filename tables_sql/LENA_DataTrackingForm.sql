@@ -1581,7 +1581,6 @@ CREATE TABLE LENA_DataTrackingForm2(
 `AVA_StdScore_Pct_64` DECIMAL (5,2)  DEFAULT NULL,
 PRIMARY KEY  (`CommentID`)
               );
-/*
+
 INSERT INTO instrument_subtests (Test_name, Subtest_name, Description, Order_number) VALUES ("LENA_DataTrackingForm", "LENA_DataTrackingForm_page1", "Uploaded Values", "1");
 INSERT INTO test_names (Test_name, Full_name, Sub_group) VALUES ('LENA_DataTrackingForm', 'LENA Data Trackign Form', 1);
-*/
