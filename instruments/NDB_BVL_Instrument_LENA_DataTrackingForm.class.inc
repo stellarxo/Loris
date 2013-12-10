@@ -368,17 +368,22 @@ class NDB_BVL_Instrument_LENA_DataTrackingForm extends NDB_BVL_Instrument
                 }
             }   
         }
-        $total_rows = sizeof($lines) -2;
-        //print " Duration total ".date('H:i:s',$avgs['Duration']/$total_rows)." ROWS : ". $total_rows;
-        foreach($avgs as $key=>$value) {
-            $avg_val = round($value/$total_rows, 2);
-            if($key == 'Duration' || $key == 'Meaningful' || $key == 'Distant'
-               || $key == 'TV' || $key == 'Noise' || $key == 'Silence') {
-                
-                $avg_val = date('H:i:s',$avg_val);
-            }
+        $total_rows = sizeof($lines) -2; //first line contains header information
+        if($total_rows > 0) {
+            foreach($avgs as $key=>$value) {
+                if(!empty($value) || $value !=0) {
+                    $avg_val = round($value/$total_rows, 2);
+                    if($key == 'Duration' || $key == 'Meaningful' || $key == 'Distant'
+                            || $key == 'TV' || $key == 'Noise' || $key == 'Silence') {
 
-            $upload_values[$key."_Avg"] = $avg_val;
+                        $avg_val = date('H:i:s',$avg_val);
+                    }
+
+                    $upload_values[$key."_Avg"] = $avg_val;
+                } else {
+                    $upload_values[$key."_Avg"] = "N/A";
+                }
+            }
         }
         $db=& Database::singleton();
 
