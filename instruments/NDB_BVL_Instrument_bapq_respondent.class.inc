@@ -136,7 +136,12 @@ class NDB_BVL_Instrument_bapq_respondent extends NDB_BVL_Instrument
         foreach($questions as $field=>$label) {
             $this->addSelect($field, $label, $this->rating);
         }
-   
+
+         //$this->form->addElement("textarea", 'comments', 'Do', array('cols'=>25, 'rows'=>4));
+        $this->addBasicTextArea('comments',"Do you have any other comments?");
+
+        //unset($this->XINRules['comments']) ;
+        $this->XINRegisterRule('comments', array('comments{@}=={@}NEVER_REQUIRED'));
 
 
     }
