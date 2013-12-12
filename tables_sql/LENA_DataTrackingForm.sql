@@ -20,6 +20,7 @@ CREATE TABLE `LENA_DataTrackingForm` (
 `duration_session4` enum('full_day','less_16hrs','notused_del') default NULL,
 `comments_session4` text default NULL,
 `comments_session4_status` enum('not_answered') default NULL,
+`Uploaded_file` VARCHAR(255) DEFAULT NULL,
 `Duration_Avg` VARCHAR(255)  DEFAULT NULL,
 `Meaningful_Avg` VARCHAR(255) DEFAULT NULL,
 `Distant_Avg` VARCHAR(255) DEFAULT NULL,

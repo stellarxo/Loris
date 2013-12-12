@@ -85,6 +85,7 @@ class NDB_BVL_Instrument_LENA_DataTrackingForm extends NDB_BVL_Instrument
            foreach($this->scoreCols as $key){
                 $this->localDefaults[$key."_Avg"] = $record[$key."_Avg"];    
            }
+           $this->localDefaults['Uploaded_file'] = $record['Uploaded_file'];
            for($i = 1; $i <= 32; $i++) {
                foreach($fields as $field) {
                    $key = $field."_".$i;
@@ -178,14 +179,15 @@ class NDB_BVL_Instrument_LENA_DataTrackingForm extends NDB_BVL_Instrument
         $this->XINRegisterRule("duration_session4",array("number_session{@}=={@}4"));
         $this->addTextAreaElement("comments_session4","Comments(e.g., did DLP malfunction?)",
                                    array("number_session{@}=={@}4"));
-        
-        $this->addLabel("<BR><strong> Average Values </strong>");
+       
+        $this->form->addElement("static", null, "&nbsp;");
+        $this->form->addElement('file', 'recording_file', 'Upload the export file');
+        $this->form->addElement('static','Uploaded_file', "Uploaded File");
+        $this->form->addElement("static", null, "&nbsp;");
+        $this->addLabel("<BR><strong> Summary Statistics </strong>");
         foreach($this->scoreCols as $key) {
             $this->form->addElement('static',$key.'_Avg',$this->indent."Average $key");
         }
-        $this->form->addElement("static", null, "&nbsp;");
-        $this->form->addElement('file', 'recording_file', 'Upload the export file');
-
     }
 
     function _page1() {
@@ -323,7 +325,8 @@ class NDB_BVL_Instrument_LENA_DataTrackingForm extends NDB_BVL_Instrument
                 );
 
          $upload_values = array(); //uploading values to LENA_DataTrackingForm table
-         $upload_values2 = array(); //uploading values to LENA_DataTrackingForm table
+         $upload_values2 = array(); //uploading values to LENA_DataTrackingForm2 table
+         $upload_values['Uploaded_file'] = $file->fileInfo['name'];
          $fields = array("Type","DLP","ChildKey","Id","ProcessingFile","Timestamp","Duration","Meaningful",
                          "Distant","TV","TV.Pct","Noise","Silence","AWC.Actual","AWC.Proj","AWC.Pct",
                          "CTC.Actual","CTC.Proj","CTC.Pct","CVC.Actual","CVC.Proj","CVC.Pct","AVA_StdScore",
@@ -401,8 +404,7 @@ class NDB_BVL_Instrument_LENA_DataTrackingForm extends NDB_BVL_Instrument
                print "Insert has failed: ".$ok->getMessage();
             }
         }
-        $filename = $file->fileInfo['name']; 
-        echo "<span style='color:red'><b>Upload Successful : </b> $filename</span><br>";
+        echo "<span style='color:red'><b>Upload Successful : </b>".$upload_values['Uploaded_file']."</span><br>";
         return true;
 
     }
