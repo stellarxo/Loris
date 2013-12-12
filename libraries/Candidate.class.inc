@@ -52,7 +52,7 @@ class Candidate
         }
 
         // get candidate data from database
-        $query = "SELECT c.CenterID, c.CandID, c.PSCID, c.DoB, c.EDC, c.Gender, p.Name AS PSC, c.Ethnicity, c.ZIP, c.Sibling1, c.Sibling2, c.Sibling3, c.Active, u1.Real_name as RegisteredBy, c.UserID, c.Entity_type, c.ProjectID FROM candidate as c left join psc as p using (CenterID) left join users as u1 on (u1.UserID = c.RegisteredBy) WHERE c.CandID='$candID' AND c.Active = 'Y'";
+        $query = "SELECT c.CenterID, c.CandID, c.PSCID, c.DoB, c.EDC, c.Gender, p.Name AS PSC, c.Ethnicity, c.ZIP, c.Active, u1.Real_name as RegisteredBy, c.UserID, c.Entity_type, c.ProjectID FROM candidate as c left join psc as p using (CenterID) left join users as u1 on (u1.UserID = c.RegisteredBy) WHERE c.CandID='$candID' AND c.Active = 'Y'";
         $row = array();
         $db->selectRow($query, $row);
         
@@ -61,15 +61,16 @@ class Candidate
         }
 
         if (!is_array($row) || sizeof($row) == 0) {
-            return PEAR::raiseError("Could not select Candidate data from the database (DCCID: $candID)", CANDIDATE_INVALID);
+            return PEAR::raiseError("Could not select Candidate data from the database (DCCID: $candID)", 
+                                     CANDIDATE_INVALID);
         }
 
         // store user data in object property
         foreach($row AS $key=>$value) {
             $this->candidateInfo[$key] = $value;
         }
-
-        // checK PSCID - only if it's passed by the open profile form
+       
+       // checK PSCID - only if it's passed by the open profile form
         // PSCID is also passed by the conflict resolver filter, so we don't check in that case
         if (isset($_REQUEST['PSCID']) && isset($_REQUEST['test_name']) && $_REQUEST['test_name'] !== 'conflicts_resolve') {
             if (strtolower(trim($_REQUEST['PSCID'])) != strtolower($this->getPSCID())) {
