@@ -16,6 +16,10 @@
 <td nowrap="nowrap" colspan="2" class="error">{$error}</td>
 </tr>
 {/foreach}
+<tr>
+<td nowrap="nowrap" id="pscid">PSCID: {$pscid}</td>
+<td nowrap="nowrap" >DCCID: {$candID}</td>
+</tr>
 
 <tr>
 <td nowrap="nowrap">{$form.SiblingID.label}</td>
