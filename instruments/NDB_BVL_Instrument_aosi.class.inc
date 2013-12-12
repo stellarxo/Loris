@@ -142,10 +142,11 @@ INSERT INTO instrument_subtests VALUES('', 'aosi', 'aosi_page2', 'General Observ
                 'q4_differential_response_to_facial_emotion_score',
                 'q5_anticipatory_response_score',
                 'q6_imitation_of_actions_score',
-                'total_score_1_18_override',
                 'total_score_1_18',
+                'total_score_1_18_override',
+                'number_of_markers',
                 'number_of_markers_override',
-                'number_of_markers');
+                'Data_entry_completion_status');
 
         // setup the form
         $this->_setupForm();
@@ -429,7 +430,8 @@ INSERT INTO instrument_subtests VALUES('', 'aosi', 'aosi_page2', 'General Observ
         //Question 3
         //calculate
             //2
-         if( $score_record[TrialName(1,1)] != NULL && $score_record[TrialName(2,1)] != NULL){   
+         if( $score_record[TrialName(1,1)] != NULL && $score_record[TrialName(2,1)] != NULL 
+             && !empty( $score_record[TrialName(1,1)] ) && !empty( $score_record[TrialName(2,1)] )){   
             if($score_record[TrialName(1,1)] == "not_answered" ||
                 $score_record[TrialName(2,1)] == "not_answered") {
                 $this->scores["q3_orients_to_name_score"] = "Unable to score";

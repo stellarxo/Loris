@@ -92,7 +92,7 @@ INSERT INTO instrument_subtests VALUES('', 'seq', 'seq_page3', 'General and Adde
 	/**
 	 * Array of column names to be ignored by the double data entry conflict detector.
 	 */
-	$this->_doubleDataEntryDiffIgnoreColumns = array('CommentID', 'UserID', 'Testdate',  'Window_Difference', 'Candidate_Age',
+	$this->_doubleDataEntryDiffIgnoreColumns = array('CommentID', 'UserID', 'Testdate',  'Window_Difference', 'Candidate_Age','Data_entry_completion_status',
 							 'person_completing_other',
 							 'q1_react_sensitively_what_do',
 							 'q2_enjoy_music_what_do',
@@ -126,9 +126,7 @@ INSERT INTO instrument_subtests VALUES('', 'seq', 'seq_page3', 'General and Adde
 							 'q30_flap_arms_what_do',
 							 'q31_free_time',
 							 'q32_seem_happiest');
-
-
-
+           
 
 		// setup the form
 		$this->_setupForm();

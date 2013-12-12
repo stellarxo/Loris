@@ -58,36 +58,37 @@ class NDB_BVL_Instrument_ados_module3 extends NDB_BVL_Instrument
 		/**
 		 * Array of column names to be ignored by the double data entry conflict detector.
 		 */
-		$this->_doubleDataEntryDiffIgnoreColumns = array('CommentID', 'UserID', 'Testdate', 'Window_Difference', 'Candidate_Age',
-                                // Text entry columns
-								 'd1_specify',
-								 'd1_specify_status',
-								 'd2_specify',
-								 'd2_specify_status',
-								 'd4_specify',
-								 'd4_specify_status',
-                                 // Scored columns
-                                 'social_affect_total',
-                                 'restricted_repetitive_behavior_total',
-                                 'social_affect_restricted_repetitive_behavior_total',
-                                 'ADOS_classification',
-                                 'b1_weighted',
-                                 'b9_weighted',
-                                 'b2_weighted',
-                                 'b10_weighted',
-                                 'b4_weighted',
-                                 'b7_weighted',
-                                 'a8_weighted',
-                                 'a9_weighted',
-                                 'b8_weighted',
-                                 'a7_weighted',
-                                 'a4_weighted',
-                                 'd1_weighted',
-                                 'd2_weighted',
-                                 'd4_weighted',
-                                 );
-
-       // setup the form
+        $this->_doubleDataEntryDiffIgnoreColumns = array('CommentID', 'UserID', 'Testdate', 'Window_Difference', 
+                'Candidate_Age',
+                // Text entry columns
+                'd1_specify',
+                'd2_specify',
+                'd4_specify',
+                // Scored columns
+                "ADOS_classification",
+                "social_affect_total",
+                "restricted_repetitive_behavior_total",
+                "social_affect_restricted_repetitive_behavior_total",
+                'a2_weighted',
+                'a3_weighted',
+                'a8_weighted',
+                'b1_weighted',
+                'b3_weighted',
+                'b4_weighted',
+                'b5_weighted',
+                'b9_weighted',
+                'b10_weighted',
+                'b11_weighted',
+                'b12_weighted',
+                'd1_weighted',
+                'd2_weighted',
+                'd4_weighted',
+                'social_affect_gotham_weighted',
+                'restricted_repetitive_gotham_weighted',
+                'gotham_weighted_score',
+                'severity_score_lookup',
+                'Data_entry_completion_status');
+        // setup the form
         $this->_setupForm();
     }
 
@@ -459,7 +460,12 @@ class NDB_BVL_Instrument_ados_module3 extends NDB_BVL_Instrument
             if (PEAR::isError($record_lookup)) {
                 return PEAR::raiseError("Could not retrieve scores: " . $record_lookup->getMessage());
             }
-            $scoreCols['severity_score_lookup']=$sevscore;
+            if(empty($sevscore)) {
+                $scoreCols['severity_score_lookup']= "N/A";
+            } else {
+                $scoreCols['severity_score_lookup']=$sevscore;
+            }
+
         }
         // Weightings from Gotham, Risi, Pickles and Lord 2008 Table 2
         // Put in the same order as the paper, which happens to be different than

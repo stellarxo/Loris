@@ -1,0 +1,12 @@
+ALTER TABLE tsi ADD COLUMN relative_mri enum('yes','no','not_answered') AFTER genetic_conditions_proband;
+ALTER TABLE tsi ADD COLUMN relative_schizophrenia enum('yes','no','not_answered') AFTER relative_mri;
+ALTER TABLE tsi ADD COLUMN relative_bipolar enum('yes','no','not_answered') AFTER relative_schizophrenia;
+ALTER TABLE tsi ADD COLUMN relative_psychosis enum('yes','no','not_answered') AFTER relative_bipolar;
+ALTER TABLE tsi_followup ADD COLUMN relative_mri enum('yes','no','not_answered') AFTER genetic_conditions_proband;
+ALTER TABLE tsi_followup ADD COLUMN relative_schizophrenia enum('yes','no','not_answered') AFTER relative_mri;
+ALTER TABLE tsi_followup ADD COLUMN relative_bipolar enum('yes','no','not_answered') AFTER relative_schizophrenia;
+ALTER TABLE tsi_followup ADD COLUMN relative_psychosis enum('yes','no','not_answered') AFTER relative_bipolar;
+UPDATE tsi SET relative_mri='yes',relative_schizophrenia = 'yes',relative_bipolar='yes',relative_psychosis='yes'  WHERE relative_with_disorder='yes';
+UPDATE tsi SET relative_mri='no',relative_schizophrenia = 'no',relative_bipolar='no',relative_psychosis='no'  WHERE relative_with_disorder='no';
+UPDATE tsi_followup SET relative_mri='yes',relative_schizophrenia = 'yes',relative_bipolar='yes',relative_psychosis='yes'  WHERE relative_with_disorder='yes';
+UPDATE tsi_followup SET relative_mri='no',relative_schizophrenia = 'no',relative_bipolar='no',relative_psychosis='no'  WHERE relative_with_disorder='no';

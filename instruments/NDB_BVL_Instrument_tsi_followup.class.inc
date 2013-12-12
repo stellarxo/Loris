@@ -15,9 +15,23 @@ class NDB_BVL_Instrument_tsi_followup extends NDB_BVL_Instrument
 	function getSession()
 	{
 		$db =& Database::singleton();
-	
-        $candID = isset($_REQUEST['candID']) ? $_REQUEST['candID'] : '';
- 		$sessionid = $db->pselectOne("SELECT ID FROM session WHERE CandID=:cndID and Visit_label LIKE '%06'", array('cndID' => $candID));
+        $sessionid = $this->getSessionID();
+        if($sessionid === false){
+           return null;    
+        }
+        $timepoint =& TimePoint::singleton($sessionid);
+        $candidate =& Candidate::singleton($timepoint->getCandID());
+        $candID = $timepoint->getCandID(); 
+        $projID = $candidate->getProjectID();
+
+        if ($projID == 2) {
+            //for IBIS2 tsi is part of Screening visit
+            $sessionid = $db->pselectOne("SELECT ID FROM session WHERE CandID=:cndID and Visit_label LIKE '%screening%'", 
+                                          array('cndID' => $candID));
+        } else { 
+ 		    $sessionid = $db->pselectOne("SELECT ID FROM session WHERE CandID=:cndID and Visit_label LIKE '%06'", 
+                                          array('cndID' => $candID));
+        }
         if($sessionid == array()) {
             return null;
         }
@@ -102,33 +116,23 @@ class NDB_BVL_Instrument_tsi_followup extends NDB_BVL_Instrument
 		$this->_selectMultipleElements = array('candidate_race', 'mother_race', 'father_race');
 
 		// required fields for data entry completion status
-		$this->_requiredElements = array("ses_income", "neurological_problems_subject", "med_his_q_1_med_surgical_problems", "diagnoses", "exc_inc_meets_criteria" );
+		$this->_requiredElements = array("ses_income", "neurological_problems_subject", "med_his_q_1_med_surgical_problems", "exc_inc_meets_criteria" );
 		$this->_doubleDataEntryDiffIgnoreColumns = array('CommentID', 'UserID', 'Testdate',  'Window_Difference', 'Candidate_Age',
 								 'in_utero_substance_proband',
-								 'in_utero_substance_proband_status',
 								 'in_utero_substance_amount_proband',
-								 'in_utero_substance_amount_proband_status',
 								 'in_utero_time_exposure_proband',
-								 'in_utero_time_exposure_proband_status',
 								 'asd_further_information',
-								 'asd_further_information_status',
 								 'med_his_q_3_surgery_describe',
-								 'med_his_q_3_surgery_describe_status',
 								 'med_his_q_5_medications_describe',
-								 'med_his_q_5_medications_describe_status',
 								 'med_his_q_6_allergies_describe',
-								 'med_his_q_6_allergies_describe_status',
 								 'med_his_q_8_brain_MRI_results',
-								 'med_his_q_8_brain_MRI_results_status',								
 								 'med_his_q_9_anethesia_problems',
-								 'med_his_q_9_anethesia_problems_status',
 								 'med_his_q_10_nap',
 								 'med_his_q_10_nap_status',
 								 'med_his_q_11_nap_how_long',
-								 'med_his_q_11_nap_how_long_status',
-                                 'further_information');
-
-
+                                 'further_information',
+                                 'Data_entry_completion_status');
+         
 		// setup the form
 		$this->_setupForm();
 
@@ -305,7 +309,11 @@ class NDB_BVL_Instrument_tsi_followup extends NDB_BVL_Instrument
 
 		$questionArray = array("neurological_problems_proband"=>"Any neurological problems such as Cerebral Palsy or Tuber Sclerosis in PROBAND?",
 		"genetic_conditions_proband"=>"Diagnosed/suspected genetic conditions or syndromes?",
-		"relative_with_disorder"=>"1st degree relative w/ MR, schizophrenia, bipolar or psychosis?",
+	//	"relative_with_disorder"=>"1st degree relative w/ MR, schizophrenia, bipolar or psychosis?",
+        "relative_mr" =>$this->indent."MR?",
+        "relative_schizophrenia"=>$this->indent."Schizophrenia?",
+        "relative_bipolar"=>$this->indent."Bipolar?",
+        "relative_psychosis"=>$this->indent."Psychosis?",
 		"cns"=>"CNS problem/injury such as a head injury or meningitis?",
 		"tested_for_fragile_x"=>"Tested for Fragile X syndrome?");
 		foreach($questionArray as $field=>$label) {
@@ -464,10 +472,38 @@ class NDB_BVL_Instrument_tsi_followup extends NDB_BVL_Instrument
 		$this->form->addElement("select", "exc_inc_meets_criteria", "1. This proband meets any of the medical or neurological exclusion criteria for this study. (see Section A)", $this->yesNo);
 		$this->form->addElement("select", "exc_inc_subject_meets_criteria", "2. This subject meets any of the medical or neurological exclusion criteria for this study. (see Section B)", $this->yesNo);
 		$this->form->addElement("select", "exc_inc_contraindication", "3. This subject has evidence for contraindication to MRI. (see Section B)", $this->yesNo);
-		$this->form->addElement("static", null, '<br />');
+	/*
+        $this->form->addElement("static", null, '<br />');
 		$this->form->addElement("static", null, "Disposition");
 		$this->form->addElement("select", "disposition", "Proceed to next level beyond screening?", $this->yesNo);
-	}
-	
+     */
+        }
+     
+     function score() {
+            $db =& Database::singleton();
+            if (Utility::isErrorX($db)) {
+                print "Could not connect to database: " . $db->getMessage();
+            }
+
+            // Get the item scores
+            $record= $db->pselectRow("SELECT * FROM $this->table WHERE CommentID=:cid", array('cid'=>$this->getCommentID()));
+            if (Utility::isErrorX($record)) {
+                print "Query has failed to select: ".$record->getMessage();
+            }
+            $score = array();
+
+            if($record['relative_mr'] == 'yes' || $record['relative_schizophrenia']== 'yes'
+                    || $record['relative_bipolar']=='yes' || $record['relative_psychosis']== 'yes')  {
+                $score['relative_with_disorder'] = 'yes';
+            } else {
+                $score['relative_with_disorder'] = 'no';
+            }
+            $result = $db->update($this->table, $score, array('CommentID'=>$this->getCommentID()));
+            if(Utility::isErrorX($result)) {
+                print "Could not save total score: ".$result->getMessage();
+            }
+        }
+
+
 }
 ?>

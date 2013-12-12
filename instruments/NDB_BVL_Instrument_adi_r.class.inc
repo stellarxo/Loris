@@ -14,7 +14,8 @@ class NDB_BVL_Instrument_adi_r extends NDB_BVL_Instrument
     var $scoreCols = array("Total_A1", "Total_A2", "Total_A3", "Total_A4", "A_Total",
     						"Total_B1", "Total_B4", "Total_B2V", "Total_B3V", "BV_Total", "BNV_Total",
     						"Total_C1", "Total_C2", "Total_C3", "Total_C4", "C_Total", "D_Total",
-                            "social_affect","repeat_restrict_behavior","imitation","reciprocal_interaction");
+                            "social_affect","repeat_restrict_behavior","imitation","reciprocal_interaction",
+                            "2012alg_research_diag","2012alg_clinical_diag","2012alg_range_concern","summary_diagnosis");
     						
     // Holds the algorithm score conversions
     var $scores = array();
@@ -51,7 +52,7 @@ class NDB_BVL_Instrument_adi_r extends NDB_BVL_Instrument
         								"q_41_cur_comm_speech_current_code", "q_50_direct_gaze_current_code",
         								"q_60_init_activities_current_code", "q_67_unusual_preoccupations_current_code",
         								"q_80_gait_current_code", "q_88_visuospatial_ability_current_code");
-        $this->_doubleDataEntryDiffIgnoreColumns = array_merge(array('CommentID', 'UserID', 'Testdate', 'Window_Difference', 'Candidate_Age'), $this->scoreCols);
+        $this->_doubleDataEntryDiffIgnoreColumns = array_merge(array('CommentID', 'UserID', 'Testdate', 'Window_Difference', 'Candidate_Age','Data_entry_completion_status','A_total','BNV_total','BV_total','C_total','D_total'), $this->scoreCols);
         // setup the form
         $this->_setupForm();
 

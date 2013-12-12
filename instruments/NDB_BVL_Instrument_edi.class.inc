@@ -242,12 +242,12 @@ INSERT INTO test_battery VALUES ('', 'edi', '1050', '1140', 'Y', 'Visit', '2');
 
 /**
      * Array of column names to be ignored by the double data entry conflict detector.
-     */
-    $this->_doubleDataEntryDiffIgnoreColumns = array('CommentID', 'UserID', 'Testdate', 'EDI8ot', 'EDI19ot', 'EDIT33ot',  'Window_Difference', 'Candidate_Age',
+     
+    $this->_doubleDataEntryDiffIgnoreColumns = array('CommentID', 'UserID', 'Testdate', 'EDI8ot', 'EDI19ot','Window_Difference', 'Candidate_Age',
                                                    'EDI45ot', 'EDI58ot', 'EDI70ot', 'EDI82ot', 'EDI96ot', 'inj_month',
                                                    'dear_month', 'conf_month', 'legl_month', 'emp_month', 'crim_month',
                                                    'other_1_month', 'other_2_month', 'comnt');
-
+*/
         //combine all scorable fields into one, savable array
         $this->scores = array_merge($this->total_symptomAnchors, $this->regulatoryAnchors, $this->socialAnchors, $this->communicationAnchors, $this->repetitive_behaviourAnchors);
 
@@ -257,7 +257,6 @@ INSERT INTO test_battery VALUES ('', 'edi', '1050', '1140', 'Y', 'Visit', '2');
     $this->_doubleDataEntryDiffIgnoreColumns = array('CommentID', 'UserID', 'Testdate',   'Window_Difference', 'Candidate_Age',
 						     'EDI8ot', 
 						     'EDI19ot', 
-						     'EDIT33ot',
 						     'EDI45ot', 
 						     'EDI58ot', 
 						     'EDI70ot', 
@@ -289,8 +288,43 @@ INSERT INTO test_battery VALUES ('', 'edi', '1050', '1140', 'Y', 'Visit', '2');
 						     'other_1_month_status', 
 						     'other_2_month_status', 
 						     'comnt_status',
-                             'EDI33ot',
-                             'other_1', 'other_2');
+                             'other_1', 'other_2',
+                             'EDI33ot_status',
+                             'score_0_3_total_symptoms',
+                             'score_0_3_regulatory',
+                             'score_4_6_total_symptoms',
+                             'score_4_6_regulatory',
+                             'score_4_6_social',
+                             'score_7_9_total_symptoms',
+                             'score_7_9_regulatory',
+                             'score_7_9_social',
+                             'score_7_9_communication',
+                             'score_10_12_total_symptoms',
+                             'score_10_12_regulatory',
+                             'score_10_12_social',
+                             'score_10_12_communication',
+                             'score_10_12_repetitive_behaviour',
+                             'score_13_15_total_symptoms',
+                             'score_13_15_regulatory',
+                             'score_13_15_social',
+                             'score_13_15_communication',
+                             'score_13_15_repetitive_behaviour',
+                             'score_16_18_total_symptoms',
+                             'score_16_18_regulatory',
+                             'score_16_18_social',
+                             'score_16_18_communication',
+                             'score_16_18_repetitive_behaviour',
+                             'score_19_21_total_symptoms',
+                             'score_19_21_regulatory',
+                             'score_19_21_social',
+                             'score_19_21_communication',
+                             'score_19_21_repetitive_behaviour',
+                             'score_22_24_total_symptoms',
+                             'score_22_24_regulatory',
+                             'score_22_24_social',
+                             'score_22_24_communication',
+                             'score_22_24_repetitive_behaviour',
+                             'Data_entry_completion_status');
 
 
         // setup the form

@@ -68,7 +68,20 @@ INSERT INTO instrument_subtests VALUES('', 'fyi', 'fyi_page2', '#47-#63', 2);
 							 'q_62',
 							 'q_62_status',
 							 'q_63',
-							 'q_63_status');
+							 'q_63_status',
+                             'orientrec', 
+                             'affeng', 
+                             'imitate', 
+                             'express', 
+                             'senproc', 
+                             'regpat', 
+                             'react',
+                             'repplay', 
+                             'soc_com_risk', 
+                             'sen_reg_risk', 
+                             'risk_score', 
+                             'percentile',
+                             'Data_entry_completion_status');
 
 
         // setup the form
