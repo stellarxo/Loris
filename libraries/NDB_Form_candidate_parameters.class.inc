@@ -396,7 +396,7 @@ class NDB_Form_candidate_parameters extends NDB_Form
         $this->form->addElement('static', 'CandidateGUID', 'Candidate GUID:');
         $this->form->addElement('static','flagged_caveatemptor','Caveat Emptor flag for Candidate');
         $this->form->addElement('static','flagged_reason',$this->indent.'Reason for Caveat Emptor flag');
-        $this->form->addElement('static','flagged_other', $this->indent.'Additional Comments for Caveat Emptor ');
+        $this->form->addElement('static','flagged_other', $this->indent.'Additional Comments for flag');
 
  		//Extract the fields from the parameter_type table
         $DB->select("SELECT pt.ParameterTypeID, pt.Name, pt.Type, Description FROM parameter_type as pt, parameter_type_category as ptc, parameter_type_category_rel as ptcr WHERE pt.ParameterTypeID=ptcr.ParameterTypeID AND ptcr.ParameterTypeCategoryID=ptc.ParameterTypeCategoryID AND ptc.Name='Candidate Parameters' ORDER BY pt.ParameterTypeID, pt.name ASC", $field_results);
@@ -502,7 +502,17 @@ class NDB_Form_candidate_parameters extends NDB_Form
     }
 
     function add_family(){
-        
+        $DB =& Database::singleton();
+
+        $pscid = $DB->pselectone(
+                'SELECT PSCID FROM candidate where CandID = :candid',
+                array('candid'=>$this->identifier)
+                );
+        $this->addScoreColumn('pscid', 'PSCID');
+        $this->tpl_data['candID'] = $this->identifier;
+
+        $this->tpl_data['pscid'] = $pscid;
+
         $this->form->addElement('text','SiblingID','Sibling ID:');
         $this->form->addElement('select','relation_type','Relation Type', $this->relationType);
         $this->form->addFormRule(array(&$this, '_validate_add_family'));
