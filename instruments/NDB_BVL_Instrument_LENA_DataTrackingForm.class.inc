@@ -86,6 +86,8 @@ class NDB_BVL_Instrument_LENA_DataTrackingForm extends NDB_BVL_Instrument
                 $this->localDefaults[$key."_Avg"] = $record[$key."_Avg"];    
            }
            $this->localDefaults['Uploaded_file'] = $record['Uploaded_file'];
+           $this->localDefaults['Uploaded_file_its'] = $record['Uploaded_file_its'];
+           
            for($i = 1; $i <= 32; $i++) {
                foreach($fields as $field) {
                    $key = $field."_".$i;
@@ -181,9 +183,17 @@ class NDB_BVL_Instrument_LENA_DataTrackingForm extends NDB_BVL_Instrument
                                    array("number_session{@}=={@}4"));
        
         $this->form->addElement("static", null, "&nbsp;");
+        $this->addLabel("<BR><strong> Upload LENA File </strong>");
         $this->form->addElement('file', 'recording_file', 'Upload the export file');
-        $this->form->addElement('static','Uploaded_file', "Uploaded File");
+        $this->form->addElement('static','Uploaded_file', "Uploaded LENA Export File");
+     
+
+        $this->addLabel("<BR><strong> Upload ITS File </strong>");
+        $this->form->addElement('file', 'recording_file_its', 'Upload the ITS file');
+        $this->form->addElement('static','Uploaded_file_its', "Uploaded ITS Export File");
+
         $this->form->addElement("static", null, "&nbsp;");
+
         $this->addLabel("<BR><strong> Summary Statistics </strong>");
         foreach($this->scoreCols as $key) {
             $this->form->addElement('static',$key.'_Avg',$this->indent."Average $key");
@@ -225,7 +235,10 @@ class NDB_BVL_Instrument_LENA_DataTrackingForm extends NDB_BVL_Instrument
      */
     function isValid(&$file, $args){
          $correct_filename = $args['PSCID'] .'_'. $args['candID'] .'_'. $args['visitLabel'];
- 
+         if(strpos($file->fileInfo['name'], "its") !== FALSE) {
+             return true;
+         }
+
         if(!preg_match("/^{$correct_filename}/i", $file->fileInfo['name']) ){
             $errors[]="Incorrect Filename: Filename begin with: " . $correct_filename;
             return $errors;
@@ -296,6 +309,44 @@ class NDB_BVL_Instrument_LENA_DataTrackingForm extends NDB_BVL_Instrument
             //proccesses them (including verify, move, and import steps)
             $file->processFiles();
         }
+        if(isset($values['recording_file_its']) && !empty($values['recording_file_its']['name'])) {
+            require_once "File_Upload.class.inc";
+            $file=new File_Upload;
+
+            //pass the existing form ($form) by reference to File_Upload, and register the file_upload field names being used.
+            $file->registerForm($this->form);
+
+
+            //Tell File_Upload what file handlers to use.
+            $file->setFileHandler("recording_file_its", $this);
+
+            //Set the target directory that you want files moved into once they are validated and processed.
+            $config = NDB_Config::singleton();
+            $dir = $config->getSetting("UploadDir");
+            if(empty($dir)) {
+                $dir = ".";
+            };
+            $file->setBaseUploadDirectory($dir . "/LENA/");
+
+            //Set the prefix to prepend to the filenames
+            //$file->setFilenamePrefix($timepoint->getVisitLabel()."-".$this->testName."-");
+
+            //set the the IDs to the handler functions.
+            $user =& User::singleton();
+            $file->setHandlerArgs(array("CommentID"=>$this->getCommentID(),
+                        "candID"=>$candidate->getCandID(),
+                        "PSCID"=>$candidate->getPSCID(),
+                        "visitLabel"=>$timepoint->getVisitLabel(),
+                        "username"=>$user->getUsername(),
+                        "values"=>$values)
+                    );
+
+
+
+            //If the form is validated, call File_Upload::processFiles() which loops through the files and 
+            //proccesses them (including verify, move, and import steps)
+           $file->processFiles();
+        }
         //echo error messages
         if(!empty($file->errorLog)){
         while(list($fileType,$fileErrors)=each($file->errorLog)){
@@ -304,7 +355,7 @@ class NDB_BVL_Instrument_LENA_DataTrackingForm extends NDB_BVL_Instrument
             }
          }
         }
-        unset($values['candID'], $values['sessionID'], $values['commentID'], $values['test_name'], $values['page'], $values['fire_away'], $values['subtest'], $values['MAX_FILE_SIZE'], $values['recording_file']);
+        unset($values['candID'], $values['sessionID'], $values['commentID'], $values['test_name'], $values['page'], $values['fire_away'], $values['subtest'], $values['MAX_FILE_SIZE'], $values['recording_file'],$values['recording_file_its']);
         $this->_save($values);
 
 
@@ -313,6 +364,14 @@ class NDB_BVL_Instrument_LENA_DataTrackingForm extends NDB_BVL_Instrument
 
     function importFile(&$file, $args) {
         $fp=fopen($file->fileInfo['tmp_name'], "r");
+        
+        $db=& Database::singleton();
+        ///Setting trackchanges to false because getting error messages
+        $db->_trackChanges = false;
+        ////////////////////////////////////////////////////////////////
+        $upload_values = array(); //uploading values to LENA_DataTrackingForm table
+        
+        if(strpos($file->fileInfo['name'], "csv") !== FALSE) {
         $contents=fread($fp,filesize($file->fileInfo['tmp_name']));
         fclose($fp);
 
@@ -324,7 +383,6 @@ class NDB_BVL_Instrument_LENA_DataTrackingForm extends NDB_BVL_Instrument
                 'Data_dir'  =>$file->getDestinationDirectory()
                 );
 
-         $upload_values = array(); //uploading values to LENA_DataTrackingForm table
          $upload_values2 = array(); //uploading values to LENA_DataTrackingForm2 table
          $upload_values['Uploaded_file'] = $file->fileInfo['name'];
          $fields = array("Type","DLP","ChildKey","Id","ProcessingFile","Timestamp","Duration","Meaningful",
@@ -388,15 +446,11 @@ class NDB_BVL_Instrument_LENA_DataTrackingForm extends NDB_BVL_Instrument
                 }
             }
         }
-        $db=& Database::singleton();
-
-        ///Setting trackchanges to false because getting error messages
-        $db->_trackChanges = false;
-        ////////////////////////////////////////////////////////////////
         $result = $db->update($this->testName, $upload_values, array('CommentID'=>$args['CommentID']));
         if(Utility::isErrorX($result)) {
             print "Update has failed: ".$result->getMessage();
         }
+        
         if(!empty($upload_values2)){
             $upload_values2['CommentID'] = $args['CommentID'];
             $ok = $db->insert("LENA_DataTrackingForm2", $upload_values2);
@@ -406,6 +460,16 @@ class NDB_BVL_Instrument_LENA_DataTrackingForm extends NDB_BVL_Instrument
         }
         echo "<span style='color:red'><b>Upload Successful : </b>".$upload_values['Uploaded_file']."</span><br>";
         return true;
+     }
+     if(strpos($file->fileInfo['name'], "its") !== FALSE) {
+         $upload_values['Uploaded_file_its'] = $file->fileInfo['name'];
+         $result = $db->update($this->testName, $upload_values, array('CommentID'=>$args['CommentID']));
+         if(Utility::isErrorX($result)) {
+             print "Update has failed: ".$result->getMessage();
+         }
+         echo "<span style='color:red'><b>Upload Successful : </b>".$upload_values['Uploaded_file_its']."</span><br>";
+         return true;
+     }
 
     }
     /**

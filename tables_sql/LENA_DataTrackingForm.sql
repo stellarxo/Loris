@@ -21,6 +21,7 @@ CREATE TABLE `LENA_DataTrackingForm` (
 `comments_session4` text default NULL,
 `comments_session4_status` enum('not_answered') default NULL,
 `Uploaded_file` VARCHAR(255) DEFAULT NULL,
+`Uploaded_file_its` VARCHAR(255) DEFAULT NULL,
 `Duration_Avg` VARCHAR(255)  DEFAULT NULL,
 `Meaningful_Avg` VARCHAR(255) DEFAULT NULL,
 `Distant_Avg` VARCHAR(255) DEFAULT NULL,
