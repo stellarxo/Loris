@@ -248,9 +248,11 @@ $scores['total_score'] = $scores['prone_subscalescore']+ $scores['supine_subscal
 
 if ($scores['total_score'] > 0) {
     $Age                  = intval($record['Candidate_Age']);
+/* do not roundup age calculation
     if($record['Candidate_Age'] > $Age) {
        $Age = $Age +1;     
     }
+    */
     $scores['percentile'] = '';
     //print "AGE $Age";
     $query_score          = "SELECT Percentile from aims_lookup WHERE Rawscore = :Rawscore 
