@@ -235,9 +235,6 @@ class NDB_BVL_Instrument_LENA_DataTrackingForm extends NDB_BVL_Instrument
      */
     function isValid(&$file, $args){
          $correct_filename = $args['PSCID'] .'_'. $args['candID'] .'_'. $args['visitLabel'];
-         if(strpos($file->fileInfo['name'], "its") !== FALSE) {
-             return true;
-         }
 
         if(!preg_match("/^{$correct_filename}/i", $file->fileInfo['name']) ){
             $errors[]="Incorrect Filename: Filename begin with: " . $correct_filename;
