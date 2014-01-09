@@ -207,7 +207,7 @@ class NDB_BVL_Instrument_LENA_DailyActivityLog extends NDB_BVL_Instrument
                          "11_1pm"=>"11:00am-1:00pm","1_3pm"=>"1:00-3:00pm","3_5pm"=>"3:00-5:00pm",
                          "5_7pm"=>"5:00-7:00pm","7_9pm"=>"7:00-9:00pm","9_11pm"=>"9:00-11:00pm","11_12pm"=>"11:00-12:00pm");
         $dlp_status = array (""=>null,"wearing_dlp"=>"+ Wearing the DLP","notwearing_dlp"=>"- Wearing the DLP");
-        $individuals_present = array (""=>null,"family"=>"1 - Family Members","other"=>"2 - Other (please not)");
+        $individuals_present = array (""=>null,"family"=>"1 - Family Members","other"=>"2 - Other (please note)");
         $envr = array(""=>null,"home"=>"Home","away"=>"Away from home");
         foreach($time_interval as $key=>$val){
         $groupname = $page."_".$key."_group";
