@@ -14,7 +14,6 @@ if (Utility::isErrorX($db)) {
         print "Could not connect to database: " . $db->getMessage();
             exit(1);
 }
-$reverse_items = array(1,3,7,9,12,15,16,19,21,23,25,28,30,34,36);
 
 $aloof = array(1,5,9,12,16,18,23,25,27,28,31,36);
 $pragmatic_language = array(2,4,7,10,11,14,17,20,21,29,32,34);
@@ -22,7 +21,6 @@ $rigid = array(3,6,8,13,15,19,22,24,26,30,33,35);
 $candidate_list = $db->pselect("SELECT DISTINCT (s.CandID) FROM flag f JOIN session s ON (s.ID=f.SessionID)
                                 WHERE (Test_name = 'pspq_1' OR Test_name='pspq_2') 
                                 AND f.CommentID NOT LIKE 'DDE%'", array());
-print_r($candidate_list);
 foreach($candidate_list as $cand) {
     $candidate = $cand['CandID'];
     $query         = "SELECT f.CommentID FROM flag f JOIN pspq_1 pspq1 
@@ -33,7 +31,6 @@ foreach($candidate_list as $cand) {
         print "Query has failed to select: ".$pspq_1->getMessage();
         //        exit(2);
     }
-    print $pspq_1;
     $query         = "SELECT f.CommentID FROM flag f JOIN pspq_2 pspq2
                       ON (f.CommentID = pspq2.CommentID)
                       JOIN session s on (s.ID = f.SessionID) WHERE s.CandID =:cand";
@@ -63,14 +60,87 @@ foreach($candidate_list as $cand) {
     if (Utility::isErrorX($pspq2_data)) {
             print "Query has failed to select: ".$pspq2_data->getMessage();
     }
+    $pspq1_data = assignscores($pspq1_data);
+    $pspq1_data = reversescores($pspq1_data);
+    $scores =     calculateSubscaleScores($pspq1_data);
 }
-function reverscores($values) {
+function reversescores($values) {
     $reverse_items = array(1,3,7,9,12,15,16,19,21,23,25,28,30,34,36);
     $participant = array('respondent'=>'q','informant'=>'qi');
     foreach($participant as $key=>$val) {
        foreach($reverse_items as $qnum) {
-               
+           $field = $val.$qnum."_";
+           foreach($values as $k=>$v) {
+               if(strpos($k, $field) !== FALSE) {
+                  $values[$k] = abs($v-6) + 1;
+               }    
+           }
        }    
     }
+    return $values;
+}
+function assignscores($values) { 
+  
+  foreach ($values as $key=>$val) {
+      if ($val == '1_very_rarely') {
+          $values[$key] = 1;    
+      } else if ($val == '2_rarely') {
+          $values[$key] = 2;    
+      }else if ($val == '3_occasionally') {
+          $values[$key] = 3;
+      }else if ($val == '4_somewhat_often') {
+          $values[$key] = 4;
+      }else if ($val == '5_often') {
+          $values[$key] = 5;
+      }else if ($val == '6_very_often') {
+          $values[$key] = 6;
+      }
+
+  }
+ return $values; 
+}
+
+function calculateSubscaleScores($values) {
+ $scores = array();
+ $subscales = array('aloof'=>array(1,5,9,12,16,18,23,25,27,28,31,36),
+                    'rigid'=>array(2,4,7,10,11,14,17,20,21,29,32,34),
+                    'pragmatic_language'=> array(3,6,8,13,15,19,22,24,26,30,33,35));
+ $aloof = array(1,5,9,12,16,18,23,25,27,28,31,36);
+ $pragmatic_language = array(2,4,7,10,11,14,17,20,21,29,32,34);
+ $rigid = array(3,6,8,13,15,19,22,24,26,30,33,35);
+
+ $participant = array('respondent'=>'q','informant'=>'qi');
+ foreach($participant as $key=>$val) {
+     foreach($subscales as $scale=>$qsnts) {
+         $scores[$key."_".$scale] = 0;
+         foreach($qsnts as $qnum) {
+             $field = $val.$qnum."_";
+             foreach ($values as $k=>$v) {
+                 if(strpos($k, $field) !== FALSE) {
+                     if (empty($v)) {
+                         $scores[$key."_".$scale] = 'N/A';
+                         break;
+                     } else {
+                         //                    print $k."####".$v."\n";
+                         $scores[$key."_".$scale] += $v;    
+                     } 
+                 }
+             }
+         }
+         if($scores[$key."_".$scale] != 'N/A') {
+             $scores[$key."_".$scale] = $scores[$key."_".$scale]/sizeof($qsnts);
+         }
+     }
+ }
+// calculating best estimate scores
+ foreach($subscales as $scale=>$qstns) {
+     $scores['best_estimate_'.$scale] = 0;     
+     foreach($participant as $key=>$val) {
+          $scores['best_estimate_'.$scale] += $scores[$key."_".$scale];
+         
+     }
+     $scores['best_estimate_'.$scale] = $scores['best_estimate_'.$scale]/sizeof($participant);
+ }
+ return $scores;
 }
 ?>
