@@ -140,14 +140,14 @@ class NDB_BVL_Instrument_LENA_DailyActivityLog extends NDB_BVL_Instrument
         $this->form->addElement("static", null, "<br><br>");
         $this->addHeader("Daily Activity Log $temp");
         $this->form->addElement("static", null, "<br><br>");
-        
+
         $group[] = &$this->form->createElement("date",$field."_date_completed",null,$dateOptions );
         $group[] = &$this->form->createElement("select",$field."_date_completed_status",null,array(""=>null,'not_answered'=>'Not Answered'));
-        $this->form->addGroup($group,$field."_date_completed_group","<td colspan=1>Date</td>",$this->_GUIDelimiter, false);
-
+        $this->form->addGroup($group,$field."_date_completed_group","<td colspan=2>His/Her last ear infection was:</td>",$this->_GUIDelimiter, false);
         unset($group);
-        $this->XINRegisterRule($field."_date_completed", array($field . "_date_completed_status{@}=={@}"), "A Date, or Not Answered is required.", $name . "_date_completed_group");
+        $this->XINRegisterRule($field."_date_completed", array($field . "_date_completed_status{@}=={@}"), "A Date, or Not Answered is required.", $field . "_date_completed_group");
 
+        
         //$this->addDateElement("1_date_completed","Date:");
         $this->form->addElement("static", null, "<br><br>");
         $group[] = &$this->form->createElement("static", null, null, "Parent-Child Daily Log<BR>Hour");
@@ -163,6 +163,8 @@ class NDB_BVL_Instrument_LENA_DailyActivityLog extends NDB_BVL_Instrument
 
         $group[] = &$this->form->createElement("select",$field."_child_sick",null,array(""=>null,"yes"=>"Yes","no"=>"No","not_answered"=>"Not Answered"));
         $this->form->addGroup($group,$field."_child_sick_group","<td colspan=2>Is your child sick or not feeling well today?</td>",$this->_GUIDelimiter,false);
+        $this->XINRegisterRule($field."_child_sick", array($field . "_child_sick{@}=={@}"), "Indicate if the child was sick or not.", $field . "_child_sick_group");
+
         unset($group);
         
         $group[] = &$this->form->createElement("textarea",$field."_sickness_kind",null);
@@ -183,6 +185,7 @@ class NDB_BVL_Instrument_LENA_DailyActivityLog extends NDB_BVL_Instrument
         $this->form->addElement("static", null, "<br><br>");
         $group[] = &$this->form->createElement("select",$field."_rate_recordingday",null,$this->rate_day);
         $this->form->addGroup($group,$field."_rate_recordingday_group","<td colspan=2>I would rate this day when we used the recording device as:</td>",$this->_GUIDelimiter,false);
+        $this->XINRegisterRule($field."_rate_recordingday", array($field . "_rate_recordingday{@}=={@}"), "Please choose the rate of recording.", $field . "_rate_recordingday_group");
         unset($group);
 
         $this->form->addElement("static", null, "<br><br>");
@@ -198,7 +201,7 @@ class NDB_BVL_Instrument_LENA_DailyActivityLog extends NDB_BVL_Instrument
         $this->form->addElement("static", null, "<br><br>");
         $group[]= &$this->form->createElement("select",$field."_more_recordings", null, array(""=>null,"yes"=>"Yes","no"=>"No"));
         $this->form->addGroup($group,$field."_more_recordings_group","<td colspan=2>Are there any more daily activity logs? </td>",$this->_GUIDelimiter, false );
-
+        $this->XINRegisterRule($field."_more_recordings", array($field . "_more_recordings{@}=={@}"), "Indicate if there are more recordings or not", $field . "_more_recordings_group");
 
     }
    

@@ -9,7 +9,7 @@ class NDB_BVL_Instrument_LENA_DataTrackingForm extends NDB_BVL_Instrument
     var $session = array(""=>null,'1'=>'1','2'=>'2','3'=>'3','4'=>'4');
     var $duration = array(""=>null,'full_day'=>'Full day(16 hrs)',
                           'less_16hrs'=>'<16hrs','notused_del'=>'Recording not used or deleted');
-    var $reasons_decline = array("issues_related_to_privacy"=>"Issues related to privacy",
+    var $reasons_decline = array(""=>NULL,"issues_related_to_privacy"=>"Issues related to privacy",
                                  "time_consuming_or_burdensome"=>"Time consuming or burdensome",
                                  "spouse_not_participate"=>"Spouse or partner of consenting parent or 
                                                             caregiver does not want to participate",
@@ -153,32 +153,33 @@ class NDB_BVL_Instrument_LENA_DataTrackingForm extends NDB_BVL_Instrument
         $this->addSelect("family_participate", "<BR>Did family agree to participate?",$this->participate); 
         $this->addLabel("<BR><strong>Section B. Reason(s) for Decline</strong>");
         $this->form->addElement("select","reasonsdecline","Check All That Apply", $this->reasons_decline, "multiple");
-        $this->XINRegisterRule("reasonsdecline",array("family_participate{@}=={@}no"));
+        $this->XINRegisterRule("reasonsdecline",array("reasonsdecline{@}=={@}NEVER_REQUIRED"));
 
         $this->addLabel("<BR><strong>Section C. DLP Tracking Information</strong>");
         $this->addSelect("number_session","Number of Recording sessions:", $this->session);
-        $this->XINRegisterRule("number_session",array("family_participate{@}=={@}yes"));
-        
+       // $this->XINRegisterRule("number_session",array("family_participate{@}=={@}yes"));
+        $this->XINRegisterRule("number_session", array("{number_session}{@}=={@}NEVER_REQUIRED"));
+
         $this->addLabel("<BR> Duration of recording session:");
         $this->addSelect("duration_session1","Recording Session 1", $this->duration);
-        $this->XINRegisterRule("duration_session1",array("number_session{@}=={@}1|2|3|4"));
+        $this->XINRegisterRule("duration_session1",array("number_session{@}=={@}NEVER_REQUIRED"));
         $this->addTextAreaElement("comments_session1","Comments(e.g., did DLP malfunction?)",
                                    array("number_session{@}=={@}1|2|3|4"));
         
         $this->addSelect("duration_session2","Recording Session 2", $this->duration);
-        $this->XINRegisterRule("duration_session2",array("number_session{@}=={@}2|3|4"));
+        $this->XINRegisterRule("duration_session2",array("number_session{@}=={@}NEVER_REQUIRED"));
         
         $this->addTextAreaElement("comments_session2","Comments(e.g., did DLP malfunction?)",
                                    array("number_session{@}=={@}2|3|4"));
        
         $this->addSelect("duration_session3","Recording Session 3", $this->duration);
-        $this->XINRegisterRule("duration_session3",array("number_session{@}=={@}3|4"));
+        $this->XINRegisterRule("duration_session3",array("number_session{@}=={@}NEVER_REQUIRED"));
         $this->addTextAreaElement("comments_session3","Comments(e.g., did DLP malfunction?)",
                                    array("number_session{@}=={@}3|4"));
 
        
         $this->addSelect("duration_session4","Recording Session 4", $this->duration);
-        $this->XINRegisterRule("duration_session4",array("number_session{@}=={@}4"));
+        $this->XINRegisterRule("duration_session4",array("number_session{@}=={@}NEVER_REQUIRED"));
         $this->addTextAreaElement("comments_session4","Comments(e.g., did DLP malfunction?)",
                                    array("number_session{@}=={@}4"));
        
@@ -198,6 +199,7 @@ class NDB_BVL_Instrument_LENA_DataTrackingForm extends NDB_BVL_Instrument
         foreach($this->scoreCols as $key) {
             $this->form->addElement('static',$key.'_Avg',$this->indent."Average $key");
         }
+        $this->form->addFormRule(array(&$this, 'LENA_DataTracking_Rules'));
     }
 
     function _page1() {
@@ -353,7 +355,7 @@ class NDB_BVL_Instrument_LENA_DataTrackingForm extends NDB_BVL_Instrument
          }
         }
         unset($values['candID'], $values['sessionID'], $values['commentID'], $values['test_name'], $values['page'], $values['fire_away'], $values['subtest'], $values['MAX_FILE_SIZE'], $values['recording_file'],$values['recording_file_its']);
-        $this->_save($values);
+      $this->_save($values);
 
 
 
@@ -483,6 +485,29 @@ class NDB_BVL_Instrument_LENA_DataTrackingForm extends NDB_BVL_Instrument
         $output=$args['candID']."/";
         return $output;
     }
+
+    function LENA_DataTracking_Rules($values) {
+        $errors = array();
+        if($values['family_participate'] == 'no' && empty($values['reasonsdecline']) ) {
+            $errors['reasonsdecline'] = 'Please enter reason of decline to participate';
+        }
+        if ($values['family_participate'] == 'yes' && empty($values['number_session'])) {
+            $errors['number_session'] = 'Please choose number of recordings';
+            
+        }
+        if ($values['family_participate'] == 'yes' && !empty($values['number_session'])) {
+           for($i=1; $i<=$values['number_session']; $i++) {
+               if (empty($values['duration_session'.$i])) {
+                   $errors['duration_session'.$i] = 'Select duration of recording';   
+               }   
+               if(empty($values['comments_session'.$i]) && empty($values['comments_session'.$i.'_status'])) {
+                   $errors['comments_session'.$i.'_group'] = 'Enter Comments for session';    
+               }
+           } 
+        }
+        return $errors;
+    }
+
 
 }
        
