@@ -42,9 +42,9 @@ foreach($candidate_list as $cand) {
     $query         = "SELECT CommentID FROM flag f JOIN pspq_score scoring 
                       ON (f.CommentID = scoring.CommentID)
                       JOIN session s on (s.ID = f.SessionID) WHERE s.CandID =:cand";
-    $score         = $db->pselectOne($query, array('cand' =>$candidate));
-    if (Utility::isErrorX($score)) {
-        print "Query has failed to select: ".$score->getMessage();
+    $scoreID       = $db->pselectOne($query, array('cand' =>$candidate));
+    if (Utility::isErrorX($scoreID)) {
+        print "Query has failed to select: ".$scoreID->getMessage();
         //        exit(2);
     }
 
@@ -82,22 +82,10 @@ function reversescores($values) {
 function assignscores($values) { 
   
   foreach ($values as $key=>$val) {
-      if ($val == '1_very_rarely') {
-          $values[$key] = 1;    
-      } else if ($val == '2_rarely') {
-          $values[$key] = 2;    
-      }else if ($val == '3_occasionally') {
-          $values[$key] = 3;
-      }else if ($val == '4_somewhat_often') {
-          $values[$key] = 4;
-      }else if ($val == '5_often') {
-          $values[$key] = 5;
-      }else if ($val == '6_very_often') {
-          $values[$key] = 6;
-      }
-
+      $num_val = explode("_", $val);
+      $values[$key] = $num_val[0];
   }
- return $values; 
+  return $values; 
 }
 
 function calculateSubscaleScores($values) {
