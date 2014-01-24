@@ -30,8 +30,10 @@ Specify Reason</br>(Required only for status Inactive/Incomplete)
     </td>
     <td>
     <div>
-    <select name="participant_suboptions" id="participant_suboptions">
-    </select>
+    <!--select name="participant_suboptions" id="participant_suboptions">
+    </select-->
+    {html_options id="participant_suboptions" options=$pstatus_suboptions name="participant_suboptions" selected=$pstat_sub}
+
     </div>
     </td>
     <tr>
