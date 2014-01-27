@@ -648,7 +648,7 @@ class NDB_BVL_Instrument_figs_year3 extends NDB_BVL_Instrument
         $dateOptions =  array(
         'language' => 'en',
         'format'   => 'YMd',
-        'minYear'  => $config->getSetting('startYear'),
+        'minYear'  => 1900,
         'maxYear'  => $config->getSetting('endYear'),
         'addEmptyOption' => true,
         'emptyOptionValue' => null
