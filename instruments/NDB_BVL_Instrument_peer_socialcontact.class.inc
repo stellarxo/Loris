@@ -10,7 +10,53 @@ class NDB_BVL_Instrument_peer_socialcontact extends NDB_BVL_Instrument
     var $respondent = array(''=>NULL,'mother'=>'Mother','father'=>'Father','other'=>'Other');
     var $num_playmates = array(''=>NULL, 1=>1,2=>2,3=>3,4=>4,5=>5);
     var $total_peer = 5;
-//    var 
+    var $gender = array(''=>NULL,'boy'=>'Boy','girl'=>'Girl','not_answered'=>'Not Answered');
+    var $q3_options = array(''=>NULL, 'cousins'=>'Cousins','neighbors'=>'Neighbors',
+                            'classmates'=>'Classmates','parent_friend_child'=>'Parents friends child',
+                            'other'=>'Other','not_answered'=>'Not Answered');
+    var $q4_options = array(''=>NULL,'mostly_your_home'=>'Mostly your home',
+                            'mostly_playmate_home'=>'Mostly playmates home','equally_both'=>'Equally both',
+                            'mostly_other'=>'Mostly other (such as playground)','not_answered'=>'Not Answered');
+    var $q5_options = array(''=>NULL,'walking_distance'=>'Walking distance',
+                            'short_drive'=>'Short drive(upto 15min)','long_drive'=>'Long drive(> 15min)',
+                            'not_answered'=>'Not Answered');
+    var $yesNo = array(''=>NULL,'yes'=>'Yes','no'=>'No','not_answered'=>'Not Answered');
+    var $q8_options = array(''=>NULL,'none'=>'None','dont_know'=>'Dont know','autism'=>'Autism',
+                            'other_developmental_delay'=>'Other developmental delay',
+                            'speech_language_delay'=>'Speech or language delay',
+                            'other'=>'Other','not_answered'=>'Not Answered');
+    var $q9_options = array(''=>NULL,'really_likes'=>'Really likes','likes'=>'Likes',
+                            'pretty_neutral'=>'Pretty neutral','just_tolerates'=>'Just tolerates',
+                            'not_answered'=>'Not Answered');
+    var $q10_options = array(''=>NULL,'really_likes'=>'Really likes','likes'=>'Likes',
+                            'pretty_neutral'=>'Pretty neutral','just_tolerates'=>'Just tolerates',
+                            'not_answered'=>'Not Answered');
+
+    var $q11_options = array(''=>NULL,'very_well'=>'Very well','okay'=>'Okay',
+                             'not_very_well'=>'Not very well','not_answered'=>'Not Answered');
+    var $q12_options = array(''=>NULL,'my_child'=>'My child','playmate'=>'Playmate','both'=>'Both',
+                             'adult'=>'Adult','not_answered'=>'Not Answered');
+    var $q13_options = array(''=>NULL,'positive'=>'Positive','neutral'=>'Neutral','negative'=>'Negative',
+                             'not_answered'=>'Not Answered');
+    var $q14_options = array(''=>NULL,'very_excited'=>'Very Excited','active'=>'Active','calm'=>'Calm',
+                             'not_answered'=>'Not Answered');
+    var $q15_options = array(''=>NULL,'frequently'=>'Frequently','occasionally'=>'Occasionally',
+                             'rarely'=>'Rarely','not_answered'=>'Not Answered');
+    var $q16_options = array(''=>NULL,'ends_play'=>'Ends play','major_disruption'=>'Major disruptions',
+                             'minor_disruption'=>'Minor disruption','no_disruption'=>'No disruption',
+                             'not_answered'=>'Not Answered');
+    var $q17_options = array(''=>NULL,'lot_of_interaction'=>'A lot of interaction',
+                             'stay_close_no_interaction'=>'Stay close but do not interact much',
+                             'dont_stay_close_or_interact'=>'Do not stay close or interact much', 
+                             'not_answered'=>'Not Answered');
+    var $q19_options = array(''=>NULL,'very_difficult'=>'Very difficult',
+                             'somewhat_difficult'=>'Somewhat difficult',
+                             'not_difficult'=>'Not difficult at all','not_answered'=>'Not Answered'); 
+    var $q20_options = array(''=>NULL,'very_stressful'=>'Very stressful',
+                             'somewhat_stressful'=>'Somewhat stressful',
+                             'not_stressful'=>'Not stressful at all','not_answered'=>'Not Answered');
+    var $q21_options = array(''=>NULL,'frequently'=>'Frequently','occasionally'=>'Occasionally',
+                             'little_or_none'=>'Little-or-none','not_answered'=>'Not Answered');
     //abstract function setup($commentID, $page);
     /**
      * sets up basic data, such as the HTML_Quickform object, and so on.
@@ -147,68 +193,81 @@ class NDB_BVL_Instrument_peer_socialcontact extends NDB_BVL_Instrument
         
     }
     function _page3(){
+        $i = 1;
          $this->form->addElement('header', 'instrument_title', "Peer Social Contact Questionnaire");
-         $this->form->addElement('header', 'instrument_title', "Playmate #1");
+         $this->form->addElement('static', 'peer_initials_1', "Playmate #1: ");
+         
+         $group[] = &$this->form->createElement("text",'age_yrs_playmate_'.$i,null,null);
+         $group[] =& $this->form->createElement("static", null,null,"yrs");
+         $group[] = &$this->form->createElement("text",'age_mos_playmate_'.$i,null,null);
+         $group[] =& $this->form->createElement("static", null,null,"mos");
+         $this->form->addGroup($group, "age_playmate".$i, "Age ", $this->_GUIDelimiter, false);
+         unset($group);
+         
+         $this->addSelect('gender_playmate_'.$i,'Gender ', $this->gender);
          $this->form->addElement('static', null, "<br /><br />");
+         $this->addNumericElement("q1_number_playtimes_playmate".$i, "1. How many times did they play together in the last three months in your home?");
+         $this->addNumericElement("q2_avg_playtime_playmate".$i,"2. How long are they together in an average play time?");         
+         $this->addSelect('q3_related_playmate'.$i,"3. How do they know each other?", $this->q3_options);
+         $this->addTextElement('q3_related_other_playmate'.$i,$this->indent."If Other please specify",
+                               array("q3_related_playmate.$i{@}=={@}other"),"Please specify relationship");
+         $this->addSelect('q4_playarea_playmate'.$i,"4. Where do they usually play?", $this->q4_options);
+         $this->addTextElement('q4_playarea_other_playmate'.$i,$this->indent."If Other please specify",
+                   array("q4_playarea_other_playmate.$i{@}=={@}mostly_other"),"Please specify play area");
          
-         $this->addSelect('q1_engage_together', "1. How many days per week do they usually engage in any kind of one-on-one 
-            activity together <BR>(for example playing, chores, sharing a snack, watching television)?", $this->num_days_week);
-         $this->addSelect('q2_play_together', "2. How many days per week do they usually play together?" , $this->num_days_week);
-         $this->addNumericElement("q3_different_playtimes", "3. On days when they play, how many different times do they usually play?");
-         $this->addNumericElement("q4_avg_playtime", "4. How long are they together in an average play time?");
-         $rating1 = array (''=>NULL,'often'=>'Often','ocassionally'=>'Ocasionally','never'=>'Never','not_answered'=>'Not Answered');
-         
-         $this->addSelect('q5_rely_olderchild',"5. To what extent do you rely on the older child to help care for the younger
-            sibling such as help getting dressed,<BR> help during meals, or help getting ready for school?", $rating1);
-         $this->addSelect('q6_rely_youngerchild', "6. To what extent do you rely on the younger sibling to help care for the older
-            child such as help getting dressed,<BR> help during meals, or help getting ready for school?", $rating1);
+         $this->addSelect('q5_proximity_playmate'.$i,"5. How close does this playmate live to your house?", 
+                          $this->q5_options);
+         $this->addSelect('q6_sameschool_playmate'.$i,"6. Is this playmate in your child's school now?", 
+                          $this->yesNo);
+         $this->addSelect('q7_samechildcare_playmate'.$i,"7. Is this playmate in your child's childcare now?",
+                                   $this->yesNo);
+         $this->addSelect('q8_specialneeds_playmate'.$i,"8. What special needs does this playmate have?",
+                          $this->q8_options);
+         $this->addSelect('q9_yourchild_like_playmate'.$i,"9. How much does your child like this playmate?",
+                          $this->q9_options);
+         $this->addSelect('q10_like_yourchild_playmate'.$i,"10. How much does this playmate like your child?",
+                          $this->q9_options);
+         $this->addSelect('q11_getalong_playmate'.$i,"11. How well would you say they get along?",
+                          $this->q11_options);
+         $this->addSelect('q12_leading_play_playmate'.$i,"12. Who usually is leading or in control of the play?",
+                          $this->q12_options);
+         $this->addSelect('q13_typical_playtone_playmate'.$i,"13. What is the typical tone of the play?",
+                          $this->q13_options);
+         $this->addSelect('q14_typical_excitement_playmate'.$i,"14. What is the typical level of excitement?",
+                          $this->q14_options);
+         $this->addSelect('q15_num_conflicts_playmate'.$i,"15. How often do they have conflicts during play?",
+                          $this->q15_options);
+         $this->addSelect('q16_disruptive_playmate'.$i,"16. How disruptive are their conflicts?",
+                          $this->q16_options);
+         $this->addSelect('q17_how_involved_playmate'.$i,"17. In a typical play session, how closely involved are they with each other during play?", $this->q17_options);
+         $this->form->addElement('static',null,"18. What percentage of time were the play dates arranged by:");
+           $this->addNumericElement("q18_arrangeplay_you_playmate".$i,$this->indent."You (%) "); 
+           $this->addNumericElement("q18_arrangeplay_yourchild_playmate".$i,$this->indent."Your child (%)"); 
+           $this->addNumericElement("q18_arrangeplay_other_playmate".$i,$this->indent."Other family or friends (%) "); 
+         $this->addSelect('q19_arrange_contacts_playmate'.$i,"19. How difficult was it to arrange those contacts?", $this->q19_options);
+         $this->addSelect('q20_stress_monitorplay_playmate'.$i,"20. How stressful is it usually for you to monitor play sessions?", $this->q20_options);
+         $this->form->addElement('static',null,"21. How do you usually monitor the play at home?");
+         $questions = array('q21_facililate_getalong_playmate'.$i=>'a. Directly facilitate by helping them get along',
+                 'q21_participate_activity_playmate'.$i=>'b. Participate in the activity with children',
+                 'q21_maintain_presence_playmate'.$i=>'c. Maintain presence (in childs view)',
+                 'q21_outofview_listen_playmate'.$i=>'d. Out of view but listen to their ongoing activity',
+                 'q21_outofview_notlisten_playmate'.$i=>'e. Out of view and can only hear outburts or cries');
 
-         $rating2 = array(''=>NULL,'very_well'=>'Very Well','okay'=>'Okay','not_very_well'=>'Not very well','not_answered'=>'Not Answered');
-
-         $this->addSelect('q7_getalong',"7. Overall, how well would you say they get along?", $rating2);
-         $this->addSelect('q8_playtogeher',"8. How well would you say they play together?", $rating2);
-         $family = array(''=>NULL,'older_child'=>'Older Child','sibling'=>'Sibling','both'=>'Both','adult'=>'Adult','not_answered'=>'Not Answered');
-         $this->addSelect('q9_controlplay',"9. Who usually is leading or in control of their play?", $family);
-         $this->addSelect('q10_toneplay',"10. What is the typical tone of their play?", array(''=>NULL,'positive'=>'Positive',
-                           'neutral'=>'Neutral','negative'=>'Negative','not_answered'=>'Not Answered'));
-         $this->addSelect('q11_excitementlevel',"11. What is the typical level of excitement?", array(''=>NULL,'very_excited'=>'Very Excited',
-                          'active'=>'Active','calm'=>'Calm','not_answered'=>'Not Answered'));
-         $this->addSelect('q12_conflicts_duringplay',"12. How often do they have conflicts during play?", array(''=>NULL,'often'=>'Often',
-                          'occasionally'=>'Occasionally','rarely'=>'Rarely','not_answered'=>'Not Answered'));
-         $this->addSelect('q13_disruptive_conflicts',"13. How disruptive are their conflicts?", array(''=>NULL,'ends_play'=>'Ends play',
-                          'major_disruption'=>'Major Disruption','minor_disruption'=>'Minor Disruption','no_disruption'=>'No disruption',
-                          'not_answered'=>'Not Answered'));
-         $this->addSelect('q14_involed_inplay',"14. In a typical play session, how closely involved are they with each other during play?",
-                          array(''=>NULL,'lot_of_interaction'=>'A lot of interaction','stay_close_no_interaction'=>'Stay close but
-                          do not interact much','dont_stay_close_or_interact'=>'Do not stay close or interact much',
-                          'not_answered'=>'Not Answered'));
-         $this->addSelect('q15_stressful_playsession','15. How stressful is it usually for you to monitor play sessions?',array(''=>NULL,
-                          'very_stressful'=>'Very Stressful','somewhat_stressful'=>'Somewhat Stressful','not_stressful'=>'Not Stressful',
-                          'not_answered'=>'Not Answered'));
-         $this->form->addElement('static',null,"16. How do you usually monitor the play at home?");
-         $questions = array('q16_help_getalong'=>'a. Directly facilitate by helping them get along?',
-                            'q16_participate'=>'b. Participate in the activity with the children',
-                            'q16_maintain_presence'=>'c. Maintain presence (in childrens view)',
-                            'q16_outofview_listen'=>'d. Out of view but listen to their ongoing activity',
-                            'q16_outofview_cry'=>'e. Out of view and can only hear outbursts or cries');
-                    
-         $rating3 = array(''=>NULL,'frequently'=>'Frequently','occasionally'=>'Occasionally','little_none'=>'Little-or-none',
-                          'not_answered'=>'Not Answered');
          foreach($questions as $qstn=>$desc) {
-             $this->addSelect($qstn,$this->indent.$desc, $rating3);
-         }
-         $this->form->addElement('static',null,"17. How much do the children need your help during play in the following areas?");
-         $questions = array('q17_manage_emotions'=>'a. Managing Emotions',
-                            'q17_understand_rules'=>'b. Understanding social rules (such as taking turns)',
-                            'q17_understand_howtoplay'=>'c. Understanding how to play games or activities',
-                            'q17_startplay'=>'d. Getting the play session started',
-                            'q17_remain_inplay'=>'e. Remaining involved in the play',
-                            'q17_manage_conflicts'=>'f. Managing conflicts');
-        
-        foreach($questions as $qstn=>$desc) {
-             $this->addSelect($qstn,$this->indent.$desc, $rating3);
+             $this->addSelect($qstn,$this->indent.$desc, $this->q21_options);
          }
 
+         $this->form->addElement('static',null,"22. How much does your child need your help during play with this playmate in the following areas?");
+         $questions = array('q22_manage_emotions_playmate'.$i=>'a. Managing Emotions',
+                 'q22_understand_rules_playmate'.$i=>'b. Understanding social rules (such as taking turns and sharing)',
+                 'q22_understand_howtoplay_playmate'.$i=>'c. Understanding how to play activities',
+                 'q22_startplay_playmate'.$i=>'d. Getting the play session started',
+                 'q22_remain_inplay_playmate'.$i=>'e. Remaining involved in the play',
+                 'q22_manage_conflicts_playmate'.$i=>'f. Managing conflicts');
+
+         foreach($questions as $qstn=>$desc) {
+             $this->addSelect($qstn,$this->indent.$desc, $this->q21_options);
+         }
 
     }
     function Peer_Rules ($values) {
