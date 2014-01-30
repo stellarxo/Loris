@@ -62,7 +62,8 @@ foreach($candidate_list as $cand) {
     }
     $pspq1_data = assignscores($pspq1_data);
     $pspq1_data = reversescores($pspq1_data);
-    $scores =     calculateSubscaleScores($pspq1_data);
+    $scores =     calculateSubscaleScores($pspq1_data, "p1");
+    print_r($scores);
 }
 function reversescores($values) {
     $reverse_items = array(1,3,7,9,12,15,16,19,21,23,25,28,30,34,36);
@@ -88,7 +89,7 @@ function assignscores($values) {
   return $values; 
 }
 
-function calculateSubscaleScores($values) {
+function calculateSubscaleScores($values,$parent) {
  $scores = array();
  $subscales = array('aloof'=>array(1,5,9,12,16,18,23,25,27,28,31,36),
                     'rigid'=>array(2,4,7,10,11,14,17,20,21,29,32,34),
@@ -96,39 +97,48 @@ function calculateSubscaleScores($values) {
  $aloof = array(1,5,9,12,16,18,23,25,27,28,31,36);
  $pragmatic_language = array(2,4,7,10,11,14,17,20,21,29,32,34);
  $rigid = array(3,6,8,13,15,19,22,24,26,30,33,35);
-
  $participant = array('respondent'=>'q','informant'=>'qi');
  foreach($participant as $key=>$val) {
+     
+     $total_count = 0;
      foreach($subscales as $scale=>$qsnts) {
-         $scores[$key."_".$scale] = 0;
+         $scores[$parent."_".$key."_".$scale] = 0;
          foreach($qsnts as $qnum) {
              $field = $val.$qnum."_";
              foreach ($values as $k=>$v) {
                  if(strpos($k, $field) !== FALSE) {
                      if (empty($v)) {
-                         $scores[$key."_".$scale] = 'N/A';
+                         $scores[$parent."_".$key."_".$scale] = 'N/A';
                          break;
                      } else {
                          //                    print $k."####".$v."\n";
-                         $scores[$key."_".$scale] += $v;    
+                         $scores[$parent."_".$key."_".$scale] += $v;   
+                         $scores[$parent."_".$key."_total"] += $v;
+                         $total_count++;
                      } 
                  }
              }
          }
-         if($scores[$key."_".$scale] != 'N/A') {
-             $scores[$key."_".$scale] = $scores[$key."_".$scale]/sizeof($qsnts);
+         if($scores[$parent."_".$key."_".$scale] != 'N/A') {
+             $scores[$parent."_".$key."_".$scale] = round($scores[$parent."_".$key."_".$scale]/sizeof($qsnts), 2);
          }
      }
+     $scores[$parent."_".$key."_total"] = round($scores[$parent."_".$key."_total"]/$total_count,2);
  }
-// calculating best estimate scores
+ // calculating best estimate scores
  foreach($subscales as $scale=>$qstns) {
-     $scores['best_estimate_'.$scale] = 0;     
+     $scores[$parent.'_best_estimate_'.$scale] = 0;     
      foreach($participant as $key=>$val) {
-          $scores['best_estimate_'.$scale] += $scores[$key."_".$scale];
-         
+         $scores[$parent.'_best_estimate_'.$scale] += $scores[$parent."_".$key."_".$scale];
      }
-     $scores['best_estimate_'.$scale] = $scores['best_estimate_'.$scale]/sizeof($participant);
+     $scores[$parent.'_best_estimate_'.$scale] = round($scores[$parent.'_best_estimate_'.$scale]/sizeof($participant), 2);
  }
+ foreach($participant as $key=>$val) {
+     $scores[$parent.'_best_estimate_total'] += $scores[$parent."_".$key."_total"];
+
+ }
+
+ $scores[$parent.'_best_estimate_total'] = round($scores[$parent.'_best_estimate_total']/sizeof($participant),2);
  return $scores;
 }
 ?>
