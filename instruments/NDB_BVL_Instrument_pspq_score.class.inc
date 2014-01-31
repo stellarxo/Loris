@@ -69,6 +69,7 @@ class NDB_BVL_Instrument_pspq_score extends NDB_BVL_Instrument
         // display test name
         $this->form->addElement('header', 'instrument_title', "PSPQ : Personality Styles and Preferences Questionnaire Scores");
         $this->form->addElement('static', null, "<br /><br />");
+        $this->form->addElement('label',null,'PSPQ Score for Parent 1');
 
     }
 
