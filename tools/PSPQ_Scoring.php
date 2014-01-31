@@ -56,14 +56,30 @@ foreach($candidate_list as $cand) {
     }
     $query         = "SELECT * from pspq_2 WHERE CommentID = :CommentID";
     $WhereCriteria = array('CommentID'=>$pspq_2);
-    $papq2_data        = $db->pselectRow($query, $WhereCriteria);
+    $pspq2_data        = $db->pselectRow($query, $WhereCriteria);
+    
     if (Utility::isErrorX($pspq2_data)) {
             print "Query has failed to select: ".$pspq2_data->getMessage();
     }
-    $pspq1_data = assignscores($pspq1_data);
-    $pspq1_data = reversescores($pspq1_data);
-    $scores =     calculateSubscaleScores($pspq1_data, "p1");
-    print_r($scores);
+    if($pspq1_data['Data_entry_completion_status'] == 'Complete' && 
+       $pspq2_data['Data_entry_completion_status'] == 'Complete') {
+      
+        $parents = array('p1'=>$pspq1_data, 'p2'=>$pspq2_data);
+        foreach($parents as $key=>$val) {
+            $data = array();
+            $data = assignscores($val);
+            $data = reversescores($data);
+            $scores = calculateSubscaleScores($data, $key);
+            $scores[$key."_age"] = $val['respondent_age'];
+            $scores[$key."_relation_candidate"] = $val['respondent'];
+            // $scores[$key."_respondent_gender"] = $val['respondent_gender'];
+            $scores[$key."_relation_respodent"] = $val['informant'];
+        }
+    }
+   // $pspq1_data = assignscores($pspq1_data);
+   // $pspq1_data = reversescores($pspq1_data);
+   // $scores =     calculateSubscaleScores($pspq1_data, "p1");
+    
 }
 function reversescores($values) {
     $reverse_items = array(1,3,7,9,12,15,16,19,21,23,25,28,30,34,36);
@@ -72,7 +88,7 @@ function reversescores($values) {
        foreach($reverse_items as $qnum) {
            $field = $val.$qnum."_";
            foreach($values as $k=>$v) {
-               if(strpos($k, $field) !== FALSE) {
+               if(strpos($k, $field) !== FALSE && !empty($v)) {
                   $values[$k] = abs($v-6) + 1;
                }    
            }
@@ -86,6 +102,7 @@ function assignscores($values) {
       $num_val = explode("_", $val);
       $values[$key] = $num_val[0];
   }
+  print_r($values);
   return $values; 
 }
 
@@ -103,12 +120,14 @@ function calculateSubscaleScores($values,$parent) {
      $total_count = 0;
      foreach($subscales as $scale=>$qsnts) {
          $scores[$parent."_".$key."_".$scale] = 0;
+          $scores[$parent."_".$key."_total"] = 0;
          foreach($qsnts as $qnum) {
              $field = $val.$qnum."_";
              foreach ($values as $k=>$v) {
                  if(strpos($k, $field) !== FALSE) {
                      if (empty($v)) {
                          $scores[$parent."_".$key."_".$scale] = 'N/A';
+                         $scores[$parent."_".$key."_total"] = 'N/A';
                          break;
                      } else {
                          //                    print $k."####".$v."\n";
@@ -127,12 +146,13 @@ function calculateSubscaleScores($values,$parent) {
  }
  // calculating best estimate scores
  foreach($subscales as $scale=>$qstns) {
-     $scores[$parent.'_best_estimate_'.$scale] = 0;     
+     $scores[$parent.'_best_estimate_'.$scale] = 'N/A';     
      foreach($participant as $key=>$val) {
          $scores[$parent.'_best_estimate_'.$scale] += $scores[$parent."_".$key."_".$scale];
      }
      $scores[$parent.'_best_estimate_'.$scale] = round($scores[$parent.'_best_estimate_'.$scale]/sizeof($participant), 2);
  }
+ $scores[$parent.'_best_estimate_total'] = 'N/A';
  foreach($participant as $key=>$val) {
      $scores[$parent.'_best_estimate_total'] += $scores[$parent."_".$key."_total"];
 
