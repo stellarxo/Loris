@@ -83,14 +83,23 @@ class NDB_BVL_Instrument_pspq_2 extends NDB_BVL_Instrument
         $this->form->addElement('header', 'instrument_title', "Self Rating");
 
         $this->form->addElement('static', null, "<br /><br />");
-        $this->addBasicDate("datecompleted_respondent","Date:", $this->dateOptions);
+        $this->addBasicDate("datecompleted_respondent","Date ", $this->dateOptions);
 
-        $this->addNumericElement('respondent_age','Your Age:<BR>(Please indicate your age in years)');
-
+       // $this->addNumericElement('respondent_age','Your Age <BR>(Please indicate your age in years)');
+        $field = 'respondent_age';$label = 'Your Age <BR>(Please indicate your age in years)';
+        $group [] = $this->createText($field, $label);
+        $this->addGroup($group, $field . "_group", $label, null, false);
+        unset($group);
+        $this->addGroupRule($field . "_group", array(array(array("Value must be numeric.", 'numeric'))));
+        
         $this->addSelect('respondent',"Relationship to child", $this->respondent);
-        $this->addTextElement('respondent_other',$this->indent."If Other please specify",
-                              array("respondent{@}=={@}other"),"Please specify relationship");
-      
+        $group [] = $this->createText('respondent_other',$this->indent."If Other please specify");
+        $this->addGroup($group,"respondent_other_group",$this->indent."If Other please specify",null,false);
+        unset($group);
+        $rules_array = array("respondent{@}=={@}other");
+        $this->XINRegisterRule('respondent_other', $rules_array, "Please specify relationship", 'respondent_other_group');
+
+
         $this->form->addElement('static', null, "<br /><br />");
         $questions = array("q1_like_being_otherpeople" => "1. I like being around other people",
                            "q2_hard_wordsout_smoothly" =>"2. I find it hard to get my words out smoothly",
