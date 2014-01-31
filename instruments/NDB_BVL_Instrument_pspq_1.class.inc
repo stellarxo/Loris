@@ -183,13 +183,25 @@ class NDB_BVL_Instrument_pspq_1 extends NDB_BVL_Instrument
         $this->form->addElement('header', 'instrument_title', "Observer Rating");
 
         $this->form->addElement('static', null, "<br /><br />");
-        $this->addBasicDate("datecompleted_informant","Date:", $this->dateOptions);
+        $this->addBasicDate("datecompleted_informant","Date ", $this->dateOptions);
 
-        $this->addNumericElement('informant_age','Your Age:<BR>(Please indicate your age in years)');
+        //$this->addNumericElement('informant_age','Your Age:<BR>(Please indicate your age in years)');
+        $field = 'informant_age';$label = 'Your Age <BR>(Please indicate your age in years)';
+        $group [] = $this->createText($field, $label);
+        $this->addGroup($group, $field . "_group", $label, null, false);
+        unset($group);
+        $this->addGroupRule($field . "_group", array(array(array("Value must be numeric.", 'numeric'))));
 
         $this->addSelect('informant',"Relationship to the other biological parent of the child", $this->informant);
-        $this->addTextElement('informant_other',$this->indent."If Other please specify",
+        /*$this->addTextElement('informant_other',$this->indent."If Other please specify",
                               array("informant{@}=={@}other"),"Please specify relationship");
+        */
+        $group [] = $this->createText('informant_other',$this->indent."If Other please specify");
+        $this->addGroup($group,"informant_other_group",$this->indent."If Other please specify",null,false);
+        unset($group);
+        $rules_array = array("informant{@}=={@}other");
+        $this->XINRegisterRule('informant_other', $rules_array, "Please specify relationship", 'informant_other_group');
+
 
         $this->form->addElement('static', null, "<br /><br />");
         $questions = array("qi1_like_being_otherpeople" => "1. He/She likes being around other people",
