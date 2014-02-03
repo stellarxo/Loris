@@ -57,19 +57,19 @@ class NDB_BVL_Instrument_mri_parameter_form extends NDB_BVL_Instrument
         }
         
         for($i=0; $i < 25; $i++){
-            if(isset($record["vector{$i})_x"])) {
+            if(isset($record["vector{$i}_x"])) {
                 $vector_x = number_format($record["vector{$i}_x"], 5);
             } else {
                 $vector_x = 'unknown';
             }
 
-            if(isset($record["vector{$i})_y"])) {
+            if(isset($record["vector{$i}_y"])) {
                 $vector_y = number_format($record["vector{$i}_y"], 5);
             } else {
                 $vector_y = 'unknown';
             }
 
-            if(isset($record["vector{$i})_z"])) {
+            if(isset($record["vector{$i}_z"])) {
                 $vector_z = number_format($record["vector{$i}_z"], 5);
             } else {
                 $vector_z = 'unknown';
