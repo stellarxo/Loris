@@ -76,9 +76,7 @@ foreach($candidate_list as $cand) {
             $scores[$key."_relation_respodent"] = $val['informant'];
         }
     }
-   // $pspq1_data = assignscores($pspq1_data);
-   // $pspq1_data = reversescores($pspq1_data);
-   // $scores =     calculateSubscaleScores($pspq1_data, "p1");
+    print_r($scores);
     
 }
 function reversescores($values) {
@@ -102,7 +100,6 @@ function assignscores($values) {
       $num_val = explode("_", $val);
       $values[$key] = $num_val[0];
   }
-  print_r($values);
   return $values; 
 }
 
