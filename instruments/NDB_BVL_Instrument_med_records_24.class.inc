@@ -13,8 +13,8 @@ class NDB_BVL_Instrument_med_records_24 extends NDB_BVL_Instrument_med_records {
 	*/
 	
 	//instrument specific variables
-	var $developmental_concerns = array ('language' => "language", 'social' => "social", 'motor' => "motor", 'other' => "other",
-                                         'not_answered'=>'Not Answered');
+	var $developmental_concerns = array ('language' => "language", 'social' => "social", 'motor' => "motor", 
+                                         'other' => "other",'not_answered'=>'Not Answered');
 
 
 
