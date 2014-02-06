@@ -67,9 +67,62 @@ class NDB_BVL_Instrument_pspq_score extends NDB_BVL_Instrument
      */
     function _main(){
         // display test name
-        $this->form->addElement('header', 'instrument_title', "PSPQ : Personality Styles and Preferences Questionnaire Scores");
+        $this->form->addElement('header', 'instrument_title', "PSPQ : Scores");
         $this->form->addElement('static', null, "<br /><br />");
-        $this->form->addElement('label',null,'PSPQ Score for Parent 1');
+        $subscales = array('aloof'=>'ALOOF','pragmatic_language'=>'PRS','rigid'=>'RIGID','total'=>'TOTAL'); 
+        for($i=1; $i<=2;$i++) {
+            $field = 'p'.$i;
+            $this->form->addElement('header',null,'PSPQ Score for Parent '.$i);
+            $this->form->addElement('static', $field."_relation_candidate", "Relationship to Candidate : ");
+            $this->form->addElement('static', $field."_age", "Age : ");
+            $this->form->addElement('static', $field."_gender", "Gender : ");
+            $this->form->addElement('static', $field."_relation_respondent", "Informant : ");
+            $this->form->addElement('static', $field."_informant_gender", "Informant Gender: ");
+
+            $this->form->addElement('static', null, "<br /><br />");
+            foreach($subscales as $subscale=>$label) {
+                $this->addHeader($label);
+                $this->form->addElement('static', $field."_respondent_".$subscale, "Self : ");
+                $this->form->addElement('static', $field."_informant_".$subscale, "Informant : ");
+                $this->form->addElement('static', $field."_best_estimate_".$subscale, "Best Estimate : ");
+                $this->form->addElement('static', null, "<br /><br />");
+
+            }
+        }
+        $this->form->addElement('header', 'instrument_title', "Cutoff Scores");
+
+        $cutoff_vals = array('f_s_aloof'=>'3.46','f_s_prs'=>'2.93','f_s_rigid'=>'3.73','f_i_aloof'=>'3.65','f_i_prs'=>'3.22',
+                             'f_i_rigid'=>'4.32','f_be_aloof'=>'3.39','f_be_prs'=>'2.89','f_be_rigid'=>'3.89','m_s_aloof'=>'4.13',
+                             'm_s_prs'=>'3.25','m_s_rigid'=>'3.94','m_i_aloof'=>'4.19','m_i_prs'=>'3.31','m_i_rigid'=>'4.20',
+                             'm_be_aloof'=>'4.02','m_be_prs'=>'3.10','m_be_rigid'=>'3.89');
+        $gender = array('m'=>'MALE Subject','f'=>'FEMALE Subject');
+        $subscales_cutoff = array('aloof'=>'ALOOF','prs'=>'PRS','rigid'=>'RIGID');
+        $scoring = array('s'=>'Subject','i'=>'Informant','be'=>'Best Estimate');
+        foreach($gender as $key=>$label) {
+            $this->addHeader($label);
+            // $group[] = $this->form->createElement("static",null,null,"Subscales -");
+            $group[] = $this->form->createElement("static",null,null,"Aloof");
+            $group[] = $this->form->createElement("static",null,null,"PRS");
+                                   $group[] = $this->form->createElement("static",null,null,null);
+
+            $group[] = $this->form->createElement("static",null,null,"Rigid");
+            $this->form->addGroup($group,$key.'_header',null, $this->_GUIDelimiter,false);
+            unset($group);
+            foreach($scoring as $field=>$value){
+                foreach($subscales_cutoff as $subscale=>$subscale_label) {
+                    $display_field = $key."_".$field."_".$subscale;
+                    $group[] = $this->form->createElement("static",null,null,$cutoff_vals[$display_field]);
+                    if($subscale =='prs') {
+                       $group[] = $this->form->createElement("static",null,null,null);
+                    }
+                }
+                $this->form->addGroup($group, $key.$field."_header", $value, $this->_GUIDelimiter,false);
+                unset($group);
+            }
+
+        }
+
+
 
     }
 

@@ -39,7 +39,7 @@ foreach($candidate_list as $cand) {
         print "Query has failed to select: ".$pspq_2->getMessage();
         //        exit(2);
     }
-    $query         = "SELECT CommentID FROM flag f JOIN pspq_score scoring 
+    $query         = "SELECT f.CommentID FROM flag f JOIN pspq_score scoring 
                       ON (f.CommentID = scoring.CommentID)
                       JOIN session s on (s.ID = f.SessionID) WHERE s.CandID =:cand";
     $scoreID       = $db->pselectOne($query, array('cand' =>$candidate));
@@ -72,11 +72,17 @@ foreach($candidate_list as $cand) {
             $scores = calculateSubscaleScores($data, $key);
             $scores[$key."_age"] = $val['respondent_age'];
             $scores[$key."_relation_candidate"] = $val['respondent'];
-            // $scores[$key."_respondent_gender"] = $val['respondent_gender'];
-            $scores[$key."_relation_respodent"] = $val['informant'];
+            $scores[$key."_gender"] = $val['respondent_gender'];
+            $scores[$key."_relation_respondent"] = $val['informant'];
+            $scores[$key."_informant_gender"] = $val['informant_gender'];
+            //save scores
+            $result = $db->update('pspq_score', $scores, array('CommentID'=>$scoreID));
+            if ($db->isError($result)) {
+                print "Could not save total score: ". $result->getMessage();
+            }
+
         }
     }
-    print_r($scores);
     
 }
 function reversescores($values) {
