@@ -1,0 +1,4 @@
+ALTER TABLE med_records_24 ADD COLUMN developmental_concerns_specify2 VARCHAR(255);
+UPDATE med_records_24 SET developmental_concerns_specify2 = developmental_concerns_specify;
+ALTER TABLE med_records_24 DROP COLUMN developmental_concerns_specify;
+ALTER TABLE med_records_24 CHANGE developmental_concerns_specify2 developmental_concerns_specify VARCHAR(255);
