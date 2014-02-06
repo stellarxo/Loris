@@ -535,7 +535,7 @@ class NDB_BVL_Instrument_figs_year3 extends NDB_BVL_Instrument
         $this->form->addRule(array('Informant_other', 'Informant'), 'Other is required if available', 'requiredIf', array('operator'=>'==', 'value'=>'Other'));
         $this->setRequired('Informant_other');
         $this->form->addElement('static',null,'<br>');
-        $this->form->addElement("textarea", "other_comments", "Comments about Validity:", array('cols'=>25, 'rows'=>4));
+        $this->form->addElement("textarea", "other_comments", "Comments :", array('cols'=>25, 'rows'=>4));
         $this->XINRegisterRule("other_comments", array("{other_comments}{@}=={@}NEVER_REQUIRED"));
 
 
