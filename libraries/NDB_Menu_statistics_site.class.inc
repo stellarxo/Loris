@@ -148,7 +148,6 @@ class NDB_Menu_statistics_site extends NDB_Menu
         $this->tpl_data["CenterID"] = $id;
         $this->tpl_data["ProjectID"] = $projectID;
         $this->tpl_data["ProjectName"] = $projectName;
-        print_r($this->tpl_data);
         sort($visits);
         $this->tpl_data['AllVisits'] = $visits;
         $this->tpl_data['NumVisitLabels'] = count($visits);
