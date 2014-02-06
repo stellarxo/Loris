@@ -152,7 +152,6 @@ class NDB_Menu_statistics_site extends NDB_Menu
         $this->tpl_data['AllVisits'] = $visits;
         $this->tpl_data['NumVisitLabels'] = count($visits);
 
-
     } // End function
 } // End class
     ?>
