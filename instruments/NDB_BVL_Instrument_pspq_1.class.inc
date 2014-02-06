@@ -99,7 +99,7 @@ class NDB_BVL_Instrument_pspq_1 extends NDB_BVL_Instrument
         $rules_array = array("respondent{@}=={@}other");
         $this->XINRegisterRule('respondent_other', $rules_array, "Please specify relationship", 'respondent_other_group');
         
-       // $this->addSelect('respondent_gender',"Gender ", $this->gender); 
+        $this->addSelect('respondent_gender',"Gender ", $this->gender); 
         $this->form->addElement('static', null, "<br /><br />");
         $questions = array("q1_like_being_otherpeople" => "1. I like being around other people",
                            "q2_hard_wordsout_smoothly" =>"2. I find it hard to get my words out smoothly",
@@ -202,6 +202,7 @@ class NDB_BVL_Instrument_pspq_1 extends NDB_BVL_Instrument
         $rules_array = array("informant{@}=={@}other");
         $this->XINRegisterRule('informant_other', $rules_array, "Please specify relationship", 'informant_other_group');
 
+        $this->addSelect('informant_gender',"Gender ", $this->gender); 
 
         $this->form->addElement('static', null, "<br /><br />");
         $questions = array("qi1_like_being_otherpeople" => "1. He/She likes being around other people",
