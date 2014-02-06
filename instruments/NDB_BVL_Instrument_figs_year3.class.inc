@@ -377,7 +377,7 @@ class NDB_BVL_Instrument_figs_year3 extends NDB_BVL_Instrument
             $setArray = $this->_addSetArrayElement('Informant_other', $setArray, $values);
             $setArray = $this->_addSetArrayElement('Candidate_Age', $setArray, $values);
             $setArray = $this->_addSetArrayElement('Window_Difference', $setArray, $values);
-
+            $setArray = $this->_addSetArrayElement('other_comments', $setArray, $values);
             $whereArray = array('CommentID'=>$this->getCommentID());
             $ok = $db->update('figs_year3', $setArray, $whereArray);
             if($this->isError($ok)) die($db->getMessage());
@@ -534,6 +534,10 @@ class NDB_BVL_Instrument_figs_year3 extends NDB_BVL_Instrument
         $this->form->addRule("Informant", "Required", 'required', null);
         $this->form->addRule(array('Informant_other', 'Informant'), 'Other is required if available', 'requiredIf', array('operator'=>'==', 'value'=>'Other'));
         $this->setRequired('Informant_other');
+        $this->form->addElement('static',null,'<br>');
+        $this->form->addElement("textarea", "other_comments", "Comments about Validity:", array('cols'=>25, 'rows'=>4));
+        $this->XINRegisterRule("other_comments", array("{other_comments}{@}=={@}NEVER_REQUIRED"));
+
 
     } // End function
     
