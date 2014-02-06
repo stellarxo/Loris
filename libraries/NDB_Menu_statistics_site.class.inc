@@ -104,7 +104,6 @@ class NDB_Menu_statistics_site extends NDB_Menu
             $ExtraProject_Criteria = ' AND (c.ProjectID IS NULL OR c.ProjectID=' . $_REQUEST['projectID'] . ')';
             $projectName = $projects[$_REQUEST['projectID']];
             $projectID = $_REQUEST['projectID'];
- 
 
         } else {
             $ExtraProject_Criteria = '';
@@ -147,7 +146,9 @@ class NDB_Menu_statistics_site extends NDB_Menu
         $this->tpl_data["data"] = $data;
         $this->tpl_data["SiteName"] = $name;
         $this->tpl_data["CenterID"] = $id;
+        $this->tpl_data["ProjectID"] = $projectID;
         $this->tpl_data["ProjectName"] = $projectName;
+        print_r($this->tpl_data);
         sort($visits);
         $this->tpl_data['AllVisits'] = $visits;
         $this->tpl_data['NumVisitLabels'] = count($visits);
