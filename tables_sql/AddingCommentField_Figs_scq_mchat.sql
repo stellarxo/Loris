@@ -1,0 +1,3 @@
+ALTER TABLE figs_year3 ADD COLUMN other_comments VARCHAR (255) DEFAULT NULL;
+ALTER TABLE scq_proband ADD COLUMN other_comments VARCHAR (255) DEFAULT NULL;
+ALTER TABLE m_chat_proband ADD COLUMN other_comments VARCHAR (255) DEFAULT NULL;

@@ -81,6 +81,7 @@ class NDB_BVL_Instrument_m_chat extends NDB_BVL_Instrument
 		foreach ($questionArray as $field=>$label) {
 			$this->form->addElement("select", $field, $label, array(null=>"", "yes"=>"Yes", "no"=>"No", "not_answered"=>"Not Answered"));
 		}
+        $this->_addAdditionalComments();        
 	}
 
 	function score() {
@@ -171,6 +172,8 @@ class NDB_BVL_Instrument_m_chat extends NDB_BVL_Instrument
 			return PEAR::raiseError("Could not save total score: ".$result->getMessage());
 		}
 	}
-
+    function _addAdditionalComments() {
+    }
 }
+
 ?>

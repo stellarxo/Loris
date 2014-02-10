@@ -145,6 +145,8 @@ class NDB_BVL_Instrument_scq extends NDB_BVL_Instrument
 		foreach($questionArray as $field=>$label) {
 			$this->form->addElement("select", $field, $this->indent . $label, $this->yesNo);
 		}
+        $this->_addAdditionalComments(); 
+
 	}
 
 	function score() {
@@ -211,6 +213,7 @@ class NDB_BVL_Instrument_scq extends NDB_BVL_Instrument
 			return PEAR::raiseError("Could not save total score: ".$result->getMessage());
 		}
 	}
-
+    function _addAdditionalComments() {
+    }
 }
 ?>
