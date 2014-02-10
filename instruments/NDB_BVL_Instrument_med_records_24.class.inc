@@ -13,7 +13,8 @@ class NDB_BVL_Instrument_med_records_24 extends NDB_BVL_Instrument_med_records {
 	*/
 	
 	//instrument specific variables
-	var $developmental_concerns = array (null => "", 'language' => "language", 'social' => "social", 'motor' => "motor", 'other' => "other" );
+	var $developmental_concerns = array ('language' => "language", 'social' => "social", 'motor' => "motor", 
+                                         'other' => "other",'not_answered'=>'Not Answered');
 
 
 
@@ -29,7 +30,10 @@ class NDB_BVL_Instrument_med_records_24 extends NDB_BVL_Instrument_med_records {
 		// set the object properties
 		$this->testName = "med_records_24"; // test_names.Test_name
 		$this->table = 'med_records_24'; // name of database table corresponding to instrument
-		
+	 
+
+        $this->_selectMultipleElements = array('developmental_concerns_specify');
+
 		/**
 		 * Array of column names to be ignored by the double data entry conflict detector.
 		 */
@@ -183,8 +187,7 @@ class NDB_BVL_Instrument_med_records_24 extends NDB_BVL_Instrument_med_records {
 		$this->form->addElement ( "static", null, "<BR>" ); //line space
 
 		$this->form->addElement ( "select", "developmental_concerns", "Are there any developmental concerns?", $this->yesNo );
-		$this->form->addElement ( "select", "developmental_concerns_specify", $this->indent . "If there were developmental concerns please specify them:", $this->developmental_concerns );
-		
+		$this->addSelect( "developmental_concerns_specify", $this->indent . "If there were developmental concerns please specify them:", $this->developmental_concerns,"multiple size='5'" );
 		$this->XINRegisterRule ( "developmental_concerns_specify", array ("developmental_concerns{@}=={@}yes" ), "Please specify the developmental concerns:" );
 		
 		$this->form->addElement ( "static", null, "<BR>" ); //line space
