@@ -81,11 +81,7 @@ class NDB_BVL_Instrument_m_chat extends NDB_BVL_Instrument
 		foreach ($questionArray as $field=>$label) {
 			$this->form->addElement("select", $field, $label, array(null=>"", "yes"=>"Yes", "no"=>"No", "not_answered"=>"Not Answered"));
 		}
-        if($this->testName == 'm_chat_proband'){
-            $this->form->addElement('static',null,'<br>');
-            $this->form->addElement("textarea", "other_comments", "Comments :", array('cols'=>25, 'rows'=>4));
-            $this->XINRegisterRule("other_comments", array("{other_comments}{@}=={@}NEVER_REQUIRED"));
-        }
+        $this->_addAdditionalComments();        
 	}
 
 	function score() {
@@ -177,5 +173,7 @@ class NDB_BVL_Instrument_m_chat extends NDB_BVL_Instrument
 		}
 	}
 
+}
+function _addAdditionalComments() {
 }
 ?>

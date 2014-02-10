@@ -50,5 +50,7 @@ class NDB_BVL_Instrument_m_chat_subject extends NDB_BVL_Instrument_m_chat
 		$this->_setupForm();
 
 	}
+    function _addAdditionalComments() {
+    }
 }
 ?>

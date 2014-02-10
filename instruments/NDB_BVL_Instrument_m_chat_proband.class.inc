@@ -47,5 +47,10 @@ class NDB_BVL_Instrument_m_chat_proband extends NDB_BVL_Instrument_m_chat
 		$this->_setupForm();
 
 	}
+    function _addAdditionalComments() {
+            $this->form->addElement('static',null,'<br>');
+            $this->form->addElement("textarea", "other_comments", "Comments :", array('cols'=>25, 'rows'=>4));
+            $this->XINRegisterRule("other_comments", array("{other_comments}{@}=={@}NEVER_REQUIRED"));
+    }
 }
 ?>
