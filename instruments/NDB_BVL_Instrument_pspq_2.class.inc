@@ -290,25 +290,5 @@ class NDB_BVL_Instrument_pspq_2 extends NDB_BVL_Instrument
 
        return $errors;
     }
-   function _saveValues ($values)
-   {
-       $timepoint =& TimePoint::singleton($this->getSessionID());
-       $candidate =& Candidate::singleton($timepoint->getCandID());
-       $participants = array('informant','respondent');
-       foreach ($participants as $participant) {
-           if(isset($values['datecompleted_'.$participant])) {
-               $date = $values['datecompleted_'.$participant];
-               if(!empty($date['Y']) && !empty($date['M']) && !empty($date['d'])) {
-                   $values['datecompleted_'.$participant] = $this->_getDatabaseDate($date);
-               }  else {
-                   unset($values['datecompleted_'.$participant]);
-               }
-           }
-       }
-       unset($values['candID'], $values['sessionID'], $values['commentID'], $values['test_name'], 
-             $values['page'], $values['fire_away'], $values['subtest']);
-
-       $this->_save($values);
-
-   }
+  
 }
