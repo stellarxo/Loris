@@ -145,11 +145,7 @@ class NDB_BVL_Instrument_scq extends NDB_BVL_Instrument
 		foreach($questionArray as $field=>$label) {
 			$this->form->addElement("select", $field, $this->indent . $label, $this->yesNo);
 		}
-        if($this->testName == 'scq_proband'){
-            $this->form->addElement('static',null,'<br>');
-            $this->form->addElement("textarea", "other_comments", "Comments :", array('cols'=>25, 'rows'=>4));
-            $this->XINRegisterRule("other_comments", array("{other_comments}{@}=={@}NEVER_REQUIRED"));
-        }
+        $this->_addAdditionalComments(); 
 
 	}
 
@@ -217,6 +213,7 @@ class NDB_BVL_Instrument_scq extends NDB_BVL_Instrument
 			return PEAR::raiseError("Could not save total score: ".$result->getMessage());
 		}
 	}
-
+    function _addAdditionalComments() {
+    }
 }
 ?>
