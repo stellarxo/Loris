@@ -27,7 +27,5 @@ INSERT INTO test_battery VALUES ('', 'scq_subject', '1050', '1140', 'Y', 'Visit'
 
         $this->_setup($commentID, $page);
     }
-    function _addAdditionalComments() {
-    }
 }
 ?>

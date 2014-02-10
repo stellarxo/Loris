@@ -172,8 +172,8 @@ class NDB_BVL_Instrument_m_chat extends NDB_BVL_Instrument
 			return PEAR::raiseError("Could not save total score: ".$result->getMessage());
 		}
 	}
+    function _addAdditionalComments() {
+    }
+}
 
-}
-function _addAdditionalComments() {
-}
 ?>
