@@ -77,8 +77,13 @@ class NDB_BVL_Instrument_sibling_socialcontact extends NDB_BVL_Instrument
         
         $this->addBasicDate('datecompleted', "Today's date:", $this->dateOptions);
         $this->addSelect('respondent',"Completed by :", $this->respondent);
-        $this->addTextElement('respondent_other',$this->indent."If Other please specify",
-                              array("respondent{@}=={@}other"),"Please specify relationship");
+        
+        $group [] = $this->createText('respondent_other',$this->indent."If Other please specify");
+        $this->addGroup($group,"respondent_other_group",$this->indent."If Other please specify",null,false);
+        unset($group);
+        $rules_array = array("respondent{@}=={@}other");
+        $this->XINRegisterRule('respondent_other', $rules_array, "Please specify relationship", 'respondent_other_group');
+
 
     }
 
@@ -89,12 +94,22 @@ class NDB_BVL_Instrument_sibling_socialcontact extends NDB_BVL_Instrument
          $this->addSelect('q1_engage_together', "1. How many days per week do they usually engage in any kind of one-on-one 
             activity together <BR>(for example playing, chores, sharing a snack, watching television)?", $this->num_days_week);
          $this->addSelect('q2_play_together', "2. How many days per week do they usually play together?" , $this->num_days_week);
-         $this->addNumericElement("q3_different_playtimes", "3. On days when they play, how many different times do they usually play?");
-         $this->addNumericElement("q4_avg_playtime", "4. How long are they together in an average play time?");
-         $rating1 = array (''=>NULL,'often'=>'Often','ocassionally'=>'Ocasionally','never'=>'Never','not_answered'=>'Not Answered');
+         //$this->addNumericElement("q3_different_playtimes", "3. On days when they play, how many different times do they usually play?");
+        // $this->addNumericElement("q4_avg_playtime", "4. How long are they together in an average play time?");
+         $questions = array("q3_different_playtimes"=>"3. On days when they play, how many different times do they usually play?",
+                            "q4_avg_playtime"=>"4. How long are they together in an average play time?(Minutes)");
+         foreach($questions as $field=>$label) {
+             $group [] = $this->createText($field, $label);
+             $this->addGroup($group, $field . "_group", $label, null, false);
+             unset($group);
+             $this->addGroupRule($field . "_group", array(array(array("Value must be numeric.", 'numeric'))));
+         }
+
+         $rating1 = array (''=>NULL,'often'=>'Often','ocassionally'=>'Occasionally','never'=>'Never','not_answered'=>'Not Answered');
          
          $this->addSelect('q5_rely_olderchild',"5. To what extent do you rely on the older child to help care for the younger
             sibling such as help getting dressed,<BR> help during meals, or help getting ready for school?", $rating1);
+
          $this->addSelect('q6_rely_youngerchild', "6. To what extent do you rely on the younger sibling to help care for the older
             child such as help getting dressed,<BR> help during meals, or help getting ready for school?", $rating1);
 

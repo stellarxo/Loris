@@ -170,8 +170,9 @@ class NDB_BVL_Instrument_peer_socialcontact extends NDB_BVL_Instrument
 
     }
     function _page2() {
-        $this->form->addElement('static', null, "In the table below indicate which children know each other");
-
+        
+        $this->addHeader("In the table below indicate which<BR> children know each other");
+        $this->form->addElement("static", null, "<br><br>");
         $group[] = &$this->form->createElement("static", null, null, "Child 1");
         $group[] = &$this->form->createElement("static", null, null, "Child 2");
         $group[] = &$this->form->createElement("static", null, null, "Child 3");
@@ -192,12 +193,13 @@ class NDB_BVL_Instrument_peer_socialcontact extends NDB_BVL_Instrument
                 }
             }
 
-            $this->form->addGroup($group, $groupname, "Child_".$i, $this->_GUIDelimiter, false);
+            $this->form->addGroup($group, $groupname, "Child ".$i, $this->_GUIDelimiter, false);
             unset($group);
         }
-         $this->form->addElement("static", null, "<br><br>");
 
-         $this->form->addElement('static', null, "Initials of the playmates are :");
+         //$this->form->addElement("static", null, "<br><br>");
+         $this->form->addElement('header', null, "Initials of the playmates are :");
+         $this->form->addElement("static", null, "<br><br>");
          for ($i = 1; $i<= $this->total_peer; $i++) {
              if(!empty($this->localDefaults["peer_initials_".$i])) {
                  $this->form->addElement('static',"peer_initials_".$i, "Initials of child $i:"); 
