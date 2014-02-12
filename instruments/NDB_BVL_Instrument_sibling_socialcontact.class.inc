@@ -6,9 +6,14 @@ class NDB_BVL_Instrument_sibling_socialcontact extends NDB_BVL_Instrument
 
     var $rating = array(''=>NULL, '1_very_rarely'=>"1. Very Rarely", '2_rarely'=>"2. Rarely", 
                         '3_occasionally'=>"3. Occasionally",'4_somewhat_often'=>'4. Somewhat Often',
-                        '5_often'=>'5. Often','6_very_often'=>'6. Very Often');
+                        '5_often'=>'5. Often','6_very_often'=>'6. Very Often','refused_dontknow'=>'Refused/I Don`t Know');
     var $respondent = array(''=>NULL,'mother'=>'Mother','father'=>'Father','other'=>'Other');
-    var $num_days_week = array (''=>NULL,0=>0,1=>1,2=>2,3=>3,4=>4,5=>5,6=>6,7=>7,'not_answered'=>'Not Answered');   
+    var $num_days_week = array (''=>NULL,'0'=>'0','1'=>'1','2'=>'2','3'=>'3','4'=>'4','5'=>'5',
+                                '6'=>'6','7'=>'7','refused_dontknow'=>'Refused/I Don`t Know');   
+    var $rating1 = array (''=>NULL,'often'=>'Often','occasionally'=>'Occasionally','never'=>'Never',
+                          'refused_dontknow'=>'Refused/I Don`t Know');
+    var $rating2 = array(''=>NULL,'very_well'=>'Very Well','okay'=>'Okay','not_very_well'=>'Not very well',
+                         'refused_dontknow'=>'Refused/I Don`t Know');
     //abstract function setup($commentID, $page);
     /**
      * sets up basic data, such as the HTML_Quickform object, and so on.
@@ -91,13 +96,12 @@ class NDB_BVL_Instrument_sibling_socialcontact extends NDB_BVL_Instrument
          $this->form->addElement('header', 'instrument_title', "Sibling Social Contact Questionnaire");
          $this->form->addElement('static', null, "<br /><br />");
          
-         $this->addSelect('q1_engage_together', "1. How many days per week do they usually engage in any kind of one-on-one 
-            activity together <BR>(for example playing, chores, sharing a snack, watching television)?", $this->num_days_week);
+         $this->addSelect('q1_engage_together', "1. How many days per week do they usually engage in any kind of one-on-one activity together <BR>(for example playing, chores, sharing a snack, watching television)?", $this->num_days_week);
          $this->addSelect('q2_play_together', "2. How many days per week do they usually play together?" , $this->num_days_week);
          //$this->addNumericElement("q3_different_playtimes", "3. On days when they play, how many different times do they usually play?");
         // $this->addNumericElement("q4_avg_playtime", "4. How long are they together in an average play time?");
          $questions = array("q3_different_playtimes"=>"3. On days when they play, how many different times do they usually play?",
-                            "q4_avg_playtime"=>"4. How long are they together in an average play time?(Minutes)");
+                            "q4_avg_playtime"=>"4. How long are they together in an average play time?(in Minutes)");
          foreach($questions as $field=>$label) {
              $group [] = $this->createText($field, $label);
              $this->addGroup($group, $field . "_group", $label, null, false);
@@ -105,36 +109,32 @@ class NDB_BVL_Instrument_sibling_socialcontact extends NDB_BVL_Instrument
              $this->addGroupRule($field . "_group", array(array(array("Value must be numeric.", 'numeric'))));
          }
 
-         $rating1 = array (''=>NULL,'often'=>'Often','ocassionally'=>'Occasionally','never'=>'Never','not_answered'=>'Not Answered');
          
-         $this->addSelect('q5_rely_olderchild',"5. To what extent do you rely on the older child to help care for the younger
-            sibling such as help getting dressed,<BR> help during meals, or help getting ready for school?", $rating1);
+         $this->addSelect('q5_rely_olderchild',"5. To what extent do you rely on the older child to help care for the younger sibling such as help getting dressed,<BR> help during meals, or help getting ready for school?", $this->rating1);
 
-         $this->addSelect('q6_rely_youngerchild', "6. To what extent do you rely on the younger sibling to help care for the older
-            child such as help getting dressed,<BR> help during meals, or help getting ready for school?", $rating1);
+         $this->addSelect('q6_rely_youngerchild', "6. To what extent do you rely on the younger sibling to help care for the older child such as help getting dressed,<BR> help during meals, or help getting ready for school?", $this->rating1);
 
-         $rating2 = array(''=>NULL,'very_well'=>'Very Well','okay'=>'Okay','not_very_well'=>'Not very well','not_answered'=>'Not Answered');
 
-         $this->addSelect('q7_getalong',"7. Overall, how well would you say they get along?", $rating2);
-         $this->addSelect('q8_playtogeher',"8. How well would you say they play together?", $rating2);
-         $family = array(''=>NULL,'older_child'=>'Older Child','sibling'=>'Sibling','both'=>'Both','adult'=>'Adult','not_answered'=>'Not Answered');
+         $this->addSelect('q7_getalong',"7. Overall, how well would you say they get along?", $this->rating2);
+         $this->addSelect('q8_playtogeher',"8. How well would you say they play together?", $this->rating2);
+         $family = array(''=>NULL,'older_child'=>'Older Child','sibling'=>'Sibling','both'=>'Both','adult'=>'Adult','refused_dontknow'=>'Refused/I Don`t Know');
          $this->addSelect('q9_controlplay',"9. Who usually is leading or in control of their play?", $family);
          $this->addSelect('q10_toneplay',"10. What is the typical tone of their play?", array(''=>NULL,'positive'=>'Positive',
-                           'neutral'=>'Neutral','negative'=>'Negative','not_answered'=>'Not Answered'));
+                           'neutral'=>'Neutral','negative'=>'Negative','refused_dontknow'=>'Refused/I Don`t Know'));
          $this->addSelect('q11_excitementlevel',"11. What is the typical level of excitement?", array(''=>NULL,'very_excited'=>'Very Excited',
-                          'active'=>'Active','calm'=>'Calm','not_answered'=>'Not Answered'));
+                          'active'=>'Active','calm'=>'Calm','refused_dontknow'=>'Refused/I Don`t Know'));
          $this->addSelect('q12_conflicts_duringplay',"12. How often do they have conflicts during play?", array(''=>NULL,'often'=>'Often',
-                          'occasionally'=>'Occasionally','rarely'=>'Rarely','not_answered'=>'Not Answered'));
+                          'occasionally'=>'Occasionally','rarely'=>'Rarely','refused_dontknow'=>'Refused/I Don`t Know'));
          $this->addSelect('q13_disruptive_conflicts',"13. How disruptive are their conflicts?", array(''=>NULL,'ends_play'=>'Ends play',
                           'major_disruption'=>'Major Disruption','minor_disruption'=>'Minor Disruption','no_disruption'=>'No disruption',
-                          'not_answered'=>'Not Answered'));
+                          'refused_dontknow'=>'Refused/I Don`t Know'));
          $this->addSelect('q14_involed_inplay',"14. In a typical play session, how closely involved are they with each other during play?",
                           array(''=>NULL,'lot_of_interaction'=>'A lot of interaction','stay_close_no_interaction'=>'Stay close but
                           do not interact much','dont_stay_close_or_interact'=>'Do not stay close or interact much',
-                          'not_answered'=>'Not Answered'));
+                          'refused_dontknow'=>'Refused/I Don`t Know'));
          $this->addSelect('q15_stressful_playsession','15. How stressful is it usually for you to monitor play sessions?',array(''=>NULL,
                           'very_stressful'=>'Very Stressful','somewhat_stressful'=>'Somewhat Stressful','not_stressful'=>'Not Stressful',
-                          'not_answered'=>'Not Answered'));
+                          'refused_dontknow'=>'Refused/I Don`t Know'));
          $this->form->addElement('static',null,"16. How do you usually monitor the play at home?");
          $questions = array('q16_help_getalong'=>'a. Directly facilitate by helping them get along?',
                             'q16_participate'=>'b. Participate in the activity with the children',
@@ -143,7 +143,7 @@ class NDB_BVL_Instrument_sibling_socialcontact extends NDB_BVL_Instrument
                             'q16_outofview_cry'=>'e. Out of view and can only hear outbursts or cries');
                     
          $rating3 = array(''=>NULL,'frequently'=>'Frequently','occasionally'=>'Occasionally','little_none'=>'Little-or-none',
-                          'not_answered'=>'Not Answered');
+                          'refused_dontknow'=>'Refused/I Don`t Know');
          foreach($questions as $qstn=>$desc) {
              $this->addSelect($qstn,$this->indent.$desc, $rating3);
          }

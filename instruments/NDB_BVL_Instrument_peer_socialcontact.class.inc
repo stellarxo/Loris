@@ -6,56 +6,66 @@ class NDB_BVL_Instrument_peer_socialcontact extends NDB_BVL_Instrument
 
     var $rating = array(''=>NULL, '1_very_rarely'=>"1. Very Rarely", '2_rarely'=>"2. Rarely", 
                         '3_occasionally'=>"3. Occasionally",'4_somewhat_often'=>'4. Somewhat Often',
-                        '5_often'=>'5. Often','6_very_often'=>'6. Very Often');
+                        '5_often'=>'5. Often','6_very_often'=>'6. Very Often','refused_dontknow'=>'Refused/I Don`t Know');
     var $respondent = array(''=>NULL,'mother'=>'Mother','father'=>'Father','other'=>'Other');
     var $num_playmates = array(''=>NULL, 1=>1,2=>2,3=>3,4=>4,5=>5);
     var $total_peer = 5;
     var $age_yrs = array(''=>NULL,'1'=>'1 yr','2'=>'2 yrs','3'=>'3 yrs','4'=>'4 yrs','5'=>'5 yrs',
                          '6'=>'6 yrs','7'=>'7 yrs','8'=>'8 yrs','9'=>'9 yrs','10'=>'10 yrs',
-                         '11'=>'11 yrs','12'=>'12 yrs','13'=>'13 yrs','14'=>'14 yrs','15'=>'15 yrs');
-    var $age_mos = array(''=>NULL,'1'=>'1 mos','2'=>'2 mos','3'=>'3 mos','4'=>'4 mos','5'=>'5 mos',
+                         '11'=>'11 yrs','12'=>'12 yrs','13'=>'13 yrs','14'=>'14 yrs','15'=>'15 yrs',
+                         'refused_dontknow'=>'Refused/I Don`t Know');
+    var $age_mos = array(''=>NULL,'0'=>'0 mos','1'=>'1 mos','2'=>'2 mos','3'=>'3 mos','4'=>'4 mos','5'=>'5 mos',
                          '6'=>'6 mos','7'=>'7 mos','8'=>'8 mos','9'=>'9 mos','10'=>'10 mos',
-                         '11'=>'11 mos','12'=>'12 mos');
-    var $gender = array(''=>NULL,'boy'=>'Boy','girl'=>'Girl');
+                         '11'=>'11 mos','12'=>'12 mos','refused_dontknow'=>'Refused/I Don`t Know');
+    var $gender = array(''=>NULL,'boy'=>'Boy','girl'=>'Girl','refused_dontknow'=>'Refused/I Don`t Know');
     var $q3_options = array(''=>NULL, 'cousins'=>'Cousins','neighbors'=>'Neighbors',
                             'classmates'=>'Classmates','parent_friend_child'=>'Parents friends child',
-                            'other'=>'Other');
+                            'other'=>'Other','refused_dontknow'=>'Refused/I Don`t Know');
     var $q4_options = array(''=>NULL,'mostly_your_home'=>'Mostly your home',
                             'mostly_playmate_home'=>'Mostly playmates home','equally_both'=>'Equally both',
-                            'mostly_other'=>'Mostly other (such as playground)');
+                            'mostly_other'=>'Mostly other (such as playground)','refused_dontknow'=>'Refused/I Don`t Know');
     var $q5_options = array(''=>NULL,'walking_distance'=>'Walking distance',
-                            'short_drive'=>'Short drive(upto 15min)','long_drive'=>'Long drive(> 15min)');
-    var $yesNo = array(''=>NULL,'yes'=>'Yes','no'=>'No');
+                            'short_drive'=>'Short drive(upto 15min)','long_drive'=>'Long drive(> 15min)',
+                            'refused_dontknow'=>'Refused/I Don`t Know');
+    var $yesNo = array(''=>NULL,'yes'=>'Yes','no'=>'No','refused_dontknow'=>'Refused/I Don`t Know');
     var $q8_options = array(''=>NULL,'none'=>'None','dont_know'=>'Dont know','autism'=>'Autism',
                             'other_developmental_delay'=>'Other developmental delay',
                             'speech_language_delay'=>'Speech or language delay',
-                            'other'=>'Other');
+                            'other'=>'Other','refused_dontknow'=>'Refused/I Don`t Know');
     var $q9_options = array(''=>NULL,'really_likes'=>'Really likes','likes'=>'Likes',
-                            'pretty_neutral'=>'Pretty neutral','just_tolerates'=>'Just tolerates');
+                            'pretty_neutral'=>'Pretty neutral','just_tolerates'=>'Just tolerates',
+                            'refused_dontknow'=>'Refused/I Don`t Know');
     var $q10_options = array(''=>NULL,'really_likes'=>'Really likes','likes'=>'Likes',
-                            'pretty_neutral'=>'Pretty neutral','just_tolerates'=>'Just tolerates');
+                            'pretty_neutral'=>'Pretty neutral','just_tolerates'=>'Just tolerates',
+                            'refused_dontknow'=>'Refused/I Don`t Know');
 
     var $q11_options = array(''=>NULL,'very_well'=>'Very well','okay'=>'Okay',
-                             'not_very_well'=>'Not very well');
+                             'not_very_well'=>'Not very well','refused_dontknow'=>'Refused/I Don`t Know');
     var $q12_options = array(''=>NULL,'my_child'=>'My child','playmate'=>'Playmate','both'=>'Both',
-                             'adult'=>'Adult');
-    var $q13_options = array(''=>NULL,'positive'=>'Positive','neutral'=>'Neutral','negative'=>'Negative');
-    var $q14_options = array(''=>NULL,'very_excited'=>'Very Excited','active'=>'Active','calm'=>'Calm');
+                             'adult'=>'Adult','refused_dontknow'=>'Refused/I Don`t Know');
+    var $q13_options = array(''=>NULL,'positive'=>'Positive','neutral'=>'Neutral','negative'=>'Negative',
+                             'refused_dontknow'=>'Refused/I Don`t Know');
+    var $q14_options = array(''=>NULL,'very_excited'=>'Very Excited','active'=>'Active','calm'=>'Calm',
+                             'refused_dontknow'=>'Refused/I Don`t Know');
     var $q15_options = array(''=>NULL,'frequently'=>'Frequently','occasionally'=>'Occasionally',
-                             'rarely'=>'Rarely');
+                             'rarely'=>'Rarely','refused_dontknow'=>'Refused/I Don`t Know');
     var $q16_options = array(''=>NULL,'ends_play'=>'Ends play','major_disruption'=>'Major disruptions',
-                             'minor_disruption'=>'Minor disruption','no_disruption'=>'No disruption');
+                             'minor_disruption'=>'Minor disruption','no_disruption'=>'No disruption',
+                             'refused_dontknow'=>'Refused/I Don`t Know');
     var $q17_options = array(''=>NULL,'lot_of_interaction'=>'A lot of interaction',
                              'stay_close_no_interaction'=>'Stay close but do not interact much',
-                             'dont_stay_close_or_interact'=>'Do not stay close or interact much');
+                             'dont_stay_close_or_interact'=>'Do not stay close or interact much',
+                             'refused_dontknow'=>'Refused/I Don`t Know');
     var $q19_options = array(''=>NULL,'very_difficult'=>'Very difficult',
                              'somewhat_difficult'=>'Somewhat difficult',
-                             'not_difficult'=>'Not difficult at all'); 
+                             'not_difficult'=>'Not difficult at all',
+                             'refused_dontknow'=>'Refused/I Don`t Know'); 
     var $q20_options = array(''=>NULL,'very_stressful'=>'Very stressful',
                              'somewhat_stressful'=>'Somewhat stressful',
-                             'not_stressful'=>'Not stressful at all');
+                             'not_stressful'=>'Not stressful at all',
+                             'refused_dontknow'=>'Refused/I Don`t Know');
     var $q21_options = array(''=>NULL,'frequently'=>'Frequently','occasionally'=>'Occasionally',
-                             'little_or_none'=>'Little-or-none');
+                             'little_or_none'=>'Little-or-none','refused_dontknow'=>'Refused/I Don`t Know');
     //abstract function setup($commentID, $page);
     /**
      * sets up basic data, such as the HTML_Quickform object, and so on.
@@ -158,7 +168,7 @@ class NDB_BVL_Instrument_peer_socialcontact extends NDB_BVL_Instrument
 
         $this->form->addElement('static', null, "<br /><br />");
         $this->addSelect('total_playmates',"Please choose the number of playmates your child has :", $this->num_playmates);
-        $this->form->addElement('static', null, "Please list the initals of the children your child plays with regularly in the lines below:");
+        $this->form->addElement('static', null, "Please list the initals of the children your child plays with regularly <BR> $this->indent the lines below:");
         for($i = 1; $i <=$this->total_peer; $i++) {
            $group [] = $this->createText("peer_initials_".$i,"Initials of child $i:");
            $this->addGroup($group,"peer_initials_".$i."_group","Initials of child $i:",null, false);
@@ -241,7 +251,7 @@ class NDB_BVL_Instrument_peer_socialcontact extends NDB_BVL_Instrument
 
          $this->addSelect('gender_playmate_'.$i,'Gender ', $this->gender);
          $this->form->addElement('static', null, "<br /><br />");
-         $questions = array("q1_number_playtimes_playmate".$i=> "1. How many times did they play together in the last three months <BR>$this->indent in your home?","q2_avg_playtime_playmate".$i=>"2. How long are they together in an average play time? (mins)");
+         $questions = array("q1_number_playtimes_playmate".$i=> "1. How many times did they play together in the last three months <BR>$this->indent in your home?","q2_avg_playtime_playmate".$i=>"2. How long are they together in an average play time? (in Minutes)");
          foreach($questions as $field=>$label) {
              $group [] = $this->createText($field, $label);
              $this->addGroup($group, $field . "_group", $label, null, false);
