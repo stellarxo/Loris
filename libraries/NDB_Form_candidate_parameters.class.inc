@@ -647,7 +647,7 @@ class NDB_Form_candidate_parameters extends NDB_Form
         	$this->form->addElement('static', "static", "No candidate parameters have been defined for this study");
         	return;
         }
-        
+        $projectID = $DB->pselectOne("SELECT ProjectID FROM candidate WHERE CandID=:candid",array('candid'=>$this->identifier)); 
         //Loop through the fields and add them appropriately
         foreach($field_results AS $fresult) {
         	switch(substr($fresult['Type'],0,3)) {
@@ -673,7 +673,13 @@ class NDB_Form_candidate_parameters extends NDB_Form
         			$this->form->addElement('textarea', "PTID_".$fresult['ParameterTypeID'], $fresult['Description']);
         		
         	}
-        	$this->tpl_data['elements_list'][]="PTID_".$fresult['ParameterTypeID'];
+            if($fresult['ParameterTypeID'] == 73754) {
+                if($projectID == 2) {
+                    $this->tpl_data['elements_list'][]="PTID_".$fresult['ParameterTypeID']; //add candidate plan only for IBIS2
+                }
+            } else {
+        	     $this->tpl_data['elements_list'][]="PTID_".$fresult['ParameterTypeID'];
+            }
         }
         $this->form->addFormRule(array(&$this,'_validate'));
 
