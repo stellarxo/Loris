@@ -56,7 +56,9 @@ class NDB_BVL_Instrument_LENA_DataTrackingForm extends NDB_BVL_Instrument
         'addEmptyOption' => true,
         'emptyOptionValue' => null
         );
-        
+
+        $this->_doubleDataEntryDiffIgnoreColumns = $this->getIgnorediffColumns(); 
+      // print_r($this->_doubleDataEntryDiffIgnoreColumns); 
         $db =& Database::singleton();
         if(Utility::isErrorX($db)) {
            print "Could not connect to database: ".$db->getMessage();
@@ -507,7 +509,18 @@ class NDB_BVL_Instrument_LENA_DataTrackingForm extends NDB_BVL_Instrument
         }
         return $errors;
     }
-
+    function getIgnorediffColumns () {
+        $fields = array('CommentID','Data_entry_completion_status','Uploaded_file','UserID', 'Testdate','comments_session1','comments_session1_status','comments_session2','comments_session2_status','comments_session3','comments_session3_status','comments_session4','comments_session4_status','Uploaded_file_its','Duration_Avg','Meaningful_Avg','Distant_Avg','TV_Avg','TV_Pct_Avg','Noise_Avg','Silence_Avg','AWC_Actual_Avg','AWC_Proj_Avg','AWC_Pct_Avg','CTC_Actual_Avg','CTC_Proj_Avg','CTC_Pct_Avg','CVC_Actual_Avg','CVC_Proj_Avg','CVC_Pct_Avg','AVA_StdScore_Avg','AVA_StdScore_Pct_Avg'); 
+       
+        $terms = array('Type_','ChildKey_','Id_','DLP_','ProcessingFile_','Timestamp_','Duration_','Meaningful_','Distant_','TV_','TV_Pct_','Noise_','Silence_','AWC_Actual_','AWC_Proj_','AWC_Pct_','CTC_Actual_','CTC_Proj_','CTC_Pct_','CVC_Actual_','CVC_Proj_','CVC_Pct_','AVA_StdScore_','AVA_StdScore_Pct_');
+        for($i = 1; $i<=64;$i++) {
+          foreach($terms as $term) {
+              $value = "'".$term.$i."'";
+              array_push($fields, $value);
+          }
+        }
+    return $fields;
+    }
 
 }
        
