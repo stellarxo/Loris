@@ -30,5 +30,11 @@ INSERT INTO test_battery VALUES ('', 'scq_proband', '1050', '1140', 'Y', 'Visit'
 
         $this->_setup($commentID, $page);
     }
+    function _addAdditionalComments() {
+        $this->form->addElement('static',null,'<br>');
+        $this->form->addElement("textarea", "other_comments", "Comments :", array('cols'=>25, 'rows'=>4));
+        $this->XINRegisterRule("other_comments", array("{other_comments}{@}=={@}NEVER_REQUIRED"));
+    }
+
 }
 ?>
