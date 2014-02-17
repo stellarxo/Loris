@@ -113,7 +113,7 @@ class NDAR_Release_2014 {
             $NoValidities = array('macarthur_words_gestures', 'seq','rbs_r', 'ibq_r', 'head_measurements_subject', 'prefrontal_task', 'fyi', 'edi','edi2');
             if(in_array($this->instrument, $NoValidities)) {
                 if($this->instrument == 'head_measurements_subject') {
-                return "c.IBISID as subjectkey, c.CandidateGUID, c.Gender, ROUND(DATEDIFF(i.Date_taken, c.DoB) / (365/12)) AS Candidate_Age_in_Months, i.Date_taken, ";
+                return "c.IBISID, c.CandidateGUID as subjectkey, c.Gender, ROUND(DATEDIFF(i.Date_taken, c.DoB) / (365/12)) AS Candidate_Age_in_Months, i.Date_taken, ";
                 }
                 return "c.IBISID, c.CandidateGUID, c.Gender, ROUND(DATEDIFF(i.Date_taken, c.DoB) / (365/12)) AS Candidate_Age_in_Months, i.Date_taken, ";
             }
