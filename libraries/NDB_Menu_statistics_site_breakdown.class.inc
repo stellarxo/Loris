@@ -100,7 +100,7 @@ class NDB_Menu_statistics_site_breakdown extends NDB_Menu
         }
 
         if(isset($_REQUEST['projectID']) && $_REQUEST['projectID'] != '') {
-            $ExtraProject_Criteria = ' AND (c.ProjectID IS NULL OR c.ProjectID=' . $_REQUEST['projectID'] . ')';
+            $ExtraProject_Criteria = ' AND (c.ProjectID IS NULL OR c.ProjectID=' . $DB->quote($_REQUEST['projectID']) . ')';
             $projectName = $projects[$_REQUEST['projectID']];
             $projectID = $_REQUEST['projectID'];
 
