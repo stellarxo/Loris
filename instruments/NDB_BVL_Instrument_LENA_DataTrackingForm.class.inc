@@ -57,8 +57,8 @@ class NDB_BVL_Instrument_LENA_DataTrackingForm extends NDB_BVL_Instrument
         'emptyOptionValue' => null
         );
 
-        $this->_doubleDataEntryDiffIgnoreColumns = $this->getIgnorediffColumns(); 
-      // print_r($this->_doubleDataEntryDiffIgnoreColumns); 
+       $this->_doubleDataEntryDiffIgnoreColumns = $this->getIgnorediffColumns(); 
+      //print_r($this->_doubleDataEntryDiffIgnoreColumns); 
         $db =& Database::singleton();
         if(Utility::isErrorX($db)) {
            print "Could not connect to database: ".$db->getMessage();
@@ -515,7 +515,7 @@ class NDB_BVL_Instrument_LENA_DataTrackingForm extends NDB_BVL_Instrument
         $terms = array('Type_','ChildKey_','Id_','DLP_','ProcessingFile_','Timestamp_','Duration_','Meaningful_','Distant_','TV_','TV_Pct_','Noise_','Silence_','AWC_Actual_','AWC_Proj_','AWC_Pct_','CTC_Actual_','CTC_Proj_','CTC_Pct_','CVC_Actual_','CVC_Proj_','CVC_Pct_','AVA_StdScore_','AVA_StdScore_Pct_');
         for($i = 1; $i<=64;$i++) {
           foreach($terms as $term) {
-              $value = "'".$term.$i."'";
+              $value = $term.$i;
               array_push($fields, $value);
           }
         }
