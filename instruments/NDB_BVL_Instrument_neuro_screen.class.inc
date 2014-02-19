@@ -819,27 +819,6 @@ class NDB_BVL_Instrument_neuro_screen extends NDB_BVL_Instrument
                             "not_answered"=>"Not Answered"));
             }
 
-            $this->form->addElement("static", null, "21. MODIFIED EDINBURGH HANDEDNESS INVENTORY");
-            $group[] = $this->form->createElement("static", "left");
-            $group[] = $this->form->createElement("static", "right");
-            $this->form->addGroup($group, 'left_right_group', $this->indent . "TASK", $this->_GUIDelimiter, false);
-            unset($group);
-
-            $group[] = $this->form->createElement("select", "q21_handedness_draw_or_write_left", null, array(null=>"", "+"=>"+", "+_+"=>"+ +", "+_+_+"=>"+ + +", "not_answered"=>"Not Answered"));
-            $group[] = $this->form->createElement("select", "q21_handedness_draw_or_write_right", null, array(null=>"", "+"=>"+", "+_+"=>"+ +", "+_+_+"=>"+ + +", "not_answered"=>"Not Answered"));
-            $this->form->addGroup($group, "q21_handedness_draw_or_write_group", $this->indent . "1. Draw or Write", $this->_GUIDelimiter, false);
-            unset($group);
-
-            $group[] = $this->form->createElement("select", "q21_handedness_throw_or_placing_left", null, array(null=>"", "+"=>"+", "+_+"=>"+ +", "+_+_+"=>"+ + +", "not_answered"=>"Not Answered"));
-            $group[] = $this->form->createElement("select", "q21_handedness_throw_or_placing_right", null, array(null=>"", "+"=>"+", "+_+"=>"+ +", "+_+_+"=>"+ + +", "not_answered"=>"Not Answered"));
-            $this->form->addGroup($group, "q21_handedness_throw_or_placing_group", $this->indent . "2. Throw or placing object", $this->_GUIDelimiter, false);
-            unset($group);
-
-            $group[] = $this->form->createElement("text", "q21_handedness_total_a_left", "Total a.");
-            $group[] = $this->form->createElement("text", "q21_handedness_total_b_right", "Total b.");
-            $this->form->addGroup($group, "q21_handedness_totals_group", $this->indent . "TOTAL", $this->_GUIDelimiter, false);
-            unset($group);
-
             $this->form->addElement("static", null, "22. Measurements");
             //$this->form->addElement("static", null, "(Sometimes this is erroneously called #21)");
             $db =Database::singleton();
@@ -989,12 +968,6 @@ class NDB_BVL_Instrument_neuro_screen extends NDB_BVL_Instrument
                     'q19_other_physical_abnormalities',
                     //        '19_other_physical_abnormalities_status',
                     'q20_hyper_extensibility_of_joints',
-                    'q21_handedness_draw_or_write_left',
-                    'q21_handedness_draw_or_write_right',
-                    'q21_handedness_throw_or_placing_left',
-                    'q21_handedness_throw_or_placing_right',
-                    'q21_handedness_total_a_left',
-                    'q21_handedness_total_b_right',
                     'q22_child_hc_cm',
                     //        '22_child_hc_cm_status',
                     'q22_mother_hc_cm',
@@ -1091,18 +1064,6 @@ class NDB_BVL_Instrument_neuro_screen extends NDB_BVL_Instrument
                     //"un-require" other questions
                     $this->XINRegisterRule($field, array("q1_strabismus{@}=={@}Never_going_to_happen"));
                 }
-            }
-
-            //hack to require question #21, because it uses QuickForm groups
-            if(in_array(21, $requiredQuestions)) {
-                $this->XINRegisterRule('q21_handedness_draw_or_write_left', array('q1_strabismus{@}!={@}Never_happening'), "This question is required.", "q21_handedness_draw_or_write_group");
-                $this->XINRegisterRule('q21_handedness_draw_or_write_right', array('q1_strabismus{@}!={@}Never_happening'), "This question is required.", "q21_handedness_draw_or_write_group");
-
-                $this->XINRegisterRule('q21_handedness_throw_or_placing_left', array('q1_strabismus{@}!={@}Never_happening'), "This question is required.", "q21_handedness_throw_or_placing_group");
-                $this->XINRegisterRule('q21_handedness_throw_or_placing_right', array('q1_strabismus{@}!={@}Never_happening'), "This question is required.", "q21_handedness_throw_or_placing_group");
-
-                $this->XINRegisterRule('q21_handedness_total_a_left', array('q1_strabismus{@}!={@}Never_happening'), "This question is required.", "q21_handedness_totals_group");
-                $this->XINRegisterRule('q21_handedness_total_b_right', array('q1_strabismus{@}!={@}Never_happening'), "This question is required.", "q21_handedness_totals_group");
             }
                
         
