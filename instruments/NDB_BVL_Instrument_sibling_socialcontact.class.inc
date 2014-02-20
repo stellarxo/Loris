@@ -95,7 +95,7 @@ class NDB_BVL_Instrument_sibling_socialcontact extends NDB_BVL_Instrument
     function _page2(){
          $this->form->addElement('header', 'instrument_title', "Sibling Social Contact Questionnaire");
          $this->form->addElement('static', null, "<br /><br />");
-         
+         $this->form->addElement('static',null,"We would like to know about your child`s relationship with his or her older sibling (please check<BR>your email to confirm which sibling you should respond for). Please fill out all fields for the questions <BR>below in order to save this page. Answer the questions in relationships to their contact in the last <BR>three months."); 
          $this->addSelect('q1_engage_together', "1. How many days per week do they usually engage in any kind of one-on-one activity together <BR>(for example playing, chores, sharing a snack, watching television)?", $this->num_days_week);
          $this->addSelect('q2_play_together', "2. How many days per week do they usually play together?" , $this->num_days_week);
          //$this->addNumericElement("q3_different_playtimes", "3. On days when they play, how many different times do they usually play?");
@@ -110,9 +110,9 @@ class NDB_BVL_Instrument_sibling_socialcontact extends NDB_BVL_Instrument
          }
 
          
-         $this->addSelect('q5_rely_olderchild',"5. To what extent do you rely on the older child to help care for the younger sibling such as help getting dressed,<BR> help during meals, or help getting ready for school?", $this->rating1);
+         $this->addSelect('q5_rely_olderchild',"5. To what extent do you rely on the older child to help care for the younger sibling such as help<BR> getting dressed, help during meals, or help getting ready for school?", $this->rating1);
 
-         $this->addSelect('q6_rely_youngerchild', "6. To what extent do you rely on the younger sibling to help care for the older child such as help getting dressed,<BR> help during meals, or help getting ready for school?", $this->rating1);
+         $this->addSelect('q6_rely_youngerchild', "6. To what extent do you rely on the younger sibling to help care for the older child such as help<BR> getting dressed, help during meals, or help getting ready for school?", $this->rating1);
 
 
          $this->addSelect('q7_getalong',"7. Overall, how well would you say they get along?", $this->rating2);
