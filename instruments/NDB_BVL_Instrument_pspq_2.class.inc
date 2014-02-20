@@ -11,6 +11,10 @@ class NDB_BVL_Instrument_pspq_2 extends NDB_BVL_Instrument
                             'stepfather'=>'Step-Father','other'=>'Other');
 
     var $informant = array(''=>NULL,'spouse'=>'Spouse','other'=>'Other');
+    var $informant_confidence = array(''=>NULL,'extremely_confident'=>'Extremely confident','very_confident'=>'Very confident',
+                                      'moderately_confident'=>'Moderately Confident','little_confident'=>'A little confident',
+                                      'not_confident'=>'Not at all confident');
+
     var $gender = array(''=>NULL,'male'=>'Male','female'=>'Female');
 
     //abstract function setup($commentID, $page);
@@ -80,6 +84,9 @@ class NDB_BVL_Instrument_pspq_2 extends NDB_BVL_Instrument
     function _main(){
         // display test name
         $this->form->addElement('header', 'instrument_title', "PSPQ : Personality Styles and Preferences Questionnaire");
+        $this->form->addElement('header',null,'Instructions');
+        $this->form->addElement('static',null,"Thank you for filling out this questionnaire. The questions you will be answering are about <BR>personality, habits, and lifestyle. There are no good or bad responses, just differences in <BR>people`s preferences.<BR><BR>1.Many of these questions ask about your interactions with other people. Think about the way<BR>your are with most people, rather than the way you are in special relationships you may have <BR> with your spouse, significant other, children, siblings and parents.<BR><BR>2.Everyone changes over time, which can make it hard to fill out questions about personality.<BR>Think about the way you`ve been most of your adult life, rather than the way you were as a <BR>teenager,or times you many have felt differently from normal.<BR><BR>3. You must answer each question and give only one answer per question. Choose the answer <BR>that best describes how often that statement applies to you. If you are confused about a <BR>question, please give it your best guess.<BR><BR>For each question, you will be given a choice of 6 answers that describe how often the statement<BR> applies to you:<BR> 1.Very Rarely<BR>2.Rarely<BR>3.Occasionally<BR>4.Somewhat Often<BR>5.Often<BR> 6.Very Often<BR><BR>Choose the number that matches the answer that comes closest to how you feel about each statement." );
+
         $this->form->addElement('header', 'instrument_title', "Self Rating");
 
         $this->form->addElement('static', null, "<br /><br />");
@@ -169,10 +176,7 @@ class NDB_BVL_Instrument_pspq_2 extends NDB_BVL_Instrument
             $this->addSelect($field, $label, $this->rating);
         }
 
-         //$this->form->addElement("textarea", 'comments', 'Do', array('cols'=>25, 'rows'=>4));
         $this->addBasicTextArea('comments',"Do you have any other comments?");
-
-        //unset($this->XINRules['comments']) ;
         $this->XINRegisterRule('comments', array('comments{@}=={@}NEVER_REQUIRED'));
 
 
@@ -181,12 +185,16 @@ class NDB_BVL_Instrument_pspq_2 extends NDB_BVL_Instrument
     function _page4(){
         // display test name
         $this->form->addElement('header', 'instrument_title', "PSPQ : Personality Styles and Preferences Questionnaire");
+        $this->form->addElement('header',null,'Instructions');
+        $this->form->addElement('static',null,"You are about to fill out a series of statements related to personality and lifestyle.<BR>For each question, circle the answer that best describes how often that statement applies to<BR>the subject. So, if they watch the evening news once a week, you might circle #4: Somewhat often.<BR><BR><strong>3 IMPORTANT THINGS TO REMEMBER</strong><BR><BR>#1. Many of these questions ask about their interactions with other <BR>people. Please think about the way they are with most people <BR>rather than special relationships they may have with spouses or <BR>significant others, children, siblings, and parents.<BR> <BR>#2. Everyone changes over time, which can make it hard to fill out<BR>questions about personality. Think about the way they have been<BR>the majority of their adult life, rather than the way they were as a<BR>teenager, or times they many have felt different than normal.<BR><BR>#3. You must answer each question, and give only one answer per <BR> question. If you are confused, please just give it a guess.<BR><BR>Observer ratings help us obtain a more well-rounded measure of personality and <BR>lifestyle, since some traits and behaviors are most easily observed by other people.<BR><BR>When answering these questions please remember that we are interested in the way<BR>they are with most people, rather than the way they are in special relationships with you,<BR>their children, siblings, and parents. We are also interested in the way they have been most <BR>of their adult life, rather than the way they were as a teenager, or times they may have <BR>felt differently from normal. Answer each question and only give one answer per<BR>question. If you have trouble answering, give it your best guess.<BR>");
+
+        $this->addSelect('informant_confidence',"<BR>How confident do you feel about your ability to give an accurate report on the <BR>personality traits and behaviors of the participant?", $this->informant_confidence);
+
         $this->form->addElement('header', 'instrument_title', "Observer Rating");
 
         $this->form->addElement('static', null, "<br /><br />");
         $this->addBasicDate("datecompleted_informant","Date:", $this->dateOptions);
 
-    //    $this->addNumericElement('informant_age','Your Age:<BR>(Please indicate your age in years)');
         $field = 'informant_age';$label = 'Your Age <BR>(Please indicate your age in years)';
         $group [] = $this->createText($field, $label);
         $this->addGroup($group, $field . "_group", $label, null, false);
@@ -194,9 +202,7 @@ class NDB_BVL_Instrument_pspq_2 extends NDB_BVL_Instrument
         $this->addGroupRule($field . "_group", array(array(array("Value must be numeric.", 'numeric'))));
       
         $this->addSelect('informant',"Relationship to the other biological parent of the child", $this->informant);
-        /*$this->addTextElement('informant_other',$this->indent."If Other please specify",
-                              array("informant{@}=={@}other"),"Please specify relationship");
-        */
+        
         $group [] = $this->createText('informant_other',$this->indent."If Other please specify");
         $this->addGroup($group,"informant_other_group",$this->indent."If Other please specify",null,false);
         unset($group);
