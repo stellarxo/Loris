@@ -79,11 +79,8 @@ class NDB_BVL_Instrument_sibling_socialcontact extends NDB_BVL_Instrument
 
         $this->form->addElement('header', 'instrument_title', "Sibling Social Contact Questionnaire");
       
-        $this->form->addElement('static',null,"We would like to know about your child's relationship with his or her older sibling (please check<BR>your email to confirm which sibling you should respond for). Please fill out all fields for the questions <BR>below in order to save this page. Answer the questions in relationships to their contact in the last <BR>three months."); 
+        $this->form->addElement('static','lorisSubHeader',"We would like to know about your child's relationship with his or her older sibling (please check<BR>your email to confirm which sibling you should respond for). Please fill out all fields for the questions <BR>below in order to save this page. Answer the questions in relationships to their contact in the last <BR>three months."); 
        
-        $this->form->addElement('static', null, "<br /><br />");
-        
-      //  $this->addBasicDate('datecompleted', "Today's date:", $this->dateOptions);
         $this->addSelect('respondent',"Completed by :", $this->respondent);
         
         $group [] = $this->createText('respondent_other',$this->indent."If Other please specify");

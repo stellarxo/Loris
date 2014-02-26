@@ -171,10 +171,10 @@ class NDB_BVL_Instrument_peer_socialcontact extends NDB_BVL_Instrument
         $this->XINRegisterRule('respondent_other', $rules_array, "Please specify relationship", 'respondent_other_group');
 
         $this->form->addElement('header', null, "Section 1: Individual Playmates");
-        $this->form->addElement('static', null, "We would like to know about the children your child plays with regularly outside of<BR>school, daycare or group activities. Please do not include siblings or other<BR>relatives living in your home. List the children your child plays with at least every<BR>three months and who are at least 2-years-old and no more than 10-years-old.<BR>There are spaces for you to list up to five children; however, most children do not <BR>have that many regular playmates. It`s easy to forget some children when making<BR>such lists. Please think about children your child knows in various groups (such as <BR> cousins, neighbors, classmates, children of your friends, etc) or settings (such as <BR>church, childcare, recreational activities, the gym, etc.). If there are more than five<BR>children, please list the ones your child plays with most frequently.");
+        $this->form->addElement('static', 'lorisSubHeader', "We would like to know about the children your child plays with regularly outside of<BR>school, daycare or group activities. Please do not include siblings or other<BR>relatives living in your home. List the children your child plays with at least every<BR>three months and who are at least 2-years-old and no more than 10-years-old.<BR>There are spaces for you to list up to five children; however, most children do not <BR>have that many regular playmates. It`s easy to forget some children when making<BR>such lists. Please think about children your child knows in various groups (such as <BR> cousins, neighbors, classmates, children of your friends, etc) or settings (such as <BR>church, childcare, recreational activities, the gym, etc.). If there are more than five<BR>children, please list the ones your child plays with most frequently.");
 
         $this->addSelect('total_playmates',"Please choose the number of playmates your child has :", $this->num_playmates);
-        $this->form->addElement('static', null, "Please list the initals of the children your child plays with regularly <BR>the lines below:");
+        $this->form->addElement('static', 'lorisSubHeader', "Please list the initals of the children your child plays with regularly <BR>the lines below:");
         for($i = 1; $i <=$this->total_peer; $i++) {
            $group [] = $this->createText("peer_initials_".$i,"Initials of child $i:");
            $this->addGroup($group,"peer_initials_".$i."_group","Initials of child $i:",null, false);
@@ -265,7 +265,7 @@ class NDB_BVL_Instrument_peer_socialcontact extends NDB_BVL_Instrument
     {
        $this->form->addElement('header', 'section2_header', "Educational or Child Care Activities");
 
-       $this->form->addElement('static', null,"Aside from individual play activities, children participate in group activities in educational and <BR>childcare placements with oeers. We'd like to know a little about your child's current placements.<BR>If your child is not in school or childcare, please go to next section.");
+       $this->form->addElement('static', 'lorisSubHeader',"Aside from individual play activities, children participate in group activities in educational and <BR>childcare placements with oeers. We'd like to know a little about your child's current placements.<BR>If your child is not in school or childcare, please go to next section.");
        $this->form->addElement('header','section2_a',"School");
         
        $this->addSelect('q23_childin_school',"23. Is your child in school or preschool?",$this->q23_options);
@@ -310,7 +310,7 @@ class NDB_BVL_Instrument_peer_socialcontact extends NDB_BVL_Instrument
     {
         $this->form->addElement('header', 'section3_header', "Community Group Activities");
 
-        $this->form->addElement('static', null,"In addition to school or childcare, some children regularly participate in other group<BR>activities with their peers, such as, swimming lessons, soccer outside of school.<BR>If your child participates in such activities, please list up to three groups below.<BR><BR>If your child does not participate in any such groups, please go to the next section.<BR>**Please note that groups designed to provide special services for children with<BR>developmental problems are to be included in the next section**");
+        $this->form->addElement('static', 'lorisSubHeader',"In addition to school or childcare, some children regularly participate in other group<BR>activities with their peers, such as, swimming lessons, soccer outside of school.<BR>If your child participates in such activities, please list up to three groups below.<BR><BR>If your child does not participate in any such groups, please go to the next section.<BR>**Please note that groups designed to provide special services for children with<BR>developmental problems are to be included in the next section**");
         for($i = 1; $i <= 3; $i++) {
             
             $this->form->addElement('header', 'group_header'.$i, " Group $i");
@@ -347,7 +347,7 @@ class NDB_BVL_Instrument_peer_socialcontact extends NDB_BVL_Instrument
     {
         $this->form->addElement('header', 'section4_header', "Groups for Special Services");
 
-        $this->form->addElement('static', null,"Some children who need special services outside of school, such as speech <BR>or physical therapy, receive them in a group setting. If your child regularly participates<BR> with other children in such therapeutic groups, please list up to three of them below.<BR>If your child does not pariticpate in such groups, leave it blank and <BR>press Save and Continue at the bottom of screen to continue with the survey.");
+        $this->form->addElement('static', 'lorisSubHeader',"Some children who need special services outside of school, such as speech <BR>or physical therapy, receive them in a group setting. If your child regularly participates<BR> with other children in such therapeutic groups, please list up to three of them below.<BR>If your child does not pariticpate in such groups, leave it blank and <BR>press Save and Continue at the bottom of screen to continue with the survey.");
         for($i = 1; $i <= 3; $i++) {
 
             $this->form->addElement('header', 'group_header'.$i, " Group $i");
@@ -377,8 +377,8 @@ class NDB_BVL_Instrument_peer_socialcontact extends NDB_BVL_Instrument
          $i = $playmate;
          $this->form->addElement('header', 'instrument_title', "Peer Social Contact Questionnaire");
 
-         $this->form->addElement('static', null,"Now, we would like to find out more about your child`s relationship with each individual playmate.<BR>Answer the questions below in relationship to their contact in the last three months.");
-         $this->form->addElement('static', null,"<strong>NOTE: You only need to fill this form if the playmate initals are specified below.<BR>Please scroll to the botton of the sreen and click 'Save and Continue' if no initals are specified. <strong>");
+         $this->form->addElement('static', 'lorisSubHeader',"Now, we would like to find out more about your child`s relationship with each individual playmate.<BR>Answer the questions below in relationship to their contact in the last three months.");
+         $this->form->addElement('static', 'lorisSubHeader',"<strong>NOTE: You only need to fill this form if the playmate initals are specified below.<BR>Please scroll to the botton of the sreen and click 'Save and Continue' if no initals are specified. <strong>");
          $this->form->addElement('static', 'peer_initials_'.$i, "Playmate #".$i." : ");
         
          $group[] = &$this->form->createElement("select",'age_yrs_playmate_'.$i,null,$this->age_yrs);
@@ -391,7 +391,6 @@ class NDB_BVL_Instrument_peer_socialcontact extends NDB_BVL_Instrument
          $this->addSelect('gender_playmate_'.$i,'Gender ', $this->gender);
          $this->XINRegisterRule('gender_playmate_'.$i, array("gender_playmate_.$i{@}=={@}NEVER_REQUIRED"));
          
-         $this->form->addElement('static', null, "<br /><br />");
          $questions = array("q1_number_playtimes_playmate".$i=> "1. How many times did they play together in the last three months <BR>$this->indent in your home?","q2_avg_playtime_playmate".$i=>"2. How long are they together in an average play time? (in Minutes)");
          foreach($questions as $field=>$label) {
              $group [] = $this->createText($field, $label);
