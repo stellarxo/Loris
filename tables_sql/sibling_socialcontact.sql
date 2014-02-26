@@ -8,7 +8,7 @@ CREATE TABLE `sibling_socialcontact` (
                           `Testdate` timestamp NOT NULL,
 
                           `Data_entry_completion_status` enum('Incomplete','Complete') NOT NULL default 'Incomplete',
-`datecompleted` date default NULL,
+`Date_taken` date default NULL,
 `respondent` enum('mother','father','other') default NULL,
 `respondent_other` varchar(255) default NULL,
 `q1_engage_together` enum('0','1','2','3','4','5','6','7','refused_dontknow') default NULL,
