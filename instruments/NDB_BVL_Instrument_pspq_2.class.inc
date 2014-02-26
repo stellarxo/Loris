@@ -35,10 +35,6 @@ class NDB_BVL_Instrument_pspq_2 extends NDB_BVL_Instrument
         $this->testName = "pspq_2";           // test_names.Test_name
         $this->table = 'pspq_2';
         
-        //The array of dates/timestamps to convert to database dates/timestamps
-        //Any HTML_Quickform date elements must be listed here
-        $this->dateTimeFields = array("datecompleted_informant","datecompleted_respondent");
-        
         // data keyed by commentID
         $this->commentID = $commentID;
         $config =& NDB_Config::singleton();
@@ -90,12 +86,12 @@ class NDB_BVL_Instrument_pspq_2 extends NDB_BVL_Instrument
         $this->form->addElement('header', 'instrument_title', "Self Rating");
 
         $this->form->addElement('static', null, "<br /><br />");
-        $this->addBasicDate("datecompleted_respondent","Date ", $this->dateOptions);
 
        // $this->addNumericElement('respondent_age','Your Age <BR>(Please indicate your age in years)');
         $field = 'respondent_age';$label = 'Your Age <BR>(Please indicate your age in years)';
         $group [] = $this->createText($field, $label);
         $this->addGroup($group, $field . "_group", $label, null, false);
+        $this->XINRegisterRule($field,array("$field{@}=={@}NEVER_REQUIRED"), $field . "_group");
         unset($group);
         $this->addGroupRule($field . "_group", array(array(array("Value must be numeric.", 'numeric'))));
         
@@ -107,6 +103,7 @@ class NDB_BVL_Instrument_pspq_2 extends NDB_BVL_Instrument
         $this->XINRegisterRule('respondent_other', $rules_array, "Please specify relationship", 'respondent_other_group');
 
         $this->addSelect('respondent_gender',"Gender ", $this->gender); 
+        $this->XINRegisterRule('respondent_gender',array("respondent_gender{@}=={@}NEVER_REQUIRED"));
 
         $this->form->addElement('static', null, "<br /><br />");
         $questions = array("q1_like_being_otherpeople" => "1. I like being around other people",
@@ -124,6 +121,8 @@ class NDB_BVL_Instrument_pspq_2 extends NDB_BVL_Instrument
 
         foreach($questions as $field=>$label) {
             $this->addSelect($field, $label, $this->rating);
+            $this->XINRegisterRule($field,array("$field{@}=={@}NEVER_REQUIRED"));
+
         }
    
         $this->form->addFormRule(array(&$this, 'PSPQ_Rules'));
@@ -150,6 +149,7 @@ class NDB_BVL_Instrument_pspq_2 extends NDB_BVL_Instrument
 
         foreach($questions as $field=>$label) {
             $this->addSelect($field, $label, $this->rating);
+            $this->XINRegisterRule($field,array("$field{@}=={@}NEVER_REQUIRED"));
         }
 
     }
@@ -174,10 +174,8 @@ class NDB_BVL_Instrument_pspq_2 extends NDB_BVL_Instrument
 
         foreach($questions as $field=>$label) {
             $this->addSelect($field, $label, $this->rating);
+            $this->XINRegisterRule($field,array("$field{@}=={@}NEVER_REQUIRED"));
         }
-
-        $this->addBasicTextArea('comments',"Do you have any other comments?");
-        $this->XINRegisterRule('comments', array('comments{@}=={@}NEVER_REQUIRED'));
 
 
     }
@@ -192,12 +190,10 @@ class NDB_BVL_Instrument_pspq_2 extends NDB_BVL_Instrument
 
         $this->form->addElement('header', 'instrument_title', "Observer Rating");
 
-        $this->form->addElement('static', null, "<br /><br />");
-        $this->addBasicDate("datecompleted_informant","Date:", $this->dateOptions);
-
         $field = 'informant_age';$label = 'Your Age <BR>(Please indicate your age in years)';
         $group [] = $this->createText($field, $label);
         $this->addGroup($group, $field . "_group", $label, null, false);
+        $this->XINRegisterRule($field,array("$field{@}=={@}NEVER_REQUIRED"), $field . "_group");
         unset($group);
         $this->addGroupRule($field . "_group", array(array(array("Value must be numeric.", 'numeric'))));
       
@@ -209,7 +205,7 @@ class NDB_BVL_Instrument_pspq_2 extends NDB_BVL_Instrument
         $rules_array = array("informant{@}=={@}other");
         $this->XINRegisterRule('informant_other', $rules_array, "Please specify relationship", 'informant_other_group');
         $this->addSelect('informant_gender',"Gender ", $this->gender); 
-
+        $this->XINRegisterRule('informant_gender',array("informant_gender{@}=={@}NEVER_REQUIRED"));
 
         $this->form->addElement('static', null, "<br /><br />");
         $questions = array("qi1_like_being_otherpeople" => "1. He/She likes being around other people",
@@ -227,6 +223,7 @@ class NDB_BVL_Instrument_pspq_2 extends NDB_BVL_Instrument
 
         foreach($questions as $field=>$label) {
             $this->addSelect($field, $label, $this->rating);
+            $this->XINRegisterRule($field,array("$field{@}=={@}NEVER_REQUIRED"));
         }
    
         $this->form->addFormRule(array(&$this, 'PSPQ_Rules'));
@@ -253,6 +250,7 @@ class NDB_BVL_Instrument_pspq_2 extends NDB_BVL_Instrument
 
         foreach($questions as $field=>$label) {
             $this->addSelect($field, $label, $this->rating);
+            $this->XINRegisterRule($field,array("$field{@}=={@}NEVER_REQUIRED"));
         }
    
      
@@ -278,9 +276,10 @@ class NDB_BVL_Instrument_pspq_2 extends NDB_BVL_Instrument
 
         foreach($questions as $field=>$label) {
             $this->addSelect($field, $label, $this->rating);
+            $this->XINRegisterRule($field,array("$field{@}=={@}NEVER_REQUIRED"));
         }
-       $this->addBasicTextArea("comments_informant", "Do you have any other comments?");
-       $this->XINRegisterRule('comments_informant', array('comments_informant{@}=={@}NEVER_REQUIRED'));
+       $this->addBasicTextArea("comments", "Do you have any other comments?");
+       $this->XINRegisterRule('comments', array('comments{@}=={@}NEVER_REQUIRED'));
    
      
     }
