@@ -1,5 +1,11 @@
 <?php
 require_once "NDB_Client.class.inc";
+/**
+ * Queries database for certain parameter and values to check validity of data
+ *
+ * QC Checks class
+ * @package main
+ */
 
 class QC_Checks {
 
