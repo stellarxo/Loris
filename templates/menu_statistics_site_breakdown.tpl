@@ -1,4 +1,4 @@
-<h2>{$SiteName} Completion Statistics</h2>
+<h2>{$SiteName} Completion Statistics {$ProjectName}</h2>
 <table class="fancytable" width="100%">
    <tr>
       <th>Instrument</th>
