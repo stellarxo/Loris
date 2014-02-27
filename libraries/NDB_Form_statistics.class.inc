@@ -124,7 +124,7 @@ class NDB_Form_statistics extends NDB_Form
         foreach($subprojects as $key=>$val) {
            $subprojList .= $key.",";
         }
-        $subprojList = substr($subprojList, 0, -1);
+        $subprojList = $DB->quote(substr($subprojList, 0, -1));
 
         $Visits = Utility::getExistingVisitLabels($currentProject);  
         
@@ -239,7 +239,7 @@ class NDB_Form_statistics extends NDB_Form
           foreach($subprojects as $key=>$val) {
               $subprojList .= $key.",";
           }
-          $subprojList = substr($subprojList, 0, -1); 
+          $subprojList = $DB->quote(substr($subprojList, 0, -1));
           $this->tpl_data['Projects'] = $projects;
 
           $DB->select("SELECT CONCAT('C', CenterID) as ID, CenterID as NumericID, PSCArea as LongName, 
@@ -662,7 +662,7 @@ class NDB_Form_statistics extends NDB_Form
         foreach($subprojects as $key=>$val) {
            $subprojList .= $key.",";    
         }
-        $subprojList = substr($subprojList, 0, -1);
+        $subprojList = $DB->quote(substr($subprojList, 0, -1));
         $this->tpl_data['Projects'] = $projects;
         $DB->select("SELECT s.subprojectid as rowid, 
             COUNT(DISTINCT(c.PSCID)) as val 
@@ -774,6 +774,7 @@ class NDB_Form_statistics extends NDB_Form
                 c.CenterID <> '1' AND f.Data_entry='Complete' AND
                 f.Administration='All' AND
                 f.CommentID NOT LIKE 'DDE%'
+                $ExtraProject_Criteria
                 GROUP BY c.CenterID, SubprojectID, VLabel, Subcat
                 UNION
                 SELECT count(*) as val, 'Incomplete' as Subcat, 
@@ -784,6 +785,7 @@ class NDB_Form_statistics extends NDB_Form
                 JOIN flag f ON (f.SessionID=s.ID) 
                 JOIN $_REQUEST[DemographicInstrument] i USING(CommentID)
                 WHERE s.Active='Y' and s.CenterID <> 1
+                $ExtraProject_Criteria
                 AND f.CommentID NOT LIKE 'DDE%' AND (f.Data_entry IS NULL OR f.Data_entry <> 'Complete')
                 GROUP BY c.CenterID, SubprojectID, VLabel, Subcat
                 ", $result);
@@ -797,10 +799,10 @@ class NDB_Form_statistics extends NDB_Form
                     count(s.CandID) as val
                     FROM session s JOIN candidate c ON (s.CandID=c.CandID) 
                     WHERE s.active='Y' AND s.CenterID <> '1'
-                    AND ((s.Current_stage IN ('Visit', 'Screening')
-                    AND s.SubprojectID IN ($subprojList))) 
+                    AND (s.Current_stage IN ('Visit', 'Screening'))
                     AND COALESCE(s.Screening,'') NOT IN ('Failure', 'Withdrawal')
                     AND COALESCE(s.Visit,'') NOT IN ('Failure', 'Withdrawal')
+                    $ExtraProject_Criteria
                     GROUP BY c.CenterID, SubprojectID, VLabel, Subcat", $result);
             if (Utility::isErrorX($result)) {
                 return PEAR::raiseError("DB Error: ".$result->getMessage());
