@@ -11,6 +11,9 @@ class NDB_BVL_Instrument_pspq_1 extends NDB_BVL_Instrument
                             'stepfather'=>'Step-Father','other'=>'Other');
 
     var $informant = array(''=>NULL,'spouse'=>'Spouse','other'=>'Other');
+    var $informant_confidence = array(''=>NULL,'extremely_confident'=>'Extremely confident','very_confident'=>'Very confident',
+                                      'moderately_confident'=>'Moderately Confident','little_confident'=>'A little confident',
+                                      'not_confident'=>'Not at all confident');
     var $gender = array(''=>NULL,'male'=>'Male','female'=>'Female');
       
     //abstract function setup($commentID, $page);
@@ -31,9 +34,6 @@ class NDB_BVL_Instrument_pspq_1 extends NDB_BVL_Instrument
         $this->testName = "pspq_1";           // test_names.Test_name
         $this->table = 'pspq_1';
         
-        //The array of dates/timestamps to convert to database dates/timestamps
-        //Any HTML_Quickform date elements must be listed here
-        $this->dateTimeFields = array("datecompleted_informant","datecompleted_respondent");
         
         // data keyed by commentID
         $this->commentID = $commentID;
@@ -80,15 +80,15 @@ class NDB_BVL_Instrument_pspq_1 extends NDB_BVL_Instrument
     function _main(){
         // display test name
         $this->form->addElement('header', 'instrument_title', "PSPQ : Personality Styles and Preferences Questionnaire");
+        
+        $this->form->addElement('static','lorisSubHeader',"<strong>Instructions:</strong><BR>Thank you for filling out this questionnaire. The questions you will be answering are about <BR>personality, habits, and lifestyle. There are no good or bad responses, just differences in <BR>people's preferences.<BR><BR>1.Many of these questions ask about your interactions with other people. Think about the way<BR>your are with most people, rather than the way you are in special relationships you may have <BR> with your spouse, significant other, children, siblings and parents.<BR><BR>2.Everyone changes over time, which can make it hard to fill out questions about personality.<BR>Think about the way you've been most of your adult life, rather than the way you were as a <BR>teenager,or times you many have felt differently from normal.<BR><BR>3. You must answer each question and give only one answer per question. Choose the answer <BR>that best describes how often that statement applies to you. If you are confused about a <BR>question, please give it your best guess.<BR><BR>For each question, you will be given a choice of 6 answers that describe how often the statement<BR> applies to you:<BR> 1.Very Rarely<BR>2.Rarely<BR>3.Occasionally<BR>4.Somewhat Often<BR>5.Often<BR> 6.Very Often<BR><BR>Choose the number that matches the answer that comes closest to how you feel about each statement." );
         $this->form->addElement('header', 'instrument_title', "Self Rating");
-
-        $this->form->addElement('static', null, "<br /><br />");
-        $this->addBasicDate("datecompleted_respondent","Date ", $this->dateOptions);
 
         //$this->addNumericElement('respondent_age','Your Age <BR>(Please indicate your age in years)');
         $field = 'respondent_age';$label = 'Your Age <BR>(Please indicate your age in years)';
         $group [] = $this->createText($field, $label);
         $this->addGroup($group, $field . "_group", $label, null, false);
+        $this->XINRegisterRule($field,array("$field{@}=={@}NEVER_REQUIRED"), $field . "_group");
         unset($group);
         $this->addGroupRule($field . "_group", array(array(array("Value must be numeric.", 'numeric'))));
         $this->addSelect('respondent',"Relationship to child", $this->respondent);
@@ -99,7 +99,9 @@ class NDB_BVL_Instrument_pspq_1 extends NDB_BVL_Instrument
         $rules_array = array("respondent{@}=={@}other");
         $this->XINRegisterRule('respondent_other', $rules_array, "Please specify relationship", 'respondent_other_group');
         
-        $this->addSelect('respondent_gender',"Gender ", $this->gender); 
+        $this->addSelect('respondent_gender',"Gender ", $this->gender);
+        $this->XINRegisterRule('respondent_gender',array("respondent_gender{@}=={@}NEVER_REQUIRED"));
+
         $this->form->addElement('static', null, "<br /><br />");
         $questions = array("q1_like_being_otherpeople" => "1. I like being around other people",
                            "q2_hard_wordsout_smoothly" =>"2. I find it hard to get my words out smoothly",
@@ -116,6 +118,7 @@ class NDB_BVL_Instrument_pspq_1 extends NDB_BVL_Instrument
 
         foreach($questions as $field=>$label) {
             $this->addSelect($field, $label, $this->rating);
+            $this->XINRegisterRule($field,array("$field{@}=={@}NEVER_REQUIRED"));
         }
    
         $this->form->addFormRule(array(&$this, 'PSPQ_Rules'));
@@ -126,7 +129,6 @@ class NDB_BVL_Instrument_pspq_1 extends NDB_BVL_Instrument
          $this->form->addElement('header', 'instrument_title', "PSPQ : Personality Styles and Preferences Questionnaire Page2");
          $this->form->addElement('header', 'instrument_title', "Self Rating");
 
-         $this->form->addElement('static', null, "<br /><br />");
          $questions = array("q13_strongneed_sameness"=>"13. I feel a strong need for sameness from day to day",
                            "q14_others_dont_understand"=>"14. People ask me to repeat things I've said because they don't understand",
                            "q15_flexible"=>"15. I am flexible about how things should be done",
@@ -142,6 +144,8 @@ class NDB_BVL_Instrument_pspq_1 extends NDB_BVL_Instrument
 
         foreach($questions as $field=>$label) {
             $this->addSelect($field, $label, $this->rating);
+            $this->XINRegisterRule($field,array("$field{@}=={@}NEVER_REQUIRED"));
+
         }
 
     }
@@ -150,7 +154,6 @@ class NDB_BVL_Instrument_pspq_1 extends NDB_BVL_Instrument
          $this->form->addElement('header', 'instrument_title', "PSPQ : Personality Styles and Preferences Questionnaire Page3");
          $this->form->addElement('header', 'instrument_title', "Self Rating");
 
-         $this->form->addElement('static', null, "<br /><br />");
          $questions = array("q25_connecting_people"=>"25. I feel like I am really connecting with other people",
                            "q26_peoplefrustrated"=>"26. People get frustrated by my unwillingness to bend",
                            "q27_conversation_boresme"=>"27. Conversation bores me",
@@ -166,32 +169,28 @@ class NDB_BVL_Instrument_pspq_1 extends NDB_BVL_Instrument
 
         foreach($questions as $field=>$label) {
             $this->addSelect($field, $label, $this->rating);
+            $this->XINRegisterRule($field,array("$field{@}=={@}NEVER_REQUIRED"));
         }
-
-         //$this->form->addElement("textarea", 'comments', 'Do', array('cols'=>25, 'rows'=>4));
-        $this->addBasicTextArea('comments',"Do you have any other comments?");
-
-        //unset($this->XINRules['comments']) ;
-        $this->XINRegisterRule('comments', array('comments{@}=={@}NEVER_REQUIRED'));
-
 
     }
 
     function _page4(){
         // display test name
         $this->form->addElement('header', 'instrument_title', "PSPQ : Personality Styles and Preferences Questionnaire");
+        $this->form->addElement('static','lorisSubHeader',"<strong>Instructions:</strong><BR>You are about to fill out a series of statements related to personality and lifestyle.<BR>For each question, circle the answer that best describes how often that statement applies to<BR>the subject. So, if they watch the evening news once a week, you might circle #4: Somewhat often.<BR><BR><strong>3 IMPORTANT THINGS TO REMEMBER</strong><BR><BR>#1. Many of these questions ask about their interactions with other people. Please think about the <BR> way they are with most people rather than special relationships they may have with spouses or <BR> significant others, children, siblings, and parents.<BR> <BR>#2. Everyone changes over time, which can make it hard to fill out questions about personality. <BR>Think about the way they have been the majority of their adult life, rather than the way they were <BR> as a teenager, or times they many have felt different than normal.<BR><BR>#3. You must answer each question, and give only one answer per question. If you are confused,<BR> please just give it a guess.<BR><BR>Observer ratings help us obtain a more well-rounded measure of personality and lifestyle, since <BR>some traits and behaviors are most easily observed by other people.<BR><BR>When answering these questions please remember that we are interested in the way they are <BR> with most people, rather than the way they are in special relationships with you, their children,<BR> siblings, and parents. We are also interested in the way they have been most of their adult life,<BR> rather than the way they were as a teenager, or times they may have felt differently from normal.<BR><BR>Answer each question and only give one answer per question. If you have trouble answering,<BR> give it your best guess.");
+        
+        $this->addSelect('informant_confidence',"<BR>How confident do you feel about your ability to give an accurate report on the <BR>personality traits and behaviors of the participant?", $this->informant_confidence);
         $this->form->addElement('header', 'instrument_title', "Observer Rating");
 
-        $this->form->addElement('static', null, "<br /><br />");
-        $this->addBasicDate("datecompleted_informant","Date ", $this->dateOptions);
-
+/*
         //$this->addNumericElement('informant_age','Your Age:<BR>(Please indicate your age in years)');
         $field = 'informant_age';$label = 'Your Age <BR>(Please indicate your age in years)';
         $group [] = $this->createText($field, $label);
         $this->addGroup($group, $field . "_group", $label, null, false);
+        $this->XINRegisterRule($field,array("$field{@}=={@}NEVER_REQUIRED"), $field . "_group");
         unset($group);
         $this->addGroupRule($field . "_group", array(array(array("Value must be numeric.", 'numeric'))));
-
+*/
         $this->addSelect('informant',"Relationship to the other biological parent of the child", $this->informant);
         /*$this->addTextElement('informant_other',$this->indent."If Other please specify",
                               array("informant{@}=={@}other"),"Please specify relationship");
@@ -203,6 +202,7 @@ class NDB_BVL_Instrument_pspq_1 extends NDB_BVL_Instrument
         $this->XINRegisterRule('informant_other', $rules_array, "Please specify relationship", 'informant_other_group');
 
         $this->addSelect('informant_gender',"Gender ", $this->gender); 
+        $this->XINRegisterRule('informant_gender',array("informant_gender{@}=={@}NEVER_REQUIRED"));
 
         $this->form->addElement('static', null, "<br /><br />");
         $questions = array("qi1_like_being_otherpeople" => "1. He/She likes being around other people",
@@ -220,6 +220,7 @@ class NDB_BVL_Instrument_pspq_1 extends NDB_BVL_Instrument
 
         foreach($questions as $field=>$label) {
             $this->addSelect($field, $label, $this->rating);
+            $this->XINRegisterRule($field,array("$field{@}=={@}NEVER_REQUIRED"));
         }
    
         $this->form->addFormRule(array(&$this, 'PSPQ_Rules'));
@@ -246,6 +247,7 @@ class NDB_BVL_Instrument_pspq_1 extends NDB_BVL_Instrument
 
         foreach($questions as $field=>$label) {
             $this->addSelect($field, $label, $this->rating);
+            $this->XINRegisterRule($field,array("$field{@}=={@}NEVER_REQUIRED"));
         }
    
      
@@ -271,9 +273,10 @@ class NDB_BVL_Instrument_pspq_1 extends NDB_BVL_Instrument
 
         foreach($questions as $field=>$label) {
             $this->addSelect($field, $label, $this->rating);
+            $this->XINRegisterRule($field,array("$field{@}=={@}NEVER_REQUIRED"));
         }
-       $this->addBasicTextArea("comments_informant", "Do you have any other comments?");
-       $this->XINRegisterRule('comments_informant', array('comments_informant{@}=={@}NEVER_REQUIRED'));
+       $this->addBasicTextArea("comments", "Do you have any other comments?");
+       $this->XINRegisterRule('comments', array('comments_informant{@}=={@}NEVER_REQUIRED'));
    
      
     }
