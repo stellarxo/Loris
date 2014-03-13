@@ -133,14 +133,15 @@ $scores['other_raw']   += $max_q100;
 $scores['internal_raw'] = $scores['emotional_raw'] + $scores['anxious_raw'] + 
                           $scores['somatic_raw'] + $scores['withdrawn_raw'];
 
-if(!empty($scores['attention_raw']) && !empty($scores['aggressive_raw'] )) {
+//if(!empty($scores['attention_raw']) && !empty($scores['aggressive_raw'] )) {
    $scores['external_raw'] = $scores['attention_raw'] + $scores['aggressive_raw'];
-}
-if(!empty($scores['internal_raw']) && !empty($scores['external_raw'] )
-   && !empty($scores['sleep_raw'] ) && !empty($scores['other_raw'] )) {
-   $scores['total_raw']    = $scores['internal_raw'] + $scores['external_raw'] + 
+//}
+/*if(!empty($scores['internal_raw']) && !empty($scores['external_raw'] )
+   && !empty($scores['sleep_raw'] ) && !empty($scores['other_raw'] )) { 
+*/
+  $scores['total_raw']    = $scores['internal_raw'] + $scores['external_raw'] + 
                           $scores['sleep_raw'] + $scores['other_raw'];
-}
+//}
 $lookup_fields = array('internal'=>'Internal','external'=>'External',
                  'total'=>'Total','emotional'=>'EmotReact','anxious'=>'AnxDep',
                  'somatic'=>'SomatComp','withdrawn'=>'With','aggressive'=>'AggrBeh',
