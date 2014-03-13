@@ -6,70 +6,75 @@ class NDB_BVL_Instrument_peer_socialcontact extends NDB_BVL_Instrument
 
     var $rating = array(''=>NULL, '1_very_rarely'=>"1. Very Rarely", '2_rarely'=>"2. Rarely", 
                         '3_occasionally'=>"3. Occasionally",'4_somewhat_often'=>'4. Somewhat Often',
-                        '5_often'=>'5. Often','6_very_often'=>'6. Very Often','refused_dontknow'=>'Refused/I Don`t Know');
+                        '5_often'=>'5. Often','6_very_often'=>'6. Very Often','refused_dontknow'=>"Refused/I Don't Know");
     var $respondent = array(''=>NULL,'mother'=>'Mother','father'=>'Father','other'=>'Other');
     var $num_playmates = array(''=>NULL, 1=>1,2=>2,3=>3,4=>4,5=>5);
     var $total_peer = 5;
     var $age_yrs = array(''=>NULL,'0'=>'0yrs','1'=>'1 yr','2'=>'2 yrs','3'=>'3 yrs','4'=>'4 yrs','5'=>'5 yrs',
                          '6'=>'6 yrs','7'=>'7 yrs','8'=>'8 yrs','9'=>'9 yrs','10'=>'10 yrs',
                          '11'=>'11 yrs','12'=>'12 yrs','13'=>'13 yrs','14'=>'14 yrs','15'=>'15 yrs',
-                         'refused_dontknow'=>'Refused/I Don`t Know');
+                         'refused_dontknow'=>"Refused/I Don't Know");
     var $age_mos = array(''=>NULL,'0'=>'0 mos','1'=>'1 mos','2'=>'2 mos','3'=>'3 mos','4'=>'4 mos','5'=>'5 mos',
                          '6'=>'6 mos','7'=>'7 mos','8'=>'8 mos','9'=>'9 mos','10'=>'10 mos',
-                         '11'=>'11 mos','12'=>'12 mos','refused_dontknow'=>'Refused/I Don`t Know');
-    var $gender = array(''=>NULL,'boy'=>'Boy','girl'=>'Girl','refused_dontknow'=>'Refused/I Don`t Know');
+                         '11'=>'11 mos','12'=>'12 mos','refused_dontknow'=>"Refused/I Don't Know");
+    var $gender = array(''=>NULL,'boy'=>'Boy','girl'=>'Girl','refused_dontknow'=>"Refused/I Don't Know");
     var $q3_options = array(''=>NULL, 'cousins'=>'Cousins','neighbors'=>'Neighbors',
-                            'classmates'=>'Classmates','parent_friend_child'=>'Parents friends child',
-                            'other'=>'Other','refused_dontknow'=>'Refused/I Don`t Know');
+                            'classmates'=>'Classmates','parent_friend_child'=>"Parent's friend's child",
+                            'other'=>'Other','refused_dontknow'=>"Refused/I Don't Know");
     var $q4_options = array(''=>NULL,'mostly_your_home'=>'Mostly your home',
                             'mostly_playmate_home'=>'Mostly playmates home','equally_both'=>'Equally both',
-                            'mostly_other'=>'Mostly other (such as playground)','refused_dontknow'=>'Refused/I Don`t Know');
+                            'mostly_other'=>'Mostly other (such as playground)','refused_dontknow'=>"Refused/I Don't Know");
     var $q5_options = array(''=>NULL,'walking_distance'=>'Walking distance',
                             'short_drive'=>'Short drive(upto 15min)','long_drive'=>'Long drive(> 15min)',
-                            'refused_dontknow'=>'Refused/I Don`t Know');
-    var $yesNo = array(''=>NULL,'yes'=>'Yes','no'=>'No','refused_dontknow'=>'Refused/I Don`t Know');
-    var $q8_options = array(''=>NULL,'none'=>'None','dont_know'=>'Dont know','autism'=>'Autism',
+                            'refused_dontknow'=>"Refused/I Don't Know");
+    var $yesNo = array(''=>NULL,'yes'=>'Yes','no'=>'No','refused_dontknow'=>"Refused/I Don't Know");
+    var $q8_options = array(''=>NULL,'none'=>'None','dont_know'=>"Don't know",'autism'=>'Autism',
                             'other_developmental_delay'=>'Other developmental delay',
                             'speech_language_delay'=>'Speech or language delay',
-                            'other'=>'Other','refused_dontknow'=>'Refused/I Don`t Know');
+                            'other'=>'Other','refused_dontknow'=>"Refused/I Don't Know");
     var $q9_options = array(''=>NULL,'really_likes'=>'Really likes','likes'=>'Likes',
                             'pretty_neutral'=>'Pretty neutral','just_tolerates'=>'Just tolerates',
-                            'refused_dontknow'=>'Refused/I Don`t Know');
+                            'refused_dontknow'=>"Refused/I Don't Know");
     var $q10_options = array(''=>NULL,'really_likes'=>'Really likes','likes'=>'Likes',
                             'pretty_neutral'=>'Pretty neutral','just_tolerates'=>'Just tolerates',
-                            'refused_dontknow'=>'Refused/I Don`t Know');
+                            'refused_dontknow'=>"Refused/I Don't Know");
 
     var $q11_options = array(''=>NULL,'very_well'=>'Very well','okay'=>'Okay',
-                             'not_very_well'=>'Not very well','refused_dontknow'=>'Refused/I Don`t Know');
+                             'not_very_well'=>'Not very well','refused_dontknow'=>"Refused/I Don't Know");
     var $q12_options = array(''=>NULL,'my_child'=>'My child','playmate'=>'Playmate','both'=>'Both',
-                             'adult'=>'Adult','refused_dontknow'=>'Refused/I Don`t Know');
+                             'adult'=>'Adult','refused_dontknow'=>"Refused/I Don't Know");
     var $q13_options = array(''=>NULL,'positive'=>'Positive','neutral'=>'Neutral','negative'=>'Negative',
-                             'refused_dontknow'=>'Refused/I Don`t Know');
+                             'refused_dontknow'=>"Refused/I Don't Know");
     var $q14_options = array(''=>NULL,'very_excited'=>'Very Excited','active'=>'Active','calm'=>'Calm',
-                             'refused_dontknow'=>'Refused/I Don`t Know');
+                             'refused_dontknow'=>"Refused/I Don't Know");
     var $q15_options = array(''=>NULL,'frequently'=>'Frequently','occasionally'=>'Occasionally',
-                             'rarely'=>'Rarely','refused_dontknow'=>'Refused/I Don`t Know');
+                             'rarely'=>'Rarely','refused_dontknow'=>"Refused/I Don't Know");
     var $q16_options = array(''=>NULL,'ends_play'=>'Ends play','major_disruption'=>'Major disruptions',
                              'minor_disruption'=>'Minor disruption','no_disruption'=>'No disruption',
-                             'refused_dontknow'=>'Refused/I Don`t Know');
+                             'refused_dontknow'=>"Refused/I Don't Know");
     var $q17_options = array(''=>NULL,'lot_of_interaction'=>'A lot of interaction',
                              'stay_close_no_interaction'=>'Stay close but do not interact much',
                              'dont_stay_close_or_interact'=>'Do not stay close or interact much',
-                             'refused_dontknow'=>'Refused/I Don`t Know');
+                             'refused_dontknow'=>"Refused/I Don't Know");
     var $q19_options = array(''=>NULL,'very_difficult'=>'Very difficult',
                              'somewhat_difficult'=>'Somewhat difficult',
                              'not_difficult'=>'Not difficult at all',
-                             'refused_dontknow'=>'Refused/I Don`t Know'); 
+                             'refused_dontknow'=>"Refused/I Don't Know"); 
     var $q20_options = array(''=>NULL,'very_stressful'=>'Very stressful',
                              'somewhat_stressful'=>'Somewhat stressful',
                              'not_stressful'=>'Not stressful at all',
-                             'refused_dontknow'=>'Refused/I Don`t Know');
+                             'refused_dontknow'=>"Refused/I Don't Know");
     var $q21_options = array(''=>NULL,'frequently'=>'Frequently','occasionally'=>'Occasionally',
-                             'little_or_none'=>'Little-or-none','refused_dontknow'=>'Refused/I Don`t Know');
-    var $q23_options = array(''=>NULL,'yes'=>'Yes','no'=>'No (go to next section)','refused_dontknow'=>'Refused/I Don`t Know');
-    var $q24_options = array(''=>NULL,'yes'=>'Yes','no'=>'No','refused_dontknow'=>'Refused/I Don`t Know');
-    var $activity_desc = array(''=>NULL,'religious'=>'a. Religious activity','play_group'=>'b. Play group','sports'=>'c. Sports(soccer, dance etc)','recreational'=>'d. Recreational (music, art, reading, etc.)','other'=>'Other','refused_dontknow'=>'Refused/I Don`t Know');
+                             'little_or_none'=>'Little-or-none','refused_dontknow'=>"Refused/I Don't Know");
+    var $q23_options = array(''=>NULL,'yes'=>'Yes','no'=>'No (go to next section)','refused_dontknow'=>"Refused/I Don't Know");
+    var $q24_options = array(''=>NULL,'yes'=>'Yes','no'=>'No','refused_dontknow'=>"Refused/I Don't Know");
+    var $activity_desc = array(''=>NULL,'religious'=>'a. Religious activity','play_group'=>'b. Play group','sports'=>'c. Sports(soccer, dance etc)','recreational'=>'d. Recreational (music, art, reading, etc.)','other'=>'Other','refused_dontknow'=>"Refused/I Don't Know");
     var $special_service = array(''=>NULL,'occupational_physical'=>'a. Occupational/Physical therapy','lang_speech'=>'b. Language or speech therapy','behavior'=>'c. Behavior therapy','social_skills'=>'d. Social skills or play group');
+    var $numdays_week = array(''=>NULL,'0'=>'0','1'=>'1','2'=>'2','3'=>'3','4'=>'4','5'=>'5','6'=>'6','7'=>'7','refused_dontknow'=>"Refused/I Don't Know");
+    var $numhrs_day = array(''=>NULL,'0'=>'0','1'=>'1','2'=>'2','3'=>'3','4'=>'4','5'=>'5','6'=>'6','7'=>'7','8'=>'8','9'=>'9',
+                            '10'=>'10','11'=>'11','12'=>'12','13'=>'13','14'=>'14','15'=>'15','16'=>'16','17'=>'17','18'=>'18',
+                            '19'=>'19','20'=>'20','21'=>'21','22'=>'22','23'=>'23','24'=>'24','refused_dontknow'=>"Refused/I Don't Know");
+
     //abstract function setup($commentID, $page);
     /**
      * sets up basic data, such as the HTML_Quickform object, and so on.
@@ -209,7 +214,7 @@ class NDB_BVL_Instrument_peer_socialcontact extends NDB_BVL_Instrument
         }  
         $this->form->addGroup($group, "table_headers", null, $this->_GUIDelimiter, false);
         unset($group);
-        $know_eachother = array(""=>null,"yes"=>"Yes","no"=>"No","refused_dontknow"=>"Refused/I Don`t Know");
+        $know_eachother = array(""=>null,"yes"=>"Yes","no"=>"No","refused_dontknow"=>"Refused/I Don't Know");
         for($i = 1; $i < $this->localDefaults['total_peer']; $i++){
             $groupname = $i."_group";
             for($j = 1; $j <= $this->localDefaults['total_peer']; $j++ )  {
@@ -271,13 +276,18 @@ class NDB_BVL_Instrument_peer_socialcontact extends NDB_BVL_Instrument
        $this->addSelect('q23_childin_school',"23. Is your child in school or preschool?",$this->q23_options);
        $this->XINRegisterRule('q23_childin_school', array("q23_childin_school{@}=={@}yes"), "Please specify");
 
-       $this->addSelect('q24_childin_spneeds_school',"24. Is your child in a classroom which specializez in educating children<BR>$this->indent with special educational needs?",$this->q23_options);
+       $this->addSelect('q24_childin_spneeds_school',"24. Is your child in a classroom which specializes in educating children<BR>$this->indent with special educational needs?",$this->q23_options);
       $this->XINRegisterRule('q24_childin_spneeds_school', array("q23_childin_school{@}=={@}yes"), "Please specify"); 
+       
+      $this->addSelect('q25_school_numdays_perweek','25. How many days per week?', $this->numdays_week);
+      $this->XINRegisterRule('q25_school_numdays_perweek', array("q25_school_numdays_perweek{@}=={@}NEVER_REQUIRED"));
+      //$this->XINRegisterRule(, array("{@}=={@}NEVER_REQUIRED"));
 
-       $questions = array('q25_school_numdays_perweek'=>'25. How many days per week?',
-                          'q26_school_numhrs_perday'=>'26. How many hours per day?',
-                          'q27_numchildren_perclass'=>'27. How many children are in the (primary) classroom?',
-                          'q28_numchildren_specialneeds'=>'28. How many of the children have special needs? (if known)');
+      $this->addSelect('q26_school_numhrs_perday','26. How many hours per day?', $this->numhrs_day);
+      $this->XINRegisterRule('q26_school_numhrs_perday', array("q26_school_numhrs_perday{@}=={@}NEVER_REQUIRED"));
+      
+      $questions = array('q27_numchildren_perclass'=>'27. How many children are in the (primary) classroom?',
+                         'q28_numchildren_specialneeds'=>'28. How many of the children have special needs? (if known)');
        foreach($questions as $field=>$label) {
            $group [] = $this->createText($field, $label);
            $this->addGroup($group, $field . "_group", $label, null, false);
@@ -292,10 +302,14 @@ class NDB_BVL_Instrument_peer_socialcontact extends NDB_BVL_Instrument
 
        $this->addSelect('q30_childin_spneeds_childcare',"30. Is it a center which specializes in educating children<BR>$this->indent with special educational needs?",$this->q23_options);
        $this->XINRegisterRule('q30_childin_spneeds_childcare', array("q29_childin_childcare{@}=={@}yes"), "Please specify");
+       
+       $this->addSelect('q31_childcare_numdays_perweek','31. How many days per week?', $this->numdays_week);
+       $this->XINRegisterRule('q31_childcare_numdays_perweek', array("q31_childcare_numdays_perweek{@}=={@}NEVER_REQUIRED"));
+       
+       $this->addSelect('q32_childcare_numhrs_perday','32. How many hours per day?',$this->numhrs_day);
+       $this->XINRegisterRule('q32_childcare_numhrs_perday',array("q32_childcare_numhrs_perday{@}=={@}NEVER_REQUIRED"));
 
-       $questions = array('q31_childcare_numdays_perweek'=>'31. How many days per week?',
-               'q32_childcare_numhrs_perday'=>'32. How many hours per day?',
-               'q33_numchildren_perclass'=>'33. How many children are in the (primary) classroom?',
+       $questions = array('q33_numchildren_perclass'=>'33. How many children are in the (primary) classroom?',
                'q35_numchildren_specialneeds'=>'34. How many of the children have special needs? (if known)');
        foreach($questions as $field=>$label) {
            $group [] = $this->createText($field, $label);
@@ -310,7 +324,7 @@ class NDB_BVL_Instrument_peer_socialcontact extends NDB_BVL_Instrument
     {
         $this->form->addElement('header', 'section3_header', "Section 3: Community Group Activities");
 
-        $this->form->addElement('static', 'lorisSubHeader',"In addition to school or childcare, some children regularly participate in other group<BR>activities with their peers, such as, swimming lessons, soccer, or classes outside of school.<BR>If your child participates in such activities, please list up to three groups below.<BR><BR>If your child does not participate in any such groups, please go to the next section.<BR>Press 'Save and Continue' at the bottom of screen to continue with the survey.<BR><BR>**Please note that groups designed to provide special services for children with<BR>developmental problems are to be included in the next section**");
+        $this->form->addElement('static', 'lorisSubHeader',"In addition to school or childcare, some children regularly participate in other group<BR>activities with their peers, such as swimming lessons, soccer, or classes outside of school.<BR>If your child participates in such activities, please list up to three groups below.<BR><BR>If your child does not participate in any such groups, please go to the next section.<BR>Press 'Save and Continue' at the bottom of screen to continue with the survey.<BR><BR>**Please note that groups designed to provide special services for children with<BR>developmental problems are to be included in the next section**");
         for($i = 1; $i <= 3; $i++) {
             
             $this->form->addElement('header', 'group_header'.$i, " Group $i");
@@ -347,7 +361,7 @@ class NDB_BVL_Instrument_peer_socialcontact extends NDB_BVL_Instrument
     {
         $this->form->addElement('header', 'section4_header', "Section 4: Groups for Special Services");
 
-        $this->form->addElement('static', 'lorisSubHeader',"Some children who need special services outside of school, such as speech <BR>or physical therapy, receive them in a group setting. If your child regularly participates<BR> with other children in such therapeutic groups, please list up to three of them below.<BR><BR>If your child does not pariticpate in such groups, leave it blank and <BR>press 'Save and Continue' at the bottom of screen to continue with the survey.");
+        $this->form->addElement('static', 'lorisSubHeader',"Some children who need special services outside of school, such as speech <BR>or physical therapy, receive them in a group setting. If your child regularly participates<BR> with other children in such therapeutic groups, please list up to three of them below.<BR><BR>If your child does not participate in such groups, leave it blank and <BR>press 'Save and Continue' at the bottom of screen to continue with the survey.");
         for($i = 1; $i <= 3; $i++) {
 
             $this->form->addElement('header', 'group_header'.$i, " Group $i");

@@ -6,14 +6,14 @@ class NDB_BVL_Instrument_sibling_socialcontact extends NDB_BVL_Instrument
 
     var $rating = array(''=>NULL, '1_very_rarely'=>"1. Very Rarely", '2_rarely'=>"2. Rarely", 
                         '3_occasionally'=>"3. Occasionally",'4_somewhat_often'=>'4. Somewhat Often',
-                        '5_often'=>'5. Often','6_very_often'=>'6. Very Often','refused_dontknow'=>'Refused/I Don`t Know');
+                        '5_often'=>'5. Often','6_very_often'=>'6. Very Often','refused_dontknow'=>"Refused/I Don't Know");
     var $respondent = array(''=>NULL,'mother'=>'Mother','father'=>'Father','other'=>'Other');
     var $num_days_week = array (''=>NULL,'0'=>'0','1'=>'1','2'=>'2','3'=>'3','4'=>'4','5'=>'5',
-                                '6'=>'6','7'=>'7','refused_dontknow'=>'Refused/I Don`t Know');   
+                                '6'=>'6','7'=>'7','refused_dontknow'=>"Refused/I Don't Know");   
     var $rating1 = array (''=>NULL,'often'=>'Often','occasionally'=>'Occasionally','never'=>'Never',
-                          'refused_dontknow'=>'Refused/I Don`t Know');
+                          'refused_dontknow'=>"Refused/I Don't Know");
     var $rating2 = array(''=>NULL,'very_well'=>'Very Well','okay'=>'Okay','not_very_well'=>'Not very well',
-                         'refused_dontknow'=>'Refused/I Don`t Know');
+                         'refused_dontknow'=>"Refused/I Don't Know");
     //abstract function setup($commentID, $page);
     /**
      * sets up basic data, such as the HTML_Quickform object, and so on.
@@ -123,35 +123,35 @@ class NDB_BVL_Instrument_sibling_socialcontact extends NDB_BVL_Instrument
 
     function _page2(){
          
-         $family = array(''=>NULL,'older_child'=>'Older Child','sibling'=>'Sibling','both'=>'Both','adult'=>'Adult','refused_dontknow'=>'Refused/I Don`t Know');
+         $family = array(''=>NULL,'older_child'=>'Older Child','sibling'=>'Sibling','both'=>'Both','adult'=>'Adult','refused_dontknow'=>"Refused/I Don't Know");
          $this->addSelect('q9_controlplay',"9. Who usually is leading or in control of their play?", $family);
          $this->XINRegisterRule('q9_controlplay', array("q9_controlplay{@}=={@}NEVER_REQUIRED") );
 
          $this->addSelect('q10_toneplay',"10. What is the typical tone of their play?", array(''=>NULL,'positive'=>'Positive',
-                           'neutral'=>'Neutral','negative'=>'Negative','refused_dontknow'=>'Refused/I Don`t Know'));
+                           'neutral'=>'Neutral','negative'=>'Negative','refused_dontknow'=>"Refused/I Don't Know"));
          $this->XINRegisterRule('q10_toneplay', array("q10_toneplay{@}=={@}NEVER_REQUIRED") );
 
-         $this->addSelect('q11_excitementlevel',"11. What is the typical level of excitement?", array(''=>NULL,'very_excited'=>'Very Excited','active'=>'Active','calm'=>'Calm','refused_dontknow'=>'Refused/I Don`t Know'));
+         $this->addSelect('q11_excitementlevel',"11. What is the typical level of excitement?", array(''=>NULL,'very_excited'=>'Very Excited','active'=>'Active','calm'=>'Calm','refused_dontknow'=>"Refused/I Don't Know"));
          $this->XINRegisterRule('q11_excitementlevel', array("q11_excitementlevel{@}=={@}NEVER_REQUIRED") );
 
          $this->addSelect('q12_conflicts_duringplay',"12. How often do they have conflicts during play?", array(''=>NULL,'often'=>'Often',
-                          'occasionally'=>'Occasionally','rarely'=>'Rarely','refused_dontknow'=>'Refused/I Don`t Know'));
+                          'occasionally'=>'Occasionally','rarely'=>'Rarely','refused_dontknow'=>"Refused/I Don't Know"));
          $this->XINRegisterRule('q12_conflicts_duringplay', array("q12_conflicts_duringplay{@}=={@}NEVER_REQUIRED") );
 
          $this->addSelect('q13_disruptive_conflicts',"13. How disruptive are their conflicts?", array(''=>NULL,'ends_play'=>'Ends play',
                           'major_disruption'=>'Major Disruption','minor_disruption'=>'Minor Disruption','no_disruption'=>'No disruption',
-                          'refused_dontknow'=>'Refused/I Don`t Know'));
+                          'refused_dontknow'=>"Refused/I Don't Know"));
          $this->XINRegisterRule('q13_disruptive_conflicts', array("q13_disruptive_conflicts{@}=={@}NEVER_REQUIRED") );
 
          $this->addSelect('q14_involed_inplay',"14. In a typical play session, how closely involved are they with each other during play?",
                           array(''=>NULL,'lot_of_interaction'=>'A lot of interaction','stay_close_no_interaction'=>'Stay close but
                           do not interact much','dont_stay_close_or_interact'=>'Do not stay close or interact much',
-                          'refused_dontknow'=>'Refused/I Don`t Know'));
+                          'refused_dontknow'=>"Refused/I Don't Know"));
          $this->XINRegisterRule('q14_involed_inplay', array("q14_involed_inplay{@}=={@}NEVER_REQUIRED") );
 
          $this->addSelect('q15_stressful_playsession','15. How stressful is it usually for you to monitor play sessions?',array(''=>NULL,
                           'very_stressful'=>'Very Stressful','somewhat_stressful'=>'Somewhat Stressful','not_stressful'=>'Not Stressful',
-                          'refused_dontknow'=>'Refused/I Don`t Know'));
+                          'refused_dontknow'=>"Refused/I Don't Know"));
          $this->XINRegisterRule('q15_stressful_playsession', array("q15_stressful_playsession{@}=={@}NEVER_REQUIRED") );
 
          $this->form->addElement('static',null,"16. How do you usually monitor the play at home?");
@@ -162,7 +162,7 @@ class NDB_BVL_Instrument_sibling_socialcontact extends NDB_BVL_Instrument
                             'q16_outofview_cry'=>'e. Out of view and can only hear outbursts or cries');
                     
          $rating3 = array(''=>NULL,'frequently'=>'Frequently','occasionally'=>'Occasionally','little_none'=>'Little-or-none',
-                          'refused_dontknow'=>'Refused/I Don`t Know');
+                          'refused_dontknow'=>"Refused/I Don't Know");
          foreach($questions as $qstn=>$desc) {
              $this->addSelect($qstn,$this->indent.$desc, $rating3);
              $this->XINRegisterRule($qstn, array("$qstn{@}=={@}NEVER_REQUIRED") );
