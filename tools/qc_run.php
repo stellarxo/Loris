@@ -17,10 +17,8 @@ $result = $DB->connect($dbConfig['database'], $dbConfig['username'], $dbConfig['
 if(PEAR::isError($result)) {
         die("Could not connect to database: ".$result->getMessage());
 }
-$sites =array('2','3','4','5'); 
-foreach($sites as $site) {
-$run = new QC_Checks($site);
- $run->run();
+if($argv) {
+	$run = new QC_Checks($argv[1]);
+	$run->run();
 }
-
 ?>
