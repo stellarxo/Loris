@@ -17,7 +17,6 @@ class NDB_BVL_Instrument_med_records_24 extends NDB_BVL_Instrument_med_records {
                                          'other' => "other",'not_answered'=>'Not Answered');
 
 
-
 	/**
 	 * sets up basic data, such as the HTML_Quickform object, and so on.
 	 *
@@ -32,7 +31,17 @@ class NDB_BVL_Instrument_med_records_24 extends NDB_BVL_Instrument_med_records {
 		$this->table = 'med_records_24'; // name of database table corresponding to instrument
 	 
 
-        $this->_selectMultipleElements = array('developmental_concerns_specify');
+                $this->_selectMultipleElements = array('developmental_concerns_specify');
+                $config =& NDB_Config::singleton();
+                $dateOptions = array(
+                                'language' => 'en',
+                                'format'   => 'YMd', 
+                                'minYear'  => $config->getSetting('startYear'),
+                                'maxYear'  => $config->getSetting('endYear'),
+                                'addEmptyOption' => true,
+                                'emptyOptionValue' => null
+                                );
+                $this->dateOptions = $dateOptions;
 
 		/**
 		 * Array of column names to be ignored by the double data entry conflict detector.
@@ -173,32 +182,82 @@ class NDB_BVL_Instrument_med_records_24 extends NDB_BVL_Instrument_med_records {
         // automatically adds examiner & date of administration
         $this->_addMetadataFields();
         $this->form->addElement('textarea', 'comments', 'General comments:');
+        $this->addBasicDate('Date_lastupdated', 'Date last updated:', $this->dateOptions);
+        $this->dateTimeFields[] = 'Date_lastupdated';
+
 	}
 	
 	function _page1() {
-		$this->form->addElement ( "select", "significant_injuries_or_illnesses", "Has the infant had any significant injuries or illnesses (e.g., head injury, high fevers, seizures)?", $this->yesNo );
-		$this->addTextElement ( "significant_injuries_or_illnesses_specify", $this->indent . "If yes, specify:", array ("significant_injuries_or_illnesses{@}=={@}yes" ), "This field is required." );
-		$this->form->addElement ( "static", null, "<BR>" ); //line space
+		$this->addBasicDate('Date_lastupdated1', 'Date last updated:', $this->dateOptions);
+                $this->dateTimeFields[] = 'Date_lastupdated1';
+                $this->form->addElement ( "static", null, "<BR>" ); 
+		$this->form->addElement ( "select", "significant_injuries_or_illnesses", "Has the infant had any significant injuries or illnesses<BR>".$this->indent." (e.g., head injury, high fevers, seizures)?", $this->yesNo );
+		$this->addTextElement ( "significant_injuries_or_illnesses_specify", $this->indent . "1. Specify first injury/illness:", array ("significant_injuries_or_illnesses{@}=={@}yes" ), "This field is required." );
+                $this->form->addElement('date','date_injury_illness', $this->indent.$this->indent. "Date of first injury/illness", $this->dateOptions, array ("significant_injuries_or_illnesses{@}=={@}yes" ), "This field is required." );
+                $this->dateTimeFields[] = 'date_injury_illness';
+                $mapping = array(2=>'second',3=>'third',4=>'fourth',5=>'fifth');
+		for($i=2; $i<=5; $i++) {
+			$this->addTextElement ( "significant_injuries_or_illnesses_specify".$i, $this->indent . "$i. Specify $mapping[$i] injury/illness:", array ("significant_injuries_or_illnesses_specify$i{@}=={@}NEVER_REQUIRED"));
+			$group[] = $this->form->createElement("date", "date_injury_illness".$i, null, $this->dateOptions);
+			$this->dateTimeFields[] = "date_injury_illness".$i; //add to array of dates and times.
+			$group[] = $this->form->createElement("select","date_injury_illness".$i."_status", null, array(NULL=>"", 'not_answered'=>"Not Answered"));
+			$this->form->addGroup($group, "date_injury_illness".$i."_group", $this->indent.$this->indent."Date of $mapping[$i] injury/illness", $this->_GUIDelimiter, FALSE);
+			unset($group);
+                        $status = "date_injury_illness".$i."_status";
+			$this->XINRegisterRule("date_injury_illness".$i, array("$status{@}=={@}", "significant_injuries_or_illnesses_specify$i{@}!={@}"), "A Date, not answered is required", "date_injury_illness".$i."_group");
+
+
+		}
+ 
+                $this->form->addElement ( "static", null, "<BR>" ); //line space
 		
 		$this->_possibleExclusionaryCriteria();
 		
 		$this->form->addElement ( "select", "other_significant_events_or_diagnosis", "Other significant events or medical diagnoses?", $this->yesNo );
-		$this->addTextElement ( "other_significant_events_or_diagnosis_specify", $this->indent . "If yes, specify:", array ("other_significant_events_or_diagnosis{@}=={@}yes" ), "This field is required." );
+		$this->addTextElement ( "other_significant_events_or_diagnosis_specify", $this->indent . "1. Specify first significant event/medical diagnoses", array ("other_significant_events_or_diagnosis{@}=={@}yes" ), "This field is required." );
+               $this->form->addElement('date','date_event_medicaldiagnoses', $this->indent.$this->indent. "Date of first significant event/medical diagnoses");
+               $this->dateTimeFields[] = 'date_event_medicaldiagnoses';
+	       for ($i=2; $i<=5; $i++) {
+		       $this->addTextElement ("other_significant_events_or_diagnosis_specify".$i, $this->indent . "$i. Specify $mapping[$i] significant event/medical diagnoses", array("other_significant_events_or_diagnosis_specify$i{@}=={@}NEVER_REQUIRED"));
+                        $group[] = $this->form->createElement("date", "date_event_medicaldiagnoses".$i, null, $this->dateOptions);
+                        $this->dateTimeFields[] = "date_event_medicaldiagnoses".$i; //add to array of dates and times.
+                        $group[] = $this->form->createElement("select","date_event_medicaldiagnoses".$i."_status", null, array(NULL=>"", 'not_answered'=>"Not Answered"));
+                        $this->form->addGroup($group, "date_event_medicaldiagnoses".$i."_group", $this->indent.$this->indent."Date of $mapping[$i] injury/illness", $this->_GUIDelimiter, FALSE);
+                        unset($group);
+                        $status = "date_event_medicaldiagnoses".$i."_status";
+                        $this->XINRegisterRule("date_event_medicaldiagnoses".$i, array("$status{@}=={@}", "other_significant_events_or_diagnosis_specify$i{@}!={@}"), "A Date, not answered is required", "date_event_medicaldiagnoses".$i."_group");
+
+
+	       }  
+            
 		$this->form->addElement ( "static", null, "<BR>" ); //line space
 
 		$this->form->addElement ( "select", "developmental_concerns", "Are there any developmental concerns?", $this->yesNo );
-		$this->addSelect( "developmental_concerns_specify", $this->indent . "If there were developmental concerns please specify them:", $this->developmental_concerns,"multiple size='5'" );
+		$this->addSelect( "developmental_concerns_specify", $this->indent . "1. If there were developmental concerns pleases specify first concern:", $this->developmental_concerns,"multiple size='5'" );
 		$this->XINRegisterRule ( "developmental_concerns_specify", array ("developmental_concerns{@}=={@}yes" ), "Please specify the developmental concerns:" );
+		$this->addTextElement ( "developmental_concerns_other_specify", $this->indent .$this->indent. "If other is selected, specify:", array ("developmental_concerns{@}=={@}yes", "developmental_concerns_specify{@}=={@}other" ), "This field is required." );
 		
-		$this->form->addElement ( "static", null, "<BR>" ); //line space
+		$mapping = array(2=>'second',3=>'third',4=>'fourth',5=>'fifth');
 		
+		$this->addNumericElement ( "developmental_concerns_age_months", $this->indent .$this->indent. "If there were developmental concerns, please specify the age <BR>".$this->indent. $this->indent."of the child in months when these were noted:", array ("developmental_concerns{@}=={@}yes" ), "This field is required." );
+                $this->form->addElement('date','date_development_concern', $this->indent.$this->indent."Date of first development concern: ");
+                $this->dateTimeFields[] = 'date_development_concern';
+                for ($i=2;$i <=5;$i++) {
+                   $this->addSelect( "developmental_concerns_specify".$i, $this->indent . "$i. If there were developmental concerns please specify $mapping[$i] concern:", $this->developmental_concerns,"multiple size='5'" );
+                   $this->XINRegisterRule("developmental_concerns_specify$i", array("developmental_concerns_specify$i{@}=={@}NEVER_REQUIRED"));
+                   $this->addTextElement ( "developmental_concerns_other_specify".$i, $this->indent .$this->indent. "If other is selected, specify:",array("developmental_concerns_specify$i{@}=={@}other"));
+                   $this->addNumericElement ( "developmental_concerns_age_months".$i, $this->indent .$this->indent. "If there were developmental concerns, please specify the age <BR>".$this->indent. $this->indent."of the child in months when these were noted:",array("developmental_concerns_specify$i{@}!={@}"));
+                  
+		   $group[] = $this->form->createElement("date", "date_development_concern".$i, null, $this->dateOptions);
+		   $this->dateTimeFields[] = "date_development_concern".$i; //add to array of dates and times.
+		   $group[] = $this->form->createElement("select","date_development_concern".$i."_status", null, array(NULL=>"", 'not_answered'=>"Not Answered"));
+		   $this->form->addGroup($group, "date_development_concern".$i."_group", $this->indent.$this->indent."Date of $mapping[$i] injury/illness", $this->_GUIDelimiter, FALSE);
+		   unset($group);
+		   $status = "date_development_concern".$i."_status";
+		   $this->XINRegisterRule("date_development_concern".$i, array("$status{@}=={@}", "developmental_concerns_specify$i{@}!={@}"), "A Date, not answered is required", "date_development_concern".$i."_group");
 
-		$this->addTextElement ( "developmental_concerns_other_specify", $this->indent . "If other is selected, specify:", array ("developmental_concerns{@}=={@}yes", "developmental_concerns_specify{@}=={@}other" ), "This field is required." );
-		
-		$this->form->addelement ( "static", null, "<BR>" );
-		
-		$this->addTextElement ( "developmental_concerns_age_months", $this->indent . "If there were developmental concerns, please specify the age of the child in months when these were noted:", array ("developmental_concerns{@}=={@}yes" ), "This field is required." );
-		
+                }
+                		
 		$this->form->addElement ( "static", null, "$this->double_indent <BR/>" ); //line space
 		
 
@@ -212,6 +271,7 @@ class NDB_BVL_Instrument_med_records_24 extends NDB_BVL_Instrument_med_records {
     }
 
     function _page4(){
+       
         $this->form->addElement('header', null, 'Audiology');
 
         $this->form->addElement('header', 'instrument_title', "Audiology Evaluation Results");
@@ -253,6 +313,51 @@ class NDB_BVL_Instrument_med_records_24 extends NDB_BVL_Instrument_med_records {
 
 
     }
+    function _possibleExclusionaryCriteria() {
+                $this->form->addElement ( 'header', null, "Possible Exclusionary Criteria:" );
+                $this->form->addElement ( "static", null, "<BR>" ); //line space
+
+
+                $this->form->addElement ( "select", "tested_of_fragile_x", "Tested for Fragile X?", $this->yesNo );
+                $this->form->addElement ( "select", "tested_of_fragile_x_result", $this->indent . "If yes, result was:", $this->normal_abnormal_FX );
+                $this->XINRegisterRule ( "tested_of_fragile_x_result", array ("tested_of_fragile_x{@}=={@}yes" ), "Please indicate the Fragile X result." );
+                $this->form->addElement ( "static", null, "<BR>" ); //line space
+
+
+                $this->form->addElement ( "select", "tested_for_tuberous_sclerosis", "Tested for Tuberous Sclerosis?", $this->yesNo );
+                $this->form->addElement ( "select", "tested_for_tuberous_sclerosis_result", $this->indent . "If yes, result was:", $this->normal_abnormal_TS );
+                $this->XINRegisterRule ( "tested_for_tuberous_sclerosis_result", array ("tested_for_tuberous_sclerosis{@}=={@}yes" ), "Please indicate the Tuberous Sclerosis result." );
+                $this->form->addElement ( "static", null, "<BR>" ); //line space
+
+
+                $this->form->addElement ( "select", "tested_for_neurofibromatosis", "Tested for Neurofibromatosis?", $this->yesNo );
+                $this->form->addElement ( "select", "tested_for_neurofibromatosis_result", $this->indent . "If yes, result was:", $this->normal_abnormal_NF );
+                $this->XINRegisterRule ( "tested_for_neurofibromatosis_result", array ("tested_for_neurofibromatosis{@}=={@}yes" ), "Please indicate the Neurofibromatosis result." );
+                $this->form->addElement ( "static", null, "<BR>" ); //line space
+
+
+                $this->form->addElement ( "select", "other_genetic_tests_completed", "Other genetic tests completed?", $this->yesNo );
+                $this->addTextElement ( "other_genetic_tests_completed_specify", $this->indent . "1. Specify first test and result:", array ("other_genetic_tests_completed{@}=={@}yes" ), "This field is required." );
+                $this->form->addElement('date','date_genetic_test', $this->indent.$this->indent. "Date of first genetic test", $this->dateOptions);
+                $this->dateTimeFields[] = "date_genetic_test";
+  
+                $mapping = array(2=>'second',3=>'third',4=>'fourth',5=>'fifth');
+                for($i=2; $i<=5; $i++) {
+                        $this->addTextElement ( "other_genetic_tests_completed_specify".$i, $this->indent . "$i. Specify $mapping[$i] genetic test and result:", array ("other_genetic_tests_completed_specify$i{@}=={@}NEVER_REQUIRED"));
+                        $group[] = $this->form->createElement("date", "date_genetic_test".$i, null, $this->dateOptions);
+                        $this->dateTimeFields[] = "date_genetic_test".$i; //add to array of dates and times.
+                        $group[] = $this->form->createElement("select","date_genetic_test".$i."_status", null, array(NULL=>"", 'not_answered'=>"Not Answered"));
+                        $this->form->addGroup($group, "date_genetic_test".$i."_group", $this->indent.$this->indent."Date of $mapping[$i] genetic test", $this->_GUIDelimiter, FALSE);
+                        unset($group);
+                        $status = "date_genetic_test".$i."_status";
+                        $this->XINRegisterRule("date_genetic_test".$i, array("$status{@}=={@}", "other_genetic_tests_completed_specify$i{@}!={@}"), "A Date, not answered is required", "date_genetic_test".$i."_group");
+
+                }
+
+
+                $this->form->addElement ( "static", null, "<BR>" ); //line space
+        }
+
 }
 
 ?>
