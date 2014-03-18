@@ -106,12 +106,14 @@ class NDB_BVL_Instrument_med_records_recruit extends NDB_BVL_Instrument_med_reco
 		// automatically adds examiner & date of administration
 		$this->_addMetadataFields ();
         $this->form->addElement('textarea', 'comments', 'General comments:');
-        $this->addDateElement('Date_lastupdated', 'Date last updated:', $this->dateOptions);
+        $this->addDateElement('Lastupdated', 'Date last updated:', $this->dateOptions);
+        $this->form->addFormRule(array(&$this, 'Med_Rules'));
+
 
 	}
 	
 	function _page1() {
-                $this->addDateElement('Date_lastupdated_exclusionary', 'Date this form was last updated:', $this->dateOptions);
+                $this->addDateElement('Lastupdated_exclusionary', 'Date this form was last updated:', $this->dateOptions);
                 $this->form->addElement ( "static", null, "<BR>" );
 
 		$this->form->addElement ( "select", "significant_notes_during_pregnancy_or_delivery", "Anything significant noted during pregnancy or delivery?", $this->yesNo );
@@ -214,6 +216,13 @@ p");
 
                 }
 
+	}
+	function Med_Rules($values) {
+		$errors = array();
+		if($values['Lastupdated_date'] < $values['Date_taken']) {
+			$errors['Lastupdated_date_group'] = 'The date should be after Date of Administration';
+		}
+		return $errors;
 	}
 }
 
