@@ -91,7 +91,7 @@ class NDB_BVL_Instrument_EARLI_interview_S3_inserts extends NDB_BVL_Instrument_E
                 $this->testName = "EARLI_interview_S3_inserts";           // test_names.Test_name
                 $this->table = 'EARLI_interview_S3_inserts';              // name of table containing data keyed by commentID
                 $this->commentID = $commentID;
-                $this->_requiredElements = array('mother_id', 'q3_5_1');
+                $this->_requiredElements = array('interview_time', 'q3_5_1');
 
 
                 //The array of dates/timestamps to convert to database dates/timestamps

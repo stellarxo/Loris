@@ -45,7 +45,7 @@ class NDB_BVL_Instrument_EARLI_interview_PART_4 extends NDB_BVL_Instrument_EARLI
 		$this->testName = "EARLI_interview_PART_4";           // test_names.Test_name
 		$this->table = 'EARLI_interview_PART_4';              // name of table containing data keyed by commentID
 		$this->commentID = $commentID;
-		$this->requiredElements = array('interviewer', 'q8_196_a', 'q8_211', 'q8_273', 'q8_302', 'q8_308', 'q8_321_a', 'q8_342_a', 'q8_366', 'interview_end_date');
+		$this->requiredElements = array('interview_time', 'q8_196_a', 'q8_211', 'q8_273', 'q8_302', 'q8_308', 'q8_321_a', 'q8_342_a', 'q8_366', 'interview_end_date');
 
 
 		//The array of dates/timestamps to convert to database dates/timestamps

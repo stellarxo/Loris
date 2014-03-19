@@ -46,7 +46,7 @@ class NDB_BVL_Instrument_EARLI_interview_PART_3 extends NDB_BVL_Instrument_EARLI
 		$this->testName = "EARLI_interview_PART_3";           // test_names.Test_name
 		$this->table = 'EARLI_interview_PART_3';              // name of table containing data keyed by commentID
 		$this->commentID = $commentID;
-		$this->requiredElements = array('interviewer', 'q8_1', 'q8_21', 'q8_41', 'q8_76', 'q8_98', 'q8_127_a', 'q8_152_a'); 
+		$this->requiredElements = array('interview_time', 'q8_1', 'q8_21', 'q8_41', 'q8_76', 'q8_98', 'q8_127_a', 'q8_152_a'); 
           
  /*Commenting out, this will be inherited from base class
         $this->_doubleDataEntryDiffIgnoreColumns = array('CommentID', 'UserID', 'Testdate',
