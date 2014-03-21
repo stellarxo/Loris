@@ -274,14 +274,13 @@ class NDB_BVL_Instrument_peer_socialcontact extends NDB_BVL_Instrument
        $this->form->addElement('header','section2_a',"School");
         
        $this->addSelect('q23_childin_school',"23. Is your child in school or preschool?",$this->q23_options);
-       $this->XINRegisterRule('q23_childin_school', array("q23_childin_school{@}=={@}yes"), "Please specify");
+       $this->XINRegisterRule('q23_childin_school', array("q23_childin_school{@}=={@}NEVER_REQUIRED"), "Please specify");
 
        $this->addSelect('q24_childin_spneeds_school',"24. Is your child in a classroom which specializes in educating children<BR>$this->indent with special educational needs?",$this->q23_options);
       $this->XINRegisterRule('q24_childin_spneeds_school', array("q23_childin_school{@}=={@}yes"), "Please specify"); 
        
       $this->addSelect('q25_school_numdays_perweek','25. How many days per week?', $this->numdays_week);
       $this->XINRegisterRule('q25_school_numdays_perweek', array("q25_school_numdays_perweek{@}=={@}NEVER_REQUIRED"));
-      //$this->XINRegisterRule(, array("{@}=={@}NEVER_REQUIRED"));
 
       $this->addSelect('q26_school_numhrs_perday','26. How many hours per day?', $this->numhrs_day);
       $this->XINRegisterRule('q26_school_numhrs_perday', array("q26_school_numhrs_perday{@}=={@}NEVER_REQUIRED"));
@@ -291,14 +290,14 @@ class NDB_BVL_Instrument_peer_socialcontact extends NDB_BVL_Instrument
        foreach($questions as $field=>$label) {
            $group [] = $this->createText($field, $label);
            $this->addGroup($group, $field . "_group", $label, null, false);
-           $this->XINRegisterRule($field, array("q23_childin_school{@}=={@}yes"),$field . "_group");
+           $this->XINRegisterRule($field, array("q24_childin_spneeds_school{@}=={@}NEVER_REQUIRED"));
            unset($group);
            $this->addGroupRule($field . "_group", array(array(array("Value must be numeric.", 'numeric'))));
        }
        $this->form->addElement('header','section2_b',"Childcare");
 
        $this->addSelect('q29_childin_childcare',"29. Is your child in a childcare setting?",$this->q23_options);
-       $this->XINRegisterRule('q29_childin_childcare', array("q29_childin_childcare{@}=={@}yes"), "Please specify");
+       $this->XINRegisterRule('q29_childin_childcare', array("q29_childin_childcare{@}=={@}NEVER_REQUIRED"), "Please specify");
 
        $this->addSelect('q30_childin_spneeds_childcare',"30. Is it a center which specializes in educating children<BR>$this->indent with special educational needs?",$this->q23_options);
        $this->XINRegisterRule('q30_childin_spneeds_childcare', array("q29_childin_childcare{@}=={@}yes"), "Please specify");
@@ -310,11 +309,11 @@ class NDB_BVL_Instrument_peer_socialcontact extends NDB_BVL_Instrument
        $this->XINRegisterRule('q32_childcare_numhrs_perday',array("q32_childcare_numhrs_perday{@}=={@}NEVER_REQUIRED"));
 
        $questions = array('q33_numchildren_perclass'=>'33. How many children are in the (primary) classroom?',
-               'q35_numchildren_specialneeds'=>'34. How many of the children have special needs? (if known)');
+               'q34_numchildren_specialneeds'=>'34. How many of the children have special needs? (if known)');
        foreach($questions as $field=>$label) {
            $group [] = $this->createText($field, $label);
            $this->addGroup($group, $field . "_group", $label, null, false);
-           $this->XINRegisterRule($field, array("q29_childin_childcare{@}=={@}yes"),$field . "_group");
+           $this->XINRegisterRule($field, array("q30_childin_spneeds_childcare{@}=={@}NEVER_REQUIRED"));
            unset($group);
            $this->addGroupRule($field . "_group", array(array(array("Value must be numeric.", 'numeric'))));
        }
