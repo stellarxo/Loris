@@ -130,8 +130,7 @@ class NDB_BVL_Instrument_med_records_recruit extends NDB_BVL_Instrument_med_reco
                 $this->form->addGroup($group, "date_injury_illness_group", $this->indent.$this->indent."Date of first injury/illness", $this->_GUIDelimiter, FALSE);
                 unset($group);
                 $status = "date_injury_illness_status";
-                $this->XINRegisterRule("date_injury_illness", array("$status{@}=={@}", "significant_injuries_or_illnesses_specify{@}!={@}"), "A Date, not answered is required", "date_injury_illness".$i."_grou
-p");
+                $this->XINRegisterRule("date_injury_illness", array("$status{@}=={@}", "significant_injuries_or_illnesses_specify{@}!={@}"), "A Date, not answered is required", "date_injury_illness".$i."_group");
                 $this->dateTimeFields[] = 'date_injury_illness';
                 $mapping = array(2=>'second',3=>'third',4=>'fourth',5=>'fifth');
 		for($i=2; $i<=5; $i++) {
@@ -217,6 +216,57 @@ p");
                 }
 
 	}
+        function _possibleExclusionaryCriteria() {
+		$this->form->addElement ( 'header', null, "Possible Exclusionary Criteria:" );
+		$this->form->addElement ( "static", null, "<BR>" ); //line space
+		
+
+		$this->form->addElement ( "select", "tested_of_fragile_x", "Tested for Fragile X?", $this->yesNo );
+		$this->form->addElement ( "select", "tested_of_fragile_x_result", $this->indent . "If yes, result was:", $this->normal_abnormal_FX );
+		$this->XINRegisterRule ( "tested_of_fragile_x_result", array ("tested_of_fragile_x{@}=={@}yes" ), "Please indicate the Fragile X result." );
+		$this->form->addElement ( "static", null, "<BR>" ); //line space
+		
+
+		$this->form->addElement ( "select", "tested_for_tuberous_sclerosis", "Tested for Tuberous Sclerosis?", $this->yesNo );
+		$this->form->addElement ( "select", "tested_for_tuberous_sclerosis_result", $this->indent . "If yes, result was:", $this->normal_abnormal_TS );
+		$this->XINRegisterRule ( "tested_for_tuberous_sclerosis_result", array ("tested_for_tuberous_sclerosis{@}=={@}yes" ), "Please indicate the Tuberous Sclerosis result." );
+		$this->form->addElement ( "static", null, "<BR>" ); //line space
+		
+
+		$this->form->addElement ( "select", "tested_for_neurofibromatosis", "Tested for Neurofibromatosis?", $this->yesNo );
+		$this->form->addElement ( "select", "tested_for_neurofibromatosis_result", $this->indent . "If yes, result was:", $this->normal_abnormal_NF );
+		$this->XINRegisterRule ( "tested_for_neurofibromatosis_result", array ("tested_for_neurofibromatosis{@}=={@}yes" ), "Please indicate the Neurofibromatosis result." );
+		$this->form->addElement ( "static", null, "<BR>" ); //line space
+		
+
+		$this->form->addElement ( "select", "other_genetic_tests_completed", "Other genetic tests completed?", $this->yesNo );
+                $this->addTextElement ( "other_genetic_tests_completed_specify", $this->indent . "1. Specify first genetic test:", array ("other_genetic_tests_completed{@}=={@}yes" ), "This field is required." );
+                $this->addTextElement ( "other_genetic_result_completed_specify", $this->indent .$this->indent . "Specify first genetic test result:", array ("other_genetic_tests_completed{@}=={@}yes" ), "This field is required." );
+                $group[] = $this->form->createElement("date", "date_genetic_test", null, $this->dateOptions);
+                $this->dateTimeFields[] = "date_genetic_test"; //add to array of dates and times.
+                $group[] = $this->form->createElement("select","date_genetic_test_status", null, array(NULL=>"", 'not_answered'=>"Not Answered"));
+                $this->form->addGroup($group, "date_genetic_test_group", $this->indent.$this->indent."Date of first genetic test", $this->_GUIDelimiter, FALSE);
+                unset($group);
+                $status = "date_genetic_test_status";
+                $this->XINRegisterRule("date_genetic_test", array("$status{@}=={@}", "other_genetic_tests_completed_specify{@}!={@}"), "A Date, not answered is required", "date_genetic_test_group");
+
+                $mapping = array(2=>'second',3=>'third',4=>'fourth',5=>'fifth');
+                for($i=2; $i<=5; $i++) {
+                        $this->addTextElement ( "other_genetic_tests_completed_specify".$i, $this->indent . "$i. Specify $mapping[$i] genetic test:", array ("other_genetic_tests_completed_specify$i{@}=={@}NEVER_REQUIRED"));
+                        $this->addTextElement ( "other_genetic_result_completed_specify".$i, $this->indent .$this->indent . "Specify $mapping[$i] genetic test result:", array ("other_genetic_tests_completed_specify$i{@}=={@}NEVER_REQUIRED"));
+                        $group[] = $this->form->createElement("date", "date_genetic_test".$i, null, $this->dateOptions);
+                        $this->dateTimeFields[] = "date_genetic_test".$i; //add to array of dates and times.
+                        $group[] = $this->form->createElement("select","date_genetic_test".$i."_status", null, array(NULL=>"", 'not_answered'=>"Not Answered"));
+                        $this->form->addGroup($group, "date_genetic_test".$i."_group", $this->indent.$this->indent."Date of $mapping[$i] genetic test", $this->_GUIDelimiter, FALSE);
+                        unset($group);
+                        $status = "date_genetic_test".$i."_status";
+                        $this->XINRegisterRule("date_genetic_test".$i, array("$status{@}=={@}", "other_genetic_tests_completed_specify$i{@}!={@}"), "A Date, not answered is required", "date_genetic_test".$i."_group");
+
+                }
+
+
+		$this->form->addElement ( "static", null, "<BR>" ); //line space
+        }
 	function Med_Rules($values) {
 		$errors = array();
 		if($values['Lastupdated_date'] < $values['Date_taken']) {

@@ -180,16 +180,17 @@ class NDB_BVL_Instrument_med_records_24 extends NDB_BVL_Instrument_med_records {
         // automatically adds examiner & date of administration
         $this->_addMetadataFields();
         $this->form->addElement('textarea', 'comments', 'General comments:');
-	$this->addDateElement('Lastupdated', 'Date last updated:', $this->dateOptions);
-        $this->form->addFormRule(array(&$this, 'Med_Rules'));
+//	$this->addDateElement('Lastupdated', 'Date last updated:', $this->dateOptions);
+  //      $this->form->addFormRule(array(&$this, 'Med_Rules'));
 
 	}
 	
 	function _page1() {
-                $this->addDateElement('Lastupdated_exclusionary', 'Date this form was last updated:', $this->dateOptions);
+               // $this->addDateElement('Lastupdated_exclusionary', 'Date this form was last updated:', $this->dateOptions);
                 $this->form->addElement ( "static", null, "<BR>" ); 
 		$this->form->addElement ( "select", "significant_injuries_or_illnesses", "Has the infant had any significant injuries or illnesses<BR>".$this->indent." (e.g., head injury, high fevers, seizures)?", $this->yesNo );
 		$this->addTextElement ( "significant_injuries_or_illnesses_specify", $this->indent . "1. Specify first injury/illness:", array ("significant_injuries_or_illnesses{@}=={@}yes" ), "This field is required." );
+                /*
 		$group[] = $this->form->createElement("date", "date_injury_illness", null, $this->dateOptions);
 		$this->dateTimeFields[] = "date_injury_illness"; //add to array of dates and times.
 		$group[] = $this->form->createElement("select","date_injury_illness_status", null, array(NULL=>"", 'not_answered'=>"Not Answered"));
@@ -214,12 +215,14 @@ class NDB_BVL_Instrument_med_records_24 extends NDB_BVL_Instrument_med_records {
 
 			}
 		} 
+            */
                 $this->form->addElement ( "static", null, "<BR>" ); //line space
 		
 		$this->_possibleExclusionaryCriteria();
 		
 		$this->form->addElement ( "select", "other_significant_events_or_diagnosis", "Other significant events or medical diagnoses?", $this->yesNo );
 		$this->addTextElement ( "other_significant_events_or_diagnosis_specify", $this->indent . "1. Specify first significant event/medical diagnosis", array ("other_significant_events_or_diagnosis{@}=={@}yes" ), "This field is required." );
+ /*
 		$group[] = $this->form->createElement("date", "date_event_medicaldiagnoses", null, $this->dateOptions);
 		$this->dateTimeFields[] = "date_event_medicaldiagnoses"; //add to array of dates and times.
 		$group[] = $this->form->createElement("select","date_event_medicaldiagnoses_status", null, array(NULL=>"", 'not_answered'=>"Not Answered"));
@@ -241,7 +244,8 @@ class NDB_BVL_Instrument_med_records_24 extends NDB_BVL_Instrument_med_records {
 
 
 			}  
-		}            
+		} 
+*/           
 		$this->form->addElement ( "static", null, "<BR>" ); //line space
 
 		$this->form->addElement ( "select", "developmental_concerns", "Are there any developmental concerns?", $this->yesNo );
@@ -253,7 +257,7 @@ class NDB_BVL_Instrument_med_records_24 extends NDB_BVL_Instrument_med_records {
 		
 		$this->addNumericElement ( "developmental_concerns_age_months", $this->indent .$this->indent. "If there were developmental concerns, please specify the age <BR>".$this->indent. $this->indent."of the child in months when these were noted:" );
                 $this->XINRegisterRule("developmental_concerns_age_months", array ("developmental_concerns{@}=={@}yes" ));
-
+/*
 		$group[] = $this->form->createElement("date", "date_development_concern", null, $this->dateOptions);
 		$this->dateTimeFields[] = "date_development_concern"; //add to array of dates and times.
 		$group[] = $this->form->createElement("select","date_development_concern_status", null, array(NULL=>"", 'not_answered'=>"Not Answered"));
@@ -279,7 +283,8 @@ class NDB_BVL_Instrument_med_records_24 extends NDB_BVL_Instrument_med_records {
 				$this->XINRegisterRule("date_development_concern".$i, array("$status{@}=={@}", "developmental_concerns_specify$i{@}!={@}"), "A Date, not answered is required", "date_development_concern".$i."_group");
 
 			}
-		}                		
+		}  
+*/              		
 		$this->form->addElement ( "static", null, "$this->double_indent <BR/>" ); //line space
 		
 
@@ -297,7 +302,7 @@ class NDB_BVL_Instrument_med_records_24 extends NDB_BVL_Instrument_med_records {
         $this->form->addElement('header', null, 'Audiology');
 
         $this->form->addElement('header', 'instrument_title', "Audiology Evaluation Results");
-	$this->addDateElement('Lastupdated_audiology', 'Date this form was last updated:', $this->dateOptions);
+//	$this->addDateElement('Lastupdated_audiology', 'Date this form was last updated:', $this->dateOptions);
 
         $this->form->addElement ( "static", null, "<BR>" );
         $this->form->addElement("select", "not_completed", "For this participant an audiology evaluation was", array(null=>"", "complete"=>"Completed","not_complete"=>"Not Completed", "other"=>"Not Answered"));
@@ -363,6 +368,7 @@ class NDB_BVL_Instrument_med_records_24 extends NDB_BVL_Instrument_med_records {
                 $this->form->addElement ( "select", "other_genetic_tests_completed", "Other genetic tests completed?", $this->yesNo );
                 $this->addTextElement ( "other_genetic_tests_completed_specify", $this->indent . "1. Specify first genetic test:", array ("other_genetic_tests_completed{@}=={@}yes" ), "This field is required." );
                 $this->addTextElement ( "other_genetic_result_completed_specify", $this->indent .$this->indent . "Specify first genetic test result:", array ("other_genetic_tests_completed{@}=={@}yes" ), "This field is required." );
+/*
 		$group[] = $this->form->createElement("date", "date_genetic_test", null, $this->dateOptions);
 		$this->dateTimeFields[] = "date_genetic_test"; //add to array of dates and times.
 		$group[] = $this->form->createElement("select","date_genetic_test_status", null, array(NULL=>"", 'not_answered'=>"Not Answered"));
@@ -386,7 +392,7 @@ class NDB_BVL_Instrument_med_records_24 extends NDB_BVL_Instrument_med_records {
 
 			}
 		}
-
+*/
                 $this->form->addElement ( "static", null, "<BR>" ); //line space
         }
  function Med_Rules($values) {

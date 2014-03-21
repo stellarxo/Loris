@@ -97,29 +97,7 @@ function _possibleExclusionaryCriteria() {
 		$this->form->addElement ( "select", "other_genetic_tests_completed", "Other genetic tests completed?", $this->yesNo );
                 $this->addTextElement ( "other_genetic_tests_completed_specify", $this->indent . "1. Specify first genetic test:", array ("other_genetic_tests_completed{@}=={@}yes" ), "This field is required." );
                 $this->addTextElement ( "other_genetic_result_completed_specify", $this->indent .$this->indent . "Specify first genetic test result:", array ("other_genetic_tests_completed{@}=={@}yes" ), "This field is required." );
-                $group[] = $this->form->createElement("date", "date_genetic_test", null, $this->dateOptions);
-                $this->dateTimeFields[] = "date_genetic_test"; //add to array of dates and times.
-                $group[] = $this->form->createElement("select","date_genetic_test_status", null, array(NULL=>"", 'not_answered'=>"Not Answered"));
-                $this->form->addGroup($group, "date_genetic_test_group", $this->indent.$this->indent."Date of first genetic test", $this->_GUIDelimiter, FALSE);
-                unset($group);
-                $status = "date_genetic_test_status";
-                $this->XINRegisterRule("date_genetic_test", array("$status{@}=={@}", "other_genetic_tests_completed_specify{@}!={@}"), "A Date, not answered is required", "date_genetic_test_group");
-
-                $mapping = array(2=>'second',3=>'third',4=>'fourth',5=>'fifth');
-                for($i=2; $i<=5; $i++) {
-                        $this->addTextElement ( "other_genetic_tests_completed_specify".$i, $this->indent . "$i. Specify $mapping[$i] genetic test:", array ("other_genetic_tests_completed_specify$i{@}=={@}NEVER_REQUIRED"));
-                        $this->addTextElement ( "other_genetic_result_completed_specify".$i, $this->indent .$this->indent . "Specify $mapping[$i] genetic test result:", array ("other_genetic_tests_completed_specify$i{@}=={@}NEVER_REQUIRED"));
-                        $group[] = $this->form->createElement("date", "date_genetic_test".$i, null, $this->dateOptions);
-                        $this->dateTimeFields[] = "date_genetic_test".$i; //add to array of dates and times.
-                        $group[] = $this->form->createElement("select","date_genetic_test".$i."_status", null, array(NULL=>"", 'not_answered'=>"Not Answered"));
-                        $this->form->addGroup($group, "date_genetic_test".$i."_group", $this->indent.$this->indent."Date of $mapping[$i] genetic test", $this->_GUIDelimiter, FALSE);
-                        unset($group);
-                        $status = "date_genetic_test".$i."_status";
-                        $this->XINRegisterRule("date_genetic_test".$i, array("$status{@}=={@}", "other_genetic_tests_completed_specify$i{@}!={@}"), "A Date, not answered is required", "date_genetic_test".$i."_group");
-
-                }
-
-
+               
 		$this->form->addElement ( "static", null, "<BR>" ); //line space
 	}
 	
@@ -134,10 +112,10 @@ function _possibleExclusionaryCriteria() {
 		$this->form->addElement ( "static", null, "Units will be automatically converted, if you would like to see the conversion results please exit this page and re-enter it.<BR>" );
 		$this->form->addElement ( "static", null, "If you select no more growth data, no more data needs to be entered into the form after that point.<BR>" );
                 $this->_linkParagraph();
-                
-                $this->addDateElement('Lastupdated_growthchart', 'Date this form was last updated:', $this->dateOptions);
-                $this->form->addElement ( "static", null, "<BR>" );
-
+                if($this->project == 2) { 
+                    $this->addDateElement('Lastupdated_growthchart', 'Date this form was last updated:', $this->dateOptions);
+                    $this->form->addElement ( "static", null, "<BR>" );
+                }
 		//Source of information
 		$administrations = array ("first" => "1", "second" => "2", "third" => "3", "fourth" => "4", "fifth" => "5", "sixth" => "6", "seventh" => "7", "eighth" => "8", "ninth" => "9", "tenth" => "10", "eleventh" => "11", "twelfth" => "12", "thirteenth" => "13", "fourteenth" => "14", "fifteenth" => "15", "sixteenth" => "16", "seventeenth" => "17");
 		
@@ -295,10 +273,11 @@ function _possibleExclusionaryCriteria() {
 	  $this->form->addElement ( "static", null, "<BR>" ); //line space
 	  $this->form->addElement ( "static", null, "Units will be automatically converted, if you would like to see the conversion results please exit this page and re-enter it.<BR>" );
 	  $this->form->addElement ( "static", null, "If you select no more growth data, no more data needs to be entered into the form after that point.<BR>" );
-          
-          $this->addDateElement('Lastupdated_growthchart2', 'Date this form was last updated:', $this->dateOptions);
- 	  $this->form->addElement ( "static", null, "<BR>" );
-	  //Source of information
+          if($this->project == 2) {
+              $this->addDateElement('Lastupdated_growthchart2', 'Date this form was last updated:', $this->dateOptions);
+ 	      $this->form->addElement ( "static", null, "<BR>" );
+	  }
+          //Source of information
 	  $administrations = array ("eighteenth" => "18", "nineteenth" =>"19", "twenty" => "20", "twentyone" => "21", "twentytwo" => "22", "twentythree" => "23", "twentyfour" => "24", 
 			  "twentyfive" => "25", "twentysix" => "26", "twentyseven" => "27", "twentyeight" => "28", "twentynine" => "29", "thirty" => "30", "thirtyone" => "31", "thirtytwo" => "32", 
 			  "thirtythree" => "33", "thirtyfour" => "34", "thirtyfive" => "35");
