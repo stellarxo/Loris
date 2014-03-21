@@ -290,7 +290,7 @@ class NDB_BVL_Instrument_peer_socialcontact extends NDB_BVL_Instrument
        foreach($questions as $field=>$label) {
            $group [] = $this->createText($field, $label);
            $this->addGroup($group, $field . "_group", $label, null, false);
-           $this->XINRegisterRule($field, array("q24_childin_spneeds_school{@}=={@}NEVER_REQUIRED"));
+           $this->XINRegisterRule($field, array("$field{@}=={@}NEVER_REQUIRED"));
            unset($group);
            $this->addGroupRule($field . "_group", array(array(array("Value must be numeric.", 'numeric'))));
        }
@@ -313,7 +313,7 @@ class NDB_BVL_Instrument_peer_socialcontact extends NDB_BVL_Instrument
        foreach($questions as $field=>$label) {
            $group [] = $this->createText($field, $label);
            $this->addGroup($group, $field . "_group", $label, null, false);
-           $this->XINRegisterRule($field, array("q30_childin_spneeds_childcare{@}=={@}NEVER_REQUIRED"));
+           $this->XINRegisterRule($field, array("$field{@}=={@}NEVER_REQUIRED"));
            unset($group);
            $this->addGroupRule($field . "_group", array(array(array("Value must be numeric.", 'numeric'))));
        }
