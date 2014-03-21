@@ -29,9 +29,9 @@ class NDB_BVL_Instrument_EARLI_interview_PART_1 extends NDB_BVL_Instrument_EARLI
         $sessionid = $this->getSessionID();
         $subprojectid = $db->selectOne("SELECT SubprojectID FROM session WHERE ID='$sessionid'");
         if ($subprojectid == '3')
-            $this->_requiredElements = array('mother_id','q1_2','q2_1','q2_21','q3_3_0');
+            $this->_requiredElements = array('interview_time','q1_2','q2_1','q2_21','q3_3_0');
         else
-            $this->_requiredElements = array('mother_id','q1_2','q2_1','q2_21','q3_3_0','q4a_1','q4_31','q4_54','q4_73');
+            $this->_requiredElements = array('interview_time','q1_2','q2_1','q2_21','q3_3_0','q4a_1','q4_31','q4_54','q4_73');
 
 
         //The array of dates/timestamps to convert to database dates/timestamps

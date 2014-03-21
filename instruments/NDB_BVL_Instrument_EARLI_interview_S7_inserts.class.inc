@@ -54,7 +54,7 @@ class NDB_BVL_Instrument_EARLI_interview_S7_inserts extends NDB_BVL_Instrument_E
 		$this->commentID = $commentID;
 
                 $db =& Database::singleton();
-                $this->_requiredElements = array('mother_id', 'q7_1_1', 'q7_19_1', 'q7_37_1_1');
+                $this->_requiredElements = array('interview_time', 'q7_1_1', 'q7_19_1', 'q7_37_1_1');
 
 
 
