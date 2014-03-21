@@ -9,7 +9,7 @@ class NDB_BVL_Instrument_med_records extends NDB_BVL_Instrument {
 	var $normal_abnormal_TS = array (null => "", 'normal' => "NORMAL (no TS)", 'abnormal' => "ABNORMAL (has TS)", 'not_answered' => "Not Answered" );
 	var $normal_abnormal_NF = array (null => "", 'normal' => "NORMAL (no NF)", 'abnormal' => "ABNORMAL (has NF)", 'not_answered' => "Not Answered" );
 	var $chart_actual = array (null => "", "not_answered" => "Not Answered", "actual" => "Actual", "chart" => "Chart" );
-
+        var $project;
 	/**
 	 * sets up basic data, such as the HTML_Quickform object, and so on.
 	 *
@@ -42,6 +42,12 @@ class NDB_BVL_Instrument_med_records extends NDB_BVL_Instrument {
 		$config = & NDB_Config::singleton ();
 		$this->dateOptions = array ('language' => 'en', 'format' => 'YMd', 'minYear' => $config->getSetting ( 'startYear' ) - 20, //allows for siblings up to 20 years older than candidate
 'maxYear' => $config->getSetting ( 'endYear' ), 'addEmptyOption' => true, 'emptyOptionValue' => null );
+                 $db = & Database::singleton();
+                $this->project = $db->pselectOne("SELECT c.ProjectID from $this->table n JOIN flag f 
+                                    ON (f.CommentID= n.CommentID) JOIN session s ON (s.ID = f.SessionID) 
+                                    JOIN candidate c ON (c.CandID=s.CandID) 
+                                    WHERE n.CommentID=:cid", array('cid'=>$this->getCommentID()));
+
 
 		// setup the form
         $this->_setupForm();
@@ -89,7 +95,9 @@ function _possibleExclusionaryCriteria() {
 		
 
 		$this->form->addElement ( "select", "other_genetic_tests_completed", "Other genetic tests completed?", $this->yesNo );
-		$this->addTextElement ( "other_genetic_tests_completed_specify", $this->indent . "If yes, specify what test and result:", array ("other_genetic_tests_completed{@}=={@}yes" ), "This field is required." );
+                $this->addTextElement ( "other_genetic_tests_completed_specify", $this->indent . "1. Specify first genetic test:", array ("other_genetic_tests_completed{@}=={@}yes" ), "This field is required." );
+                $this->addTextElement ( "other_genetic_result_completed_specify", $this->indent .$this->indent . "Specify first genetic test result:", array ("other_genetic_tests_completed{@}=={@}yes" ), "This field is required." );
+               
 		$this->form->addElement ( "static", null, "<BR>" ); //line space
 	}
 	
@@ -103,8 +111,11 @@ function _possibleExclusionaryCriteria() {
 		$this->form->addElement ( "static", null, "<BR>" ); //line space
 		$this->form->addElement ( "static", null, "Units will be automatically converted, if you would like to see the conversion results please exit this page and re-enter it.<BR>" );
 		$this->form->addElement ( "static", null, "If you select no more growth data, no more data needs to be entered into the form after that point.<BR>" );
-        $this->_linkParagraph();
-
+                $this->_linkParagraph();
+                if($this->project == 2) { 
+                    $this->addDateElement('Lastupdated_growthchart', 'Date this form was last updated:', $this->dateOptions);
+                    $this->form->addElement ( "static", null, "<BR>" );
+                }
 		//Source of information
 		$administrations = array ("first" => "1", "second" => "2", "third" => "3", "fourth" => "4", "fifth" => "5", "sixth" => "6", "seventh" => "7", "eighth" => "8", "ninth" => "9", "tenth" => "10", "eleventh" => "11", "twelfth" => "12", "thirteenth" => "13", "fourteenth" => "14", "fifteenth" => "15", "sixteenth" => "16", "seventeenth" => "17");
 		
@@ -257,16 +268,19 @@ function _possibleExclusionaryCriteria() {
 	
 	
   function _page3() {
-  		    $this->form->addElement ( 'header', null, "Growth Chart Information Continued:" );
-  		    $this->form->addElement ( "static", null, "<BR>" ); //line space
-  		    $this->form->addElement ( "static", null, "<BR>" ); //line space
-  		    $this->form->addElement ( "static", null, "Units will be automatically converted, if you would like to see the conversion results please exit this page and re-enter it.<BR>" );
-  		$this->form->addElement ( "static", null, "If you select no more growth data, no more data needs to be entered into the form after that point.<BR>" );
-
-  		//Source of information
-  		    $administrations = array ("eighteenth" => "18", "nineteenth" =>"19", "twenty" => "20", "twentyone" => "21", "twentytwo" => "22", "twentythree" => "23", "twentyfour" => "24", 
-     		"twentyfive" => "25", "twentysix" => "26", "twentyseven" => "27", "twentyeight" => "28", "twentynine" => "29", "thirty" => "30", "thirtyone" => "31", "thirtytwo" => "32", 
-     		"thirtythree" => "33", "thirtyfour" => "34", "thirtyfive" => "35");
+	  $this->form->addElement ( 'header', null, "Growth Chart Information Continued:" );
+	  $this->form->addElement ( "static", null, "<BR>" ); //line space
+	  $this->form->addElement ( "static", null, "<BR>" ); //line space
+	  $this->form->addElement ( "static", null, "Units will be automatically converted, if you would like to see the conversion results please exit this page and re-enter it.<BR>" );
+	  $this->form->addElement ( "static", null, "If you select no more growth data, no more data needs to be entered into the form after that point.<BR>" );
+          if($this->project == 2) {
+              $this->addDateElement('Lastupdated_growthchart2', 'Date this form was last updated:', $this->dateOptions);
+ 	      $this->form->addElement ( "static", null, "<BR>" );
+	  }
+          //Source of information
+	  $administrations = array ("eighteenth" => "18", "nineteenth" =>"19", "twenty" => "20", "twentyone" => "21", "twentytwo" => "22", "twentythree" => "23", "twentyfour" => "24", 
+			  "twentyfive" => "25", "twentysix" => "26", "twentyseven" => "27", "twentyeight" => "28", "twentynine" => "29", "thirty" => "30", "thirtyone" => "31", "thirtytwo" => "32", 
+			  "thirtythree" => "33", "thirtyfour" => "34", "thirtyfive" => "35");
 
   		reset ( $administrations );
 
@@ -833,6 +847,5 @@ function interpolate($age_one, $age_two, $real_age, $value_one, $value_two){
     $real_value = $value_one + (($real_age - $age_one)* (($value_two - $value_one)/($age_two - $age_one)));
   return $real_value;
 }
-
     
 ?>
