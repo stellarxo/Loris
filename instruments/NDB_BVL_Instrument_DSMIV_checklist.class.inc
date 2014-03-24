@@ -192,7 +192,7 @@ function _page2(){
 
            	$this->form->addElement('text', "name_confirming_clinician", "Name of Confirming Clinician:");
 
-          	$this->form->addElement('date', "date_taken_confirming_clinician", "Date:", $dateOptions);
+          	$this->addDateElement("date_taken_confirming_clinician", "Date:", $dateOptions);
           	
             $this->XINRegisterRule("name_confirming_clinician", array("confirmed_diagnosis{@}=={@}yes|no"), "Please enter the name of the confirming clinician and the date confirmed.");          	
           	
