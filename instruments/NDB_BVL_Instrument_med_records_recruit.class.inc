@@ -144,7 +144,6 @@ class NDB_BVL_Instrument_med_records_recruit extends NDB_BVL_Instrument_med_reco
 			$this->XINRegisterRule("date_injury_illness".$i, array("$status{@}=={@}", "significant_injuries_or_illnesses_specify$i{@}!={@}"), "A Date, not answered is required", "date_injury_illness".$i."_group");
 
 		}
-
 		$this->form->addElement ( "static", null, "<BR>" ); //line space
 		
 
@@ -182,7 +181,6 @@ class NDB_BVL_Instrument_med_records_recruit extends NDB_BVL_Instrument_med_reco
 
                 $this->form->addElement ( "select", "developmental_concerns", "Are there any developmental concerns?", $this->yesNo );
                 $this->addSelect( "developmental_concerns_specify", $this->indent . "1. If there were developmental concerns pleases specify first concern:", $this->developmental_concerns,"multiple size='5'" );
-                $this->XINRegisterRule ( "developmental_concerns_specify", array ("developmental_concerns{@}=={@}yes" ), "Please specify the developmental concerns:" );
                 $this->addTextElement ( "developmental_concerns_other_specify", $this->indent .$this->indent. "If other is selected, specify:", array ("developmental_concerns{@}=={@}yes", "developmental_concerns_specify{@}=={@}other" ), "This field is required." );
 
                 $mapping = array(2=>'second',3=>'third',4=>'fourth',5=>'fifth');
@@ -214,6 +212,7 @@ class NDB_BVL_Instrument_med_records_recruit extends NDB_BVL_Instrument_med_reco
                    $this->XINRegisterRule("date_development_concern".$i, array("$status{@}=={@}", "developmental_concerns_specify$i{@}!={@}"), "A Date, not answered is required", "date_development_concern".$i."_group");
 
                 }
+                $this->form->addFormRule(array(&$this, 'Med_Rules'));
 
 	}
         function _possibleExclusionaryCriteria() {
@@ -272,6 +271,9 @@ class NDB_BVL_Instrument_med_records_recruit extends NDB_BVL_Instrument_med_reco
 		if($values['Lastupdated_date'] < $values['Date_taken']) {
 			$errors['Lastupdated_date_group'] = 'The date should be after Date of Administration';
 		}
+               if($values['developmental_concerns'] == 'yes' && empty($values['developmental_concerns_specify'])) {
+                        $errors['developmental_concerns_specify'] = 'Please specify the developmental concerns';
+               }
 		return $errors;
 	}
 }
