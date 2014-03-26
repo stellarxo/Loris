@@ -188,7 +188,7 @@ class NDB_BVL_Instrument_med_records_recruit extends NDB_BVL_Instrument_med_reco
                 $mapping = array(2=>'second',3=>'third',4=>'fourth',5=>'fifth');
 
                 $this->addNumericElement ( "developmental_concerns_age_months", $this->indent .$this->indent. "If there were developmental concerns, please specify the age <BR>".$this->indent. $this->indent."of the child in months when these were noted:" );
-                $this->XINRegisterRule("developmental_concerns_age_months", array ("developmental_concerns{@}=={@}yes" ));
+                $this->XINRegisterRule("developmental_concerns_age_months", array ("developmental_concerns{@}=={@}yes" ), "Please specify age in months","developmental_concerns_age_months_group");
 
                 $group[] = $this->form->createElement("date", "date_development_concern", null, $this->dateOptions);
                 $this->dateTimeFields[] = "date_development_concern"; //add to array of dates and times.
@@ -204,7 +204,7 @@ class NDB_BVL_Instrument_med_records_recruit extends NDB_BVL_Instrument_med_reco
                    $this->XINRegisterRule("developmental_concerns_specify$i", array("developmental_concerns_specify$i{@}=={@}NEVER_REQUIRED"));
                    $this->addTextElement ( "developmental_concerns_other_specify".$i, $this->indent .$this->indent. "If other is selected, specify:",array("developmental_concerns_specify$i{@}=={@}other"));
                    $this->addNumericElement ( "developmental_concerns_age_months".$i, $this->indent .$this->indent. "If there were developmental concerns, please specify the age <BR>".$this->indent. $this->indent."of the child in months when these were noted:");
-                   $this->XINRegisterRule("developmental_concerns_age_months".$i, array("developmental_concerns_specify$i{@}!={@}"));
+                   $this->XINRegisterRule("developmental_concerns_age_months".$i, array("developmental_concerns_specify$i{@}!={@}"), "Please specify age in months", "developmental_concerns_age_months".$i."_group");
                    $group[] = $this->form->createElement("date", "date_development_concern".$i, null, $this->dateOptions);
                    $this->dateTimeFields[] = "date_development_concern".$i; //add to array of dates and times.
                    $group[] = $this->form->createElement("select","date_development_concern".$i."_status", null, array(NULL=>"", 'not_answered'=>"Not Answered"));
