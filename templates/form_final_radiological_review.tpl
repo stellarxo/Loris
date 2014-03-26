@@ -99,6 +99,9 @@
 	
 {$form.hidden}
 </form>
+
+
+{*
 <h1>Change Log</h1>
 <table class="std">
 <tr>
@@ -108,5 +111,6 @@
 <th>Old Value</th>
 <th>New Value</th>
 </tr>
-{$form.history.html}
+$form.history.html
 </table>
+*}
