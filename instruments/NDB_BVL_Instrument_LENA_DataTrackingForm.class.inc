@@ -88,8 +88,9 @@ class NDB_BVL_Instrument_LENA_DataTrackingForm extends NDB_BVL_Instrument
                 $this->localDefaults[$key."_Avg"] = $record[$key."_Avg"];    
            }
            $this->localDefaults['Uploaded_file'] = $record['Uploaded_file'];
-           $this->localDefaults['Uploaded_file_its'] = $record['Uploaded_file_its'];
-           
+           for($i = 1; $i <= 4; $i++) {
+               $this->localDefaults['Uploaded_file_its'.$i] = $record['Uploaded_file_its'.$i];
+           }
            for($i = 1; $i <= 32; $i++) {
                foreach($fields as $field) {
                    $key = $field."_".$i;
@@ -191,9 +192,18 @@ class NDB_BVL_Instrument_LENA_DataTrackingForm extends NDB_BVL_Instrument
         $this->form->addElement('static','Uploaded_file', "Uploaded LENA Export File");
      
 
-        $this->addLabel("<BR><strong> Upload ITS File </strong>");
-        $this->form->addElement('file', 'recording_file_its', 'Upload the ITS file');
-        $this->form->addElement('static','Uploaded_file_its', "Uploaded ITS Export File");
+        $this->addLabel("<BR><strong> Upload ITS File 1</strong>");
+        $this->form->addElement('file', 'recording_file_its1', 'Upload the ITS file 1');
+        $this->form->addElement('static','Uploaded_file_its1', "Uploaded ITS Export File 1");
+        $this->addLabel("<BR><strong> Upload ITS File 2</strong>");
+        $this->form->addElement('file', 'recording_file_its2', 'Upload the ITS file 2');
+        $this->form->addElement('static','Uploaded_file_its2', "Uploaded ITS Export File 2");
+        $this->addLabel("<BR><strong> Upload ITS File 3</strong>");
+        $this->form->addElement('file', 'recording_file_its3', 'Upload the ITS file 3');
+        $this->form->addElement('static','Uploaded_file_its3', "Uploaded ITS Export File 3");
+        $this->addLabel("<BR><strong> Upload ITS File 4</strong>");
+        $this->form->addElement('file', 'recording_file_its4', 'Upload the ITS file 4');
+        $this->form->addElement('static','Uploaded_file_its4', "Uploaded ITS Export File 4");
 
         $this->form->addElement("static", null, "&nbsp;");
 
@@ -239,14 +249,18 @@ class NDB_BVL_Instrument_LENA_DataTrackingForm extends NDB_BVL_Instrument
      */
     function isValid(&$file, $args){
          $correct_filename = $args['PSCID'] .'_'. $args['candID'] .'_'. $args['visitLabel'];
-
-        if(!preg_match("/^{$correct_filename}/i", $file->fileInfo['name']) ){
-            $errors[]="Incorrect Filename: Filename begin with: " . $correct_filename;
-            return $errors;
-        }
-
+	 if(strpos($file->fileInfo['name'], "its") !== FALSE) { 
+		 if(!preg_match("/^{$correct_filename}-[1-4].its$/i", $file->fileInfo['name']) ){ 
+			 $errors[]="Incorrect Filename: Filename begin with: " . $correct_filename."-#";
+			 return $errors;
+		 }   
+	 } else {
+		 if(!preg_match("/^{$correct_filename}/i", $file->fileInfo['name']) ){
+			 $errors[]="Incorrect Filename: Filename begin with: " . $correct_filename;
+			 return $errors;
+		 }
+	 }
         return true;
-
     }
 
     function _saveValues ($values)
@@ -310,44 +324,46 @@ class NDB_BVL_Instrument_LENA_DataTrackingForm extends NDB_BVL_Instrument
             //proccesses them (including verify, move, and import steps)
             $file->processFiles();
         }
-        if(isset($values['recording_file_its']) && !empty($values['recording_file_its']['name'])) {
-            require_once "File_Upload.class.inc";
-            $file=new File_Upload;
+        for($i=1; $i<=4;$i++) {
+		if(isset($values['recording_file_its'.$i]) && !empty($values['recording_file_its'.$i]['name'])) {
+			require_once "File_Upload.class.inc";
+			$file=new File_Upload;
 
-            //pass the existing form ($form) by reference to File_Upload, and register the file_upload field names being used.
-            $file->registerForm($this->form);
-
-
-            //Tell File_Upload what file handlers to use.
-            $file->setFileHandler("recording_file_its", $this);
-
-            //Set the target directory that you want files moved into once they are validated and processed.
-            $config = NDB_Config::singleton();
-            $dir = $config->getSetting("UploadDir");
-            if(empty($dir)) {
-                $dir = ".";
-            };
-            $file->setBaseUploadDirectory($dir . "/LENA/");
-
-            //Set the prefix to prepend to the filenames
-            //$file->setFilenamePrefix($timepoint->getVisitLabel()."-".$this->testName."-");
-
-            //set the the IDs to the handler functions.
-            $user =& User::singleton();
-            $file->setHandlerArgs(array("CommentID"=>$this->getCommentID(),
-                        "candID"=>$candidate->getCandID(),
-                        "PSCID"=>$candidate->getPSCID(),
-                        "visitLabel"=>$timepoint->getVisitLabel(),
-                        "username"=>$user->getUsername(),
-                        "values"=>$values)
-                    );
+			//pass the existing form ($form) by reference to File_Upload, and register the file_upload field names being used.
+			$file->registerForm($this->form);
 
 
+			//Tell File_Upload what file handlers to use.
+			$file->setFileHandler("recording_file_its".$i, $this);
 
-            //If the form is validated, call File_Upload::processFiles() which loops through the files and 
-            //proccesses them (including verify, move, and import steps)
-           $file->processFiles();
-        }
+			//Set the target directory that you want files moved into once they are validated and processed.
+			$config = NDB_Config::singleton();
+			$dir = $config->getSetting("UploadDir");
+			if(empty($dir)) {
+				$dir = ".";
+			};
+			$file->setBaseUploadDirectory($dir . "/LENA/");
+
+			//Set the prefix to prepend to the filenames
+			//$file->setFilenamePrefix($timepoint->getVisitLabel()."-".$this->testName."-");
+
+			//set the the IDs to the handler functions.
+			$user =& User::singleton();
+			$file->setHandlerArgs(array("CommentID"=>$this->getCommentID(),
+						"candID"=>$candidate->getCandID(),
+						"PSCID"=>$candidate->getPSCID(),
+						"visitLabel"=>$timepoint->getVisitLabel(),
+						"username"=>$user->getUsername(),
+						"values"=>$values)
+					);
+
+
+
+			//If the form is validated, call File_Upload::processFiles() which loops through the files and 
+			//proccesses them (including verify, move, and import steps)
+			$file->processFiles();
+		}
+	}
         //echo error messages
         if(!empty($file->errorLog)){
         while(list($fileType,$fileErrors)=each($file->errorLog)){
@@ -356,10 +372,8 @@ class NDB_BVL_Instrument_LENA_DataTrackingForm extends NDB_BVL_Instrument
             }
          }
         }
-        unset($values['candID'], $values['sessionID'], $values['commentID'], $values['test_name'], $values['page'], $values['fire_away'], $values['subtest'], $values['MAX_FILE_SIZE'], $values['recording_file'],$values['recording_file_its']);
+        unset($values['candID'], $values['sessionID'], $values['commentID'], $values['test_name'], $values['page'], $values['fire_away'], $values['subtest'], $values['MAX_FILE_SIZE'], $values['recording_file'],$values['recording_file_its1'], $values['recording_file_its2'], $values['recording_file_its3'], $values['recording_file_its4']);
       $this->_save($values);
-
-
 
     }
 
@@ -463,12 +477,25 @@ class NDB_BVL_Instrument_LENA_DataTrackingForm extends NDB_BVL_Instrument
         return true;
      }
      if(strpos($file->fileInfo['name'], "its") !== FALSE) {
-         $upload_values['Uploaded_file_its'] = $file->fileInfo['name'];
+         if(strpos($file->fileInfo['name'], "-1") !== FALSE) {
+             $field = 'Uploaded_file_its1';
+         }
+         if(strpos($file->fileInfo['name'], "-2") !== FALSE) {
+             $field = 'Uploaded_file_its2';
+         }
+         if(strpos($file->fileInfo['name'], "-3") !== FALSE){
+             $field = 'Uploaded_file_its3';
+         }
+         if(strpos($file->fileInfo['name'], "-4") !== FALSE) {
+             $field = 'Uploaded_file_its4';
+         }
+
+         $upload_values[$field] = $file->fileInfo['name'];
          $result = $db->update($this->testName, $upload_values, array('CommentID'=>$args['CommentID']));
          if(Utility::isErrorX($result)) {
              print "Update has failed: ".$result->getMessage();
          }
-         echo "<span style='color:red'><b>Upload Successful : </b>".$upload_values['Uploaded_file_its']."</span><br>";
+         echo "<span style='color:red'><b>Upload Successful : </b>".$upload_values[$field]."</span><br>";
          return true;
      }
 
