@@ -289,6 +289,7 @@ class NDB_BVL_Instrument_med_records_24 extends NDB_BVL_Instrument_med_records {
 		
 
 		$this->form->addElement ( "static", null, "<BR>" ); //line space
+               $this->form->addFormRule(array(&$this, 'Med_Rules'));
 	}
     function _linkParagraph() {
         $db = Database::singleton();
@@ -400,6 +401,10 @@ class NDB_BVL_Instrument_med_records_24 extends NDB_BVL_Instrument_med_records {
    if($values['Lastupdated_date'] < $values['Date_taken']) {
        $errors['Lastupdated_date_group'] = 'The date should be after Date of Administration';
    }
+   if($values['developmental_concerns'] == 'yes' && empty($values['developmental_concerns_specify'])) {
+        $errors['developmental_concerns_specify'] = 'Please specify the developmental concerns';
+    }
+
    return $errors;
 }
 }
