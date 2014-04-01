@@ -10,17 +10,15 @@ class NDB_Menu_statistics_dd_site extends NDB_Menu_statistics_site
 
     function notexcluded($var) {
         switch($var) {
-            case "mri_parameter_form":
             case "vineland_subject":
             case "vineland_proband":
-            case "radiology_review":
             case "csbs_sponteneity":
                 return false;
             default: return true;
         }
     }
     function __construct() {
-        $this->instruments = $this->_getInstrumentList();
+        $this->instruments = $this->_getInstrumentList(); 
         $this->instruments = array_filter($this->instruments, array(&$this, 'notexcluded'));
     }
     function _CompleteCount($id, $instrument,$ExtraProject_Criteria) {
