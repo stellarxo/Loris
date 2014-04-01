@@ -21,7 +21,7 @@ class NDB_BVL_Instrument_dna_tracking extends NDB_BVL_Instrument
     var $collection_method_blood = array(''=>NULL, 'project_staff'=>'Project Staff','local_nurse'=>'Local nurse','family_physician'=>'Family Physician','travelling_phlebotomist'=>'Travelling phlebotomist','other'=>'Other (if other specify)','not_answered'=>'Not Answered');
     var $location_sent = array(''=>NULL, 'unc'=>'UNC','repository'=>'Repository','other'=>'Other (if other specify)','not_answered'=>'Not Answered');
     var $saliva_no_collection = array(''=>NULL, 'never_scheduled'=>'Never scheduled','child_too_old'=>'Child was too old','family_declined'=>'Family Declined','family_not_responsive'=>'Family not responsive','other'=>'Other','not_answered'=>'Not Answered');
-    var $blood_no_collection = array(''=>NULL, 'never_scheduled'=>'Never scheduled','child_too_old'=>'Child was too old','family_declined'=>'Family Declined','family_not_responsive'=>'Family not responsive','parent_did_not_want_child_blood_drawn'=>"Parent did not want child's blood drawn" ,'other'=>'Other','not_answered'=>'Not Answered');
+    var $blood_no_collection = array(''=>NULL, 'never_scheduled'=>'Never scheduled','child_too_old'=>'Child was too old','family_declined'=>'Family Declined','family_not_responsive'=>'Family not responsive','parent_did_not_want_child_blood_drawn'=>"Parent did not want child's blood drawn" ,'draw_attempted_unable_to_obtain'=>'Draw attempted, but unable to obtain' ,'other'=>'Other','not_answered'=>'Not Answered');
 
     function setup($commentID, $page){
 
@@ -115,41 +115,126 @@ class NDB_BVL_Instrument_dna_tracking extends NDB_BVL_Instrument
                            "num_blood2"=>"2. How many?","yellowtop_collected2"=>"2. Was the yellow top collected?", 
                            "blood_collection_method2"=>"2. How was blood collected?","blood_sent2"=>"2. Where was blood sent?");
         $subjects = array('candidate','proband','mother','father','other');
+        $types = array('saliva','blood');
 	foreach($questions as $key=>$val){
 		$groupname = $key."_group";
      
+        $this->form->addFormRule(array(&$this, 'dna_rules'));
 	//	$group[] =& $this->form->createElement("static",null,null,$val);
                 if($key == "saliva_collected" || $key == "blood_collected" || $key == "lab_purpletop_collected1" || $key == "lab_purpletop_collected2" 
                    || $key == "yellowtop_collected1" || $key == "yellowtop_collected2") {
                     foreach($subjects as $subject) {
                         $group[] = $this->form->createElement("select", $key."_".$subject,null,$this->yesNo, array('class' => 'oneselect'));
-                    }
+                        if(strpos($key, "1")) {
+                                  $field = "blood_collected_".$subject;
+                                  // If blood or saliva was collected then require yellow/purple top collected question
+                                  $this->XINRegisterRule( $key."_".$subject, array("$field{@}=={@}yes"), "Please specify", $groupname);
+                       }
+                       if(strpos($key, "2")) {
+                              foreach($types as $type) {
+                                  // If blood or saliva was collected then enter date
+                                  $field = $key."_".$subject;
+                                  $this->XINRegisterRule( $field, array("$field{@}=={@}NEVER_REQUIRED"));
+                              }
+                       }
+
+                    }// end of foreach
                 }
                 if(strpos($key, "saliva_collection_method") !== FALSE) {
                    foreach($subjects as $subject) {
                         $group[] = $this->form->createElement("select", $key."_".$subject,null,$this->collection_method_saliva, array('class' => 'oneselect'));
-                    }
+                         if(strpos($key, "1")) {
+                              foreach($types as $type) {
+                                  $field = $type."_collected_".$subject;
+                                  // If blood or saliva was collected then enter collection method
+                                  $this->XINRegisterRule( $key."_".$subject, array("$field{@}=={@}yes"), "Please specify collection method", $groupname);
+                              }
+                       }
+                       if(strpos($key, "2")) {
+                              foreach($types as $type) {
+                                  // If blood or saliva was collected then enter date
+                                  $field = $key."_".$subject;
+                                  $this->XINRegisterRule( $field, array("$field{@}=={@}NEVER_REQUIRED"));
+                              }
+                       }
+
+                    } 
 
                 }
                 if(strpos($key, "when_saliva_collected") !== FALSE || strpos($key, "when_blood_collected") !== FALSE) {
                     foreach($subjects as $subject) {
+                        $this->dateTimeFields[] = $key."_".$subject;
                         $group[] = $this->form->createElement("date", $key."_".$subject,null,$this->dateOptions);
+                        $field = $key."_".$subject;
+                        if(strpos($key, "1")) {
+                              foreach($types as $type) {
+                                  $field = $type."_collected_".$subject;
+                                  // If blood or saliva was collected then enter date
+                       //           $this->XINRegisterRule( $key."_".$subject, array("$field{@}=={@}yes"), "Please specify date", $groupname);
+                              } 
+                       }
+                       if(strpos($key, "2")) {
+                              foreach($types as $type) {
+                                 // $field = $type."_collected_".$subject;
+                                  // If blood or saliva was collected then enter date
+                                  $field = $key."_".$subject;
+                                  $this->XINRegisterRule( $field, array("$field{@}=={@}NEVER_REQUIRED"));
+                              }
+                       }
                     } 
                 }
                 if(strpos($key, "num_blood") !== FALSE) {
                    foreach($subjects as $subject) {
                         $group[] = $this->form->createElement("select", $key."_".$subject,null,$this->num_blood_samples, array('class' => 'oneselect'));
-                    }
+                        if(strpos($key, "1")) {
+                                  $field = "blood_collected_".$subject; 
+                                  // If blood was collected then require number of tubes
+                                  $this->XINRegisterRule( $key."_".$subject, array("$field{@}=={@}yes"), "Please specify", $groupname);
+                       }
+                       if(strpos($key, "2")) {
+                              foreach($types as $type) {
+                                
+                                  $field = $key."_".$subject;
+                                  $this->XINRegisterRule( $field, array("$field{@}=={@}NEVER_REQUIRED"));
+                              }
+                       }
+
+                    } // end for each
                 } 
                 if(strpos($key, "blood_collection_method") !== FALSE) {
                    foreach($subjects as $subject) {
                         $group[] = $this->form->createElement("select", $key."_".$subject,null,$this->collection_method_blood, array('class' => 'oneselect'));
-                    }
+                         if(strpos($key, "1")) {
+                                  $field = "blood_collected_".$subject; 
+                                  // If blood was collected then require number of tubes
+                                  $this->XINRegisterRule( $key."_".$subject, array("$field{@}=={@}yes"), "Please specify", $groupname);
+                       }
+                       if(strpos($key, "2")) {
+                              foreach($types as $type) {
+                                  $field = $key."_".$subject;
+                                  $this->XINRegisterRule( $field, array("$field{@}=={@}NEVER_REQUIRED"));
+                              }
+                       }
+
+                    } // end of foreach
                 }
                 if(strpos($key, "blood_sent") !== FALSE) {
                    foreach($subjects as $subject) {
                         $group[] = $this->form->createElement("select", $key."_".$subject,null,$this->location_sent, array('class' => 'oneselect'));
-                    }
+                         if(strpos($key, "1")) {
+                                  $field = "blood_collected_".$subject;
+                                  // If blood was collected then require number of tubes
+                                  $this->XINRegisterRule( $key."_".$subject, array("$field{@}=={@}yes"), "Please specify", $groupname);
+                       }
+                       if(strpos($key, "2")) {
+                              foreach($types as $type) {
+
+                                  $field = $key."_".$subject;
+                                  $this->XINRegisterRule( $field, array("$field{@}=={@}NEVER_REQUIRED"));
+                              }
+                       }
+
+                    } //end foreach
                 }
 
                 if($key == 'blood_collected' || $key == 'saliva_collected' ) {
@@ -159,27 +244,34 @@ class NDB_BVL_Instrument_dna_tracking extends NDB_BVL_Instrument
                 }
 		unset($group);
                if(strpos($key, "saliva_collection_method") !== FALSE || strpos($key, "blood_collection_method") !== FALSE ) {
+                   $groupname = $key."_other_group";
                    foreach($subjects as $subject) {
-                        $group[] = $this->form->createElement("textarea", $key."_other".$subject,null);
+                        $field = $key."_".$subject; 
+                        $group[] = $this->form->createElement("textarea", $field."_other",null); 
+                       // $this->XINRegisterRule($field."_other", array("$field{@}=={@}other"), "Please specify other", $groupname);
                     }
-                    $groupname = $key."_other_group";
                     $this->form->addGroup($group, $groupname, $this->indent."If other specify:", $this->_GUIDelimiter, false);
                     unset($group);
-                    $this->XINRegisterRule($key."_other".$subject, array("$key.'_'.$subject{@}=={@}other"), "Please specify other", $groupname);
+		    $groupname = "blankline_group";
+		    foreach ($subjects as $subject) {
+			    $group[] = $this->createLabel(null, null, null);
+		    }
+		    $this->form->addGroup($group, $groupname,null, $this->_GUIDelimiter, false);
+		    unset($group);
 
                 }
                 if($key == "saliva_collected") {
-                    $groupname = $key."_".$subject."_saliva_notcollected_group";
+                    $groupname = "saliva_notcollected_group";
                     foreach($subjects as $subject) {
                         $field = $key."_".$subject;
-                        $group[] = $this->form->createElement("select", $field."_saliva_notcollected",null,$this->saliva_no_collection, array('class' => 'oneselect'));
+                        $group[] = $this->form->createElement("select", "saliva_notcollected_".$subject,null,$this->saliva_no_collection, array('class' => 'oneselect'));
                         //adding rules for each of the subjects 
-                        $this->XINRegisterRule($field."_saliva_notcollected", array("$field{@}=={@}no"),'If saliva was not collected, please specify reason', $groupname);
+                        $this->XINRegisterRule("saliva_notcollected_".$subject, array("$field{@}=={@}no"),'If saliva was not collected, please specify reason', $groupname);
                     }
                     $this->form->addGroup($group, $groupname, $this->indent."If no, specify reason:", $this->_GUIDelimiter, false);
                     unset($group);
                     
-                    $groupname = $key."_saliva_notcollected_other_group";
+                    $groupname = "saliva_notcollected_other_group";
                     foreach ($subjects as $subject) {
                         $field = $key."_".$subject;
 		        $group[] = $this->form->createElement("textarea", $field."_saliva_notcollected_other",null);
@@ -187,32 +279,99 @@ class NDB_BVL_Instrument_dna_tracking extends NDB_BVL_Instrument
                     }
                     $this->form->addGroup($group, $groupname, $this->indent.$this->indent."If other, specify:", $this->_GUIDelimiter, false);
                     unset($group);
-
+                  
                 }
                 if($key == "blood_collected") {
-                    $groupname = $key."_".$subject."_blood_notcollected_group";
+                    $groupname = "blood_notcollected_group";
                     foreach($subjects as $subject) {
                         $field = $key."_".$subject;
-                        $group[] = $this->form->createElement("select", $field."_blood_notcollected",null,$this->blood_no_collection, array('class' => 'oneselect'));
-                        $this->XINRegisterRule($field."_blood_notcollected", array("$field{@}=={@}no"),'If blood was not collected, please specify reason', $groupname);                        
+                        $group[] = $this->form->createElement("select", "blood_notcollected_".$subject,null,$this->blood_no_collection, array('class' => 'oneselect'));
+                        $this->XINRegisterRule("blood_notcollected_".$subject, array("$field{@}=={@}no"),'If blood was not collected, please specify reason', $groupname);                        
                     }
                     $this->form->addGroup($group, $groupname, $this->indent."If no specify reason:", $this->_GUIDelimiter, false);
                     unset($group);
                     
                  
-                    $groupname = $key."_blood_notcollected_other_group";
+                    $groupname = "blood_notcollected_other_group";
                     foreach ($subjects as $subject) {
-                        $field = $key."_".$subject;
-                        $group[] = $this->form->createElement("textarea", $field."_blood_notcollected_other",null);
-                        $this->XINRegisterRule($field."_blood_notcollected_other", array($field."_blood_notcollected{@}=={@}other"),'If blood was not collected, please specify reason', $groupname);                              
+                        $field = "blood_notcollected_".$subject;
+                        $group[] = $this->form->createElement("textarea", "blood_notcollected_other_".$subject,null);
+                        $this->XINRegisterRule("blood_notcollected_other_".$subject, array("$field{@}=={@}other"),'If blood was not collected, please specify reason', $groupname);                              
                     }
                     $this->form->addGroup($group, $groupname, $this->indent.$this->indent."If other, specify:", $this->_GUIDelimiter, false);
                     unset($group);
                    
                 }
+		if(strpos($key, "blood_sent") !== FALSE) {
+                      $groupname = "blood_sent_other_group";
+		      foreach($subjects as $subject) { 
+                           $field = $key."_".$subject;
+                           $group[] = $this->form->createElement("textarea",$field."_other", null);
+                           $this->XINRegisterRule($field."_other", array("$field{@}=={@}other"), "If other, specify:", $this->_GUIDelimiter, false);
+	        	}
+                        $this->form->addGroup($group, $groupname, $this->indent.$this->indent."If other, specify:", $this->_GUIDelimiter, false);
+                        unset($group);
 
+			$groupname = "blankline_group";
+			foreach ($subjects as $subject) {
+				$group[] = $this->form->createElement("static", null,null,null, array('class'=>'blankline'));
+			}
+			$this->form->addGroup($group, $groupname,null, $this->_GUIDelimiter, false);
+			unset($group);
+
+                }
 	}
 
+    }
+
+    function dna_rules ($values) { 
+        $errors = array();
+        $subjects = array('candidate','proband','mother','father','other');
+        foreach($subjects as $subject) {
+              $field = "blood_collected_".$subject; 
+              
+              if( ($values[$field] == 'yes') && empty($values["yellowtop_collected1_".$subject])) {
+                  $errors['yellowtop_collected1_group'] = "Specify if yellowtop was collected for $subject";
+              } 
+              if($values[$field] == 'yes' && empty($values["lab_purpletop_collected1_".$subject])) { 
+                  $errors['lab_purpletop_collected1_group'] = "Specify if lab/purple top was collected for $subject";
+             } 
+             $when = array(); $when = $values["when_blood_collected1_".$subject];
+             if($values[$field] == 'yes' && empty($when['Y'])) { 
+                  $errors['when_blood_collected1_group'] = "Specify date for $subject";
+             } 
+             if($values[$field] == 'yes' && empty($values["num_blood1_".$subject])) {
+                  $errors['num_blood1_group'] = "Specify number of tubes for $subject";
+             }
+             if($values[$field] == 'yes' && empty($values["blood_collection_method1_".$subject])) {
+                  $errors['blood_collection_method1_group'] = "Specify how blood was collected for $subject";
+             }
+             if($values[$field] == 'yes' && empty($values["blood_sent1_".$subject])) {
+                  $errors['blood_sent1_group'] = "Specify where blood was sent for $subject";
+             }
+             if($values[$field] == 'yes' && $values["blood_collection_method1_".$subject] == 'other'
+                && empty($values["blood_collection_method1_".$subject."_other" ] )) {
+                  $errors["blood_collection_method1_other_group" ] = "Specify other for $subject";
+             }
+             if($values[$field] == 'no' && empty($values["blood_notcollected_".$subject]) ) {
+                  $errors["blood_notcollected_group"] = "Specify reason for $subject";
+             }
+             if($values[$field] == 'no' && $values["blood_notcollected_".$subject] == "other" 
+                 && empty($values["blood_notcollected_other_".$subject]) ) {
+                 $errors["blood_notcollected_other_group"] = "Specify other for $subject";
+             }
+             $saliva_field = "saliva_collected_".$subject;
+             if($values[$saliva_field] == 'yes' && empty ($values["saliva_collection_method1_".$subject]) )  {
+                 $errors["saliva_collection_method1_group"] = "Specify how saliva was collected for $subject";
+              }
+              $saliva_when = array(); $saliva_when = $values["when_saliva_collected1_".$subject];
+              if($values[$saliva_field] == 'yes' && empty($saliva_when['Y'])) {
+                  $errors['when_saliva_collected1_group'] = "Specify date for $subject";
+              }
+              
+        }
+
+        return $errors;
     }
 
 }
