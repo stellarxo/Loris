@@ -1,0 +1,4 @@
+ALTER TABLE DSMIV_checklist ADD COLUMN date_taken_confirming_clinician_date date;
+UPDATE DSMIV_checklist SET date_taken_confirming_clinician_date = date_taken_confirming_clinician;
+ALTER TABLE DSMIV_checklist DROP COLUMN date_taken_confirming_clinician;
+ALTER TABLE DSMIV_checklist ADD COLUMN date_taken_confirming_clinician_date_status enum('not_answered');
