@@ -25,7 +25,7 @@ class NDB_BVL_Instrument_peer_socialcontact extends NDB_BVL_Instrument
                             'mostly_playmate_home'=>'Mostly playmates home','equally_both'=>'Equally both',
                             'mostly_other'=>'Mostly other (such as playground)','refused_dontknow'=>"Refused/I Don't Know");
     var $q5_options = array(''=>NULL,'walking_distance'=>'Walking distance',
-                            'short_drive'=>'Short drive(upto 15min)','long_drive'=>'Long drive(> 15min)',
+                            'short_drive'=>'Short drive(up to 15min)','long_drive'=>'Long drive(> 15min)',
                             'refused_dontknow'=>"Refused/I Don't Know");
     var $yesNo = array(''=>NULL,'yes'=>'Yes','no'=>'No','refused_dontknow'=>"Refused/I Don't Know");
     var $q8_options = array(''=>NULL,'none'=>'None','dont_know'=>"Don't know",'autism'=>'Autism',
@@ -68,13 +68,13 @@ class NDB_BVL_Instrument_peer_socialcontact extends NDB_BVL_Instrument
                              'little_or_none'=>'Little-or-none','refused_dontknow'=>"Refused/I Don't Know");
     var $q23_options = array(''=>NULL,'yes'=>'Yes','no'=>'No (go to next section)','refused_dontknow'=>"Refused/I Don't Know");
     var $q24_options = array(''=>NULL,'yes'=>'Yes','no'=>'No','refused_dontknow'=>"Refused/I Don't Know");
-    var $activity_desc = array(''=>NULL,'religious'=>'a. Religious activity','play_group'=>'b. Play group','sports'=>'c. Sports(soccer, dance etc)','recreational'=>'d. Recreational (music, art, reading, etc.)','other'=>'Other','refused_dontknow'=>"Refused/I Don't Know");
+    var $activity_desc = array(''=>NULL,'religious'=>'a. Religious activity','play_group'=>'b. Play group','sports'=>'c. Sports(soccer, dance etc)','recreational'=>'d. Recreational (music, art, reading, etc.)','other'=>'e. Other','refused_dontknow'=>"Refused/I Don't Know");
     var $special_service = array(''=>NULL,'occupational_physical'=>'a. Occupational/Physical therapy','lang_speech'=>'b. Language or speech therapy','behavior'=>'c. Behavior therapy','social_skills'=>'d. Social skills or play group');
     var $numdays_week = array(''=>NULL,'0'=>'0','1'=>'1','2'=>'2','3'=>'3','4'=>'4','5'=>'5','6'=>'6','7'=>'7','refused_dontknow'=>"Refused/I Don't Know");
     var $numhrs_day = array(''=>NULL,'0'=>'0','1'=>'1','2'=>'2','3'=>'3','4'=>'4','5'=>'5','6'=>'6','7'=>'7','8'=>'8','9'=>'9',
                             '10'=>'10','11'=>'11','12'=>'12','13'=>'13','14'=>'14','15'=>'15','16'=>'16','17'=>'17','18'=>'18',
                             '19'=>'19','20'=>'20','21'=>'21','22'=>'22','23'=>'23','24'=>'24','refused_dontknow'=>"Refused/I Don't Know");
-
+    var $promote_play = array(''=>NULL,'almost_always'=>'a. Almost always','sometimes'=>'b. Sometimes','never'=>'c. Never', 'refused_dontknow'=>"Refused/I Don't Know");
     //abstract function setup($commentID, $page);
     /**
      * sets up basic data, such as the HTML_Quickform object, and so on.
@@ -195,7 +195,7 @@ class NDB_BVL_Instrument_peer_socialcontact extends NDB_BVL_Instrument
        // $this->form->addElement("static",null,"In the table below indicate which children know each other.<BR>You must select `Yes` or `No` fields to save this form.<BR>");
         $colspan = $this->localDefaults['total_peer']-1;
         $group[] = &$this->form->createElement("static", null, null,"");
-        $this->form->addGroup($group,"page2_header","<td colspan= $colspan>In the table below indicate which of your children's playmates know each other.</td>", null,false);
+        $this->form->addGroup($group,"page2_header","<td colspan= $colspan>In the table below indicate which of your children's playmates know<BR> each other. You must select 'Yes' or 'No' in all field to save this form.</td>", null,false);
         unset($group);
         if($this->localDefaults['total_peer'] >= 1) {
             $group[] = &$this->form->createElement("static", null, null, "Child 1");
@@ -386,7 +386,75 @@ class NDB_BVL_Instrument_peer_socialcontact extends NDB_BVL_Instrument
         }
 
     }
-    function _generate_Questions($playmate) {
+   function _page11() 
+  {
+       $this->form->addElement('header', 'section4_header', "Section 5: Effects of Autism on Children's play");
+       $this->form->addElement('static','lorisSubHeader', "Please complete the following section if your child has ever been diagnosed with autism<BR> (fill out for either a current diagnosis or a history of autism in the past)");
+       $this->addSelect('q1_autism_effect_discuss', "1. When trying to help your child establish a friendship with a peer, do you discuss<BR> issues related to autism with peer's parents in order to promote better play?", $this->promote_play);
+       $this->XINRegisterRule('q1_autism_effect_discuss',array("q1_autism_effect_discuss{@}=={@}NEVER_REQUIRED"));
+       $strategy = array(''=>NULL, 'detail_about_child_strength_weakness'=>"a. Go into a lot of detail about your child's strengths and weaknesses", 
+                         'no_details_not_minimizing_issues_either'=>'b. Not many details, but not minimizing issues either',
+                         'minimize_issues_comfortable'=>'c. Minimize the issues to try to help them feel comfortable',
+                         'never_discuss'=>'d. Never discuss it','refused_dontknow'=>"Refused/I Don't Know"); 
+       $this->addSelect('q2_autism_effect_discuss_parents', "2. If you do discuss these issues with parents to promote better play with peers,<BR> which strategy best describes your approach? ", $strategy);
+       $this->XINRegisterRule('q2_autism_effect_discuss_parents',array("q2_autism_effect_discuss_parents{@}=={@}NEVER_REQUIRED"));
+
+       $avoid_arranging = array(''=>NULL,'frequently'=>'a. Frequently','occasionally'=>'b. Occasionally','rarely_never'=>'c. Rarely or never','refused_dontknow'=>"Refused/I Don't Know");
+       $this->addSelect('q3_autism_effect_difficulty_arrangingplay', "3. How often have you experienced difficulty in arranging play opportunities for your<BR> child which you believe is due to your child having autism? ", $avoid_arranging);
+       $this->XINRegisterRule('q3_autism_effect_difficulty_arrangingplay',array("q3_autism_effect_difficulty_arrangingplay{@}=={@}NEVER_REQUIRED"));
+
+       $this->addSelect('q4_autism_effect_avoid_arranding_play', "4. How often have you avoided arranging play opportunities for your child due to fear<BR> of rejection due to your child having autism?", $avoid_arranging);
+       $this->XINRegisterRule('q4_autism_effect_avoid_arranding_play',array("q4_autism_effect_avoid_arranding_play{@}=={@}NEVER_REQUIRED"));
+       
+       $this->addSelect('q5_autism_effect_concernc_childskill',"5. How often have you avoided arranging play opportunities for your child due to concern <BR>that your child's social skills are not good enough?", $avoid_arranging);
+      $this->XINRegisterRule('q5_autism_effect_concernc_childskill',array("q5_autism_effect_concernc_childskill{@}=={@}NEVER_REQUIRED"));
+      
+      $restrict = array(''=>NULL, 'very_much'=>'a. Very much','somewhat'=>'b. Somewhat','not_at_all'=>'c. Not at all','refused_dontknow'=>"Refused/I Don't Know");
+      $this->addSelect('q6_autism_effect_restrict_socialtime',"6. To what extent do the various medical and educational services your child requires<BR> restrict the amount of time your child has for social opportunities with peers?", $restrict);
+      $this->XINRegisterRule('q6_autism_effect_restrict_socialtime',array("q6_autism_effect_restrict_socialtime{@}=={@}NEVER_REQUIRED"));
+      
+     $school = array(''=>NULL, 'very_satisfied'=>'a. Very satisfied','somewhat_satisfied'=>'b. Somewhat satisfied','not_satisfied'=>'c. Not satisfied','extremely_dissatisfied'=>'d. Extremely dissatisfied','not_in_school'=>'e. Not in school' ,'refused_dontknow'=>"Refused/I Don't Know"); 
+     $this->addSelect('q7_autism_effect_satisfaction_schoolstaff', "7. How satisfied are you with how the school staff help your child get along with peers?", $school);
+     $this->XINRegisterRule('q7_autism_effect_satisfaction_schoolstaff',array("q7_autism_effect_satisfaction_schoolstaff{@}=={@}NEVER_REQUIRED"));
+
+      $daycare = array(''=>NULL, 'very_satisfied'=>'a. Very satisfied','somewhat_satisfied'=>'b. Somewhat satisfied','not_satisfied'=>'c. Not satisfied','extremely_dissatisfied'=>'d. Extremely dissatisfied','not_in_daycare'=>'e. Not in daycare' ,'refused_dontknow'=>"Refused/I Don't Know");
+      $this->addSelect('q8_autism_effect_satisfaction_daycarestaff', "8. How satisfied are you with how the daycare staff help your child get along with peers?", $daycare);
+      $this->XINRegisterRule('q8_autism_effect_satisfaction_daycarestaff',array("q8_autism_effect_satisfaction_daycarestaff{@}=={@}NEVER_REQUIRED"));
+      
+      $q9_options = array(''=>NULL, 'mostly'=>'Mostly','some'=>'Some','rarely'=>'Rarely','refused_dontknow'=>"Refused/I Don't Know"); 
+      $this->form->addElement('static',null,"9. To what extent does your child tend to play with each of the groups listed below?");
+      $questions = array('q9a_autism_effect_other_children_autism'=>'a. Other children with autism',
+                 'q9b_autism_effect_other_children_devdelay'=>'b. Other children with developmental delays',
+                 'q9c_autism_effect_sameage'=>'c. Typically developing children -same age',
+                 'q9d_autism_effect_younger'=>'d. Typically developing children -younger',
+                 'q9e_autism_effect_older'=>'e. Typically developing children -older');
+
+      foreach($questions as $qstn=>$desc) {
+             $this->addSelect($qstn,$this->indent.$desc, $q9_options);
+             $this->XINRegisterRule($qstn, array("$qstn{@}=={@}NEVER_REQUIRED"));
+
+         }
+
+      $this->form->addElement('static',null,"10. Which group of peers does your child play with the best? Please rank order 1 through 5.");
+        $questions = array('q10a_autism_effect_other_children_autism'=>'a. Other children with autism',
+                 'q10b_autism_effect_other_children_devdelay'=>'b. Other children with developmental delays',
+                 'q10c_autism_effect_sameage'=>'c. Typically developing children -same age',
+                 'q10d_autism_effect_younger'=>'d. Typically developing children -younger',
+                 'q10e_autism_effect_older'=>'e. Typically developing children -older');
+
+      foreach($questions as $field=>$label) {
+             $group [] = $this->createText($field, $label);
+             $this->addGroup($group, $field . "_group",$this->indent. $label, null, false);
+             $this->XINRegisterRule($field,array("$field{@}=={@}NEVER_REQUIRED"),$field . "_group");
+             unset($group);
+             $this->addGroupRule($field . "_group", array(array(array("Value must be numeric.", 'numeric'))));
+         }
+
+       $this->addBasicTextArea("q11_comments", "11. Feel free to describe any other ways in which you have noticed that having autism has<BR> affected your child's social contacts with peers:");
+       $this->XINRegisterRule('q11_comments', array('q11_comments{@}=={@}NEVER_REQUIRED'));
+ 
+   } 
+   function _generate_Questions($playmate) {
          $i = $playmate;
          $this->form->addElement('header', 'instrument_title', "Peer Social Contact Questionnaire");
 
@@ -548,16 +616,16 @@ class NDB_BVL_Instrument_peer_socialcontact extends NDB_BVL_Instrument
             if($values["q8_specialneeds_playmate".$i] == 'other' && empty($values["q8_specialneeds_other_playmate".$i])) {
                 $errors["q8_specialneeds_other_playmate".$i."_group"] = "Please specify play area";
             }
-            /*
-            $q18 = array("q18_arrangeplay_you_playmate".$i,
-                    "q18_arrangeplay_yourchild_playmate".$i,
-                    "q18_arrangeplay_other_playmate".$i);
-            foreach($q18 as $field) {
-                if(array_key_exists($field, $values) && empty($values[$field])){
-                    $errors[$field."_group"] = "Please enter numerical value without % symbol";    
+	    for($i= 1; $i<=5; $i++) {
+		    $q18 = array("q18_arrangeplay_you_playmate".$i,
+				    "q18_arrangeplay_yourchild_playmate".$i,
+				    "q18_arrangeplay_other_playmate".$i);
+		$total = $values["q18_arrangeplay_you_playmate".$i] + $values["q18_arrangeplay_yourchild_playmate".$i] +
+                         $values["q18_arrangeplay_other_playmate".$i];
+                if($total > 100 ) { 
+                     $errors["q18_arrangeplay_you_playmate".$i."_group"] = "The total percent should add up to 100";
                 }
-            }
-            */
+	    }
 
         }
 //        print_r($errors);
@@ -607,6 +675,19 @@ class NDB_BVL_Instrument_peer_socialcontact extends NDB_BVL_Instrument
 
           }
        }
+       $activity_other = array('activity_desc_'=>'activity_other');
+       for($i=1; $i<=3; $i++) {
+         foreach($questions_other as $other=>$other_val) {
+             $field = $other.$i;
+             foreach($tpl_data['questions'] as $key=>$val) {
+                   if($val['SourceField'] == $other_val.$i && $Responses[$field] != 'other') {
+                       unset($tpl_data['questions'][$key]); //unset all if Other specify question if answer to previous question is not set to other
+                   }
+               }
+
+          }
+       }
+
        foreach ($tpl_data['questions'] as $key=>&$row) {
             if (isset($Responses[$row['SourceField']])) {
                 if($row['SourceField'] == 'respondent_other' && $Responses['respondent'] != 'other') {
