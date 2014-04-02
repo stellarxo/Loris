@@ -563,5 +563,64 @@ class NDB_BVL_Instrument_peer_socialcontact extends NDB_BVL_Instrument
 //        print_r($errors);
         return $errors;
     }
+     function getReview() {
+        $DB = Database::singleton();
+        $smarty = new Smarty_neurodb();
+        $tpl_data = array();
+
+        $tpl_data['questions'] = $DB->pselect(
+            "SELECT Description as question,
+            SourceField FROM parameter_type 
+            WHERE SourceFrom=:TN AND 
+            SourceField NOT IN ('Validity', 'Administration')",
+                array(
+                    'TN' => $this->testName
+                )
+            );
+
+        $Responses = $DB->pselectRow(
+            "SELECT * FROM " . $this->testName . " WHERE CommentID=:CID",
+            array('CID' => $this->getCommentID())
+        );
+        $total_playmates = $Responses['total_playmates'];
+        $questions_toremove = array('peer_initials_' ,'age_yrs_playmate_','age_mos_playmate_','gender_playmate_','q_number_playtimes_playmate','q2_avg_playtime_playmate','q3_related_playmate','q3_related_other_playmate','q4_playarea_playmate','q4_playarea_other_playmate','q5_proximity_playmate','q6_sameschool_playmate','q7_samechildcare_playmate','q8_specialneeds_playmate','q8_specialneeds_other_playmate','q9_yourchild_like_playmate','q0_like_yourchild_playmate','q_getalong_playmate','q2_leading_play_playmate','q3_typical_playtone_playmate','q4_typical_excitement_playmate','q5_num_conflicts_playmate','q6_disruptive_playmate','q7_how_involved_playmate','q8_arrangeplay_you_playmate','q8_arrangeplay_yourchild_playmate','q8_arrangeplay_other_playmate','q9_arrange_contacts_playmate','q20_stress_monitorplay_playmate','q2_facililate_getalong_playmate','q2_participate_activity_playmate','q2_maintain_presence_playmate','q2_outofview_listen_playmate','q2_outofview_notlisten_playmate','q22_manage_emotions_playmate','q22_understand_rules_playmate','q22_understand_howtoplay_playmate','q22_startplay_playmate','q22_remain_inplay_playmate','q22_manage_conflicts_playmate');
+      for($i= $total_playmates+1; $i<=5; $i++) {
+           foreach($questions_toremove as $qstn) {
+               $field = $qstn.$i;
+               foreach($tpl_data['questions'] as $key=>$val) {
+                   if($val['SourceField'] == $field) {
+                       unset($tpl_data['questions'][$key]);
+                   }
+               }
+           }
+       }
+       $questions_other = array('q3_related_playmate'=>'q3_related_other_playmate','q4_playarea_playmate'=>'q4_playarea_other_playmate',
+                                'q8_specialneeds_playmate'=>'q8_specialneeds_other_playmate');
+       for($i=1; $i<=5; $i++) {
+         foreach($questions_other as $other=>$other_val) {
+             $field = $other.$i;
+             foreach($tpl_data['questions'] as $key=>$val) {
+                   if($val['SourceField'] == $other_val.$i && $Responses[$field] != 'other') {
+                       unset($tpl_data['questions'][$key]); //unset all if Other specify question if answer to previous question is not set to other
+                   }
+               }
+
+          }
+       }
+       foreach ($tpl_data['questions'] as $key=>&$row) {
+            if (isset($Responses[$row['SourceField']])) {
+                if($row['SourceField'] == 'respondent_other' && $Responses['respondent'] != 'other') {
+                   unset($tpl_data['questions'][$key]);
+                } elseif (empty ($row['question'] ) || empty($row['SourceField']) ) {
+                   unset($tpl_data['questions'][$key]); //removes static fields from showing up
+                } else {
+                    $row['response'] = $Responses[$row['SourceField']];
+                }
+            }
+        }
+        $smarty->assign($tpl_data);
+        $html = $smarty->fetch("directentry_review.tpl");
+        return $html;
+    }
     
 }
