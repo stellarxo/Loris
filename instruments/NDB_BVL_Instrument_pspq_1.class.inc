@@ -292,4 +292,43 @@ class NDB_BVL_Instrument_pspq_1 extends NDB_BVL_Instrument
 
        return $errors;
     }
+
+   function getReview() {
+        $DB = Database::singleton();
+        $smarty = new Smarty_neurodb();
+        $tpl_data = array();
+
+        $tpl_data['questions'] = $DB->pselect(
+            "SELECT Description as question,
+            SourceField FROM parameter_type 
+            WHERE SourceFrom=:TN AND 
+            SourceField NOT IN ('Validity', 'Administration')",
+                array(
+                    'TN' => $this->testName
+                )
+            );
+        
+        $Responses = $DB->pselectRow(
+            "SELECT * FROM " . $this->testName . " WHERE CommentID=:CID",
+            array('CID' => $this->getCommentID())
+        );
+        foreach ($tpl_data['questions'] as $key=>&$row) {
+            if (isset($Responses[$row['SourceField']])) {
+                if($row['SourceField'] == 'respondent_other' && $Responses['respondent'] != 'other') { 
+                   unset($tpl_data['questions'][$key]); 
+                } else if($row['SourceField'] == 'informant_other' && $Responses['informant'] != 'other') { 
+                   unset($tpl_data['questions'][$key]);
+                } elseif (empty ($row['question'] ) || empty($row['SourceField']) ) { 
+                   unset($tpl_data['questions'][$key]);
+                } else {
+                    $row['response'] = $Responses[$row['SourceField']];
+                }
+            }
+        }
+
+        $smarty->assign($tpl_data);
+        $html = $smarty->fetch("directentry_review.tpl");
+        return $html;
+    }
+
 }
