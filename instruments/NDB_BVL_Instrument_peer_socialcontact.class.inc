@@ -8,7 +8,7 @@ class NDB_BVL_Instrument_peer_socialcontact extends NDB_BVL_Instrument
                         '3_occasionally'=>"3. Occasionally",'4_somewhat_often'=>'4. Somewhat Often',
                         '5_often'=>'5. Often','6_very_often'=>'6. Very Often','refused_dontknow'=>"Refused/I Don't Know");
     var $respondent = array(''=>NULL,'mother'=>'Mother','father'=>'Father','other'=>'Other');
-    var $num_playmates = array(''=>NULL, 1=>1,2=>2,3=>3,4=>4,5=>5);
+    var $num_playmates = array(''=>NULL,0=>0,1=>1,2=>2,3=>3,4=>4,5=>5);
     var $total_peer = 5;
     var $age_yrs = array(''=>NULL,'0'=>'0yrs','1'=>'1 yr','2'=>'2 yrs','3'=>'3 yrs','4'=>'4 yrs','5'=>'5 yrs',
                          '6'=>'6 yrs','7'=>'7 yrs','8'=>'8 yrs','9'=>'9 yrs','10'=>'10 yrs',
@@ -120,8 +120,10 @@ class NDB_BVL_Instrument_peer_socialcontact extends NDB_BVL_Instrument
         foreach($fields as $field) {
             $this->localDefaults[$field] = $record[$field];     
         }
-        if(!empty($record['total_playmates'])) {
+        if(!empty($record['total_playmates'])) { 
             $this->localDefaults['total_peer'] = $record['total_playmates'];
+        } else {
+            $this->localDefaults['total_peer'] = 5; //by default we want the total playmates as 5 in order for the data dictionary to work properly
         }
         
         // required fields for data entry completion status
@@ -193,11 +195,29 @@ class NDB_BVL_Instrument_peer_socialcontact extends NDB_BVL_Instrument
     function _page2() {
         
        // $this->form->addElement("static",null,"In the table below indicate which children know each other.<BR>You must select `Yes` or `No` fields to save this form.<BR>");
-        $colspan = $this->localDefaults['total_peer']-1;
-        $group[] = &$this->form->createElement("static", null, null,"");
-        $this->form->addGroup($group,"page2_header","<td colspan= $colspan>In the table below indicate which of your children's playmates know<BR> each other. You must select 'Yes' or 'No' in all field to save this form.</td>", null,false);
-        unset($group);
-        if($this->localDefaults['total_peer'] >= 1) {
+        $db =& Database::singleton();
+        if(Utility::isErrorX($db)) {
+            print "Could not connect to database: ".$db->getMessage();
+        }
+        $numplaymates = $db->pselectOne("SELECT total_playmates FROM ".$this->table." WHERE CommentID=:cid",
+                array('cid' =>$this->getCommentID()));
+
+        if (Utility::isErrorX($numplaymates)) {
+            print "Query has failed to select: ".$numplaymates->getMessage();
+        }
+        $colspan = $numplaymates -1;
+	if($numplaymates > 1) {
+		$group[] = &$this->form->createElement("static", null, null,"");
+		$this->form->addGroup($group,"page2_header","<td colspan= $colspan>In the table below indicate which of your children's playmates know<BR> each other. You must select 'Yes' or 'No' in all field to save this form.</td>", null,false);
+		unset($group);
+	} else {
+                $group[] = &$this->form->createElement("static", null, null,""); 
+                $this->form->addGroup($group,"page2_header","<td colspan= $colspan>In the previous page you have indicated $numplaymates playmate(s) of your child. <BR>Click 'Save and Continue' to go to the next section.</td>", null,false);
+                unset($group);
+
+	}
+        $this->localDefaults['total_peer'] = $numplaymates;
+        if($this->localDefaults['total_peer'] > 1) {
             $group[] = &$this->form->createElement("static", null, null, "Child 1");
         }
         if($this->localDefaults['total_peer'] >= 2) {
@@ -230,12 +250,12 @@ class NDB_BVL_Instrument_peer_socialcontact extends NDB_BVL_Instrument
             $this->form->addGroup($group, $groupname, "Child ".$i, $this->_GUIDelimiter, false);
             unset($group);
         }
-
-         $group[] = &$this->form->createElement("static", null, null,"");
-         $this->form->addGroup($group,"page2_header","<td colspan= $colspan>Initials of the playmates are :<BR></td>", null,false);
-         unset($group);
-
-         for ($i = 1; $i<= $this->total_peer; $i++) {
+	if($this->localDefaults['total_peer'] > 0) {
+		$group[] = &$this->form->createElement("static", null, null,"");
+		$this->form->addGroup($group,"page2_header","<td colspan= $colspan>Initials of the playmates are :<BR></td>", null,false);
+		unset($group);
+	}
+         for ($i = 1; $i<= $this->localDefaults['total_peer']; $i++) {
              if(!empty($this->localDefaults["peer_initials_".$i])) {
                $group[] =& $this->form->createElement("static", "peer_initials_".$i,null,null);
                $this->form->addGroup($group,$i."_header","<td colspan= $colspan>Initials of child $i:</td>", null,false);
@@ -578,7 +598,7 @@ class NDB_BVL_Instrument_peer_socialcontact extends NDB_BVL_Instrument
                  'q21_participate_activity_playmate'.$i=>'b. Participate in the activity with children',
                  'q21_maintain_presence_playmate'.$i=>'c. Maintain presence (in childs view)',
                  'q21_outofview_listen_playmate'.$i=>'d. Out of view but listen to their ongoing activity',
-                 'q21_outofview_notlisten_playmate'.$i=>'e. Out of view and can only hear outburts or cries');
+                 'q21_outofview_notlisten_playmate'.$i=>'e. Out of view and can only hear outbursts or cries');
 
          foreach($questions as $qstn=>$desc) {
              $this->addSelect($qstn,$this->indent.$desc, $this->q21_options);

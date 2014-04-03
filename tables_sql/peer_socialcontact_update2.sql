@@ -18,3 +18,4 @@ ALTER TABLE peer_socialcontact ADD COLUMN `q10c_autism_effect_sameage` varchar(2
 ALTER TABLE peer_socialcontact ADD COLUMN `q10d_autism_effect_younger` varchar(255) default NULL;
 ALTER TABLE peer_socialcontact ADD COLUMN `q10e_autism_effect_older` varchar(255) default NULL;
 ALTER TABLE peer_socialcontact ADD COLUMN `q11_comments` text default NULL;
+ALTER TABLE peer_socialcontact CHANGE COLUMN total_playmates total_playmates enum('0','1','2','3','4','5') ;
