@@ -248,17 +248,18 @@ class NDB_BVL_Instrument_dna_tracking extends NDB_BVL_Instrument
                    foreach($subjects as $subject) {
                         $field = $key."_".$subject; 
                         $group[] = $this->form->createElement("textarea", $field."_other",null); 
-                       // $this->XINRegisterRule($field."_other", array("$field{@}=={@}other"), "Please specify other", $groupname);
+                        $this->XINRegisterRule($field."_other", array("$field{@}=={@}NEVER_REQUIRED"));
                     }
                     $this->form->addGroup($group, $groupname, $this->indent."If other specify:", $this->_GUIDelimiter, false);
                     unset($group);
-		    $groupname = "blankline_group";
-		    foreach ($subjects as $subject) {
-			    $group[] = $this->createLabel(null, null, null);
+		    if(strpos($key, "saliva_collection_method") !== FALSE ) {
+			    $groupname = "blankline_group";
+			    foreach ($subjects as $subject) {
+				    $group[] = $this->form->createElement("static", null,null,null, array('class'=>'blankline'));
+			    }
+			    $this->form->addGroup($group, $groupname,null, $this->_GUIDelimiter, false);
+			    unset($group);
 		    }
-		    $this->form->addGroup($group, $groupname,null, $this->_GUIDelimiter, false);
-		    unset($group);
-
                 }
                 if($key == "saliva_collected") {
                     $groupname = "saliva_notcollected_group";
@@ -273,9 +274,9 @@ class NDB_BVL_Instrument_dna_tracking extends NDB_BVL_Instrument
                     
                     $groupname = "saliva_notcollected_other_group";
                     foreach ($subjects as $subject) {
-                        $field = $key."_".$subject;
-		        $group[] = $this->form->createElement("textarea", $field."_saliva_notcollected_other",null);
-                        $this->XINRegisterRule($field."_saliva_notcollected_other", array($field."_saliva_notcollected{@}=={@}other"),'Please specify other', $groupname);
+                        $field = "saliva_notcollected_".$subject;
+		        $group[] = $this->form->createElement("textarea", $field."_other",null);
+                        $this->XINRegisterRule($field."_other", array($field."_other{@}=={@}NEVER_REQUIRED"));
                     }
                     $this->form->addGroup($group, $groupname, $this->indent.$this->indent."If other, specify:", $this->_GUIDelimiter, false);
                     unset($group);
@@ -295,8 +296,8 @@ class NDB_BVL_Instrument_dna_tracking extends NDB_BVL_Instrument
                     $groupname = "blood_notcollected_other_group";
                     foreach ($subjects as $subject) {
                         $field = "blood_notcollected_".$subject;
-                        $group[] = $this->form->createElement("textarea", "blood_notcollected_other_".$subject,null);
-                        $this->XINRegisterRule("blood_notcollected_other_".$subject, array("$field{@}=={@}other"),'If blood was not collected, please specify reason', $groupname);                              
+                        $group[] = $this->form->createElement("textarea", $field."_other",null);
+                        $this->XINRegisterRule( $field."_other", array($field."_other{@}=={@}NEVER_REQUIRED"));                              
                     }
                     $this->form->addGroup($group, $groupname, $this->indent.$this->indent."If other, specify:", $this->_GUIDelimiter, false);
                     unset($group);
@@ -353,6 +354,11 @@ class NDB_BVL_Instrument_dna_tracking extends NDB_BVL_Instrument
                 && empty($values["blood_collection_method1_".$subject."_other" ] )) {
                   $errors["blood_collection_method1_other_group" ] = "Specify other for $subject";
              }
+             if($values["blood_collection_method2_".$subject] == 'other'
+                && empty($values["blood_collection_method2_".$subject."_other" ] )) {
+                  $errors["blood_collection_method2_other_group" ] = "Specify other for $subject";
+             }
+
              if($values[$field] == 'no' && empty($values["blood_notcollected_".$subject]) ) {
                   $errors["blood_notcollected_group"] = "Specify reason for $subject";
              }
@@ -364,10 +370,21 @@ class NDB_BVL_Instrument_dna_tracking extends NDB_BVL_Instrument
              if($values[$saliva_field] == 'yes' && empty ($values["saliva_collection_method1_".$subject]) )  {
                  $errors["saliva_collection_method1_group"] = "Specify how saliva was collected for $subject";
               }
+	     for($i =1; $i<=2;$i++){
+		     if($values["saliva_collection_method".$i."_".$subject] == 'other' 
+                        && empty($values["saliva_collection_method".$i."_".$subject."_other"] ) ) {
+			     $errors["saliva_collection_method".$i."_other_group"] = "Specify other for $subject";
+		     }
+	     }
               $saliva_when = array(); $saliva_when = $values["when_saliva_collected1_".$subject];
-              if($values[$saliva_field] == 'yes' && empty($saliva_when['Y'])) {
+             if($values[$saliva_field] == 'yes' && empty($saliva_when['Y'])) {
                   $errors['when_saliva_collected1_group'] = "Specify date for $subject";
-              }
+             }
+             if($values[$saliva_field] == 'no' && $values["saliva_notcollected_".$subject] == "other"
+                 && empty($values["saliva_notcollected_".$subject."_other"]) ) {
+                 $errors["saliva_notcollected_other_group"] = "Specify other for $subject";
+             }
+
               
         }
 
