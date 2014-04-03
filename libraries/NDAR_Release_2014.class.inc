@@ -1,7 +1,7 @@
 <?
 require_once '/var/www/loris/php/libraries/NDB_Factory.class.inc';
 require_once '/var/www/loris/php/libraries/Database.class.inc';
-class NDAR_Release_2014 {
+class NDAR_Release_2014a {
 
     function __construct($instrument, $project) {
         $this->instrument = $instrument;
@@ -14,7 +14,7 @@ class NDAR_Release_2014 {
         } else {
             $GUID = "AND COALESCE(c.CandidateGUID, '') <> ''";
         }
-        $Base = "COALESCE(s.Current_stage, '') <> 'Recycling Bin' AND COALESCE(s.Visit, '') NOT IN ('Failure', 'Withdrawal') AND COALESCE(s.Screening, '') NOT IN ('Failure', 'Withdrawal') AND f.Administration='All' AND f.Data_entry='Complete' AND EXISTS (SELECT 'x' FROM flag df WHERE df.CommentID=CONCAT('DDE_', i.CommentID) AND df.Data_entry='Complete') AND NOT EXISTS (SELECT 'x' FROM conflicts_unresolved cu WHERE cu.CommentId1=i.CommentID OR cu.CommentId2=i.CommentID) AND s.CenterID IN (2, 3, 4, 5) AND ( ps.study_consent = 'yes' AND (COALESCE(ps.study_consent_withdrawal,'0000-00-00') = '0000-00-00' )) AND (ps.ndar_consent = 'yes' AND (COALESCE(ps.ndar_consent_withdrawal,'0000-00-00') = '0000-00-00'))";
+        $Base = "COALESCE(s.Current_stage, '') <> 'Recycling Bin' AND COALESCE(s.Visit, '') NOT IN ('Failure', 'Withdrawal') AND COALESCE(s.Screening, '') NOT IN ('Failure', 'Withdrawal') AND f.Administration='All' AND f.Data_entry='Complete' AND EXISTS (SELECT 'x' FROM flag df WHERE df.CommentID=CONCAT('DDE_', i.CommentID) AND df.Data_entry='Complete') AND NOT EXISTS (SELECT 'x' FROM conflicts_unresolved cu WHERE cu.CommentId1=i.CommentID OR cu.CommentId2=i.CommentID) AND s.CenterID IN (2, 3, 4, 5) AND ( ps.study_consent = 'yes' AND (COALESCE(ps.study_consent_withdrawal,'0000-00-00') = '0000-00-00' )) AND (ps.ndar_consent = 'yes' AND (COALESCE(ps.ndar_consent_withdrawal,'0000-00-00') = '0000-00-00')) AND c.Active='Y' AND s.Active ='Y'";
 	if($this->instrument == 'adi_r_proband') {
 		if($this->project == 2){
 			return $Base . " AND i.Summary_diagnosis='ASD+' AND s.SubprojectID IN (9,10) AND s.Visit_label ='Screening' $GUID";
@@ -48,18 +48,18 @@ class NDAR_Release_2014 {
                }  
         } else if ($this->instrument == 'vineland_proband') {
            if ($this->project == 1) {
-               return "COALESCE(s.Current_stage, '') <> 'Recycling Bin' AND COALESCE(s.Visit, '') NOT IN ('Failure', 'Withdrawal') AND COALESCE(s.Screening, '') NOT IN ('Failure', 'Withdrawal') AND f.Administration='All' AND f.Data_entry='Complete' AND s.CenterID IN (2, 3, 4, 5) AND s.SubprojectID IN (1, 2) AND ( ps.study_consent = 'yes' AND (COALESCE(ps.study_consent_withdrawal,'0000-00-00') = '0000-00-00' )) AND (ps.ndar_consent = 'yes' AND (COALESCE(ps.ndar_consent_withdrawal,'0000-00-00') = '0000-00-00')) $GUID";
+               return "COALESCE(s.Current_stage, '') <> 'Recycling Bin' AND COALESCE(s.Visit, '') NOT IN ('Failure', 'Withdrawal') AND COALESCE(s.Screening, '') NOT IN ('Failure', 'Withdrawal') AND f.Administration='All' AND f.Data_entry='Complete' AND s.CenterID IN (2, 3, 4, 5) AND s.SubprojectID IN (1, 2) AND ( ps.study_consent = 'yes' AND (COALESCE(ps.study_consent_withdrawal,'0000-00-00') = '0000-00-00' )) AND (ps.ndar_consent = 'yes' AND (COALESCE(ps.ndar_consent_withdrawal,'0000-00-00') = '0000-00-00')) $GUID ";
             } else {
             // No DDE
             return "COALESCE(s.Current_stage, '') <> 'Recycling Bin' AND COALESCE(s.Visit, '') NOT IN ('Failure', 'Withdrawal') AND COALESCE(s.Screening, '') NOT IN ('Failure', 'Withdrawal') AND 
-             f.Administration='All' AND f.Data_entry='Complete' AND s.CenterID IN (2, 3, 4, 5) AND s.SubprojectID IN (9,10 ) AND s.Visit_label='Screening' AND ( ps.study_consent = 'yes' AND (COALESCE(ps.study_consent_withdrawal,'0000-00-00') = '0000-00-00' )) AND (ps.ndar_consent = 'yes' AND (COALESCE(ps.ndar_consent_withdrawal,'0000-00-00') = '0000-00-00')) $GUID";
+             f.Administration='All' AND f.Data_entry='Complete' AND s.CenterID IN (2, 3, 4, 5) AND s.SubprojectID IN (9,10 ) AND s.Visit_label='Screening' AND ( ps.study_consent = 'yes' AND (COALESCE(ps.study_consent_withdrawal,'0000-00-00') = '0000-00-00' )) AND (ps.ndar_consent = 'yes' AND (COALESCE(ps.ndar_consent_withdrawal,'0000-00-00') = '0000-00-00')) $GUID AND c.IBISID NOT IN ('IBIS4853','IBIS0465','IBIS6856')";
            }
         } else if($this->instrument == 'vineland_subject') {
             // No DDE
            if($this->project == 2){
-            return "COALESCE(s.Current_stage, '') <> 'Recycling Bin' AND COALESCE(s.Visit, '') NOT IN ('Failure', 'Withdrawal') AND COALESCE(s.Screening, '') NOT IN ('Failure', 'Withdrawal') AND f.Administration='All' AND f.Data_entry='Complete' AND s.CenterID IN (2, 3, 4, 5) AND ((s.SubprojectID=9 AND UPPER(s.Visit_label)='V03') OR (s.SubprojectID=10 AND UPPER(s.Visit_label) IN ('V03','V06','V09', 'V12','V15','V18', 'V24'))) AND ( ps.study_consent = 'yes' AND (COALESCE(ps.study_consent_withdrawal,'0000-00-00') = '0000-00-00' )) AND (ps.ndar_consent = 'yes' AND (COALESCE(ps.ndar_consent_withdrawal,'0000-00-00') = '0000-00-00')) $GUID";
+            return "COALESCE(s.Current_stage, '') <> 'Recycling Bin' AND COALESCE(s.Visit, '') NOT IN ('Failure', 'Withdrawal') AND COALESCE(s.Screening, '') NOT IN ('Failure', 'Withdrawal') AND f.Administration='All' AND f.Data_entry='Complete' AND s.CenterID IN (2, 3, 4, 5) AND ((s.SubprojectID=9 AND UPPER(s.Visit_label)='V03') OR (s.SubprojectID=10 AND UPPER(s.Visit_label) IN ('V03','V06','V09', 'V12','V15','V18', 'V24'))) AND ( ps.study_consent = 'yes' AND (COALESCE(ps.study_consent_withdrawal,'0000-00-00') = '0000-00-00' )) AND (ps.ndar_consent = 'yes' AND (COALESCE(ps.ndar_consent_withdrawal,'0000-00-00') = '0000-00-00')) $GUID AND c.IBISID NOT IN ('IBIS4853','IBIS0465','IBIS6856')";
             } else { 
-            return "COALESCE(s.Current_stage, '') <> 'Recycling Bin' AND COALESCE(s.Visit, '') NOT IN ('Failure', 'Withdrawal') AND COALESCE(s.Screening, '') NOT IN ('Failure', 'Withdrawal') AND f.Administration='All' AND f.Data_entry='Complete' AND s.CenterID IN (2, 3, 4, 5) AND ((s.SubprojectID=1 AND UPPER(s.Visit_label)='V06') OR (s.SubprojectID=3 AND UPPER(s.Visit_label) IN ('V06', 'V12', 'V24'))) AND ( ps.study_consent = 'yes' AND (COALESCE(ps.study_consent_withdrawal,'0000-00-00') = '0000-00-00' )) AND (ps.ndar_consent = 'yes' AND (COALESCE(ps.ndar_consent_withdrawal,'0000-00-00') = '0000-00-00')) $GUID";
+            return "COALESCE(s.Current_stage, '') <> 'Recycling Bin' AND COALESCE(s.Visit, '') NOT IN ('Failure', 'Withdrawal') AND COALESCE(s.Screening, '') NOT IN ('Failure', 'Withdrawal') AND f.Administration='All' AND f.Data_entry='Complete' AND s.CenterID IN (2, 3, 4, 5) AND ((s.SubprojectID=1 AND UPPER(s.Visit_label)='V06') OR (s.SubprojectID=3 AND UPPER(s.Visit_label) IN ('V06', 'V12', 'V24'))) AND ( ps.study_consent = 'yes' AND (COALESCE(ps.study_consent_withdrawal,'0000-00-00') = '0000-00-00' )) AND (ps.ndar_consent = 'yes' AND (COALESCE(ps.ndar_consent_withdrawal,'0000-00-00') = '0000-00-00')) $GUID AND c.IBISID NOT IN ('IBIS4853','IBIS0465','IBIS6856')";
    
              }
         } else if ($this->instrument == 'prefrontal_task' || $this->instrument == 'csbs') {
@@ -94,6 +94,8 @@ class NDAR_Release_2014 {
              return $Base . " AND ((s.SubprojectID=9 AND UPPER(s.Visit_label)='V03') OR (s.SubprojectID=10 AND UPPER(s.Visit_label) IN ('V03','V06','V09','V12', 'V15', 'V24'))) $GUID" ; 
         } else if ($this->instrument == 'macarthur_words_gestures' && $this->project ==2) {    
              return $Base . " AND (s.SubprojectID=10 AND UPPER(s.Visit_label) IN ('V12', 'V24')) $GUID";
+        } else if($this->instrument == 'ndar_subject') {
+            return  $Base ." AND c.ProjectID = $this->project $GUID";
         }
         return $Base . " AND ((s.SubprojectID=1 AND UPPER(s.Visit_label)='V06') OR (s.SubprojectID=3 AND UPPER(s.Visit_label) IN ('V06', 'V12', 'V24'))) $GUID";
     }
@@ -104,13 +106,13 @@ class NDAR_Release_2014 {
             return "c.IBISID, ";
         }
         if(strpos($this->instrument, '_proband') !== FALSE) {
-            if($this->instrument == 'm_chat_proband' ) {
+            if($this->instrument == 'm_chat_proband' || $this->instrument =='scq_proband' ) {
                 // No validity
                 return "c.IBISID,  c.ProbandGUID,  c.ProbandGender, ROUND(DATEDIFF(i.Date_taken, c.ProbandDoB) / (365/12)) AS Proband_Age_in_Months, i.Date_taken, ";
             }
                 return "c.IBISID, c.ProbandGUID, c.ProbandGender, ROUND(DATEDIFF(i.Date_taken, c.ProbandDoB) / (365/12)) AS Proband_Age_in_Months, f.Validity as validity_of_data, i.Date_taken, ";
         } else {
-            $NoValidities = array('macarthur_words_gestures', 'seq','rbs_r', 'ibq_r', 'head_measurements_subject', 'prefrontal_task', 'fyi', 'edi','edi2');
+            $NoValidities = array('macarthur_words_gestures', 'seq','rbs_r', 'ibq_r', 'head_measurements_subject', 'prefrontal_task', 'fyi','scq_proband');
             if(in_array($this->instrument, $NoValidities)) {
                 if($this->instrument == 'head_measurements_subject') {
                 return "c.IBISID, c.CandidateGUID as subjectkey, c.Gender, ROUND(DATEDIFF(i.Date_taken, c.DoB) / (365/12)) AS Candidate_Age_in_Months, i.Date_taken, ";
@@ -634,50 +636,6 @@ class NDAR_Release_2014 {
                 'i.`CMM_95%_CI` AS CMM_95PERCENT_CI',
                 'i.CMM_ADAPT_LEVEL',
                 'i.CMM_AGE_EQUIV',
-                'i.CMM_ITEM_1_NDAR',
-                'i.CMM_ITEM_2_NDAR',
-                'i.CMM_ITEM_3_NDAR',
-                'i.CMM_ITEM_4_NDAR',
-                'i.CMM_ITEM_5_NDAR',
-                'i.CMM_ITEM_6_NDAR',
-                'i.CMM_ITEM_7_NDAR',
-                'i.CMM_ITEM_8_NDAR',
-                'i.CMM_ITEM_9_NDAR',
-                'i.CMM_ITEM_10_NDAR',
-                'i.CMM_ITEM_11_NDAR',
-                'i.CMM_ITEM_12_NDAR',
-                'i.CMM_ITEM_13_NDAR',
-                'i.CMM_ITEM_14_NDAR',
-                'i.CMM_ITEM_15_NDAR',
-                'i.CMM_ITEM_16_NDAR',
-                'i.CMM_ITEM_17_NDAR',
-                'i.CMM_ITEM_18_NDAR',
-                'i.CMM_ITEM_19_NDAR',
-                'i.CMM_ITEM_20_NDAR',
-                'i.CMM_ITEM_21_NDAR',
-                'i.CMM_ITEM_22_NDAR',
-                'i.CMM_ITEM_23_NDAR',
-                'i.CMM_ITEM_24_NDAR',
-                'i.CMM_ITEM_25_NDAR',
-                'i.CMM_ITEM_26_NDAR',
-                'i.CMM_ITEM_27_NDAR',
-                'i.CMM_ITEM_28_NDAR',
-                'i.CMM_ITEM_29_NDAR',
-                'i.CMM_ITEM_30_NDAR',
-                'i.CMM_ITEM_31_NDAR',
-                'i.CMM_ITEM_32_NDAR',
-                'i.CMM_ITEM_33_NDAR',
-                'i.CMM_ITEM_34_NDAR',
-                'i.CMM_ITEM_35_NDAR',
-                'i.CMM_ITEM_36_NDAR',
-                'i.CMM_ITEM_37_NDAR',
-                'i.CMM_ITEM_38_NDAR',
-                'i.CMM_ITEM_39_NDAR',
-                'i.CMM_ITEM_40_NDAR',
-                'i.CMM_ITEM_41_NDAR',
-                'i.CMM_ITEM_42_NDAR',
-                'i.CMM_ITEM_43_NDAR',
-                'i.CMM_ITEM_44_NDAR',
                 'i.CMM_RAW',
                 'i.CMM_SW',
                 'i.CMM_VSCALE',
@@ -688,67 +646,9 @@ class NDAR_Release_2014 {
                 'i.COM_STD_SCORE',
                 'i.COM_SUM_VSCALES_FOR_DOMAIN',
                 'i.COM_SW',
-                'i.CRIT_ITEM_1',
-                'i.CRIT_ITEM_2',
-                'i.CRIT_ITEM_3',
-                'i.CRIT_ITEM_4',
-                'i.CRIT_ITEM_5',
-                'i.CRIT_ITEM_6',
-                'i.CRIT_ITEM_7',
-                'i.CRIT_ITEM_8',
-                'i.CRIT_ITEM_9',
-                'i.CRIT_ITEM_10',
-                'i.CRIT_ITEM_11',
-                'i.CRIT_ITEM_12',
-                'i.CRIT_ITEM_13',
-                'i.CRIT_ITEM_14',
-                'i.CRIT_SEVERITY_ITEM_1',
-                'i.CRIT_SEVERITY_ITEM_2',
-                'i.CRIT_SEVERITY_ITEM_3',
-                'i.CRIT_SEVERITY_ITEM_4',
-                'i.CRIT_SEVERITY_ITEM_5',
-                'i.CRIT_SEVERITY_ITEM_6',
-                'i.CRIT_SEVERITY_ITEM_7',
-                'i.CRIT_SEVERITY_ITEM_8',
-                'i.CRIT_SEVERITY_ITEM_9',
                 'i.`CS_95%_CI` as CS_95PERCENT_CI',
-                'i.CRIT_SEVERITY_ITEM_10',
-                'i.CRIT_SEVERITY_ITEM_11',
-                'i.CRIT_SEVERITY_ITEM_12',
-                'i.CRIT_SEVERITY_ITEM_13',
-                'i.CRIT_SEVERITY_ITEM_14',
                 'i.CS_ADAPT_LEVEL',
                 'i.CS_AGE_EQUIV',
-                'i.CS_ITEM_1_NDAR',
-                'i.CS_ITEM_2_NDAR',
-                'i.CS_ITEM_3_NDAR',
-                'i.CS_ITEM_4_NDAR',
-                'i.CS_ITEM_5_NDAR',
-                'i.CS_ITEM_6_NDAR',
-                'i.CS_ITEM_7_NDAR',
-                'i.CS_ITEM_8_NDAR',
-                'i.CS_ITEM_9_NDAR',
-                'i.CS_ITEM_10_NDAR',
-                'i.CS_ITEM_11_NDAR',
-                'i.CS_ITEM_12_NDAR',
-                'i.CS_ITEM_13_NDAR',
-                'i.CS_ITEM_14_NDAR',
-                'i.CS_ITEM_15_NDAR',
-                'i.CS_ITEM_16_NDAR',
-                'i.CS_ITEM_17_NDAR',
-                'i.CS_ITEM_18_NDAR',
-                'i.CS_ITEM_19_NDAR',
-                'i.CS_ITEM_20_NDAR',
-                'i.CS_ITEM_21_NDAR',
-                'i.CS_ITEM_22_NDAR',
-                'i.CS_ITEM_23_NDAR',
-                'i.CS_ITEM_24_NDAR',
-                'i.CS_ITEM_25_NDAR',
-                'i.CS_ITEM_26_NDAR',
-                'i.CS_ITEM_27_NDAR',
-                'i.CS_ITEM_28_NDAR',
-                'i.CS_ITEM_29_NDAR',
-                'i.CS_ITEM_30_NDAR',
                 'i.CS_RAW',
                 'i.CS_SW',
                 'i.CS_VSCALE',
@@ -762,252 +662,39 @@ class NDAR_Release_2014 {
                 'i.`DOM_95%_CI` as DOM_95PERCENT_CI',
                 'i.DOM_ADAPT_LEVEL',
                 'i.DOM_AGE_EQUIV',
-                'i.DOM_ITEM_1_NDAR',
-                'i.DOM_ITEM_2_NDAR',
-                'i.DOM_ITEM_3_NDAR',
-                'i.DOM_ITEM_4_NDAR',
-                'i.DOM_ITEM_5_NDAR',
-                'i.DOM_ITEM_6_NDAR',
-                'i.DOM_ITEM_7_NDAR',
-                'i.DOM_ITEM_8_NDAR',
-                'i.DOM_ITEM_9_NDAR',
-                'i.DOM_ITEM_10_NDAR',
-                'i.DOM_ITEM_11_NDAR',
-                'i.DOM_ITEM_12_NDAR',
-                'i.DOM_ITEM_13_NDAR',
-                'i.DOM_ITEM_14_NDAR',
-                'i.DOM_ITEM_15_NDAR',
-                'i.DOM_ITEM_16_NDAR',
-                'i.DOM_ITEM_17_NDAR',
-                'i.DOM_ITEM_18_NDAR',
-                'i.DOM_ITEM_19_NDAR',
-                'i.DOM_ITEM_20_NDAR',
-                'i.DOM_ITEM_21_NDAR',
-                'i.DOM_ITEM_22_NDAR',
-                'i.DOM_ITEM_23_NDAR',
-                'i.DOM_ITEM_24_NDAR',
                 'i.DOM_RAW',
                 'i.DOM_SW',
                 'i.DOM_VSCALE',
                 'i.`EXP_95%_CI` AS EXP_95PERCENT_CI',
                 'i.EXP_ADAPT_LEVEL',
                 'i.EXP_AGE_EQUIV',
-                'i.EXP_ITEM_1_NDAR',
-                'i.EXP_ITEM_2_NDAR',
-                'i.EXP_ITEM_3_NDAR',
-                'i.EXP_ITEM_4_NDAR',
-                'i.EXP_ITEM_5_NDAR',
-                'i.EXP_ITEM_6_NDAR',
-                'i.EXP_ITEM_7_NDAR',
-                'i.EXP_ITEM_8_NDAR',
-                'i.EXP_ITEM_9_NDAR',
-                'i.EXP_ITEM_10_NDAR',
-                'i.EXP_ITEM_11_NDAR',
-                'i.EXP_ITEM_12_NDAR',
-                'i.EXP_ITEM_13_NDAR',
-                'i.EXP_ITEM_14_NDAR',
-                'i.EXP_ITEM_15_NDAR',
-                'i.EXP_ITEM_16_NDAR',
-                'i.EXP_ITEM_17_NDAR',
-                'i.EXP_ITEM_18_NDAR',
-                'i.EXP_ITEM_19_NDAR',
-                'i.EXP_ITEM_20_NDAR',
-                'i.EXP_ITEM_21_NDAR',
-                'i.EXP_ITEM_22_NDAR',
-                'i.EXP_ITEM_23_NDAR',
-                'i.EXP_ITEM_24_NDAR',
-                'i.EXP_ITEM_25_NDAR',
-                'i.EXP_ITEM_26_NDAR',
-                'i.EXP_ITEM_27_NDAR',
-                'i.EXP_ITEM_28_NDAR',
-                'i.EXP_ITEM_29_NDAR',
-                'i.EXP_ITEM_30_NDAR',
-                'i.EXP_ITEM_31_NDAR',
-                'i.EXP_ITEM_32_NDAR',
-                'i.EXP_ITEM_33_NDAR',
-                'i.EXP_ITEM_34_NDAR',
-                'i.EXP_ITEM_35_NDAR',
-                'i.EXP_ITEM_36_NDAR',
-                'i.EXP_ITEM_37_NDAR',
-                'i.EXP_ITEM_38_NDAR',
-                'i.EXP_ITEM_39_NDAR',
-                'i.EXP_ITEM_40_NDAR',
-                'i.EXP_ITEM_41_NDAR',
-                'i.EXP_ITEM_42_NDAR',
-                'i.EXP_ITEM_43_NDAR',
-                'i.EXP_ITEM_44_NDAR',
-                'i.EXP_ITEM_45_NDAR',
-                'i.EXP_ITEM_46_NDAR',
-                'i.EXP_ITEM_47_NDAR',
-                'i.EXP_ITEM_48_NDAR',
-                'i.EXP_ITEM_49_NDAR',
-                'i.EXP_ITEM_50_NDAR',
-                'i.EXP_ITEM_51_NDAR',
-                'i.EXP_ITEM_52_NDAR',
-                'i.EXP_ITEM_53_NDAR',
-                'i.EXP_ITEM_54_NDAR',
                 'i.EXP_RAW',
                 'i.EXP_SW',
                 'i.EXP_VSCALE',
                 'i.`EXT_95%_CI` AS EXT_95PERCENT_CI',
                 'i.EXT_ADAPT_LEVEL',
-                'i.EXT_ITEM_1_NDAR',
-                'i.EXT_ITEM_2_NDAR',
-                'i.EXT_ITEM_3_NDAR',
-                'i.EXT_ITEM_4_NDAR',
-                'i.EXT_ITEM_5_NDAR',
-                'i.EXT_ITEM_6_NDAR',
-                'i.EXT_ITEM_7_NDAR',
-                'i.EXT_ITEM_8_NDAR',
-                'i.EXT_ITEM_9_NDAR',
-                'i.EXT_ITEM_10_NDAR',
                 'i.EXT_RAW',
                 'i.EXT_VSCALE',
                 'i.`FMS_95%_CI` AS FMS_95PERCENT_CI',
                 'i.FMS_ADAPT_LEVEL',
                 'i.FMS_AGE_EQUIV',
-                'i.FMS_ITEM_1_NDAR',
-                'i.FMS_ITEM_2_NDAR',
-                'i.FMS_ITEM_3_NDAR',
-                'i.FMS_ITEM_4_NDAR',
-                'i.FMS_ITEM_5_NDAR',
-                'i.FMS_ITEM_6_NDAR',
-                'i.FMS_ITEM_7_NDAR',
-                'i.FMS_ITEM_8_NDAR',
-                'i.FMS_ITEM_9_NDAR',
-                'i.FMS_ITEM_10_NDAR',
-                'i.FMS_ITEM_11_NDAR',
-                'i.FMS_ITEM_12_NDAR',
-                'i.FMS_ITEM_13_NDAR',
-                'i.FMS_ITEM_14_NDAR',
-                'i.FMS_ITEM_15_NDAR',
-                'i.FMS_ITEM_16_NDAR',
-                'i.FMS_ITEM_17_NDAR',
-                'i.FMS_ITEM_18_NDAR',
-                'i.FMS_ITEM_19_NDAR',
-                'i.FMS_ITEM_20_NDAR',
-                'i.FMS_ITEM_21_NDAR',
-                'i.FMS_ITEM_22_NDAR',
-                'i.FMS_ITEM_23_NDAR',
-                'i.FMS_ITEM_24_NDAR',
-                'i.FMS_ITEM_25_NDAR',
-                'i.FMS_ITEM_26_NDAR',
-                'i.FMS_ITEM_27_NDAR',
-                'i.FMS_ITEM_28_NDAR',
-                'i.FMS_ITEM_29_NDAR',
-                'i.FMS_ITEM_30_NDAR',
-                'i.FMS_ITEM_31_NDAR',
-                'i.FMS_ITEM_32_NDAR',
-                'i.FMS_ITEM_33_NDAR',
-                'i.FMS_ITEM_34_NDAR',
-                'i.FMS_ITEM_35_NDAR',
-                'i.FMS_ITEM_36_NDAR',
                 'i.FMS_RAW',
                 'i.FMS_SW',
                 'i.FMS_VSCALE',
                 'i.`GMS_95%_CI` as GMS_95PERCENT_CI',
                 'i.GMS_ADAPT_LEVEL',
                 'i.GMS_AGE_EQUIV',
-                'i.GMS_ITEM_1_NDAR',
-                'i.GMS_ITEM_2_NDAR',
-                'i.GMS_ITEM_3_NDAR',
-                'i.GMS_ITEM_4_NDAR',
-                'i.GMS_ITEM_5_NDAR',
-                'i.GMS_ITEM_6_NDAR',
-                'i.GMS_ITEM_7_NDAR',
-                'i.GMS_ITEM_8_NDAR',
-                'i.GMS_ITEM_9_NDAR',
-                'i.GMS_ITEM_10_NDAR',
-                'i.GMS_ITEM_11_NDAR',
-                'i.GMS_ITEM_12_NDAR',
-                'i.GMS_ITEM_13_NDAR',
-                'i.GMS_ITEM_14_NDAR',
-                'i.GMS_ITEM_15_NDAR',
-                'i.GMS_ITEM_16_NDAR',
-                'i.GMS_ITEM_17_NDAR',
-                'i.GMS_ITEM_18_NDAR',
-                'i.GMS_ITEM_19_NDAR',
-                'i.GMS_ITEM_20_NDAR',
-                'i.GMS_ITEM_21_NDAR',
-                'i.GMS_ITEM_22_NDAR',
-                'i.GMS_ITEM_23_NDAR',
-                'i.GMS_ITEM_24_NDAR',
-                'i.GMS_ITEM_25_NDAR',
-                'i.GMS_ITEM_26_NDAR',
-                'i.GMS_ITEM_27_NDAR',
-                'i.GMS_ITEM_28_NDAR',
-                'i.GMS_ITEM_29_NDAR',
-                'i.GMS_ITEM_30_NDAR',
-                'i.GMS_ITEM_31_NDAR',
-                'i.GMS_ITEM_32_NDAR',
-                'i.GMS_ITEM_33_NDAR',
-                'i.GMS_ITEM_34_NDAR',
-                'i.GMS_ITEM_35_NDAR',
-                'i.GMS_ITEM_36_NDAR',
-                'i.GMS_ITEM_37_NDAR',
-                'i.GMS_ITEM_38_NDAR',
-                'i.GMS_ITEM_39_NDAR',
-                'i.GMS_ITEM_40_NDAR',
                 'i.GMS_RAW',
                 'i.GMS_SW',
                 'i.GMS_VSCALE',
                 'i.GRADE',
                 'i.`INT_95%_CI` AS INT_95PERCENT_CI',
                 'i.INT_ADAPT_LEVEL',
-                'i.INT_ITEM_1_NDAR',
-                'i.INT_ITEM_2_NDAR',
-                'i.INT_ITEM_3_NDAR',
-                'i.INT_ITEM_4_NDAR',
-                'i.INT_ITEM_5_NDAR',
-                'i.INT_ITEM_6_NDAR',
-                'i.INT_ITEM_7_NDAR',
-                'i.INT_ITEM_8_NDAR',
-                'i.INT_ITEM_9_NDAR',
-                'i.INT_ITEM_10_NDAR',
-                'i.INT_ITEM_11_NDAR',
                 'i.INT_RAW',
                 'i.INT_VSCALE',
                 'i.`IPR_95%_CI` AS IPR_95PERCENT_CI',
                 'i.IPR_ADAPT_LEVEL',
                 'i.IPR_AGE_EQUIV',
-                'i.IPR_ITEM_1_NDAR',
-                'i.IPR_ITEM_2_NDAR',
-                'i.IPR_ITEM_3_NDAR',
-                'i.IPR_ITEM_4_NDAR',
-                'i.IPR_ITEM_5_NDAR',
-                'i.IPR_ITEM_6_NDAR',
-                'i.IPR_ITEM_7_NDAR',
-                'i.IPR_ITEM_8_NDAR',
-                'i.IPR_ITEM_9_NDAR',
-                'i.IPR_ITEM_10_NDAR',
-                'i.IPR_ITEM_11_NDAR',
-                'i.IPR_ITEM_12_NDAR',
-                'i.IPR_ITEM_13_NDAR',
-                'i.IPR_ITEM_14_NDAR',
-                'i.IPR_ITEM_15_NDAR',
-                'i.IPR_ITEM_16_NDAR',
-                'i.IPR_ITEM_17_NDAR',
-                'i.IPR_ITEM_18_NDAR',
-                'i.IPR_ITEM_19_NDAR',
-                'i.IPR_ITEM_20_NDAR',
-                'i.IPR_ITEM_21_NDAR',
-                'i.IPR_ITEM_22_NDAR',
-                'i.IPR_ITEM_23_NDAR',
-                'i.IPR_ITEM_24_NDAR',
-                'i.IPR_ITEM_25_NDAR',
-                'i.IPR_ITEM_26_NDAR',
-                'i.IPR_ITEM_27_NDAR',
-                'i.IPR_ITEM_28_NDAR',
-                'i.IPR_ITEM_29_NDAR',
-                'i.IPR_ITEM_30_NDAR',
-                'i.IPR_ITEM_31_NDAR',
-                'i.IPR_ITEM_32_NDAR',
-                'i.IPR_ITEM_33_NDAR',
-                'i.IPR_ITEM_34_NDAR',
-                'i.IPR_ITEM_35_NDAR',
-                'i.IPR_ITEM_36_NDAR',
-                'i.IPR_ITEM_37_NDAR',
-                'i.IPR_ITEM_38_NDAR',
                 'i.IPR_RAW',
                 'i.IPR_SW',
                 'i.IPR_VSCALE',
@@ -1027,129 +714,22 @@ class NDAR_Release_2014 {
                 'i.OTH_RAW',
                 'i.OTH_STATUS',
                 'i.OTH_VSCALE',
-                'i.OTH_ITEM_1_NDAR',
-                'i.OTH_ITEM_2_NDAR',
-                'i.OTH_ITEM_3_NDAR',
-                'i.OTH_ITEM_4_NDAR',
-                'i.OTH_ITEM_5_NDAR',
-                'i.OTH_ITEM_6_NDAR',
-                'i.OTH_ITEM_7_NDAR',
-                'i.OTH_ITEM_8_NDAR',
-                'i.OTH_ITEM_9_NDAR',
-                'i.OTH_ITEM_10_NDAR',
-                'i.OTH_ITEM_11_NDAR',
-                'i.OTH_ITEM_12_NDAR',
-                'i.OTH_ITEM_13_NDAR',
-                'i.OTH_ITEM_14_NDAR',
-                'i.OTH_ITEM_15_NDAR',
                 'i.`PER_95%_CI` AS PER_95PERCENT_CI',
                 'i.PER_ADAPT_LEVEL',
                 'i.PER_AGE_EQUIV',
-                'i.PER_ITEM_1_NDAR',
-                'i.PER_ITEM_2_NDAR',
-                'i.PER_ITEM_3_NDAR',
-                'i.PER_ITEM_4_NDAR',
-                'i.PER_ITEM_5_NDAR',
-                'i.PER_ITEM_6_NDAR',
-                'i.PER_ITEM_7_NDAR',
-                'i.PER_ITEM_8_NDAR',
-                'i.PER_ITEM_9_NDAR',
-                'i.PER_ITEM_10_NDAR',
-                'i.PER_ITEM_11_NDAR',
-                'i.PER_ITEM_12_NDAR',
-                'i.PER_ITEM_13_NDAR',
-                'i.PER_ITEM_14_NDAR',
-                'i.PER_ITEM_15_NDAR',
-                'i.PER_ITEM_16_NDAR',
-                'i.PER_ITEM_17_NDAR',
-                'i.PER_ITEM_18_NDAR',
-                'i.PER_ITEM_19_NDAR',
-                'i.PER_ITEM_20_NDAR',
-                'i.PER_ITEM_21_NDAR',
-                'i.PER_ITEM_22_NDAR',
-                'i.PER_ITEM_23_NDAR',
-                'i.PER_ITEM_24_NDAR',
-                'i.PER_ITEM_25_NDAR',
-                'i.PER_ITEM_26_NDAR',
-                'i.PER_ITEM_27_NDAR',
-                'i.PER_ITEM_28_NDAR',
-                'i.PER_ITEM_29_NDAR',
-                'i.PER_ITEM_30_NDAR',
-                'i.PER_ITEM_31_NDAR',
-                'i.PER_ITEM_32_NDAR',
-                'i.PER_ITEM_33_NDAR',
-                'i.PER_ITEM_34_NDAR',
-                'i.PER_ITEM_35_NDAR',
-                'i.PER_ITEM_36_NDAR',
-                'i.PER_ITEM_37_NDAR',
-                'i.PER_ITEM_38_NDAR',
-                'i.PER_ITEM_39_NDAR',
-                'i.PER_ITEM_40_NDAR',
-                'i.PER_ITEM_41_NDAR',
                 'i.PER_RAW',
                 'i.PER_SW',
                 'i.PER_VSCALE',
                 'i.`PL_95%_CI` AS PL_95PERCENT_CI',
                 'i.PL_ADAPT_LEVEL',
                 'i.PL_AGE_EQUIV',
-                'i.PL_ITEM_1_NDAR',
-                'i.PL_ITEM_2_NDAR',
-                'i.PL_ITEM_3_NDAR',
-                'i.PL_ITEM_4_NDAR',
-                'i.PL_ITEM_5_NDAR',
-                'i.PL_ITEM_6_NDAR',
-                'i.PL_ITEM_7_NDAR',
-                'i.PL_ITEM_8_NDAR',
-                'i.PL_ITEM_9_NDAR',
-                'i.PL_ITEM_10_NDAR',
-                'i.PL_ITEM_11_NDAR',
-                'i.PL_ITEM_12_NDAR',
-                'i.PL_ITEM_13_NDAR',
-                'i.PL_ITEM_14_NDAR',
-                'i.PL_ITEM_15_NDAR',
-                'i.PL_ITEM_16_NDAR',
-                'i.PL_ITEM_17_NDAR',
-                'i.PL_ITEM_18_NDAR',
-                'i.PL_ITEM_19_NDAR',
-                'i.PL_ITEM_20_NDAR',
-                'i.PL_ITEM_21_NDAR',
-                'i.PL_ITEM_22_NDAR',
-                'i.PL_ITEM_23_NDAR',
-                'i.PL_ITEM_24_NDAR',
-                'i.PL_ITEM_25_NDAR',
-                'i.PL_ITEM_26_NDAR',
-                'i.PL_ITEM_27_NDAR',
-                'i.PL_ITEM_28_NDAR',
-                'i.PL_ITEM_29_NDAR',
-                'i.PL_ITEM_30_NDAR',
-                'i.PL_ITEM_31_NDAR',
                 'i.PL_RAW',
                 'i.PL_SW',
                 'i.PL_VSCALE',
                 'i.`REC_95%_CI` AS REC_95PERCENT_CI',
                 'i.REC_ADAPT_LEVEL',
                 'i.REC_AGE_EQUIV',
-                'i.REC_ITEM_1_NDAR',
-                'i.REC_ITEM_2_NDAR',
-                'i.REC_ITEM_3_NDAR',
-                'i.REC_ITEM_4_NDAR',
-                'i.REC_ITEM_5_NDAR',
-                'i.REC_ITEM_6_NDAR',
-                'i.REC_ITEM_7_NDAR',
-                'i.REC_ITEM_8_NDAR',
-                'i.REC_ITEM_9_NDAR',
-                'i.REC_ITEM_10_NDAR',
-                'i.REC_ITEM_11_NDAR',
-                'i.REC_ITEM_12_NDAR',
-                'i.REC_ITEM_13_NDAR',
-                'i.REC_ITEM_14_NDAR',
-                'i.REC_ITEM_15_NDAR',
-                'i.REC_ITEM_16_NDAR',
-                'i.REC_ITEM_17_NDAR',
-                'i.REC_ITEM_18_NDAR',
-                'i.REC_ITEM_19_NDAR',
-                'i.REC_ITEM_20_NDAR',
-                'i.REC_RAW',
+                   'i.REC_RAW',
                 'i.REC_SW',
                 'i.REC_VSCALE',
                 'i.`SOC_%ILE_RANK` AS SOC_PERCENTILE_RANK',
@@ -1162,31 +742,6 @@ class NDAR_Release_2014 {
                 'i.`WRN_95%_CI` AS WRN_95PERCENT_CI',
                 'i.WRN_ADAPT_LEVEL',
                 'i.WRN_AGE_EQUIV',
-                'i.WRN_ITEM_1_NDAR',
-                'i.WRN_ITEM_2_NDAR',
-                'i.WRN_ITEM_3_NDAR',
-                'i.WRN_ITEM_4_NDAR',
-                'i.WRN_ITEM_5_NDAR',
-                'i.WRN_ITEM_6_NDAR',
-                'i.WRN_ITEM_7_NDAR',
-                'i.WRN_ITEM_8_NDAR',
-                'i.WRN_ITEM_9_NDAR',
-                'i.WRN_ITEM_10_NDAR',
-                'i.WRN_ITEM_11_NDAR',
-                'i.WRN_ITEM_12_NDAR',
-                'i.WRN_ITEM_13_NDAR',
-                'i.WRN_ITEM_14_NDAR',
-                'i.WRN_ITEM_15_NDAR',
-                'i.WRN_ITEM_16_NDAR',
-                'i.WRN_ITEM_17_NDAR',
-                'i.WRN_ITEM_18_NDAR',
-                'i.WRN_ITEM_19_NDAR',
-                'i.WRN_ITEM_20_NDAR',
-                'i.WRN_ITEM_21_NDAR',
-                'i.WRN_ITEM_22_NDAR',
-                'i.WRN_ITEM_23_NDAR',
-                'i.WRN_ITEM_24_NDAR',
-                'i.WRN_ITEM_25_NDAR',
                 'i.WRN_RAW',
                 'i.WRN_SW',
                 'i.WRN_VSCALE');
@@ -1946,7 +1501,7 @@ class NDAR_Release_2014 {
         } else if($this->instrument == 'ibq_r') {
             $fields = array('i.activity_level', 'i.approach', 'i.cuddliness', 'i.distress_to_limitations', 'i.duration_of_orienting', 'i.falling_reactivity', 'i.fear', 'i.high_pleasure', 'i.low_pleasure', 'i.perceptual_sensitivity', 'i.sadness', 'i.smiling_and_laughter', 'i.soothability', 'i.vocal_reactivity', 'i.q_1', 'i.q_10', 'i.q_100', 'i.q_101', 'i.q_102', 'i.q_103', 'i.q_104', 'i.q_105', 'i.q_106', 'i.q_107', 'i.q_108', 'i.q_109', 'i.q_11', 'i.q_110', 'i.q_111', 'i.q_112', 'i.q_113', 'i.q_114', 'i.q_115', 'i.q_116', 'i.q_117', 'i.q_118', 'i.q_119', 'i.q_12', 'i.q_120', 'i.q_121', 'i.q_122', 'i.q_123', 'i.q_124', 'i.q_125', 'i.q_126', 'i.q_127', 'i.q_128', 'i.q_129', 'i.q_13', 'i.q_130', 'i.q_131', 'i.q_132', 'i.q_133', 'i.q_134', 'i.q_135', 'i.q_136', 'i.q_137', 'i.q_138', 'i.q_139', 'i.q_14', 'i.q_140', 'i.q_141', 'i.q_142', 'i.q_143', 'i.q_144', 'i.q_145', 'i.q_146', 'i.q_147', 'i.q_148', 'i.q_149', 'i.q_15', 'i.q_150', 'i.q_151', 'i.q_152', 'i.q_153', 'i.q_154', 'i.q_155', 'i.q_156', 'i.q_157', 'i.q_158', 'i.q_159', 'i.q_16', 'i.q_160', 'i.q_161', 'i.q_162', 'i.q_163', 'i.q_164', 'i.q_165', 'i.q_166', 'i.q_167', 'i.q_168', 'i.q_169', 'i.q_17', 'i.q_170', 'i.q_171', 'i.q_172', 'i.q_173', 'i.q_174', 'i.q_175', 'i.q_176', 'i.q_177', 'i.q_178', 'i.q_179', 'i.q_18', 'i.q_180', 'i.q_181', 'i.q_182', 'i.q_183', 'i.q_184', 'i.q_185', 'i.q_186', 'i.q_187', 'i.q_188', 'i.q_189', 'i.q_19', 'i.q_190', 'i.q_191', 'i.q_2', 'i.q_20', 'i.q_21', 'i.q_22', 'i.q_23', 'i.q_24', 'i.q_25', 'i.q_26', 'i.q_27', 'i.q_28', 'i.q_29', 'i.q_3', 'i.q_30', 'i.q_31', 'i.q_32', 'i.q_33', 'i.q_34', 'i.q_35', 'i.q_36', 'i.q_37', 'i.q_38', 'i.q_39', 'i.q_4', 'i.q_40', 'i.q_41', 'i.q_42', 'i.q_43', 'i.q_44', 'i.q_45', 'i.q_46', 'i.q_47', 'i.q_48', 'i.q_49', 'i.q_5', 'i.q_50', 'i.q_51', 'i.q_52', 'i.q_53', 'i.q_54', 'i.q_55', 'i.q_56', 'i.q_57', 'i.q_58', 'i.q_59', 'i.q_6', 'i.q_60', 'i.q_61', 'i.q_62', 'i.q_63', 'i.q_64', 'i.q_65', 'i.q_66', 'i.q_67', 'i.q_68', 'i.q_69', 'i.q_7', 'i.q_70', 'i.q_71', 'i.q_72', 'i.q_73', 'i.q_74', 'i.q_75', 'i.q_76', 'i.q_77', 'i.q_78', 'i.q_79', 'i.q_8', 'i.q_80', 'i.q_81', 'i.q_82', 'i.q_83', 'i.q_84', 'i.q_85', 'i.q_86', 'i.q_87', 'i.q_88', 'i.q_89', 'i.q_9', 'i.q_90', 'i.q_91', 'i.q_92', 'i.q_93', 'i.q_94', 'i.q_95', 'i.q_96', 'i.q_97', 'i.q_98', 'i.q_99');
         } else if ($this->instrument == 'head_measurements_subject') {
-            $fields = array('i.head_circumference1', 'i.head_circumference_unit', 'i.length1', 'i.length2', 'i.head_length_unit', 'i.weight1', 'i.weight2','i.weight_unit');
+            $fields = array('i.length1', 'i.length2', 'i.head_length_unit', 'i.weight1', 'i.weight2','i.weight_unit');
         } else if ($this->instrument == 'prefrontal_task') {
             $fields = array('i.training', 'i.training_finds_partially_covered', 'i.training_finds_fully_covered', 'i.training_retrieves_R_well', 'i.training_retrieves_R_well_trial', 'i.training_retrieves_R_well_trial_of', 'i.training_retrieves_L_well', 'i.training_retrieves_L_well_trial', 'i.training_retrieves_L_well_trial_of', 'i.start_side', 'i.trial_1', 'i.trial_2', 'i.trial_3', 'i.trial_4', 'i.trial_5', 'i.trial_6', 'i.trial_7', 'i.trial_8', 'i.trial_9', 'i.trial_10', 'i.trial_11', 'i.trial_12', 'i.trial_13', 'i.trial_14', 'i.trial_15', 'i.trial_16', 'i.trial_17', 'i.trial_18', 'i.trial_19', 'i.trial_20', 'i.trial_21', 'i.trial_22', 'i.trial_23', 'i.trial_24', 'i.first_reversal', 'i.second_reversal', 'i.third_reversal', 'i.fourth_reversal', 'i.validity_of_data', 'i.invalidity_reason', 'i.invalidity_comment', 'i.invalidity_comment_status', 'i.5sec_overall_correct', 'i.5sec_overall_trials', 'i.5sec_reversals_correct', 'i.5sec_reversals_trials', 'i.12sec_overall_correct', 'i.12sec_overall_trials', 'i.12sec_reversals_correct', 'i.12sec_reversals_trials');
         } else if ($this->instrument == 'fyi') {
@@ -1974,6 +1529,8 @@ class NDAR_Release_2014 {
                     LEFT JOIN neuro_screen neuroscreen ON (neuroscreenflag.CommentID=neuroscreen.CommentID)
                     LEFT JOIN tsi tsi ON (tsiflag.CommentID=tsi.CommentID)
                     WHERE " . $this->getWhere();
+            } else if($this->instrument == 'ndar_subject') {
+                 return "SELECT c.IBISID, s.CenterID as Site, CASE s.SubprojectID WHEN 1 THEN 'High Risk' WHEN 2 THEN 'High Risk' WHEN 3 THEN 'Low Risk' WHEN 9 THEN 'High Risk' WHEN 10 THEN 'Low Risk' END as Cohort, c.ProbandGUID,  c.ProbandGender, c.CandidateGUID, c.Gender, i.Date_taken,ROUND(DATEDIFF(i.Date_taken, c.DoB) / (365/12)) AS Candidate_Age_in_Months, i.Date_taken,ROUND(DATEDIFF(i.Date_taken, c.ProbandDoB) / (365/12)) AS Proband_Age_in_Months, i.Candidate_race as race, i.child_ethnicity as ethnic_group from candidate c  left join session s on s.CandID = c.CandID join flag f on f.SessionID = s.ID join tsi i on i.CommentID=f.CommentID join participant_status ps on ps.CandID = c.CandID WHERE ". $this->getWhere();
             }
         return "SELECT " . $this->getFields() . " FROM " . $this->instrument . " i JOIN flag f ON (f.CommentID=i.CommentID) JOIN session s ON (s.ID=f.SessionID) JOIN candidate c ON (c.CandID=s.CandID) JOIN participant_status ps ON (ps.CandID = c.CandID) JOIN participant_status_options pso ON (pso.ID = ps.participant_status) WHERE " . $this->getWhere()." AND c.ProjectID= $this->project AND (pso.Description <> 'Ineligible' || pso.Description <> 'Excluded')";
     }
@@ -2156,7 +1713,7 @@ class NDAR_Release_2014 {
           if($this->instrument == 'vineland_subject' || $this->instrument == 'vineland_proband'){ 
              $fieldstochange = array('ABC_STD_SCORE','COM_STD_SCORE','DLS_STD_SCORE','SOC_STD_SCORE','MS_STD_SCORE');
 	     if(in_array($key, $fieldstochange) && empty($val)) {
-		     $val= 999;
+		     $row[$key]= 999;
 	     }
 	     if(strpos($val,'Moderately') !== FALSE){
 		     $val = str_replace("Moderately","Mod.", $val);
@@ -2179,9 +1736,17 @@ class NDAR_Release_2014 {
                   $row[$key] = 8; 
               } 
          }
+	 if($this->instrument == 'ndar_subject') {
+		 if(strpos($key, 'Date_taken') !== FALSE || $key == 'DoB' || strpos($key, 'Date_Taken') !== FALSE) {
+			 $Date = explode('-', $val); //print_r($Date);
+			 $row[$key] = $Date[1] . '/' . '01' . '/' . $Date[0];
+		 }
+
+
+	 }
        
        }
-  if($this->instrument == 'head_measurements_subject') {
+       if($this->instrument == 'head_measurements_subject') {
             $add_columns = array('height_met'=>'','height_std'=>'','weight_met'=>'','weight_std'=>'');
             if($row['head_length_unit'] == 'cm') {
                  $add_columns['height_met'] = $row['length1'];
@@ -2200,6 +1765,55 @@ class NDAR_Release_2014 {
           
              $row = array_merge($row, $add_columns);
        }
+       if($this->instrument == 'ndar_subject') {
+          $data = array('twins_populate'=>'No','sibling_study'=>'Yes','family_study'=>'No','sample_taken'=>'No');
+          $row = array_merge($row,$data);
+ 
+          if($row['Candidate_Age_in_Months'] < 0){
+		  $row['Candidate_Age_in_Months'] =0;
+	  }
+	  $type='';
+	  $type_pr ='';
+	  if($row['ProbandGender']== 'Male') {
+		  $type = "Full Brother FB";
+	  } else if($row['ProbandGender'] == 'Female'){
+		  $type = "Full Sister FS";
+	  } else {
+		  $type = " ";
+	  }
+	  if($row['Gender']== 'Male') {
+		  $type_pr = "Full Brother FB";
+	  } else if($row['Gender'] == 'Female'){
+		  $type_pr = "Full Sister FS";
+	  }
+	  $race = $row['race'];
+	  if(strpos($race,'more_than_one_race') !== FALSE){
+		  $race_final = "More than one race";
+	  } else {
+		  if(strpos($race,'white') !== FALSE){
+			  $race_final = "White";
+		  } else  if(strpos($race,'asian') !== FALSE){
+			  $race_final = "Asian";
+		  } else if(strpos($race,'black_african_american') !== FALSE){
+			  $race_final = "Black or African American";
+		  } else if(strpos($race,'white') !== FALSE){
+			  $race_final = "White";
+		  }
+	  }
+	  $candidate = array($row['IBISID'], $row['CandidateGUID'], $row['Gender'], $row['Site'], $row['Cohort'], $row['Candidate_Age_in_Months'], $row['Date_taken'],
+			  'No',$race_final,$row['ethnic_group'],'No','Yes','No', $row['Cohort']." Sibling",$row['ProbandGUID'],$row['IBISID']."pr", $type);
+        
+	  
+          //fputcsv($fd, $candidate);
+          $converted = $candidate;
+	  if(!empty($row['ProbandGUID'])){
+		  $proband   = array($row['IBISID']."pr", $row['ProbandGUID'], $row['ProbandGender'], $row['Site'], "Proband", $row['Proband_Age_in_Months'], $row['Date_taken'],
+				  'No',"Unknown or not reported","Unknown or not reported",'No','Yes','No', "Proband of Sibling",$row['CandidateGUID'], $row['IBISID'], $type_pr);
+                  $converted[] = $proband;
+	//	  fputcsv($fd, $proband);
+	  }
+          return $converted;
+        }
         if(array_key_exists('validity_of_data', $row) && empty($row['validity_of_data'])) {
             $row['validity_of_data'] = 999;
         }        
@@ -2229,7 +1843,7 @@ print "#### $header";
                          'fyi'=>'fyi01','ibq_r'=>'ibq_r01','macarthur_words_gestures'=>'mci_words_gestures01','vineland_proband'=>'vinelandsurvey_200505',
                          'm_chat_proband'=>'m_chat02','mullen'=>'mullen03','prefrontal_task'=>'prefront_task01','edi2'=>'edi01',
                          'rbs_r'=>'rbs_r02','seq'=>'seq01','vineland_subject'=>'vinelandsurvey_200505','adi_r_subject'=>'adir_200304',
-                         'head_measurements_subject'=>'charge_physicalexam01');
+                         'head_measurements_subject'=>'charge_physicalexam01','ndar_subject'=>'ndar_subject01');
 print "0";
         $factory = NDB_Factory::singleton();
 print "1";
@@ -2240,21 +1854,49 @@ print "2";
 print "3";
          $header = $headers[$this->instrument];
         if($this->instrument == 'scq_proband' || $this->instrument == 'scq_subject') {
-            $results = $db->pselect($Query . " AND i.scq_version='lifetime'", array());
-            $converted = $this->process($results);
-            $header = 'scq_lifetime04';
-            $this->writeResults($converted,$header, '/var/www/loris/project/tools/NDAR_2014/' . $this->instrument . '_lifetime.csv');
-            $results = $db->pselect($Query . " AND i.scq_version='current'", array());
-            $converted = $this->process($results);
-            $header = 'scq_current04';
-            $this->writeResults($converted,$header, '/var/www/loris/project/tools/NDAR_2014/' . $this->instrument . '_current.csv');
-        } else {
+		if($this->project == 2) {
+                        $results = $db->pselect($Query . " AND i.scq_version='lifetime'", array());
+                        $converted = $this->process($results);
+                        $header = 'scq_lifetime04';
+                        $this->writeResults($converted,$header, '/var/www/loris/project/tools/NDAR_2014/' . $this->instrument . '_lifetime_IBIS2.csv');
+                        $results = $db->pselect($Query . " AND i.scq_version='current'", array());
+                        $converted = $this->process($results);
+                        $header = 'scq_current04';
+                        $this->writeResults($converted,$header, '/var/www/loris/project/tools/NDAR_2014/' . $this->instrument . '_current_IBIS2.csv');
+
+		} else {
+			$results = $db->pselect($Query . " AND i.scq_version='lifetime'", array());
+			$converted = $this->process($results);
+			$header = 'scq_lifetime04';
+			$this->writeResults($converted,$header, '/var/www/loris/project/tools/NDAR_2014/' . $this->instrument . '_lifetime.csv');
+			$results = $db->pselect($Query . " AND i.scq_version='current'", array());
+			$converted = $this->process($results);
+			$header = 'scq_current04';
+			$this->writeResults($converted,$header, '/var/www/loris/project/tools/NDAR_2014/' . $this->instrument . '_current.csv');
+		}
+         } else if($this->instrument == 'ndar_subject') {
+             if($this->project == 2){
+                $this->writeResults($converted,$header, '/var/www/loris/project/tools/NDAR_2014/' . $this->instrument . '_IBIS2.csv');
+
+            } else {
+                $this->writeResults($converted,$header, '/var/www/loris/project/tools/NDAR_2014/' . $this->instrument . '.csv');
+            }
+
+   
+         } else {
             $results = $db->pselect($Query, array());
             $converted = $this->process($results);
             if($this->project == 2){
-                $this->writeResults($converted,$header, '/var/www/loris/project/tools/NDAR_2014/' . $this->instrument . '_IBIS2.csv');
+                $this->writeResults(array(),$header, '/var/www/loris/project/tools/NDAR_2014/' . $this->instrument . '_IBIS2.csv');
+                $headers = array('IBISID','SubjectKey','Gender','Site','Cohort','Candidate_Age_in_Months','Date_taken','family_study','race','ethnic_group',
+                  'twins_study','sibling_study','sample_taken','phenotype_description','subjectkey_sibling1','src_sibling1_id','sibling_type1');
+                $this->writeResults($converted,$headers, '/var/www/loris/project/tools/NDAR_2014/' . $this->instrument . '_IBIS2.csv');
             } else {
-                $this->writeResults($converted,$header, '/var/www/loris/project/tools/NDAR_2014/' . $this->instrument . '.csv');
+                $this->writeResults(array(),$header, '/var/www/loris/project/tools/NDAR_2014/' . $this->instrument . '.csv');
+                 $headers = array('IBISID','SubjectKey','Gender','Site','Cohort','Candidate_Age_in_Months','Date_taken','family_study','race','ethnic_group',
+                  'twins_study','sibling_study','sample_taken','phenotype_description','subjectkey_sibling1','src_sibling1_id','sibling_type1');
+
+                $this->writeResults($converted,$headers, '/var/www/loris/project/tools/NDAR_2014/' . $this->instrument . '.csv');
             }
         }
 print "4";
