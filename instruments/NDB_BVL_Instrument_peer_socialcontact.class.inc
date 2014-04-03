@@ -299,14 +299,14 @@ class NDB_BVL_Instrument_peer_socialcontact extends NDB_BVL_Instrument
        $this->addSelect('q24_childin_spneeds_school',"24. Is your child in a classroom which specializes in educating children<BR>$this->indent with special educational needs?",$this->q23_options);
       $this->XINRegisterRule('q24_childin_spneeds_school', array("q23_childin_school{@}=={@}yes"), "Please specify"); 
        
-      $this->addSelect('q25_school_numdays_perweek','25. How many days per week?', $this->numdays_week);
+      $this->addSelect('q25_school_numdays_perweek','25. How many days per week is your child in school?', $this->numdays_week);
       $this->XINRegisterRule('q25_school_numdays_perweek', array("q25_school_numdays_perweek{@}=={@}NEVER_REQUIRED"));
 
-      $this->addSelect('q26_school_numhrs_perday','26. How many hours per day?', $this->numhrs_day);
+      $this->addSelect('q26_school_numhrs_perday','26. How many hours per day is your child in school?', $this->numhrs_day);
       $this->XINRegisterRule('q26_school_numhrs_perday', array("q26_school_numhrs_perday{@}=={@}NEVER_REQUIRED"));
       
-      $questions = array('q27_numchildren_perclass'=>'27. How many children are in the (primary) classroom?',
-                         'q28_numchildren_specialneeds'=>'28. How many of the children have special needs? (if known)');
+      $questions = array('q27_numchildren_perclass'=>'27. How many children are in the (primary) classroom at school?',
+                         'q28_numchildren_specialneeds'=>'28. How many of the children have special needs in the (primary)<BR> classroom at school?');
        foreach($questions as $field=>$label) {
            $group [] = $this->createText($field, $label);
            $this->addGroup($group, $field . "_group", $label, null, false);
@@ -319,17 +319,17 @@ class NDB_BVL_Instrument_peer_socialcontact extends NDB_BVL_Instrument
        $this->addSelect('q29_childin_childcare',"29. Is your child in a childcare setting?",$this->q23_options);
        $this->XINRegisterRule('q29_childin_childcare', array("q29_childin_childcare{@}=={@}NEVER_REQUIRED"), "Please specify");
 
-       $this->addSelect('q30_childin_spneeds_childcare',"30. Is it a center which specializes in educating children<BR>$this->indent with special educational needs?",$this->q23_options);
+       $this->addSelect('q30_childin_spneeds_childcare',"30. Is the childcare setting a center which specializes in educating<BR>$this->indent children  with special educational needs?",$this->q23_options);
        $this->XINRegisterRule('q30_childin_spneeds_childcare', array("q29_childin_childcare{@}=={@}yes"), "Please specify");
        
-       $this->addSelect('q31_childcare_numdays_perweek','31. How many days per week?', $this->numdays_week);
+       $this->addSelect('q31_childcare_numdays_perweek','31. How many days per week is your child in a childcare setting?', $this->numdays_week);
        $this->XINRegisterRule('q31_childcare_numdays_perweek', array("q31_childcare_numdays_perweek{@}=={@}NEVER_REQUIRED"));
        
-       $this->addSelect('q32_childcare_numhrs_perday','32. How many hours per day?',$this->numhrs_day);
+       $this->addSelect('q32_childcare_numhrs_perday','32. How many hours per day is your child in a childcare setting?',$this->numhrs_day);
        $this->XINRegisterRule('q32_childcare_numhrs_perday',array("q32_childcare_numhrs_perday{@}=={@}NEVER_REQUIRED"));
 
-       $questions = array('q33_numchildren_perclass'=>'33. How many children are in the (primary) classroom?',
-               'q34_numchildren_specialneeds'=>'34. How many of the children have special needs? (if known)');
+       $questions = array('q33_numchildren_perclass'=>'33. How many children are in the (primary) classroom? at childcare',
+               'q34_numchildren_specialneeds'=>"34. How many of the children have special needs in the (primary)<BR> $this->indent classroom at childcare?");
        foreach($questions as $field=>$label) {
            $group [] = $this->createText($field, $label);
            $this->addGroup($group, $field . "_group", $label, null, false);
