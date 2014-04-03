@@ -1,7 +1,7 @@
 <?
 require_once '/var/www/loris/php/libraries/NDB_Factory.class.inc';
 require_once '/var/www/loris/php/libraries/Database.class.inc';
-class NDAR_Release_2014a {
+class NDAR_Release_2014 {
 
     function __construct($instrument, $project) {
         $this->instrument = $instrument;
