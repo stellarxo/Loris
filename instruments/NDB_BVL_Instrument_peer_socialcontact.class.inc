@@ -205,17 +205,29 @@ class NDB_BVL_Instrument_peer_socialcontact extends NDB_BVL_Instrument
         if (Utility::isErrorX($numplaymates)) {
             print "Query has failed to select: ".$numplaymates->getMessage();
         }
+          if(isset($_GET["key"])) {
+            $key = $_GET["key"]; 
+        }
+
         $colspan = $numplaymates -1;
 	if($numplaymates > 1) {
 		$group[] = &$this->form->createElement("static", null, null,"");
 		$this->form->addGroup($group,"page2_header","<td colspan= $colspan>In the table below indicate which of your children's playmates know<BR> each other. You must select 'Yes' or 'No' in all field to save this form.</td>", null,false);
-		unset($group);
-	} else {
+ 		unset($group);
+	} else if($numplaymates = 1) {
                 $group[] = &$this->form->createElement("static", null, null,""); 
-                $this->form->addGroup($group,"page2_header","<td colspan= $colspan>In the previous page you have indicated $numplaymates playmate(s) of your child. <BR>Click 'Save and Continue' to go to the next section.</td>", null,false);
+                
+                $this->form->addGroup($group,"page2_header","<td colspan= $colspan>In the previous page you have indicated $numplaymates playmate(s) of your child.<BR> Please click 'Save and Continue' to go to the next section. </td>", null,false);
                 unset($group);
 
-	}
+	} else if($numplaymates ==0) {
+                 $group[] = &$this->form->createElement("static", null, null,"");
+
+                $this->form->addGroup($group,"page2_header","<td colspan= $colspan>In the previous page you have indicated $numplaymates playmate(s) of your child. <BR>Click here go to th
+e next section:<a href=\"survey.php?key=$key&pageNum=7\"><font color=\"red\"> Section 2</font></a> </td>", null,false);
+                unset($group);
+
+        }
         $this->localDefaults['total_peer'] = $numplaymates;
         if($this->localDefaults['total_peer'] > 1) {
             $group[] = &$this->form->createElement("static", null, null, "Child 1");
@@ -479,7 +491,11 @@ class NDB_BVL_Instrument_peer_socialcontact extends NDB_BVL_Instrument
          $this->form->addElement('header', 'instrument_title', "Peer Social Contact Questionnaire");
 
          $this->form->addElement('static', 'lorisSubHeader',"Now, we would like to find out more about your child's relationship with each individual playmate.<BR>Answer the questions below in relationship to their contact in the last three months.");
-         $this->form->addElement('static', 'lorisSubHeader',"<strong>NOTE: You only need to fill this form if the playmate initals are specified below.<BR>Please press 'Save and Continue' if no initals are specified. <strong>");
+        if(isset($_GET["key"])) {
+            $key = $_GET["key"];
+        }
+
+         $this->form->addElement('static', 'lorisSubHeader',"<strong>NOTE: You only need to fill this form if the playmate initals are specified below.<BR>If no initials are specified click here go to the next section:<a href=\"survey.php?key=$key&pageNum=7\"><font color=\"red\"> Section 2</font></a> <strong>");
          $this->form->addElement('static', 'peer_initials_'.$i, "Playmate #".$i." : ");
         
          $group[] = &$this->form->createElement("select",'age_yrs_playmate_'.$i,null,$this->age_yrs);
