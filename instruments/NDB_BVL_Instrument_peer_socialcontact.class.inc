@@ -209,22 +209,22 @@ class NDB_BVL_Instrument_peer_socialcontact extends NDB_BVL_Instrument
             $key = $_GET["key"]; 
         }
 
-        $colspan = $numplaymates -1;
+        $colspan = $numplaymates -1; 
 	if($numplaymates > 1) {
 		$group[] = &$this->form->createElement("static", null, null,"");
 		$this->form->addGroup($group,"page2_header","<td colspan= $colspan>In the table below indicate which of your children's playmates know<BR> each other. You must select 'Yes' or 'No' in all field to save this form.</td>", null,false);
  		unset($group);
-	} else if($numplaymates = 1) {
+
+	} else if($numplaymates == 1) {
                 $group[] = &$this->form->createElement("static", null, null,""); 
                 
                 $this->form->addGroup($group,"page2_header","<td colspan= $colspan>In the previous page you have indicated $numplaymates playmate(s) of your child.<BR> Please click 'Save and Continue' to go to the next section. </td>", null,false);
                 unset($group);
 
-	} else if($numplaymates ==0) {
+	} else if($numplaymates == 0) {
                  $group[] = &$this->form->createElement("static", null, null,"");
 
-                $this->form->addGroup($group,"page2_header","<td colspan= $colspan>In the previous page you have indicated $numplaymates playmate(s) of your child. <BR>Click here go to th
-e next section:<a href=\"survey.php?key=$key&pageNum=7\"><font color=\"red\"> Section 2</font></a> </td>", null,false);
+                $this->form->addGroup($group,"page2_header","<td colspan= $colspan>In the previous page you have indicated $numplaymates playmate(s) of your child. <BR>Click here go to the next section:<a href=\"survey.php?key=$key&pageNum=7\"><font color=\"red\"> Section 2</font></a> </td>", null,false);
                 unset($group);
 
         }
@@ -244,8 +244,11 @@ e next section:<a href=\"survey.php?key=$key&pageNum=7\"><font color=\"red\"> Se
         if($this->localDefaults['total_peer'] == 5) {
             $group[] = &$this->form->createElement("static", null, null, "Child 5");
         }  
-        $this->form->addGroup($group, "table_headers", null, $this->_GUIDelimiter, false);
-        unset($group);
+        //$this->form->addGroup($group, "table_headers","<td colspan= 2></td>" , $this->_GUIDelimiter, false);
+        if($this->localDefaults['total_peer'] >1 ) {
+            $this->form->addGroup($group, "table_headers",null , $this->_GUIDelimiter, false);
+            unset($group);
+        }
         $know_eachother = array(""=>null,"yes"=>"Yes","no"=>"No","refused_dontknow"=>"Refused/I Don't Know");
         for($i = 1; $i < $this->localDefaults['total_peer']; $i++){
             $groupname = $i."_group";
