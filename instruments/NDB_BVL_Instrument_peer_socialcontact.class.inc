@@ -224,7 +224,7 @@ class NDB_BVL_Instrument_peer_socialcontact extends NDB_BVL_Instrument
 	} else if($numplaymates == 0) {
                  $group[] = &$this->form->createElement("static", null, null,"");
 
-                $this->form->addGroup($group,"page2_header","<td colspan= $colspan>In the previous page you have indicated $numplaymates playmate(s) of your child. <BR>Click here go to the next section:<a href=\"survey.php?key=$key&pageNum=7\"><font color=\"red\"> <u>Section 2 </u></font></a> </td>", null,false);
+                $this->form->addGroup($group,"page2_header","<td colspan= $colspan>In the previous page you have indicated $numplaymates playmate(s). <BR>Click here go to the next section:<a href=\"survey.php?key=$key&pageNum=7\"><font color=\"#0000FF\"> <u>Section 2 </u></font></a> </td>", null,false);
                 unset($group);
 
         }
@@ -510,7 +510,7 @@ class NDB_BVL_Instrument_peer_socialcontact extends NDB_BVL_Instrument
         }
 
          if($playmate > $numplaymates) {
-              $this->form->addElement('static', 'lorisSubHeader',"<strong>NOTE: You only need to fill this form if the playmate initals are specified below.<BR>If no initials are specified click here go to the next section:<a href=\"survey.php?key=$key&pageNum=7\"><font color=\"red\"> Section 2</font></a> <strong>");
+              $this->form->addElement('static', 'lorisSubHeader',"<strong>NOTE: You only need to fill this form if the playmate initals are specified below.<BR>If no initials are specified click here go to the next section:<a href=\"survey.php?key=$key&pageNum=7\"><font color=\"#0000FF\"> <u>Section 2 </u></font></a> <strong>");
 
          } else {
               $this->form->addElement('static', 'lorisSubHeader',"<strong>NOTE: You only need to fill this form if the playmate initals are specified below.<strong>");
@@ -527,7 +527,7 @@ class NDB_BVL_Instrument_peer_socialcontact extends NDB_BVL_Instrument
          $this->addSelect('gender_playmate_'.$i,'Gender ', $this->gender);
          $this->XINRegisterRule('gender_playmate_'.$i, array("gender_playmate_.$i{@}=={@}NEVER_REQUIRED"));
          
-         $questions = array("q1_number_playtimes_playmate".$i=> "1. How many times did they play together in the last three months <BR>$this->indent in your home?","q2_avg_playtime_playmate".$i=>"2. How long are they together in an average play time? (in Minutes)");
+         $questions = array("q1_number_playtimes_playmate".$i=> "1. How many times on average did they play together in the last <BR>$this->indent three months in your home?","q2_avg_playtime_playmate".$i=>"2. How long are they together in an average play time? (in Minutes)");
          foreach($questions as $field=>$label) {
              $group [] = $this->createText($field, $label);
              $this->addGroup($group, $field . "_group", $label, null, false);
