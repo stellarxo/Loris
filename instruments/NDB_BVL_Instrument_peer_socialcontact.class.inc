@@ -218,13 +218,13 @@ class NDB_BVL_Instrument_peer_socialcontact extends NDB_BVL_Instrument
 	} else if($numplaymates == 1) {
                 $group[] = &$this->form->createElement("static", null, null,""); 
                 
-                $this->form->addGroup($group,"page2_header","<td colspan= $colspan>In the previous page you have indicated $numplaymates playmate(s) of your child.<BR> Please click 'Save and Continue' to go to the next section. </td>", null,false);
+                $this->form->addGroup($group,"page2_header","<td colspan= $colspan>In the previous page you have indicated $numplaymates playmate(s).<BR> Please click 'Save and Continue' to go to the next section. </td>", null,false);
                 unset($group);
 
 	} else if($numplaymates == 0) {
                  $group[] = &$this->form->createElement("static", null, null,"");
 
-                $this->form->addGroup($group,"page2_header","<td colspan= $colspan>In the previous page you have indicated $numplaymates playmate(s) of your child. <BR>Click here go to the next section:<a href=\"survey.php?key=$key&pageNum=7\"><font color=\"red\"> Section 2</font></a> </td>", null,false);
+                $this->form->addGroup($group,"page2_header","<td colspan= $colspan>In the previous page you have indicated $numplaymates playmate(s) of your child. <BR>Click here go to the next section:<a href=\"survey.php?key=$key&pageNum=7\"><font color=\"red\"> <u>Section 2 </u></font></a> </td>", null,false);
                 unset($group);
 
         }
@@ -497,8 +497,24 @@ class NDB_BVL_Instrument_peer_socialcontact extends NDB_BVL_Instrument
         if(isset($_GET["key"])) {
             $key = $_GET["key"];
         }
+        $db =& Database::singleton();
+        if(Utility::isErrorX($db)) {
+            print "Could not connect to database: ".$db->getMessage();
+        }
 
-         $this->form->addElement('static', 'lorisSubHeader',"<strong>NOTE: You only need to fill this form if the playmate initals are specified below.<BR>If no initials are specified click here go to the next section:<a href=\"survey.php?key=$key&pageNum=7\"><font color=\"red\"> Section 2</font></a> <strong>");
+        $numplaymates = $db->pselectOne("SELECT total_playmates FROM ".$this->table." WHERE CommentID=:cid",
+                array('cid' =>$this->getCommentID()));
+
+        if (Utility::isErrorX($numplaymates)) {
+            print "Query has failed to select: ".$numplaymates->getMessage();
+        }
+
+         if($playmate > $numplaymates) {
+              $this->form->addElement('static', 'lorisSubHeader',"<strong>NOTE: You only need to fill this form if the playmate initals are specified below.<BR>If no initials are specified click here go to the next section:<a href=\"survey.php?key=$key&pageNum=7\"><font color=\"red\"> Section 2</font></a> <strong>");
+
+         } else {
+              $this->form->addElement('static', 'lorisSubHeader',"<strong>NOTE: You only need to fill this form if the playmate initals are specified below.<strong>");
+         }
          $this->form->addElement('static', 'peer_initials_'.$i, "Playmate #".$i." : ");
         
          $group[] = &$this->form->createElement("select",'age_yrs_playmate_'.$i,null,$this->age_yrs);
