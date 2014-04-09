@@ -106,6 +106,7 @@ class NDB_BVL_Instrument_med_records_recruit extends NDB_BVL_Instrument_med_reco
 		// automatically adds examiner & date of administration
 		$this->_addMetadataFields ();
         $this->form->addElement('textarea', 'comments', 'General comments:');
+        $this->XINRegisterRule('comments', array("comments{@}=={@}NEVER_REQUIRED"));
         $this->addDateElement('Lastupdated', 'Date last updated:', $this->dateOptions);
         $this->form->addFormRule(array(&$this, 'Med_Rules'));
 
@@ -268,9 +269,11 @@ class NDB_BVL_Instrument_med_records_recruit extends NDB_BVL_Instrument_med_reco
         }
 	function Med_Rules($values) {
 		$errors = array();
-		if($values['Lastupdated_date'] < $values['Date_taken']) {
-			$errors['Lastupdated_date_group'] = 'The date should be after Date of Administration';
+	       if(isset($values['Lastupdated_date']) && empty($values['Lastupdated_date_status'] ) ) {
+         	if($values['Lastupdated_date'] < $values['Date_taken']) {
+			$errors['Lastupdated_date_group'] = 'The date should be on or after Date of Administration';
 		}
+               }
                if($values['developmental_concerns'] == 'yes' && empty($values['developmental_concerns_specify'])) {
                         $errors['developmental_concerns_specify'] = 'Please specify the developmental concerns';
                }
