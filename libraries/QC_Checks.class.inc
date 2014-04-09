@@ -158,7 +158,7 @@ class QC_Checks {
             $instrument = $test['Test_name'];
             $data = $DB->pselect("SELECT c.PSCID,c.CandID, s.Visit_label, i.CommentID from $instrument i JOIN flag f ON (f.CommentID=i.CommentID) JOIN session s ON (s.ID=f.SessionID) JOIN candidate c ON (c.CandID=s.CandID) WHERE COALESCE(s.Current_stage, '') <> 'Recycling Bin' AND COALESCE(s.Visit, '') NOT IN ('Failure', 'Withdrawal') AND COALESCE(s.Screening, '') NOT IN ('Failure', 'Withdrawal') AND f.Administration='All' AND f.Data_entry='Complete' AND EXISTS (SELECT 'x' FROM flag df WHERE df.CommentID=CONCAT('DDE_', i.CommentID) AND df.Data_entry !='Complete') AND c.CenterID = $this->site", array());
             if(sizeof($data) > 1 ) {
-                file_put_contents($file,"\n INSTRUMENT - ".$test['Full_name']."\n",FILE_APPEND|LOCK_EX);
+                print "\n INSTRUMENT - ".$test['Full_name']."\n";
             }
             foreach($data as $row) {
                 print implode("\t", $row);
