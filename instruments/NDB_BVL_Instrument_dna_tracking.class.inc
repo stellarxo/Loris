@@ -352,7 +352,7 @@ class NDB_BVL_Instrument_dna_tracking extends NDB_BVL_Instrument
                   $errors['lab_purpletop_collected1_group'] = "Specify if lab/purple top was collected for $subject";
              } 
              $blood_when = array(); $blood_when = $values["when_blood_collected1_".$subject];
-             if($values[$field] == 'yes' && empty($blood_when['Y'])) { 
+             if($values[$field] == 'yes' && _checkDate($blood_when) == false) { 
                   $errors['when_blood_collected1_group'] = "Specify date for $subject";
              } 
              if($values[$field] == 'yes' && empty($values["num_blood1_".$subject])) {
@@ -412,16 +412,27 @@ class NDB_BVL_Instrument_dna_tracking extends NDB_BVL_Instrument
                   $errors['when_saliva_collected2_group'] = "Invalid date for $subject";
 
              }
+             if(_checkDate($saliva_when) == false) {
+                  $errors['when_saliva_collected1_group'] = "Invalid date for $subject";
+
+             }
+/*
              if( (_checkDate($saliva_when) == true)   && (_checkDate($saliva_when2) == true ) 
-               &&  ($values["when_saliva_collected1_".$subject] < $values["when_saliva_collected2_".$subject])) {
+               &&  ($values["when_saliva_collected1_".$subject] > $values["when_saliva_collected2_".$subject])) {
                   $errors['when_saliva_collected2_group'] = "Date sample collected should be after first sample was collected for $subject";
 
             }
+*/
             $blood_when2 = array(); $blood_when2 = $values["when_blood_collected2_".$subject];
              if(_checkDate($blood_when2) == false) {
                   $errors['when_blood_collected2_group'] = "Invalid date for $subject";
 
              }
+             if(_checkDate($blood_when1) == false) {
+                  $errors['when_blood_collected1_group'] = "Invalid date for $subject";
+
+             }
+
   /*           if
         /*    if(!empty($blood_when2['Y']) && !empty($blood_when['Y'] ) ) { 
                 if ($values["when_blood_collected1_".$subject] < $values["when_blood_collected2_".$subject]) {
