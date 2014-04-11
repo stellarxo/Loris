@@ -379,7 +379,7 @@ class NDB_BVL_Instrument_peer_socialcontact extends NDB_BVL_Instrument
             $questions = array('activity'.$i."_meet_permonth"=>'How many times each month does the group meet?',
                                'activity'.$i."_numchildren_participate"=>"How many children participate in the group?",
                                'activity'.$i."_numchildren_class"=>"How many of these children are in your child's classroom at school or daycare?",
-                               'activity'.$i."_numchildren_spneeds"=>"How many of these children also have special needs(if known)?");
+                               'activity'.$i."_numchildren_spneeds"=>"How many of these children have special needs(if known)?");
             foreach($questions as $field=>$label) {
                 $group [] = $this->createText($field, $label);
                 $this->addGroup($group, $field . "_group", $label, null, false);
@@ -564,8 +564,9 @@ class NDB_BVL_Instrument_peer_socialcontact extends NDB_BVL_Instrument
          $this->addSelect('q7_samechildcare_playmate'.$i,"7. Is this playmate in your child's childcare now?",
                           $this->yesNo);
          $this->XINRegisterRule('q7_samechildcare_playmate'.$i, array("q7_samechildcare_playmate.$i{@}=={@}NEVER_REQUIRED"));
-         $this->addSelect('q8_specialneeds_playmate'.$i,"8. What special needs does this playmate have?",
-                          $this->q8_options);
+         $this->addSelect('q8_specialneeds_playmate'.$i,"8. What special needs does this playmate have?<BR>Press Ctrl+click or Cmd+click to select mutiple options",
+                          $this->q8_options, "multiple size='8'");
+         $this->_selectMultipleElements[] = 'q8_specialneeds_playmate'.$i;
          $this->XINRegisterRule('q8_specialneeds_playmate'.$i, array("q8_specialneeds_playmate.$i{@}=={@}NEVER_REQUIRED"));
          $group [] = $this->createText('q8_specialneeds_other_playmate'.$i,$this->indent."If Other please specify");
          $this->addGroup($group,'q8_specialneeds_other_playmate'.$i."_group",$this->indent."If Other please specify",null,false);
