@@ -154,7 +154,7 @@ class NDB_BVL_Instrument_sibling_socialcontact extends NDB_BVL_Instrument
                           'refused_dontknow'=>"Refused/I Don't Know"));
          $this->XINRegisterRule('q15_stressful_playsession', array("q15_stressful_playsession{@}=={@}NEVER_REQUIRED") );
 
-         $this->form->addElement('static',null,"16. How do you usually monitor the play at home?");
+         $this->form->addElement('static','lorisSubHeader',"16. How do you usually monitor the play at home?");
          $questions = array('q16_help_getalong'=>'a. Directly facilitate by helping them get along?',
                             'q16_participate'=>'b. Participate in the activity with the children',
                             'q16_maintain_presence'=>'c. Maintain presence (in childrens view)',
@@ -168,7 +168,7 @@ class NDB_BVL_Instrument_sibling_socialcontact extends NDB_BVL_Instrument
              $this->XINRegisterRule($qstn, array("$qstn{@}=={@}NEVER_REQUIRED") );
 
          }
-         $this->form->addElement('static',null,"17. How much do the children need your help during play in the following areas?");
+         $this->form->addElement('static','lorisSubHeader',"17. How much do the children need your help during play in the following areas?");
          $questions = array('q17_manage_emotions'=>'a. Managing Emotions',
                             'q17_understand_rules'=>'b. Understanding social rules (such as taking turns)',
                             'q17_understand_howtoplay'=>'c. Understanding how to play games or activities',
