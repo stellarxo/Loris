@@ -110,10 +110,11 @@ class NDB_BVL_Instrument_dna_tracking extends NDB_BVL_Instrument
                            "blood_collection_method2"=>"2. How was blood collected?","blood_sent2"=>"2. Where was blood sent?");
         $subjects = array('candidate','proband','mother','father','other');
         $types = array('saliva','blood');
+                        $this->form->registerRule('checkdate', 'callback', '_checkDate');
+        $this->form->addFormRule(array(&$this, 'dna_rules'));
 	foreach($questions as $key=>$val){
 		$groupname = $key."_group";
      
-        $this->form->addFormRule(array(&$this, 'dna_rules'));
                 if($key == "saliva_collected" || $key == "blood_collected" || $key == "lab_purpletop_collected1" || $key == "lab_purpletop_collected2" 
                    || $key == "yellowtop_collected1" || $key == "yellowtop_collected2") {
                     foreach($subjects as $subject) {
@@ -165,6 +166,8 @@ class NDB_BVL_Instrument_dna_tracking extends NDB_BVL_Instrument
                         $group[] = $this->form->createElement("date", $key."_".$subject,null,$this->dateOptions);
                         $field = $key."_".$subject;
                         $this->XINRegisterRule( $field, array("$field{@}=={@}NEVER_REQUIRED"));
+                        $this->form->addRule($field, 'Date is invalid', 'checkdate');
+
                        /*
                         if(strpos($key, "1")) {
                               foreach($types as $type) {
@@ -315,11 +318,11 @@ class NDB_BVL_Instrument_dna_tracking extends NDB_BVL_Instrument
                    
                 }
 		if(strpos($key, "blood_sent") !== FALSE) {
-                      $groupname = "blood_sent_other_group";
+                      $groupname = $key."_other_group"; 
 		      foreach($subjects as $subject) { 
-                           $field = $key."_".$subject;
-                           $group[] = $this->form->createElement("textarea",$field."_other", null);
-                           $this->XINRegisterRule($field."_other", array("$field{@}=={@}other"), "If other, specify:", $this->_GUIDelimiter, false);
+                           $field = $key."_".$subject."_other";
+                           $group[] = $this->form->createElement("textarea",$field, null);
+                           $this->XINRegisterRule($field,  array("$field{@}=={@}NEVER_REQUIRED"));
 	        	}
                         $this->form->addGroup($group, $groupname, $this->indent.$this->indent."If other, specify:", $this->_GUIDelimiter, false);
                         unset($group);
@@ -387,8 +390,11 @@ class NDB_BVL_Instrument_dna_tracking extends NDB_BVL_Instrument
 			     $errors["saliva_collection_method".$i."_other_group"] = "Specify other for $subject";
 		     }
 	     }
-              $saliva_when = array(); $saliva_when = $values["when_saliva_collected1_".$subject];
+             $saliva_when = array(); $saliva_when = $values["when_saliva_collected1_".$subject];
              if($values[$saliva_field] == 'yes' && empty($saliva_when['Y'])) {
+                  $errors['when_saliva_collected1_group'] = "Specify date for $subject";
+             }
+             if($values[$saliva_field] == 'yes' && (empty($saliva_when['Y']) || empty($saliva_when['M']) || empty($saliva_when['d'])) ) {
                   $errors['when_saliva_collected1_group'] = "Specify date for $subject";
              }
              if($values[$saliva_field] == 'no' && empty($values["saliva_notcollected_".$subject] ) ) {
@@ -402,36 +408,51 @@ class NDB_BVL_Instrument_dna_tracking extends NDB_BVL_Instrument
              if(!empty($saliva_when2['Y']) && empty($values["saliva_collection_method2_".$subject] ) ) { 
                 $errors["saliva_collection_method2_group"] = "Specify how saliva was collected for $subject";
              }
-             if( !empty($saliva_when2['Y']) && !empty($saliva_when2) 
-               &&  ($values["when_saliva_collected1_".$subject] > $values["when_saliva_collected2_".$subject])) {
+             if(_checkDate($saliva_when2) == false) {
+                  $errors['when_saliva_collected2_group'] = "Invalid date for $subject";
+
+             }
+             if( (_checkDate($saliva_when) == true)   && (_checkDate($saliva_when2) == true ) 
+               &&  ($values["when_saliva_collected1_".$subject] < $values["when_saliva_collected2_".$subject])) {
                   $errors['when_saliva_collected2_group'] = "Date sample collected should be after first sample was collected for $subject";
 
             }
             $blood_when2 = array(); $blood_when2 = $values["when_blood_collected2_".$subject];
-            if(!empty($blood_when2['Y']) && !empty($blood_when['Y'] ) ) { 
-                if ($values["when_blood_collected1_".$subject] > $values["when_blood_collected2_".$subject]) {
+             if(_checkDate($blood_when2) == false) {
+                  $errors['when_blood_collected2_group'] = "Invalid date for $subject";
+
+             }
+  /*           if
+        /*    if(!empty($blood_when2['Y']) && !empty($blood_when['Y'] ) ) { 
+                if ($values["when_blood_collected1_".$subject] < $values["when_blood_collected2_".$subject]) {
                   $errors['when_blood_collected2_group'] = "Date sample collected should be after first sample was collected for $subject";
                 }
             }
-            if( !empty($blood_when2['Y'])  && empty($values["yellowtop_collected2_".$subject])) {
+*/
+            if( _checkDate($blood_when2) == true && empty($values["yellowtop_collected2_".$subject])) {
                   $errors['yellowtop_collected2_group'] = "Specify if yellowtop was collected for $subject";
              }
-            if(!empty($blood_when2['Y'])  && empty($values["lab_purpletop_collected2_".$subject])) {
+            if( _checkDate($blood_when2) == true && empty($values["lab_purpletop_collected2_".$subject])) {
                   $errors['lab_purpletop_collected2_group'] = "Specify if lab/purple top was collected for $subject";
             }
            
-             if(!empty($blood_when2['Y'])  && empty($values["num_blood2_".$subject])) {
+             if( _checkDate($blood_when2) == true && empty($values["num_blood2_".$subject])) {
                   $errors['num_blood2_group'] = "Specify number of tubes for $subject";
              }
-             if(!empty($blood_when2['Y']) && empty($values["blood_collection_method2_".$subject])) {
+             if(_checkDate($blood_when2) == true && empty($values["blood_collection_method2_".$subject])) {
                   $errors['blood_collection_method2_group'] = "Specify how blood was collected for $subject";
              }
-             if(!empty($blood_when2['Y'])  && empty($values["blood_sent2_".$subject])) {
+             if(_checkDate($blood_when2) == true && empty($values["blood_sent2_".$subject])) {
                   $errors['blood_sent2_group'] = "Specify where blood was sent for $subject";
              }
+             if(_checkDate($blood_when2) == true && $values["blood_sent2_".$subject] == "other" 
+                 && empty($values["blood_sent2_".$subject."_other"] ) ) 
+             { 
+                $errors["blood_sent2_other_group"] = "Specify other for $subject";
+             }
 
-        return $errors;
     }
+        return $errors;
    }
 }
 ?>
