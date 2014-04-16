@@ -109,7 +109,7 @@ class NDB_BVL_Instrument_pspq_2 extends NDB_BVL_Instrument
                            "q2_hard_wordsout_smoothly" =>"2. I find it hard to get my words out smoothly",
                            "q3_comfortable_unexpectedchanges"=>"3. I am comfortable with unexpected changes in plans",
                            "q4_hard_avoid_sidetrack"=>"4. It's hard for me to avoid getting sidetracked in conversations",
-                           "q5_information_than_socialize"=>"5. I would rather talk to people to get information that to socialize",
+                           "q5_information_than_socialize"=>"5. I would rather talk to people to get information than to socialize",
                            "q6_talkinto_tryingnew"=>"6. People have to talk me into trying something new",
                            "q7_intune_conversation"=>"7. I am 'in-tune' with the other person during conversation",
                            "q8_warmup_unfamiliarplace"=>"8. I have to warm myself up to the idea of visiting an unfamiliar place",
