@@ -138,7 +138,7 @@ class NDB_BVL_Instrument_pspq_2 extends NDB_BVL_Instrument
                            "q16_situations_meetnew_people"=>"16. I look forward to situations where I can meet new people",
                            "q17_talktoomuch_certain_topics"=>"17. I have been told that I talk too much about certain topics",
                            "q18_conversation_tobe_polite"=>"18. When I make conversation it is just to be polite",
-                           "q19_lookforward_newthings"=>"19. I look foward to trying new things",
+                           "q19_lookforward_newthings"=>"19. I look forward to trying new things",
                            "q20_speak_tooloud_softly"=>"20. I speak too loudly or softly",
                            "q21_tell_someone_not_interested"=>"21. I can tell when someone is not interested in what I am saying",
                            "q22_hardtime_change_routine"=>"22. I have a hard time dealing with changes in my routine",
@@ -257,7 +257,7 @@ class NDB_BVL_Instrument_pspq_2 extends NDB_BVL_Instrument
        $this->form->addElement('header', 'instrument_title', "PSPQ : Personality Styles and Preferences Questionnaire Page2");
        $this->form->addElement('header', 'instrument_title', "Observer Rating");
 
-       $questions = array("qi25_connecting_people"=>"25. He/She feel like he/she is really connecting with other people",
+       $questions = array("qi25_connecting_people"=>"25. He/She feels like he/she is really connecting with other people",
                            "qi26_peoplefrustrated"=>"26. People get frustrated by his/her unwillingness to bend",
                            "qi27_conversation_boresme"=>"27. Conversation bores him/her",
                            "qi28_warmfriendly_others"=>"28. He/She is warm and friendly in his/her interactions with others",
@@ -267,7 +267,7 @@ class NDB_BVL_Instrument_pspq_2 extends NDB_BVL_Instrument
                            "qi32_losetrack_talking"=>"32. He/She loses track of his/her original point when talking to people",
                            "qi33_follow_routine"=>"33. He/She likes to closely follow a routine while working",
                            "qi34_change_topic"=>"34. He/She can tell when it is time to change topics in conversation",
-                           "qi35_doingthings_knownway"=>"35. He/She keeps doing things the way he/she know, even if another way might be better",
+                           "qi35_doingthings_knownway"=>"35. He/She keeps doing things the way he/she knows, even if another way might be better",
                            "qi36_enjoy_chatting"=>"36. He/She enjoys chatting with people");
 
         foreach($questions as $field=>$label) {
