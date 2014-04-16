@@ -243,8 +243,7 @@ class NDB_BVL_Instrument_tsi extends NDB_BVL_Instrument
         $nonAskedQuestions = array("<br>Parent's Telephone:",
 		"Parent's Address:",
 		"$this->indent a) Older sibling",
-		"$this->indent b) other siblings:",
-		"Nature of Referral:");
+		"$this->indent b) other siblings:");
 		foreach ($nonAskedQuestions as $field) {
 			$this->form->addElement('static', null, $field);
 		}
@@ -266,8 +265,9 @@ class NDB_BVL_Instrument_tsi extends NDB_BVL_Instrument
             $this->addSelect('live_at_home_sibling'.$i, $this->indent. "Live in home:", array(''=>NULL,'yes'=>'Yes','no'=>'No','not_answered'=>'Not Answered')); 
             $this->XINRegisterRule("live_at_home_sibling".$i, array("$field{@}!={@}"), "Specify if sibling $i lives at home or not");
          }
-       
-	}
+         $this->form->addElement("static", null, "<br><br>");
+         $this->form->addElement('static', null, "Nature of Referral:"); 
+    }
 
 	function _page1(){
 
