@@ -14,4 +14,6 @@ ALTER TABLE med_records_recruit ADD test_results_ear enum('left_ear','right_ear'
 ALTER TABLE med_records_recruit ADD test_results_severity enum('partial','total','not_answered') DEFAULT NULL;
 ALTER TABLE med_records_recruit ADD equivocal_evaluation_results_specify text;
 ALTER TABLE med_records_recruit ADD equivocal_evaluation_results_specify_status enum('not_answered') DEFAULT NULL;
+ALTER TABLE med_records_recruit ADD COLUMN Lastupdated_audiology_date date;
+ALTER TABLE med_records_recruit ADD COLUMN Lastupdated_audiology_date_status enum('not_answered');
 INSERT INTO instrument_subtests (Test_name,Subtest_name, Description,Order_number) VALUES ('med_records_recruit','med_records_recruit_page4','Audiology Report (IBIS2 only)',4);
