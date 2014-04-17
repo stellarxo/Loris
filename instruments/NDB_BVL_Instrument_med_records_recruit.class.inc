@@ -216,6 +216,52 @@ class NDB_BVL_Instrument_med_records_recruit extends NDB_BVL_Instrument_med_reco
                 $this->form->addFormRule(array(&$this, 'Med_Rules'));
 
 	}
+        function _page4(){
+       
+        $this->form->addElement('header', null, 'Audiology');
+
+        $this->form->addElement('header', 'instrument_title', "Audiology Evaluation Results");
+//      $this->addDateElement('Lastupdated_audiology', 'Date this form was last updated:', $this->dateOptions);
+
+        $this->form->addElement ( "static", null, "<BR>" );
+        $this->form->addElement("select", "not_completed", "For this participant an audiology evaluation was", array(null=>"", "complete"=>"Completed","not_complete"=>"Not Completed", "other"=>"Not Answered"));
+
+        $config =& NDB_Config::singleton();
+        $this->dateOptions = array(
+                'language' => 'en',
+                'format'   => 'YMd',
+                'minYear'  => $config->getSetting('startYear'),
+                'maxYear'  => $config->getSetting('endYear'),
+                'addEmptyOption' => true,
+                'emptyOptionValue' => null
+                );
+                $this->form->addElement ( "static", null, "<BR>" ); //line space
+        $this->form->addElement("static",null,"If an audiology evaluation was completed, please provide the following information:");
+        $this->addDateElement('hearing_screening', "Date of audiology evaluation:");
+        $this->XINRegisterRule("hearing_screening_date", array("hearing_screening_date_status{@}=={@}", "not_completed{@}!={@}not_complete"), "Please specify date of hearing");
+
+        $this->form->addElement("static", null);
+        $this->form->addElement("header", null, "Methods used: (check all that apply)");
+        $this->form->addElement("advcheckbox", "vra", "Visual Reinforcement Audiometry", null, null, array("unused", "used"));
+        $this->form->addElement("advcheckbox", "oae", "Otoacoustic Emission Testing", null, null, array("unused", "used"));
+        $this->form->addElement("advcheckbox", "tympanometry", "Tympanometry", null, null, array("unused", "used"));
+        $this->form->addElement("advcheckbox", "other_method", "Other", null, null, array("unused", "used"));
+        $this->addTextElement("other_method_specify", $this->indent . "Please specify", array("other_method{@}=={@}used"), "Please specify");
+
+        $this->form->addElement("static", null);
+        $this->form->addElement("header", null, "Test Results:");
+        $this->form->addElement("select", "test_results", "Result", array(null=>"", "normal_hearing"=>"Normal hearing", "temporary_hearing_difficulty"=>"Temporary hearing difficulty", "equivocal_evaluation_results"=>"Equivocal evaluation results", "permanent_abnormal_hearing"=>"Permanent abnormal hearing", "not_answered"=>"Not Answered"));
+        $this->XINRegisterRule("test_results", array("not_completed{@}!={@}not_complete"), "Required");
+        $this->form->addElement("select", "test_results_ear", $this->indent . "Ear", array(null=>"", "left_ear"=>"Left Ear", "right_ear"=>"Right Ear", "bilateral"=>"Bilateral", "not_answered"=>"Not answered"));
+        $this->XINRegisterRule("test_results_ear", array("test_results{@}!={@}normal_hearing", "not_completed{@}!={@}not_complete"), "Please specify and ear");
+        $this->form->addElement("select", "test_results_severity", $this->indent . "Severity", array(null=>"", "partial"=>"Partial", "total"=>"Total", "not_answered"=>"Not Answered"));
+        $this->XINRegisterRule("test_results_severity", array("test_results{@}=={@}temporary_hearing_difficulty|permanent_abnormal_hearing"), "Please indicate a severity");
+        $this->addTextAreaElement("equivocal_evaluation_results_specify", $this->indent . $this->indent . "Equivocal evaluation results specify", array("test_results{@}=={@}equivocal_evaluation_results"), "This field is required for equivocal results");
+
+
+
+    }
+
         function _possibleExclusionaryCriteria() {
 		$this->form->addElement ( 'header', null, "Possible Exclusionary Criteria:" );
 		$this->form->addElement ( "static", null, "<BR>" ); //line space
