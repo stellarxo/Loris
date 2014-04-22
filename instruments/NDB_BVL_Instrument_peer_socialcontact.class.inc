@@ -343,7 +343,7 @@ class NDB_BVL_Instrument_peer_socialcontact extends NDB_BVL_Instrument
        $this->addSelect('q32_childcare_numhrs_perday','32. How many hours per day is your child in a childcare setting?',$this->numhrs_day);
        $this->XINRegisterRule('q32_childcare_numhrs_perday',array("q32_childcare_numhrs_perday{@}=={@}NEVER_REQUIRED"));
 
-       $questions = array('q33_numchildren_perclass'=>'33. How many children are in the (primary) classroom? at childcare',
+       $questions = array('q33_numchildren_perclass'=>'33. How many children are in the (primary) classroom at childcare?',
                'q34_numchildren_specialneeds'=>"34. How many of the children have special needs in the (primary)<BR> $this->indent classroom at childcare?");
        foreach($questions as $field=>$label) {
            $group [] = $this->createText($field, $label);
