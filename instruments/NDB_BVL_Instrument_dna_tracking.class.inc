@@ -16,12 +16,12 @@ class NDB_BVL_Instrument_dna_tracking extends NDB_BVL_Instrument
     */
     var $indent = "&nbsp;&nbsp;&nbsp;&nbsp;";
     var $yesNo = array(''=>NULL,'yes'=>'Yes','no'=>'No','not_answered'=>'Not Answered');
-    var $collection_method_saliva = array(''=>NULL, 'project_staff'=>'Project Staff','kit_mail'=>'Kit sent by mail','other'=>'Other (if other specify)','not_answered'=>'Not Answered');
+    var $collection_method_saliva = array(''=>NULL, 'project_staff'=>'Project Staff','kit_mail'=>'Kit sent by mail','travelling_phlebotomist'=>'Travelling phlebotomist', 'other'=>'Other (if other specify)','not_answered'=>'Not Answered');
     var $num_blood_samples = array(''=>NULL,1=>1,2=>2,3=>3,'more_than3'=>'More than 3','not_answered'=>'Not Answered');
     var $collection_method_blood = array(''=>NULL, 'project_staff'=>'Project Staff','local_nurse'=>'Local nurse','family_physician'=>'Family Physician','travelling_phlebotomist'=>'Travelling phlebotomist','other'=>'Other (if other specify)','not_answered'=>'Not Answered');
     var $location_sent = array(''=>NULL, 'unc'=>'UNC','repository'=>'Repository','other'=>'Other (if other specify)','not_answered'=>'Not Answered');
-    var $saliva_no_collection = array(''=>NULL, 'never_scheduled'=>'Never scheduled','child_too_old'=>'Child was too old','family_declined'=>'Family Declined','family_not_responsive'=>'Family not responsive','other'=>'Other','not_answered'=>'Not Answered');
-    var $blood_no_collection = array(''=>NULL, 'never_scheduled'=>'Never scheduled','child_too_old'=>'Child was too old','family_declined'=>'Family Declined','family_not_responsive'=>'Family not responsive','parent_did_not_want_child_blood_drawn'=>"Parent did not want child's blood drawn" ,'draw_attempted_unable_to_obtain'=>'Draw attempted, but unable to obtain' ,'other'=>'Other','not_answered'=>'Not Answered');
+    var $saliva_no_collection = array(''=>NULL, 'never_scheduled'=>'Never scheduled','child_too_old'=>'Child was too old','family_declined'=>'Family Declined','family_not_responsive'=>'Family not responsive','individual_declined'=>'Individual declined','individual_not_responsive'=>'Individual not responsive','collected_blood_sample'=>'Got blood sample','other'=>'Other','not_answered'=>'Not Answered');
+    var $blood_no_collection = array(''=>NULL, 'never_scheduled'=>'Never scheduled','child_too_old'=>'Child was too old','family_declined'=>'Family Declined','family_not_responsive'=>'Family not responsive','parent_did_not_want_child_blood_drawn'=>"Parent did not want child's blood drawn" ,'draw_attempted_unable_to_obtain'=>'Draw attempted, but unable to obtain' ,'individual_declined'=>'Individual declined','individual_not_responsive'=>'Individual not responsive','other'=>'Other','not_answered'=>'Not Answered');
 
     function setup($commentID, $page){
 
@@ -95,7 +95,7 @@ class NDB_BVL_Instrument_dna_tracking extends NDB_BVL_Instrument
         $group[] = &$this->form->createElement("static", null, null, "<strong>Mother</strong>");
         $group[] = &$this->form->createElement("static", null, null, "<strong>Father</strong>");
         $group[] = &$this->form->createElement("textarea","subject_other_specify", null, array('placeholder'=>'Specify other'));
-        $this->XINRegisterRule("subject_other_specify", array("subject_other_specify{@}=={@}"), "Specify Other", "headers");
+        $this->XINRegisterRule("subject_other_specify", array("subject_other_specify{@}=={@}NEVER_REQUIRED"));
         $this->form->addGroup($group, "headers", null, $this->_GUIDelimiter, false);
         unset($group);
         // automatically adds examiner & date of administration
@@ -103,10 +103,12 @@ class NDB_BVL_Instrument_dna_tracking extends NDB_BVL_Instrument
                            "saliva_collection_method1"=>"1. How was saliva collected?", "when_saliva_collected2"=>"2. When was saliva collected?",
                            "saliva_collection_method2"=>"2. How was saliva collected?","blood_collected"=>"Was blood collected?",
 			   "when_blood_collected1"=>"1. When was blood collected?","lab_purpletop_collected1"=>"1. Was the lab/purple top collected?",
-                           "num_blood1"=>"1. How many?","yellowtop_collected1"=>"1. Was the yellow top collected?" , 
+                           "num_blood1"=>"1. How many lab/purple top samples collected?","yellowtop_collected1"=>"1. Was the yellow top collected?" ,
+                           "num_yellowtop_collected1"=>"1. How many yellow top samples collected?", 
                            "blood_collection_method1"=>"1. How was blood collected?","blood_sent1"=>"1. Where was blood sent?", 
                            "when_blood_collected2"=>"2. When was blood collected?","lab_purpletop_collected2"=>"2. Was the lab/purple top collected?",
-                           "num_blood2"=>"2. How many?","yellowtop_collected2"=>"2. Was the yellow top collected?", 
+                           "num_blood2"=>"2. How many lab/purple top samples collected?","yellowtop_collected2"=>"2. Was the yellow top collected?",
+                           "num_yellowtop_collected2"=>"2. How many yellow top samples collected?",
                            "blood_collection_method2"=>"2. How was blood collected?","blood_sent2"=>"2. Where was blood sent?");
         $subjects = array('candidate','proband','mother','father','other');
         $types = array('saliva','blood');
@@ -187,7 +189,7 @@ class NDB_BVL_Instrument_dna_tracking extends NDB_BVL_Instrument
                       */
                     } 
                 }
-                if(strpos($key, "num_blood") !== FALSE) {
+                if(strpos($key, "num_blood") !== FALSE || strpos($key, "num_yellowtop_collected") !== FALSE) {
                    foreach($subjects as $subject) {
                         $group[] = $this->form->createElement("select", $key."_".$subject,null,$this->num_blood_samples, array('class' => 'oneselect'));
                         $field = $key."_".$subject;
@@ -356,7 +358,10 @@ class NDB_BVL_Instrument_dna_tracking extends NDB_BVL_Instrument
                   $errors['when_blood_collected1_group'] = "Specify date for $subject";
              } 
              if($values[$field] == 'yes' && empty($values["num_blood1_".$subject])) {
-                  $errors['num_blood1_group'] = "Specify number of tubes for $subject";
+                  $errors['num_blood1_group'] = "Specify number of purple tubes for $subject";
+             }
+             if($values[$field] == 'yes' && empty($values["num_yellowtop_collected1_".$subject])) {
+                  $errors['num_yellowtop_collected1_group'] = "Specify number of yellow tubes for $subject";
              }
              if($values[$field] == 'yes' && empty($values["blood_collection_method1_".$subject])) {
                   $errors['blood_collection_method1_group'] = "Specify how blood was collected for $subject";
@@ -440,23 +445,28 @@ class NDB_BVL_Instrument_dna_tracking extends NDB_BVL_Instrument
                 }
             }
 */
-            if( _checkDate($blood_when2) == true && empty($values["yellowtop_collected2_".$subject])) {
+            
+            if( !empty($blood_when2['Y']) && empty($values["yellowtop_collected2_".$subject])) {
                   $errors['yellowtop_collected2_group'] = "Specify if yellowtop was collected for $subject";
              }
-            if( _checkDate($blood_when2) == true && empty($values["lab_purpletop_collected2_".$subject])) {
+            if( !empty($blood_when2['Y']) && empty($values["lab_purpletop_collected2_".$subject])) {
                   $errors['lab_purpletop_collected2_group'] = "Specify if lab/purple top was collected for $subject";
             }
            
-             if( _checkDate($blood_when2) == true && empty($values["num_blood2_".$subject])) {
+             if(!empty($blood_when2['Y'])  && empty($values["num_blood2_".$subject])) {
                   $errors['num_blood2_group'] = "Specify number of tubes for $subject";
              }
-             if(_checkDate($blood_when2) == true && empty($values["blood_collection_method2_".$subject])) {
+            if(!empty($blood_when2['Y'])  && empty($values["num_yellowtop_collected2_".$subject])) {
+                  $errors['num_yellowtop_collected2_group'] = "Specify number of yellow tubes for $subject";
+             }
+
+             if( !empty($blood_when2['Y'])  && empty($values["blood_collection_method2_".$subject])) {
                   $errors['blood_collection_method2_group'] = "Specify how blood was collected for $subject";
              }
-             if(_checkDate($blood_when2) == true && empty($values["blood_sent2_".$subject])) {
+             if(!empty($blood_when2['Y']) && empty($values["blood_sent2_".$subject])) {
                   $errors['blood_sent2_group'] = "Specify where blood was sent for $subject";
              }
-             if(_checkDate($blood_when2) == true && $values["blood_sent2_".$subject] == "other" 
+             if(!empty($blood_when2['Y']) && $values["blood_sent2_".$subject] == "other" 
                  && empty($values["blood_sent2_".$subject."_other"] ) ) 
              { 
                 $errors["blood_sent2_other_group"] = "Specify other for $subject";
