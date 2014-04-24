@@ -129,7 +129,6 @@ class NDB_Form_statistics extends NDB_Form
         $Visits = Utility::getExistingVisitLabels($currentProject);  
         
         $this->tpl_data['Visits'] = $Visits;
-
         //---- BEHAVIORAL STATS -----
         $mri_data = array();
         $DB->select("SELECT s.CenterID,
@@ -142,9 +141,7 @@ class NDB_Form_statistics extends NDB_Form
                 s.Active='Y' AND c.Active='Y' 
                 AND s.Current_stage <> 'Recycling Bin'
                 AND f.CommentID NOT LIKE 'DDE%' 
-                AND s.SubprojectID IN ($subprojList)
                 $ExtraProject_Criteria
-                $vlabel_criteria
                 AND s.CenterID <> '1'
                 GROUP by s.CenterID, VLabel, f.Data_Entry",
                 $result);
@@ -185,8 +182,7 @@ class NDB_Form_statistics extends NDB_Form
                 AND (f.Test_name NOT LIKE '%parameter%' 
                     AND f.Test_name NOT LIKE '%radiological%' 
                     AND f.Test_name NOT LIKE '%vineland%')
-                $ExtraProject_Criteria AND s.SubprojectID IN ($subprojList)
-                $vlabel_criteria
+                $ExtraProject_Criteria 
                 AND s.CenterID <> '1'
                 GROUP BY s.CenterID, VLabel, f.Data_Entry ORDER BY c.PSCID;",
                 $result);
@@ -315,7 +311,6 @@ class NDB_Form_statistics extends NDB_Form
                   AND s.Active='Y'
                   AND c.Active='Y'
                   AND f.CommentID NOT LIKE 'DDE%'
-                  AND s.SubprojectID IN ($subprojList)
                   $ExtraProject_Criteria
                   GROUP BY Subcat, s.SubprojectID, c.CenterID, s.Visit_label", $result);
           $M_Visits = Utility::getExistingVisitLabels($currentProject);
@@ -335,7 +330,6 @@ class NDB_Form_statistics extends NDB_Form
                   AND s.Active='Y'
                   AND f.CommentID NOT LIKE 'DDE%'
                   $ExtraProject_Criteria
-                  AND s.SubprojectID IN ($subprojList)
                   GROUP BY s.SubprojectID, c.CenterID, s.Visit_label;",
                   $result);
           foreach($result as $row) {
@@ -368,7 +362,6 @@ class NDB_Form_statistics extends NDB_Form
                   AND f.Data_entry='Complete'
                   AND f.CommentID NOT LIKE 'DDE%'
                   AND (m.T1_Scan_done IS NULL OR m.T1_Scan_done <> 'No')
-                  AND s.SubprojectID IN ($subprojList)
                   GROUP BY s.CenterID;", $result);
           foreach($result as $row) {
               $this->tpl_data['mri_errors'][$row['CenterID']]['no_tarchive'] = $row['val'];
@@ -387,7 +380,6 @@ class NDB_Form_statistics extends NDB_Form
                   AND f.Data_entry = 'Complete'
                   AND m.CommentID NOT LIKE 'DDE%'
                   AND s.Active='Y'
-                  AND s.SubprojectID IN ($subprojList)
                   GROUP by s.CenterID;", $result);
           foreach($result as $row) {
               $this->tpl_data['mri_errors'][$row['CenterID']]['no_browser'] = $row['val'];
@@ -406,7 +398,6 @@ class NDB_Form_statistics extends NDB_Form
                   AND c.PSCID <> 'scanner'
                   AND mpf.CommentID NOT LIKE 'DDE%'
                   $ExtraProject_Criteria
-                  AND s.SubprojectID IN ($subprojList)
                   GROUP BY s.CenterID", $result);
           foreach($result as $row) {
               $this->tpl_data['mri_errors'][$row['CenterID']]['no_parameter'] = $row['val'];
@@ -418,21 +409,21 @@ class NDB_Form_statistics extends NDB_Form
               $id = $center['NumericID'];
               $name = $center['LongName'];
               // -------- MRI STATS---------------
-              $DB->select("SELECT COUNT(distinct s.CandID, s.Visit_label) FROM tarchive as t, session as s WHERE MID(t.PatientName,9,6)=s.CandID  AND s.SubprojectID IN ($subprojList) AND s.CenterID={$center['NumericID']};", $result23);
+              $DB->select("SELECT COUNT(distinct s.CandID, s.Visit_label) FROM tarchive as t, session as s WHERE MID(t.PatientName,9,6)=s.CandID AND s.CenterID={$center['NumericID']};", $result23);
               if (Utility::isErrorX($result23)) {
                   return PEAR::raiseError("DB Error: ".$result23->getMessage());
               }
               list(,$result23)=each($result23[0]);
               $work_station_count = $result23;
 
-              $DB->select("SELECT COUNT(s.CandID) FROM session as s, psc as p, candidate as c WHERE c.CandID=s.CandID AND s.Active='Y' AND s.CenterID=p.CenterID  AND s.Scan_done='Y' AND s.CenterID={$id} $ExtraProject_Criteria AND s.SubprojectID IN ($subprojList) ORDER BY s.CandID;", $result24);
+              $DB->select("SELECT COUNT(s.CandID) FROM session as s, psc as p, candidate as c WHERE c.CandID=s.CandID AND s.Active='Y' AND s.CenterID=p.CenterID  AND s.Scan_done='Y' AND s.CenterID={$id} $ExtraProject_Criteria  ORDER BY s.CandID;", $result24);
               if (Utility::isErrorX($result24)) {
                   return PEAR::raiseError("DB Error: ".$result24->getMessage());
               }
               list(,$result24)=each($result24[0]);
               $claimed_count = $result24;
 
-              $DB->select("SELECT COUNT(s.CandID) FROM mri_parameter_form as pf, session as s, flag as f, psc as p, candidate as c WHERE f.CommentID=pf.CommentID AND s.ID=f.SessionID AND c.CandID=s.CandID AND s.Active='Y' AND s.CenterID=p.CenterID AND pf.Data_entry_completion_status='Complete' AND s.CenterID={$id} $ExtraProject_Criteria AND s.SubprojectID IN ($subprojList) ORDER BY p.Name;", $result25);
+              $DB->select("SELECT COUNT(s.CandID) FROM mri_parameter_form as pf, session as s, flag as f, psc as p, candidate as c WHERE f.CommentID=pf.CommentID AND s.ID=f.SessionID AND c.CandID=s.CandID AND s.Active='Y' AND s.CenterID=p.CenterID AND pf.Data_entry_completion_status='Complete' AND s.CenterID={$id} $ExtraProject_Criteria  ORDER BY p.Name;", $result25);
               if (Utility::isErrorX($result25)) {
                   return PEAR::raiseError("DB Error: ".$result25->getMessage());
               }
@@ -444,7 +435,7 @@ class NDB_Form_statistics extends NDB_Form
                           WHERE v12.Active='Y' AND v12.Visit_label='v12' AND v06.CandID=v12.CandID AND m12.T1_Scan_Done='Complete') 
                       AND EXISTS (SELECT 'x' FROM session v24 join flag f24 ON (f24.SessionID=v24.ID and Test_name='mri_parameter_form' AND CommentID NOT LIKE 'DDE%') join mri_parameter_form m24 ON (f24.CommentID=m24.CommentID)
                           WHERE v24.Active='Y' AND v24.Visit_label='v24' AND v06.CandID=v24.CandID and m24.T1_Scan_Done='Complete') 
-                      AND v06.CenterID='{$id}' $ExtraProject_Criteria AND v06.SubprojectID IN ($subprojList) ");
+                      AND v06.CenterID='{$id}' $ExtraProject_Criteria ");
 
               $mri_data[] = array('name' => $name,  'work_station_count' => $work_station_count, 'claimed_count' => $claimed_count, 'forms_count' => $forms_count, 'all_three_scans' => $three_scans);
 
@@ -473,13 +464,13 @@ class NDB_Form_statistics extends NDB_Form
                            AND COALESCE(mpf24.T2_Scan_done, 'No')='Complete' 
                            AND COALESCE(mpf12.DTI_Scan_done, 'No')='Complete' AND COALESCE(mpf06.DTI_Scan_done, 'No')='Complete' 
                            AND COALESCE(mpf24.DTI_Scan_done, 'No')='Complete') WHEN true THEN c.CandID ELSE null END) as Three_All_done
-                       FROM candidate c JOIN session v06 ON (c.CandID=v06.CandID AND v06.Visit_label='v06' and v06.Active='Y' and v06.Current_stage <> 'Recycling Bin' AND v06.SubprojectID IN ($subprojList)) 
+                       FROM candidate c JOIN session v06 ON (c.CandID=v06.CandID AND v06.Visit_label='v06' and v06.Active='Y' and v06.Current_stage <> 'Recycling Bin' ) 
                        JOIN flag f06 ON (f06.SessionID=v06.ID and f06.Test_name='mri_parameter_form' AND f06.CommentID NOT LIKE 'DDE%') 
                        JOIN mri_parameter_form mpf06 ON (f06.CommentID=mpf06.CommentID) 
                        LEFT JOIN session v12 ON (c.CandID=v12.CandID and v12.Visit_label='v12' and v12.Current_stage <> 'Recycling Bin') 
                        LEFT JOIN flag f12 ON (f12.SessionID=v12.ID AND f12.Test_name='mri_parameter_form' AND f12.CommentID NOT LIKE 'DDE%') 
                        LEFT JOIN mri_parameter_form mpf12 ON (mpf12.CommentID=f12.CommentID) 
-                       LEFT JOIN session v24 ON (v24.CandID=c.CandID and v24.Visit_label='v24' and v24.Current_stage <> 'Recycling Bin' and v24.Active='Y' AND v24.SubprojectID IN ($subprojList)) 
+                       LEFT JOIN session v24 ON (v24.CandID=c.CandID and v24.Visit_label='v24' and v24.Current_stage <> 'Recycling Bin' and v24.Active='Y') 
                        LEFT JOIN flag f24 ON (f24.SessionID=v24.ID AND f24.Test_name='mri_parameter_form' AND f24.CommentID NOT LIKE 'DDE%') 
                        LEFT JOIN mri_parameter_form mpf24 ON (mpf24.CommentID=f24.CommentID) WHERE 
                        c.Active='Y' and c.PSCID  not like 'dcc%'  and c.PSCID <> 'scanner' 
