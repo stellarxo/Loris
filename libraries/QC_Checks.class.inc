@@ -79,6 +79,40 @@ class QC_Checks {
 
             }
         }
+          /* ************************************************************************* */
+        // Determine sessions where Date_taken of visit n = Date taken of visit n+1
+        /* ************************************************************************* */
+        print "\n\nSESSIONS WITH VISIT N IS SAME DATE AS VISIT N+1\n";
+        print "-------------------------------------\n";
+        foreach($tests as $test_row) {
+            $test = $test_row['Test_name'];
+            $instrument_query = "SELECT c.PSCID, c.CandID, t.Date_taken, s.Visit_label, f.CommentID FROM candidate c LEFT JOIN session s USING (CandID) LEFT JOIN flag f ON (f.SessionID=s.ID) JOIN $test t USING (CommentID) WHERE f.Test_name=" . $DB->quote($test)  . " AND f.CommentID NOT LIKE 'DDE%' AND s.Active='Y' AND c.Active='Y' AND t.Date_taken IS NOT NULL  AND f.Data_entry='Complete' AND COALESCE(s.Visit, 'NotFailure') <> 'Failure' AND c.CenterID = $this->site ORDER BY PSCID, Visit_label ";
+            $instrument_data = $DB->pselect($instrument_query, array());
+            //    print_r($instrument_data);
+            $LastCandidate = '';
+            $LastDateTaken = 0;
+            $LastCommentID = '';
+            foreach($instrument_data as $row) {
+                if($row['PSCID'] != $LastCandidate) {
+                    $LastCandidate = $row['PSCID'];
+                    $LastDateTaken = $row['Date_taken'];
+                    $LastVisit = $row['Visit_label'];
+                    $LastCommentID= $row['CommentID'];
+                    continue;
+                }
+                if($LastDateTaken == $row['Date_taken']) {
+                    $disp = array($row['PSCID'], $row['CandID'], $row['Visit_label'], $test, $LastVisit . ' = ' . $row['Visit_label']);
+                    print implode($disp, "\t");
+                    print "\n";
+                }
+                $LastCandidate = $row['PSCID'];
+                $LastDateTaken = $row['Date_taken'];
+                $LastVisit = $row['Visit_label'];
+                $LastCommentID= $row['CommentID'];
+
+            }
+        }
+
 
         print "\n\nSESSIONS WITH DUPLICATE SCANS\n";
         print"-------------------------------------\n";
