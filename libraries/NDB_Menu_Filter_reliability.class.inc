@@ -162,7 +162,8 @@ class NDB_Menu_Filter_reliability extends NDB_Menu_Filter
         $subproject_options = Utility::getSubprojectList();
         $subproject_options = array(null=>'Any') + $subproject_options;
         $gender_options = array(null=>'Any', 'Male'=>'Male', 'Female'=>'Female');
-        $list_of_instruments = array(null=>'Any', 'csbs'=>'CSBS', 'adi_r'=>'ADI-R', 'ados'=>'ADOS', 'aosi' => 'AOSI');
+        $list_of_instruments = array(null=>'Any', 'csbs'=>'CSBS', 'adi_r'=>'ADI-R', 'ados'=>'ADOS', 'aosi' => 'AOSI',
+                                     'aims'=>'AIMS');
         $list_of_instruments_only = array('csbs'=>'CSBS', 'adi_r_proband'=>'ADI-R (Proband)', 'adi_r_subject' => 'ADI-R (Subject)', 'ados_module1'=>'ADOS (Module 1)', 'ados_module2' => 'ADOS (Module 2)', 'aosi' => 'AOSI');
         $lock_options = array(null=>'','Locked'=>'Locked','Unlocked'=>'Unlocked');
 
@@ -235,7 +236,18 @@ class NDB_Menu_Filter_reliability extends NDB_Menu_Filter
     // This is used both by setDataTableRows, and reliability statistics
     function getThreshholds() {
         //return array("adi_r_proband" => 90, "adi_r_subject" => 90, "adi_r" => 90, 'aosi' => 78.9, 'csbs' => 80, 'ados_module1' => 80, 'ados_module2' => 80);
-        return array("adi_r_proband" => 89.5, "adi_r_subject" => 89.5, "adi_r" => 89.5, 'aosi' => 78.0, 'csbs' => 79.5, 'ados_module1' => 79.5, 'ados_module2' => 79.5);
+        $config =& NDB_Config::singleton();
+        $reliabilityConfig = $config->getSetting("ReliabilityInstruments");
+        $threshold = array();
+           
+        foreach(Utility::toArray($reliabilityConfig) AS $reliabilityInstrument){
+             $instrument_list = $reliabilityInstrument['Instrument'];
+             foreach($instrument_list AS $instrument){
+                 $threshold[$instrument['Testname']] = $instrument['Threshold'];
+             }
+        }
+        return $threshold;
+        //return array("adi_r_proband" => 89.5, "adi_r_subject" => 89.5, "adi_r" => 89.5, 'aosi' => 78.0, 'csbs' => 79.5, 'ados_module1' => 79.5, 'ados_module2' => 79.5);
     }
     function _setDataTableRows($count)
     {
@@ -321,6 +333,8 @@ class NDB_Menu_Filter_reliability extends NDB_Menu_Filter
           $this->within_site_flagging("ados_module1", 0.1, $site, $db);
           $this->within_site_flagging("ados_module2", 0.1, $site, $db);
           $this->within_site_flagging("csbs", 0.1, $site, $db);
+          $this->within_site_flagging("aims", 0.1, $site, $db);
+
         }    
         
         foreach($site_list as $site){
@@ -330,6 +344,7 @@ class NDB_Menu_Filter_reliability extends NDB_Menu_Filter
           $this->cross_site_flagging("ados_module1", $site, array_remove($site, $site_list), $db);
           $this->cross_site_flagging("ados_module2", $site, array_remove($site, $site_list), $db);
           $this->cross_site_flagging("csbs", $site, array_remove($site, $site_list), $db);
+          $this->cross_site_flagging("aims", $site, array_remove($site, $site_list), $db);
         }            
         
     }
