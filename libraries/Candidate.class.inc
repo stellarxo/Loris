@@ -19,7 +19,6 @@ define('CANDIDATE_MAX_CANDID', 999999);
 define('CANDIDATE_MIN_PSCID', 1000);
 define('CANDIDATE_MAX_PSCID', 9999);
 
-
 class Candidate
 {
     var $candidateInfo;
