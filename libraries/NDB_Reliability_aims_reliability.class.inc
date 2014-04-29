@@ -97,8 +97,6 @@ class NDB_Reliability_aims_reliability extends NDB_Reliability
         $query = "SELECT * FROM {$this->name} WHERE CommentID='".$this->identifier."'  AND reliability_center_id='$this->reliability_center_id'";
         $query1 = "SELECT * FROM {$initial_table} WHERE CommentID='".$this->identifier."'";
 
-
-
         $db->selectRow($query, $score_record);
         if (Utility::isErrorX($score_record)) {
             return PEAR::raiseError("Could not get scores: ".$score_record->getMessage() . " - Query: {$query}");
@@ -116,36 +114,34 @@ class NDB_Reliability_aims_reliability extends NDB_Reliability
         $algorithm_mismatches  = 0;
         $algorithm_denominator = 0;
         $age_months = $this->_getAgeInMonths($instrument_record, $reliability_record);
-
-        foreach($instrument_record as $key=>$value){
-            if(!preg_match("/^q_/", $key)) continue;
+        $algorithm_questions = array('q1_pronelying1','q2_pronelying2','q3_prone_prop','q4_forearmsupport1','q5_prone_mobility','q6_forearmsupport2','q7_extended_armsupport','q8_rollingprone_supine_wo_rotation','q9_swimming','q10_reach_forearmsupport','q11_pivoting','q12_rollingprone_supine_w_rotation','q13_fourpoint_kneeling','q14_propped_sidelying','q15_reciprocal_crawling','q16_fourptkneel_sit_halfsit','q17_reciprocal_creeping1','q18_reach_extended_armsupport','q19_fourpoint_kneeling2','q20_mod_fourpoint_kneeling','q21_reciprocal_creeping2','q22_supinelying1','q23_supinelying2','q24_supinelying3','q25_supinglying4','q26_hands_knees','q27_active_extension','q28_hands_feet','q29_rollingsupine_prone_wo_rotation','q30_rollingsupine_prone_w_rotation','q31_sit_w_support','q32_sit_proppedarms','q33_pullsit','q34_unsustained_sitting','q35_sit_w_armsupport','q36_unsustained_sit_wo_armsupport','q37_weightshift_unsustainedsit','q38_sit_wo_armsupport1','q39_reach_rotation_sit','q40_sit_prone','q41_sit_fourpoint_kneel','q42_sit_wo_armsupport2','q43_supportedstand1','q44_supportedstand2','q45_supportstand3','q46_pullstand_w_support','q47_pullstand','q48_supportstand_w_rotation','q49_cruise_wo_rotation','q50_halfkneel','q51_controllower_stand','q52_cruise_w_rotation','q53_standalone','q54_earlystep','q55_stand_modsquat','q56_stand_quadposition','q57_walkalone','q58_squat');
+        foreach($instrument_record as $key=>$value){ 
+            if(!preg_match("/^q[1-9]/", $key)) continue;
             $rel_key = $key;
-            if(preg_match("/^q_(13|14|15|16)/", $rel_key)){
-                $rel_key = preg_replace("/^q_/", "", $rel_key);
-            }
-            //echo($rel_key . " -- {$value} vs. {$rel_value}<BR>");
+            $algorithm_question = in_array($key, $algorithm_questions);
             $rel_value = $reliability_record[$rel_key];
-            if(is_null($value) || is_null($rel_value) ) continue;
+	    if(!empty($value) && !empty($rel_value) ) {
 
-            $denominator++;
-            if($algorithm_question){
-                $algorithm_denominator++;
-            }
+		    $denominator++;
+		    if($algorithm_question){ 
+			    $algorithm_denominator++;
+		    }
 
 
-            if($value == $rel_value) continue;
-            //echo("MISMATCH<BR>");                 
-            $mismatches++;
-            if($algorithm_question){
-                $algorithm_mismatches++;
-            }
+		    if( $this->_checkEquivalency($value,$rel_value))  continue;
+		    //echo("MISMATCH<BR>");                 
+		    $mismatches++;
+		    if($algorithm_question){
+			    $algorithm_mismatches++;
+		    }
+	    }
         }
+        //print "Denominator : $denominator , MISMATCHES : $mismatches, ALG_DENOM : $algorithm_denominator, ALG_MISMATCH : $algorithm_mismatches";
              // Score the reliability
              $reliability['Reliability_score_all_items']= (($denominator-$mismatches)/$denominator*100);
-             $reliability['Reliability_score_scored_items']= (($algorithm_denominator-$algorithm_mismatches)/$algorithm_denominator*100);
+            // $reliability['Reliability_score_scored_items']= (($algorithm_denominator-$algorithm_mismatches)/$algorithm_denominator*100);
 
         
-         // print_r($this->identifier);
       
         // Do the update here for the relibaility scores - saving the scores
 		$result = $db->update("{$this->name}", $reliability, array("CommentID"=>$this->identifier, 'reliability_center_id' => $this->reliability_center_id));
@@ -153,20 +149,30 @@ class NDB_Reliability_aims_reliability extends NDB_Reliability
 			return PEAR::raiseError("Could not save total score: ". $result->getMessage());
 		}
 		
-		$result = $db->update("reliability", array("Reliability_score" => min($reliability['Reliability_score_all_items'], $reliability['Reliability_score_scored_items'])), array("CommentID"=>$this->identifier, "Instrument" => preg_replace("/_reliability$/", "", $this->name), 'reliability_center_id' => $this->reliability_center_id));
+		$result = $db->update("reliability", array("Reliability_score" => round(min($reliability['Reliability_score_all_items'], $reliability['Reliability_score_scored_items']),3)), array("CommentID"=>$this->identifier, "Instrument" => preg_replace("/_reliability$/", "", $this->name), 'reliability_center_id' => $this->reliability_center_id));
 		if($db->isError($result)) {
-			return PEAR::raiseError("Could not save total score: ". $result->getMessage());
+			return PEAR::raiseError("Could not save total score : ". $result->getMessage());
 		}
-    
-/*	 // Update the main relibaility table with the overall reliability score 
-                $result1 = $db->update("reliability", $reliability['reliability_score'], array("CommentID"=>$this->identifier));
+	 // Update the main relibaility table with the overall reliability score 
+                $result1 = $db->update("reliability", array('reliability_score'=> $reliability['Reliability_score_all_items']), array("CommentID"=>$this->identifier));
                 if($db->isError($result1)) {
                         return PEAR::raiseError("Could not save total score: ". $result1->getMessage());
                 }
-*/
-
     } // end function score
-           
+    
+    function _checkEquivalency( $val, $rel_val) {
+        if ($val == 'credited' && ($rel_val == 'observed' || $rel_val == 'credited') ) {
+            return true;
+        } else if ($val == 'not_observed' && ($rel_val == 'above_ceiling' || $rel_val == 'not_observed') ) {
+            return true;
+        } else if($val == 'observed' && ($rel_val == 'observed' || $rel_val == 'credited') ) {
+            return true;
+        } else if($val == 'above_ceiling' && ($rel_val == 'above_ceiling' || $rel_val == 'not_observed') ) {
+            return true;
+        }
+        
+        return false;
+    } 
     function _nullScores()
     {
         $db=& Database::singleton();
@@ -200,7 +206,8 @@ class NDB_Reliability_aims_reliability extends NDB_Reliability
 
         //Scoring header
         $this->form->addElement('header', 'instrument_title', "Scoring:");
-        $this->form->addElement("static", "reliability_score", "Reliability Score (%):");
+       // $this->form->addElement("static", "Reliability_score_scored_items", "Reliability Score All items(%):");
+        $this->form->addElement("static", "Reliability_score_all_items", "Reliability Scored items(%):");
         $this->form->addElement("static", "CommentID", "CommentID:");
 
         //display test name
@@ -325,7 +332,7 @@ class NDB_Reliability_aims_reliability extends NDB_Reliability
                 return PEAR::raiseError("DB Error: ".$success->getMessage());
             }
         } else {
-            // update the event
+            // update the event 
             $success = $DB->update($this->name, $values,          
                                    array('CommentID'=>$this->identifier, 'reliability_center_id' => $this->reliability_center_id)
                                    ); 
