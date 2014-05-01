@@ -281,7 +281,8 @@ class NDB_BVL_Instrument_pspq_father extends NDB_BVL_Instrument
     }
 
    function PSPQ_Rules($values) {
-       $errors = array();
+      /* commenting out the warnings
+         $errors = array();
          $DB = Database::singleton();
          $questions = array();
          $questions = $DB->pselect(
@@ -303,6 +304,7 @@ class NDB_BVL_Instrument_pspq_father extends NDB_BVL_Instrument
                    echo('<center><strong><font color="Red"> Missing response for question -'. $q_display.'</font></strong></center>');
             }
        }
+       */
        if(intval($values['respondent_age']) > 100) {
            $errors['respondent_age_group'] = "Specify age between 0 and 100";    
        }
