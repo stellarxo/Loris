@@ -177,8 +177,6 @@ class NDB_BVL_Instrument_tsi extends NDB_BVL_Instrument
 	        $this->addTextElement("primary_language", "Primary language spoken in the home:");	
 		$this->form->addElement("static", null, "<b>Parent's Information:</b><br><br>");
 		
-		$this->addTextElement("primary_language", "Primary language spoken in the home:");
-		
 		//Mother's Information
     	$this->form->addElement("static", null, "<b>Mother's Information</b><br>");
 		
@@ -262,7 +260,7 @@ class NDB_BVL_Instrument_tsi extends NDB_BVL_Instrument
                             array(''=>NULL,'half_sibling'=>'Half sibling', 'full_sibling'=>'Full sibling',
                                   'step_sibling'=>'Step sibling','not_answered'=>'Not Answered'));
             $this->XINRegisterRule("relation_sibling".$i, array("$field{@}!={@}"), "Specify relationship for sibling $i");
-            $this->addSelect('live_at_home_sibling'.$i, $this->indent. "Live in home:", array(''=>NULL,'yes'=>'Yes','no'=>'No','not_answered'=>'Not Answered')); 
+            $this->addSelect('live_at_home_sibling'.$i, $this->indent. "Live in home:", array(''=>NULL,'yes'=>'Yes','no'=>'No','part_time'=>'Part time','not_answered'=>'Not Answered')); 
             $this->XINRegisterRule("live_at_home_sibling".$i, array("$field{@}!={@}"), "Specify if sibling $i lives at home or not");
          }
          $this->form->addElement("static", null, "<br><br>");
