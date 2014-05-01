@@ -174,10 +174,8 @@ class NDB_BVL_Instrument_tsi extends NDB_BVL_Instrument
         	$this->form->addElement("select", "father_race", "Father Race:", array("white"=>"White", "black_african_american"=>"Black or African American", "asian"=>"Asian", "unknown_not_reported"=>"Unknown or not Reported", "american_indian_alaska_native"=>"American Indian / Alaska Native", "native_hawaiian_pacific_islander"=>"Native Hawaiian / Other Pacific Islander", "more_than_one_race"=>"More than one race (select all applicable)"), "multiple");
        
         	$this->form->addRule("father_race", "Must answer this race question", 'required');
-		
+	        $this->addTextElement("primary_language", "Primary language spoken in the home:");	
 		$this->form->addElement("static", null, "<b>Parent's Information:</b><br><br>");
-		
-		$this->addTextElement("primary_language", "Primary language spoken in the home:");
 		
 		//Mother's Information
     	$this->form->addElement("static", null, "<b>Mother's Information</b><br>");
@@ -243,12 +241,31 @@ class NDB_BVL_Instrument_tsi extends NDB_BVL_Instrument
         $nonAskedQuestions = array("<br>Parent's Telephone:",
 		"Parent's Address:",
 		"$this->indent a) Older sibling",
-		"$this->indent b) other siblings:",
-		"Nature of Referral:");
+		"$this->indent b) other siblings:");
 		foreach ($nonAskedQuestions as $field) {
 			$this->form->addElement('static', null, $field);
 		}
-	}
+         $this->form->addElement("static", null, "<br><br><b>Other siblings</b><br>");
+         for($i = 1; $i<=4; $i++) {
+            $this->addScoreColumn(null, "Sibling $i");
+	    $field = 'age_sibling'.$i; $label = $this->indent. 'Age (Please indicate age in years):';
+	    $group [] = $this->createText($field, $label);
+	    $this->addGroup($group, $field . "_group", $label, null, false);
+	    $this->XINRegisterRule($field,array("$field{@}=={@}NEVER_REQUIRED"), $field . "_group");
+	    unset($group);
+	    $this->addGroupRule($field . "_group", array(array(array("Value must be numeric.", 'numeric'))));
+            $this->addTextElement("dx_sibling".$i, $this->indent . "Dx:");
+            $this->XINRegisterRule("dx_sibling".$i,array("$field{@}!={@}"), "Specify diagnoses for sibling $i", "dx_sibling".$i."_group");
+            $this->addSelect('relation_sibling'.$i, $this->indent. "Specify relationship:", 
+                            array(''=>NULL,'half_sibling'=>'Half sibling', 'full_sibling'=>'Full sibling',
+                                  'step_sibling'=>'Step sibling','not_answered'=>'Not Answered'));
+            $this->XINRegisterRule("relation_sibling".$i, array("$field{@}!={@}"), "Specify relationship for sibling $i");
+            $this->addSelect('live_at_home_sibling'.$i, $this->indent. "Live in home:", array(''=>NULL,'yes'=>'Yes','no'=>'No','part_time'=>'Part time','not_answered'=>'Not Answered')); 
+            $this->XINRegisterRule("live_at_home_sibling".$i, array("$field{@}!={@}"), "Specify if sibling $i lives at home or not");
+         }
+         $this->form->addElement("static", null, "<br><br>");
+         $this->form->addElement('static', null, "Nature of Referral:"); 
+    }
 
 	function _page1(){
 
