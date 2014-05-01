@@ -92,7 +92,7 @@ CREATE TABLE `pspq_mother` (
 `comments` text default NULL,
 PRIMARY KEY  (`CommentID`)
               );
-INSERT INTO test_names(Test_name, Full_name,Sub_group,isDirectEntry) VALUES ('pspq_mother','PSPQ-Father (Personality Styles and Preferences Questionnaire)',6, true);
+INSERT INTO test_names(Test_name, Full_name,Sub_group,isDirectEntry) VALUES ('pspq_mother','PSPQ-Mother (Personality Styles and Preferences Questionnaire)',6, true);
 INSERT INTO instrument_subtests (Test_name, Subtest_name, Description, Order_number) VALUES ('pspq_mother','pspq_mother_page2','Respondent Page2', 1);
 INSERT INTO instrument_subtests (Test_name, Subtest_name, Description, Order_number) VALUES ('pspq_mother','pspq_mother_page3','Respondent Page3', 2);
 INSERT INTO instrument_subtests (Test_name, Subtest_name, Description, Order_number) VALUES ('pspq_mother','pspq_mother_page4','Informant Page1', 3);
