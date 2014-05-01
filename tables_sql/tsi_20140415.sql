@@ -14,10 +14,10 @@ ALTER TABLE tsi ADD COLUMN relation_sibling1 enum('half_sibling','full_sibling',
 ALTER TABLE tsi ADD COLUMN relation_sibling2 enum('half_sibling','full_sibling','step_sibling','not_answered');
 ALTER TABLE tsi ADD COLUMN relation_sibling3 enum('half_sibling','full_sibling','step_sibling','not_answered');
 ALTER TABLE tsi ADD COLUMN relation_sibling4 enum('half_sibling','full_sibling','step_sibling','not_answered');
-ALTER TABLE tsi ADD COLUMN live_at_home_sibling1 enum('yes','no','not_answered');
-ALTER TABLE tsi ADD COLUMN live_at_home_sibling2 enum('yes','no','not_answered');
-ALTER TABLE tsi ADD COLUMN live_at_home_sibling3 enum('yes','no','not_answered');
-ALTER TABLE tsi ADD COLUMN live_at_home_sibling4 enum('yes','no','not_answered');
+ALTER TABLE tsi ADD COLUMN live_at_home_sibling1 enum('yes','no','part_time','not_answered');
+ALTER TABLE tsi ADD COLUMN live_at_home_sibling2 enum('yes','no','part_time','not_answered');
+ALTER TABLE tsi ADD COLUMN live_at_home_sibling3 enum('yes','no','part_time','not_answered');
+ALTER TABLE tsi ADD COLUMN live_at_home_sibling4 enum('yes','no','part_time','not_answered');
 ALTER TABLE tsi ADD COLUMN primary_language varchar(255);
 ALTER TABLE tsi ADD COLUMN primary_language_status enum('not_answered');
 ALTER TABLE tsi_followup ADD COLUMN age_sibling1 varchar(255);
@@ -36,7 +36,7 @@ ALTER TABLE tsi_followup ADD COLUMN relation_sibling1 enum('half_sibling','full_
 ALTER TABLE tsi_followup ADD COLUMN relation_sibling2 enum('half_sibling','full_sibling','step_sibling','not_answered');
 ALTER TABLE tsi_followup ADD COLUMN relation_sibling3 enum('half_sibling','full_sibling','step_sibling','not_answered');
 ALTER TABLE tsi_followup ADD COLUMN relation_sibling4 enum('half_sibling','full_sibling','step_sibling','not_answered');
-ALTER TABLE tsi_followup ADD COLUMN live_at_home_sibling1 enum('yes','no','not_answered');
-ALTER TABLE tsi_followup ADD COLUMN live_at_home_sibling2 enum('yes','no','not_answered');
-ALTER TABLE tsi_followup ADD COLUMN live_at_home_sibling3 enum('yes','no','not_answered');
-ALTER TABLE tsi_followup ADD COLUMN live_at_home_sibling4 enum('yes','no','not_answered');
+ALTER TABLE tsi_followup ADD COLUMN live_at_home_sibling1 enum('yes','no','part_time','not_answered');
+ALTER TABLE tsi_followup ADD COLUMN live_at_home_sibling2 enum('yes','no','part_time','not_answered');
+ALTER TABLE tsi_followup ADD COLUMN live_at_home_sibling3 enum('yes','no','part_time','not_answered');
+ALTER TABLE tsi_followup ADD COLUMN live_at_home_sibling4 enum('yes','no','part_time','not_answered');
