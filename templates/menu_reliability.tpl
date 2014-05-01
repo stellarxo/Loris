@@ -47,13 +47,10 @@ $(document).ready(function() {
 	<td colspan = 15>
 	<table border="0">
 <tr>
-{* OBJECTIVE IS NIHPD SPECIFIC - BUT WE ARE TOO LAZY TO CHANGE THIS TODAY *}
 	<td nowrap="nowrap" align="right">Subproject:</td>
 	<td nowrap="nowrap">{$form.CommentID.html}</td>
-	{* <td nowrap="nowrap">Objective:</td>
-        <td nowrap="nowrap">{$form.Objective.html}</td> *}
-        <td>&nbsp;</td>
-        <td>&nbsp;</td>
+	<td nowrap="nowrap">{$form.ProjectID.label}</td>
+        <td nowrap="nowrap">{$form.ProjectID.html}</td> 
         <td nowrap="nowrap">{$form.CenterID.label}</td>
         <td nowrap="nowrap">{$form.CenterID.html}</td>
         <td nowrap="nowrap">{$form.Instrument.label}</td>
