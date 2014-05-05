@@ -334,6 +334,7 @@ class NDB_BVL_Instrument_pspq_mother extends NDB_BVL_Instrument
 		echo "<script>
         	var thisUrl = '';
 		var error_window = window.open(thisUrl, 'MyWindow', 'width=800, height=600, resizable=yes, scrollbars=yes, status=no, toolbar=no, location=no, menubar=no');
+                error_window.document.body.innerHTML=\"\";
 		error_window.document.write('<center><strong><font color=\\'Red\\'> Missing response for the following questions in the previous page : </font></strong></center>');";
 		foreach($list_questions as $key=>$question) { 
 			$question = addslashes($question); //escaping php string
