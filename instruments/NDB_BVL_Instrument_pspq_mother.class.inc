@@ -150,6 +150,7 @@ class NDB_BVL_Instrument_pspq_mother extends NDB_BVL_Instrument
             $this->XINRegisterRule($field,array("$field{@}=={@}NEVER_REQUIRED"));
         }
 
+        $this->form->addFormRule(array(&$this, 'PSPQ_Rules'));
     }
     
     function _page3(){
@@ -174,13 +175,14 @@ class NDB_BVL_Instrument_pspq_mother extends NDB_BVL_Instrument
             $this->XINRegisterRule($field,array("$field{@}=={@}NEVER_REQUIRED"));
         }
 
+        $this->form->addFormRule(array(&$this, 'PSPQ_Rules'));
 
     }
 
     function _page4(){
         // display test name
-        $this->form->addElement('header', 'instrument_title', "Personality Styles and Preferences Questionnaire - Other Biological Parent");
-         $this->form->addElement('static','lorisSubHeader',"<strong>Instructions:</strong><BR>You are about to fill out a series of statements related to personality and lifestyle of the other biological parent <BR>of your child. For each question, you will be given a choice of 6 answers that describe how often the statement<BR> applies to the other biological parent:<BR> 1.Very Rarely<BR>2.Rarely<BR>3.Occasionally<BR>4.Somewhat Often<BR>5.Often<BR> 6.Very Often<BR><BR>Choose the number that matches the answer that comes closest to how you feel about each statement.<BR>So, if they watch the evening news once a week, you might circle #4: Somewhat often.<BR><BR><strong>3 IMPORTANT THINGS TO REMEMBER</strong><BR><BR>#1. Many of these questions ask about their interactions with other people. Please <strong>think about the <BR> way they are with <i>most</i> people rather than special relationships</strong> they may have with spouses or <BR> significant others, children, siblings, and parents.<BR> <BR>#2. Everyone changes over time, which can make it hard to fill out questions about personality. <BR><strong>Think about the way they have been the majority of their adult life</strong>, rather than the way they were <BR> as a teenager, or times they many have felt different than normal.<BR><BR>#3. <strong>You must answer each question,</strong> and give only one answer per question. If you are confused,<BR> please just give it a guess.<BR><BR>Observer ratings help us obtain a more well-rounded measure of personality and lifestyle, since <BR>some traits and behaviors are most easily observed by other people.");
+        $this->form->addElement('header', 'instrument_title', "Personality Styles and Preferences Questionnaire - Other");
+        $this->form->addElement('static','lorisSubHeader',"<strong>Instructions:</strong><BR>You are about to fill out a series of statements related to personality and lifestyle of the other biological parent <BR>of your child. For each question, you will be given a choice of 6 answers that describe how often the statement<BR> applies to the other biological parent:<BR> 1.Very Rarely<BR>2.Rarely<BR>3.Occasionally<BR>4.Somewhat Often<BR>5.Often<BR> 6.Very Often<BR><BR>Choose the number that matches the answer that comes closest to how you feel about each statement.<BR>So, if they watch the evening news once a week, you might circle #4: Somewhat often.<BR><BR><strong>3 IMPORTANT THINGS TO REMEMBER</strong><BR><BR>#1. Many of these questions ask about their interactions with other people. Please <strong>think about the <BR> way they are with <i>most</i> people rather than special relationships</strong> they may have with spouses or <BR> significant others, children, siblings, and parents.<BR> <BR>#2. Everyone changes over time, which can make it hard to fill out questions about personality. <BR><strong>Think about the way they have been the majority of their adult life</strong>, rather than the way they were <BR> as a teenager, or times they many have felt different than normal.<BR><BR>#3. <strong>You must answer each question,</strong> and give only one answer per question. If you are confused,<BR> please just give it a guess.<BR><BR>Observer ratings help us obtain a more well-rounded measure of personality and lifestyle, since <BR>some traits and behaviors are most easily observed by other people.");
 
         $this->addSelect('informant_confidence',"<BR>How confident do you feel about your ability to give an accurate report on the <BR>personality traits and behaviors of the participant?", $this->informant_confidence);
 
@@ -249,6 +251,7 @@ class NDB_BVL_Instrument_pspq_mother extends NDB_BVL_Instrument
             $this->XINRegisterRule($field,array("$field{@}=={@}NEVER_REQUIRED"));
         }
    
+        $this->form->addFormRule(array(&$this, 'PSPQ_Rules'));
      
     }
     
@@ -277,12 +280,13 @@ class NDB_BVL_Instrument_pspq_mother extends NDB_BVL_Instrument
        $this->addBasicTextArea("comments", "Do you have any other comments?");
        $this->XINRegisterRule('comments', array('comments{@}=={@}NEVER_REQUIRED'));
    
+        $this->form->addFormRule(array(&$this, 'PSPQ_Rules'));
      
     }
 
    function PSPQ_Rules($values) {
-      /* commenting out the warnings
-       $errors = array();
+      // commenting out the warnings
+         $errors = array();
          $DB = Database::singleton();
          $questions = array();
          $questions = $DB->pselect(
@@ -294,17 +298,52 @@ class NDB_BVL_Instrument_pspq_mother extends NDB_BVL_Instrument
                     'TN' => $this->testName
                 )
             );
+       $list_questions = array();
        foreach($values as $key=>$val) {
-            if(empty($val)) {
-                   foreach($questions as $row) {
-                       if($row['SourceField'] == $key) {
-                           $q_display = $row['question'];break;
-                        }
-                   }
-                   echo('<center><strong><font color="Red"> Missing response for question -'. $q_display.'</font></strong></center>');
-            }
+	       if(empty($val)) {
+		       foreach($questions as $row) {
+			       if($row['SourceField'] == $key) {
+				       // $q_display = $row['question'];break;
+				       $list_questions[$key] = $row['question'];
+			       }
+		       }
+	       }
        }
-       */
+       foreach ($list_questions as $key=>$row) {
+                if($key == 'respondent_other' && $questions['respondent'] != 'other') {
+                   unset($list_questions[$key]);
+                } else if($key == 'informant_other' && $questions['informant'] != 'other') {
+                   unset($list_questions[$key]);
+                } elseif (empty ($row) )  {
+                   unset($list_questions[$key]);
+                } 
+        }
+        if(isset($_GET["key"])) {
+            $url_key = $_GET["key"];
+        }
+       if(isset($_GET["pageNum"])) { 
+          $page = $_GET["pageNum"];
+           $page_verbose= $page +1;
+          $goback_url = "survey.php?key=$url_key&pageNum=$page";
+       }
+       if($page_verbose == 'top') {
+           $page_verbose = 1;
+        }
+
+	if(!empty($list_questions)) { 
+		echo "<script>
+        	var thisUrl = '';
+		var error_window = window.open(thisUrl, 'MyWindow', 'width=800, height=600, resizable=yes, scrollbars=yes, status=no, toolbar=no, location=no, menubar=no');
+		error_window.document.write('<center><strong><font color=\\'Red\\'> Missing response for the following questions in the previous page : </font></strong></center>');";
+		foreach($list_questions as $key=>$question) { 
+			$question = addslashes($question); //escaping php string
+			echo "error_window.document.write('<center><strong><font color=\\'Red\\'> {$question} </font></strong></center>');";
+		}
+		echo "error_window.document.write('<a href=\"javascript:window.opener.location.href=\\'{$goback_url}\\';\" onclick=\"window.close();\">Go back to page {$page_verbose}</a>');";
+		echo "error_window.document.write('<a href=\"#\" onclick=\"window.close();\" style=\"float:right;\"> Close window</a>');";
+
+		echo "</script>";
+	}
        if(intval($values['respondent_age']) > 100) {
            $errors['respondent_age_group'] = "Specify age between 0 and 100";    
        }
