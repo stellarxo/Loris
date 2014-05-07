@@ -341,7 +341,10 @@ class NDB_BVL_Instrument_pspq_mother extends NDB_BVL_Instrument
 			echo "error_window.document.write('<center><strong><font color=\\'Red\\'> {$question} </font></strong></center>');";
 		}
 		echo "error_window.document.write('<a href=\"javascript:window.opener.location.href=\\'{$goback_url}\\';\" onclick=\"window.close();\">Go back to page {$page_verbose}</a>');";
-		echo "error_window.document.write('<a href=\"#\" onclick=\"window.close();\" style=\"float:right;\"> Close window</a>');";
+	        echo "error_window.document.write('<a href=\"javascript:window.opener.location.href=\\'{$goback_url}\\';\" onclick=\"window.close();\" style=\"float:right;\">Go back to page {$pag
+e_verbose}</a>');";
+ 	
+               //echo "error_window.document.write('<a href=\"#\" onclick=\"window.close();\" style=\"float:right;\"> Close window</a>');";
 
 		echo "</script>";
 	}

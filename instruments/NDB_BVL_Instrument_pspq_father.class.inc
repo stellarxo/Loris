@@ -322,13 +322,14 @@ class NDB_BVL_Instrument_pspq_father extends NDB_BVL_Instrument
             $url_key = $_GET["key"];
         }
        if(isset($_GET["pageNum"])) { 
-          $page = $_GET["pageNum"];
-           $page_verbose= $page +1;
+          $page = $_GET["pageNum"]; 
+          if($page == 'top') {
+               $page_verbose = 1;
+           } else {
+               $page_verbose= $page +1;
+           }
           $goback_url = "survey.php?key=$url_key&pageNum=$page";
        }
-       if($page_verbose == 'top') {
-           $page_verbose = 1;
-        }
 
 	if(!empty($list_questions)) { 
 		echo "<script>
@@ -340,8 +341,8 @@ class NDB_BVL_Instrument_pspq_father extends NDB_BVL_Instrument
 			$question = addslashes($question); //escaping php string
 			echo "error_window.document.write('<center><strong><font color=\\'Red\\'> {$question} </font></strong></center>');";
 		}
-		echo "error_window.document.write('<a href=\"javascript:window.opener.location.href=\\'{$goback_url}\\';\" onclick=\"window.close();\">Go back to page {$page_verbose}</a>');";
-		echo "error_window.document.write('<a href=\"#\" onclick=\"window.close();\" style=\"float:right;\"> Close window</a>');";
+		echo "error_window.document.write('<a href=\"javascript:window.opener.location.href=\\'{$goback_url}\\';\" onclick=\"window.close();\" style=\"float:right;\">Go back to page {$page_verbose}</a>');";
+	//	echo "error_window.document.write('<a href=\"#\" onclick=\"window.close();\" style=\"float:right;\"> Close window</a>');";
 
 		echo "</script>";
 	}
