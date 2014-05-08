@@ -321,33 +321,28 @@ class NDB_BVL_Instrument_pspq_mother extends NDB_BVL_Instrument
         if(isset($_GET["key"])) {
             $url_key = $_GET["key"];
         }
-       if(isset($_GET["pageNum"])) { 
+      
+        if(isset($_GET["pageNum"])) {
           $page = $_GET["pageNum"];
-           $page_verbose= $page +1;
+          if($page == 'top') {
+               $page_verbose = 1;
+           } else {
+               $page_verbose= $page +1;
+           }
           $goback_url = "survey.php?key=$url_key&pageNum=$page";
        }
-       if($page_verbose == 'top') {
-           $page_verbose = 1;
+
+        if(!empty($list_questions)) {
+                $value = "Note: You have missed answering a few questions on the previous page : <BR><BR>";
+                foreach($list_questions as $key=>$question) {
+                        $question = addslashes($question); //escaping php string 
+                        $value  .= $question."<BR><BR>";
+                }
+          setcookie("MissingResponses",$value);
+          setCookie("PrevPage", $page);
+          setCookie("URLKey", $url_key);
         }
 
-	if(!empty($list_questions)) { 
-		echo "<script>
-        	var thisUrl = '';
-		var error_window = window.open(thisUrl, 'MyWindow', 'width=800, height=600, resizable=yes, scrollbars=yes, status=no, toolbar=no, location=no, menubar=no');
-                error_window.document.body.innerHTML=\"\";
-		error_window.document.write('<center><strong><font color=\\'Red\\'> Missing response for the following questions in the previous page : </font></strong></center>');";
-		foreach($list_questions as $key=>$question) { 
-			$question = addslashes($question); //escaping php string
-			echo "error_window.document.write('<center><strong><font color=\\'Red\\'> {$question} </font></strong></center>');";
-		}
-		echo "error_window.document.write('<a href=\"javascript:window.opener.location.href=\\'{$goback_url}\\';\" onclick=\"window.close();\">Go back to page {$page_verbose}</a>');";
-	        echo "error_window.document.write('<a href=\"javascript:window.opener.location.href=\\'{$goback_url}\\';\" onclick=\"window.close();\" style=\"float:right;\">Go back to page {$pag
-e_verbose}</a>');";
- 	
-               //echo "error_window.document.write('<a href=\"#\" onclick=\"window.close();\" style=\"float:right;\"> Close window</a>');";
-
-		echo "</script>";
-	}
        if(intval($values['respondent_age']) > 100) {
            $errors['respondent_age_group'] = "Specify age between 0 and 100";    
        }
