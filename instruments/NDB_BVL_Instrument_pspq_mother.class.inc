@@ -333,9 +333,9 @@ class NDB_BVL_Instrument_pspq_mother extends NDB_BVL_Instrument
        }
 
         if(!empty($list_questions)) {
-                $value = "Note: You have missed answering a few questions on the previous page : <BR><BR>";
+                setcookie("MissingResponses","", time()-3600);
+                $value = "<font color='Red'>Note: You have missed answering a few questions on the previous page :</font> <BR><BR>";
                 foreach($list_questions as $key=>$question) {
-                        $question = addslashes($question); //escaping php string 
                         $value  .= $question."<BR><BR>";
                 }
           setcookie("MissingResponses",$value);
