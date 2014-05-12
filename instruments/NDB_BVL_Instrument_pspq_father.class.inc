@@ -290,8 +290,8 @@ class NDB_BVL_Instrument_pspq_father extends NDB_BVL_Instrument
          $DB = Database::singleton();
          $questions = array();
          $questions = $DB->pselect(
-            "SELECT Description as question,
-            SourceField FROM parameter_type 
+            "SELECT pto.Description as question,
+            SourceField FROM parameter_type LEFT JOIN parameter_type_override pto USING (Name) 
             WHERE SourceFrom=:TN AND 
             SourceField NOT IN ('Validity', 'Administration')",
                 array(
