@@ -334,7 +334,7 @@ class NDB_BVL_Instrument_pspq_mother extends NDB_BVL_Instrument
 
         if(!empty($list_questions)) {
                 setcookie("MissingResponses","", time()-3600);
-                $value = "<font color='Red'>Note: You have missed answering a few questions on the previous page :</font> <BR><BR>";
+                $value = "<font color='Red'>Note: You have missed a few questions on the previous page :</font> <BR><BR>";
                 foreach($list_questions as $key=>$question) {
                         $value  .= $question."<BR><BR>";
                 }
@@ -358,8 +358,8 @@ class NDB_BVL_Instrument_pspq_mother extends NDB_BVL_Instrument
         $tpl_data = array();
 
         $tpl_data['questions'] = $DB->pselect(
-            "SELECT Description as question,
-            SourceField FROM parameter_type 
+            "SELECT pto.Description as question,
+            SourceField FROM parameter_type LEFT JOIN parameter_type_override pto USING (Name) 
             WHERE SourceFrom=:TN AND 
             SourceField NOT IN ('Validity', 'Administration')",
                 array(
