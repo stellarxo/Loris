@@ -176,9 +176,9 @@ class NDB_BVL_Instrument_neuro_screen extends NDB_BVL_Instrument
                         "9_failure_to_test"=>"9 failure to test",
                         "not_answered"=>"Not Answered"));
 
-            //$this->addTextElement("q2_specify", $this->indent . "Specify R or L or Bilat.", array("q2_ptosis{@}=={@}1_doubtful|2_definite"));
-            $this->addSelect("q2_ptosis_dropdown",$this->indent . "Specify R or L or Bilat.", 
+            $this->addSelect("q2_ptosis_dropdown",$this->indent . "Choose R or L or Bilat.", 
                              array(null=>"",'left'=>'L','right'=>'R','bilat'=>'Bilat','none'=>'None','not_answered'=>'Not answered'));
+            $this->addTextElement("q2_specify", $this->indent . "Specify R or L or Bilat.", array("q2_specify{@}=={@}NEVER_REQUIRED"));
             $this->form->addElement("select", "q3_epicanthus", "3. Epicanthus: Where upper and lower lids join the nose, point of union is", array(null=>"",
                         "0_normal"=>"0 normal",
                         "1_partly_covered"=>"1 partly covered",
@@ -647,9 +647,9 @@ class NDB_BVL_Instrument_neuro_screen extends NDB_BVL_Instrument
                         "9_failure_to_test"=>"9 failure to test",
                         "not_answered"=>"Not Answered"));
 
-           // $this->addTextElement("q2_specify", $this->indent . "Specify R or L or Bilat.", array("q2_ptosis{@}=={@}1_doubtful|2_definite"));
-             $this->addSelect("q2_ptosis_dropdown",$this->indent . "Specify R or L or Bilat.",
+             $this->addSelect("q2_ptosis_dropdown",$this->indent . "Choose R or L or Bilat.",
                              array(null=>"",'left'=>'L','right'=>'R','bilat'=>'Bilat','none'=>'None','not_answered'=>'Not answered'));
+            $this->addTextElement("q2_specify", $this->indent . "Specify R or L or Bilat.", array("q2_specify{@}=={@}NEVER_REQUIRED"));
             if($visit == '3month' || $visit == '6month') {
                 $this->form->addElement("select", "q3_epicanthus", "3. Epicanthus: Where upper and lower lids join the nose, point of union is", array(null=>"",
                             "0_normal"=>"0 normal",
