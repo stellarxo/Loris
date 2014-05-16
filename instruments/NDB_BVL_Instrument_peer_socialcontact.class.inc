@@ -192,6 +192,7 @@ class NDB_BVL_Instrument_peer_socialcontact extends NDB_BVL_Instrument
         $this->form->addFormRule(array(&$this, 'Peer_Rules'));
 
     }
+
     function _page2() {
         
        // $this->form->addElement("static",null,"In the table below indicate which children know each other.<BR>You must select `Yes` or `No` fields to save this form.<BR>");
@@ -208,8 +209,12 @@ class NDB_BVL_Instrument_peer_socialcontact extends NDB_BVL_Instrument
           if(isset($_GET["key"])) {
             $key = $_GET["key"]; 
         }
-
-        $colspan = $numplaymates -1; 
+        $colspan = 2;
+        if(is_numeric($numplaymates)) {
+            $colspan = $numplaymates -1; 
+        } else {
+            $numplaymates =5;
+        }
 	if($numplaymates > 1) {
 		$group[] = &$this->form->createElement("static", null, null,"");
 		$this->form->addGroup($group,"page2_header","<td colspan= $colspan>In the table below indicate which of your children's playmates know<BR> each other. You must select 'Yes' or 'No' in all field to save this form.</td>", null,false);
@@ -279,7 +284,7 @@ class NDB_BVL_Instrument_peer_socialcontact extends NDB_BVL_Instrument
              }
           }
        $this->form->addFormRule(array(&$this, 'Peer_Rules'));    
-    }    
+    } 
     function _page3(){
        
          $this->_generate_Questions(1); // playmate #1
