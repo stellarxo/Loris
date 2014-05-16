@@ -192,6 +192,7 @@ class NDB_BVL_Instrument_peer_socialcontact extends NDB_BVL_Instrument
         $this->form->addFormRule(array(&$this, 'Peer_Rules'));
 
     }
+
     function _page2() {
         
        // $this->form->addElement("static",null,"In the table below indicate which children know each other.<BR>You must select `Yes` or `No` fields to save this form.<BR>");
@@ -208,8 +209,12 @@ class NDB_BVL_Instrument_peer_socialcontact extends NDB_BVL_Instrument
           if(isset($_GET["key"])) {
             $key = $_GET["key"]; 
         }
-
-        $colspan = $numplaymates -1; 
+        $colspan = 2;
+        if(is_numeric($numplaymates)) {
+            $colspan = $numplaymates -1; 
+        } else {
+            $numplaymates =5;
+        }
 	if($numplaymates > 1) {
 		$group[] = &$this->form->createElement("static", null, null,"");
 		$this->form->addGroup($group,"page2_header","<td colspan= $colspan>In the table below indicate which of your children's playmates know<BR> each other. You must select 'Yes' or 'No' in all field to save this form.</td>", null,false);
@@ -278,8 +283,8 @@ class NDB_BVL_Instrument_peer_socialcontact extends NDB_BVL_Instrument
 
              }
           }
-        
-    }
+       $this->form->addFormRule(array(&$this, 'Peer_Rules'));    
+    } 
     function _page3(){
        
          $this->_generate_Questions(1); // playmate #1
@@ -309,46 +314,46 @@ class NDB_BVL_Instrument_peer_socialcontact extends NDB_BVL_Instrument
        $this->form->addElement('header','section2_a',"School");
         
        $this->addSelect('q23_childin_school',"23. Is your child in school or preschool?",$this->q23_options);
-       $this->XINRegisterRule('q23_childin_school', array("q23_childin_school{@}=={@}NEVER_REQUIRED"), "Please specify");
+       //$this->XINRegisterRule('q23_childin_school', array("q23_childin_school{@}=={@}NEVER_REQUIRED"), "Please specify");
 
        $this->addSelect('q24_childin_spneeds_school',"24. Is your child in a classroom which specializes in educating children<BR>$this->indent with special educational needs?",$this->q23_options);
       $this->XINRegisterRule('q24_childin_spneeds_school', array("q23_childin_school{@}=={@}yes"), "Please specify"); 
        
       $this->addSelect('q25_school_numdays_perweek','25. How many days per week is your child in school?', $this->numdays_week);
-      $this->XINRegisterRule('q25_school_numdays_perweek', array("q25_school_numdays_perweek{@}=={@}NEVER_REQUIRED"));
+      //$this->XINRegisterRule('q25_school_numdays_perweek', array("q25_school_numdays_perweek{@}=={@}NEVER_REQUIRED"));
 
       $this->addSelect('q26_school_numhrs_perday','26. How many hours per day is your child in school?', $this->numhrs_day);
-      $this->XINRegisterRule('q26_school_numhrs_perday', array("q26_school_numhrs_perday{@}=={@}NEVER_REQUIRED"));
+      //$this->XINRegisterRule('q26_school_numhrs_perday', array("q26_school_numhrs_perday{@}=={@}NEVER_REQUIRED"));
       
       $questions = array('q27_numchildren_perclass'=>'27. How many children are in the (primary) classroom at school?',
                          'q28_numchildren_specialneeds'=>'28. How many of the children have special needs in the (primary)<BR> classroom at school?');
        foreach($questions as $field=>$label) {
            $group [] = $this->createText($field, $label);
            $this->addGroup($group, $field . "_group", $label, null, false);
-           $this->XINRegisterRule($field, array("$field{@}=={@}NEVER_REQUIRED"));
+        //   $this->XINRegisterRule($field, array("$field{@}=={@}NEVER_REQUIRED"));
            unset($group);
            $this->addGroupRule($field . "_group", array(array(array("Value must be numeric.", 'numeric'))));
        }
        $this->form->addElement('header','section2_b',"Childcare");
 
        $this->addSelect('q29_childin_childcare',"29. Is your child in a childcare setting?",$this->q23_options);
-       $this->XINRegisterRule('q29_childin_childcare', array("q29_childin_childcare{@}=={@}NEVER_REQUIRED"), "Please specify");
+       //$this->XINRegisterRule('q29_childin_childcare', array("q29_childin_childcare{@}=={@}NEVER_REQUIRED"), "Please specify");
 
        $this->addSelect('q30_childin_spneeds_childcare',"30. Is the childcare setting a center which specializes in educating<BR>$this->indent children  with special educational needs?",$this->q23_options);
-       $this->XINRegisterRule('q30_childin_spneeds_childcare', array("q29_childin_childcare{@}=={@}yes"), "Please specify");
+      // $this->XINRegisterRule('q30_childin_spneeds_childcare', array("q29_childin_childcare{@}=={@}yes"), "Please specify");
        
        $this->addSelect('q31_childcare_numdays_perweek','31. How many days per week is your child in a childcare setting?', $this->numdays_week);
-       $this->XINRegisterRule('q31_childcare_numdays_perweek', array("q31_childcare_numdays_perweek{@}=={@}NEVER_REQUIRED"));
+      // $this->XINRegisterRule('q31_childcare_numdays_perweek', array("q31_childcare_numdays_perweek{@}=={@}NEVER_REQUIRED"));
        
        $this->addSelect('q32_childcare_numhrs_perday','32. How many hours per day is your child in a childcare setting?',$this->numhrs_day);
-       $this->XINRegisterRule('q32_childcare_numhrs_perday',array("q32_childcare_numhrs_perday{@}=={@}NEVER_REQUIRED"));
+       //$this->XINRegisterRule('q32_childcare_numhrs_perday',array("q32_childcare_numhrs_perday{@}=={@}NEVER_REQUIRED"));
 
        $questions = array('q33_numchildren_perclass'=>'33. How many children are in the (primary) classroom at childcare?',
                'q34_numchildren_specialneeds'=>"34. How many of the children have special needs in the (primary)<BR> $this->indent classroom at childcare?");
        foreach($questions as $field=>$label) {
            $group [] = $this->createText($field, $label);
            $this->addGroup($group, $field . "_group", $label, null, false);
-           $this->XINRegisterRule($field, array("$field{@}=={@}NEVER_REQUIRED"));
+         //  $this->XINRegisterRule($field, array("$field{@}=={@}NEVER_REQUIRED"));
            unset($group);
            $this->addGroupRule($field . "_group", array(array(array("Value must be numeric.", 'numeric'))));
        }
@@ -365,10 +370,10 @@ class NDB_BVL_Instrument_peer_socialcontact extends NDB_BVL_Instrument
 
             $group [] = $this->createText("activity_".$i,"Type or name of group activity :");
             $this->addGroup($group,"activity_".$i."_group","Type or name of group activity :",null, false);
-            $this->XINRegisterRule('activity_'.$i, array("activity_$i{@}=={@}NEVER_REQUIRED"), null, "activity_".$i."_group");
+           // $this->XINRegisterRule('activity_'.$i, array("activity_$i{@}=={@}NEVER_REQUIRED"), null, "activity_".$i."_group");
             unset($group);
             $this->addSelect('activity_desc_'.$i,"Which one of the following best describes the group",$this->activity_desc);
-            $this->XINRegisterRule('activity_desc_'.$i, array("activity_desc_$i{@}=={@}NEVER_REQUIRED") );
+           // $this->XINRegisterRule('activity_desc_'.$i, array("activity_desc_$i{@}=={@}NEVER_REQUIRED") );
 
             $group [] = $this->createText('activity_other'.$i,$this->indent."If Other please specify");
             $this->addGroup($group,'activity_other'.$i."_group",$this->indent."If Other please specify",null,false);
@@ -383,7 +388,7 @@ class NDB_BVL_Instrument_peer_socialcontact extends NDB_BVL_Instrument
             foreach($questions as $field=>$label) {
                 $group [] = $this->createText($field, $label);
                 $this->addGroup($group, $field . "_group", $label, null, false);
-                $this->XINRegisterRule($field, array("$field{@}=={@}NEVER_REQUIRED"),$field . "_group");
+           //     $this->XINRegisterRule($field, array("$field{@}=={@}NEVER_REQUIRED"),$field . "_group");
                 unset($group);
                 $this->addGroupRule($field . "_group", array(array(array("Value must be numeric.", 'numeric'))));
             }
@@ -403,9 +408,9 @@ class NDB_BVL_Instrument_peer_socialcontact extends NDB_BVL_Instrument
             $group [] = $this->createText("special_service_".$i,"Type or name of group activity :");
             $this->addGroup($group,"special_service_".$i."_group","Type or name of group activity :",null, false);
             unset($group);
-            $this->XINRegisterRule('special_service_'.$i, array("special_service_.$i{@}=={@}NEVER_REQUIRED"), null, "special_service_".$i."_group");
+           // $this->XINRegisterRule('special_service_'.$i, array("special_service_.$i{@}=={@}NEVER_REQUIRED"), null, "special_service_".$i."_group");
             $this->addSelect('special_service_desc_'.$i,"Which one of the following best describes the group",$this->special_service);
-            $this->XINRegisterRule('special_service_desc_'.$i, array("special_service_$i{@}=={@}NEVER_REQUIRED") );
+           // $this->XINRegisterRule('special_service_desc_'.$i, array("special_service_$i{@}=={@}NEVER_REQUIRED") );
 
             $questions = array('special_service'.$i."_meet_permonth"=>'How many times each month does the group meet?',
                     'special_service'.$i."_numchildren_participate"=>"How many children participate in the group?",
@@ -413,7 +418,7 @@ class NDB_BVL_Instrument_peer_socialcontact extends NDB_BVL_Instrument
             foreach($questions as $field=>$label) {
                 $group [] = $this->createText($field, $label);
                 $this->addGroup($group, $field . "_group", $label, null, false);
-                $this->XINRegisterRule($field, array("$field{@}=={@}NEVER_REQUIRED"),$field . "_group");
+             //   $this->XINRegisterRule($field, array("$field{@}=={@}NEVER_REQUIRED"),$field . "_group");
                 unset($group);
                 $this->addGroupRule($field . "_group", array(array(array("Value must be numeric.", 'numeric'))));
             }
@@ -426,35 +431,35 @@ class NDB_BVL_Instrument_peer_socialcontact extends NDB_BVL_Instrument
        $this->form->addElement('header', 'section4_header', "Section 5: Effects of Autism on Children's play");
        $this->form->addElement('static','lorisSubHeader', "Please complete the following section if your child has ever been diagnosed with autism<BR> (fill out for either a current diagnosis or a history of autism in the past)");
        $this->addSelect('q1_autism_effect_discuss', "1. When trying to help your child establish a friendship with a peer, do you discuss<BR> issues related to autism with peer's parents in order to promote better play?", $this->promote_play);
-       $this->XINRegisterRule('q1_autism_effect_discuss',array("q1_autism_effect_discuss{@}=={@}NEVER_REQUIRED"));
+       //$this->XINRegisterRule('q1_autism_effect_discuss',array("q1_autism_effect_discuss{@}=={@}NEVER_REQUIRED"));
        $strategy = array(''=>NULL, 'detail_about_child_strength_weakness'=>"a. Go into a lot of detail about your child's strengths and weaknesses", 
                          'no_details_not_minimizing_issues_either'=>'b. Not many details, but not minimizing issues either',
                          'minimize_issues_comfortable'=>'c. Minimize the issues to try to help them feel comfortable',
                          'never_discuss'=>'d. Never discuss it','refused_dontknow'=>"Refused/I Don't Know"); 
        $this->addSelect('q2_autism_effect_discuss_parents', "2. If you do discuss these issues with parents to promote better play with peers,<BR> which strategy best describes your approach? ", $strategy);
-       $this->XINRegisterRule('q2_autism_effect_discuss_parents',array("q2_autism_effect_discuss_parents{@}=={@}NEVER_REQUIRED"));
+      // $this->XINRegisterRule('q2_autism_effect_discuss_parents',array("q2_autism_effect_discuss_parents{@}=={@}NEVER_REQUIRED"));
 
        $avoid_arranging = array(''=>NULL,'frequently'=>'a. Frequently','occasionally'=>'b. Occasionally','rarely_never'=>'c. Rarely or never','refused_dontknow'=>"Refused/I Don't Know");
        $this->addSelect('q3_autism_effect_difficulty_arrangingplay', "3. How often have you experienced difficulty in arranging play opportunities for your<BR> child which you believe is due to your child having autism? ", $avoid_arranging);
-       $this->XINRegisterRule('q3_autism_effect_difficulty_arrangingplay',array("q3_autism_effect_difficulty_arrangingplay{@}=={@}NEVER_REQUIRED"));
+      // $this->XINRegisterRule('q3_autism_effect_difficulty_arrangingplay',array("q3_autism_effect_difficulty_arrangingplay{@}=={@}NEVER_REQUIRED"));
 
        $this->addSelect('q4_autism_effect_avoid_arranding_play', "4. How often have you avoided arranging play opportunities for your child due to fear<BR> of rejection due to your child having autism?", $avoid_arranging);
-       $this->XINRegisterRule('q4_autism_effect_avoid_arranding_play',array("q4_autism_effect_avoid_arranding_play{@}=={@}NEVER_REQUIRED"));
+      // $this->XINRegisterRule('q4_autism_effect_avoid_arranding_play',array("q4_autism_effect_avoid_arranding_play{@}=={@}NEVER_REQUIRED"));
        
        $this->addSelect('q5_autism_effect_concernc_childskill',"5. How often have you avoided arranging play opportunities for your child due to concern <BR>that your child's social skills are not good enough?", $avoid_arranging);
-      $this->XINRegisterRule('q5_autism_effect_concernc_childskill',array("q5_autism_effect_concernc_childskill{@}=={@}NEVER_REQUIRED"));
+     // $this->XINRegisterRule('q5_autism_effect_concernc_childskill',array("q5_autism_effect_concernc_childskill{@}=={@}NEVER_REQUIRED"));
       
       $restrict = array(''=>NULL, 'very_much'=>'a. Very much','somewhat'=>'b. Somewhat','not_at_all'=>'c. Not at all','refused_dontknow'=>"Refused/I Don't Know");
       $this->addSelect('q6_autism_effect_restrict_socialtime',"6. To what extent do the various medical and educational services your child requires<BR> restrict the amount of time your child has for social opportunities with peers?", $restrict);
-      $this->XINRegisterRule('q6_autism_effect_restrict_socialtime',array("q6_autism_effect_restrict_socialtime{@}=={@}NEVER_REQUIRED"));
+     // $this->XINRegisterRule('q6_autism_effect_restrict_socialtime',array("q6_autism_effect_restrict_socialtime{@}=={@}NEVER_REQUIRED"));
       
      $school = array(''=>NULL, 'very_satisfied'=>'a. Very satisfied','somewhat_satisfied'=>'b. Somewhat satisfied','not_satisfied'=>'c. Not satisfied','extremely_dissatisfied'=>'d. Extremely dissatisfied','not_in_school'=>'e. Not in school' ,'refused_dontknow'=>"Refused/I Don't Know"); 
      $this->addSelect('q7_autism_effect_satisfaction_schoolstaff', "7. How satisfied are you with how the school staff help your child get along with peers?", $school);
-     $this->XINRegisterRule('q7_autism_effect_satisfaction_schoolstaff',array("q7_autism_effect_satisfaction_schoolstaff{@}=={@}NEVER_REQUIRED"));
+    // $this->XINRegisterRule('q7_autism_effect_satisfaction_schoolstaff',array("q7_autism_effect_satisfaction_schoolstaff{@}=={@}NEVER_REQUIRED"));
 
       $daycare = array(''=>NULL, 'very_satisfied'=>'a. Very satisfied','somewhat_satisfied'=>'b. Somewhat satisfied','not_satisfied'=>'c. Not satisfied','extremely_dissatisfied'=>'d. Extremely dissatisfied','not_in_daycare'=>'e. Not in daycare' ,'refused_dontknow'=>"Refused/I Don't Know");
       $this->addSelect('q8_autism_effect_satisfaction_daycarestaff', "8. How satisfied are you with how the daycare staff help your child get along with peers?", $daycare);
-      $this->XINRegisterRule('q8_autism_effect_satisfaction_daycarestaff',array("q8_autism_effect_satisfaction_daycarestaff{@}=={@}NEVER_REQUIRED"));
+     // $this->XINRegisterRule('q8_autism_effect_satisfaction_daycarestaff',array("q8_autism_effect_satisfaction_daycarestaff{@}=={@}NEVER_REQUIRED"));
       
       $q9_options = array(''=>NULL, 'mostly'=>'Mostly','some'=>'Some','rarely'=>'Rarely','refused_dontknow'=>"Refused/I Don't Know"); 
       $this->form->addElement('static',null,"9. To what extent does your child tend to play with each of the groups listed below?");
@@ -466,7 +471,7 @@ class NDB_BVL_Instrument_peer_socialcontact extends NDB_BVL_Instrument
 
       foreach($questions as $qstn=>$desc) {
              $this->addSelect($qstn,$this->indent.$desc, $q9_options);
-             $this->XINRegisterRule($qstn, array("$qstn{@}=={@}NEVER_REQUIRED"));
+       //      $this->XINRegisterRule($qstn, array("$qstn{@}=={@}NEVER_REQUIRED"));
 
          }
 
@@ -480,7 +485,7 @@ class NDB_BVL_Instrument_peer_socialcontact extends NDB_BVL_Instrument
       foreach($questions as $field=>$label) {
              $group [] = $this->createText($field, $label);
              $this->addGroup($group, $field . "_group",$this->indent. $label, null, false);
-             $this->XINRegisterRule($field,array("$field{@}=={@}NEVER_REQUIRED"),$field . "_group");
+         //    $this->XINRegisterRule($field,array("$field{@}=={@}NEVER_REQUIRED"),$field . "_group");
              unset($group);
              $this->addGroupRule($field . "_group", array(array(array("Value must be numeric.", 'numeric'))));
          }
@@ -525,7 +530,8 @@ class NDB_BVL_Instrument_peer_socialcontact extends NDB_BVL_Instrument
          unset($group);
 
          $this->addSelect('gender_playmate_'.$i,'Gender ', $this->gender);
-         $this->XINRegisterRule('gender_playmate_'.$i, array("gender_playmate_.$i{@}=={@}NEVER_REQUIRED"));
+         $g_playmate = 'gender_playmate_'.$i;
+         $this->XINRegisterRule($g_playmate, array($g_playmate."{@}=={@}NEVER_REQUIRED"));
          
          $questions = array("q1_number_playtimes_playmate".$i=> "1. How many times on average did they play together in the last <BR>$this->indent three months in your home?","q2_avg_playtime_playmate".$i=>"2. How long are they together in an average play time? (in Minutes)");
          foreach($questions as $field=>$label) {
@@ -570,7 +576,7 @@ class NDB_BVL_Instrument_peer_socialcontact extends NDB_BVL_Instrument
          $this->XINRegisterRule('q8_specialneeds_playmate'.$i, array("q8_specialneeds_playmate.$i{@}=={@}NEVER_REQUIRED"));
          $group [] = $this->createText('q8_specialneeds_other_playmate'.$i,$this->indent."If Other please specify");
          $this->addGroup($group,'q8_specialneeds_other_playmate'.$i."_group",$this->indent."If Other please specify",null,false);
-       //  $this->XINRegisterRule('q8_specialneeds_other_playmate'.$i, array("q8_specialneeds_other_playmate.$i{@}=={@}NEVER_REQUIRED"),'q8_specialneeds_other_playmate'.$i."_group");
+         $this->XINRegisterRule('q8_specialneeds_other_playmate'.$i, array("q8_specialneeds_other_playmate.$i{@}=={@}NEVER_REQUIRED"),'q8_specialneeds_other_playmate'.$i."_group");
          unset($group);
          $rules_array = array("q8_specialneeds_playmate$i{@}=={@}other");
          $this->XINRegisterRule('q8_specialneeds_other_playmate'.$i, $rules_array, "Please specify play area", 'q8_specialneeds_other_playmate'.$i.'_group');
@@ -657,11 +663,47 @@ class NDB_BVL_Instrument_peer_socialcontact extends NDB_BVL_Instrument
     }
 
     function Peer_Rules ($values) {
-        $errors = array(); 
-        for($i = 1; $i <= $this->total_peer; $i++) {
-            if((empty($values["peer_initials_".$i]) && $i <= $values["total_playmates"])) {
+        $errors = array();
+         $db =& Database::singleton();
+        if(Utility::isErrorX($db)) {
+            print "Could not connect to database: ".$db->getMessage();
+        }
+        reset($values);
+        $first =key($values);
+        $playmates_listed = $db->pselectOne("SELECT total_playmates FROM ".$this->table." WHERE CommentID=:cid",
+                array('cid' =>$this->getCommentID()));
+
+        if (Utility::isErrorX($playamtes_listed)) {
+            print "Query has failed to select: ".$playmantes_listed->getMessage();
+            $playmates_listed = array();
+        }
+       
+        for ($i =1; $i < 5; $i++) {
+            $groupname = $i."_group";
+            for($temp = $i+1; $temp<5; $temp++) {
+                $field = "know_".$i."_".$temp;
+                if(array_key_exists($field, $values) && empty($values[$field])) {
+                    $errors[$groupname] = "Choose an option";
+                }
+             }
+        } 
+        if(!array_key_exists('know_1_2', $values)) {
+        for($i = 1; $i <= 5; $i++) { 
+            if((empty($values["peer_initials_".$i]) && $i <= $values["total_playmates"])) { 
                 $errors["peer_initials_".$i."_group"] = "Please specify playmate initials";    
             }
+            $questions = array('age_yrs_playmate_','age_mos_playmate_','gender_playmate_','q1_number_playtimes_playmate','q2_avg_playtime_playmate','q3_related_playmate','q4_playarea_playmate','q5_proximity_playmate','q6_sameschool_playmate','q7_samechildcare_playmate','q8_specialneeds_playmate','q9_yourchild_like_playmate','q10_like_yourchild_playmate','q11_getalong_playmate','q12_leading_play_playmate','q13_typical_playtone_playmate','q14_typical_excitement_playmate','q15_num_conflicts_playmate','q16_disruptive_playmate','q17_how_involved_playmate','q18_arrangeplay_you_playmate','q18_arrangeplay_yourchild_playmate','q18_arrangeplay_other_playmate','q19_arrange_contacts_playmate','q20_stress_monitorplay_playmate','q21_facililate_getalong_playmate','q21_participate_activity_playmate','q21_maintain_presence_playmate','q21_outofview_listen_playmate','q21_outofview_notlisten_playmate','q22_manage_emotions_playmate','q22_understand_rules_playmate','q22_understand_howtoplay_playmate','q22_startplay_playmate','q22_remain_inplay_playmate','q22_manage_conflicts_playmate');
+           $group_qstn = array('age_yrs_playmate_','age_mos_playmate_','q1_number_playtimes_playmate','q2_avg_playtime_playmate','q18_arrangeplay_yourchild_playmate');
+            foreach($questions as $qstn) {
+                $q = $qstn.$i; 
+                if(empty($values[$q]) && $i <= $playmates_listed && ($i == substr($first, -1))) {
+                   if(in_array($qstn, $group_qstn)) { 
+                       $errors[$q."_group"] = "Please choose an option";
+                    } else {
+                        $errors[$q] = "Please choose an option";
+                    }
+                }
+            } 
             if($values["q3_related_playmate".$i] == 'other'&& empty($values["q3_related_other_playmate".$i]) ) {
                 $errors["q3_related_other_playmate".$i."_group"] = "Please specify relationship";    
             }
@@ -672,18 +714,17 @@ class NDB_BVL_Instrument_peer_socialcontact extends NDB_BVL_Instrument
             if($values["q8_specialneeds_playmate".$i] == 'other' && empty($values["q8_specialneeds_other_playmate".$i])) {
                 $errors["q8_specialneeds_other_playmate".$i."_group"] = "Please specify play area";
             }
-	    for($i= 1; $i<=5; $i++) {
-		    $q18 = array("q18_arrangeplay_you_playmate".$i,
-				    "q18_arrangeplay_yourchild_playmate".$i,
-				    "q18_arrangeplay_other_playmate".$i);
-		$total = $values["q18_arrangeplay_you_playmate".$i] + $values["q18_arrangeplay_yourchild_playmate".$i] +
-                         $values["q18_arrangeplay_other_playmate".$i];
-                if($total > 100 ) { 
-                     $errors["q18_arrangeplay_you_playmate".$i."_group"] = "The total percent should add up to 100";
-                }
+	    $q18 = array("q18_arrangeplay_you_playmate".$i,
+			    "q18_arrangeplay_yourchild_playmate".$i,
+			    "q18_arrangeplay_other_playmate".$i);
+	    $total = $values["q18_arrangeplay_you_playmate".$i] + $values["q18_arrangeplay_yourchild_playmate".$i] +
+		    $values["q18_arrangeplay_other_playmate".$i];
+	    if($total > 100 ) { 
+		    $errors["q18_arrangeplay_you_playmate".$i."_group"] = "The total percent should add up to 100";
 	    }
 
         }
+      }
 //        print_r($errors);
         return $errors;
     }
@@ -693,8 +734,8 @@ class NDB_BVL_Instrument_peer_socialcontact extends NDB_BVL_Instrument
         $tpl_data = array();
 
         $tpl_data['questions'] = $DB->pselect(
-            "SELECT Description as question,
-            SourceField FROM parameter_type 
+            "SELECT pto.Description as question,
+            SourceField FROM parameter_type LEFT JOIN parameter_type_override pto USING (Name) 
             WHERE SourceFrom=:TN AND 
             SourceField NOT IN ('Validity', 'Administration')",
                 array(
