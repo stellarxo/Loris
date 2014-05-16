@@ -186,7 +186,7 @@ class NDB_BVL_Instrument_peer_socialcontact extends NDB_BVL_Instrument
            $group [] = $this->createText("peer_initials_".$i,"Initials of child $i:");
            $this->addGroup($group,"peer_initials_".$i."_group","Initials of child $i:",null, false);
            unset($group);
-           //$this->XINRegisterRule('peer_initials_'.$i, array("peer_initials_.$i{@}=={@}NEVER_REQUIRED"), null, "peer_initials_".$i."_group");
+           $this->XINRegisterRule('peer_initials_'.$i, array("peer_initials_.$i{@}=={@}NEVER_REQUIRED"), null, "peer_initials_".$i."_group");
         }
         $this->form->addElement("static", null, "<br><br>");
         $this->form->addFormRule(array(&$this, 'Peer_Rules'));
@@ -520,95 +520,96 @@ class NDB_BVL_Instrument_peer_socialcontact extends NDB_BVL_Instrument
          $group[] = &$this->form->createElement("select",'age_yrs_playmate_'.$i,null,$this->age_yrs);
          $group[] = &$this->form->createElement("select",'age_mos_playmate_'.$i,null,$this->age_mos);
          $this->form->addGroup($group, "age_playmate".$i."_group", "Age ", null, false);
-        // $this->XINRegisterRule('age_yrs_playmate_'.$i, array("age_yrs_playmate_$i{@}=={@}NEVER_REQUIRED"), "age_playmate".$i."_group");
-        // $this->XINRegisterRule('age_mos_playmate_'.$i, array("age_mos_playmate_$i{@}=={@}NEVER_REQUIRED"), "age_playmate".$i."_group");
+         $this->XINRegisterRule('age_yrs_playmate_'.$i, array("age_yrs_playmate_$i{@}=={@}NEVER_REQUIRED"), "age_playmate".$i."_group");
+         $this->XINRegisterRule('age_mos_playmate_'.$i, array("age_mos_playmate_$i{@}=={@}NEVER_REQUIRED"), "age_playmate".$i."_group");
          unset($group);
 
          $this->addSelect('gender_playmate_'.$i,'Gender ', $this->gender);
-        // $this->XINRegisterRule('gender_playmate_'.$i, array("gender_playmate_.$i{@}=={@}NEVER_REQUIRED"));
+         $g_playmate = 'gender_playmate_'.$i;
+         $this->XINRegisterRule($g_playmate, array($g_playmate."{@}=={@}NEVER_REQUIRED"));
          
          $questions = array("q1_number_playtimes_playmate".$i=> "1. How many times on average did they play together in the last <BR>$this->indent three months in your home?","q2_avg_playtime_playmate".$i=>"2. How long are they together in an average play time? (in Minutes)");
          foreach($questions as $field=>$label) {
              $group [] = $this->createText($field, $label);
              $this->addGroup($group, $field . "_group", $label, null, false);
-            // $this->XINRegisterRule($field,array("$field{@}=={@}NEVER_REQUIRED"),$field . "_group");
+             $this->XINRegisterRule($field,array("$field{@}=={@}NEVER_REQUIRED"),$field . "_group");
              unset($group);
              $this->addGroupRule($field . "_group", array(array(array("Value must be numeric.", 'numeric'))));
          }
          $this->addSelect('q3_related_playmate'.$i,"3. How do they know each other?", $this->q3_options);
-        // $this->XINRegisterRule('q3_related_playmate'.$i, array("q3_related_playmate.$i{@}=={@}NEVER_REQUIRED"));
+         $this->XINRegisterRule('q3_related_playmate'.$i, array("q3_related_playmate.$i{@}=={@}NEVER_REQUIRED"));
 
          $group [] = $this->createText('q3_related_other_playmate'.$i,$this->indent."If Other please specify");
          $this->addGroup($group,'q3_related_other_playmate'.$i."_group",$this->indent."If Other please specify",null,false);
          unset($group);
          $rules_array = array("q3_related_playmate$i{@}=={@}other");
-        // $this->XINRegisterRule('q3_related_other_playmate'.$i, $rules_array, "Please specify relationship", 'q3_related_other_playmate'.$i.'_group');
+         $this->XINRegisterRule('q3_related_other_playmate'.$i, $rules_array, "Please specify relationship", 'q3_related_other_playmate'.$i.'_group');
 
          $this->addSelect('q4_playarea_playmate'.$i,"4. Where do they usually play?", $this->q4_options);
-        // $this->XINRegisterRule('q4_playarea_playmate'.$i, array("q4_playarea_playmate.$i{@}=={@}NEVER_REQUIRED"));
+         $this->XINRegisterRule('q4_playarea_playmate'.$i, array("q4_playarea_playmate.$i{@}=={@}NEVER_REQUIRED"));
 
          $group [] = $this->createText('q4_playarea_other_playmate'.$i,$this->indent."If Other please specify");
          $this->addGroup($group,'q4_playarea_other_playmate'.$i."_group",$this->indent."If Other please specify",null,false);
          unset($group);
          $rules_array = array("q4_playarea_playmate$i{@}=={@}mostly_other");
-        // $this->XINRegisterRule('q4_playarea_other_playmate'.$i, $rules_array, "Please specify play area", 'q4_playarea_other_playmate'.$i.'_group');
+         $this->XINRegisterRule('q4_playarea_other_playmate'.$i, $rules_array, "Please specify play area", 'q4_playarea_other_playmate'.$i.'_group');
 
          $this->addSelect('q5_proximity_playmate'.$i,"5. How close does this playmate live to your house?", 
                           $this->q5_options);
 
-        // $this->XINRegisterRule('q5_proximity_playmate'.$i, array("q5_proximity_playmate.$i{@}=={@}NEVER_REQUIRED"));
+         $this->XINRegisterRule('q5_proximity_playmate'.$i, array("q5_proximity_playmate.$i{@}=={@}NEVER_REQUIRED"));
         // $this->XINRegisterRule(''.$i, array(".$i{@}=={@}NEVER_REQUIRED"));
          $this->addSelect('q6_sameschool_playmate'.$i,"6. Is this playmate in your child's school now?", 
                           $this->yesNo);
-        // $this->XINRegisterRule('q6_sameschool_playmate'.$i, array("q6_sameschool_playmate.$i{@}=={@}NEVER_REQUIRED"));
+         $this->XINRegisterRule('q6_sameschool_playmate'.$i, array("q6_sameschool_playmate.$i{@}=={@}NEVER_REQUIRED"));
          $this->addSelect('q7_samechildcare_playmate'.$i,"7. Is this playmate in your child's childcare now?",
                           $this->yesNo);
-        // $this->XINRegisterRule('q7_samechildcare_playmate'.$i, array("q7_samechildcare_playmate.$i{@}=={@}NEVER_REQUIRED"));
+         $this->XINRegisterRule('q7_samechildcare_playmate'.$i, array("q7_samechildcare_playmate.$i{@}=={@}NEVER_REQUIRED"));
          $this->addSelect('q8_specialneeds_playmate'.$i,"8. What special needs does this playmate have?<BR>Press Ctrl+click or Cmd+click to select mutiple options",
                           $this->q8_options, "multiple size='8'");
          $this->_selectMultipleElements[] = 'q8_specialneeds_playmate'.$i;
-        // $this->XINRegisterRule('q8_specialneeds_playmate'.$i, array("q8_specialneeds_playmate.$i{@}=={@}NEVER_REQUIRED"));
+         $this->XINRegisterRule('q8_specialneeds_playmate'.$i, array("q8_specialneeds_playmate.$i{@}=={@}NEVER_REQUIRED"));
          $group [] = $this->createText('q8_specialneeds_other_playmate'.$i,$this->indent."If Other please specify");
          $this->addGroup($group,'q8_specialneeds_other_playmate'.$i."_group",$this->indent."If Other please specify",null,false);
-       //  $this->XINRegisterRule('q8_specialneeds_other_playmate'.$i, array("q8_specialneeds_other_playmate.$i{@}=={@}NEVER_REQUIRED"),'q8_specialneeds_other_playmate'.$i."_group");
+         $this->XINRegisterRule('q8_specialneeds_other_playmate'.$i, array("q8_specialneeds_other_playmate.$i{@}=={@}NEVER_REQUIRED"),'q8_specialneeds_other_playmate'.$i."_group");
          unset($group);
          $rules_array = array("q8_specialneeds_playmate$i{@}=={@}other");
-        // $this->XINRegisterRule('q8_specialneeds_other_playmate'.$i, $rules_array, "Please specify play area", 'q8_specialneeds_other_playmate'.$i.'_group');
+         $this->XINRegisterRule('q8_specialneeds_other_playmate'.$i, $rules_array, "Please specify play area", 'q8_specialneeds_other_playmate'.$i.'_group');
 
          $this->addSelect('q9_yourchild_like_playmate'.$i,"9. How much does your child like this playmate?",
                           $this->q9_options);
-        // $this->XINRegisterRule('q9_yourchild_like_playmate'.$i, array("q9_yourchild_like_playmate.$i{@}=={@}NEVER_REQUIRED"));
+         $this->XINRegisterRule('q9_yourchild_like_playmate'.$i, array("q9_yourchild_like_playmate.$i{@}=={@}NEVER_REQUIRED"));
 
          $this->addSelect('q10_like_yourchild_playmate'.$i,"10. How much does this playmate like your child?",
                           $this->q9_options);
-        // $this->XINRegisterRule('q10_like_yourchild_playmate'.$i, array("q10_like_yourchild_playmate.$i{@}=={@}NEVER_REQUIRED"));
+         $this->XINRegisterRule('q10_like_yourchild_playmate'.$i, array("q10_like_yourchild_playmate.$i{@}=={@}NEVER_REQUIRED"));
 
          $this->addSelect('q11_getalong_playmate'.$i,"11. How well would you say they get along?",
                           $this->q11_options);
-        // $this->XINRegisterRule('q11_getalong_playmate'.$i, array("q11_getalong_playmate.$i{@}=={@}NEVER_REQUIRED"));
+         $this->XINRegisterRule('q11_getalong_playmate'.$i, array("q11_getalong_playmate.$i{@}=={@}NEVER_REQUIRED"));
 
          $this->addSelect('q12_leading_play_playmate'.$i,"12. Who usually is leading or in control of the play?",
                           $this->q12_options);
-        // $this->XINRegisterRule('q12_leading_play_playmate'.$i, array("q12_leading_play_playmate.$i{@}=={@}NEVER_REQUIRED"));
+         $this->XINRegisterRule('q12_leading_play_playmate'.$i, array("q12_leading_play_playmate.$i{@}=={@}NEVER_REQUIRED"));
 
          $this->addSelect('q13_typical_playtone_playmate'.$i,"13. What is the typical tone of the play?",
                           $this->q13_options);
-        // $this->XINRegisterRule('q13_typical_playtone_playmate'.$i, array("q13_typical_playtone_playmate.$i{@}=={@}NEVER_REQUIRED"));
+         $this->XINRegisterRule('q13_typical_playtone_playmate'.$i, array("q13_typical_playtone_playmate.$i{@}=={@}NEVER_REQUIRED"));
 
          $this->addSelect('q14_typical_excitement_playmate'.$i,"14. What is the typical level of excitement?",
                           $this->q14_options);
-        // $this->XINRegisterRule('q14_typical_excitement_playmate'.$i, array("q14_typical_excitement_playmate.$i{@}=={@}NEVER_REQUIRED"));
+         $this->XINRegisterRule('q14_typical_excitement_playmate'.$i, array("q14_typical_excitement_playmate.$i{@}=={@}NEVER_REQUIRED"));
 
          $this->addSelect('q15_num_conflicts_playmate'.$i,"15. How often do they have conflicts during play?",
                           $this->q15_options);
-        // $this->XINRegisterRule('q15_num_conflicts_playmate'.$i, array("q15_num_conflicts_playmate.$i{@}=={@}NEVER_REQUIRED"));
+         $this->XINRegisterRule('q15_num_conflicts_playmate'.$i, array("q15_num_conflicts_playmate.$i{@}=={@}NEVER_REQUIRED"));
 
          $this->addSelect('q16_disruptive_playmate'.$i,"16. How disruptive are their conflicts?",
                           $this->q16_options);
-        // $this->XINRegisterRule('q16_disruptive_playmate'.$i, array("q16_disruptive_playmate.$i{@}=={@}NEVER_REQUIRED"));
+         $this->XINRegisterRule('q16_disruptive_playmate'.$i, array("q16_disruptive_playmate.$i{@}=={@}NEVER_REQUIRED"));
 
          $this->addSelect('q17_how_involved_playmate'.$i,"17. In a typical play session, how closely involved are they with <BR>$this->indent each other during play?", $this->q17_options);
-        // $this->XINRegisterRule('q17_how_involved_playmate'.$i, array("q17_how_involved_playmate.$i{@}=={@}NEVER_REQUIRED"));
+         $this->XINRegisterRule('q17_how_involved_playmate'.$i, array("q17_how_involved_playmate.$i{@}=={@}NEVER_REQUIRED"));
 
          $this->form->addElement('static',null,"18. What percentage of time were the play dates arranged by:");
         
@@ -618,16 +619,16 @@ class NDB_BVL_Instrument_peer_socialcontact extends NDB_BVL_Instrument
          foreach($q18 as $field=>$label) {
              $group [] = $this->createText($field, $label);
              $this->addGroup($group, $field . "_group", $label, null, false);
-            // $this->XINRegisterRule($field, array("$field{@}=={@}NEVER_REQUIRED"),$field . "_group");
+             $this->XINRegisterRule($field, array("$field{@}=={@}NEVER_REQUIRED"),$field . "_group");
              unset($group);
              $this->addGroupRule($field . "_group", array(array(array("Value must be numeric. Please enter value without % symbol", 'numeric'))));
          }
 
          $this->addSelect('q19_arrange_contacts_playmate'.$i,"19. How difficult was it to arrange those contacts?", $this->q19_options);
-        // $this->XINRegisterRule('q19_arrange_contacts_playmate'.$i, array("q19_arrange_contacts_playmate.$i{@}=={@}NEVER_REQUIRED"));
+         $this->XINRegisterRule('q19_arrange_contacts_playmate'.$i, array("q19_arrange_contacts_playmate.$i{@}=={@}NEVER_REQUIRED"));
 
          $this->addSelect('q20_stress_monitorplay_playmate'.$i,"20. How stressful is it usually for you to monitor play sessions?", $this->q20_options);
-        // $this->XINRegisterRule('q20_stress_monitorplay_playmate'.$i, array("q20_stress_monitorplay_playmate.$i{@}=={@}NEVER_REQUIRED"));
+         $this->XINRegisterRule('q20_stress_monitorplay_playmate'.$i, array("q20_stress_monitorplay_playmate.$i{@}=={@}NEVER_REQUIRED"));
 
          $this->form->addElement('static',null,"21. How do you usually monitor the play at home?");
          $questions = array('q21_facililate_getalong_playmate'.$i=>'a. Directly facilitate by helping them get along',
@@ -638,7 +639,7 @@ class NDB_BVL_Instrument_peer_socialcontact extends NDB_BVL_Instrument
 
          foreach($questions as $qstn=>$desc) {
              $this->addSelect($qstn,$this->indent.$desc, $this->q21_options);
-            // $this->XINRegisterRule($qstn, array("$qstn{@}=={@}NEVER_REQUIRED"));
+             $this->XINRegisterRule($qstn, array("$qstn{@}=={@}NEVER_REQUIRED"));
 
          }
 
@@ -652,16 +653,41 @@ class NDB_BVL_Instrument_peer_socialcontact extends NDB_BVL_Instrument
 
          foreach($questions as $qstn=>$desc) {
              $this->addSelect($qstn,$this->indent.$desc, $this->q21_options);
-            // $this->XINRegisterRule($qstn, array("$qstn{@}=={@}NEVER_REQUIRED"));
+             $this->XINRegisterRule($qstn, array("$qstn{@}=={@}NEVER_REQUIRED"));
          }   
     }
 
-    function Peer_Rules ($values) {
-        $errors = array(); 
-        for($i = 1; $i <= $this->total_peer; $i++) {
-            if((empty($values["peer_initials_".$i]) && $i <= $values["total_playmates"])) {
+    function Peer_Rules ($values) { 
+        $errors = array();
+         $db =& Database::singleton();
+        if(Utility::isErrorX($db)) {
+            print "Could not connect to database: ".$db->getMessage();
+        }
+        reset($values);
+        $first =key($values);
+        $playmates_listed = $db->pselectOne("SELECT total_playmates FROM ".$this->table." WHERE CommentID=:cid",
+                array('cid' =>$this->getCommentID()));
+
+        if (Utility::isErrorX($playamtes_listed)) {
+            print "Query has failed to select: ".$playmantes_listed->getMessage();
+            $playmates_listed = array();
+        }
+        for($i = 1; $i <= 5; $i++) { 
+            if((empty($values["peer_initials_".$i]) && $i <= $values["total_playmates"])) { 
                 $errors["peer_initials_".$i."_group"] = "Please specify playmate initials";    
             }
+            $questions = array('age_yrs_playmate_','age_mos_playmate_','gender_playmate_','q1_number_playtimes_playmate','q2_avg_playtime_playmate','q3_related_playmate','q4_playarea_playmate','q5_proximity_playmate','q6_sameschool_playmate','q7_samechildcare_playmate','q8_specialneeds_playmate','q9_yourchild_like_playmate','q10_like_yourchild_playmate','q11_getalong_playmate','q12_leading_play_playmate','q13_typical_playtone_playmate','q14_typical_excitement_playmate','q15_num_conflicts_playmate','q16_disruptive_playmate','q17_how_involved_playmate','q18_arrangeplay_you_playmate','q18_arrangeplay_yourchild_playmate','q18_arrangeplay_other_playmate','q19_arrange_contacts_playmate','q20_stress_monitorplay_playmate','q21_facililate_getalong_playmate','q21_participate_activity_playmate','q21_maintain_presence_playmate','q21_outofview_listen_playmate','q21_outofview_notlisten_playmate','q22_manage_emotions_playmate','q22_understand_rules_playmate','q22_understand_howtoplay_playmate','q22_startplay_playmate','q22_remain_inplay_playmate','q22_manage_conflicts_playmate');
+           $group_qstn = array('age_yrs_playmate_','age_mos_playmate_','q1_number_playtimes_playmate','q2_avg_playtime_playmate','q18_arrangeplay_yourchild_playmate');
+            foreach($questions as $qstn) {
+                $q = $qstn.$i; 
+                if(empty($values[$q]) && $i <= $playmates_listed && ($i == substr($first, -1))) {
+                   if(in_array($qstn, $group_qstn)) { 
+                       $errors[$q."_group"] = "Please choose an option";
+                    } else {
+                        $errors[$q] = "Please choose an option";
+                    }
+                }
+            } 
             if($values["q3_related_playmate".$i] == 'other'&& empty($values["q3_related_other_playmate".$i]) ) {
                 $errors["q3_related_other_playmate".$i."_group"] = "Please specify relationship";    
             }
@@ -672,15 +698,13 @@ class NDB_BVL_Instrument_peer_socialcontact extends NDB_BVL_Instrument
             if($values["q8_specialneeds_playmate".$i] == 'other' && empty($values["q8_specialneeds_other_playmate".$i])) {
                 $errors["q8_specialneeds_other_playmate".$i."_group"] = "Please specify play area";
             }
-	    for($i= 1; $i<=5; $i++) {
-		    $q18 = array("q18_arrangeplay_you_playmate".$i,
-				    "q18_arrangeplay_yourchild_playmate".$i,
-				    "q18_arrangeplay_other_playmate".$i);
-		$total = $values["q18_arrangeplay_you_playmate".$i] + $values["q18_arrangeplay_yourchild_playmate".$i] +
-                         $values["q18_arrangeplay_other_playmate".$i];
-                if($total > 100 ) { 
-                     $errors["q18_arrangeplay_you_playmate".$i."_group"] = "The total percent should add up to 100";
-                }
+	    $q18 = array("q18_arrangeplay_you_playmate".$i,
+			    "q18_arrangeplay_yourchild_playmate".$i,
+			    "q18_arrangeplay_other_playmate".$i);
+	    $total = $values["q18_arrangeplay_you_playmate".$i] + $values["q18_arrangeplay_yourchild_playmate".$i] +
+		    $values["q18_arrangeplay_other_playmate".$i];
+	    if($total > 100 ) { 
+		    $errors["q18_arrangeplay_you_playmate".$i."_group"] = "The total percent should add up to 100";
 	    }
 
         }
