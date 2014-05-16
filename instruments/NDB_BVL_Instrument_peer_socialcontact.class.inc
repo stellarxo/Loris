@@ -260,7 +260,7 @@ class NDB_BVL_Instrument_peer_socialcontact extends NDB_BVL_Instrument
                 } else {
                     $group[] =& $this->form->createElement("select", $field,null,$know_eachother);
                 }
-            //$this->XINRegisterRule($field, array("$field{@}=={@}NEVER_REQUIRED"), $groupname);
+            $this->XINRegisterRule($field, array("$field{@}=={@}NEVER_REQUIRED"), $groupname);
             }
             $this->form->addGroup($group, $groupname, "Child ".$i, $this->_GUIDelimiter, false);
             unset($group);
@@ -278,8 +278,8 @@ class NDB_BVL_Instrument_peer_socialcontact extends NDB_BVL_Instrument
 
              }
           }
-        
-    }
+       $this->form->addFormRule(array(&$this, 'Peer_Rules'));    
+    }    
     function _page3(){
        
          $this->_generate_Questions(1); // playmate #1
@@ -657,7 +657,7 @@ class NDB_BVL_Instrument_peer_socialcontact extends NDB_BVL_Instrument
          }   
     }
 
-    function Peer_Rules ($values) { 
+    function Peer_Rules ($values) {
         $errors = array();
          $db =& Database::singleton();
         if(Utility::isErrorX($db)) {
@@ -672,6 +672,17 @@ class NDB_BVL_Instrument_peer_socialcontact extends NDB_BVL_Instrument
             print "Query has failed to select: ".$playmantes_listed->getMessage();
             $playmates_listed = array();
         }
+       
+        for ($i =1; $i < 5; $i++) {
+            $groupname = $i."_group";
+            for($temp = $i+1; $temp<5; $temp++) {
+                $field = "know_".$i."_".$temp;
+                if(array_key_exists($field, $values) && empty($values[$field])) {
+                    $errors[$groupname] = "Choose an option";
+                }
+             }
+        } 
+        if(!array_key_exists('know_1_2', $values)) {
         for($i = 1; $i <= 5; $i++) { 
             if((empty($values["peer_initials_".$i]) && $i <= $values["total_playmates"])) { 
                 $errors["peer_initials_".$i."_group"] = "Please specify playmate initials";    
@@ -708,6 +719,7 @@ class NDB_BVL_Instrument_peer_socialcontact extends NDB_BVL_Instrument
 	    }
 
         }
+      }
 //        print_r($errors);
         return $errors;
     }
