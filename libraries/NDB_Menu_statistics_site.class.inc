@@ -8,7 +8,7 @@ require_once 'NDB_Menu.class.inc';
 class NDB_Menu_statistics_site extends NDB_Menu
 {
     function __construct() {
-        $this->instruments = $this->_getInstrumentList();
+        $this->instruments = $this->_getInstrumentList(); print $this->instruments;
     }
     function _getInstrumentList() {
         $DB =& Database::singleton();
@@ -46,7 +46,7 @@ class NDB_Menu_statistics_site extends NDB_Menu
     }
     function _CompleteCount($id, $instrument,$ExtraProject_Criteria) {
         $DB =& Database::singleton();
-        $count = $DB->selectOne(
+        $count = $DB->pselectOne(
                 "SELECT count(s.CandID)  FROM session as s, 
                 candidate as c, flag as f, {$instrument} as i 
                 WHERE s.ID=f.SessionID AND f.CommentID=i.CommentID 
@@ -56,7 +56,7 @@ class NDB_Menu_statistics_site extends NDB_Menu
                 AND s.Current_stage <> 'Recycling Bin'
                 AND f.Administration='All'
                 $ExtraProject_Criteria
-                AND i.CommentID NOT LIKE 'DDE%';");
+                AND i.CommentID NOT LIKE 'DDE%';", array());
         if (PEAR::isError($result)) {
             return PEAR::raiseError("DB Error: ".$result->getMessage());
         }
@@ -65,7 +65,7 @@ class NDB_Menu_statistics_site extends NDB_Menu
     }
     function _GetResults($id, $instrument,$ExtraProject_Criteria) {
         $DB =& Database::singleton();
-        $DB->select("SELECT s.CandID, f.SessionID, i.CommentID, c.PSCID, 
+        $result =  $DB->pselect("SELECT s.CandID, f.SessionID, i.CommentID, c.PSCID, 
                 lower(s.Visit_label) as Visit_label
                 FROM session as s, candidate as c, flag as f, 
                 {$instrument} as i 
@@ -76,8 +76,8 @@ class NDB_Menu_statistics_site extends NDB_Menu
                 AND s.CenterID={$id} 
                 AND (f.Data_entry is NULL OR f.Data_entry<>'Complete')
                 $ExtraProject_Criteria
-                AND i.CommentID NOT LIKE 'DDE%' ORDER BY s.Visit_label, c.PSCID;", $result);
-        if (PEAR::isError($result)) {
+                AND i.CommentID NOT LIKE 'DDE%' ORDER BY s.Visit_label, c.PSCID;", array());
+        if (Utility::isErrorX($result)) {
             return PEAR::raiseError("DB Error: ".$result->getMessage());
         }
         return $result;
@@ -114,14 +114,12 @@ class NDB_Menu_statistics_site extends NDB_Menu
         // cells for ones that are missing for a given instrument in the 
         // template
         $visits = array();
-
         $data = array();
         foreach($this->instruments as $instrument){
-           // $instrument = $instruments['Test_name'];
+           // $instrument = $instruments['Test_name']; 
             $complete_count = $this->_CompleteCount($id, $instrument,$ExtraProject_Criteria); 
 
-            $results = $this->_GetResults($id, $instrument,$ExtraProject_Criteria);
-
+            $results = $this->_GetResults($id, $instrument,$ExtraProject_Criteria); //print_r($results);
             $test_url = $instrument;
             if(substr($test_url, 0, 10) == "figs_year3"){
                 $test_url = "figs_year3";
