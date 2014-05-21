@@ -8,7 +8,7 @@ require_once 'NDB_Menu.class.inc';
 class NDB_Menu_statistics_site extends NDB_Menu
 {
     function __construct() {
-        $this->instruments = $this->_getInstrumentList(); print $this->instruments;
+        $this->instruments = $this->_getInstrumentList(); //print $this->instruments;
     }
     function _getInstrumentList() {
         $DB =& Database::singleton();
@@ -57,7 +57,7 @@ class NDB_Menu_statistics_site extends NDB_Menu
                 AND f.Administration='All'
                 $ExtraProject_Criteria
                 AND i.CommentID NOT LIKE 'DDE%';", array());
-        if (PEAR::isError($result)) {
+        if (Utility::isErrorX($result)) {
             return PEAR::raiseError("DB Error: ".$result->getMessage());
         }
         return $count;
