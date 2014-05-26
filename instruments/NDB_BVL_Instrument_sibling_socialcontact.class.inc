@@ -1,6 +1,9 @@
 <?php
 class NDB_BVL_Instrument_sibling_socialcontact extends NDB_BVL_Instrument
 {
+    var $ValidityEnabled = false;
+    var $ValidityRequired = false;
+
     //Commonly used level of indentation;
     var $indent = "&nbsp;&nbsp;&nbsp;&nbsp;";
 
@@ -102,7 +105,7 @@ class NDB_BVL_Instrument_sibling_socialcontact extends NDB_BVL_Instrument
         foreach($questions as $field=>$label) {
             $group [] = $this->createText($field, $label);
             $this->addGroup($group, $field . "_group", $label, null, false);
-          //  $this->XINRegisterRule($field, array("$field{@}=={@}NEVER_REQUIRED"),$field . "_group");
+            $this->XINRegisterRule($field, array("$field{@}=={@}NEVER_REQUIRED"),$field . "_group");
             unset($group);
             $this->addGroupRule($field . "_group", array(array(array("Value must be numeric.", 'numeric'))));
         }
@@ -118,6 +121,7 @@ class NDB_BVL_Instrument_sibling_socialcontact extends NDB_BVL_Instrument
 
         $this->addSelect('q8_playtogeher',"8. How well would you say they play together?", $this->rating2);
        // $this->XINRegisterRule('q8_playtogeher', array("q8_playtogeher{@}=={@}NEVER_REQUIRED") );
+        $this->form->addFormRule(array(&$this, 'Sib_Rules'));
 
     }
 
@@ -183,6 +187,18 @@ class NDB_BVL_Instrument_sibling_socialcontact extends NDB_BVL_Instrument
          }
 
 
+    }
+    function Sib_Rules ($values) {
+        $errors = array();
+        $questions = array("q3_different_playtimes", "q4_avg_playtime");
+        foreach($questions as $key) {
+             if(empty($values[$key])) { 
+                 $errors[$key."_group"] = "Please specify"; 
+
+             }
+
+        }
+        return $errors;
     }
     function getReview() {
         $DB = Database::singleton();
