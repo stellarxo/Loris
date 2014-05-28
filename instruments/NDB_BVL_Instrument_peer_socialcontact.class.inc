@@ -695,8 +695,15 @@ class NDB_BVL_Instrument_peer_socialcontact extends NDB_BVL_Instrument
             foreach($questions as $qstn) {
                 $q = $qstn.$i; //print "QQQQQ8". $values['q8_specialneeds_playmate'.$i]; 
                 if(empty($values[$q]) && $i <= $playmates_listed && ($i == substr($first, -1))) { 
-                   if(in_array($qstn, $group_qstn)) { 
-                       $errors[$q."_group"] = "Please specify";
+                   if(in_array($qstn, $group_qstn)) {
+                        if (strpos($qstn, "age_") !== FALSE) {
+                            if($values[$q] == null) {
+                                $errors[$q."_group"] = "Please specify";
+                            }
+                        } else {
+                            $errors[$q."_group"] = "Please specify";
+                        }
+ 
                     } else {
                         if (strpos($qstn, "q18_") !== FALSE) {
                             if($values[$q] == null) {
