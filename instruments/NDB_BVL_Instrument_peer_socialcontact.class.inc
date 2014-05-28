@@ -622,11 +622,8 @@ class NDB_BVL_Instrument_peer_socialcontact extends NDB_BVL_Instrument
                       "q18_arrangeplay_yourchild_playmate".$i=>$this->indent."Your child (%)",
                       "q18_arrangeplay_other_playmate".$i=>$this->indent."Other family or friends (%) ");
          foreach($q18 as $field=>$label) {
-             $group [] = $this->createText($field, $label);
-             $this->addGroup($group, $field . "_group", $label, null, false);
-             $this->XINRegisterRule($field, array("$field{@}=={@}NEVER_REQUIRED"),$field . "_group");
-             unset($group);
-             $this->addGroupRule($field . "_group", array(array(array("Value must be numeric. Please enter value without % symbol", 'numeric'))));
+             $this->addBasicText($field, $label);
+             $this->XINRegisterRule($field, array("$field{@}=={@}NEVER_REQUIRED"));
          }
 
          $this->addSelect('q19_arrange_contacts_playmate'.$i,"19. How difficult was it to arrange those contacts?", $this->q19_options);
@@ -694,14 +691,20 @@ class NDB_BVL_Instrument_peer_socialcontact extends NDB_BVL_Instrument
             }
             if(array_key_exists('age_yrs_playmate_'.$i, $values)) {
             $questions = array('age_yrs_playmate_','age_mos_playmate_','gender_playmate_','q1_number_playtimes_playmate','q2_avg_playtime_playmate','q3_related_playmate','q4_playarea_playmate','q5_proximity_playmate','q6_sameschool_playmate','q7_samechildcare_playmate','q8_specialneeds_playmate','q9_yourchild_like_playmate','q10_like_yourchild_playmate','q11_getalong_playmate','q12_leading_play_playmate','q13_typical_playtone_playmate','q14_typical_excitement_playmate','q15_num_conflicts_playmate','q16_disruptive_playmate','q17_how_involved_playmate','q18_arrangeplay_you_playmate','q18_arrangeplay_yourchild_playmate','q18_arrangeplay_other_playmate','q19_arrange_contacts_playmate','q20_stress_monitorplay_playmate','q21_facililate_getalong_playmate','q21_participate_activity_playmate','q21_maintain_presence_playmate','q21_outofview_listen_playmate','q21_outofview_notlisten_playmate','q22_manage_emotions_playmate','q22_understand_rules_playmate','q22_understand_howtoplay_playmate','q22_startplay_playmate','q22_remain_inplay_playmate','q22_manage_conflicts_playmate');
-           $group_qstn = array('age_yrs_playmate_','age_mos_playmate_','q1_number_playtimes_playmate','q2_avg_playtime_playmate','q18_arrangeplay_you_playmate','q18_arrangeplay_yourchild_playmate','q18_arrangeplay_other_playmate');
+           $group_qstn = array('age_yrs_playmate_','age_mos_playmate_','q1_number_playtimes_playmate','q2_avg_playtime_playmate');
             foreach($questions as $qstn) {
                 $q = $qstn.$i; //print "QQQQQ8". $values['q8_specialneeds_playmate'.$i]; 
                 if(empty($values[$q]) && $i <= $playmates_listed && ($i == substr($first, -1))) { 
                    if(in_array($qstn, $group_qstn)) { 
                        $errors[$q."_group"] = "Please specify";
                     } else {
-                        $errors[$q] = "Please specify";
+                        if (strpos($qstn, "q18_") !== FALSE) {
+                            if($values[$q] == null) {
+                                $errors[$q] = "Please specify";
+                            }
+                        } else {
+                            $errors[$q] = "Please specify";
+                        }
                     }
                 }
                 if($qstn == 'q8_specialneeds_playmate') { 
@@ -728,7 +731,7 @@ class NDB_BVL_Instrument_peer_socialcontact extends NDB_BVL_Instrument
 	    $total = $values["q18_arrangeplay_you_playmate".$i] + $values["q18_arrangeplay_yourchild_playmate".$i] +
 		    $values["q18_arrangeplay_other_playmate".$i];
 	    if($total > 100  || $total < 100) { 
-		    $errors["q18_arrangeplay_you_playmate".$i."_group"] = "The total percent should add up to 100";
+		    $errors["q18_arrangeplay_you_playmate".$i] = "The total percent should add up to 100";
 	    }
 
         }
