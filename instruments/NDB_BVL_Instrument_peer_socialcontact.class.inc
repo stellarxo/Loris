@@ -1,6 +1,9 @@
 <?php
 class NDB_BVL_Instrument_peer_socialcontact extends NDB_BVL_Instrument
 {
+    var $ValidityEnabled = false;
+    var $ValidityRequired = false;
+
     //Commonly used level of indentation;
     var $indent = "&nbsp;&nbsp;&nbsp;&nbsp;";
 
@@ -210,7 +213,7 @@ class NDB_BVL_Instrument_peer_socialcontact extends NDB_BVL_Instrument
             $key = $_GET["key"]; 
         }
         $colspan = 2;
-        if(is_numeric($numplaymates)) {
+        if(is_numeric($numplaymates)) { 
             $colspan = $numplaymates -1; 
         } else {
             $numplaymates =5;
@@ -309,8 +312,11 @@ class NDB_BVL_Instrument_peer_socialcontact extends NDB_BVL_Instrument
     function _page8()
     {
        $this->form->addElement('header', 'section2_header', "Section 2: Educational or Child Care Activities");
+       if(isset($_GET["key"])) {
+            $key = $_GET["key"];
+        }
 
-       $this->form->addElement('static', 'lorisSubHeader',"Aside from individual play activities, children participate in group activities in educational and <BR>childcare placements with peers. We'd like to know a little about your child's current placements.<BR><BR>If your child is not in school or childcare, please go to next section. Press 'Save and Continue' <BR>at the bottom of screen to continue with the survey.");
+       $this->form->addElement('static', 'lorisSubHeader',"Aside from individual play activities, children participate in group activities in educational and <BR>childcare placements with peers. We'd like to know a little about your child's current placements.<BR><BR>If your child is not in school or childcare, please go to next section: <a href=\"survey.php?key=$key&pageNum=8\"><font color=\"#0000FF\"> <u>Section 3 </u></font></a> <strong>");
        $this->form->addElement('header','section2_a',"School");
         
        $this->addSelect('q23_childin_school',"23. Is your child in school or preschool?",$this->q23_options);
@@ -320,19 +326,16 @@ class NDB_BVL_Instrument_peer_socialcontact extends NDB_BVL_Instrument
       $this->XINRegisterRule('q24_childin_spneeds_school', array("q23_childin_school{@}=={@}yes"), "Please specify"); 
        
       $this->addSelect('q25_school_numdays_perweek','25. How many days per week is your child in school?', $this->numdays_week);
-      //$this->XINRegisterRule('q25_school_numdays_perweek', array("q25_school_numdays_perweek{@}=={@}NEVER_REQUIRED"));
+      $this->XINRegisterRule('q25_school_numdays_perweek', array("q23_childin_school{@}=={@}yes"), "Please specify");
 
       $this->addSelect('q26_school_numhrs_perday','26. How many hours per day is your child in school?', $this->numhrs_day);
-      //$this->XINRegisterRule('q26_school_numhrs_perday', array("q26_school_numhrs_perday{@}=={@}NEVER_REQUIRED"));
+      $this->XINRegisterRule('q26_school_numhrs_perday', array("q23_childin_school{@}=={@}yes"), "Please specify");
       
       $questions = array('q27_numchildren_perclass'=>'27. How many children are in the (primary) classroom at school?',
                          'q28_numchildren_specialneeds'=>'28. How many of the children have special needs in the (primary)<BR> classroom at school?');
        foreach($questions as $field=>$label) {
-           $group [] = $this->createText($field, $label);
-           $this->addGroup($group, $field . "_group", $label, null, false);
-        //   $this->XINRegisterRule($field, array("$field{@}=={@}NEVER_REQUIRED"));
-           unset($group);
-           $this->addGroupRule($field . "_group", array(array(array("Value must be numeric.", 'numeric'))));
+           $this->addBasicText($field, $label);
+           $this->XINRegisterRule($field, array("$field{@}=={@}NEVER_REQUIRED"));
        }
        $this->form->addElement('header','section2_b',"Childcare");
 
@@ -340,40 +343,40 @@ class NDB_BVL_Instrument_peer_socialcontact extends NDB_BVL_Instrument
        //$this->XINRegisterRule('q29_childin_childcare', array("q29_childin_childcare{@}=={@}NEVER_REQUIRED"), "Please specify");
 
        $this->addSelect('q30_childin_spneeds_childcare',"30. Is the childcare setting a center which specializes in educating<BR>$this->indent children  with special educational needs?",$this->q23_options);
-      // $this->XINRegisterRule('q30_childin_spneeds_childcare', array("q29_childin_childcare{@}=={@}yes"), "Please specify");
+       $this->XINRegisterRule('q30_childin_spneeds_childcare', array("q29_childin_childcare{@}=={@}yes"), "Please specify");
        
        $this->addSelect('q31_childcare_numdays_perweek','31. How many days per week is your child in a childcare setting?', $this->numdays_week);
-      // $this->XINRegisterRule('q31_childcare_numdays_perweek', array("q31_childcare_numdays_perweek{@}=={@}NEVER_REQUIRED"));
+       $this->XINRegisterRule('q31_childcare_numdays_perweek', array("q29_childin_childcare{@}=={@}yes"),"Please specify");
        
        $this->addSelect('q32_childcare_numhrs_perday','32. How many hours per day is your child in a childcare setting?',$this->numhrs_day);
-       //$this->XINRegisterRule('q32_childcare_numhrs_perday',array("q32_childcare_numhrs_perday{@}=={@}NEVER_REQUIRED"));
+       $this->XINRegisterRule('q32_childcare_numhrs_perday',array("q29_childin_childcare{@}=={@}yes"), "Please specify");
 
        $questions = array('q33_numchildren_perclass'=>'33. How many children are in the (primary) classroom at childcare?',
                'q34_numchildren_specialneeds'=>"34. How many of the children have special needs in the (primary)<BR> $this->indent classroom at childcare?");
        foreach($questions as $field=>$label) {
-           $group [] = $this->createText($field, $label);
-           $this->addGroup($group, $field . "_group", $label, null, false);
-         //  $this->XINRegisterRule($field, array("$field{@}=={@}NEVER_REQUIRED"));
-           unset($group);
-           $this->addGroupRule($field . "_group", array(array(array("Value must be numeric.", 'numeric'))));
+           $this->addBasicText($field, $label);
+           $this->XINRegisterRule($field, array("$field{@}=={@}NEVER_REQUIRED"));
        }
-
+        $this->form->addFormRule(array(&$this, 'Peer_Rules'));
     }
     function _page9()
     {
         $this->form->addElement('header', 'section3_header', "Section 3: Community Group Activities");
+        if(isset($_GET["key"])) {
+            $key = $_GET["key"];
+        }
 
-        $this->form->addElement('static', 'lorisSubHeader',"In addition to school or childcare, some children regularly participate in other group<BR>activities with their peers, such as swimming lessons, soccer, or classes outside of school.<BR>If your child participates in such activities, please list up to three groups below.<BR><BR>If your child does not participate in any such groups, please go to the next section.<BR>Press 'Save and Continue' at the bottom of screen to continue with the survey.<BR><BR>**Please note that groups designed to provide special services for children with<BR>developmental problems are to be included in the next section**");
+        $this->form->addElement('static', 'lorisSubHeader',"In addition to school or childcare, some children regularly participate in other group<BR>activities with their peers, such as swimming lessons, soccer, or classes outside of school.<BR>If your child participates in such activities, please list up to three groups below.<BR><BR>If your child does not participate in any such groups, please go to the next section:<a href=\"survey.php?key=$key&pageNum=9\"><font color=\"#0000FF\"> <u>Section 4 </u></font></a> <strong><BR><BR>**Please note that groups designed to provide special services for children with<BR>developmental problems are to be included in the next section**");
         for($i = 1; $i <= 3; $i++) {
             
             $this->form->addElement('header', 'group_header'.$i, " Group $i");
 
             $group [] = $this->createText("activity_".$i,"Type or name of group activity :");
             $this->addGroup($group,"activity_".$i."_group","Type or name of group activity :",null, false);
-           // $this->XINRegisterRule('activity_'.$i, array("activity_$i{@}=={@}NEVER_REQUIRED"), null, "activity_".$i."_group");
+            $this->XINRegisterRule('activity_'.$i, array("activity_$i{@}=={@}NEVER_REQUIRED"), null, "activity_".$i."_group");
             unset($group);
             $this->addSelect('activity_desc_'.$i,"Which one of the following best describes the group",$this->activity_desc);
-           // $this->XINRegisterRule('activity_desc_'.$i, array("activity_desc_$i{@}=={@}NEVER_REQUIRED") );
+            $this->XINRegisterRule('activity_desc_'.$i, array("activity_desc_$i{@}=={@}NEVER_REQUIRED") );
 
             $group [] = $this->createText('activity_other'.$i,$this->indent."If Other please specify");
             $this->addGroup($group,'activity_other'.$i."_group",$this->indent."If Other please specify",null,false);
@@ -386,21 +389,22 @@ class NDB_BVL_Instrument_peer_socialcontact extends NDB_BVL_Instrument
                                'activity'.$i."_numchildren_class"=>"How many of these children are in your child's classroom at school or daycare?",
                                'activity'.$i."_numchildren_spneeds"=>"How many of these children have special needs(if known)?");
             foreach($questions as $field=>$label) {
-                $group [] = $this->createText($field, $label);
-                $this->addGroup($group, $field . "_group", $label, null, false);
-           //     $this->XINRegisterRule($field, array("$field{@}=={@}NEVER_REQUIRED"),$field . "_group");
-                unset($group);
-                $this->addGroupRule($field . "_group", array(array(array("Value must be numeric.", 'numeric'))));
+                $this->addBasicText($field, $label);
+                $this->XINRegisterRule($field, array("$field{@}=={@}NEVER_REQUIRED"));
             }
 
         }
+        $this->form->addFormRule(array(&$this, 'Peer_Rules'));
 
     }
     function _page10()
     {
         $this->form->addElement('header', 'section4_header', "Section 4: Groups for Special Services");
+        if(isset($_GET["key"])) {
+            $key = $_GET["key"];
+        }
 
-        $this->form->addElement('static', 'lorisSubHeader',"Some children who need special services outside of school, such as speech <BR>or physical therapy, receive them in a group setting. If your child regularly participates<BR> with other children in such therapeutic groups, please list up to three of them below.<BR><BR>If your child does not participate in such groups, leave it blank and <BR>press 'Save and Continue' at the bottom of screen to continue with the survey.");
+        $this->form->addElement('static', 'lorisSubHeader',"Some children who need special services outside of school, such as speech <BR>or physical therapy, receive them in a group setting. If your child regularly participates<BR> with other children in such therapeutic groups, please list up to three of them below.<BR><BR>If your child does not participate in such groups, please go to the next section:<a href=\"survey.php?key=$key&pageNum=10\"><font color=\"#0000FF\"> <u>Section 5 </u></font></a> <strong>");
         for($i = 1; $i <= 3; $i++) {
 
             $this->form->addElement('header', 'group_header'.$i, " Group $i");
@@ -408,22 +412,20 @@ class NDB_BVL_Instrument_peer_socialcontact extends NDB_BVL_Instrument
             $group [] = $this->createText("special_service_".$i,"Type or name of group activity :");
             $this->addGroup($group,"special_service_".$i."_group","Type or name of group activity :",null, false);
             unset($group);
-           // $this->XINRegisterRule('special_service_'.$i, array("special_service_.$i{@}=={@}NEVER_REQUIRED"), null, "special_service_".$i."_group");
+            $this->XINRegisterRule('special_service_'.$i, array("special_service_.$i{@}=={@}NEVER_REQUIRED"), null, "special_service_".$i."_group");
             $this->addSelect('special_service_desc_'.$i,"Which one of the following best describes the group",$this->special_service);
-           // $this->XINRegisterRule('special_service_desc_'.$i, array("special_service_$i{@}=={@}NEVER_REQUIRED") );
+            $this->XINRegisterRule('special_service_desc_'.$i, array("special_service_$i{@}=={@}NEVER_REQUIRED") );
 
             $questions = array('special_service'.$i."_meet_permonth"=>'How many times each month does the group meet?',
                     'special_service'.$i."_numchildren_participate"=>"How many children participate in the group?",
                     'special_service'.$i."_numchildren_class"=>"How many of these children are in your child's classroom at school or daycare?");
             foreach($questions as $field=>$label) {
-                $group [] = $this->createText($field, $label);
-                $this->addGroup($group, $field . "_group", $label, null, false);
-             //   $this->XINRegisterRule($field, array("$field{@}=={@}NEVER_REQUIRED"),$field . "_group");
-                unset($group);
-                $this->addGroupRule($field . "_group", array(array(array("Value must be numeric.", 'numeric'))));
+                $this->addBasicText($field, $label);
+                $this->XINRegisterRule($field, array("$field{@}=={@}NEVER_REQUIRED") );
             }
 
         }
+        $this->form->addFormRule(array(&$this, 'Peer_Rules'));
 
     }
    function _page11() 
@@ -483,15 +485,13 @@ class NDB_BVL_Instrument_peer_socialcontact extends NDB_BVL_Instrument
                  'q10e_autism_effect_older'=>'e. Typically developing children -older');
 
       foreach($questions as $field=>$label) {
-             $group [] = $this->createText($field, $label);
-             $this->addGroup($group, $field . "_group",$this->indent. $label, null, false);
-         //    $this->XINRegisterRule($field,array("$field{@}=={@}NEVER_REQUIRED"),$field . "_group");
-             unset($group);
-             $this->addGroupRule($field . "_group", array(array(array("Value must be numeric.", 'numeric'))));
+             $this->addBasicText($field, $label);
+             $this->XINRegisterRule($field,array("$field{@}=={@}NEVER_REQUIRED"));
          }
 
        $this->addBasicTextArea("q11_comments", "11. Feel free to describe any other ways in which you have noticed that having autism has<BR> affected your child's social contacts with peers:");
        $this->XINRegisterRule('q11_comments', array('q11_comments{@}=={@}NEVER_REQUIRED'));
+       $this->form->addFormRule(array(&$this, 'Peer_Rules'));
  
    } 
    function _generate_Questions($playmate) {
@@ -662,7 +662,8 @@ class NDB_BVL_Instrument_peer_socialcontact extends NDB_BVL_Instrument
          }   
     }
 
-    function Peer_Rules ($values) {
+    function Peer_Rules ($values) 
+    {
         $errors = array();
          $db =& Database::singleton();
         if(Utility::isErrorX($db)) {
@@ -683,24 +684,31 @@ class NDB_BVL_Instrument_peer_socialcontact extends NDB_BVL_Instrument
             for($temp = $i+1; $temp<5; $temp++) {
                 $field = "know_".$i."_".$temp;
                 if(array_key_exists($field, $values) && empty($values[$field])) {
-                    $errors[$groupname] = "Choose an option";
+                    $errors[$groupname] = "Please specify";
                 }
              }
-        } 
-        if(!array_key_exists('know_1_2', $values)) {
+        }
         for($i = 1; $i <= 5; $i++) { 
-            if((empty($values["peer_initials_".$i]) && $i <= $values["total_playmates"])) { 
+            if((empty($values["peer_initials_".$i]) && $i <= $values["total_playmates"]) && array_key_exists('peer_initials_'.$i, $values)) { 
                 $errors["peer_initials_".$i."_group"] = "Please specify playmate initials";    
             }
+            if(array_key_exists('age_yrs_playmate_'.$i, $values)) {
             $questions = array('age_yrs_playmate_','age_mos_playmate_','gender_playmate_','q1_number_playtimes_playmate','q2_avg_playtime_playmate','q3_related_playmate','q4_playarea_playmate','q5_proximity_playmate','q6_sameschool_playmate','q7_samechildcare_playmate','q8_specialneeds_playmate','q9_yourchild_like_playmate','q10_like_yourchild_playmate','q11_getalong_playmate','q12_leading_play_playmate','q13_typical_playtone_playmate','q14_typical_excitement_playmate','q15_num_conflicts_playmate','q16_disruptive_playmate','q17_how_involved_playmate','q18_arrangeplay_you_playmate','q18_arrangeplay_yourchild_playmate','q18_arrangeplay_other_playmate','q19_arrange_contacts_playmate','q20_stress_monitorplay_playmate','q21_facililate_getalong_playmate','q21_participate_activity_playmate','q21_maintain_presence_playmate','q21_outofview_listen_playmate','q21_outofview_notlisten_playmate','q22_manage_emotions_playmate','q22_understand_rules_playmate','q22_understand_howtoplay_playmate','q22_startplay_playmate','q22_remain_inplay_playmate','q22_manage_conflicts_playmate');
-           $group_qstn = array('age_yrs_playmate_','age_mos_playmate_','q1_number_playtimes_playmate','q2_avg_playtime_playmate','q18_arrangeplay_yourchild_playmate');
+           $group_qstn = array('age_yrs_playmate_','age_mos_playmate_','q1_number_playtimes_playmate','q2_avg_playtime_playmate','q18_arrangeplay_you_playmate','q18_arrangeplay_yourchild_playmate','q18_arrangeplay_other_playmate');
             foreach($questions as $qstn) {
-                $q = $qstn.$i; 
-                if(empty($values[$q]) && $i <= $playmates_listed && ($i == substr($first, -1))) {
+                $q = $qstn.$i; //print "QQQQQ8". $values['q8_specialneeds_playmate'.$i]; 
+                if(empty($values[$q]) && $i <= $playmates_listed && ($i == substr($first, -1))) { 
                    if(in_array($qstn, $group_qstn)) { 
-                       $errors[$q."_group"] = "Please choose an option";
+                       $errors[$q."_group"] = "Please specify";
                     } else {
-                        $errors[$q] = "Please choose an option";
+                        $errors[$q] = "Please specify";
+                    }
+                }
+                if($qstn == 'q8_specialneeds_playmate') { 
+                    foreach($values[$q] as $key=>$val) {
+                        if(empty($val)) {
+                           $errors[$q] = "Please specify";
+                        }
                     }
                 }
             } 
@@ -719,13 +727,92 @@ class NDB_BVL_Instrument_peer_socialcontact extends NDB_BVL_Instrument
 			    "q18_arrangeplay_other_playmate".$i);
 	    $total = $values["q18_arrangeplay_you_playmate".$i] + $values["q18_arrangeplay_yourchild_playmate".$i] +
 		    $values["q18_arrangeplay_other_playmate".$i];
-	    if($total > 100 ) { 
+	    if($total > 100  || $total < 100) { 
 		    $errors["q18_arrangeplay_you_playmate".$i."_group"] = "The total percent should add up to 100";
 	    }
 
         }
       }
-//        print_r($errors);
+     if(array_key_exists('q23_childin_school', $values)) {
+    
+          $q_list = array ('q27_numchildren_perclass','q28_numchildren_specialneeds','q33_numchildren_perclass','q34_numchildren_specialneeds' );
+          foreach ($q_list as $q ) {
+              if(! is_numeric($values[$q])) {
+                  $errors[$q] = "Please specify numerical values only";
+              }
+          }
+ 
+	  if($values['q27_numchildren_perclass'] == null   && $values['q23_childin_school'] == 'yes') {
+		  $errors["q27_numchildren_perclass"] = "Please specify";
+	  }
+          if( $values['q28_numchildren_specialneeds'] == null && $values['q23_childin_school'] == 'yes') {
+                  $errors["q28_numchildren_specialneeds"] = "Please specify";
+          }
+          if( $values['q33_numchildren_perclass'] == null && $values['q29_childin_childcare'] == 'yes') {
+                  $errors["q33_numchildren_perclass"] = "Please specify";
+          }
+         if( $values['q34_numchildren_specialneeds'] == null && $values['q29_childin_childcare'] == 'yes') {
+                  $errors["q34_numchildren_specialneeds"] = "Please specify";
+          }
+
+
+     }
+     if(array_key_exists('q10a_autism_effect_other_children_autism', $values)) {
+          $q_list = array ('q10a_autism_effect_other_children_autism','q10b_autism_effect_other_children_devdelay', 'q10c_autism_effect_sameage','q10d_autism_effect_younger','q10e_autism_effect_older');
+          foreach($q_list as $q) {
+              if($values[$q] == null) {
+                  $errors[$q] = "Please specify";
+              }
+              if($values[$q] < 1 || $values[$q] > 5 ) {
+                  $errors[$q] = "Please rank order 1 through 5";
+              }
+           }
+      }
+      if(array_key_exists('special_service_1', $values)) {
+          for($i = 1; $i<=3; $i++) {
+               if(!empty($values['special_service_'.$i]) && empty($values['special_service_desc_'.$i])) {
+                   $errors['special_service_desc_'.$i] = "Please specify";
+               }
+                $questions = array('special_service'.$i."_meet_permonth", 'special_service'.$i."_numchildren_participate",
+                                   'special_service'.$i."_numchildren_class");
+  
+                foreach($questions as $q) {
+                     if(!empty($values['special_service_'.$i]) && $values[$q] == null) {
+                         $errors[$q] = "Please specify"; 
+                     }
+                     if(! is_numeric($values[$q]) && !empty($values['activity_'.$i])) {
+                         $errors[$q] = "Please specify numerical values only";
+                      }
+
+                }
+          }
+      }
+      if(array_key_exists('activity_1', $values)) {
+           for($i = 1; $i<=3; $i++) {
+               if( !empty($values['activity_'.$i]) && empty($values['activity_desc_'.$i]) ) {
+                   $errors['activity_desc_'.$i] = "Please specify";
+               }
+               if($values['activity_desc_'.$i] == "other" && empty($values['activity_other'.$i])) {
+                   $errors['activity_other'.$i."_group"] = "Plese specify other";
+               }
+               $questions = array('activity'.$i."_meet_permonth",
+                               'activity'.$i."_numchildren_participate",
+                               'activity'.$i."_numchildren_class",
+                               'activity'.$i."_numchildren_spneeds");
+               foreach($questions as $q) {
+                      if(! is_numeric($values[$q]) && !empty($values['activity_'.$i])) {
+                         $errors[$q] = "Please specify numerical values only";
+                      }
+
+                     if(!empty($values['activity_'.$i]) && $values[$q] == null) {
+                         $errors[$q] = "Please specify";
+                     }
+                }
+
+           }
+          
+      }
+      // print_r($errors);
         return $errors;
     }
      function getReview() {
