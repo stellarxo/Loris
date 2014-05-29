@@ -713,7 +713,7 @@ class NDB_BVL_Instrument_peer_socialcontact extends NDB_BVL_Instrument
                             $errors[$q] = "Please specify";
                         }
                     }
-                }
+               // }
                 if($qstn == 'q8_specialneeds_playmate') { 
                     foreach($values[$q] as $key=>$val) {
                         if(empty($val)) {
@@ -721,7 +721,7 @@ class NDB_BVL_Instrument_peer_socialcontact extends NDB_BVL_Instrument
                         }
                     }
                 }
-            } 
+           // } 
             if($values["q3_related_playmate".$i] == 'other'&& empty($values["q3_related_other_playmate".$i]) ) {
                 $errors["q3_related_other_playmate".$i."_group"] = "Please specify relationship";    
             }
@@ -740,8 +740,9 @@ class NDB_BVL_Instrument_peer_socialcontact extends NDB_BVL_Instrument
 	    if($total > 100  || $total < 100) { 
 		    $errors["q18_arrangeplay_you_playmate".$i] = "The total percent should add up to 100";
 	    }
-
+          }
         }
+       }
       }
      if(array_key_exists('q23_childin_school', $values)) {
     
@@ -822,7 +823,7 @@ class NDB_BVL_Instrument_peer_socialcontact extends NDB_BVL_Instrument
            }
           
       }
-      // print_r($errors);
+     //  print_r($errors);
         return $errors;
     }
      function getReview() {
