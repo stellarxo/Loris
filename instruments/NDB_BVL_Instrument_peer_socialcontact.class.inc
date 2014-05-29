@@ -697,8 +697,8 @@ class NDB_BVL_Instrument_peer_socialcontact extends NDB_BVL_Instrument
                 if(empty($values[$q]) && $i <= $playmates_listed && ($i == substr($first, -1))) { 
                    if(in_array($qstn, $group_qstn)) {
                         if (strpos($qstn, "age_") !== FALSE) {
-                            if($values[$q] == null) {
-                                $errors[$q."_group"] = "Please specify";
+                            if($values[$q] == null) { 
+                                $errors["age_playmate".$i."_group"] = "Please specify";
                             }
                         } else {
                             $errors[$q."_group"] = "Please specify";
