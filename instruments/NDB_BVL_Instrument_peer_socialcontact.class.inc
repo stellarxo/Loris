@@ -685,7 +685,8 @@ class NDB_BVL_Instrument_peer_socialcontact extends NDB_BVL_Instrument
                 }
              }
         }
-        for($i = 1; $i <= 5; $i++) { 
+        for($i = 1; $i <= 5; $i++) 
+        { 
             if((empty($values["peer_initials_".$i]) && $i <= $values["total_playmates"]) && array_key_exists('peer_initials_'.$i, $values)) { 
                 $errors["peer_initials_".$i."_group"] = "Please specify playmate initials";    
             }
@@ -693,7 +694,7 @@ class NDB_BVL_Instrument_peer_socialcontact extends NDB_BVL_Instrument
             $questions = array('age_yrs_playmate_','age_mos_playmate_','gender_playmate_','q1_number_playtimes_playmate','q2_avg_playtime_playmate','q3_related_playmate','q4_playarea_playmate','q5_proximity_playmate','q6_sameschool_playmate','q7_samechildcare_playmate','q8_specialneeds_playmate','q9_yourchild_like_playmate','q10_like_yourchild_playmate','q11_getalong_playmate','q12_leading_play_playmate','q13_typical_playtone_playmate','q14_typical_excitement_playmate','q15_num_conflicts_playmate','q16_disruptive_playmate','q17_how_involved_playmate','q18_arrangeplay_you_playmate','q18_arrangeplay_yourchild_playmate','q18_arrangeplay_other_playmate','q19_arrange_contacts_playmate','q20_stress_monitorplay_playmate','q21_facililate_getalong_playmate','q21_participate_activity_playmate','q21_maintain_presence_playmate','q21_outofview_listen_playmate','q21_outofview_notlisten_playmate','q22_manage_emotions_playmate','q22_understand_rules_playmate','q22_understand_howtoplay_playmate','q22_startplay_playmate','q22_remain_inplay_playmate','q22_manage_conflicts_playmate');
            $group_qstn = array('age_yrs_playmate_','age_mos_playmate_','q1_number_playtimes_playmate','q2_avg_playtime_playmate');
             foreach($questions as $qstn) {
-                $q = $qstn.$i; //print "QQQQQ8". $values['q8_specialneeds_playmate'.$i]; 
+                $q = $qstn.$i; //print "QQQQQ8";// print_r( $values['q8_specialneeds_playmate'.$i]); 
                 if(empty($values[$q]) && $i <= $playmates_listed && ($i == substr($first, -1))) { 
                    if(in_array($qstn, $group_qstn)) {
                        if($values[$q] == null) { 
@@ -709,27 +710,27 @@ class NDB_BVL_Instrument_peer_socialcontact extends NDB_BVL_Instrument
                                 $errors[$q] = "Please specify";
                             }
                         } else {
-                            $errors[$q] = "Please specify";
+                            if(empty($values[$q])) {
+                                $errors[$q] = "Please specify";
+                            }
+                        }
+                   }
+                    foreach($values['q8_specialneeds_playmate'.$i ] as $key=>$val) { 
+                        if(empty($val)) { 
+                           $errors['q8_specialneeds_playmate'.$i] = "Please specify";
                         }
                     }
-               // }
-                if($qstn == 'q8_specialneeds_playmate') { 
-                    foreach($values[$q] as $key=>$val) {
-                        if(empty($val)) {
-                           $errors[$q] = "Please specify";
-                        }
-                    }
-                }
-           // } 
             if($values["q3_related_playmate".$i] == 'other'&& empty($values["q3_related_other_playmate".$i]) ) {
                 $errors["q3_related_other_playmate".$i."_group"] = "Please specify relationship";    
             }
 
             if($values["q4_playarea_playmate".$i] == 'mostly_other' && empty($values["q4_playarea_other_playmate".$i])) {
                 $errors["q4_playarea_other_playmate".$i."_group"] = "Please specify play area";    
-            }
-            if($values["q8_specialneeds_playmate".$i] == 'other' && empty($values["q8_specialneeds_other_playmate".$i])) {
-                $errors["q8_specialneeds_other_playmate".$i."_group"] = "Please specify play area";
+            } 
+            foreach($values["q8_specialneeds_playmate".$i] as $key=>$value) {
+                if($value  == 'other' && empty($values["q8_specialneeds_other_playmate".$i])) {
+                    $errors["q8_specialneeds_other_playmate".$i."_group"] = "Please specify play area";
+                }
             }
 	    $q18 = array("q18_arrangeplay_you_playmate".$i,
 			    "q18_arrangeplay_yourchild_playmate".$i,
@@ -742,33 +743,38 @@ class NDB_BVL_Instrument_peer_socialcontact extends NDB_BVL_Instrument
           }
         }
        }
-      }
-     if(array_key_exists('q23_childin_school', $values)) {
+      } 
+      if(array_key_exists('q23_childin_school', $values)) {
     
-          $q_list = array ('q27_numchildren_perclass','q28_numchildren_specialneeds','q33_numchildren_perclass','q34_numchildren_specialneeds' );
-          foreach ($q_list as $q ) {
-              if(! is_numeric($values[$q])) {
-                  $errors[$q] = "Please specify numerical values only";
-              }
-          }
- 
 	  if($values['q27_numchildren_perclass'] == null   && $values['q23_childin_school'] == 'yes') {
 		  $errors["q27_numchildren_perclass"] = "Please specify";
 	  }
+          if(!is_numeric($values['q27_numchildren_perclass'])   && $values['q23_childin_school'] == 'yes') {
+                  $errors["q27_numchildren_perclass"] = "Please specify numerical values only";
+          }
           if( $values['q28_numchildren_specialneeds'] == null && $values['q23_childin_school'] == 'yes') {
                   $errors["q28_numchildren_specialneeds"] = "Please specify";
+          }
+          if(! is_numeric($values['q28_numchildren_specialneeds']) && $values['q23_childin_school'] == 'yes') {
+                  $errors["q28_numchildren_specialneeds"] = "Please specify numerical values only";
           }
           if( $values['q33_numchildren_perclass'] == null && $values['q29_childin_childcare'] == 'yes') {
                   $errors["q33_numchildren_perclass"] = "Please specify";
           }
+          if( !is_numeric ($values['q33_numchildren_perclass']) && $values['q29_childin_childcare'] == 'yes') {
+                  $errors["q33_numchildren_perclass"] = "Please specify numerical values only";
+          }
          if( $values['q34_numchildren_specialneeds'] == null && $values['q29_childin_childcare'] == 'yes') {
                   $errors["q34_numchildren_specialneeds"] = "Please specify";
           }
-
+          if(!is_numeric( $values['q34_numchildren_specialneeds']) && $values['q29_childin_childcare'] == 'yes') {
+                  $errors["q34_numchildren_specialneeds"] = "Please specify";
+          }
 
      }
      if(array_key_exists('q10a_autism_effect_other_children_autism', $values)) {
-          $q_list = array ('q10a_autism_effect_other_children_autism','q10b_autism_effect_other_children_devdelay', 'q10c_autism_effect_sameage','q10d_autism_effect_younger','q10e_autism_effect_older');
+          $q_list = array ('q10a_autism_effect_other_children_autism','q10b_autism_effect_other_children_devdelay', 
+                           'q10c_autism_effect_sameage','q10d_autism_effect_younger','q10e_autism_effect_older');
           foreach($q_list as $q) {
               if($values[$q] == null) {
                   $errors[$q] = "Please specify";
