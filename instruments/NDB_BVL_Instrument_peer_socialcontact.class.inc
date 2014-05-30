@@ -837,8 +837,8 @@ class NDB_BVL_Instrument_peer_socialcontact extends NDB_BVL_Instrument
         $tpl_data = array();
 
         $tpl_data['questions'] = $DB->pselect(
-            "SELECT pto.Description as question,
-            SourceField FROM parameter_type LEFT JOIN parameter_type_override pto USING (Name) 
+            "SELECT Description as question,
+            SourceField FROM parameter_type  
             WHERE SourceFrom=:TN AND 
             SourceField NOT IN ('Validity', 'Administration')",
                 array(
