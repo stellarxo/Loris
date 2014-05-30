@@ -41,12 +41,11 @@ class NDB_BVL_Instrument_eye_tracking extends NDB_BVL_Instrument
             return PEAR::raiseError ("Could not connect to database: ".$db->getMessage());
         }
         // required fields for data entry completion status
-        $this->_requiredElements = array('Examiner', "Date_taken", 'q1_fidgety_social_situations', "q17_recognizes_unfair",
-                "q43_separates_from_caregivers");
+        $this->_requiredElements = array();
 
         //MODIFY THIS WHEN THE SCORING IS IMPLEMENTED
 
-        $this->_doubleDataEntryDiffIgnoreColumns = array('CommentID', 'UserID', 'Testdate', 'Window_Difference', 'Candidate_Age','Data_entry_completion_status','srs_score');
+        $this->_doubleDataEntryDiffIgnoreColumns = array();
 
         // setup the form
         $this->_setupForm();
