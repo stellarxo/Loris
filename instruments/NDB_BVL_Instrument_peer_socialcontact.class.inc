@@ -851,6 +851,27 @@ class NDB_BVL_Instrument_peer_socialcontact extends NDB_BVL_Instrument
             array('CID' => $this->getCommentID())
         );
         $total_playmates = $Responses['total_playmates'];
+        $to_unset = array();
+        if($total_playmates == 1 || $total_playmates == 0)  {
+            $to_unset = array ('know_1_2','know_1_3','know_1_4','know_1_5','know_2_3','know_2_4','know_2_5','know_3_4','know_3_5','know_4_5');
+        }
+        if($total_playmates == 2) {
+            $to_unset = array ('know_1_3','know_1_4','know_1_5','know_2_3','know_2_4','know_2_5','know_3_4','know_3_5','know_4_5');
+        }
+        if($total_playmates == 3) {
+            $to_unset = array ('know_1_4','know_1_5','know_2_4','know_2_5','know_3_4','know_3_5','know_4_5');
+        }
+        if($total_playmates == 4) {
+            $to_unset = array ('know_1_5','know_2_5','know_3_5','know_4_5');
+        }
+
+	foreach($to_unset as $temp) {
+		foreach($tpl_data['questions'] as $key=>$val) {
+                    if($val['SourceField'] == $temp) {
+                        unset($tpl_data['questions'][$key]);
+                    }
+		}
+	}
         $questions_toremove = array('peer_initials_' ,'age_yrs_playmate_','age_mos_playmate_','gender_playmate_','q1_number_playtimes_playmate','q2_avg_playtime_playmate','q3_related_playmate','q3_related_other_playmate','q4_playarea_playmate','q4_playarea_other_playmate','q5_proximity_playmate','q6_sameschool_playmate','q7_samechildcare_playmate','q8_specialneeds_playmate','q8_specialneeds_other_playmate','q9_yourchild_like_playmate','q10_like_yourchild_playmate','q11_getalong_playmate','q12_leading_play_playmate','q13_typical_playtone_playmate','q14_typical_excitement_playmate','q15_num_conflicts_playmate','q16_disruptive_playmate','q17_how_involved_playmate','q18_arrangeplay_you_playmate','q18_arrangeplay_yourchild_playmate','q18_arrangeplay_other_playmate','q19_arrange_contacts_playmate','q20_stress_monitorplay_playmate','q21_facililate_getalong_playmate','q21_participate_activity_playmate','q21_maintain_presence_playmate','q21_outofview_listen_playmate','q21_outofview_notlisten_playmate','q22_manage_emotions_playmate','q22_understand_rules_playmate','q22_understand_howtoplay_playmate','q22_startplay_playmate','q22_remain_inplay_playmate','q22_manage_conflicts_playmate');
       for($i= $total_playmates+1; $i<=5; $i++) {
            foreach($questions_toremove as $qstn) {
@@ -877,19 +898,35 @@ class NDB_BVL_Instrument_peer_socialcontact extends NDB_BVL_Instrument
        }
        $activity_other = array('activity_desc_'=>'activity_other');
        for($i=1; $i<=3; $i++) {
-         foreach($questions_other as $other=>$other_val) {
+         foreach($activity_other as $other=>$other_val) {
              $field = $other.$i;
              foreach($tpl_data['questions'] as $key=>$val) {
                    if($val['SourceField'] == $other_val.$i && $Responses[$field] != 'other') {
                        unset($tpl_data['questions'][$key]); //unset all if Other specify question if answer to previous question is not set to other
                    }
+                   
                }
 
           }
+          $all_activities = array ('activity_desc_'.$i,'activity'.$i."_meet_permonth",'activity'.$i."_numchildren_participate",'activity'.$i."_numchildren_class",'activity'.$i."_numchildren_spneeds");
+                   
        }
-
        foreach ($tpl_data['questions'] as $key=>&$row) {
             if (isset($Responses[$row['SourceField']])) {
+                $section3a = array('q24_childin_spneeds_school','q25_school_numdays_perweek','q26_school_numhrs_perday',
+                                   'q27_numchildren_perclass','q28_numchildren_specialneeds' );
+		foreach($section3a as $sec) {
+			if($row['SourceField'] == $sec && $Responses['q23_childin_school'] == 'no') {
+			    unset($tpl_data['questions'][$key]);
+			}
+		}
+                $section3b = array('q30_childin_spneeds_childcare','q31_childcare_numdays_perweek','q32_childcare_numhrs_perday',
+                                   'q33_numchildren_perclass','q34_numchildren_specialneeds');
+                foreach($section3b as $sec) {
+                        if($row['SourceField'] == $sec && $Responses['q29_childin_childcare'] == 'no') {
+                            unset($tpl_data['questions'][$key]);
+                        }
+                }  
                 if($row['SourceField'] == 'respondent_other' && $Responses['respondent'] != 'other') {
                    unset($tpl_data['questions'][$key]);
                 } elseif (empty ($row['question'] ) || empty($row['SourceField']) ) {

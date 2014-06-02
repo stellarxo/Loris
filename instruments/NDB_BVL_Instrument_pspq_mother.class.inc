@@ -104,7 +104,7 @@ class NDB_BVL_Instrument_pspq_mother extends NDB_BVL_Instrument
         $rules_array = array("respondent{@}=={@}other");
         $this->XINRegisterRule('respondent_other', $rules_array, "Please specify relationship", 'respondent_other_group');
 
-        $this->addSelect('respondent_gender',"Gender ", $this->gender); 
+        $this->addSelect('respondent_gender',"Your Gender", $this->gender); 
         $this->XINRegisterRule('respondent_gender',array("respondent_gender{@}=={@}NEVER_REQUIRED"));
 
         $this->form->addElement('static', null, "<br /><br />");
@@ -205,7 +205,7 @@ class NDB_BVL_Instrument_pspq_mother extends NDB_BVL_Instrument
         unset($group);
         $rules_array = array("informant{@}=={@}other");
         $this->XINRegisterRule('informant_other', $rules_array, "Please specify relationship", 'informant_other_group');
-        $this->addSelect('informant_gender',"Gender ", $this->gender); 
+        $this->addSelect('informant_gender',"Gender of the other biological parent of the child", $this->gender); 
         $this->XINRegisterRule('informant_gender',array("informant_gender{@}=={@}NEVER_REQUIRED"));
 
         $this->form->addElement('static', null, "<br /><br />");

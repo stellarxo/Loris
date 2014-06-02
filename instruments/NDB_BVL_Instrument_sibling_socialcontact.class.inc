@@ -103,11 +103,8 @@ class NDB_BVL_Instrument_sibling_socialcontact extends NDB_BVL_Instrument
         $questions = array("q3_different_playtimes"=>"3. On days when they play, how many different times do they usually play?",
                 "q4_avg_playtime"=>"4. How long are they together in an average play time?(in Minutes)");
         foreach($questions as $field=>$label) {
-            $group [] = $this->createText($field, $label);
-            $this->addGroup($group, $field . "_group", $label, null, false);
-            $this->XINRegisterRule($field, array("$field{@}=={@}NEVER_REQUIRED"),$field . "_group");
-            unset($group);
-            $this->addGroupRule($field . "_group", array(array(array("Value must be numeric.", 'numeric'))));
+            $this->addBasicText($field, $label);
+            $this->XINRegisterRule($field, array("$field{@}=={@}NEVER_REQUIRED"));
         }
          
         $this->addSelect('q5_rely_olderchild',"5. To what extent do you rely on the older child to help care for the younger sibling such as help<BR>$this->indent getting dressed, help during meals, or help getting ready for school?", $this->rating1);
@@ -192,12 +189,16 @@ class NDB_BVL_Instrument_sibling_socialcontact extends NDB_BVL_Instrument
         $errors = array();
         $questions = array("q3_different_playtimes", "q4_avg_playtime");
         foreach($questions as $key) {
-             if(empty($values[$key])) { 
-                 $errors[$key."_group"] = "Please specify"; 
+             if( $values[$key] == null) { 
+                 $errors[$key] = "Please specify"; 
 
+             }
+             if(!is_numeric($values[$key])) {
+                 $errors[$key] = "Please specify numerical values only";
              }
 
         }
+//print_r($errors);
         return $errors;
     }
     function getReview() {
