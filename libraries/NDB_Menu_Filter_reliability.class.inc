@@ -362,7 +362,7 @@ class NDB_Menu_Filter_reliability extends NDB_Menu_Filter
           $this->cross_site_flagging("ados_module1", $site, array_remove($site, $site_list), $db, 1);
           $this->cross_site_flagging("ados_module2", $site, array_remove($site, $site_list), $db, 1);
           $this->cross_site_flagging("csbs", $site, array_remove($site, $site_list), $db, 1);
-          $this->cross_site_flagging("ados2_module1", $site, array_remove($site, $site_list), $db, 1);
+         // $this->cross_site_flagging("ados2_module1", $site, array_remove($site, $site_list), $db, 1);
          // $this->cross_site_flagging_aims($site, array_remove($site, $site_list), $db, 2);
           // IBIS2 reliability
           $this->cross_site_flagging("aosi", $site, array("UofA"), $db, 2);
