@@ -340,6 +340,7 @@ class NDB_Menu_Filter_reliability extends NDB_Menu_Filter
           $this->within_site_flagging("ados_module1", 0.1, $site, $db, 1);
           $this->within_site_flagging("ados_module2", 0.1, $site, $db, 1);
           $this->within_site_flagging("csbs", 0.1, $site, $db, 1);
+          $this->within_site_flagging("ados2_module1", 0.1, $site, $db, 1);
           //ibis 2 reliability
           $this->within_site_flagging_visitlevel("aims", 0.1, $site, $db,'V03' ,2);
           $this->within_site_flagging_visitlevel("aims", 0.05, $site, $db,'V06' ,2);
@@ -350,7 +351,8 @@ class NDB_Menu_Filter_reliability extends NDB_Menu_Filter
           $this->within_site_flagging("adi_r_proband", 0.1, $site, $db, 2);
           $this->within_site_flagging("aosi", 0.1, $site, $db, 2);
           $this->within_site_flagging("csbs", 0.1, $site, $db, 2);
-          $this->within_site_flagging("ados2_module1", 0.1, $site, $db, 1);
+          $this->within_site_flagging_visitlevel("ados2_module1", 0.1, $site, $db,'V24' ,2);
+          $this->within_site_flagging_visitlevel("ados2_module1", 0.1, $site, $db,'V36' ,2);
         }    
         
         foreach($site_list as $site){
@@ -360,11 +362,13 @@ class NDB_Menu_Filter_reliability extends NDB_Menu_Filter
           $this->cross_site_flagging("ados_module1", $site, array_remove($site, $site_list), $db, 1);
           $this->cross_site_flagging("ados_module2", $site, array_remove($site, $site_list), $db, 1);
           $this->cross_site_flagging("csbs", $site, array_remove($site, $site_list), $db, 1);
+          $this->cross_site_flagging("ados2_module1", $site, array_remove($site, $site_list), $db, 1);
          // $this->cross_site_flagging_aims($site, array_remove($site, $site_list), $db, 2);
           // IBIS2 reliability
           $this->cross_site_flagging("aosi", $site, array("UofA"), $db, 2);
-          $this->cross_site_flagging("adi_r_subject", $site, array_remove($site, $site_list), $db, 2); 
+         // $this->cross_site_flagging("adi_r_subject", $site, array_remove($site, $site_list), $db, 2); 
           $this->cross_site_flagging("csbs", $site, array_remove($site, $site_list), $db, 2);
+         // $this->cross_site_flagging("ados2_module1", $site, array_remove($site, $site_list), $db, 2);
 
         }            
         
