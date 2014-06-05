@@ -164,8 +164,8 @@ class NDB_Menu_Filter_reliability extends NDB_Menu_Filter
         $subproject_options = array(null=>'Any') + $subproject_options;
         $gender_options = array(null=>'Any', 'Male'=>'Male', 'Female'=>'Female');
         $list_of_instruments = array(null=>'Any', 'csbs'=>'CSBS', 'adi_r'=>'ADI-R', 'ados'=>'ADOS', 'aosi' => 'AOSI',
-                                     'aims'=>'AIMS');
-        $list_of_instruments_only = array('csbs'=>'CSBS', 'adi_r_proband'=>'ADI-R (Proband)', 'adi_r_subject' => 'ADI-R (Subject)', 'ados_module1'=>'ADOS (Module 1)', 'ados_module2' => 'ADOS (Module 2)', 'aosi' => 'AOSI');
+                                     'aims'=>'AIMS','ados2_module1'=>'ADOS2');
+        $list_of_instruments_only = array('csbs'=>'CSBS', 'adi_r_proband'=>'ADI-R (Proband)', 'adi_r_subject' => 'ADI-R (Subject)', 'ados_module1'=>'ADOS (Module 1)', 'ados_module2' => 'ADOS (Module 2)', 'aosi' => 'AOSI', 'ados2_module1'=>'ADOS2 (Module 1)');
         $lock_options = array(null=>'','Locked'=>'Locked','Unlocked'=>'Unlocked');
         $list_of_projects =& Utility::getProjectList();
 
@@ -350,6 +350,7 @@ class NDB_Menu_Filter_reliability extends NDB_Menu_Filter
           $this->within_site_flagging("adi_r_proband", 0.1, $site, $db, 2);
           $this->within_site_flagging("aosi", 0.1, $site, $db, 2);
           $this->within_site_flagging("csbs", 0.1, $site, $db, 2);
+          $this->within_site_flagging("ados2_module1", 0.1, $site, $db, 1);
         }    
         
         foreach($site_list as $site){
@@ -391,14 +392,14 @@ class NDB_Menu_Filter_reliability extends NDB_Menu_Filter
         } else {
             $max = floor($ratio * $total_records_count);
         }
-         
+        
          //echo("Site: {$current_site} <BR>");
          //echo($current_count . " --- " . $total_count . "<BR>");
          //echo("Max (ratio: {$ratio}/jump: {$jump_step}): {$max} <BR><BR>");
         
        for($i = 0; $i < count($instrument_records) && $current_count + 1 <= $max; $i += 2){
           $commentID = $instrument_records[$i]["CommentID"];
-          if(!find_cID($commentID, $this->reliability_table)){
+          if(!find_cID($commentID, $this->reliability_table)){ 
             $db->insert('reliability', array('CommentID' => $instrument_records[$i]["CommentID"],
                                               'reliability_center_id' => $this->site_id[$current_site],
                                               'Instrument' => $instrument
