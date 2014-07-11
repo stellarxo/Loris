@@ -154,11 +154,11 @@ class NDB_Menu_Filter_videos extends NDB_Menu_Filter
         $lock_options = array(null=>'','Locked'=>'Locked','Unlocked'=>'Unlocked');
 
         // Form Elements
-        $this->form->addElement('text', 'PSCID', 'PSCID:', array("size"=>9, "maxlength"=>7));
-        $this->form->addElement('select', 'Instrument', 'Instrument:', $list_of_instruments);
-        $this->form->addElement('select', 'visitLabel', 'Visit Label:', $list_of_visit_labels);
-        $this->form->addElement('select', 'For_site', 'For Site:', $list_of_sites);
-        $this->form->addElement('text', 'uploaded_by', 'Uploaded By');
+        $this->addBasicText('PSCID', 'PSCID:', array("size"=>9, "maxlength"=>7));
+        $this->addSelect('Instrument', 'Instrument:', $list_of_instruments);
+        $this->addSelect('visitLabel', 'Visit Label:', $list_of_visit_labels);
+        $this->addSelect('For_site', 'For Site:', $list_of_sites);
+        $this->addBasicText('uploaded_by', 'Uploaded By');
        
         return true;
     }
