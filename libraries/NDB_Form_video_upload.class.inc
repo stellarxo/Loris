@@ -105,14 +105,14 @@ class NDB_Form_video_upload extends NDB_Form
 
         $candidates = hash_it($candidates + $candidates2, "PSCID");
         
-        $this->form->addElement("select", "Instrument", "Instrument", $instruments);
+        $this->addSelect("Instrument", "Instrument", $instruments);
         if($this->_isEARLIUser()) {
-            $this->form->addElement("text", "PSCID", "PSCID");
+            $this->addBasicText("PSCID", "PSCID");
         } else {
-            $this->form->addElement("select", "PSCID", "PSCID", $candidates);
+            $this->addSelect("PSCID", "PSCID", $candidates);
         }
         $visit_list = Utility::getVisitList();
-        $this->form->addElement("select", "visitLabel", "Visit Label", $visit_list);
+        $this->addSelect("visitLabel", "Visit Label", $visit_list);
         $dateOptions = array(
                              'language' => 'en',
                              'format'   => 'YMd',
@@ -122,12 +122,12 @@ class NDB_Form_video_upload extends NDB_Form
                              'emptyOptionValue' => null
                              );
 
-        $this->form->addElement('date', 'Date_taken', 'Date of Administration', $dateOptions);
+        $this->addBasicDate('Date_taken', 'Date of Administration', $dateOptions);
         //$this->form->addElement("select", "For_site", "Site This File is Being Uploaded For", array(null, "DCC", "SEA", "PHI", "STL", "UNC", "UofA"));
-        $this->form->addElement("select", "For_site", "Site This File is Being Uploaded For", Utility::getSiteList(false));
-        $this->form->addElement("select", "multipart", "Is this upload split into multiple parts?", array("Yes" => "Yes", "No" => "No"));
-        $this->form->addElement("select", "EARLI", "Is this an EARLI collaboration video?", array('' => '', "1" => "Yes", "0" => "No"));
-        $this->form->addElement("textarea", "comments", "Comments (optional)", array ('rows' => 5, 'cols' => 50));
+        $this->addSelect("For_site", "Site This File is Being Uploaded For", Utility::getSiteList(false));
+        $this->addSelect("multipart", "Is this upload split into multiple parts?", array("Yes" => "Yes", "No" => "No"));
+        $this->addSelect("EARLI", "Is this an EARLI collaboration video?", array('' => '', "1" => "Yes", "0" => "No"));
+        $this->addBasicTextArea("comments", "Comments (optional)", array('rows' => 5, 'cols' => 50));
         if($this->identifier){
           $this->form->addElement('static', 'File_name', 'File name');
         }else{
