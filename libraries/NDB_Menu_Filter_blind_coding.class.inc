@@ -110,35 +110,35 @@ class NDB_Menu_Filter_blind_coding extends NDB_Menu_Filter
         $lock_options = array(null=>'','Locked'=>'Locked','Unlocked'=>'Unlocked');
 
         // Form Elements
-        $this->form->addElement('select', 'CommentID', 'CommentID:', $subproject_options);
-        $this->form->addElement('select', 'Objective', 'Objective:', $subproject_options);
-        $this->form->addElement('select', 'CenterID', 'Site:', $list_of_sites);
-        $this->form->addElement('select', 'reliability_center_id', 'Site of Coding:', $list_of_sites);
-        $this->form->addElement('text', 'DCCID', 'DCCID::', array("size"=>9, "maxlength"=>6));
-        $this->form->addElement('text', 'PSCID', 'PSCID:', array("size"=>9, "maxlength"=>7));
-        $this->form->addElement('select', 'Gender', 'Gender:', $gender_options);
-        $this->form->addElement('select', 'Visit_label', 'Visit Label:', $list_of_visit_labels);
-        $this->form->addElement('select', 'Instrument', 'Instrument:', $list_of_instruments);
-        $this->form->addElement('select', 'Invalid', 'Invalid Candidate:', array('' => '', 'yes' => 'Yes', 'no' => 'No'));
+        $this->addSelect('CommentID', 'CommentID:', $subproject_options);
+        $this->addSelect('Objective', 'Objective:', $subproject_options);
+        $this->addSelect('CenterID', 'Site:', $list_of_sites);
+        $this->addSelect('reliability_center_id', 'Site of Coding:', $list_of_sites);
+        $this->addBasicText('DCCID', 'DCCID::', array("size"=>9, "maxlength"=>6));
+        $this->addBasicText('PSCID', 'PSCID:', array("size"=>9, "maxlength"=>7));
+        $this->addSelect('Gender', 'Gender:', $gender_options);
+        $this->addSelect('Visit_label', 'Visit Label:', $list_of_visit_labels);
+        $this->addSelect('Instrument', 'Instrument:', $list_of_instruments);
+        $this->addSelect('Invalid', 'Invalid Candidate:', array('' => '', 'yes' => 'Yes', 'no' => 'No'));
 	 // $this->form->addElement('select', 'Lock_record', 'Lock_record:', $lock_options);
        
        // For swapping candidates
         if ($user->hasPermission('blind_swap_candidates')) {
             $this->tpl_data['blind_swap_candidates'] = true;
-            $this->form->addElement('select', 'Cand1Visit_label', 'Visit Label:', $list_of_visit_labels_only);
-            $this->form->addElement('text', 'Cand1PSCID', 'PSCID:');
-            $this->form->addElement('select', 'Cand2Visit_label', 'Visit Label:', $list_of_visit_labels_only);
-            $this->form->addElement('text', 'Cand2PSCID', 'PSCID:');
-            $this->form->addElement('select', 'SwapInstrument', 'Instrument:', $list_of_instruments_only);
+            $this->addSelect('Cand1Visit_label', 'Visit Label:', $list_of_visit_labels_only);
+            $this->addBasicText('Cand1PSCID', 'PSCID:');
+            $this->addSelect('Cand2Visit_label', 'Visit Label:', $list_of_visit_labels_only);
+            $this->addBasicText('Cand2PSCID', 'PSCID:');
+            $this->addSelect('SwapInstrument', 'Instrument:', $list_of_instruments_only);
         } else {
             $this->tpl_data['blind_swap_candidates'] = false;
         }
 
         if($user->hasPermission('blind_add_candidates')) {
-            $this->form->addElement('text', 'AddPSCID', 'PSCID:');
-            $this->form->addElement('select', 'AddVisit_label', 'Visit Label:', array_merge(array('' => 'Any'), $list_of_visit_labels_only));
-            $this->form->addElement('select', 'AddBlindCenter', 'Site of Coding:', $list_of_sites);
-            $this->form->addElement('select', 'AddInstrument', 'Instrument:', array_merge(array('' => 'Any'), $list_of_instruments_only));
+            $this->addBasicText('AddPSCID', 'PSCID:');
+            $this->addSelect('AddVisit_label', 'Visit Label:', array_merge(array('' => 'Any'), $list_of_visit_labels_only));
+            $this->addSelect('AddBlindCenter', 'Site of Coding:', $list_of_sites);
+            $this->addSelect('AddInstrument', 'Instrument:', array_merge(array('' => 'Any'), $list_of_instruments_only));
             $this->tpl_data['blind_add_candidates'] = true;
         } else {
             $this->tpl_data['blind_add_candidates'] = false;
