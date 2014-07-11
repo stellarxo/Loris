@@ -95,8 +95,8 @@ class NDB_Form_new_profile extends NDB_Form
                              );
 
         // add date of birth
-        $this->form->addElement('date', 'dob1', 'Date of Birth', $dateOptions);
-        $this->form->addElement('date', 'dob2', 'Confirm Date of Birth', $dateOptions);
+        $this->addBasicDate('dob1', 'Date of Birth', $dateOptions);
+        $this->addBasicDate('dob2', 'Confirm Date of Birth', $dateOptions);
     
         // date of birth rules
         $this->form->addGroupRule('dob1', 'Date of Birth is required', 'required');
@@ -104,8 +104,8 @@ class NDB_Form_new_profile extends NDB_Form
 
         if($config->getSetting('useEDC') == "true"){
             // add expected date of confinement
-            $this->form->addElement('date', 'edc1', 'Expected Date of Confinement', $dateOptions);
-            $this->form->addElement('date', 'edc2', 'Confirm EDC', $dateOptions);
+            $this->addBasicDate('edc1', 'Expected Date of Confinement', $dateOptions);
+            $this->addBasicDate('edc2', 'Confirm EDC', $dateOptions);
 
             // expected date of confinement rules
             $this->form->addRule(array('edc1', 'edc2'), 'EDC fields must match', 'compare');
@@ -117,16 +117,16 @@ class NDB_Form_new_profile extends NDB_Form
             foreach($projects as $projectID => $projectName) {
                 $projList[$projectID] = $projectName;
             }
-            $this->form->addElement("select", 'ProjectID', 'Project', $projList);
+            $this->addSelect('ProjectID', 'Project', $projList);
         }
 
         // add gender
         $genderOptions = array('' => '', 'Male' => 'Male', 'Female' => 'Female');
-        $this->form->addElement('select', 'gender', 'Gender', $genderOptions);
+        $this->addSelect('gender', 'Gender', $genderOptions);
     
         // gender rules
         $this->form->addRule('gender', 'Gender is required', 'required');
-        $this->form->addElement("select", "candidate_plan", 'Candidate Plan', 
+        $this->addSelect("candidate_plan", 'Candidate Plan', 
             array(
                 ''         => '',
                 '3m_plan1' => '3m_plan1',
@@ -140,7 +140,7 @@ class NDB_Form_new_profile extends NDB_Form
         );
         $PSCIDsettings = $config->getSetting('PSCID');
         if($PSCIDsettings['generation'] == 'user') {
-            $this->form->addElement('text', 'PSCID', 'PSCID');
+            $this->addBasicText('PSCID', 'PSCID');
         }
         $this->form->addFormRule(array(&$this, '_validate'));
     }
