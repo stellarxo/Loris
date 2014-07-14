@@ -26,3 +26,4 @@
       </tr>
       {/section}
    </table>
+</div>
