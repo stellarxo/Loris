@@ -5,57 +5,70 @@
 {/if}
 <form method="post" name="update_candidate_info" id="update_candidate_info" enctype="multipart/form-data">
 {if not $success}
-<table class="std">
-<!-- table title -->
-<tr><th colspan="2">Update Candidate Information</th></tr>
-
-{foreach from=$form.errors item=error}
-<tr>
-<td nowrap="nowrap" colspan="2" class="error">{$error}</td>
-</tr>
-{/foreach}
-<tr>
-<td nowrap="nowrap" id="pscid">PSCID: {$pscid}</td>
-<td nowrap="nowrap" >DCCID: {$candID}</td>
-</tr>
-
-    <tr>
-        <td nowrap="nowrap">{$form.CandidateGUID.label}</td>
-        <td nowrap="nowrap">{$form.CandidateGUID.html}</td>
-    </tr>
-    <tr>
-      <td nowrap="nowrap">{$form.flagged_caveatemptor.label}</td>
-      <td nowrap="nowrap">{$form.flagged_caveatemptor.html}</td>
-    </tr>
-    <tr>
-      <td nowrap="nowrap">{$form.flagged_reason.label}</td>
-      <td nowrap="nowrap">{$form.flagged_reason.html}</td>
-    </tr>
-    <tr>
-      <td nowrap="nowrap">{$form.flagged_other_group.label}</td>
-      <td nowrap="nowrap">{$form.flagged_other_group.html}</td>
-    </tr>
-
-  </br>
-
-    {foreach from=$elements_list item=element}
-	<tr>
-		<td nowrap="nowrap">{$form.$element.label}</td>
-		<td nowrap="nowrap">{$form.$element.html}</td>
-	</tr>
-	{/foreach}
-
-
-
-<tr>
-    <td nowrap="nowrap">&nbsp;</td>
-    <td nowrap="nowrap" colspan="2">
-    <input class="button" name="fire_away" value="Save" type="submit" />
-{/if}
-<input class="button" onclick="location.href='main.php?test_name=candidate_parameters&candID={$candID}&identifier={$candID}'" value="Return to profile" type="button" />
-
-</td>
-</tr>
-
-</table>
-
+<div class="panel panel-primary">
+    <div class="panel-heading">
+        Update Candidate Information
+    </div>
+    <div class="panel-body">
+        {foreach from=$form.errors item=error}
+            <font class="error">{$error}</font>
+        {/foreach}
+        <div class="row">
+            <label class="col-sm-2">PSCID:</label>
+            <div class="col-sm-4">
+                {$pscid}
+            </div>
+        </div>
+        <br>
+        <div class="row">
+            <label class="col-sm-2">DCCID:</label>
+            <div class="col-sm-4">
+                {$candID}
+            </div>
+        </div>
+        <br>
+        <div class="row">
+            <label class="col-sm-4">{$form.CandidateGUID.label}</label>
+            <div class="col-sm-4">
+                {$form.CandidateGUID.html}
+            </div>
+        </div>
+        <br>
+        <div class="row">
+            <label class="col-sm-4">{$form.flagged_caveatemptor.label}</label>
+            <div class="col-sm-4">
+                {$form.flagged_caveatemptor.html}
+            </div>
+        </div>
+        <br>
+        <div class="row">
+            <label class="col-sm-4">{$form.flagged_reason.label}</label>
+            <div class="col-sm-4">
+                {$form.flagged_reason.html}
+            </div>
+        </div>
+        <br>
+        <div class="row">
+            <label class="col-sm-4">{$form.flagged_other_group.label}</label>
+            <div class="col-sm-8 form-inline">
+                {$form.flagged_other_group.html}
+            </div>
+        </div>
+        <br>
+        {foreach from=$elements_list item=element}
+            <div class="row">
+                <label class="col-sm-4">{$form.$element.label}</label>
+                <div class="col-sm-4">
+                    {$form.$element.html}
+                </div>
+            </div>
+            <div class="col-xs-12"></div>
+            <div class="col-xs-12"></div>
+            <div class="col-xs-12"></div>
+            <br>
+        {/foreach}
+        <input class="btn btn-sm btn-primary col-sm-offset-3" name="fire_away" value="Save" type="submit" />
+        {/if}
+        <input class="btn btn-sm btn-primary" onclick="location.href='main.php?test_name=candidate_parameters&candID={$candID}&identifier={$candID}'" value="Return to profile" type="button" />
+    </div>
+</div>

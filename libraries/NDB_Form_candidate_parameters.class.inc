@@ -633,10 +633,10 @@ class NDB_Form_candidate_parameters extends NDB_Form
             $caveat_options[$row['ID']] = $row['Description'];
         }
 
-        $this->form->addElement('text', 'CandidateGUID', 'Candidate GUID:');
-        $this->form->addElement('select','flagged_caveatemptor','Caveat Emptor flag for candidate', 
+        $this->addBasicText('CandidateGUID', 'Candidate GUID:');
+        $this->addSelect('flagged_caveatemptor','Caveat Emptor flag for candidate', 
                                  array(''=>'','true'=>'True','false'=>'False'));
-        $this->form->addElement('select','flagged_reason',$this->indent.'Reason for Caveat Emptor flag',
+        $this->addSelect('flagged_reason',$this->indent.'Reason for Caveat Emptor flag',
                                 $caveat_options);
         $this->addTextAreaGroup('flagged_other',$this->indent.'If Other, please specify',
                                           array(null=>'','not_answered'=>'Not Answered'));
@@ -659,18 +659,18 @@ class NDB_Form_candidate_parameters extends NDB_Form
                     foreach($options as $option) {
                         $elOptions[$option] = $option;
                     }
-        			$this->form->addElement('select', "PTID_".$fresult['ParameterTypeID'], $fresult['Description'], $elOptions);
+        			$this->addSelect("PTID_".$fresult['ParameterTypeID'], $fresult['Description'], $elOptions);
         		break;
         		
         		case "dat":
-        			$this->form->addElement('date', "PTID_".$fresult['ParameterTypeID'], $fresult['Description'], $dateOptions);
+        			$this->addBasicDate("PTID_".$fresult['ParameterTypeID'], $fresult['Description'], $dateOptions);
         		break;
         		
         		case "int":
         		case "var":
         		case "tex":
             default:
-        			$this->form->addElement('textarea', "PTID_".$fresult['ParameterTypeID'], $fresult['Description']);
+        			$this->addBasicTextArea("PTID_".$fresult['ParameterTypeID'], $fresult['Description']);
         		
         	}
             if($fresult['ParameterTypeID'] == 73754) {
