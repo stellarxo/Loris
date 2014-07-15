@@ -8,7 +8,7 @@
 {if not $success}
 <div class="panel panel-primary">
     <div class="panel-heading">
-        Update Candidate Information
+        Update Family Member Information
     </div>
     <div class="panel-body">
         {foreach from=$form.errors item=error}
@@ -16,7 +16,7 @@
         {/foreach}
         <div class="row">
             <label class="col-sm-2">PSCID:</label>
-            <div class="col-sm-4">
+            <div class="col-sm-4" id="pscid">
                 {$pscid}
             </div>
         </div>
