@@ -581,8 +581,8 @@ class NDB_Form_candidate_parameters extends NDB_Form
 
         $this->tpl_data['pscid'] = $pscid;
 
-        $this->form->addElement('text','SiblingID','Sibling ID:<BR>(Please enter DCCID)');
-        $this->form->addElement('select','relation_type','Relation Type', $this->relationType);
+        $this->addBasicText('SiblingID','Sibling ID:<BR>(Please enter DCCID)');
+        $this->addSelect('relation_type','Relation Type', $this->relationType);
         $this->form->addFormRule(array(&$this, '_validate_add_family'));
         $this->tpl_data['candID'] = $this->identifier; 
 
