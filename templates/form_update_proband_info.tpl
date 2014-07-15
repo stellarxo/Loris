@@ -7,7 +7,7 @@
 {if not $succes}
 <div class="panel panel-primary">
     <div class="panel-heading">
-        Update Candidate Information
+        Update Proband Information
     </div>
     <div class="panel-body">
         {foreach from=$form.errors item=error}
