@@ -697,7 +697,7 @@ class NDB_Form_candidate_parameters extends NDB_Form
 
         $this->tpl_data['pscid'] = $pscid;
         
-        $this->form->addElement('text', 'ProbandGUID', 'Proband GUID:');
+        $this->addBasicText('ProbandGUID', 'Proband GUID:');
         
         $config =& NDB_Config::singleton();
         $probandDateOptions = array(
@@ -709,9 +709,9 @@ class NDB_Form_candidate_parameters extends NDB_Form
             'emptyOptionValue' => null
         );
 
-        $this->form->addElement('date', 'ProbandDoB', 'DoB Proband:', $probandDateOptions);
-        $this->form->addElement('date', 'ProbandDoB2', 'Confirm DoB Proband:', $probandDateOptions);
-        $this->form->addElement('select', 'ProbandGender', 'Proband gender:', array('' => '','Male' => 'Male', 'Female' => 'Female') );
+        $this->addBasicDate('ProbandDoB', 'DoB Proband:', $probandDateOptions);
+        $this->addBasicDate('ProbandDoB2', 'Confirm DoB Proband:', $probandDateOptions);
+        $this->addSelect('ProbandGender', 'Proband gender:', array('' => '','Male' => 'Male', 'Female' => 'Female') );
         
         $this->form->addFormRule(array(&$this,'_validate'));
     }
