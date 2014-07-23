@@ -150,12 +150,12 @@ class NDB_BVL_Instrument_LENA_DailyActivityLog extends NDB_BVL_Instrument
         
         //$this->addDateElement("1_date_completed","Date:");
         $this->form->addElement("static", null, "<br><br>");
-        $group[] = &$this->form->createElement("static", null, null, "Parent-Child Daily Log<BR>Hour");
+        $group[] = &$this->form->createElement("static", null, null, "Parent-Child Daily Log Hour");
         $group[] = &$this->form->createElement("static", null, null, "Environment");
         $group[] = &$this->form->createElement("static", null, null, "DLP Status");
         $group[] = &$this->form->createElement("static", null, null, "Individuals Present");
         $group[] = &$this->form->createElement("static", null, null, "Other Notes");
-        $this->form->addGroup($group, $field."_headers", null, $this->_GUIDelimiter, false);
+        $this->form->addGroup($group, $field."_headers", "table", $this->_GUIDelimiter, false);
         unset($group);
 
         $this->_addTableRow($field);
@@ -216,17 +216,17 @@ class NDB_BVL_Instrument_LENA_DailyActivityLog extends NDB_BVL_Instrument
         $groupname = $page."_".$key."_group";
         $field = $page."_".$key;
         $group[] =& $this->form->createElement("static",null,null,$val);
-        $group[] =& $this->form->createElement("select", $field."_environment",null,$envr);
-        $group[] =& $this->form->createElement("select",$field."_dlpstatus",null,$dlp_status);
-        $group[] =& $this->form->createElement("select",$field."_individuals",null,$individuals_present);
-        $group[] =& $this->form->createElement("textarea",$field."_notes",null);
+        $group[] =& $this->form->createElement("select", $field."_environment","Environment",$envr,array("class" => "col-sm-3"));
+        $group[] =& $this->form->createElement("select",$field."_dlpstatus",null,$dlp_status,array("class" => "col-sm-3"));
+        $group[] =& $this->form->createElement("select",$field."_individuals",null,$individuals_present,array("class" => "col-sm-3"));
+        $group[] =& $this->form->createElement("textarea",$field."_notes",null,array("class" => "col-sm-3"));
         $list = array ("_environment","_dlpstatus","_individuals","_notes");
         foreach($list as $term) {
            $final_field = $field.$term;
            $this->XINRegisterRule($final_field, array("$final_field{@}=={@}NEVER_REQUIRED"),null,$groupname);
 
         }
-        $this->form->addGroup($group, $groupname, null, $this->_GUIDelimiter, false);
+        $this->form->addGroup($group, $groupname, "table", $this->_GUIDelimiter, false);
         unset($group);
        }
    }
