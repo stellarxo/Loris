@@ -26,6 +26,7 @@
                 {$candID}
             </div>
         </div>
+        <br>
         {if $consent}
 			{section name=question loop=$consent}
 				{* 
@@ -45,6 +46,7 @@
 			        	<div class="row">
 						<span class="error col-sm-offset-4">{$form.$row.error}</span>
 					{/if}
+                    <br>
 				{/foreach}
 			{/section}
 		{/if}
