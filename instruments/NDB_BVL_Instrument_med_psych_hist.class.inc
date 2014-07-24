@@ -212,6 +212,12 @@ class NDB_BVL_Instrument_med_psych_hist extends NDB_BVL_Instrument
     *
     */
     function _main(){
+ 
+        $db = & Database::singleton();
+        $record = $db->pselectRow("SELECT s.Visit_label from med_psych_hist n JOIN flag f ON (f.CommentID= n.CommentID)
+                                   JOIN session s ON (s.ID = f.SessionID) join candidate c ON (c.CandID=s.CandID) 
+                                   WHERE n.CommentID=:cid", array('cid'=>$this->getCommentID()));
+
         // display test name
         $this->form->addElement('header', 'instrument_title', "Medical and Psychiatric History");
 
@@ -230,6 +236,10 @@ class NDB_BVL_Instrument_med_psych_hist extends NDB_BVL_Instrument
         $this->addTextElement('relationship_to_child_other', $this->indent . "If other, (please explain)", array('relationship_to_child{@}=={@}other'), "This field is required if the relationship is not previously identified.");
 
         $this->form->addElement('select', 'abbrev_full_version', "Full or abbreviated (items #1-#3) version:", array(null=>'', 'full'=>"Full", 'abbrev'=>"Abbreviated"));
+	if($record['Visit_label'] != 'Screening') {
+		$this->addSelect('followup_form_updated',"Were there any changes?", array(null=>'','yes'=>'Yes','no'=>'No','not_answered'=>'Not Answered'));
+		$this->addLabel("NOTE: If 'No' is entered, continue data entry at item 4, unless the <BR>abbreviated version was administered (in which case, no further <BR> data entry is required).");
+	}
     }
 
     function _page1(){
