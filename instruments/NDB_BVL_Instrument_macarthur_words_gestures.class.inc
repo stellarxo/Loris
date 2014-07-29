@@ -440,7 +440,7 @@ class NDB_BVL_Instrument_macarthur_words_gestures extends NDB_BVL_Instrument
 
         $questionArray = array("1. Extends arm to show you something he/she is holding.", "2. Reaches out and gives you a toy or some object that he/she is holding.", "3. Points (with arm and index finger 		extended) at some interesting object or event.", "4. Waves bye-bye on his/her own when someone leaves.", "5. Extends his/her arm upward to signal a wish to be picked up.", "6. Shakes head `no`.",
                 "7. Nods head `yes`.", "8. Gestures `hush` by placing finger to lips.", "9. Requests something by extending arm and opening and closing hand.", "10. Blows kisses from a distance.", 
-                "11. Smacks lips in a `yum yum` gesture to indicate that something taste good.", "12. Shrugs to indicate `all gone` or `where'd it go`.");
+                "11. Smacks lips in a `yum yum` gesture to indicate that something tastes good.", "12. Shrugs to indicate `all gone` or `where'd it go`.");
 
         $first_communicative_gestures_sometimes = 0;
         $first_communicative_gestures_often = 0;
