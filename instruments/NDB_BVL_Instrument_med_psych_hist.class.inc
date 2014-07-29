@@ -94,6 +94,31 @@ class NDB_BVL_Instrument_med_psych_hist extends NDB_BVL_Instrument
         $this->localDefaults = array_merge($this->localDefaults, array("presence_header"=>"Presence",
         "relative_header"=>"Relative",
         "other_relative_header"=>"Other Relative"));
+        //Are we using the Full or Abbreviated version?
+        // DB Object
+        $db =& Database::singleton();
+        if(PEAR::isError($db)) {
+            return PEAR::raiseError ("Could not connect to database: ".$db->getMessage());
+        }
+
+        //applicable version
+        // This hasn't been implemented terrifically smoothly.  It may require an extra "Save Data" click.
+        // During most regular workflows (data entry), the glitches should go unnoticed.  Hopefully.
+        $query = "SELECT abbrev_full_version from med_psych_hist WHERE CommentID = '".$this->getCommentID()."'";
+        $version = $db->selectOne($query);
+        if(PEAR::isError($version)){
+            return PEAR::raiseError("Query has failed to select version: ".$version->getMessage());
+        }
+
+        if ($version == 'abbrev') {
+            $this->_requiredElements = array_merge($this->_requiredElements, array("child_pregnancy_number"));
+        } else {
+            $this->_requiredElements = array_merge($this->_requiredElements, array("q4_pregnancy_ART", "q10_meds_induce_labor", "q15_seizures_convulsions"));
+        }
+        $record = $db->pselectOne("SELECT followup_form_updated FROM med_psych_hist WHERE CommentID=:cid", array('cid'=>$this->getCommentID()));
+        if($record == 'no') {
+            $this->_requiredElements = array();
+        }
 
     /**
     * Array of column names to be ignored by the double data entry conflict detector.
@@ -170,29 +195,7 @@ class NDB_BVL_Instrument_med_psych_hist extends NDB_BVL_Instrument
 
         //add the initial null choice to the commonly-presented answers options.
         $this->yesNo = array_merge(array(null=>''), $this->yesNo);
-
-        //Are we using the Full or Abbreviated version?
-        // DB Object
-        $db =& Database::singleton();
-        if(PEAR::isError($db)) {
-            return PEAR::raiseError ("Could not connect to database: ".$db->getMessage());
-        }
-
-        //applicable version
-        // This hasn't been implemented terrifically smoothly.  It may require an extra "Save Data" click.
-        // During most regular workflows (data entry), the glitches should go unnoticed.  Hopefully.
-        $query = "SELECT abbrev_full_version from med_psych_hist WHERE CommentID = '".$this->getCommentID()."'";
-        $version = $db->selectOne($query);
-        if(PEAR::isError($version)){
-            return PEAR::raiseError("Query has failed to select version: ".$version->getMessage());
-        }
-
-        if ($version == 'abbrev') {
-            $this->_requiredElements = array_merge($this->_requiredElements, array("child_pregnancy_number"));
-        } else {
-            $this->_requiredElements = array_merge($this->_requiredElements, array("q4_pregnancy_ART", "q10_meds_induce_labor", "q15_seizures_convulsions"));
-        }
-
+        
         //determine page to display
         if(preg_match("/med_psych_hist(_page[0-9]+)/",$this->page,$matches)){
             call_user_method($matches[1], $this);
