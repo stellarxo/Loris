@@ -698,7 +698,7 @@ class NDB_BVL_Instrument_mullen extends NDB_BVL_Instrument
 
         "22. Kicks a 10- to 12-inch ball (2 of 5 trials)",
         "23. Stands on one foot, with help",
-        "24. Walks 4 to S steps, one foot on line",
+        "24. Walks 4 to 5 steps, one foot on line",
         "25. Walks up stairs by self, nonalternating",
         "26. Jumps down from bench",
         "27. Jumps in place, feet together (one jump)",
