@@ -988,7 +988,6 @@ class NDB_Form_statistics extends NDB_Form
         } else {
             $ExtraProject_Criteria = '';
         }
-
         $db = Database::singleton();
         $ret = array();
         $ret['name'] = $name;
@@ -1015,24 +1014,35 @@ class NDB_Form_statistics extends NDB_Form
 
         // Thresholds was copy/pasted from 
         $thresholds = NDB_Menu_Filter_Reliability::getThreshholds();
-        
         $tests = array(
                 'adi_r_proband' => 'ADI-R (Proband)',
                 'adi_r_subject' => 'ADI-R (Subject)',
                 'aosi' => 'AOSI',
                 'ados_module1' => 'ADOS (Module 1)',
                 'ados_module2' => 'ADOS (Module 2)',
-                'csbs' => 'CSBS'
-
+                'csbs' => 'CSBS',
+                'aims' =>'AIMS',
+                'ados2_module1'=> 'ADOS2 (Module1)',
+                'ados2_module2'=> 'ADOS2 (Module2)'
                 );
-        $within_cross = array('adi_r_subject', 'ados_module1', 'ados_module2', 'aosi', 'csbs');
-
+        $within_cross = array('adi_r_subject', 'ados_module1', 'ados_module2', 'aosi', 'csbs','ados2_module1');
+        if(isset($_REQUEST['ReliabilityProject']) && $_REQUEST['ReliabilityProject'] != '') {
+            if($_REQUEST['ReliabilityProject'] == 1) {
+                 $within_cross = array('adi_r_subject', 'ados_module1', 'ados_module2', 'aosi', 'csbs');
+                 //remove IBIS2 instruments
+                 unset($tests['ados2_module1']); unset($tests['ados2_module2']);unset($tests['aims']);
+             } else if ( $_REQUEST['ReliabilityProject'] == 2) {
+                 $within_cross = array('adi_r_subject', 'ados2_module1', 'ados2_module2', 'aosi', 'csbs','aims');
+                 unset($tests['ados_module1']); unset($tests['ados_module2']);
+             }
+        }
         $reliable = array();
         $within_reliable = array();
         $across_reliable = array();
         foreach($tests as $inst => $name) {
             if(in_array($inst, $within_cross)) {
-                if($inst == 'aosi') {
+                if($inst == 'aosi' && isset($_REQUEST['ReliabilityProject']) 
+                   && $_REQUEST['ReliabilityProject'] != '' && $_REQUEST['ReliabilityProject'] == 1) {
                     $within_reliable[] = $this->_getWithinSiteReliabilityData(
                             $name . " v06", 
                             $inst, $thresholds[$inst], 
