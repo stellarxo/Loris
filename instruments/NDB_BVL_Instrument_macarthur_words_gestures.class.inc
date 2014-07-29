@@ -1136,7 +1136,7 @@ class NDB_BVL_Instrument_macarthur_words_gestures extends NDB_BVL_Instrument
         "8. Gestures `hush` by placing finger to lips.",
         "9. Requests something by extending arm and opening and closing hand.",
         "10. Blows kisses from a distance.",
-        "11. Smacks lips in a `yum yum` gesture to indicate that something taste good.",
+        "11. Smacks lips in a `yum yum` gesture to indicate that something tastes good.",
         "12. Shrugs to indicate `all gone` or `where'd it go`.");
         $qNum = 1;
         foreach($questionArray as $label) {
