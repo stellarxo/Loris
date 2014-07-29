@@ -191,7 +191,7 @@ INSERT INTO instrument_subtests VALUES('', 'fyi', 'fyi_page2', '#47-#63', 2);
                     "35. When you say 'Where's (a familiar person or object)?? without pointing or showing, will your baby look at the person or object named?",
                     "36. Does your baby use the first finger and tip of the thumb to pick up a very small object like a raisin or a Cheerio?",
                     "37. Does your baby seem to get stuck on playing with a part of a toy (such as an eyeball, label, wheel or tag), instead of the whole toy?",
-                    "38. Does your baby communicate with you by using his or her finger to point at objects or picturesf",
+                    "38. Does your baby communicate with you by using his or her finger to point at objects or pictures",
                     "39. Do you get the feeling that your baby plays or communicates with you less now than in the past?",
                     "40. Do your baby's eyes line up together when looking at an object?",
                     "41. Are your baby's feeding patterns regular from day to day",
