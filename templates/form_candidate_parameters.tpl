@@ -100,7 +100,7 @@
             {foreach from=$history_list item=row}
                 <tr>
                     {foreach from=$row item=value key=name}
-                        <td>{$value}s</td>
+                        <td>{$value}</td>
                     {/foreach}
                 </tr>
             {/foreach}
