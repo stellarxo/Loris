@@ -32,11 +32,6 @@ class NDB_BVL_Instrument_BSRC extends NDB_BVL_Instrument
        //The array of selects with multiple answers allowed
        //Any HTML_Quickform multiple selects must be listed here
        $this->_selectMultipleElements = array('q10_therapyoptions');
-       $this->monthYearFields = array("startdate_occupationaltherapy","stopdate_occupationaltherapy",
-               "startdate_physicaltherapy","stopdate_physicaltherapy",
-               "startdate_speechlangtherapy","stopdate_speechlangtherapy",
-               "startdate_behaviorintervention","stopdate_behaviorintervention",
-               "startdate_other","stopdate_other");
        // required fields for data entry completion status
        $this->_requiredElements = array('Examiner', "Date_taken");
 

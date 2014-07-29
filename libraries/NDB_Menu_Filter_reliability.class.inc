@@ -164,8 +164,8 @@ class NDB_Menu_Filter_reliability extends NDB_Menu_Filter
         $subproject_options = array(null=>'Any') + $subproject_options;
         $gender_options = array(null=>'Any', 'Male'=>'Male', 'Female'=>'Female');
         $list_of_instruments = array(null=>'Any', 'csbs'=>'CSBS', 'adi_r'=>'ADI-R', 'ados'=>'ADOS', 'aosi' => 'AOSI',
-                                     'aims'=>'AIMS','ados2_module1'=>'ADOS2');
-        $list_of_instruments_only = array('csbs'=>'CSBS', 'adi_r_proband'=>'ADI-R (Proband)', 'adi_r_subject' => 'ADI-R (Subject)', 'ados_module1'=>'ADOS (Module 1)', 'ados_module2' => 'ADOS (Module 2)', 'aosi' => 'AOSI', 'ados2_module1'=>'ADOS2 (Module 1)');
+                                     'aims'=>'AIMS','ados2_module1'=>'ADOS2 Module1','ados2_module2'=>'ADOS2 Module2');
+        $list_of_instruments_only = array('csbs'=>'CSBS', 'adi_r_proband'=>'ADI-R (Proband)', 'adi_r_subject' => 'ADI-R (Subject)', 'ados_module1'=>'ADOS (Module 1)', 'ados_module2' => 'ADOS (Module 2)', 'aosi' => 'AOSI', 'ados2_module1'=>'ADOS2 (Module 1)','ados2_module2'=>'ADOS2 (Module2)');
         $lock_options = array(null=>'','Locked'=>'Locked','Unlocked'=>'Unlocked');
         $list_of_projects =& Utility::getProjectList();
 
@@ -353,6 +353,8 @@ class NDB_Menu_Filter_reliability extends NDB_Menu_Filter
           $this->within_site_flagging("csbs", 0.1, $site, $db, 2);
           $this->within_site_flagging_visitlevel("ados2_module1", 0.1, $site, $db,'V24' ,2);
           $this->within_site_flagging_visitlevel("ados2_module1", 0.1, $site, $db,'V36' ,2);
+          $this->within_site_flagging_visitlevel("ados2_module2", 0.1, $site, $db,'V24' ,2);
+          $this->within_site_flagging_visitlevel("ados2_module2", 0.1, $site, $db,'V36' ,2);
         }    
         
         foreach($site_list as $site){
@@ -368,7 +370,10 @@ class NDB_Menu_Filter_reliability extends NDB_Menu_Filter
           $this->cross_site_flagging("aosi", $site, array("UofA"), $db, 2);
          // $this->cross_site_flagging("adi_r_subject", $site, array_remove($site, $site_list), $db, 2); 
           $this->cross_site_flagging("csbs", $site, array_remove($site, $site_list), $db, 2);
-         // $this->cross_site_flagging("ados2_module1", $site, array_remove($site, $site_list), $db, 2);
+          $this->cross_site_flagging_visitlevel("ados2_module1", $site, array_remove($site, $site_list), $db,'V24', 2);
+          $this->cross_site_flagging_visitlevel("ados2_module1", $site, array_remove($site, $site_list), $db,'V36', 2);
+          $this->cross_site_flagging_visitlevel("ados2_module2", $site, array_remove($site, $site_list), $db,'V24', 2);
+          $this->cross_site_flagging_visitlevel("ados2_module2", $site, array_remove($site, $site_list), $db,'V36', 2);
 
         }            
         
@@ -490,6 +495,55 @@ class NDB_Menu_Filter_reliability extends NDB_Menu_Filter
             $this->reliability_table[$instrument_records[$i]["CommentID"]] = $this->site_id[$current_site];
             $current_count++;
           }                  
+       }
+    }
+
+   function cross_site_flagging_visitlevel($instrument, $current_site, $reliability_sites, $db, $visit_label, $projectID){
+        $ratio = 0.1;
+        $reliability_site_index = 0; 
+        // We want the site to be random, starting from 0 causes a bias towards the first entry
+        // in $reliability_sites.. so shuffle the array to eliminate the bias
+        shuffle($reliability_sites);
+        
+        $query_extra = '';
+        if($instrument == "adi_r_subject"){
+          $query_extra = " AND (s.visit_label='v24' OR s.visit_label='v36')";
+        }
+        
+        $phi_site_clause = '';
+        if($current_site == "PHI" && ($instrument == "adi_r_subject" || $instrument == "adi_r_proband")){
+          $phi_site_clause = " AND Date_taken >= '2009-11-11' ";
+        }
+        if($current_site == "STL" && ($instrument == "aosi")){
+          $phi_site_clause = " AND Date_taken >= '2010-02-15' ";
+        }
+          
+        $db->select("SELECT i.CommentID FROM {$instrument} as i, flag as f, session as s, candidate as c WHERE i.CommentID=f.CommentID AND f.sessionID=s.ID AND s.CandID = c.CandID AND s.Current_stage<>'Recycling Bin' AND f.Data_entry='Complete' AND i.CommentID LIKE '%{$current_site}%' AND s.visit_label= $visit_label{$query_extra} AND i.CommentID NOT LIKE 'DDE%' {$phi_site_clause} AND f.Administration <> 'None' AND c.ProjectID = $projectID ORDER BY RIGHT(i.CommentID, 6)", $instrument_records);
+        $total_records_count = $db->selectOne("SELECT COUNT(i.CommentID) FROM {$instrument} as i, flag as f, session as s, candidate c WHERE i.CommentID=f.CommentID AND f.sessionID=s.ID AND s.CandID=c.CandID AND s.Current_stage<>'Recycling Bin' AND f.Data_entry='Complete' AND i.CommentID LIKE '%{$current_site}%' AND s.visit_label=$visit_label{$query_extra} AND i.CommentID NOT LIKE 'DDE%' AND f.Administration <> 'None' AND c.ProjectID = $projectID ORDER BY RIGHT(i.CommentID, 6)");
+        
+         $current_count = $db->selectOne("SELECT count(*) FROM (SELECT DISTINCT r.CommentID FROM reliability as r, flag as f, session as s  WHERE r.CommentID LIKE '%{$current_site}%' AND r.Instrument='{$instrument}' AND r.reliability_center_id<>{$this->site_id[$current_site]} AND r.invalid = 'no' AND r.CommentID=f.CommentID AND f.sessionID=s.ID AND s.Current_stage<>'Recycling Bin') as t");
+        $total_count = count($instrument_records);
+        if($ratio*$total_records_count >= $total_count) {
+            $max = $total_count;
+        } else {
+            $max = floor($ratio * $total_records_count);
+        }
+        // 
+        // echo("Site: {$current_site} <BR>");
+        // echo($current_count . " --- " . $total_count . "<BR>");
+        // echo("Max (ratio: {$ratio}/jump: {$jump_step}): {$max} <BR><BR>");
+        
+       for($i = 0; $i < count($instrument_records) && $current_count + 1 <= $max; $i += 2){
+          $commentID = $instrument_records[$i]["CommentID"];
+          if(!find_cID($commentID, $this->reliability_table)){
+            $db->insert('reliability', array('CommentID' => $instrument_records[$i]["CommentID"],
+                                              'reliability_center_id' => $this->site_id[$reliability_sites[$reliability_site_index]],
+                                              'Instrument' => $instrument
+                                              ));
+            $this->reliability_table[$instrument_records[$i]["CommentID"]] = $this->site_id[$current_site];
+            $current_count++;
+          }
+          $reliability_site_index = ($reliability_site_index + 1) % count($reliability_sites);                  
        }
     }
    /* To be discussed with Tanya 
