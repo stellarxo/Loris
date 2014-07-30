@@ -28,65 +28,65 @@
                 {/if}
                 <div class="row">
                     <div class="form-group col-sm-2">
-                        <label class="col-xs-12 col-lg-6">
+                        <label class="col-xs-12">
                             Subproject:
                         </label>
-                        <div class="col-xs-12 col-lg-6">
+                        <div class="col-xs-12">
                             {$form.CommentID.html}
                         </div>
                     </div>
                     <div class="form-group col-sm-2">
-                        <label class="col-xs-12 col-lg-4">
+                        <label class="col-xs-12">
                             {$form.ProjectID.label}
                         </label>
-                        <div class="col-xs-12 col-lg-8">
+                        <div class="col-xs-12">
                             {$form.ProjectID.html}
                         </div>
                     </div>
                     <div class="form-group col-sm-2">
-                        <label class="col-xs-12 col-lg-4">
+                        <label class="col-xs-12">
                             {$form.CenterID.label}
                         </label>
-                        <div class="col-xs-12 col-lg-8">
+                        <div class="col-xs-12">
                             {$form.CenterID.html}
                         </div>
                     </div>
                     <div class="form-group col-sm-3">
-                        <label class="col-xs-12 col-lg-4">
+                        <label class="col-xs-12">
                             {$form.Instrument.label}
                         </label>
-                        <div class="col-xs-12 col-lg-8">
+                        <div class="col-xs-12">
                             {$form.Instrument.html}
                         </div>
                     </div>
                     <div class="form-group col-sm-3">
-                        <label class="col-xs-12 col-lg-4">
+                        <label class="col-xs-12">
                             {$form.reliability_center_id.label}
                         </label>
-                        <div class="col-xs-12 col-lg-8">
+                        <div class="col-xs-12">
                             {$form.reliability_center_id.html}
                         </div>
                     </div>
                 </div>
                 <div class="row">
                     <div class="form-group col-sm-2">
-                        <label class="col-xs-12 col-lg-4">
+                        <label class="col-xs-12">
                             DCCID:
                         </label>
-                        <div class="col-xs-12 col-lg-8">
+                        <div class="col-xs-12">
                             {$form.DCCID.html}
                         </div>
                     </div>
                     <div class="form-group col-sm-2">
-                        <label class="col-xs-12 col-lg-4">
+                        <label class="col-xs-12">
                             PSCID:
                         </label>
-                        <div class="col-xs-12 col-lg-8">
+                        <div class="col-xs-12">
                             {$form.PSCID.html}
                         </div>
                     </div>
                     <div class="form-group col-sm-2">
-                        <label class="col-xs-12 col-lg-4">
+                        <label class="col-xs-12">
                             Gender:
                         </label>
                         <div class="col-xs-12 col-lg-8">
@@ -94,18 +94,18 @@
                         </div>
                     </div>
                     <div class="form-group col-sm-3">
-                        <label class="col-xs-12 col-lg-4">
+                        <label class="col-xs-12">
                             Visit label:
                         </label>
-                        <div class="col-xs-12 col-lg-8">
+                        <div class="col-xs-12">
                             {$form.Visit_label.html}
                         </div>
                     </div>
                     <div class="form-group col-sm-3">
-                        <label class="col-xs-12 col-lg-4">
+                        <label class="col-xs-12">
                             {$form.Invalid.label}
                         </label>
-                        <div class="col-xs-12 col-lg-8">
+                        <div class="col-xs-12">
                             {$form.Invalid.html}
                         </div>
                     </div>
