@@ -131,101 +131,101 @@
     </div>
 </div>
 <div class="row">
-    {if $reliability_swap_candidates}
-        <div class="col-sm-6">
-            <div class="panel panel-primary">
-                <div class="panel-heading" onclick="togglePanel('swap');">
-                    Swap Candidates
-                    <span class="glyphicon glyphicon-chevron-down pull-right" id="down-swap"></span>
-                    <span class="glyphicon glyphicon-chevron-up pull-right" style="display:none" id="up-swap"></span>
-                </div>
-                <div class="panel-body" style="display:none" id="panel-body-swap">
-                    <form method="post" action="main.php?test_name=reliability">
-                        <input type="hidden" name="swap" value="swap"/>
-                        <h5>Original Candidate</h5>
-                        <div class="row">
-                            <label class="col-sm-12 col-lg-4">{$form.Cand1PSCID.label}</label>
-                            <div class="col-sm-12 col-lg-8">{$form.Cand1PSCID.html}</div>
+{if $reliability_swap_candidates}
+    <div class="col-sm-6">
+        <div class="panel panel-primary">
+            <div class="panel-heading" onclick="togglePanel('swap');">
+                Swap Candidates
+                <span class="glyphicon glyphicon-chevron-down pull-right" id="down-swap"></span>
+                <span class="glyphicon glyphicon-chevron-up pull-right" style="display:none" id="up-swap"></span>
+            </div>
+            <div class="panel-body" style="display:none" id="panel-body-swap">
+                <form method="post" action="main.php?test_name=reliability">
+                    <input type="hidden" name="swap" value="swap"/>
+                    <h5>Original Candidate</h5>
+                    <div class="row">
+                        <label class="col-sm-12 col-md-4">{$form.Cand1PSCID.label}</label>
+                        <div class="col-sm-12 col-md-8">{$form.Cand1PSCID.html}</div>
+                    </div>
+                    <br>
+                    <div class="row">
+                        <label class="col-sm-12 col-md-4">{$form.Cand1Visit_label.label}</label>
+                        <div class="col-sm-12 col-md-8">{$form.Cand1Visit_label.html}</div>
+                    </div>
+                    <h5>Replacement Candidate</h5>
+                    <div class="row">
+                        <label class="col-sm-12 col-md-4">{$form.Cand2PSCID.label}</label>
+                        <div class="col-sm-12 col-md-8">{$form.Cand2PSCID.html}</div>
+                    </div>
+                    <br>
+                    <div class="row">
+                        <label class="col-sm-12 col-md-4">{$form.Cand2Visit_label.label}</label>
+                        <div class="col-sm-12 col-md-8">{$form.Cand2Visit_label.html}</div>
+                    </div>
+                    <br>
+                    <div class="row">
+                        <label class="col-sm-12 col-md-4">{$form.SwapInstrument.label}</label>
+                        <div class="col-sm-12 col-md-8">{$form.SwapInstrument.html}</div>
+                    </div>
+                    <br>
+                    <div class="row">
+                        <div class="visible-xs visible-sm col-xs-12"> </div>
+                        <div class="visible-xs visible-sm col-xs-12"> </div>
+                        <div class="visible-xs visible-sm col-xs-12"> </div>
+                        <div class="visible-xs visible-sm col-xs-12"> </div>
+                        <div class="col-md-6 col-xs-12 col-md-offset-6">
+                            <input type="submit" name="swap" value="Swap Candidates" class="btn btn-sm btn-primary col-xs-12" />
                         </div>
-                        <br>
-                        <div class="row">
-                            <label class="col-sm-12 col-lg-4">{$form.Cand1Visit_label.label}</label>
-                            <div class="col-sm-12 col-lg-8">{$form.Cand1Visit_label.html}</div>
-                        </div>
-                        <h5>Replacement Candidate</h5>
-                        <div class="row">
-                            <label class="col-sm-12 col-lg-4">{$form.Cand2PSCID.label}</label>
-                            <div class="col-sm-12 col-lg-8">{$form.Cand2PSCID.html}</div>
-                        </div>
-                        <br>
-                        <div class="row">
-                            <label class="col-sm-12 col-lg-4">{$form.Cand2Visit_label.label}</label>
-                            <div class="col-sm-12 col-lg-8">{$form.Cand2Visit_label.html}</div>
-                        </div>
-                        <br>
-                        <div class="row">
-                            <label class="col-sm-12 col-lg-4">{$form.SwapInstrument.label}</label>
-                            <div class="col-sm-12 col-lg-8">{$form.SwapInstrument.html}</div>
-                        </div>
-                        <br>
-                        <div class="row">
-                            <div class="visible-xs visible-sm col-xs-12"> </div>
-                            <div class="visible-xs visible-sm col-xs-12"> </div>
-                            <div class="visible-xs visible-sm col-xs-12"> </div>
-                            <div class="visible-xs visible-sm col-xs-12"> </div>
-                            <div class="col-lg-6 col-xs-12 col-lg-offset-6">
-                                <input type="submit" name="swap" value="Swap Candidates" class="btn btn-sm btn-primary col-xs-12" />
-                            </div>
-                        </div>
-                    </form>
-                </div>
-            </div>   
+                    </div>
+                </form>
+            </div>
+        </div>   
     </div>
-    {/if}
-    {if $EARLI_Reliability}
-        <div class="col-sm-6">
-            <div class="panel panel-primary">
-                <div class="panel-heading" onclick="togglePanel('earli');">
-                    Add EARLI Candidate
-                    <span class="glyphicon glyphicon-chevron-down pull-right" id="down-earli"></span>
-                    <span class="glyphicon glyphicon-chevron-up pull-right" style="display:none" id="up-earli"></span>
-                </div>
-                <div class="panel-body" style="display:none" id="panel-body-earli">
-                    <form method="post" action="main.php?test_name=reliability">
-                        <div class="row">
-                            <label class="col-sm-12 col-lg-4">{$form.AddPSCID.label}</label>
-                            <div class="col-sm-12 col-lg-8">{$form.AddPSCID.html}</div>
+{/if}
+{if $EARLI_Reliability}
+    <div class="col-sm-6">
+        <div class="panel panel-primary">
+            <div class="panel-heading" onclick="togglePanel('earli');">
+                Add EARLI Candidate
+                <span class="glyphicon glyphicon-chevron-down pull-right" id="down-earli"></span>
+                <span class="glyphicon glyphicon-chevron-up pull-right" style="display:none" id="up-earli"></span>
+            </div>
+            <div class="panel-body" style="display:none" id="panel-body-earli">
+                <form method="post" action="main.php?test_name=reliability">
+                    <div class="row">
+                        <label class="col-sm-12 col-md-4">{$form.AddPSCID.label}</label>
+                        <div class="col-sm-12 col-md-8">{$form.AddPSCID.html}</div>
+                    </div>
+                    <br>
+                    <div class="row">
+                        <label class="col-sm-12 col-md-4">{$form.AddVisit_label.label}</label>
+                        <div class="col-sm-12 col-md-8">{$form.AddVisit_label.html}</div>
+                    </div>
+                    <br>
+                    <div class="row">
+                        <label class="col-sm-12 col-md-4">{$form.AddInstrument.label}</label>
+                        <div class="col-sm-12 col-md-8">{$form.AddInstrument.html}</div>
+                    </div>
+                    <br>
+                    <div class="row">
+                        <label class="col-sm-12 col-md-4">{$form.AddReliabilityCenter.label}</label>
+                        <div class="col-sm-12 col-md-8">{$form.AddReliabilityCenter.html}</div>
+                    </div>
+                    <br>
+                    <div class="row">
+                        <div class="visible-xs visible-sm col-xs-12"> </div>
+                        <div class="visible-xs visible-sm col-xs-12"> </div>
+                        <div class="visible-xs visible-sm col-xs-12"> </div>
+                        <div class="visible-xs visible-sm col-xs-12"> </div>
+                        <div class="col-md-6 col-xs-12 col-md-offset-6">
+                            <input type="submit" name="swap" value="Add Candidate" class="btn btn-sm btn-primary col-xs-12" />
                         </div>
-                        <br>
-                        <div class="row">
-                            <label class="col-sm-12 col-lg-4">{$form.AddVisit_label.label}</label>
-                            <div class="col-sm-12 col-lg-8">{$form.AddVisit_label.html}</div>
-                        </div>
-                        <br>
-                        <div class="row">
-                            <label class="col-sm-12 col-lg-4">{$form.AddInstrument.label}</label>
-                            <div class="col-sm-12 col-lg-8">{$form.AddInstrument.html}</div>
-                        </div>
-                        <br>
-                        <div class="row">
-                            <label class="col-sm-12 col-lg-4">{$form.AddReliabilityCenter.label}</label>
-                            <div class="col-sm-12 col-lg-8">{$form.AddReliabilityCenter.html}</div>
-                        </div>
-                        <br>
-                        <div class="row">
-                            <div class="visible-xs visible-sm col-xs-12"> </div>
-                            <div class="visible-xs visible-sm col-xs-12"> </div>
-                            <div class="visible-xs visible-sm col-xs-12"> </div>
-                            <div class="visible-xs visible-sm col-xs-12"> </div>
-                            <div class="col-lg-6 col-xs-12 col-lg-offset-6">
-                                <input type="submit" name="swap" value="Add Candidate" class="btn btn-sm btn-primary col-xs-12" />
-                            </div>
-                        </div>
-                    </form>
-                </div>
-            </div>   
+                    </div>
+                </form>
+            </div>
+        </div>   
     </div>
-    {/if}
+{/if}
 </div>
 
 {if $IBIS_Access}
