@@ -366,7 +366,40 @@ class QC_Checks {
                 print implode("\t", $row);
                 print "\n";
             }
-        }
-    }
+        } 
+        /* ************************************************************************* */
+        // CHECK Candidate DOB is same at scan time and date taken in MRI Parameter Form is same as scan date
+        /* ************************************************************************* */
+
+        print "\n\n CHECK Candidate DOB is same at scan time and date taken in MRI Parameter Form is same as scan date \n";
+        print "--------------------------------------\n";
+        $data = $DB->pselect("SELECT File,session.ID, flag.CommentID, dob.Value as PatientDOB, candidate.DoB, study_date.Value as StudyDate, m.Date_taken as MRI_PF_Date_taken from files LEFT JOIN parameter_file dob USING (FileID) LEFT JOIN parameter_file study_date USING (FileID) LEFT JOIN session ON session.ID = files.SessionID JOIN candidate ON candidate.CandID = session.CandID JOIN flag ON flag.SessionID = session.ID JOIN mri_parameter_form m ON m.CommentID = flag.CommentID  WHERE study_date.ParameterTypeID=275 AND dob.ParameterTypeID=161 AND flag.CommentID NOT LIKE 'DDE_%' AND candidate.CenterID = $this->site", array());  
+ $header = array('File', 'SessionID', 'CommentID','PatientDoB(YYYYMMDD)','Candidate DoB(YYYYMMDD)','StudyDate','MRI_PF_Date_taken','Issue');
+ if(sizeof($data) > 0 ){
+	 foreach($header as $row) {
+		 print $row."\t";
+	 }
+	 print "\n";
+ }
+ $session = '';
+ foreach($data as $row) {
+
+	 $row['MRI_PF_Date_taken']  = preg_replace('/-/', '', $row['MRI_PF_Date_taken']);
+	 $row['DoB']  = preg_replace('/-/', '', $row['DoB']);
+	 if($row['ID'] != $session) {
+		 if($row['MRI_PF_Date_taken'] != $row['StudyDate'] || $row['PatientDOB'] != $row['DoB']) {
+                     if($row['MRI_PF_Date_taken'] != $row['StudyDate']) {
+                          $row['Issue'] = 'Scan date mismatch';
+                      } else {
+                          $row['Issue'] = 'DoB mismatch';
+                      }
+			 print_r($row);
+			 print "\n";
+		 }
+		 $session = $row['ID'];
+	 }
+ }
+ 
+  }
 }
 ?>
