@@ -51,16 +51,16 @@ INSERT INTO test_battery VALUES ('', 'head_measurements_subject', '1050', '1140'
             }
             $this->form->addElement('static', null, "<br><b>" . $type .'</b>:');
             $this->form->addElement('select', "head_circumference_unit$suffix", 'Unit for head circumference', array('c    m' => 'centimeters', "inches" => "inches", "not_answered" => "Not Answered"));
-            $this->addTextElement("head_circumference1$suffix", "Circumference 1:");
+            $this->addNumericElement("head_circumference1$suffix", "Circumference 1:");
             if($type === 'Child') {
-                $this->addTextElement("head_circumference2$suffix", "Circumference 2:");
+                $this->addNumericElement("head_circumference2$suffix", "Circumference 2:");
             }
         
             $this->form->addElement('header', null, 'Length');
             $this->form->addElement('select', "head_length_unit$suffix", 'Unit for length', array('cm' => 'centimeters'    , "inches" => "inches", "not_answered" => "Not Answered"));
-            $this->addTextElement("length1$suffix", "Length 1:");
+            $this->addNumericElement("length1$suffix", "Length 1:");
             if($type === 'Child') {
-                $this->addTextElement("length2$suffix", "Length 2:");
+                $this->addNumericElement("length2$suffix", "Length 2:");
             }
             if($type === 'Child') {
                 $this->form->addElement("select", 'measurement_method', $this->indent . "Child was measured:", array    (""=>NULL, "lying_down"=>"Lying down", "standing_up"=>"Standing up", "not_answered"=>"Not Answered"));
@@ -68,9 +68,9 @@ INSERT INTO test_battery VALUES ('', 'head_measurements_subject', '1050', '1140'
        
             $this->form->addElement('header', null, 'Weight');
             $this->form->addElement('select', "weight_unit$suffix", 'Unit for weight', array('kg' => 'kilograms', "lbs"     => "pounds", "not_answered" => "Not Answered"));
-            $this->addTextElement("weight1$suffix", "Weight 1:");
+            $this->addNumericElement("weight1$suffix", "Weight 1:");
             if($type === 'Child') {
-                $this->addTextElement("weight2$suffix", "Weight 2:");
+                $this->addNumericElement("weight2$suffix", "Weight 2:");
             }
         }
         $this->addTextAreaElement('comments', 'General Comments:');
