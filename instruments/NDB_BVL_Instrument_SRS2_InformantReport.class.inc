@@ -5,7 +5,8 @@ class NDB_BVL_Instrument_SRS2_InformantReport extends NDB_BVL_Instrument
     var $indent = "&nbsp;&nbsp;&nbsp;&nbsp;";
 
     var $rating = array(''=>NULL, '1_not_true'=>"1. Not True", '2_sometimes_true'=>"2. Sometimes True", 
-                        '3_often_true'=>"3. Often True",'4_almost_always_true'=>'4. Almost Always True');
+                        '3_often_true'=>"3. Often True",'4_almost_always_true'=>'4. Almost Always True',
+                        'refused_dontknow'=>"Refused/I Don't Know");
     var $informant = array(''=>NULL,'mother'=>'Mother','father'=>'Father','other_relative'=>'Other Relative',
                            'spouse'=>'Spouse','other'=>'Other');
 
