@@ -75,7 +75,7 @@ class NDB_BVL_Instrument_SRS2_InformantReport extends NDB_BVL_Instrument
      */
     function _main(){
         // display test name
-        $this->form->addElement('header', 'instrument_title', "SRS2");
+        $this->form->addElement('header', 'instrument_title', "SRS2 - Adult");
         
         $this->form->addElement('static','lorisSubHeader',"<strong>Instructions:</strong><BR>For each question, please choose an option that best describes this individual's behaviour <strong>over the past 6 months </strong>");
 
@@ -127,7 +127,7 @@ class NDB_BVL_Instrument_SRS2_InformantReport extends NDB_BVL_Instrument
     }
 
     function _page2(){
-         $this->form->addElement('header', 'instrument_title', "SRS2");
+         $this->form->addElement('header', 'instrument_title', "SRS2 - Adult");
 
          $questions = array("q16_avoideyecontact"=>"16. Avoids eye contact or has unusual eye contact",
                            "q17_recognize_unfair"=>"17. Recognizes when something is unfair",
@@ -156,7 +156,7 @@ class NDB_BVL_Instrument_SRS2_InformantReport extends NDB_BVL_Instrument
     }
     
     function _page3(){
-         $this->form->addElement('header', 'instrument_title', "SRS2");
+         $this->form->addElement('header', 'instrument_title', "SRS2 - Adult");
 
          $questions = array("q33_socially_awkward"=>"33. Is socially awkward, even when trying to be polite",
                            "q34_avoid_emotionallyclose"=>"34. Avoids people who want to be emotionally close to him or her",
@@ -188,7 +188,7 @@ class NDB_BVL_Instrument_SRS2_InformantReport extends NDB_BVL_Instrument
 
     function _page4(){
         // display test name
-        $this->form->addElement('header', 'instrument_title', "SRS2");
+        $this->form->addElement('header', 'instrument_title', "SRS2 - Adult");
         
        $this->form->addElement('static', null, "<br /><br />");
         $questions = array("q52_overly_loud" => "52. Knows when he or she is talking too loud or making too much noise",
