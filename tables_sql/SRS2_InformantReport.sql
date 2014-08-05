@@ -8,8 +8,8 @@ CREATE TABLE `SRS2_InformantReport` (
                           `Testdate` timestamp NOT NULL,
 
                           `Data_entry_completion_status` enum('Incomplete','Complete') NOT NULL default 'Incomplete',
-`respondent_age` varchar(255) default NULL,
-`respondent_gender` enum('male','female') default NULL,
+`informant_age` varchar(255) default NULL,
+`informant_gender` enum('male','female') default NULL,
 `informant` enum('mother','father','other_relative','spouse','other') default NULL,
 `informant_other` varchar(255) default NULL,
 `q1_uncomfortable_socialsituations` enum('1_not_true','2_sometimes_true','3_often_true','4_almost_always_true','refused_dontknow') default NULL,
