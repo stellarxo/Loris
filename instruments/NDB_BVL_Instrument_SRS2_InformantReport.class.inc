@@ -249,7 +249,10 @@ class NDB_BVL_Instrument_SRS2_InformantReport extends NDB_BVL_Instrument
             if (isset($Responses[$row['SourceField']])) {
                 if($row['SourceField'] == 'informant_other' && $Responses['informant'] != 'other') {
                    unset($tpl_data['questions'][$key]);
-                } 
+                } else {
+                    $row['response'] = $Responses[$row['SourceField']];
+                }
+
             }
         }
 
