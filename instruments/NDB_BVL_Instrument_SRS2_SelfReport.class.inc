@@ -82,12 +82,12 @@ class NDB_BVL_Instrument_SRS2_SelfReport extends NDB_BVL_Instrument
         $field = 'respondent_age';$label = 'Your Age <BR>(Please indicate your age in years)';
         $group [] = $this->createText($field, $label);
         $this->addGroup($group, $field . "_group", $label, null, false);
-        $this->XINRegisterRule($field,array("$field{@}=={@}NEVER_REQUIRED"), $field . "_group");
+        //$this->XINRegisterRule($field,array("$field{@}=={@}NEVER_REQUIRED"), $field . "_group");
         unset($group);
         $this->addGroupRule($field . "_group", array(array(array("Value must be numeric.", 'numeric'))));
         
         $this->addSelect('respondent_gender',"Gender ", $this->gender);
-        $this->XINRegisterRule('respondent_gender',array("respondent_gender{@}=={@}NEVER_REQUIRED"));
+       // $this->XINRegisterRule('respondent_gender',array("respondent_gender{@}=={@}NEVER_REQUIRED"));
 
         $this->form->addElement('static', null, "<br /><br />");
         $questions = array("q1_uncomfortable_socialsituations" => "1. I am much more uncomfortable in social situations than when I am by myself",
@@ -108,9 +108,10 @@ class NDB_BVL_Instrument_SRS2_SelfReport extends NDB_BVL_Instrument
 
         foreach($questions as $field=>$label) {
             $this->addSelect($field, $label, $this->rating);
-            $this->XINRegisterRule($field,array("$field{@}=={@}NEVER_REQUIRED"));
+           // $this->XINRegisterRule($field,array("$field{@}=={@}NEVER_REQUIRED"));
         }
-   
+        $this->form->addFormRule(array(&$this, 'SRS2_Rules'));
+ 
     }
 
     function _page2(){
@@ -136,7 +137,7 @@ class NDB_BVL_Instrument_SRS2_SelfReport extends NDB_BVL_Instrument
 
         foreach($questions as $field=>$label) {
             $this->addSelect($field, $label, $this->rating);
-            $this->XINRegisterRule($field,array("$field{@}=={@}NEVER_REQUIRED"));
+            //$this->XINRegisterRule($field,array("$field{@}=={@}NEVER_REQUIRED"));
 
         }
 
@@ -168,7 +169,7 @@ class NDB_BVL_Instrument_SRS2_SelfReport extends NDB_BVL_Instrument
 
         foreach($questions as $field=>$label) {
             $this->addSelect($field, $label, $this->rating);
-            $this->XINRegisterRule($field,array("$field{@}=={@}NEVER_REQUIRED"));
+            //$this->XINRegisterRule($field,array("$field{@}=={@}NEVER_REQUIRED"));
         }
 
     }
@@ -196,12 +197,22 @@ class NDB_BVL_Instrument_SRS2_SelfReport extends NDB_BVL_Instrument
 
         foreach($questions as $field=>$label) {
             $this->addSelect($field, $label, $this->rating);
-            $this->XINRegisterRule($field,array("$field{@}=={@}NEVER_REQUIRED"));
+            //$this->XINRegisterRule($field,array("$field{@}=={@}NEVER_REQUIRED"));
         }
    
 
     }
+     function SRS2_Rules($values) {
+       $errors = array();
+       if(intval($values['respondent_age']) > 100 || intval($values['respondent_age']) < 0) {
+           $errors['respondent_age_group'] = "Specify age between 0 and 100";
+       }
+       if(empty($values['respondent_age'])) {
+           $errors['respondent_age_group'] = "Please specify age in years";
+       }
 
+       return $errors;
+    }
 
 }
 ?>
