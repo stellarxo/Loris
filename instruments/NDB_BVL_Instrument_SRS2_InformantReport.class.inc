@@ -79,13 +79,13 @@ class NDB_BVL_Instrument_SRS2_InformantReport extends NDB_BVL_Instrument
         
         $this->form->addElement('static','lorisSubHeader',"<strong>Instructions:</strong><BR>For each question, please choose an option that best describes this individual's behaviour <strong>over the past 6 months </strong>");
 
-        $field = 'respondent_age';$label = 'Your Age <BR>(Please indicate your age in years)';
+        $field = 'informant_age';$label = 'Your Age <BR>(Please indicate your age in years)';
         $group [] = $this->createText($field, $label);
         $this->addGroup($group, $field . "_group", $label, null, false);
         //$this->XINRegisterRule($field,array("$field{@}=={@}NEVER_REQUIRED"), $field . "_group");
         unset($group);
         $this->addGroupRule($field . "_group", array(array(array("Value must be numeric.", 'numeric'))));
-        $this->addSelect('respondent_gender',"Gender ", $this->gender);
+        $this->addSelect('informant_gender',"Gender ", $this->gender);
         //$this->XINRegisterRule('respondent_gender',array("respondent_gender{@}=={@}NEVER_REQUIRED"));
  
         $this->addSelect('informant',"Relationship to rated individual", $this->informant);
@@ -216,16 +216,47 @@ class NDB_BVL_Instrument_SRS2_InformantReport extends NDB_BVL_Instrument
     }
     function SRS2_Rules($values) {
        $errors = array();
-       if(intval($values['respondent_age']) > 100 || intval($values['respondent_age']) < 0) {
-           $errors['respondent_age_group'] = "Specify age between 0 and 100";
+       if(intval($values['informant_age']) > 100 || intval($values['informant_age']) < 0) {
+           $errors['informant_age_group'] = "Specify age between 0 and 100";
        }
-       if(empty($values['respondent_age'])) {
-           $errors['respondent_age_group'] = "Please specify age in years";
+       if(empty($values['informant_age'])) {
+           $errors['informant_age_group'] = "Please specify age in years";
        }
 
        return $errors;
     }
 
+    function getReview() {
+        $DB = Database::singleton();
+        $smarty = new Smarty_neurodb();
+        $tpl_data = array();
+
+        $tpl_data['questions'] = $DB->pselect(
+            "SELECT Description as question,
+            SourceField FROM parameter_type 
+            WHERE SourceFrom=:TN AND 
+            SourceField NOT IN ('Validity', 'Administration')",
+                array(
+                    'TN' => $this->testName
+                )
+            );
+
+        $Responses = $DB->pselectRow(
+            "SELECT * FROM " . $this->testName . " WHERE CommentID=:CID",
+            array('CID' => $this->getCommentID())
+        );
+        foreach ($tpl_data['questions'] as $key=>&$row) {
+            if (isset($Responses[$row['SourceField']])) {
+                if($row['SourceField'] == 'informant_other' && $Responses['informant'] != 'other') {
+                   unset($tpl_data['questions'][$key]);
+                } 
+            }
+        }
+
+        $smarty->assign($tpl_data);
+        $html = $smarty->fetch("directentry_review.tpl");
+        return $html;
+    }
 
 
 }
