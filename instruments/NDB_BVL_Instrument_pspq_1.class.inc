@@ -347,10 +347,9 @@ class NDB_BVL_Instrument_pspq_1 extends NDB_BVL_Instrument
        if(intval($values['informant_age']) > 100) {
            $errors['informant_age_group'] = "Specify age between 0 and 100";
        }
-       if(empty($values['respondent_age'])) {
+       if(empty($values['respondent_age']) && array_key_exists('respondent_age', $values)) {
            $errors['respondent_age_group'] = 'Specify age';
        }
-
        return $errors;
     }
 
