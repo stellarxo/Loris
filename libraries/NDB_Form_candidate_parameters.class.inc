@@ -329,10 +329,11 @@ class NDB_Form_candidate_parameters extends NDB_Form
            foreach($consent_dates as $field) {
                $value = $this->_getDatabaseDate($values[$field]);
                if($value === '--') {
-                   $value = '';
+                   $value = NULL;
                }
                $participant_vals[$field] = $value;  
            }
+
            $current_consent = $DB->pselectRow("SELECT study_consent, study_consent_date, study_consent_withdrawal,
                    ndar_consent, ndar_consent_date, ndar_consent_withdrawal FROM participant_status
                    WHERE CandID = :cid", array("cid"=>$values['CandID']));
