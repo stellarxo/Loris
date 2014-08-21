@@ -124,7 +124,7 @@
                 <td><b>Data Entry Staff</b></td>
                 <td><b>Date Updated</b></td>
             </tr>
-            {foreach from=$ndar_consent_history item=row}
+            {foreach from=$study_consent_history item=row}
                 <tr>
                     {foreach from=$row item=value key=name}
                         <td>{$value}</td>
