@@ -29,10 +29,10 @@
                 <div class="row">
                     <div class="form-group col-sm-2">
                         <label class="col-xs-12">
-                            Subproject:
+                            {$form.SubprojectID.label}
                         </label>
                         <div class="col-xs-12">
-                            {$form.CommentID.html}
+                            {$form.SubprojectID.html}
                         </div>
                     </div>
                     <div class="form-group col-sm-2">

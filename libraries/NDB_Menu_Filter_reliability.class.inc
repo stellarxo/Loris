@@ -88,17 +88,16 @@ class NDB_Menu_Filter_reliability extends NDB_Menu_Filter
         }
 
         // set the class variables
-        $this->columns = array('reliability.CommentID', 'candidate.PSCID', 'reliability.reliability_center_id AS Site', 'session.SubprojectID as Cohort', 'session.CandID AS DCCID', 'candidate.Gender', 'session.Visit_label', 'reliability.Instrument', 'reliability.Reliability_score', 'session.Current_stage', 'reliability.invalid', 'reliability.Manual_Swap');
+        $this->columns = array('candidate.PSCID', 'reliability.reliability_center_id AS Site', 'session.SubprojectID as Cohort', 'session.CandID AS DCCID', 'candidate.Gender', 'session.Visit_label', 'reliability.Instrument', 'reliability.Reliability_score', 'session.Current_stage', 'reliability.invalid', 'reliability.Manual_Swap');
 
         $this->query = $query;
         $this->group_by = '';
         $this->order_by = 'reliability.Instrument, session.CandID, session.Visit_label';
         $this->headers = array('PSCID', 'reliability_center_id','Cohort', 'DCCID', 'Gender', 'Visit_label', 'Instrument', 'reliability_score', 'Reliable');
-        $this->validFilters = array('reliability.CommentID', 'reliability.reliability_center_id', 'session.SubprojectID', 'candidate.CenterID', 'session.CandID', 'candidate.PSCID', 'candidate.Gender', 'session.Visit_label', 'reliability.Instrument', 'reliability.Reliability_score', 'session.Current_stage', 'reliability.invalid','candidate.ProjectID');
+        $this->validFilters = array('reliability.reliability_center_id', 'session.SubprojectID', 'candidate.CenterID', 'session.CandID', 'candidate.PSCID', 'candidate.Gender', 'session.Visit_label', 'reliability.Instrument', 'reliability.Reliability_score', 'session.Current_stage', 'reliability.invalid','candidate.ProjectID');
 
         $this->formToFilter = array(
-                                    'CommentID' => 'reliability.CommentID',
-                                    'Cohort' => 'session.SubprojectID',
+                                    'SubprojectID' => 'session.SubprojectID',
                                     'CenterID' => 'candidate.CenterID',
                                     'reliability_center_id'=> 'reliability.reliability_center_id',
                                     'DCCID' => 'candidate.CandID',
@@ -170,7 +169,7 @@ class NDB_Menu_Filter_reliability extends NDB_Menu_Filter
         $list_of_projects =& Utility::getProjectList();
 
         // Form Elements
-        $this->addSelect('CommentID', 'CommentID:', $subproject_options);
+        $this->addSelect('SubprojectID', 'SubprojectID:', $subproject_options);
         $this->addSelect('Objective', 'Objective:', $subproject_options);
         $this->addSelect('CenterID', 'Site:', $list_of_sites);
         $this->addSelect('reliability_center_id', 'Site of Reliability:', $list_of_sites);
