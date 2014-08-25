@@ -133,42 +133,17 @@ class NDB_BVL_Instrument_ados2_module3 extends NDB_BVL_Instrument
 
     	$this->form->addElement("header",null,"SUMMARY SCORES:");
     
-    	$this->form->addElement("static",null,null);
-    	$this->form->addElement("static",null,null);
+    	$this->form->addElement('static', "social_affect_total", "Social Affect Total:");
     
-    	$group[]= &$this->form->createElement("static", "social_affect_total", null);
-     	$this->form->addGroup($group, null, "Social Affect Total:", $this->_GUIDelimiter, false);
-        unset($group);
+    	$this->form->addElement('static', "restricted_repetitive_behavior_total", "Restricted and Repetitive Behavior Total:");
     
-    	$this->form->addElement("static",null,null);
-    	$this->form->addElement("static",null,null);
+    	$this->form->addElement('static', "social_affect_restricted_repetitive_behavior_total", "Social Affect and Restricted and Repetitive Behavior Total:");
     
-    	$group[]= &$this->form->createElement("static", "restricted_repetitive_behavior_total", null);
-     	$this->form->addGroup($group, null, "Restricted and Repetitive Behavior Total:", $this->_GUIDelimiter, false);
-        unset($group);
-    
-    	$this->form->addElement("static",null,null);
-    	$this->form->addElement("static",null,null);
-    
-    	$group[]= &$this->form->createElement("static", "social_affect_restricted_repetitive_behavior_total", null);
-     	$this->form->addGroup($group, null, "Social Affect and Restricted and Repetitive Behavior Total:", $this->_GUIDelimiter, false);
-        unset($group);
-    
-    	$this->form->addElement("static",null,null);
-    	$this->form->addElement("static",null,null);
-    
-    	$group[]= &$this->form->createElement("static", "ADOS_classification", null);
-     	$this->form->addGroup($group, null, "ADOS Classification:", $this->_GUIDelimiter, false);
-        unset($group);
-    
-    	$this->form->addElement("static",null,null);
-    	$this->form->addElement("static",null,null);
+    	$this->form->addElement('static', "ADOS_classification", "ADOS Classification:");
 
-        $this->form->addElement('static', null, '<br>');
         $this->form->addElement('header', null, 'Severity Scores:');
         $this->form->addElement('static', 'gotham_weighted_score', 'Weighted Score:');
         $this->form->addElement('static', 'severity_score_lookup', 'Severity Score:');
-        $this->form->addElement('static',null,'<br>');
         $this->form->addElement("textarea", "other_comments", "Comments about Validity:", array('cols'=>25, 'rows'=>4));
         $this->XINRegisterRule("other_comments", array("{other_comments}{@}=={@}NEVER_REQUIRED"));
 
@@ -179,14 +154,14 @@ class NDB_BVL_Instrument_ados2_module3 extends NDB_BVL_Instrument
 	//Section A: Observation
 	//Question #1 - Free Play
         $this->form->addElement('header', null, "OBSERVATION:");
-        $this->form->addElement("static", null, "<BR>"); //line space
+        
 
         $group[] =&$this->form->createElement('textarea', 'obs_q_1', null, "Communication Sample");
         $group[] =&$this->form->createElement('advcheckbox', 'obs_q_1_check', null, "Not Answered");
         $this->form->addGroup($group, 'obs_q_1_group', '1. Free Play', false);
         unset($group);
 
-        $this->form->addElement("static", null, "<BR>"); //line space
+        
 
         $group[] =&$this->form->createElement('textarea', 'obs_q_1_notes', null, "Notes");
         $group[] =&$this->form->createElement('advcheckbox', 'obs_q_1_notes_check', null, "Not Answered");
@@ -203,7 +178,7 @@ class NDB_BVL_Instrument_ados2_module3 extends NDB_BVL_Instrument
 
 
 	//Question #2 - Response to Name
-        $this->form->addElement("static", null, "<BR>"); //line space
+        
 
         $group[] =&$this->form->createElement('textarea', 'obs_q_2_notes', null, "Notes");
         $group[] =&$this->form->createElement('advcheckbox', 'obs_q_2_notes_check', null, "Not Answered");
@@ -217,7 +192,7 @@ class NDB_BVL_Instrument_ados2_module3 extends NDB_BVL_Instrument
 
 
 	//Question #3 - Response to Joint Attention
-        $this->form->addElement("static", null, "<BR>"); //line space
+        
 
         $group[] =&$this->form->createElement('textarea', 'obs_q_3_notes', null, "Notes");
         $group[] =&$this->form->createElement('advcheckbox', 'obs_q_3_notes_check', null, "Not Answered");
@@ -231,7 +206,7 @@ class NDB_BVL_Instrument_ados2_module3 extends NDB_BVL_Instrument
 
 
 	//Question #4 - Bubble Play
-        $this->form->addElement("static", null, "<BR>"); //line space
+        
 
         $group[] =&$this->form->createElement('textarea', 'obs_q_4_notes', null, "Notes");
         $group[] =&$this->form->createElement('advcheckbox', 'obs_q_4_notes_check', null, "Not Answered");
@@ -245,7 +220,7 @@ class NDB_BVL_Instrument_ados2_module3 extends NDB_BVL_Instrument
 
 
 	//Question #5 - Anticipation of a Routine with Objects
-        $this->form->addElement("static", null, "<BR>"); //line space
+        
 
         $group[] =&$this->form->createElement('textarea', 'obs_q_5_notes', null, "Notes");
         $group[] =&$this->form->createElement('advcheckbox', 'obs_q_5_notes_check', null, "Not Answered");
@@ -263,111 +238,111 @@ class NDB_BVL_Instrument_ados2_module3 extends NDB_BVL_Instrument
     	//CODING
     	//Section A: Language and Communication
         $this->form->addElement('header', null, "ADOS Module 3");
-        $this->form->addElement("static", null, "<BR>"); //line space
+        
 
         $this->form->addElement('header', null, "Section A: Language and Communication");
-        $this->form->addElement("static", null, "<BR>"); //line space
-        $this->form->addElement("static", null, "<BR>"); //line space
+        
+        
         $this->form->addElement('select', 'a1', '1. Overall Level of Non-Echoed Language', $this->option0123);
-        $this->form->addElement("static", null, "<BR>"); //line space
+        
         $this->form->addElement('select', 'a2', '2. Speech Abnormalities Associated with Autism (Intonation/Volume/Rhythm/Rate)', $this->option0127);
-        $this->form->addElement("static", null, "<BR>"); //line space
+        
         $this->form->addElement('select', 'a3', '3. Immediate Echolalia',  $this->option0123);
-        $this->form->addElement("static", null, "<BR>"); //line space
+        
         $this->form->addElement('select', 'a4', '4. Stereotyped/Idiosyncratic Use of Words or Phrases', $this->option0123);
-        $this->form->addElement("static", null, "<BR>"); //line space
+        
         $this->form->addElement('select', 'a5', '5. Offers Information', $this->option012);
-        $this->form->addElement("static", null, "<BR>"); //line space
+        
         $this->form->addElement('select', 'a6', '6. Asks for Information', $this->option0123);
-        $this->form->addElement("static", null, "<BR>"); //line space
+        
         $this->form->addElement('select', 'a7', '7. Reporting of Events', $this->option0123);
-        $this->form->addElement("static", null, "<BR>"); //line space
+        
         $this->form->addElement('select', 'a8', '8. Conversation', $this->option0123);
-        $this->form->addElement("static", null, "<BR>"); //line space
+        
         $this->form->addElement('select', 'a9', '9. Descriptive, Conventional, Instrumental, or Informational Gestures', $this->option01238);
 
-        $this->form->addElement("static", null, "<BR>"); //line space
-        $this->form->addElement("static", null, "<BR>"); //line space
+        
+        
 
 
 	   //Section B: Reciprocal Social Interaction
         $this->form->addElement('header', null, "Section B: Reciprocal Social Interaction");
-        $this->form->addElement("static", null, "<BR>"); //line space
-        $this->form->addElement("static", null, "<BR>"); //line space
+        
+        
 
         $this->form->addElement('select', 'b1', '1. Unusual Eye Contact', $this->option02);
-        $this->form->addElement("static", null, "<BR>"); //line space
+        
         $this->form->addElement('select', 'b2', '2. Facial Expressions Directed to the Examiner', $this->option012);
-        $this->form->addElement("static", null, "<BR>"); //line space
+        
         $this->form->addElement('select', 'b3', '3. Language Production and Linked Nonverbal Communication', $this->option01278);
-        $this->form->addElement("static", null, "<BR>"); //line space
+        
         $this->form->addElement('select', 'b4', '4. Shared Enjoyment in Interaction', $this->option0123);
-        $this->form->addElement("static", null, "<BR>"); //line space
+        
         $this->form->addElement('select', 'b5', "5. Empathy/Comments on Others' Emotions", $this->option012);
-        $this->form->addElement("static", null, "<BR>"); //line space
+        
         $this->form->addElement('select', 'b6', '6. Insight', $this->option0123);
-        $this->form->addElement("static", null, "<BR>"); //line space
+        
         $this->form->addElement('select', 'b7', '7. Quality of Social Overtures', $this->option0123);
-        $this->form->addElement("static", null, "<BR>"); //line space
+        
         $this->form->addElement('select', 'b8', '8. Amount of Social Overtures/Maintenance of Attention', $this->option01237);
-        $this->form->addElement("static", null, "<BR>"); //line space
+        
         $this->form->addElement('select', 'b9', '9. Quality of Social Response', $this->option0123);
-        $this->form->addElement("static", null, "<BR>"); //line space
+        
         $this->form->addElement('select', 'b10', '10. Amount of Reciprocal Social Communication', $this->option0123);
-        $this->form->addElement("static", null, "<BR>"); //line space
+        
         $this->form->addElement('select', 'b11', '11. Overall Quality of Rapport', $this->option0123);
-        $this->form->addElement("static", null, "<BR>"); //line space
+        
  
-        $this->form->addElement("static", null, "<BR>"); //line space
-        $this->form->addElement("static", null, "<BR>"); //line space
+        
+        
     }
 
     function _page2(){
     	//Section C: Play
         $this->form->addElement('header', null, "Section C: Imagination");
-        $this->form->addElement("static", null, "<BR>"); //line space
-        $this->form->addElement("static", null, "<BR>"); //line space
+        
+        
         $this->form->addElement('select', 'c1', '1. Imagination/Creativity', $this->option0123);
-        $this->form->addElement("static", null, "<BR>"); //line space
+        
 
-        $this->form->addElement("static", null, "<BR>"); //line space
-        $this->form->addElement("static", null, "<BR>"); //line space
+        
+        
 
     	//Section D: Stereotyped Behaviors and Restricted Interests
         $this->form->addElement('header', null, "Section D: Stereotyped Behaviors and Restricted Interests");
-        $this->form->addElement("static", null, "<BR>"); //line space
-        $this->form->addElement("static", null, "<BR>"); //line space
+        
+        
         $this->form->addElement('select', 'd1', '1. Unusual Sensory Interest in Play Material/Person', $this->option0123);
-        $this->form->addElement("static", null, "<BR>"); //line space
+        
      	$this->addTextAreaElement('d1_specify', $this->indent . "Please specify:");
-        $this->form->addElement("static", null, "<BR>"); //line space
+        
         $this->form->addElement('select', 'd2', '2. Hand and Finger and Other Complex Mannerisms', $this->option0123);
-        $this->form->addElement("static", null, "<BR>"); //line space
+        
     	$this->addTextAreaElement('d2_specify', $this->indent . "Please specify:");
-        $this->form->addElement("static", null, "<BR>"); //line space
+        
         $this->form->addElement('select', 'd3', '3. Self-Injurious Behavior', $this->option012);
-        $this->form->addElement("static", null, "<BR>"); //line space
+        
         $this->form->addElement('select', 'd4', '4. Excessive Interest in or References to Unusual or Highly Specific Topics or Objects or Repetitive Behaviors', $this->option0123);
-        $this->form->addElement("static", null, "<BR>"); //line space
+        
     	$this->form->addElement('select', 'd5', "5. Compulsions or Rituals", $this->option012);
-        $this->form->addElement("static", null, "<BR>"); //line space
+        
     	$this->addTextAreaElement('d5_specify', $this->indent . "Please specify:");
 
-        $this->form->addElement("static", null, "<BR>"); //line space
-        $this->form->addElement("static", null, "<BR>"); //line space
+        
+        
 
     	//Section E: Other Abnormal Behaviors
         $this->form->addElement('header', null, "Section E: Other Abnormal Behaviors");
-        $this->form->addElement("static", null, "<BR>"); //line space
-        $this->form->addElement("static", null, "<BR>"); //line space
+        
+        
         $this->form->addElement('select', 'e1', '1. Overactivity/Agitation', $this->option01237);
-        $this->form->addElement("static", null, "<BR>"); //line space
+        
         $this->form->addElement('select', 'e2', '2. Tantrums, Aggression, Negative or Disruptive Behavior', $this->option0123);
-        $this->form->addElement("static", null, "<BR>"); //line space
+        
         $this->form->addElement('select', 'e3', '3. Anxiety', $this->option012);
 
-        $this->form->addElement("static", null, "<BR>"); //line space
-        $this->form->addElement("static", null, "<BR>"); //line space
+        
+        
 
     } // End Form
 
