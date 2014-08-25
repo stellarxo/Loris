@@ -97,12 +97,12 @@ class NDB_BVL_Instrument_SRS2_SelfReport extends NDB_BVL_Instrument
                            "q5_others_take_advantage"=>"5. I do not recognize when others are trying to take advantage of me",
                            "q6_rather_be_alone"=>"6. I would rather be alone than with others",
                            "q7_aware_others_feeling"=>"7. I am usually aware of how others are feeling",
-                           "q8_behave_strange_bizzare"=>"8. I behave in ways that seem strange or bizzare to others",
+                           "q8_behave_strange_bizzare"=>"8. I behave in ways that seem strange or bizarre to others",
                            "q9_overly_dependent"=>"9. I am overly dependent on others for help with meeting my everyday needs",
                            "q10_takethings_literally"=>"10. I take things too literally, and because of that, I misinterpret the intended meaning of parts<BR> of a conversation",
                            "q11_have_selfconfidence"=>"11. I have good self-confidence",
                            "q12_communicate_toothers"=>"12. I am unable to communicate my feelings to others",
-                           "q13_awkward_turn_takingtalk"=>"13. I am awkward in turn-taking internactions with others (for example, I have a hard time keeping<BR>up with the give-and-take of a conversation)",
+                           "q13_awkward_turn_takingtalk"=>"13. I am awkward in turn-taking interactions with others (for example, I have a hard time keeping<BR>up with the give-and-take of a conversation)",
                            "q14_notwell_coordinated"=>"14. I am not well coordinated",
                            "q15_changefacialexp_understandmeaning"=>"15. When people change their tone or facial expression, I usually pick on that and understand what it means"                             );
 
@@ -158,7 +158,7 @@ class NDB_BVL_Instrument_SRS2_SelfReport extends NDB_BVL_Instrument
                            "q42_overly_sensitive"=>"42. I am overly sensitive to certain sounds, textures, or smells",
                            "q43_enjoy_smalltalk"=>"43. I enjoy small talk (casual conversation with others)",
                            "q44_touble_chains_causation"=>"44. I have more trouble than most people with understanding chains of causation<BR>(in other words, how events are related to one another)",
-                           "q45_pay_attention"=>"45. When others around me are paying attention to something, I get intersted in what they<BR>are attending to",
+                           "q45_pay_attention"=>"45. When others around me are paying attention to something, I get interested in what they<BR>are attending to",
                             "q46_serious_facialexp"=>"46. Others feel that I have overly serious facial expressions",
                             "q47_laugh_inappropriarte"=>"47. I laugh at inappropriate times",
                             "q48_goodsense_humor"=>"48. I have a good sense of humor and can understand jokes",
