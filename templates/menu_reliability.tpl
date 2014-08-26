@@ -28,92 +28,109 @@
                 {/if}
                 <div class="row">
                     <div class="form-group col-sm-2">
-                        <label class="col-xs-12 col-md-6">
-                            Subproject:
+                        <label class="col-xs-12">
+                            {$form.SubprojectID.label}
                         </label>
-                        <div class="col-xs-12 col-md-6">
-                            {$form.CommentID.html}
+                        <div class="col-xs-12">
+                            {$form.SubprojectID.html}
                         </div>
                     </div>
                     <div class="form-group col-sm-2">
-                        <label class="col-xs-12 col-md-4">
+                        <label class="col-xs-12">
                             {$form.ProjectID.label}
                         </label>
-                        <div class="col-xs-12 col-md-8">
+                        <div class="col-xs-12">
                             {$form.ProjectID.html}
                         </div>
                     </div>
                     <div class="form-group col-sm-2">
-                        <label class="col-xs-12 col-md-4">
+                        <label class="col-xs-12">
                             {$form.CenterID.label}
                         </label>
-                        <div class="col-xs-12 col-md-8">
+                        <div class="col-xs-12">
                             {$form.CenterID.html}
                         </div>
                     </div>
                     <div class="form-group col-sm-3">
-                        <label class="col-xs-12 col-md-4">
+                        <label class="col-xs-12">
                             {$form.Instrument.label}
                         </label>
-                        <div class="col-xs-12 col-md-8">
+                        <div class="col-xs-12">
                             {$form.Instrument.html}
                         </div>
                     </div>
                     <div class="form-group col-sm-3">
-                        <label class="col-xs-12 col-md-4">
+                        <label class="col-xs-12">
                             {$form.reliability_center_id.label}
                         </label>
-                        <div class="col-xs-12 col-md-8">
+                        <div class="col-xs-12">
                             {$form.reliability_center_id.html}
                         </div>
                     </div>
                 </div>
                 <div class="row">
                     <div class="form-group col-sm-2">
-                        <label class="col-xs-12 col-md-4">
+                        <label class="col-xs-12">
                             DCCID:
                         </label>
-                        <div class="col-xs-12 col-md-8">
+                        <div class="col-xs-12">
                             {$form.DCCID.html}
                         </div>
                     </div>
                     <div class="form-group col-sm-2">
-                        <label class="col-xs-12 col-md-4">
+                        <label class="col-xs-12">
                             PSCID:
                         </label>
-                        <div class="col-xs-12 col-md-8">
+                        <div class="col-xs-12">
                             {$form.PSCID.html}
                         </div>
                     </div>
                     <div class="form-group col-sm-2">
-                        <label class="col-xs-12 col-md-4">
+                        <label class="col-xs-12">
                             Gender:
                         </label>
-                        <div class="col-xs-12 col-md-8">
+                        <div class="col-xs-12 col-lg-8">
                             {$form.Gender.html}
                         </div>
                     </div>
                     <div class="form-group col-sm-3">
-                        <label class="col-xs-12 col-md-4">
+                        <label class="col-xs-12">
                             Visit label:
                         </label>
-                        <div class="col-xs-12 col-md-8">
+                        <div class="col-xs-12">
                             {$form.Visit_label.html}
                         </div>
                     </div>
                     <div class="form-group col-sm-3">
-                        <label class="col-xs-12 col-md-4">
+                        <label class="col-xs-12">
                             {$form.Invalid.label}
                         </label>
-                        <div class="col-xs-12 col-md-8">
+                        <div class="col-xs-12">
                             {$form.Invalid.html}
                         </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="visible-xs col-xs-12"> </div>
+                    <div class="visible-xs col-xs-12"> </div>
+                    <div class="visible-xs col-xs-12"> </div>
+                    <div class="visible-xs col-xs-12"> </div>
+                    <div class="col-sm-3 col-sm-offset-6">
+                        <input type="submit" name="filter" value="Show Data" class="btn btn-sm btn-primary col-xs-12" />
+                    </div>
+                    <div class="visible-xs col-xs-12"> </div>
+                    <div class="visible-xs col-xs-12"> </div>
+                    <div class="visible-xs col-xs-12"> </div>
+                    <div class="visible-xs col-xs-12"> </div>
+                    <div class="col-sm-3">
+                        <input type="button" name="reset" value="Clear Form" class="btn btn-sm btn-primary col-xs-12" onclick="location.href='main.php?test_name=reliability&reset=true'" />
                     </div>
                 </div>
             </form>
         </div>
     </div>
 </div>
+<div class="row">
 {if $reliability_swap_candidates}
     <div class="col-sm-6">
         <div class="panel panel-primary">
@@ -163,7 +180,7 @@
                 </form>
             </div>
         </div>   
-</div>
+    </div>
 {/if}
 {if $EARLI_Reliability}
     <div class="col-sm-6">
@@ -207,8 +224,9 @@
                 </form>
             </div>
         </div>   
-</div>
+    </div>
 {/if}
+</div>
 
 {if $IBIS_Access}
 <a href='main.php?test_name=reliability_phase_one'>Phase 1 Reliability</a> |

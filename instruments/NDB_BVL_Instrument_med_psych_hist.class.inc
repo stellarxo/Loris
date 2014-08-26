@@ -219,6 +219,9 @@ class NDB_BVL_Instrument_med_psych_hist extends NDB_BVL_Instrument
         $db = & Database::singleton();
          
         $timepoint =& TimePoint::singleton($this->getSessionID());
+        if (Utility::isErrorX($timepoint)) {
+            return PEAR::raiseError("Candidate Error ($this->identifier): ".$timepoint->getMessage());
+        }
         $candidate =& Candidate::singleton($timepoint->getCandID() );
         if (Utility::isErrorX($candidate)) {
             return PEAR::raiseError("Candidate Error ($this->identifier): ".$candidate->getMessage());

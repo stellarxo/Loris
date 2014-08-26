@@ -90,7 +90,7 @@ class NDB_BVL_Instrument_pspq_2 extends NDB_BVL_Instrument
         $field = 'respondent_age';$label = 'Your Age <BR>(Please indicate your age in years)';
         $group [] = $this->createText($field, $label);
         $this->addGroup($group, $field . "_group", $label, null, false);
-        $this->XINRegisterRule($field,array("$field{@}=={@}NEVER_REQUIRED"), $field . "_group");
+    //    $this->XINRegisterRule($field,array("$field{@}=={@}NEVER_REQUIRED"), $field . "_group");
         unset($group);
         $this->addGroupRule($field . "_group", array(array(array("Value must be numeric.", 'numeric'))));
         
@@ -102,7 +102,7 @@ class NDB_BVL_Instrument_pspq_2 extends NDB_BVL_Instrument
         $this->XINRegisterRule('respondent_other', $rules_array, "Please specify relationship", 'respondent_other_group');
 
         $this->addSelect('respondent_gender',"Gender ", $this->gender); 
-        $this->XINRegisterRule('respondent_gender',array("respondent_gender{@}=={@}NEVER_REQUIRED"));
+      //  $this->XINRegisterRule('respondent_gender',array("respondent_gender{@}=={@}NEVER_REQUIRED"));
 
         $this->form->addElement('static', null, "<br /><br />");
         $questions = array("q1_like_being_otherpeople" => "1. I like being around other people",
@@ -149,6 +149,7 @@ class NDB_BVL_Instrument_pspq_2 extends NDB_BVL_Instrument
             $this->addSelect($field, $label, $this->rating);
             $this->XINRegisterRule($field,array("$field{@}=={@}NEVER_REQUIRED"));
         }
+        $this->form->addFormRule(array(&$this, 'PSPQ_Rules'));
 
     }
     
@@ -173,7 +174,7 @@ class NDB_BVL_Instrument_pspq_2 extends NDB_BVL_Instrument
             $this->addSelect($field, $label, $this->rating);
             $this->XINRegisterRule($field,array("$field{@}=={@}NEVER_REQUIRED"));
         }
-
+        $this->form->addFormRule(array(&$this, 'PSPQ_Rules'));
 
     }
 
@@ -248,7 +249,7 @@ class NDB_BVL_Instrument_pspq_2 extends NDB_BVL_Instrument
             $this->addSelect($field, $label, $this->rating);
             $this->XINRegisterRule($field,array("$field{@}=={@}NEVER_REQUIRED"));
         }
-   
+        $this->form->addFormRule(array(&$this, 'PSPQ_Rules'));
      
     }
     
@@ -276,17 +277,75 @@ class NDB_BVL_Instrument_pspq_2 extends NDB_BVL_Instrument
         }
        $this->addBasicTextArea("comments", "Do you have any other comments?");
        $this->XINRegisterRule('comments', array('comments{@}=={@}NEVER_REQUIRED'));
-   
+       $this->form->addFormRule(array(&$this, 'PSPQ_Rules'));
+ 
      
     }
-
-   function PSPQ_Rules($values) {
-       $errors = array();
+    function PSPQ_Rules($values) {
+      // commenting out the warnings
+         $errors = array();
+         $DB = Database::singleton();
+         $questions = array();
+         $questions = $DB->pselect(
+            "SELECT  Description as question,
+            SourceField FROM parameter_type  
+            WHERE SourceFrom=:TN AND 
+            SourceField NOT IN ('Validity', 'Administration')",
+                array(
+                    'TN' => $this->testName
+                )
+            );
+       $list_questions = array();
+       foreach($values as $key=>$val) {
+	       if(empty($val)) {
+		       foreach($questions as $row) {
+			       if($row['SourceField'] == $key) {
+				       // $q_display = $row['question'];break;
+				       $list_questions[$key] = $row['question'];
+			       }
+		       }
+	       }
+       }
+       foreach ($list_questions as $key=>$row) {
+                if($key == 'respondent_other' && $questions['respondent'] != 'other') {
+                   unset($list_questions[$key]);
+                } else if($key == 'informant_other' && $questions['informant'] != 'other') {
+                   unset($list_questions[$key]);
+                } elseif (empty ($row) )  {
+                   unset($list_questions[$key]);
+                } 
+        }
+        if(isset($_GET["key"])) {
+            $url_key = $_GET["key"];
+        }
+       if(isset($_GET["pageNum"])) { 
+          $page = $_GET["pageNum"]; 
+          if($page == 'top') {
+               $page_verbose = 1;
+           } else {
+               $page_verbose= $page +1;
+           }
+          $goback_url = "survey.php?key=$url_key&pageNum=$page";
+       }
+//print_r($list_questions);
+	if(!empty($list_questions)) {
+                setcookie("MissingResponses","", time()-3600);
+                $value = "<font color='Red'>Note: You have missed a few questions on the previous page :</font> <BR><BR>";
+		foreach($list_questions as $key=>$question) {
+                    $value  .= $question."<BR><BR>";
+		}
+          setcookie("MissingResponses",$value);
+          setCookie("PrevPage", $page);
+          setCookie("URLKey", $url_key);
+	}
        if(intval($values['respondent_age']) > 100) {
            $errors['respondent_age_group'] = "Specify age between 0 and 100";    
        }
        if(intval($values['informant_age']) > 100) {
            $errors['informant_age_group'] = "Specify age between 0 and 100";
+       }
+       if(empty($values['respondent_age']) && array_key_exists('respondent_age', $values)) {
+           $errors['respondent_age_group'] = 'Specify age';
        }
 
        return $errors;
