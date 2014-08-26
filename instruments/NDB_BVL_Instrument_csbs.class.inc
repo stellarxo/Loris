@@ -384,7 +384,7 @@ INSERT INTO instrument_subtests VALUES('', 'csbs', 'csbs_page2', 'Symbolic Behav
     		return PEAR::raiseError("Could not retrieve scores: " . $record->getMessage());
     	}
    
- 	
+       $scores['score_validity'] = "";	
        // Get the subject age in months for scoring
         $timepoint =& TimePoint::singleton($this->getSessionID());
         $dob = $timepoint->getEffectiveDateOfBirth();
