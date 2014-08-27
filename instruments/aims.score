@@ -14,13 +14,15 @@
 
 require_once "../tools/generic_includes.php";
 require_once "Database.class.inc";
-
+require_once "NDB_BVL_Instrument.class.inc";
+require_once "TimePoint.class.inc";
 $CommentID = $argv[1];
 $db        =& Database::singleton();
 if (Utility::isErrorX($db)) {
     print "Could not connect to database: " . $db->getMessage();
     exit(1);
 }
+
 $query         = "SELECT * from aims WHERE CommentID = :CommentID";
 $WhereCriteria = array('CommentID'=>$CommentID);
 $record        = array();
@@ -29,6 +31,12 @@ if (Utility::isErrorX($record)) {
     print "Query has failed to select: ".$record->getMessage();
     exit(2);
 }
+$instrument =& NDB_BVL_Instrument::factory('aims', $record['CommentID'], null, false);
+if($instrument->getSessionID() != NULL) { //quickform_parser doesn't use any specific session
+     $timepoint =& TimePoint::singleton($instrument->getSessionID());
+     $dob = $timepoint->getEffectiveDateOfBirth();
+}
+
 $scores = array();
 if ($record['prone_first_item'] != null & $record['prone_last_item'] != null) {
     $scores['prone_prev_itemscredited']   = 0;
@@ -245,35 +253,38 @@ foreach ($record as $field => $value) {
 }
 $scores['total_score'] = $scores['prone_subscalescore']+ $scores['supine_subscalescore']+
                         $scores['sit_subscalescore']+$scores['stand_subscalescore'];
-
+if(!empty($dob) && !empty($record['Date_taken'])) {
+    $age = Utility::calculateAge($dob, $record["Date_taken"]);
+}
+if(isset($age) && is_array($age)) { 
+	$Age = $age['year'] * 12 + $age['mon'];
+}
 if ($scores['total_score'] > 0) {
-    $Age                  = intval($record['Candidate_Age']);
-/* do not roundup age calculation
-    if($record['Candidate_Age'] > $Age) {
-       $Age = $Age +1;     
-    }
-    */
+
     $scores['percentile'] = '';
     //print "AGE $Age";
-    $query_score          = "SELECT Percentile from aims_lookup WHERE Rawscore = :Rawscore 
-                             AND Age = :Age";
-    $WhereCriteria_p      = array('Rawscore'=>$scores['total_score'],'Age'=>$Age);
-   // print "QUERY $query_score";
-    $percentile           = intval($db->pselectOne($query_score, $WhereCriteria_p));
+    $query_score          = "SELECT Percentile from aims_lookup WHERE Rawscore = :val_score 
+                             AND Age = :val_age";
+    $WhereCriteria_p      = array('val_score'=>$scores['total_score'],'val_age'=>$Age);
+    $percentile           =  $db->pselectOne($query_score, $WhereCriteria_p);
     if (Utility::isErrorX($percentile)) {
         print "Query has failed to select: ".$percentile->getMessage();
         exit(2);
-    } //print "PERCENTILE $percentile ";
-    if (is_int($percentile)) {
-        if ($percentile == 0) {
-            $scores['percentile'] = '<1';
-        } else if ($percentile == 100) {
-            $scores['percentile'] = '>99';
-        } else {
-            $scores['percentile'] = $percentile;
-        }
+    } 
+    if(is_array($percentile)) {
+        $scores['percentile'] = 'N/A';
     } else {
-        $scores['percentile'] ='N/A';   
+	    if (is_int($percentile)) {
+		    if ($percentile == 0) {
+			    $scores['percentile'] = '<1';
+		    } else if ($percentile == 100) {
+			    $scores['percentile'] = '>99';
+		    } else {
+			    $scores['percentile'] = $percentile;
+		    }
+	    } else {
+		    $scores['percentile'] =$percentile;   
+	    }
     }
     //save scores
     $result = $db->update('aims', $scores, $WhereCriteria);
