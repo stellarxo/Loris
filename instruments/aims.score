@@ -256,19 +256,16 @@ $scores['total_score'] = $scores['prone_subscalescore']+ $scores['supine_subscal
 if(!empty($dob) && !empty($record['Date_taken'])) {
     $age = Utility::calculateAge($dob, $record["Date_taken"]);
 }
-if(isset($age) && is_array($age)) { print_r($age);
+if(isset($age) && is_array($age)) { 
 	$Age = $age['year'] * 12 + $age['mon'];
 }
 if ($scores['total_score'] > 0) {
-//    $Age                  = intval($record['Candidate_Age']);
 
-print "AGE". $Age;
     $scores['percentile'] = '';
     //print "AGE $Age";
     $query_score          = "SELECT Percentile from aims_lookup WHERE Rawscore = :val_score 
                              AND Age = :val_age";
     $WhereCriteria_p      = array('val_score'=>$scores['total_score'],'val_age'=>$Age);
-   print "QUERY $query_score";
     $percentile           =  $db->pselectOne($query_score, $WhereCriteria_p);
     if (Utility::isErrorX($percentile)) {
         print "Query has failed to select: ".$percentile->getMessage();
