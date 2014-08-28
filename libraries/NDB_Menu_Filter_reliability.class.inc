@@ -169,7 +169,6 @@ class NDB_Menu_Filter_reliability extends NDB_Menu_Filter
         $list_of_projects =& Utility::getProjectList();
 
         // Form Elements
-        $this->addSelect('CommentID', 'CommentID:', $subproject_options);
         $this->addSelect('SubprojectID', 'SubprojectID:', $subproject_options);
         $this->addSelect('Objective', 'Objective:', $subproject_options);
         $this->addSelect('CenterID', 'Site:', $list_of_sites);
@@ -269,7 +268,7 @@ class NDB_Menu_Filter_reliability extends NDB_Menu_Filter
             //print out data rows
             $i = 1;
             // $identifier = $item['Tracking_log_ID'];
-            $comment_id = $item['CommentID']; 
+            $comment_id = $item['CommentID'];
             $site_id = $item['Site'];
             $current_stage = $item['Current_stage'];
             $invalid = $item['invalid'];
