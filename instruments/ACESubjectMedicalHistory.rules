@@ -1,0 +1,20 @@
+rev_headimagestudytype{-}Specify type(s) of brain imaging study{-}rev_headimagestudy{@}=={@}yes 
+info_gest{-}Specify gestation period{-}full_term{@}=={@}no 
+verb_words{-}Specify how many words{-}current_lang{@}=={@}yes 
+rev_headmeningitisage{-}Specify age{-}rev_headmeningitis{@}=={@}yes 
+rev_headmeningitisorg{-}Specify status{-}rev_headmeningitis{@}=={@}yes 
+rev_headencephalitisage{-}Specify age{-}rev_headencephalitis{@}=={@}yes
+rev_headencephalitisorg{-}Specify status{-}rev_headencephalitis{@}=={@}yes
+rev_headencephalitisage{-}Specify age{-}rev_headencephalitis{@}=={@}yes
+rev_headfebseizage{-}Specify age{-}rev_headfebseiages{@}=={@}yes
+rev_headseizureonset{-}Specify age{-}rev_headseizure{@}=={@}yes
+rev_headseizurecontrol{-}Specify control{-}rev_headseizure{@}=={@}yes
+rev_yeartestsages{-}Specify age{-}rev_eartest{@}=={@}yes
+rev_earrecuotitisyear{-}Specify year{-}rev_earrecuotitis{@}=={@}yes 
+rev_earrecuotitisage{-}Specify age{-}rev_earrecuotitis{@}=={@}yes 
+rev_endoprecociousage{-}Specify age{-}rev_endoprecocious{@}=={@}yes 
+rev_headimagestudytype{-}Specify type{-}rev_headimagestudy{@}=={@}yes
+rev_headimagestudyresult{-}Specify result{-}rev_headimagestudy{@}=={@}yes
+rev_eartestages{-}Specify age{-}rev_eartest{@}=={@}yes
+rev_eartestresult{-}Specify result{-}rev_eartest{@}=={@}yes
+rev_endodiabetestype{-}Specify type{-}rev_endodiabetes{@}=={@}yes

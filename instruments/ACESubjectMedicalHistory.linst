@@ -1,0 +1,146 @@
+table{@}ACESubjectMedicalHistory
+title{@}ACE Subject Medical History
+date{@}Date_taken{@}Date of Administration{@}2006{@}2012
+static{@}Candidate_Age{@}Candidate Age (Months)
+static{@}Window_Difference{@}Window Difference (+/- Days)
+select{@}Examiner{@}Examiner{@}NULL=>''
+header{@}{@}ACE Subject Medical History
+static{@}{@}<b>Diagnostic History</b>
+numeric{@}diag_aofc{@}1. Age of first concern (in months){@}1{@}150
+select{@}diag_aofc_status{@}{@}NULL=>''{-}'not_answered'=>'Not Answered'
+select{@}devel_concern{@}2. Developmental concern{@}NULL=>''{-}'1_cognitive/learning'=>'1. Cognitive/learning'{-}'2_behavior'=>'2. Behavior'{-}'3_hearing'=>'3. Hearing'{-}'4_motor'=>'4. Motor'{-}'5_language'=>'5. Language'{-}'not_answered'=>'Not Answered'{-}'none'=>'None'
+select{@}aut_diag{@}3. Autism-related diagnosis{@}NULL=>''{-}'1_autism'=>'1. Autism'{-}'2_autism_spectrum_disorder'=>'2. Autism Spectrum Disorder'{-}'3_asperger_syndrome'=>'3. Asperger syndrome'{-}'4_pdd-nos'=>'4. PDD-NOS'{-}'not_answered'=>'Not Answered'{-}'none'=>'None'
+numeric{@}diag_ageatdiag{@}4. Age at diagnosis (in months){@}1{@}360
+select{@}diag_ageatdiag_status{@}{@}NULL=>''{-}'not_answered'=>'Not Answered'
+select{@}diag_diagnosismadeby{@}5.Diagnosis made by{@}NULL=>''{-}'physician'=>'Physician'{-}'psychologist'=>'Psychologist'{-}'other'=>'Other'{-}'nk'=>'NK'{-}'not_answered'=>'Not Answered'{-}'none'=>'None'
+static{@}{@}<b>Prenatal/Early Postnatal History</b>
+select{@}preg_complic{@}6. Complications during pregnancy?{@}NULL=>''{-}'yes'=>'Yes'{-}'no'=>'No'{-}'nk'=>'NK'{-}'not_answered'=>'Not Answered'
+select{@}preg_dxdrug{@}7. Used prescription medications during pregnancy?{@}NULL=>''{-}'yes'=>'Yes'{-}'no'=>'No'{-}'nk'=>'NK'{-}'not_answered'=>'Not Answered'
+numeric{@}birth_weight_lbs{@}8. Birth weight pounds{@}1{@}25
+select{@}birth_weight_lbs_status{@}{@}NULL=>''{-}'not_answered'=>'Not Answered'
+numeric{@}ldnb_lgthin{@}9. What was the baby's length at birth (inches){@}
+select{@}ldnb_lgthin_status{@}{@}NULL=>''{-}'not_answered'=>'Not Answered'
+select{@}full_term{@}10. Full-term delivery?{@}NULL=>''{-}'yes'=>'Yes'{-}'no'=>'No'{-}'nk'=>'NK'{-}'not_answered'=>'Not Answered'
+numeric{@}info_gest{@}If No, how many weeks gestation?{@}1{@}45
+select{@}info_gest_status{@}{@}NULL=>''{-}'not_answered'=>'Not Answered'
+text{@}ldnb_hosptotalmom{@}How many days did the mom stay in the hospital after birth?
+select{@}ldnb_hosptotalmom_status{@}{@}NULL=>''{-}'not_answered'=>'Not Answered'
+static{@}{@}<b>Developmental History</b>
+numeric{@}earlydev_walk{@}12. Age when first walked unaided (in months)
+select{@}earlydev_walk_status{@}{@}NULL=>''{-}'not_answered'=>'Not Answered'
+numeric{@}ad016{@}13. Age of first single words (in months)
+select{@}ad016_status{@}{@}NULL=>''{-}'not_answered'=>'Not Answered'
+numeric{@}age_3word{@}14. Age at 3-word sentences (in months)
+select{@}age_3word_status{@}{@}NULL=>''{-}'not_answered'=>'Not Answered'
+select{@}current_lang{@}15. Current speech/language: Verbal?{@}NULL=>''{-}'yes'=>'Yes'{-}'no'=>'No'{-}'nk'=>'NK'{-}'not_answered'=>'Not Answered'
+select{@}verb_words{@}If yes, how many words?{@}NULL=>''{-}'1_<10_single_words'=>'1. <10 single words'{-}'2_speaks_in_10_or_more_single_words'=>'2. Speaks in 10 or more single words'{-}'3_speaks_in_2_word_combinations'=>'3. Speaks in 2 word combinations'{-}'4_speaks_in_3_or_more_word_combinations'=>'4. Speaks in 3 or more word combinations'{-}'not_answered'=>'Not Answered'
+select{@}othmem_devdelay{@}16. Developmental Delay{@}NULL=>''{-}'yes'=>'Yes'{-}'no'=>'No'{-}'nk'=>'NK'{-}'not_answered'=>'Not Answered'
+select{@}school_perf{@}17. School Performance{@}NULL=>''{-}'1_below_grade_level'=>'1. Below grade level'{-}'2_at_grade_level'=>'2. At grade level'{-}'3_above_grade_level'=>'3. Above grade level'{-}'4_mixed'=>'4. Mixed'{-}'not_answered'=>'Not Answered'{-}'none'=>'None'
+static{@}{@}<b>Current Medications</b>
+select{@}rx_behav{@}18. Prescription medications for behavioral concerns{@}NULL=>''{-}'yes'=>'Yes'{-}'no'=>'No'{-}'nk'=>'NK'{-}'not_answered'=>'Not Answered'
+select{@}rx_phys{@}19. Prescription medications for physical health concerns{@}NULL=>''{-}'yes'=>'Yes'{-}'no'=>'No'{-}'nk'=>'NK'{-}'not_answered'=>'Not Answered'
+select{@}otc_med{@}20. Over-the-counter medications{@}NULL=>''{-}'yes'=>'Yes'{-}'no'=>'No'{-}'nk'=>'NK'{-}'not_answered'=>'Not Answered'
+select{@}ds_med{@}21. Dietary Supplements{@}NULL=>''{-}'yes'=>'Yes'{-}'no'=>'No'{-}'nk'=>'NK'{-}'not_answered'=>'Not Answered'
+select{@}gastro_spec_diet{@}22. Does subject have a special diet?{@}NULL=>''{-}'yes'=>'Yes'{-}'no'=>'No'{-}'nk'=>'NK'{-}'not_answered'=>'Not Answered'
+page{@}{@}Page 1
+header{@}{@}Review of Systems
+static{@}{@}<b>Head/Brain</b>
+select{@}rev_headmeningitis{@}23. Meningitis{@}NULL=>''{-}'yes'=>'Yes'{-}'no'=>'No'{-}'nk'=>'NK'{-}'not_answered'=>'Not Answered'
+numeric{@}rev_headmeningitisage{@}Meningitis: Age (in months)
+select{@}rev_headmeningitisage_status{@}{@}NULL=>''{-}'not_answered'=>'Not Answered'
+text{@}rev_headmeningitisorg{@}Meningitis: Organism
+select{@}rev_headmeningitisorg_status{@}{@}NULL=>''{-}'not_answered'=>'Not Answered'
+select{@}rev_headencephalitis{@}24. Encephalitis{@}NULL=>''{-}'yes'=>'Yes'{-}'no'=>'No'{-}'nk'=>'NK'{-}'not_answered'=>'Not Answered'
+numeric{@}rev_headencephalitisage{@}Encephalitis: Age (in months)
+select{@}rev_headencephalitisage_status{@}{@}NULL=>''{-}'not_answered'=>'Not Answered'
+text{@}rev_headencephalitisorg{@}Encephalitis: Organism
+select{@}rev_headencephalitisorg_status{@}{@}NULL=>''{-}'not_answered'=>'Not Answered'
+select{@}rev_headfebseiz{@}25. Febrile Seizures{@}NULL=>''{-}'yes'=>'Yes'{-}'no'=>'No'{-}'nk'=>'NK'{-}'not_answered'=>'Not Answered'
+text{@}rev_headfebseizages{@}Febrile Seizures: Age(s)
+select{@}rev_headfebseizages_status{@}{@}NULL=>''{-}'not_answered'=>'Not Answered'
+select{@}rev_headseizure{@}26. Non-Febrile Seizures{@}NULL=>''{-}'yes'=>'Yes'{-}'no'=>'No'{-}'nk'=>'NK'{-}'not_answered'=>'Not Answered'
+text{@}rev_headseizureonset{@}Non-Febrile Seizures: Onset
+select{@}rev_headseizureonset_status{@}{@}NULL=>''{-}'not_answered'=>'Not Answered'
+select{@}rev_headseizurecontrol{@}Non-Febrile Seizures: Controlled{@}NULL=>''{-}'yes'=>'Yes'{-}'no'=>'No'{-}'nk'=>'NK'{-}'not_answered'=>'Not Answered'
+select{@}fhxcp{@}27. Cerebral Palsy{@}NULL=>''{-}'yes'=>'Yes'{-}'no'=>'No'{-}'nk'=>'NK'{-}'not_answered'=>'Not Answered'
+select{@}hist_trauma{@}28. History of head trauma{@}NULL=>''{-}'yes'=>'Yes'{-}'no'=>'No'{-}'nk'=>'NK'{-}'not_answered'=>'Not Answered'
+select{@}rev_headimagestudy{@}29. Imaging Studies{@}NULL=>''{-}'yes'=>'Yes'{-}'no'=>'No'{-}'nk'=>'NK'{-}'not_answered'=>'Not Answered'{-}'na'=>'Not Applicable'
+select{@}rev_headimagestudytype{@}Imaging Studies: Type{@}NULL=>''{-}'us'=>'US'{-}'ct'=>'CT'{-}'mr'=>'MR'{-}'pet'=>'PET'{-}'eeg'=>'EEG'{-}'not_answered'=>'Not Answered'
+select{@}rev_headimagestudyresult{@}Imaging Studies: Results{@}NULL=>''{-}'normal'=>'Normal'{-}'abnormal'=>'Abnormal'{-}'not_answered'=>'Not Answered'
+static{@}{@}<b>Eyes</b>
+select{@}vis_blind{@}30. Significant visual loss or congenital blindness{@}NULL=>''{-}'yes'=>'Yes'{-}'no'=>'No'{-}'nk'=>'NK'{-}'not_answered'=>'Not Answered'
+static{@}{@}<b>Ears</>
+select{@}rev_eartest{@}31. Hearing Testing{@}NULL=>''{-}'yes'=>'Yes'{-}'no'=>'No'{-}'nk'=>'NK'{-}'not_answered'=>'Not Answered'
+text{@}rev_eartestages{@}Hearing Testing: Age(s)
+select{@}rev_eartestages_status{@}{@}NULL=>''{-}'not_answered'=>'Not Answered'
+select{@}rev_eartestresult{@}Hearing Testing: Result{@}NULL=>''{-}'normal'=>'Normal'{-}'abnormal'=>'Abnormal'{-}'not_answered'=>'Not Answered'
+select{@}hear_loss{@}32. Deafness or significant hearing loss{@}NULL=>''{-}'yes'=>'Yes'{-}'no'=>'No'{-}'nk'=>'NK'{-}'not_answered'=>'Not Answered'
+select{@}othmem_hearingcor{@}If yes, was hearing corrected with hearing aid(s) or cochlear implant?{@}NULL=>''{-}'yes'=>'Yes'{-}'no'=>'No'{-}'nk'=>'NK'{-}'not_answered'=>'Not Answered'
+select{@}rev_earrecuotitis{@}33. Recurrent Otitis Media{@}NULL=>''{-}'yes'=>'Yes'{-}'no'=>'No'{-}'nk'=>'NK'{-}'not_answered'=>'Not Answered'
+numeric{@}rev_earrecuotitisyear{@}Recurrent Otitis Media: #/Year
+select{@}rev_earrecuotitisyear_status{@}{@}NULL=>''{-}'not_answered'=>'Not Answered'
+numeric{@}rev_earrecuotitisage{@}Recurrent Otitis Media: Age of Onset (in months)
+select{@}rev_earrecuotitisage_status{@}{@}NULL=>''{-}'not_answered'=>'Not Answered'
+select{@}rev_earpetube{@}34. PE (ear) tubes{@}NULL=>''{-}'yes'=>'Yes'{-}'no'=>'No'{-}'nk'=>'NK'{-}'not_answered'=>'Not Answered'
+static{@}{@}<b>Mouth</b>
+select{@}rev_mouthcleftlip{@}35. Cleft Lip{@}NULL=>''{-}'yes'=>'Yes'{-}'no'=>'No'{-}'nk'=>'NK'{-}'not_answered'=>'Not Answered'
+select{@}rev_mouthcleftpalate{@}36. Cleft Palate{@}NULL=>''{-}'yes'=>'Yes'{-}'no'=>'No'{-}'nk'=>'NK'{-}'not_answered'=>'Not Answered'
+static{@}{@}<b>Teeth<b>
+select{@}rev_teethdentalab{@}37. Dental abnormalities{@}NULL=>''{-}'yes'=>'Yes'{-}'no'=>'No'{-}'nk'=>'NK'{-}'not_answered'=>'Not Answered'
+static{@}{@}<b>Neck/Back</b>
+select{@}rev_neckspinalab{@}38. Spinal abnormalities{@}NULL=>''{-}'yes'=>'Yes'{-}'no'=>'No'{-}'nk'=>'NK'{-}'not_answered'=>'Not Answered'
+static{@}{@}<b>Skin</b>
+select{@}rev_skinbirthmark{@}39. Birthmarks (e.g., café-au-lait spots, white spots){@}NULL=>''{-}'yes'=>'Yes'{-}'no'=>'No'{-}'nk'=>'NK'{-}'not_answered'=>'Not Answered'
+select{@}rev_skineczema{@}40. Eczema{@}NULL=>''{-}'yes'=>'Yes'{-}'no'=>'No'{-}'nk'=>'NK'{-}'not_answered'=>'Not Answered'
+select{@}rev_skinabscesses{@}41. Skin Infections/Abscesses{@}NULL=>''{-}'yes'=>'Yes'{-}'no'=>'No'{-}'nk'=>'NK'{-}'not_answered'=>'Not Answered'
+page{@}{@}Page 2 
+header{@}{@}Review of Systems
+static{@}{@}<b>Pulmonary</b>
+select{@}rev_pulbreathab{@}42. Abnormal Breathing{@}NULL=>''{-}'yes'=>'Yes'{-}'no'=>'No'{-}'nk'=>'NK'{-}'not_answered'=>'Not Answered'
+select{@}rev_pulbrasthma{@}43. Asthma{@}NULL=>''{-}'yes'=>'Yes'{-}'no'=>'No'{-}'nk'=>'NK'{-}'not_answered'=>'Not Answered'
+select{@}rev_lung{@}44. Lung disease{@}NULL=>''{-}'yes'=>'Yes'{-}'no'=>'No'{-}'nk'=>'NK'{-}'not_answered'=>'Not Answered'
+static{@}{@}<b>Cardiovascular</b>
+select{@}rev_cardiomalfunc{@}45. Cardiac Malformation{@}NULL=>''{-}'yes'=>'Yes'{-}'no'=>'No'{-}'nk'=>'NK'{-}'not_answered'=>'Not Answered'
+select{@}rev_cardiocyanosis{@}46. Cyanosis{@}NULL=>''{-}'yes'=>'Yes'{-}'no'=>'No'{-}'nk'=>'NK'{-}'not_answered'=>'Not Answered'
+select{@}rev_rhythm{@}47. Abnormal rhythm or heart rate{@}NULL=>''{-}'yes'=>'Yes'{-}'no'=>'No'{-}'nk'=>'NK'{-}'not_answered'=>'Not Answered'
+static{@}{@}<b>Gastrointestinal</b>
+select{@}rev_gastrodysphagia{@}48. Dysphagia{@}NULL=>''{-}'yes'=>'Yes'{-}'no'=>'No'{-}'nk'=>'NK'{-}'not_answered'=>'Not Answered'
+select{@}rev_gastroreflux{@}49. Reflux{@}NULL=>''{-}'yes'=>'Yes'{-}'no'=>'No'{-}'nk'=>'NK'{-}'not_answered'=>'Not Answered'
+select{@}rev_gastrorefluxmed{@}Reflux: Medication Required{@}NULL=>''{-}'yes'=>'Yes'{-}'no'=>'No'{-}'nk'=>'NK'{-}'not_answered'=>'Not Answered'
+select{@}rev_gastroother{@}50. Other feeding difficulties{@}NULL=>''{-}'yes'=>'Yes'{-}'no'=>'No'{-}'nk'=>'NK'{-}'not_answered'=>'Not Answered'
+static{@}{@}<b>Endocrine/Metabolic</b>
+select{@}rev_endoprecocious{@}51. Precocious Puberty{@}NULL=>''{-}'yes'=>'Yes'{-}'no'=>'No'{-}'nk'=>'NK'{-}'not_answered'=>'Not Answered'
+text{@}rev_endoprecociousage{@}Precocious Puberty: Age (in months)
+select{@}rev_endoprecociousage_status{@}{@}NULL=>''{-}'not_answered'=>'Not Answered'
+select{@}rev_endohypothyroidism{@}52. Hypothyroidism{@}NULL=>''{-}'yes'=>'Yes'{-}'no'=>'No'{-}'nk'=>'NK'{-}'not_answered'=>'Not Answered'
+select{@}rev_endohyperthyroidism{@}53. Hyperthyroidism{@}NULL=>''{-}'yes'=>'Yes'{-}'no'=>'No'{-}'nk'=>'NK'{-}'not_answered'=>'Not Answered'
+select{@}rev_endodiabetes{@}54. Diabetes{@}NULL=>''{-}'yes'=>'Yes'{-}'no'=>'No'{-}'nk'=>'NK'{-}'not_answered'=>'Not Answered'
+select{@}rev_endodiabetestype{@}Diabetes: Type{@}NULL=>''{-}'type_1'=>'Type 1'{-}'type_2'=>'Type 2'{-}'nk'=>'NK'{-}'not_answered'=>'Not Answered'
+select{@}rev_endohypoglycemia{@}55. Hypoglycemia{@}NULL=>''{-}'yes'=>'Yes'{-}'no'=>'No'{-}'nk'=>'NK'{-}'not_answered'=>'Not Answered'
+static{@}{@}</b>Hematologic</b>
+select{@}rev_hemanemia{@}56. Anemia{@}NULL=>''{-}'yes'=>'Yes'{-}'no'=>'No'{-}'nk'=>'NK'{-}'not_answered'=>'Not Answered'
+select{@}rev_hembleeddisorder{@}57. Bleeding disorder{@}NULL=>''{-}'yes'=>'Yes'{-}'no'=>'No'{-}'nk'=>'NK'{-}'not_answered'=>'Not Answered'
+static{@}{@}<b>Immunologic</b>
+select{@}rev_immunorecurinfection{@}58. Recurrent Infections (>2 pneumonia or sinus infections/yr, >8 OM/yr, abscesses){@}NULL=>''{-}'yes'=>'Yes'{-}'no'=>'No'{-}'nk'=>'NK'{-}'not_answered'=>'Not Answered'
+select{@}rev_immunoigdeficiency{@}59. Immunoglobulin deficiency{@}NULL=>''{-}'yes'=>'Yes'{-}'no'=>'No'{-}'nk'=>'NK'{-}'not_answered'=>'Not Answered'
+select{@}rev_immunocellimmunedef{@}60. Cell-Mediated Immune Deficiency{@}NULL=>''{-}'yes'=>'Yes'{-}'no'=>'No'{-}'nk'=>'NK'{-}'not_answered'=>'Not Answered'
+select{@}rev_immunoenvallergy{@}61. Environmental Allergies{@}NULL=>''{-}'yes'=>'Yes'{-}'no'=>'No'{-}'nk'=>'NK'{-}'not_answered'=>'Not Answered'
+select{@}rev_immunomedallergy{@}62. Medication Allergies{@}NULL=>''{-}'yes'=>'Yes'{-}'no'=>'No'{-}'nk'=>'NK'{-}'not_answered'=>'Not Answered'
+select{@}rev_immunoimmunization{@}63. Immunizations{@}NULL=>''{-}'up-to-date'=>'Up-to-date'{-}'behind'=>'Behind'{-}'none'=>'None'{-}'nk'=>'NK'{-}'not_answered'=>'Not Answered'
+page{@}{@}Page 3 
+header{@}{@}Review of Systems
+static{@}{@}<b>Genetic</b>
+select{@}gen_dis{@}64. Does the study subject have any of the following genetic disorders?{@}NULL=>''{-}'1_rett_syndrome'=>'1. Rett syndrome'{-}'2_down_syndrome'=>'2. Down syndrome'{-}'3_tuberous_sclerosis_complex'=>'3. Tuberous Sclerosis Complex'{-}'4_fragile_x_syndrome'=>'4. Fragile X syndrome'{-}'5_neurofibromatosis_i'=>'5. Neurofibromatosis I'{-}'not_answered'=>'Not Answered'{-}'none'=>'None'
+select{@}gen_dis_conf{@}If check above, is the genetic disorder confirmed by a physician-ordered genetic analysis?{@}NULL=>''{-}'yes'=>'Yes'{-}'no'=>'No'{-}'nk'=>'NK'{-}'not_answered'=>'Not Answered'
+static{@}{@}<b>Mental Health</b>
+select{@}othmem_bipolar{@}65. Bipolar disorder (Manic/depression){@}NULL=>''{-}'yes'=>'Yes'{-}'no'=>'No'{-}'nk'=>'NK'{-}'not_answered'=>'Not Answered'
+select{@}othmem_depression{@}66. Depression{@}NULL=>''{-}'yes'=>'Yes'{-}'no'=>'No'{-}'nk'=>'NK'{-}'not_answered'=>'Not Answered'
+select{@}othmem_anxiety{@}67. Anxiety disorder{@}NULL=>''{-}'yes'=>'Yes'{-}'no'=>'No'{-}'nk'=>'NK'{-}'not_answered'=>'Not Answered'
+select{@}cfmh_othr_ocd{@}68. Obsessive compulsive disorder{@}NULL=>''{-}'yes'=>'Yes'{-}'no'=>'No'{-}'nk'=>'NK'{-}'not_answered'=>'Not Answered'
+select{@}othmem_schizophrenia{@}69. Schizophrenia{@}NULL=>''{-}'yes'=>'Yes'{-}'no'=>'No'{-}'nk'=>'NK'{-}'not_answered'=>'Not Answered'
+select{@}othmem_selfinj{@}70. Self-injuring behavior{@}NULL=>''{-}'yes'=>'Yes'{-}'no'=>'No'{-}'nk'=>'NK'{-}'not_answered'=>'Not Answered'
+select{@}othmem_adhd{@}71. Attention deficit hyperactivity disorder (ADHD){@}NULL=>''{-}'yes'=>'Yes'{-}'no'=>'No'{-}'nk'=>'NK'{-}'not_answered'=>'Not Answered'
+select{@}othmem_eatingdis{@}72. Eating disorder{@}NULL=>''{-}'yes'=>'Yes'{-}'no'=>'No'{-}'nk'=>'NK'{-}'not_answered'=>'Not Answered'
+select{@}othmem_eatingdis_type{@}If yes, specify type{@}NULL=>''{-}'anorexia'=>'Anorexia'{-}'bulimia'=>'Bulimia'{-}'other'=>'Other'{-}'not_answered'=>'Not Answered'
+select{@}sleep_pat{@}73. Disrupted sleep patterns{@}NULL=>''{-}'yes'=>'Yes'{-}'no'=>'No'{-}'nk'=>'NK'{-}'not_answered'=>'Not Answered'
+select{@}touret{@}74. Tourette Syndrome{@}NULL=>''{-}'yes'=>'Yes'{-}'no'=>'No'{-}'nk'=>'NK'{-}'not_answered'=>'Not Answered'
