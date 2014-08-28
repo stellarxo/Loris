@@ -70,7 +70,7 @@ class NDB_BVL_Instrument_ACEFamilyMedicalHistory extends NDB_BVL_Instrument
         $this->addHeader("ACE Family Medical History");
         $table_heading = array('mother'=>'Biological Mother', 'father'=>'Biological Father', 'sibling1'=>'Sibling 1', 'sibling2'=>'Sibling 2',
                        'sibling3'=>'Sibling 3','sibling4'=>'Sibling 4','sibling5'=>'Sibling 5');
-        $questions = array('header'=>null,'relation'=>'Specify Relation','currentage'=>'Current age(months)','sex'=>'Sex: Male(M) or Female(F)',
+        $questions = array('header'=>null,'relation'=>'Specify Relation','currentage'=>'Current age(months)','gender'=>'Sex: Male(M) or Female(F)',
                            'last_grade_completed'=>'Last Grade Completed','asd'=>'1. Austism Spectrum Disoder','autistic_disorder'=>'2. Autistic Disorder',
                            'asperger_syndrome'=>'3. Asperger Syndrome','rett_syndrome'=>'4. Rett Syndrome','pdd_nos'=>'5. PDD-NOS','history_speechdelay'=>'6. History Speech Delay',
                            'history_development_delay'=>'7. History Development Delay','history_learndisability'=>'8. History Learning Disability',
@@ -83,6 +83,7 @@ class NDB_BVL_Instrument_ACEFamilyMedicalHistory extends NDB_BVL_Instrument
                             'tournette'=>'27. Tournette Syndrome');
         $options = array(''=>'','yes'=>'Yes','no'=>'No');
         $relation = array(""=>null,'full_sibling'=>'Full','maternal_half'=>'Maternal Half','paternal_half'=>'Paternal Half');
+        $gender = array(''=>null,'male'=>'Male','female'=>'Female');
         foreach($questions as $key=>$val){
             $groupname = $key."_group";
            
@@ -107,8 +108,12 @@ class NDB_BVL_Instrument_ACEFamilyMedicalHistory extends NDB_BVL_Instrument
                                   }
 
                             } else {
-			        $group[] =& $this->form->createElement("select",$field,null,$options);
-                            }
+                                if($key == 'gender') {
+                                     $group[] =& $this->form->createElement("select",$field,null,$gender);
+                                } else {
+			             $group[] =& $this->form->createElement("select",$field,null,$options);
+                                }
+                           }
 		    }
 	    }
             $this->form->addGroup($group, $groupname, $val, $this->_GUIDelimiter, false);
