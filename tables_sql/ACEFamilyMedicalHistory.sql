@@ -226,5 +226,5 @@ CREATE TABLE `ACEFamilyMedicalHistory` (
 `tournette_sibling4` enum('yes','no') default NULL,
 `tournette_sibling5` enum('yes','no') default NULL,
 PRIMARY KEY  (`CommentID`)
-
               );
+REPLACE INTO test_names (Test_name, Full_name, Sub_group) VALUES ('ACEFamilyMedicalHistory', 'ACE Family Medical History', 1);
