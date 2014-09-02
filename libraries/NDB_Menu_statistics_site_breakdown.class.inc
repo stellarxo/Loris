@@ -99,10 +99,10 @@ class NDB_Menu_statistics_site_breakdown extends NDB_Menu
             $projects[$key] = $value;
         }
 
-        if(isset($_REQUEST['projectID']) && $_REQUEST['projectID'] != '') {
-            $ExtraProject_Criteria = ' AND (c.ProjectID IS NULL OR c.ProjectID=' . $DB->quote($_REQUEST['projectID']) . ')';
-            $projectName = $projects[$_REQUEST['projectID']];
-            $projectID = $_REQUEST['projectID'];
+        if(isset($_REQUEST['ProjectID']) && $_REQUEST['ProjectID'] != '') {
+            $ExtraProject_Criteria = ' AND (c.ProjectID IS NULL OR c.ProjectID=' . $DB->quote($_REQUEST['ProjectID']) . ')';
+            $projectName = $projects[$_REQUEST['ProjectID']];
+            $projectID = $_REQUEST['ProjectID'];
 
          } else {
              $ExtraProject_Criteria = '';
@@ -135,6 +135,8 @@ class NDB_Menu_statistics_site_breakdown extends NDB_Menu
         
         $this->tpl_data["data"] = $data;
         $this->tpl_data["SiteName"] = $name;
+        $this->tpl_data["ProjectID"] = $projectID;
+        $this->tpl_data["ProjectName"] = $projectName;
         sort($visits);
         $this->tpl_data['AllVisits'] = $visits;
         $this->tpl_data['NumVisitLabels'] = count($visits);

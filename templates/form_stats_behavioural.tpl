@@ -77,7 +77,7 @@
   </div>
 </div>
 
-<h2 class="statsH2">Double Data Entry Statistics:</h2>
+<h2 class="statsH2">Double Data Entry Statistics {if $CurrentProject} for {$CurrentProject.Name} {/if}</h2>
 <div id="carousel-example-generic" class="carousel slide" data-ride="carousel">
   <div class="carousel-inner">
     <div class="col-xs-10 col-xs-offset-1" id="contentDD" style="overflow-y:auto">
