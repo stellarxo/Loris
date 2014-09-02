@@ -99,16 +99,15 @@ class NDB_Menu_statistics_site extends NDB_Menu
         $name = $center['Name'];
         foreach(Utility::getProjectList() as $key => $value) {
             $projects[$key] = $value;
-        }
-       if(isset($_REQUEST['projectID']) && $_REQUEST['projectID'] != '') {
-            $ExtraProject_Criteria = ' AND (c.ProjectID IS NULL OR c.ProjectID=' . $_REQUEST['projectID'] . ')';
-            $projectName = $projects[$_REQUEST['projectID']];
-            $projectID = $_REQUEST['projectID'];
+        } 
+       if(isset($_REQUEST['ProjectID']) && $_REQUEST['ProjectID'] != '') {
+            $ExtraProject_Criteria = ' AND (c.ProjectID IS NULL OR c.ProjectID=' . $_REQUEST['ProjectID'] . ')';
+            $projectName = $projects[$_REQUEST['ProjectID']];
+            $projectID = $_REQUEST['ProjectID'];
 
         } else {
             $ExtraProject_Criteria = '';
         }
-
         // List of all visits. Add to it any time a new one is seen, so
         // that we can iterate over it to display later, and leave blank
         // cells for ones that are missing for a given instrument in the 
@@ -145,7 +144,7 @@ class NDB_Menu_statistics_site extends NDB_Menu
         $this->tpl_data["SiteName"] = $name;
         $this->tpl_data["CenterID"] = $id;
         $this->tpl_data["ProjectID"] = $projectID;
-        $this->tpl_data["ProjectName"] = $projectName;
+        $this->tpl_data["ProjectName"] = $projectName; 
         sort($visits);
         $this->tpl_data['AllVisits'] = $visits;
         $this->tpl_data['NumVisitLabels'] = count($visits);
