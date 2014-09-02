@@ -1,0 +1,6 @@
+vis_corr_type{-}Specify type of correction{-}child_visionimp{@}=={@}yes
+hear_corr_type{-}Specify type of correction{-}child_hearingimp{@}=={@}yes
+ear_ab_type{-}Specify appearence{-}medprob_ear{@}=={@}yes
+genit_exam_spec{-}Specify finding{-}genit_exam{@}=={@}yes
+limb_abnor_det{-}Specify finding{-}limb_abnor{@}=={@}yes
+muscle_streng_det{-}Specify muscle strength finding{-}muscle_streng{@}=={@}yes

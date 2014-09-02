@@ -1,0 +1,68 @@
+table{@}ACESubjectPhysicalExam
+title{@}ACE Subject Physical Exam
+date{@}Date_taken{@}Date of Administration{@}2006{@}2012
+static{@}Candidate_Age{@}Candidate Age (Months)
+static{@}Window_Difference{@}Window Difference (+/- Days)
+select{@}Examiner{@}Examiner{@}NULL=>''
+header{@}{@}ACE Subject Physical Exam
+static{@}{@}<br />
+static{@}{@}Measurements
+numeric{@}height_met{@}1. Height (in cm)
+select{@}height_met_status{@}{@}NULL=>''{-}'not_answered'=>'Not Answered'
+numeric{@}weight_met{@}2. Weight (in kg)
+select{@}weight_met_status{@}{@}NULL=>''{-}'not_answered'=>'Not Answered'
+numeric{@}head_circum{@}3. Head Circumference (in cm)
+select{@}head_circum_status{@}{@}NULL=>''{-}'not_answered'=>'Not Answered'
+static{@}{@}<br />
+static{@}{@}HEENT (Head, Eyes, Ears, Nose, Throat/mouth)
+select{@}head_faciala{@}4. Is there any facial asymmetry?{@}NULL=>''{-}'yes'=>'Yes'{-}'no'=>'No'{-}'nk'=>'NK'{-}'not_answered'=>'Not Answered'
+select{@}facial_dysmorp{@}5. Are there dysmorphic facial features (e.g. eyes too closely or widely spaced, ears lowest)?{@}NULL=>''{-}'yes'=>'Yes'{-}'no'=>'No'{-}'nk'=>'NK'{-}'not_answered'=>'Not Answered'
+select{@}child_visionimp{@}6. Is vision abnormal?{@}NULL=>''{-}'yes'=>'Yes'{-}'no'=>'No'{-}'nk'=>'NK'{-}'not_answered'=>'Not Answered'
+select{@}vis_corr_type{@}If yes, is there any correction/what kind?{@}NULL=>''{-}'1_glasses_or_corrective_lens'=>'1. Glasses or Corrective lens'{-}'2_surgery'=>'2. Surgery'{-}'not_answered'=>'Not Answered'
+select{@}child_hearingimp{@}7. Is hearing abnormal?{@}NULL=>''{-}'yes'=>'Yes'{-}'no'=>'No'{-}'nk'=>'NK'{-}'not_answered'=>'Not Answered'
+select{@}hear_corr_type{@}If yes, is there any correction/what kind?{@}NULL=>''{-}'1_hearing_aids'=>'1. Hearing aids'{-}'2_cochlear_implants'=>'2. Cochlear implants'{-}'not_answered'=>'Not Answered'
+select{@}eye_mov{@}8. Are the eye movements full and symmetric?{@}NULL=>''{-}'yes'=>'Yes'{-}'no'=>'No'{-}'nk'=>'NK'{-}'not_answered'=>'Not Answered'
+select{@}eyes_strabismus{@}9. Is there strabismus?{@}NULL=>''{-}'yes'=>'Yes'{-}'no'=>'No'{-}'nk'=>'NK'{-}'not_answered'=>'Not Answered'
+select{@}eyes_nystagmus{@}10. Is there nystagmus?{@}NULL=>''{-}'yes'=>'Yes'{-}'no'=>'No'{-}'nk'=>'NK'{-}'not_answered'=>'Not Answered'
+select{@}eyes_ptosis{@}11. Is there ptosis?{@}NULL=>''{-}'yes'=>'Yes'{-}'no'=>'No'{-}'nk'=>'NK'{-}'not_answered'=>'Not Answered'
+select{@}medprob_ear{@}12. Do ears appear abnormal?{@}NULL=>''{-}'yes'=>'Yes'{-}'no'=>'No'{-}'nk'=>'NK'{-}'not_answered'=>'Not Answered'
+select{@}ear_ab_type{@}If yes, how do they appear?{@}NULL=>''{-}'cupped'=>'Cupped'{-}'prominent'=>'Prominent'{-}'lowset'=>'Lowset'{-}'tags'=>'Tags'{-}'not_answered'=>'Not Answered'
+select{@}jaw_ab{@}13. Does the jaw appear abnormal?{@}NULL=>''{-}'yes'=>'Yes'{-}'no'=>'No'{-}'nk'=>'NK'{-}'not_answered'=>'Not Answered'
+select{@}rev_mouthcleftlip{@}14. Is there a cleft lip and/or cleft palate?{@}NULL=>''{-}'yes'=>'Yes'{-}'no'=>'No'{-}'nk'=>'NK'{-}'not_answered'=>'Not Answered'
+static{@}{@}<br />
+static{@}{@}Neck, Chest, Back
+select{@}neck_webbed{@}15. Is the neck short and/or webbed?{@}NULL=>''{-}'yes'=>'Yes'{-}'no'=>'No'{-}'nk'=>'NK'{-}'not_answered'=>'Not Answered'
+select{@}neck_pect{@}16. Is there a pectus deformity (breastbone scooped in or prominent)?{@}NULL=>''{-}'yes'=>'Yes'{-}'no'=>'No'{-}'nk'=>'NK'{-}'not_answered'=>'Not Answered'
+select{@}neck_scoliosis{@}17. Is there scoliosis (curvature of the spine)?{@}NULL=>''{-}'yes'=>'Yes'{-}'no'=>'No'{-}'nk'=>'NK'{-}'not_answered'=>'Not Answered'
+select{@}cardio_murmur{@}18. Is there a heart murmur or abnormal heart examination?{@}NULL=>''{-}'yes'=>'Yes'{-}'no'=>'No'{-}'nk'=>'NK'{-}'not_answered'=>'Not Answered'
+static{@}{@}<br />
+static{@}{@}Abdomen
+select{@}abdomen_hepatom{@}19. Is there evidence of hepato(spleno)mealy (large liver or spleen)?{@}NULL=>''{-}'yes'=>'Yes'{-}'no'=>'No'{-}'nk'=>'NK'{-}'not_answered'=>'Not Answered'
+page{@}{@}Page 2
+static{@}{@}<br />
+static{@}{@}Genitourinary (optional)
+select{@}genit_exam{@}20. Is the genital exam abnormal?{@}NULL=>''{-}'yes'=>'Yes'{-}'no'=>'No'{-}'nk'=>'NK'{-}'not_answered'=>'Not Answered'
+select{@}genit_exam_spec{@}If yes, what findings?{@}NULL=>''{-}'1_hypospadias'=>'1. Hypospadias'{-}'2_cryptorchidism'=>'2. Cryptorchidism'{-}'3_enlarged_testicles'=>'3. Enlarged testicles'{-}'4_micropenis'=>'4. Micropenis'{-}'5_hypoplastic_labia'=>'5. Hypoplastic labia'{-}'not_answered'=>'Not Answered'
+static{@}{@}<br />
+static{@}{@}Limbs
+select{@}limb_abnor{@}21. Are there any digital abnormalities (extra or missing fingers or toes)?{@}NULL=>''{-}'yes'=>'Yes'{-}'no'=>'No'{-}'nk'=>'NK'{-}'not_answered'=>'Not Answered'
+select{@}limb_abnor_det{@}If yes, what findings?{@}NULL=>''{-}'1_extra_fingers'=>'1. Extra fingers'{-}'2_missing_fingers'=>'2. Missing fingers'{-}'3_extra_toes'=>'3. Extra toes'{-}'4_missing_toes'=>'4. Missing toes'{-}'5_fused_digits'=>'5. Fused digits'{-}'not_answered'=>'Not Answered'
+select{@}limb_joint_loos{@}22. Are joints excessively loose?{@}NULL=>''{-}'yes'=>'Yes'{-}'no'=>'No'{-}'nk'=>'NK'{-}'not_answered'=>'Not Answered'
+select{@}limb_joint_limitations{@}23. Are there joint contractures?{@}NULL=>''{-}'yes'=>'Yes'{-}'no'=>'No'{-}'nk'=>'NK'{-}'not_answered'=>'Not Answered'
+static{@}{@}<br />
+static{@}{@}Skin
+select{@}skin_hypopigmen{@}24. Are there areas of hypopigmentation (ash-leaf spots)?{@}NULL=>''{-}'yes'=>'Yes'{-}'no'=>'No'{-}'nk'=>'NK'{-}'not_answered'=>'Not Answered'
+select{@}skin_hyperpig{@}25. Are there areas of hyperpigmentation (café-au-lair spots)?{@}NULL=>''{-}'yes'=>'Yes'{-}'no'=>'No'{-}'nk'=>'NK'{-}'not_answered'=>'Not Answered'
+select{@}skin_freck{@}26. Are there freckles under the arms and/or groin area?{@}NULL=>''{-}'yes'=>'Yes'{-}'no'=>'No'{-}'nk'=>'NK'{-}'not_answered'=>'Not Answered'
+select{@}skin_neurofib{@}27. Are there neurofibromas (bumps under the skin, sometimes with a bluish tinge)?{@}NULL=>''{-}'yes'=>'Yes'{-}'no'=>'No'{-}'nk'=>'NK'{-}'not_answered'=>'Not Answered'
+select{@}skin_abnorm{@}28. Any other skin abnormalities?{@}NULL=>''{-}'yes'=>'Yes'{-}'no'=>'No'{-}'nk'=>'NK'{-}'not_answered'=>'Not Answered'
+static{@}{@}<br />
+static{@}{@}Neurologic
+select{@}hypotonia{@}29. Is there any evidence of hypotonia (low muscle tone)?{@}NULL=>''{-}'yes'=>'Yes'{-}'no'=>'No'{-}'nk'=>'NK'{-}'not_answered'=>'Not Answered'
+select{@}hypertonia{@}30. Is there any evidence of hypertonia (increased muscle tone)?{@}NULL=>''{-}'yes'=>'Yes'{-}'no'=>'No'{-}'nk'=>'NK'{-}'not_answered'=>'Not Answered'
+select{@}muscle_streng{@}31. Is muscle strength abnormal?{@}NULL=>''{-}'yes'=>'Yes'{-}'no'=>'No'{-}'nk'=>'NK'{-}'not_answered'=>'Not Answered'
+select{@}muscle_streng_det{@}If yes, what findings?{@}NULL=>''{-}'1_generalized_weakness'=>'1. Generalized weakness'{-}'2_focal_weakness'=>'2. Focal weakness'{-}'not_answered'=>'Not Answered'
+select{@}gait_atax{@}32. Is there evidence of poor coordination or gait ataxia (difficulty walking straight)?{@}NULL=>''{-}'yes'=>'Yes'{-}'no'=>'No'{-}'nk'=>'NK'{-}'not_answered'=>'Not Answered'
+select{@}neuro_involunmove{@}33. Are there any involuntary movements?{@}NULL=>''{-}'yes'=>'Yes'{-}'no'=>'No'{-}'nk'=>'NK'{-}'not_answered'=>'Not Answered'
+select{@}cran_nerv{@}34. Are the cranial nerves normal (do face, tongue and palate move normally)?{@}NULL=>''{-}'yes'=>'Yes'{-}'no'=>'No'{-}'nk'=>'NK'{-}'not_answered'=>'Not Answered'
+select{@}sens_exam{@}35. Is sensory exam normal?{@}NULL=>''{-}'yes'=>'Yes'{-}'no'=>'No'{-}'nk'=>'NK'{-}'not_answered'=>'Not Answered'
