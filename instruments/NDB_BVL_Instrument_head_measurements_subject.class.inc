@@ -50,14 +50,14 @@ INSERT INTO test_battery VALUES ('', 'head_measurements_subject', '1050', '1140'
                 $suffix= '_' . strtolower($type);
             }
             $this->form->addElement('static', null, "<br><b>" . $type .'</b>:');
-            $this->form->addElement('select', "head_circumference_unit$suffix", 'Unit for head circumference', array('c    m' => 'centimeters', "inches" => "inches", "not_answered" => "Not Answered"));
+            $this->form->addElement('select', "head_circumference_unit$suffix", 'Unit for head circumference', array(""=>NULL,'cm' => 'centimeters', "inches" => "inches", "not_answered" => "Not Answered"));
             $this->addNumericElement("head_circumference1$suffix", "Circumference 1:");
             if($type === 'Child') {
                 $this->addNumericElement("head_circumference2$suffix", "Circumference 2:");
             }
         
             $this->form->addElement('header', null, 'Length');
-            $this->form->addElement('select', "head_length_unit$suffix", 'Unit for length', array('cm' => 'centimeters'    , "inches" => "inches", "not_answered" => "Not Answered"));
+            $this->form->addElement('select', "head_length_unit$suffix", 'Unit for length', array(""=>NULL,'cm' => 'centimeters'    , "inches" => "inches", "not_answered" => "Not Answered"));
             $this->addNumericElement("length1$suffix", "Length 1:");
             if($type === 'Child') {
                 $this->addNumericElement("length2$suffix", "Length 2:");
@@ -67,7 +67,7 @@ INSERT INTO test_battery VALUES ('', 'head_measurements_subject', '1050', '1140'
             }
        
             $this->form->addElement('header', null, 'Weight');
-            $this->form->addElement('select', "weight_unit$suffix", 'Unit for weight', array('kg' => 'kilograms', "lbs"     => "pounds", "not_answered" => "Not Answered"));
+            $this->form->addElement('select', "weight_unit$suffix", 'Unit for weight', array(""=>NULL,'kg' => 'kilograms', "lbs"     => "pounds", "not_answered" => "Not Answered"));
             $this->addNumericElement("weight1$suffix", "Weight 1:");
             if($type === 'Child') {
                 $this->addNumericElement("weight2$suffix", "Weight 2:");
