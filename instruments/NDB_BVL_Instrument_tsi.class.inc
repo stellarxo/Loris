@@ -278,6 +278,7 @@ class NDB_BVL_Instrument_tsi extends NDB_BVL_Instrument
         "relative_schizophrenia"=>$this->indent."Schizophrenia?",
         "relative_bipolar"=>$this->indent."Bipolar?",
         "relative_psychosis"=>$this->indent."Psychosis?",
+        "relative_down_syndrome"=>$this->indent."Down Syndrome?",
 		"cns"=>"CNS problem/injury such as a head injury or meningitis?",
 		"tested_for_fragile_x"=>"Tested for Fragile X syndrome?",
         "premature_birth_proband"=>"Premature birth (< 37 weeks)?");
