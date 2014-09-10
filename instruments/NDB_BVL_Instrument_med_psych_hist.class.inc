@@ -121,7 +121,7 @@ class NDB_BVL_Instrument_med_psych_hist extends NDB_BVL_Instrument
         if($record == 'no') {
             $this->_requiredElements = array();
         }
-
+//print_r($this->_requiredElements);
     /**
     * Array of column names to be ignored by the double data entry conflict detector.
     */
@@ -236,7 +236,7 @@ class NDB_BVL_Instrument_med_psych_hist extends NDB_BVL_Instrument
         if($vLabel ==  $timepoint->getVisitLabel()){
             $firstVisit = true; //if current visit label is same as visit label returned must be first visit   
         }
-
+        $current_visitlabel = $timepoint->getVisitLabel();
         // display test name
         $this->form->addElement('header', 'instrument_title', "Medical and Psychiatric History");
 
@@ -255,10 +255,13 @@ class NDB_BVL_Instrument_med_psych_hist extends NDB_BVL_Instrument
         $this->addTextElement('relationship_to_child_other', $this->indent . "If other, (please explain)", array('relationship_to_child{@}=={@}other'), "This field is required if the relationship is not previously identified.");
 
         $this->form->addElement('select', 'abbrev_full_version', "Full or abbreviated (items #1-#3) version:", array(null=>'', 'full'=>"Full", 'abbrev'=>"Abbreviated"));
-	if( !$firstVisit) {
-		$this->addSelect('followup_form_updated',"Were there any changes?", array(null=>'','yes'=>'Yes','no'=>'No','not_answered'=>'Not Answered'));
+
+		$this->addSelect('followup_form_updated',"Were there any changes?<BR>(Required only if NOT first visit)", array(null=>'','yes'=>'Yes','no'=>'No','not_answered'=>'Not Answered'));
+        $this->XINRegisterRule("followup_form_updated", array("followup_form_updated{@}=={@}NEVER_REQUIRED"));
+ 
 		$this->addLabel("NOTE: If 'No' is entered, continue data entry at item 4, unless the <BR>abbreviated version was administered (in which case, no further <BR> data entry is required).");
-	}
+        $this->form->addFormRule(array(&$this, 'firstVisitCheck'));
+
     }
 
     function _page1(){
@@ -613,6 +616,32 @@ class NDB_BVL_Instrument_med_psych_hist extends NDB_BVL_Instrument
             $errors['q8_b1_cigarette_perday'] = 'Please specify number of cigarettes per day'; 
         }
         
+        return $errors;
+    }
+    function firstVisitCheck($values) {
+         $db = & Database::singleton();
+
+        $timepoint =& TimePoint::singleton($this->getSessionID());
+        if (Utility::isErrorX($timepoint)) {
+            return PEAR::raiseError("Candidate Error ($this->identifier): ".$timepoint->getMessage());
+        }
+        $candidate =& Candidate::singleton($timepoint->getCandID() );
+        if (Utility::isErrorX($candidate)) {
+            return PEAR::raiseError("Candidate Error ($this->identifier): ".$candidate->getMessage());
+        }
+
+        $firstVisit = false;
+        $vLabel = $db->pselectOne("SELECT Visit_label FROM session s JOIN candidate c 
+                                   ON (c.CandID = s.CandID) WHERE c.CandID=:cid 
+                                   ORDER BY Date_Visit", array('cid'=>$timepoint->getCandID()));//get first visit for candidate 
+        if($vLabel ==  $timepoint->getVisitLabel()){
+            $firstVisit = true; //if current visit label is same as visit label returned must be first visit   
+        }
+        $current_visitlabel = $timepoint->getVisitLabel();
+        if($vLabel != $current_visitlabel && empty($values['followup_form_updated'])) { 
+            $errors['followup_form_updated'] = "PLease indicate if there were changes";
+        }
+
         return $errors;
     }
 
