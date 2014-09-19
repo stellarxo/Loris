@@ -3,7 +3,7 @@
 <div class="col-sm-3">
   {html_options id="BehaviouralProject" options=$Projects name="BehaviouralProject" selected=$CurrentProject.ID class="form-control input-sm"}
 </div>
-<script type="text/javascript" src="js/modules/form_stats_behavioural.js"></script>
+<script type="text/javascript" src="GetJS.php?Module=statistics&file=form_stats_behavioural.js"></script>
 <button class="btn btn-primary btn-sm"  onClick="updateBehaviouralTab()">Submit Query</button>
 <br><br>
 

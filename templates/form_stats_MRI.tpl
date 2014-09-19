@@ -7,7 +7,7 @@
     <div class="col-sm-2">
         {html_options id="MRIProject" options=$Projects name="MRIProject" selected=$CurrentProject.ID class="form-control input-sm"}
     </div>
-    <script type="text/javascript" src="js/modules/form_stats_MRI.js"></script>
+    <script type="text/javascript" src="GetJS.php?Module=statistics&file=form_stats_MRI.js"></script>
     <button class="btn btn-primary btn-sm" onClick="updateMRITab()">Submit Query</button>
     <br><br>
     <div class="table-responsive">
