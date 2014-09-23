@@ -606,7 +606,7 @@ class NDB_Menu_Filter_reliability extends NDB_Menu_Filter
         $PSCID_Replace_V = $_POST['Cand2Visit_label'];
         $Instrument = $_POST['SwapInstrument'];
 
-        $query="SELECT reliability.CommentID as OldID, reliability.reliability_center_id as CenterID, reliability.Reliability_score as Score, candidate.CenterID as OldCenterID, reliability.EARLI_Candidate AS EARLI_Candidate,c.ProjectID  FROM candidate, session, flag, reliability WHERE reliability.CommentID=flag.CommentID AND candidate.CandID=session.CandID AND session.ID=flag.SessionID AND candidate.PSCID='$PSCID' AND reliability.Instrument='$Instrument' and session.Visit_label='$PSCID_V' and flag.Data_entry IS NOT NULL and flag.Data_entry <> 'None' ";
+        $query="SELECT reliability.CommentID as OldID, reliability.reliability_center_id as CenterID, reliability.Reliability_score as Score, candidate.CenterID as OldCenterID, reliability.EARLI_Candidate AS EARLI_Candidate,candidate.ProjectID  FROM candidate, session, flag, reliability WHERE reliability.CommentID=flag.CommentID AND candidate.CandID=session.CandID AND session.ID=flag.SessionID AND candidate.PSCID='$PSCID' AND reliability.Instrument='$Instrument' and session.Visit_label='$PSCID_V' and flag.Data_entry IS NOT NULL and flag.Data_entry <> 'None' ";
 
         $DB->selectRow($query, $CommentID);
         if(!$CommentID) {
