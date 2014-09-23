@@ -104,7 +104,7 @@ class NDB_BVL_Instrument_SRS2_SelfReport extends NDB_BVL_Instrument
                            "q12_communicate_toothers"=>"12. I am unable to communicate my feelings to others",
                            "q13_awkward_turn_takingtalk"=>"13. I am awkward in turn-taking interactions with others (for example, I have a hard time keeping<BR>up with the give-and-take of a conversation)",
                            "q14_notwell_coordinated"=>"14. I am not well coordinated",
-                           "q15_changefacialexp_understandmeaning"=>"15. When people change their tone or facial expression, I usually pick on that and understand what it means"                             );
+                           "q15_changefacialexp_understandmeaning"=>"15. When people change their tone or facial expression, I usually pick up on that and understand what it means"                             );
 
         foreach($questions as $field=>$label) {
             $this->addSelect($field, $label, $this->rating);
@@ -128,13 +128,13 @@ class NDB_BVL_Instrument_SRS2_SelfReport extends NDB_BVL_Instrument
                            "q22_interact_appropriately"=>"22. I interact appropriately with other adults",
                            "q23_joingroups_activities"=>"23. I do not join group activities or social events unless prompted or strongly<BR> urged to do so",
                            "q24_diff_changeroutine"=>"24. I have more difficulty than others with changes in my routine",
-                           "q25_diff_wavelength"=>"25. I do not mind being out of step with or 'not on the same' wavelength' as others",
+                           "q25_diff_wavelength"=>"25. I do not mind being out of step with or 'not on the same' wavelength as others",
                            "q26_offer_comfort"=>"26. I offer comfort to others when they are sad",
                            "q27_avoid_socialinteractions"=>"27. I avoid starting social interactions with other adults",
                            "q28_think_overandover"=>"28. I think or talk about the same thing over and over",
                            "q29_odd_weird"=>"29. I am regarded by others as odd or weird",
                            "q30_upset_situations"=>"30. I become upset in situations with lots of things going on",
-                           "q31_cant_getmind_off"=>"31. I can't get mind off something once I start thinking about it",
+                           "q31_cant_getmind_off"=>"31. I can't get my mind off something once I start thinking about it",
                            "q32_good_personal_hygiene"=>"32. I have good personal hygiene");
 
         foreach($questions as $field=>$label) {
