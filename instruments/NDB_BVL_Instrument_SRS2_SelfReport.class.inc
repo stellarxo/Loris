@@ -110,8 +110,10 @@ class NDB_BVL_Instrument_SRS2_SelfReport extends NDB_BVL_Instrument
             $this->addSelect($field, $label, $this->rating);
            // $this->XINRegisterRule($field,array("$field{@}=={@}NEVER_REQUIRED"));
         }
+        $this->form->addElement('static','lorisSubHeader',"SRS-2 Self Report copyright © 2012 by Western Psychological Services. Reprint authorized by the<BR>author, J. Constantino, under WPS agreement for the sole use in registered scholarly study. Not to be reprinted in<BR> whole or in part, for any additional purpose, without the prior written authorization of WPS. All rights reserved<BR>
+(rights@wpspublish.com)");
         $this->form->addFormRule(array(&$this, 'SRS2_Rules'));
- 
+
     }
 
     function _page2(){
@@ -140,9 +142,10 @@ class NDB_BVL_Instrument_SRS2_SelfReport extends NDB_BVL_Instrument
             //$this->XINRegisterRule($field,array("$field{@}=={@}NEVER_REQUIRED"));
 
         }
-
+        $this->form->addElement('static','lorisSubHeader',"SRS-2 Self Report copyright © 2012 by Western Psychological Services. Reprint authorized by the<BR>author, J. Constantino, under WPS agreement for the sole use in registered scholarly study. Not to be reprinted in<BR> whole or in part, for any additional purpose, without the prior written authorization of WPS. All rights reserved<BR>
+(rights@wpspublish.com)");
     }
-    
+
     function _page3(){
          $this->form->addElement('header', 'instrument_title', "SRS2 - Self Report");
 
@@ -171,13 +174,14 @@ class NDB_BVL_Instrument_SRS2_SelfReport extends NDB_BVL_Instrument
             $this->addSelect($field, $label, $this->rating);
             //$this->XINRegisterRule($field,array("$field{@}=={@}NEVER_REQUIRED"));
         }
-
+        $this->form->addElement('static','lorisSubHeader',"SRS-2 Self Report copyright © 2012 by Western Psychological Services. Reprint authorized by the<BR>author, J. Constantino, under WPS agreement for the sole use in registered scholarly study. Not to be reprinted in<BR> whole or in part, for any additional purpose, without the prior written authorization of WPS. All rights reserved<BR>
+(rights@wpspublish.com)");
     }
 
     function _page4(){
         // display test name
         $this->form->addElement('header', 'instrument_title', "SRS2 - Self Report");
-        
+
        $this->form->addElement('static', null, "<br /><br />");
         $questions = array("q52_overly_loud" => "52. I get overly loud without realizing it",
                            "q53_monotone_voice"=>"53. I tend to talk in a monotone voice (in other words, less inflection of voice<BR>than most people demonstrate)",
@@ -199,7 +203,8 @@ class NDB_BVL_Instrument_SRS2_SelfReport extends NDB_BVL_Instrument
             $this->addSelect($field, $label, $this->rating);
             //$this->XINRegisterRule($field,array("$field{@}=={@}NEVER_REQUIRED"));
         }
-   
+        $this->form->addElement('static','lorisSubHeader',"SRS-2 Self Report copyright © 2012 by Western Psychological Services. Reprint authorized by the<BR>author, J. Constantino, under WPS agreement for the sole use in registered scholarly study. Not to be reprinted in<BR> whole or in part, for any additional purpose, without the prior written authorization of WPS. All rights reserved<BR>
+(rights@wpspublish.com)");
 
     }
      function SRS2_Rules($values) {
