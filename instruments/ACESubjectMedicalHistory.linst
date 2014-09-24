@@ -23,7 +23,7 @@ select{@}ldnb_lgthin_status{@}{@}NULL=>''{-}'not_answered'=>'Not Answered'
 select{@}full_term{@}10. Full-term delivery?{@}NULL=>''{-}'yes'=>'Yes'{-}'no'=>'No'{-}'nk'=>'NK'{-}'not_answered'=>'Not Answered'
 numeric{@}info_gest{@}If No, how many weeks gestation?{@}1{@}45
 select{@}info_gest_status{@}{@}NULL=>''{-}'not_answered'=>'Not Answered'
-text{@}ldnb_hosptotalmom{@}How many days did the mom stay in the hospital after birth?
+text{@}ldnb_hosptotalmom{@}11. How many days in the hospital after birth?
 select{@}ldnb_hosptotalmom_status{@}{@}NULL=>''{-}'not_answered'=>'Not Answered'
 static{@}{@}<b>Developmental History</b>
 numeric{@}earlydev_walk{@}12. Age when first walked unaided (in months)
