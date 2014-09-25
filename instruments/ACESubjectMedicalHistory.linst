@@ -130,7 +130,7 @@ select{@}rev_immunoimmunization{@}63. Immunizations{@}NULL=>''{-}'up-to-date'=>'
 page{@}{@}Page 3 
 header{@}{@}Review of Systems
 static{@}{@}<b>Genetic</b>
-select{@}gen_dis{@}64. Does the study subject have any of the following genetic disorders?{@}NULL=>''{-}'1_rett_syndrome'=>'1. Rett syndrome'{-}'2_down_syndrome'=>'2. Down syndrome'{-}'3_tuberous_sclerosis_complex'=>'3. Tuberous Sclerosis Complex'{-}'4_fragile_x_syndrome'=>'4. Fragile X syndrome'{-}'5_neurofibromatosis_i'=>'5. Neurofibromatosis I'{-}'not_answered'=>'Not Answered'{-}'none'=>'None'
+selectmultiple{@}gen_dis{@}64. Does the study subject have any of the following genetic disorders?{@}NULL=>''{-}'1_rett_syndrome'=>'1. Rett syndrome'{-}'2_down_syndrome'=>'2. Down syndrome'{-}'3_tuberous_sclerosis_complex'=>'3. Tuberous Sclerosis Complex'{-}'4_fragile_x_syndrome'=>'4. Fragile X syndrome'{-}'5_neurofibromatosis_i'=>'5. Neurofibromatosis I'{-}'not_answered'=>'Not Answered'{-}'none'=>'None'
 select{@}gen_dis_conf{@}If check above, is the genetic disorder confirmed by a physician-ordered genetic analysis?{@}NULL=>''{-}'yes'=>'Yes'{-}'no'=>'No'{-}'nk'=>'NK'{-}'not_answered'=>'Not Answered'
 static{@}{@}<b>Mental Health</b>
 select{@}othmem_bipolar{@}65. Bipolar disorder (Manic/depression){@}NULL=>''{-}'yes'=>'Yes'{-}'no'=>'No'{-}'nk'=>'NK'{-}'not_answered'=>'Not Answered'

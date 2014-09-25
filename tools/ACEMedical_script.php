@@ -35,7 +35,7 @@ $result = $db->pselect("SELECT t.pregnancy_complication_subject, t.premature_bir
                         m.c_tuberous_sclerosis, m.c_tuberous_sclerosis_who, m.b_fragile_x, m.b_fragile_x_who, m.d_neurofibromatosis,
                         m.d_neurofibromatosis_who, m.t_manic_depres_bi, m.t_manic_depres_bi_who, m.s_depression_who,m.s_depression_who,
                         m.r_panic_anxiety_dis, m.r_panic_anxiety_dis_who, m.u_schizophrenia, m.u_schizophrenia_who, m.q_add,m.q_add_who,
-                        n.q23_adenoma_sebaceum,n.q25_shagreen_patches_describe
+                        n.q23_adenoma_sebaceum,n.q25_shagreen_patches_describe,n.q24_ash_leaf_macules, n.q27_cafe_au_lait_spots
                         FROM session s LEFT JOIN flag tflag ON (s.ID = tflag.SessionID AND tflag.Test_name='tsi')
                         LEFT JOIN flag mflag ON (s.ID = mflag.SessionID AND mflag.Test_name='med_psych_hist')
                         LEFT JOIN flag nflag ON (s.ID = nflag.SessionID AND nflag.Test_name='neuro_screen')
@@ -97,6 +97,37 @@ foreach($result as $row) {
     if ($row['q17_birth_defects'] == 'c_open_spine') {
         $final_result['rev_neckspinalab'] = 'yes';
     }
+   $birth_marks = array($row['q27_cafe_au_lait_spots'], $row['q24_ash_leaf_macules'], $row['q23_adenoma_sebaceum']);
+   $final_result['rev_skinbirthmark'] = 'no';
+   if (in_array('1_uncertain', $birth_marks) || in_array('2_present', $birth_marks) || in_array('3_six_or_more_spots', $birth_marks)
+       || in_array('1_one_three_spots', $birth_marks) || in_array('2_four_or_five_spots', $birth_marks)) {
+       $final_result['rev_skinbirthmark'] = 'yes';
+   }
+  $final_result['rev_cardiomalfunc'] = 'no';
+  if ($row['17_birth_defects'] == 'd_heart_defect') {
+      $final_result['rev_cardiomalfunc'] = 'yes';
+  }
+  $final_result['rev_immunomedallergy'] = $row['med_his_q_6_allergies'];
+  $final_result['gen_dis'] = NULL;
+  $mental_health = array('e_rett_syndrome'=>'1_rett_syndrome', 'c_tuberous_sclerosis'=>'3_tuberous_sclerosis_complex',
+                         'b_fragile_x'=>'4_fragile_x_syndrome', 'd_neurofibromatosis'=>'5_neurofibromatosis_i');
+  foreach ($mental_health as $key=>$val) {
+      if ($row[$key] == '1_yes' && (strpos($row[$key.'_who'], 'child') !== false)) {
+          if (empty($final_result['gen_dis'])) {
+              $final_result['gen_dis'] = $val;
+          } else {
+              $final_result['gen_dis'] .= '{@}'.$val;
+          }
+      }
+  }
+  $other_health = array('t_manic_depres_bi'=>'othmem_bipolar', 's_depression'=>'othmem_depression', 'r_panic_anxiety_dis'=>'othmem_anxiety',
+                        'u_schizophrenia'=>'othmem_schizophrenia', 'q_add'=>'othmem_adhd');
+  foreach ($other_health as $key=>$val) {
+      if ($row[$key] == '1_yes' && (strpos($row[$key.'_who'], 'child') !== false)) {
+              $final_result[$val] = 'yes';
+      }
+  }
+
 print_r($final_result);
 }
 ?>
