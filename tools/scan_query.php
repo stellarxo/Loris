@@ -76,7 +76,8 @@ foreach ($project as $key=>$val) {
             $candidate = array('CandID'=>$row['CandID'],'PSCID'=>$row['PSCID'],
                     'Gender'=>$row['Gender'],'Subproject'=>$row['Cohort'],
                     'DSMIV_checklist'=>'','DSMIV_checklist_PDD'=>'',
-                    'DSMV_checklist_asd'=>'', 'DSMV_checklist_scd'=>'','ADOS_DERIVED'=>'',
+                    'DSMV_checklist_asd'=>'', 'DSMV_checklist_scd'=>'',
+                    'ADOS_DERIVED'=>'',
                     'Selected_T1'=>'no','T1_QCStatus'=>'','T1_Filename'=>'',
                     'Selected_T2'=>'no','T2_QCStatus'=>'','T2_Filename'=>'',
                     'DTI25'=>'no','Num_Frame_DTI25'=>0,'DTI25_Filename'=>'',
@@ -88,8 +89,41 @@ foreach ($project as $key=>$val) {
                     'Bold_frames5'=>0,'Bold_Filename5'=>'');
 
             $id = $row['ID']; //this is the session ID
+            if ($visit_label == 'V24') {
+                $query_asd  = "SELECT d4. q4_criteria_autistic_disorder, d4. q4_criteria_PDD,
+                    d5. meet_dsm_asd, d5. meet_dsm_scd
+                    FROM session s
+                    LEFT JOIN flag d5flag ON (s.ID = d5flag.SessionID
+                            AND d5flag.Test_name='DSMV_checklist')
+                    LEFT JOIN flag d4flag ON (s.ID = d4flag.SessionID
+                            AND d4flag.Test_name='DSMIV_checklist')
+                    LEFT JOIN DSMIV_checklist d4 ON (d4.CommentID = d4flag.CommentID)
+                    LEFT JOIN DSMV_checklist d5 ON (d5.CommentID = d5flag.CommentID)
+                    WHERE d5flag.CommentID NOT LIKE 'DDE%'
+                    AND d4flag.CommentID NOT LIKE 'DDE%'
+                    AND s.ID=$id";
+                $result_asd = $db->pselect($query_asd, array());
+                foreach ($result_asd as $asd) {
+                    $candidate['DSMIV_checklist']     = $asd['q4_criteria_autistic_disorder'];
+                    $candidate['DSMIV_checklist_PDD'] = $asd['q4_criteria_PDD'];
+                    $candidate['DSMV_checklist_asd']  = $asd['meet_dsm_asd'];
+                    $candidate['DSMV_checklist_scd']  = $asd['meet_dsm_scd'];
+                }
+                $ADOSModule = getADOSModule($id); //print $ADOSModule."\n";
+                if (!empty($ADOSModule)) {
+                    $derived_ados = "SELECT a.ADOS_classification FROM session s
+                        LEFT JOIN flag aflag ON (s.ID = aflag.SessionID
+                                AND aflag.Test_name= $ADOSModule)
+                        LEFT JOIN $ADOSModule a ON (a.CommentID = aflag.CommentID)
+                        WHERE aflag.CommentID NOT LIKE 'DDE%'
+                        AND s.ID=$id";
+                    $value_derives = $db->pselectOne($derived_ados, array());
+                    if (!empty($value_derived)) {
+                        $candidate['ADOS_DERIVED'] = $value_derived;
+                    }
+                }
 
-            $ADOSModule = getADOSModule($id);
+            }
             // Get t1 and t2 Selected info and QC status
             $query_t12 = "SELECT DISTINCT m.Scan_type, q.QCStatus, f.File
                 FROM files f
@@ -172,19 +206,24 @@ foreach ($project as $key=>$val) {
  * @return string Test_name of ADOS module. null if not found
  */
 function getADOSModule($SessionID)
-{
-    $rows = $this->SQLDB->pselect(
-            "SELECT Test_name, Administration FROM flag " .
-            "WHERE SessionID=:SID AND Test_name LIKE 'ados%'" .
-            " AND CommentID NOT LIKE 'DDE%'",
-            array('SID' => $SessionID)
-            );
-    foreach ($rows as $row) {
-        if ($row['Administration'] === 'All') {
-            return $row['Test_name'];
-        }
-    }
-    return null;
+{   
+	$db = Database::singleton();
+	if (Utility::isErrorX($db)) {
+		print "Could not connect to database: " . $db->getMessage();
+		exit(1);
+	}
+	$rows = $db->pselect(
+			"SELECT Test_name, Administration FROM flag " .
+			"WHERE SessionID=:SID AND Test_name LIKE 'ados%'" .
+			" AND CommentID NOT LIKE 'DDE%'",
+			array('SID' => $SessionID)
+			);
+	foreach ($rows as $row) {
+		if ($row['Administration'] === 'All') {
+			return $row['Test_name'];
+		}
+	}
+	return null;
 }
 
 ?>
