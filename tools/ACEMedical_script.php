@@ -21,6 +21,12 @@ $mapping = array('preg_complic'=>'pregnancy_complication_subject','preg_dxdrug'=
                  'rev_cardiomalfunc'=>'rev_cardiomalfunc','rev_immunomedallergy'=>'med_his_q_6_allergies',
                  'gen_dis'=>'gen_dis','othmem_bipolar','othmem_depression'=>'othmem_depression','othmem_anxiety'=>'othmem_anxiety',
                  'othmem_schizophrenia'=>'othmem_schizophrenia','othmem_adhd'=>'othmem_adhd');
+$session = $db->pselect("SELECT s.ID from session s
+                         JOIN flag f ON ( f.sessionID = s.ID AND f.Test_name=:tname)
+                              AND f.CommentID NOT LIKE 'DDE_%'",
+                         array('tname'=>'ACEFamilyMedicalHistory'));
+foreach ($session as $sessionID ) {
+
 $result = $db->pselect("SELECT t.pregnancy_complication_subject, t.premature_birth, t.weeks_gestation, t.med_his_q_6_allergies,
                         mr.first_measurement_length_units_stat, mr.first_measurement_length_cm,mr.first_measurement_length_inches,
                         mr.not_completed, mr.test_results, m.q6_a_antibio_infections_when_taken, m.q6_b_acne_meds_when_taken,
@@ -33,7 +39,7 @@ $result = $db->pselect("SELECT t.pregnancy_complication_subject, t.premature_bir
                         m.q14_child_hospitalised_days, m.q14_child_hospitalised_hours, m.q15_c_fever_seizures, m.q15_seizures_convulsions,
                         m.m_cerebral_palsy,m.m_cerebral_palsy_who, m.q16_has_child_ever, m.q17_birth_defects, m.e_rett_syndrome, m.e_rett_syndrome_who,
                         m.c_tuberous_sclerosis, m.c_tuberous_sclerosis_who, m.b_fragile_x, m.b_fragile_x_who, m.d_neurofibromatosis,
-                        m.d_neurofibromatosis_who, m.t_manic_depres_bi, m.t_manic_depres_bi_who, m.s_depression_who,m.s_depression_who,
+                        m.d_neurofibromatosis_who, m.t_manic_depres_bi, m.t_manic_depres_bi_who, m.s_depression,m.s_depression_who,
                         m.r_panic_anxiety_dis, m.r_panic_anxiety_dis_who, m.u_schizophrenia, m.u_schizophrenia_who, m.q_add,m.q_add_who,
                         n.q23_adenoma_sebaceum,n.q25_shagreen_patches_describe,n.q24_ash_leaf_macules, n.q27_cafe_au_lait_spots
                         FROM session s LEFT JOIN flag tflag ON (s.ID = tflag.SessionID AND tflag.Test_name='tsi')
@@ -43,8 +49,9 @@ $result = $db->pselect("SELECT t.pregnancy_complication_subject, t.premature_bir
                         LEFT JOIN tsi t ON (tflag.CommentID = t.CommentID)
                         LEFT JOIN med_psych_hist m ON (mflag.CommentID = m.CommentID)
                         LEFT JOIN neuro_screen n ON (nflag.CommentID = n.CommentID)
-                        LEFT JOIN med_records_24 mr ON (mrflag.CommentID = mr.CommentID) WHERE s.ID = 482 AND tflag.CommentID NOT LIKE 'DDE%'
-                        AND mflag.CommentID NOT LIKE 'DDE%' AND mrflag.CommentID NOT LIKE 'DDE%' AND nflag.CommentID NOT LIKE 'DDE%'", array());
+                        LEFT JOIN med_records_24 mr ON (mrflag.CommentID = mr.CommentID) WHERE s.ID =:sid AND tflag.CommentID NOT LIKE 'DDE%'
+                        AND mflag.CommentID NOT LIKE 'DDE%' AND mrflag.CommentID NOT LIKE 'DDE%' AND nflag.CommentID NOT LIKE 'DDE%'",
+                        array('sid'=>$sessionID['ID']));
 
 foreach($result as $row) {
     $final_result['preg_complic'] = $row['pregnancy_complication_subject'];
@@ -104,7 +111,7 @@ foreach($result as $row) {
        $final_result['rev_skinbirthmark'] = 'yes';
    }
   $final_result['rev_cardiomalfunc'] = 'no';
-  if ($row['17_birth_defects'] == 'd_heart_defect') {
+  if ( strpos($row['q17_birth_defects'] , 'd_heart_defect') !== false) {
       $final_result['rev_cardiomalfunc'] = 'yes';
   }
   $final_result['rev_immunomedallergy'] = $row['med_his_q_6_allergies'];
@@ -128,6 +135,19 @@ foreach($result as $row) {
       }
   }
 
-print_r($final_result);
+//print_r($final_result);
+}
+$WhereCriteria['CommentID'] = $db->pselectOne("SELECT i.CommentID FROM ACESubjectMedicalHistory i
+                                               JOIN flag f ON f.CommentID = i.CommentID
+                                               JOIN session s ON s.ID = f.SessionID
+                                               WHERE s.ID =:sid AND f.CommentID NOT LIKE 'DDE%'",
+                                               array('sid'=>$sessionID['ID']));
+$result = $db->update('ACESubjectMedicalHistory', $final_result, $WhereCriteria);
+if ($db->isError($result)) {
+    print "Could not update ACESubjectMedicalHistory: ". $result->getMessage();
+    //                        exit(3);
+}
+
+
 }
 ?>

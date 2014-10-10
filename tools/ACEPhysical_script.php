@@ -21,18 +21,23 @@ $head_measurements_subject = array('head_length_child','weight1_child','head_cir
 $neuro_screen = array('q4_low_seated_ears','q1_strabismus','q2_ptosis','q4_low_seated_ears','q5_adherent','q6_ear_formation','q7_cleft_palate','q20_hyper_extensibility_of_joints',
                       'q24_ash_leaf_macules','q27_cafe_au_lait_spots','q23_adenoma_sebaceum','q25_shagreen_patches_describe','q28_cutaneous_nodules','q13_tone_symmetrical_abnormality',
                       'q17_power_lower_limb','q18_other_limb_hand_dysmorphic');
-
+$session = $db->pselect("SELECT s.ID from session s
+                         JOIN flag f ON ( f.sessionID = s.ID AND f.Test_name=:tname)
+                              AND f.CommentID NOT LIKE 'DDE_%'",
+                         array('tname'=>'ACEFamilyMedicalHistory'));
+foreach ($session as $sessionID ) {
 $result       = $db->pselect("SELECT h.length1, h.weight1, h.head_circumference1, n.q1_strabismus,n.q2_ptosis,
                               n.q4_low_seated_ears, n.q5_adherent, n.q6_ear_formation, n.q7_cleft_palate,q8_craniofacial_dysmorphic,
                               n.q20_hyper_extensibility_of_joints,
                               n.q24_ash_leaf_macules, n.q27_cafe_au_lait_spots, n.q23_adenoma_sebaceum, n.q25_shagreen_patches_describe,
                               n.q28_cutaneous_nodules,n.q13_tone_symmetrical_abnormality,n.q14_tone_asymmetrical_abnormality,
-                              n.q17_power_lower_limb, n.q16_power_upper_limb FROM 
-                              session s LEFT JOIN flag nflag ON (s.ID = nflag.SessionID AND nflag.Test_name='neuro_screen') 
+                              n.q17_power_lower_limb, n.q16_power_upper_limb FROM
+                              session s LEFT JOIN flag nflag ON (s.ID = nflag.SessionID AND nflag.Test_name='neuro_screen')
                               LEFT JOIN flag hflag ON (s.ID = hflag.SessionID AND hflag.Test_name='head_measurements_subject')
                               LEFT JOIN neuro_screen n ON (nflag.CommentID = n.CommentID)
-                              LEFT JOIN head_measurements_subject h ON (hflag.CommentID = h.CommentID) WHERE s.ID = 482 AND nflag.CommentID NOT LIKE 'DDE%' 
-                              AND hflag.CommentID NOT LIKE 'DDE%'", array());
+                              LEFT JOIN head_measurements_subject h ON (hflag.CommentID = h.CommentID)
+                              WHERE s.ID =:sid AND nflag.CommentID NOT LIKE 'DDE%'
+                                    AND hflag.CommentID NOT LIKE 'DDE%'", array('sid'=>$sessionID['ID']));
 $value_mapping = array('1_covert'=>'yes','2_overt'=>'yes','0_absent'=>'no','9_not_tested'=>'nk','7_can_t_tell'=>'nk',
                        '9_failure_to_test'=>'nk','2_definite'=>'yes','0_absent'=>'no','1_doubtful'=>'nk',
                        '8_suject_unable'=>'nk');
@@ -108,19 +113,17 @@ foreach($result as $row) {
      } else if (in_array($row['q27_cafe_au_lait_spots'],$unable ) ) {
          $row['skin_hyperpig'] = 'nk';
      }
-     
-     if($row['q25_shagreen_patches'] == '2_present' || $row['q25_shagreen_patches'] == '1_uncertain' 
+     if($row['q25_shagreen_patches_describe'] == '2_present' || $row['q25_shagreen_patches_describe'] == '1_uncertain'
         || $row['q23_adenoma_sebaceum'] == '1_uncertain' || $row['q23_adenoma_sebaceum'] == '2_present'
         || $row['q28_cutaneous_nodules'] == '1_uncertain' || $row['q28_cutaneous_nodules'] == '2_one_or_more' ) {
-            $row['skin_abnorm'] = 'yes'; 
-     } else if ($row['q25_shagreen_patches'] == '0_absent' || $row['q23_adenoma_sebaceum'] == '0_absent' 
+            $row['skin_abnorm'] = 'yes';
+     } else if ($row['q25_shagreen_patches_describe'] == '0_absent' || $row['q23_adenoma_sebaceum'] == '0_absent'
                 || $row['q28_cutaneous_nodules'] == '0_absent') {
             $row['skin_abnorm'] = 'no';
      } else if (in_array($row['q25_shagreen_patches'], $unable) || in_array($row['q23_adenoma_sebaceum'], $unable)
                 || in_array($row['q28_cutaneous_nodules'], $unable) ) {
             $row['skin_abnorm'] = 'nk';
      }
-    
      if($row['q13_tone_symmetrical_abnormality'] == '2_increased' || $row['q14_tone_asymmetrical_abnormality'] == '2_increased') {
          $row['hypertonia'] = 'yes';
      } else {
@@ -140,12 +143,24 @@ foreach($result as $row) {
      } else if ( in_array($row['q16_power_upper_limb'], $unable) || in_array($row['q17_power_lower_limb'], $unable)) {
          $row['muscle_streng'] = 'nk';
      }
-     
-          
+
+
 }
 $final = array();
 foreach($mapping as $key=>$val) {
         $final[$key] = $row[$val];
 }
-print_r($final);
+//print_r($final);
+$WhereCriteria['CommentID'] = $db->pselectOne("SELECT i.CommentID FROM ACESubjectPhysicalExam i
+                                               JOIN flag f ON f.CommentID = i.CommentID
+                                               JOIN session s ON s.ID = f.SessionID
+                                               WHERE s.ID =:sid AND f.CommentID NOT LIKE 'DDE%'",
+                                               array('sid'=>$sessionID['ID']));
+$result = $db->update('ACESubjectPhysicalExam', $final, $WhereCriteria);
+if ($db->isError($result)) {
+    print "Could not update ACESubjectPhysicalExam: ". $result->getMessage();
+    //                        exit(3);
+}
+
+}
 ?>
