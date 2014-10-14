@@ -108,7 +108,7 @@ CREATE TABLE `ACESubjectMedicalHistory` (
 `rev_immunoenvallergy` enum('yes','no','nk','not_answered') default NULL,
 `rev_immunomedallergy` enum('yes','no','nk','not_answered') default NULL,
 `rev_immunoimmunization` enum('up-to-date','behind','none','nk','not_answered') default NULL,
-`gen_dis` enum('1_rett_syndrome','2_down_syndrome','3_tuberous_sclerosis_complex','4_fragile_x_syndrome','5_neurofibromatosis_i','not_answered','none') default NULL,
+`gen_dis` varchar(255),
 `gen_dis_conf` enum('yes','no','nk','not_answered') default NULL,
 `othmem_bipolar` enum('yes','no','nk','not_answered') default NULL,
 `othmem_depression` enum('yes','no','nk','not_answered') default NULL,
