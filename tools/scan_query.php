@@ -3,7 +3,7 @@
  * This script queries the database for t1, t2, dti, 65 dir dti, bold
  * and bold b1000 scans accquired for each candidate at visit level.
  * For each of the dti25 and bold scans accquired we report number of
- * frames. Create one csv file per visit per project
+ * frames. Creates one csv file per visit per project
  *
  *  PHP Version 5
  *
