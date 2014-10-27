@@ -24,7 +24,7 @@ $neuro_screen = array('q4_low_seated_ears','q1_strabismus','q2_ptosis','q4_low_s
 $session = $db->pselect("SELECT s.ID from session s
                          JOIN flag f ON ( f.sessionID = s.ID AND f.Test_name=:tname)
                               AND f.CommentID NOT LIKE 'DDE_%'",
-                         array('tname'=>'ACEFamilyMedicalHistory'));
+                         array('tname'=>'ACESubjectPhysicalExam'));
 foreach ($session as $sessionID ) {
 $result       = $db->pselect("SELECT h.length1, h.weight1, h.head_circumference1, n.q1_strabismus,n.q2_ptosis,
                               n.q4_low_seated_ears, n.q5_adherent, n.q6_ear_formation, n.q7_cleft_palate,q8_craniofacial_dysmorphic,

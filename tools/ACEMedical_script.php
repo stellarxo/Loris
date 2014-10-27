@@ -24,7 +24,7 @@ $mapping = array('preg_complic'=>'pregnancy_complication_subject','preg_dxdrug'=
 $session = $db->pselect("SELECT s.ID from session s
                          JOIN flag f ON ( f.sessionID = s.ID AND f.Test_name=:tname)
                               AND f.CommentID NOT LIKE 'DDE_%'",
-                         array('tname'=>'ACEFamilyMedicalHistory'));
+                         array('tname'=>'ACESubjectMedicalHistory'));
 foreach ($session as $sessionID ) {
 
 $result = $db->pselect("SELECT t.pregnancy_complication_subject, t.premature_birth, t.weeks_gestation, t.med_his_q_6_allergies,
