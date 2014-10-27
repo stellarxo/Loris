@@ -54,6 +54,7 @@ $result = $db->pselect("SELECT t.pregnancy_complication_subject, t.premature_bir
                         array('sid'=>$sessionID['ID']));
 
 foreach($result as $row) {
+    $final_row = array();
     $final_result['preg_complic'] = $row['pregnancy_complication_subject'];
     $preg_drugs = array($row['q6_a_antibio_infections_when_taken'], $row['q6_b_acne_meds_when_taken'],
                         $row['q6_c_birth_control_meds_when_taken'], $row['q6_d_antihypertensives_when_taken'], $row['q6_e_heart_cardiac_meds_when_taken'],
