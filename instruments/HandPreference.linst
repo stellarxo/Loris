@@ -7,7 +7,7 @@ static{@}Window_Difference{@}Window Difference (+/- Days)
 select{@}Examiner{@}Examiner{@}NULL=>''
 select{@}ParentQuestion{@}Ask Parent:Is  child right handed or left handed?{@}NULL=>''{-}'l'=>'L'{-}'r'=>'R'{-}'b'=>'B'{-}'uk'=>'UK'{-}'not_answered'=>'Not Answered'
 static{@}{@}<br />
-static{@}{@}<b><u>Please Note:</u></b> Right and Left are Experimenter's Right and Left
+select{@}administration_perspective{@}Indicate perspective used when administring the instrument{@}NULL=>''{-}'child_perspective'=>'Child's perspective'{-}'examiner_perspective'=>'Examiner's perspective'
 static{@}{@}<br />
 header{@}{@}Eating with Spoon (Show me how you eat)
 select{@}EatingTrial1{@}Trial#1{@}NULL=>''{-}'l'=>'L'{-}'r'=>'R'{-}'b'=>'B'{-}'nr'=>'NR'{-}'not_answered'=>'Not Answered'

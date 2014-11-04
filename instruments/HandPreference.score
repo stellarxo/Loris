@@ -40,9 +40,13 @@ foreach($result as $key=>$value) {
 if($UMR !== 0) {
     $LI = ($RHR/$UMR)*24;
 } else {
-    $LI = "Error UMR is zero";
+    $LI = "Cannot be calculated";
 }
-$final_score = 24 - $LI;
+if ($result['administration_perspective'] == 'examiner_perspective') {
+    $final_score = 24 - $LI;
+} else if ( $result['administration_perspective'] == 'child_perspective') {
+    $final_score = $LI;
+}
 $values = array('LateralityIndex'=>$final_score);
 $result = $db->update('HandPreference', $values, $WhereCriteria);
 if(PEAR::isError($result)) {
