@@ -45,3 +45,4 @@ header{@}{@}Validity
 textarea{@}CommentValidity{@}Comments About Validity:
 select{@}CommentValidity_status{@}{@}NULL=>''{-}'not_answered'=>'Not Answered'
 static{@}LateralityIndex{@}Laterality Index(LI)
+static{@}{@}Note: Laterality Index value ranges from 0-24. The candidate is right handed if the value is closer to 24 and the candidate is left handed if the value is closer to 0.
