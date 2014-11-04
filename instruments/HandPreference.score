@@ -39,7 +39,7 @@ foreach($result as $key=>$value) {
 
 
 if($UMR !== 0) {
-    $LI = ($RHR/$UMR)*24;
+    $LI = round(($RHR/$UMR)*24,3);
 } else {
     $LI = "Cannot be calculated";
 }
