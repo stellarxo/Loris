@@ -191,7 +191,7 @@ function InsertQCStatus($fileID, $value) {
                    );
            if ($FileCount > 0) {
                $success = $DB->update(
-                       "file_qcstatus",
+                       "files_qcstatus",
                        array('QCStatus'=>$value),
                        array('FileID'=>$fileID)
                        );
@@ -215,16 +215,15 @@ function InsertQCInfo($fileID, $typeID, $value) {
     if (Utility::isErrorX($DB)) {
         return PEAR::raiseError("Could not connect to database: ".$DB->getMessage());
     }
-   if ($value === 'TRUE' && !empty($fileID)) {
-        $FileCount = $DB->pselectOne(
-                   "SELECT COUNT(*) FROM parameter_file WHERE FileID = :fid",
-                   array("fid"=>$fileID)
+   if (strtoupper($value) === 'TRUE' && !empty($fileID)) {
+        $FileCount = $DB->pselectOne("SELECT COUNT(*) FROM parameter_file WHERE FileID = :fid AND ParameterTypeID = :pid",
+            array("fid"=>$fileID, 'pid' => $typeID)
                    );
            if ($FileCount > 0) {
                $success = $DB->update(
                        "parameter_file",
-                       array('ParameterTypeID'=>$typeID, 'Value'=>'dti'),
-                       array('FileID'=>$fileID)
+                       array('Value'=>'dti'),
+                       array('FileID'=>$fileID, 'ParameterTypeID' => $typeID)
                        );
            } else {
                //insert it
