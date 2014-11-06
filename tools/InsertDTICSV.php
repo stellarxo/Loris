@@ -21,17 +21,17 @@ $headers = fgetcsv($fp);
 $headers = array_slice($headers, 3, 36);
 
 $InsertTypes = array(
-    0  => GetCommentIDType("Dominant Direction Artifact (DWI ONLY)"),
+    0  => GetParameterTypeID("Color_artifact"),
     1  => GetPredefinedCommentID("red artifact"),
     2  => GetPredefinedCommentID("green artifact"),
     3  => GetPredefinedCommentID("blue artifact"),
-    4  => GetCommentIDType("Entropy Rating (DWI ONLY)"),
+    4  => GetParameterTypeID("Entropy"),
     5  => GetCommentIDType("Dominant Direction Artifact (DWI ONLY)"),
-    6  => GetCommentIDType("Movement artifact"),
+    6  => GetParameterTypeID("Movement_artifacts_within_scan"),
     7  => GetPredefinedCommentID("slice wise artifact (DWI ONLY)"),
     8  => GetPredefinedCommentID("gradient wise artifact (DWI ONLY)"),
     9  => GetCommentIDType("Movement artifact"),
-    10 => GetCommentIDType("Intensity"),
+    10 => GetParameterTypeID("Intensity"),
     11 => GetPredefinedCommentID("noisy scan"),
     12 => GetPredefinedCommentID("checkerboard artifact"),
     13 => GetPredefinedCommentID("horizontal intensity striping (Venetian blind effect, DWI ONLY)"),
@@ -58,7 +58,6 @@ $InsertTypes = array(
     34 => GetParameterTypeID("Selected"),
     35 => GetCommentIDType("Overall"),
 );
-
 function GetPredefinedCommentID($name) {
    $DB = Database::singleton();
     if(Utility::isErrorX($DB)) {
@@ -99,11 +98,20 @@ function GetParameterTypeID($name) {
    return $parameterTypeID;
 
 }
-function InsertDropdown($typeID, $value, $comments) {
+function InsertDropdown($typeID, $value, $fileID) {
+    $DB = Database::singleton();
+    if(Utility::isErrorX($DB)) {
+        return PEAR::raiseError("Could not connect to database: ".$DB->getMessage());
+    }
+    $name='';
+    if(!empty($typeID) ) {
+    $name = $DB->pselectOne("SELECT Name from parameter_type Where ParameterTypeID=:pid",
+                             array('pid'=>$typeID));
+    }
     $options = array();
-    if($typeID === 'Entropy Rating (DWI ONLY)') {
+    if($name === 'Entropy') {
         $options = array('Acceptable', 'Suspicious', 'Unacceptable', 'Not_available');
-    } elseif($typeID === 'Movement artifact') {
+    } elseif($name === 'Movement_artifacts_within_scan') {
         $options = array('None', 'Slight', 'Poor', 'Unacceptable');
     } else {
         $options = array('Fair', 'Good', 'Poor', 'Unacceptable');
@@ -113,7 +121,32 @@ function InsertDropdown($typeID, $value, $comments) {
     }
     if(in_array($value, $options)) {
         //insert
-        $comments->addTextComment($value, $typeID);
+        if(!empty($fileID)) {
+            $FileCount = $DB->pselectOne(
+                    "SELECT COUNT(*) FROM parameter_file WHERE FileID=:fid AND ParameterTypeID=:pid",
+                    array("fid"=>$fileID, "pid"=>$typeID)
+                    );
+            if ($FileCount > 0) {
+                $success = $DB->update(
+                        "parameter_file",
+                        array('Value'=>$value),
+                        array('FileID'=>$fileID, 'ParameterTypeID'=>$typeID)
+                        );
+            } else {
+                //insert it
+                $success = $DB->insert('parameter_file', array('Value'=>$value,
+                                       'ParameterTypeID'=>$typeID,'FileID'=>$fileID)
+                        );
+            }
+
+            if (Utility::isErrorX($success)) {
+                return PEAR::raiseError(
+                        "Could not update file qc status: ".$success->getMessage()
+                        );
+            }
+
+        }
+
         return;
     }
    // print "\t$typeID: $value\n";
@@ -131,14 +164,15 @@ function InsertCheckbox($typeID, $value, $comments) {
     }
     if($value === 'Yes') {
         //insert
+        $success = $DB->delete("feedback_mri_comments",array('PredefinedCommentID'=>$typeID,
+                          'FileID'=>$comments->fileID));
+        $comments->setPredefinedComments(array($typeID));
+
         return;
     }
    // print "\t$typeID: $value\n";
  //clear predefined comments
-   $success = $DB->delete("feedback_mri_comments",array('PredefinedCommentID'=>$typeID,
-                          'FileID'=>$comments->fileID));
-   $comments->setPredefinedComments(array($typeID));
-}
+   }
 
 function InsertComment($type, $value, $comments) {
 
@@ -189,12 +223,13 @@ function InsertQCInfo($fileID, $typeID, $value) {
            if ($FileCount > 0) {
                $success = $DB->update(
                        "parameter_file",
-                       array('ParameterTypeID'=>$typeID),
+                       array('ParameterTypeID'=>$typeID, 'Value'=>'dti'),
                        array('FileID'=>$fileID)
                        );
            } else {
                //insert it
               $success = $DB->insert('parameter_file', array('FileID'=>$fileID,
+                                                      'Value'=>'dti',
                                                       'ParameterTypeID'=>$typeID));
 
            }
@@ -238,7 +273,7 @@ while($csv_line = fgetcsv($fp))
         case 4:
         case 6:
         case 10:
-            InsertDropdown($InsertTypes[$i], $results[$i], $comments);
+            InsertDropdown($InsertTypes[$i], $results[$i],$file_info['FileID']);
             break;
         case 1:
         case 2:
@@ -278,9 +313,10 @@ while($csv_line = fgetcsv($fp))
         case 32:
             UpdateCaveat($file_info['FileID'],$results[$i]);
             break;
-        case 33:
         case 34:
             InsertQCInfo($file_info['FileID'],$InsertTypes[$i], $results[$i]);
+            break;
+        case 33:
             break;
         default:
             print "Unhandled type: $i\n";
