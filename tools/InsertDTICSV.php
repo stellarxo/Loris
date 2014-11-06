@@ -56,7 +56,7 @@ $InsertTypes = array(
     32 => /* Caveat */ '',
     33 => /* Pending, ignored */ '',
     34 => GetParameterTypeID("Selected"),
-    35 => /* Notes/Exclude Reason */ '',
+    35 => GetCommentIDType("Overall"),
 );
 
 function GetPredefinedCommentID($name) {
@@ -93,7 +93,8 @@ function GetParameterTypeID($name) {
         return PEAR::raiseError("Could not connect to database: ".$DB->getMessage());
     }
 
-   $parameterTypeID = $db->pselectOne("SELECT FROM parameter_type WHERE Name=:param",
+   $parameterTypeID = $DB->pselectOne("SELECT ParameterTypeID FROM parameter_type
+                                       WHERE Name=:param",
                                        array('param'=>$name));
    return $parameterTypeID;
 
@@ -118,6 +119,10 @@ function InsertDropdown($typeID, $value, $comments) {
    // print "\t$typeID: $value\n";
 }
 function InsertCheckbox($typeID, $value, $comments) {
+   $DB = Database::singleton();
+    if(Utility::isErrorX($DB)) {
+        return PEAR::raiseError("Could not connect to database: ".$DB->getMessage());
+    }
     if($value === 'No'
         || $value === ''
         || $value === 'NULL'
@@ -129,7 +134,10 @@ function InsertCheckbox($typeID, $value, $comments) {
         return;
     }
    // print "\t$typeID: $value\n";
-   $comments->_addComment($value, '', $typeID);
+ //clear predefined comments
+   $success = $DB->delete("feedback_mri_comments",array('PredefinedCommentID'=>$typeID,
+                          'FileID'=>$comments->fileID));
+   $comments->setPredefinedComments(array($typeID));
 }
 
 function InsertComment($type, $value, $comments) {
@@ -143,20 +151,60 @@ function InsertQCStatus($fileID, $value) {
         return PEAR::raiseError("Could not connect to database: ".$DB->getMessage());
     }
     if(!empty($fileID)) {
-        $success = $DB->insert('files_qcstatus', array('QCStatus'=>$value,
-                                                       'FileID'=>$fileID)
-                              );
+       $FileCount = $DB->pselectOne(
+                   "SELECT COUNT(*) FROM files_qcstatus WHERE FileID = :fid",
+                   array("fid"=>$fileID)
+                   );
+           if ($FileCount > 0) {
+               $success = $DB->update(
+                       "file_qcstatus",
+                       array('QCStatus'=>$value),
+                       array('FileID'=>$fileID)
+                       );
+           } else {
+               //insert it
+               $success = $DB->insert('files_qcstatus', array('QCStatus'=>$value,
+                                                              'FileID'=>$fileID)
+                                      );
+           }
+
+           if (Utility::isErrorX($success)) {
+               return PEAR::raiseError(
+                       "Could not update file qc status: ".$success->getMessage()
+                       );
+           }
+
     }
 }
 function InsertQCInfo($fileID, $typeID, $value) {
     $DB = Database::singleton();
-    if(Utility::isErrorX($DB)) {
+    if (Utility::isErrorX($DB)) {
         return PEAR::raiseError("Could not connect to database: ".$DB->getMessage());
     }
-   if($value == 'TRUE' && !empty($fileID)) {
-       $success = $DB->insert('parameter_file', array('FileID'=>$fileID,
+   if ($value === 'TRUE' && !empty($fileID)) {
+        $FileCount = $DB->pselectOne(
+                   "SELECT COUNT(*) FROM parameter_file WHERE FileID = :fid",
+                   array("fid"=>$fileID)
+                   );
+           if ($FileCount > 0) {
+               $success = $DB->update(
+                       "parameter_file",
+                       array('ParameterTypeID'=>$typeID),
+                       array('FileID'=>$fileID)
+                       );
+           } else {
+               //insert it
+              $success = $DB->insert('parameter_file', array('FileID'=>$fileID,
                                                       'ParameterTypeID'=>$typeID));
-   }
+
+           }
+           if (Utility::isErrorX($success)) {
+               return PEAR::raiseError(
+                       "Could not update file qc status: ".$success->getMessage()
+                       );
+           }
+
+          }
 }
 function UpdateCaveat($fileID, $value) {
     $DB = Database::singleton();
@@ -164,7 +212,7 @@ function UpdateCaveat($fileID, $value) {
         return PEAR::raiseError("Could not connect to database: ".$DB->getMessage());
     }
     if (!empty($fileID)) {
-       if ($value == 'TRUE') {
+       if ($value === 'TRUE') {
            $DB->update('files', array('Caveat'=>1), array('FileID'=>$fileID));
         } else if ($value == 'FALSE') {
            $DB->update('files', array('Caveat'=>0), array('FileID'=>$fileID));
@@ -233,8 +281,6 @@ while($csv_line = fgetcsv($fp))
         case 33:
         case 34:
             InsertQCInfo($file_info['FileID'],$InsertTypes[$i], $results[$i]);
-            break;
-        case 35:
             break;
         default:
             print "Unhandled type: $i\n";
