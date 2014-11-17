@@ -1,5 +1,5 @@
 <div id="enroll">
-    <script type="text/javascript" src="js/modules/form_stats_enrollment.js"></script>
+    <script type="text/javascript" src="GetJS.php?Module=statistics&file=form_stats_enrollment.js"></script>
     <div class="col-sm-3">
         {html_options id="EnrollmentSite" options=$Sites name="site" selected=$CurrentSite.ID class="form-control input-sm"}
     </div>
