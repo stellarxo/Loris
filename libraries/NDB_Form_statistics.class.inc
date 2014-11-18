@@ -362,6 +362,7 @@ class NDB_Form_statistics extends NDB_Form
                   AND f.Data_entry='Complete'
                   AND f.CommentID NOT LIKE 'DDE%'
                   AND (m.T1_Scan_done IS NULL OR m.T1_Scan_done <> 'No')
+                  $ExtraProject_Criteria
                   GROUP BY s.CenterID;", $result);
           foreach($result as $row) {
               $this->tpl_data['mri_errors'][$row['CenterID']]['no_tarchive'] = $row['val'];
@@ -379,7 +380,7 @@ class NDB_Form_statistics extends NDB_Form
                   AND fi.FileID IS NULL 
                   AND f.Data_entry = 'Complete'
                   AND m.CommentID NOT LIKE 'DDE%'
-                  AND s.Active='Y'
+                  AND s.Active='Y' $ExtraProject_Criteria
                   GROUP by s.CenterID;", $result);
           foreach($result as $row) {
               $this->tpl_data['mri_errors'][$row['CenterID']]['no_browser'] = $row['val'];
@@ -409,21 +410,21 @@ class NDB_Form_statistics extends NDB_Form
               $id = $center['NumericID'];
               $name = $center['LongName'];
               // -------- MRI STATS---------------
-              $DB->select("SELECT COUNT(distinct s.CandID, s.Visit_label) FROM tarchive as t, session as s WHERE MID(t.PatientName,9,6)=s.CandID AND s.CenterID={$center['NumericID']};", $result23);
+              $DB->select("SELECT COUNT(distinct s.CandID, s.Visit_label) FROM tarchive as t, session as s, candidate as c WHERE MID(t.PatientName,9,6)=s.CandID AND s.CenterID={$center['NumericID']} AND s.CandID=c.CandID $ExtraProject_Criteria", $result23);
               if (Utility::isErrorX($result23)) {
                   return PEAR::raiseError("DB Error: ".$result23->getMessage());
               }
               list(,$result23)=each($result23[0]);
               $work_station_count = $result23;
 
-              $DB->select("SELECT COUNT(s.CandID) FROM session as s, psc as p, candidate as c WHERE c.CandID=s.CandID AND s.Active='Y' AND s.CenterID=p.CenterID  AND s.Scan_done='Y' AND s.CenterID={$id} $ExtraProject_Criteria  ORDER BY s.CandID;", $result24);
+              $DB->select("SELECT COUNT(s.CandID) FROM session as s, psc as p, candidate as c WHERE c.CandID=s.CandID AND s.Active='Y' AND s.CenterID=p.CenterID  AND s.Scan_done='Y' AND s.CenterID={$center['NumericID']} $ExtraProject_Criteria  ORDER BY s.CandID;", $result24);
               if (Utility::isErrorX($result24)) {
                   return PEAR::raiseError("DB Error: ".$result24->getMessage());
               }
               list(,$result24)=each($result24[0]);
               $claimed_count = $result24;
 
-              $DB->select("SELECT COUNT(s.CandID) FROM mri_parameter_form as pf, session as s, flag as f, psc as p, candidate as c WHERE f.CommentID=pf.CommentID AND s.ID=f.SessionID AND c.CandID=s.CandID AND s.Active='Y' AND s.CenterID=p.CenterID AND pf.Data_entry_completion_status='Complete' AND s.CenterID={$id} $ExtraProject_Criteria  ORDER BY p.Name;", $result25);
+              $DB->select("SELECT COUNT(s.CandID) FROM mri_parameter_form as pf, session as s, flag as f, psc as p, candidate as c WHERE f.CommentID=pf.CommentID AND s.ID=f.SessionID AND c.CandID=s.CandID AND s.Active='Y' AND s.CenterID=p.CenterID AND pf.Data_entry_completion_status='Complete' AND s.CenterID={$center['NumericID']} $ExtraProject_Criteria  ORDER BY p.Name", $result25);
               if (Utility::isErrorX($result25)) {
                   return PEAR::raiseError("DB Error: ".$result25->getMessage());
               }
