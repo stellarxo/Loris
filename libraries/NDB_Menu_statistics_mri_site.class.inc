@@ -18,10 +18,10 @@ class NDB_Menu_statistics_mri_site extends NDB_Menu_statistics_site
         }
         return parent::_getInstrumentName($instrument);
     }
-    function _CompleteCount($id, $instrument) {
+    function _CompleteCount($id, $instrument, $ExtraProject_Criteria) {
         return null;
     }
-    function _GetResults($id, $instrument) {
+    function _GetResults($id, $instrument,$ExtraProject_Criteria) {
         $DB =& Database::singleton();
         switch($instrument) {
             case 'Tarchive_Missing':
@@ -40,6 +40,7 @@ class NDB_Menu_statistics_mri_site extends NDB_Menu_statistics_site
                             AND m.CommentID NOT LIKE 'DDE%'
                             AND s.Cancelled='N'
                             AND f.Data_entry='Complete'
+                            $ExtraProject_Criteria
                             AND s.CenterID=" . $DB->quote($_REQUEST['CenterID']) . "
                             AND (m.T1_Scan_done IS NULL OR m.T1_Scan_done <> 'No')
                         ORDER BY c.PSCID";
@@ -59,6 +60,7 @@ class NDB_Menu_statistics_mri_site extends NDB_Menu_statistics_site
                         AND f.Data_entry= 'Complete'
                         AND s.Active='Y'
                         AND s.Cancelled='N'
+                        $ExtraProject_Criteria
                         AND s.CenterID=" .  $DB->quote($_REQUEST['CenterID'])
                     . "ORDER BY c.PSCID";
                 break;
@@ -75,6 +77,7 @@ class NDB_Menu_statistics_mri_site extends NDB_Menu_statistics_site
                            AND (f.ID IS NULL OR
                            f.Data_entry <> 'Complete' OR
                            f.Data_entry IS NULL)
+                           $ExtraProject_Criteria
                            AND s.CenterID=" .
                            $DB->quote($_REQUEST['CenterID'])
                            . "ORDER BY c.PSCID";
