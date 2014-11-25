@@ -1,11 +1,11 @@
-<h2>{$SiteName} MRI Integrity Statistics</h2>
+<h2>{$SiteName} MRI Integrity Statistics {$ProjectName}</h2>
 <div class="table-responsive">
    <table class="table table-primary table-bordered" width="100%">
-      <tr>
+      <tr class="info">
          <th>Instrument</th>
          <th colspan="{$NumVisitLabels}" width="80%">Incomplete Entries</th>
       </tr>
-      <tr>
+      <tr class="info">
          <th>&nbsp;</th>
          {foreach from=$AllVisits item=visit}
          <th width="20%">{$visit}</th>

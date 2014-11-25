@@ -27,6 +27,7 @@
                     <td>{$mri_data[item].name}</td>
                     <td>{$mri_data[item].work_station_count}</td>
                     <td>{$mri_data[item].claimed_count}</td>
+                    <td>{$mri_data[item].all_three_scans}</td>
                     <td>{$mri_data[item].forms_count}</td>
                     <td></td>
                  </tr>
@@ -85,7 +86,7 @@
                         <td>{$mri_errors[$center.NumericID].no_parameter}</td>
                         <td>{$mri_errors[$center.NumericID].no_browser}</td>
                         <td>{$mri_errors[$center.NumericID].no_tarchive}</td>
-                        <td><a href="?test_name=statistics_mri_site&CenterID={$center.NumericID}">Please Click Here</a></td>
+                        <td><a href="?test_name=statistics_mri_site&CenterID={$center.NumericID}&ProjectID={$CurrentProject.ID}">Please Click Here</a></td>
                     </tr>
                 {/foreach}
             </tbody>
