@@ -330,8 +330,9 @@ class Candidate
             return PEAR::raiseError("Could not connect to database: ".$db->getMessage());
         }
 
-        $query  = "SELECT Visit_label FROM session s JOIN candidate c ON (c.CandID = s.CandID) 
-            WHERE c.CandID=:cid AND Visit_label NOT LIKE '%Screening%' ORDER BY Date_Visit";
+        $query  = "SELECT Visit_label FROM session s JOIN candidate c ON (c.CandID = s.CandID)
+            WHERE c.CandID=:cid AND Visit_label NOT LIKE '%Screening%' AND Date_Visit IS NOT NULL
+            ORDER BY Date_Visit";
         $where  = array('cid'=>$candID);
         $vLabel = $db->pselectOne($query, $where);
         if(Utility::isErrorX($vLabel)) {
