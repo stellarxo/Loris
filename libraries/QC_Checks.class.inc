@@ -12,7 +12,7 @@ class QC_Checks {
     function __construct($site) {
         $this->site = $site;    
     }
-    
+
     function run() {
         $factory = NDB_Factory::singleton();
         $DB = $factory->Database();
@@ -398,8 +398,45 @@ class QC_Checks {
 		 }
 		 $session = $row['ID'];
 	 }
- }
- 
+   }
+       /* ************************************************************************* */
+        // CHECK multiple selected T1 files
+        /* ************************************************************************* */
+
+        print "\n\n CHECK multiple selected T1 files \n";
+        print "--------------------------------------\n";
+        $data = $DB->pselect("SELECT CandID, Visit_label, count(f.FileID), Value FROM files f JOIN parameter_file pf ON (pf.FileID=f.FileID) JOIN session s ON (s.ID=f.SessionID) WHERE pf.ParameterTypeID=1 AND pf.Value='t1w' AND File not like '%lego%' AND File not like '%phantom%' AND CenterID=$this->site GROUP BY SessionID HAVING count(f.FileID)>1 ORDER BY count(f.FileID)");
+        $header = array('CandID', 'Visit_label', 'Num_Files', 'Value');
+        if(sizeof($data) > 0 ){
+            foreach($header as $row) {
+                print $row."\t";
+            }
+            print "\n";
+        }
+        foreach($data as $row) {
+            print implode("\t", $row);
+            print "\n";
+        }
+        /* ************************************************************************* */
+        // CHECK multiple selected T2 files
+        /* ************************************************************************* */
+
+        print "\n\n CHECK multiple selected T2 files \n";
+        print "--------------------------------------\n";
+        $data = $DB->pselect("SELECT CandID, Visit_label, count(f.FileID), Value FROM files f JOIN parameter_file pf ON (pf.FileID=f.FileID) JOIN session s ON (s.ID=f.SessionID) WHERE pf.ParameterTypeID=1 AND pf.Value='t2w' AND File not like '%lego%' AND File not like '%phantom%' AND CenterID=$this->site GROUP BY SessionID HAVING count(f.FileID)>1 ORDER BY count(f.FileID)");
+        $header = array('CandID', 'Visit_label', 'Num_Files', 'Value');
+        if(sizeof($data) > 0 ){
+            foreach($header as $row) {
+                print $row."\t";
+            }
+            print "\n";
+        }
+        foreach($data as $row) {
+            print implode("\t", $row);
+            print "\n";
+        }
+
+
   }
 }
 ?>
