@@ -108,7 +108,7 @@
     <input type="submit" class="btn btn-sm btn-primary col-xs-4 col-sm-2" name="fire_away" value="Save" />
     {$form.hidden}
 </form>
-
+{*
 <h1>Change Log</h1>
 <table class="std">
 <tr>
@@ -118,5 +118,6 @@
 <th>Old Value</th>
 <th>New Value</th>
 </tr>
-$form.history.html
+{$form.history.html}
 </table>
+*}
