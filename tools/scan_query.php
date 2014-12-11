@@ -123,24 +123,20 @@ foreach ($project as $key=>$val) {
                 }
 
             }
-            // Get t1 and t2 Selected info and QC status
-            $query_t12 = "SELECT DISTINCT m.Scan_type, q.QCStatus, f.File
+            $scan_types = array('T1'=>'t1w', 'T2'=>'t2w');
+            foreach ($scan_types as $sc_key=>$sc_val) {
+               $query_t12 = "SELECT DISTINCT m.Scan_type, q.QCStatus, f.File
                 FROM files f
                 JOIN mri_scan_type m on m.ID = f. AcquisitionProtocolID
                 JOIN parameter_file p ON p.FileID=f.FileID
                 JOIN files_qcstatus q ON q.FileID=f.FileID
-                WHERE m.Scan_type IN('t1w', 't2w') AND p.ParameterTypeID=1
-                      AND f.SessionID=3487 AND p.Value <>''";
-            $result    = $db->pselect($query_t12, array());
-            foreach ($result as $row) {
-                if ('t1w' == $row['Scan_type']) {
-                    $candidate['Selected_T1'] = 'yes';
-                    $candidate['T1_QCStatus'] = $row['QCStatus'];
-                    $candidate['T1_Filename'] = $row['File'];
-                } else if ('t2w' == $row['Scan_type']) {
-                    $candidate['Selected_T2'] = 'yes';
-                    $candidate['T2_QCStatus'] = $row['QCStatus'];
-                    $candidate['T2_Filename'] = $row['File'];
+                WHERE m.Scan_type=:stype AND p.ParameterTypeID=1
+                      AND p.Value <>'' AND f.SessionID=$id";
+                $result    = $db->pselectRow($query_t12, array('stype'=>$sc_val));
+                if (!empty($result)) {
+                    $candidate['Selected_'.$sc_key] = 'yes';
+                    $candidate[$sc_key.'_QCStatus'] = $row['QCStatus'];
+                    $candidate[$sc_key.'_Filename'] = $row['File'];
                 }
             }
             $scan_info  = "SELECT DISTINCT m.Scan_type, p.Value as 'Num_Frames',
