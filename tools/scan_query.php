@@ -30,6 +30,7 @@ if (Utility::isErrorX($db)) {
 }
 $visit   = array('V03', 'V06', 'V09','V12', 'V24', 'V36');
 $project = array(1=>'IBIS1',2=>'IBIS2',3=>'FRX',4=>'EARLI');
+//$visit = array('V06'); $project = array(1=>'IBIS1');
 foreach ($project as $key=>$val) {
     foreach ($visit as $visit_label) {
         $query = "SELECT c.CandID,c.PSCID, s.ID, c.Gender, CASE s.SubprojectID WHEN 1
@@ -130,13 +131,14 @@ foreach ($project as $key=>$val) {
                 JOIN mri_scan_type m on m.ID = f. AcquisitionProtocolID
                 JOIN parameter_file p ON p.FileID=f.FileID
                 JOIN files_qcstatus q ON q.FileID=f.FileID
-                WHERE m.Scan_type=:stype AND p.ParameterTypeID=1
+                WHERE m.Scan_type='$sc_val' AND p.ParameterTypeID=1
                       AND p.Value <>'' AND f.SessionID=$id";
-                $result    = $db->pselectRow($query_t12, array('stype'=>$sc_val));
-                if (!empty($result)) {
+                $result    = $db->pselectRow($query_t12, array());
+               // print "SESSION - $id";print_r($result);print"\n";
+                if (isset($result['Scan_type']) ) {
                     $candidate['Selected_'.$sc_key] = 'yes';
-                    $candidate[$sc_key.'_QCStatus'] = $row['QCStatus'];
-                    $candidate[$sc_key.'_Filename'] = $row['File'];
+                    $candidate[$sc_key.'_QCStatus'] = $result['QCStatus'];
+                    $candidate[$sc_key.'_Filename'] = $result['File']; //print_r($candidate);
                 }
             }
             $scan_info  = "SELECT DISTINCT m.Scan_type, p.Value as 'Num_Frames',
