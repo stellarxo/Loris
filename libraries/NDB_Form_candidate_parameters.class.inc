@@ -72,42 +72,37 @@ class NDB_Form_candidate_parameters extends NDB_Form
     function _getDefaults()
     {
         $DB =& Database::singleton();
+        $config =& NDB_Config::singleton();
+
         //Get the default values
         $value_results = $DB->pselect("SELECT ParameterTypeID, Value FROM 
                          parameter_candidate WHERE CandID=:CaID", 
                          array('CaID' => $this->identifier));
-       
-        $proband_info['ProbandGUID'] = $DB->pselectOne("SELECT ProbandGUID FROM 
-                                       candidate WHERE CandID=:CandidateID", 
-                                       array('CandidateID' => $this->identifier));
-        $defaults['ProbandGUID']     = $proband_info['ProbandGUID'];
-
-        $proband_info['ProbandDoB'] = $DB->pselectOne("SELECT ProbandDoB FROM 
-                                       candidate WHERE CandID=:CandidateID", 
-                                       array('CandidateID' => $this->identifier));
-        if ($proband_info['ProbandDoB']=== '0000-00-00') {
-            $proband_info['ProbandDoB'] = '';
-        }
-        $proband_info['ProbandGender'] = $DB->pselectOne("SELECT ProbandGender FROM 
-                                         candidate WHERE CandID=:CandidateID", 
-                                         array('CandidateID' => $this->identifier));
         $candidate_dob                 = $DB->pselectOne("SELECT DoB FROM candidate 
                                          WHERE CandID=:CandidateID", 
                                          array('CandidateID' => $this->identifier));
 
-        $age                           = Utility::calculateAge(
-                                       $proband_info['ProbandDoB'], $candidate_dob); 
-        if (Utility::isErrorX($age)) {
-            $defaults['Age_Difference'] = 'Could not calculate age';
-        } else {
-            $defaults['Age_Difference'] = $age['year']*12 + $age['mon'] + 
-                                          round($age['day']/30, 2);
-        }
-        $this->tpl_data['proband_info'] = $proband_info;
-        foreach ($proband_info as $key=>$val) {
-            $defaults[$key] = $val;
-            if ($key == 'ProbandDoB') {
-                $defaults[$key."2"] = $proband_info[$key];
+        if ($config->getSetting('useProband') === 'true') {
+            $proband_info = $DB->pselectRow("SELECT ProbandDoB,ProbandGender FROM
+                    candidate WHERE CandID=:CandidateID",
+                    array('CandidateID' => $this->identifier));
+            if ($proband_info['ProbandDoB']=== '0000-00-00') {
+                $proband_info['ProbandDoB'] = '';
+            }
+            if (!empty($proband_info['ProbandDoB']) & !empty($candidate_dob) ) {
+                $age = Utility::calculateAge($proband_info['ProbandDoB'],
+                                             $candidate_dob);
+                $defaults['Age_Difference'] = $age['year']*12 + $age['mon'] + 
+                        round($age['day']/30, 2);
+            } else {
+                $defaults['Age_Difference'] = 'Could not calculate age';
+            }
+            $this->tpl_data['proband_info'] = $proband_info;
+            foreach ($proband_info as $key=>$val) {
+                $defaults[$key] = $val;
+                if ($key == 'ProbandDoB') {
+                    $defaults[$key."2"] = $proband_info[$key];
+                }
             }
         }
 
@@ -409,6 +404,7 @@ class NDB_Form_candidate_parameters extends NDB_Form
                    "SELECT COUNT(*) FROM participant_status WHERE CandID = :cid", 
                    array("cid"=>$values['CandID'])
                    );
+           $success = $DB->insert("consent_info_history", $participant_vals); 
            if ($ParticipantCount > 0) {
                $success = $DB->update(
                        "participant_status", 
@@ -421,18 +417,6 @@ class NDB_Form_candidate_parameters extends NDB_Form
                $success = $DB->insert("participant_status",$participant_vals);
            }
 
-           if (Utility::isErrorX($success)) {
-               return PEAR::raiseError(
-                       "NDB_Form_candidate_parameters::_process: ".$success->getMessage()
-                       );
-           }
-
-           $success = $DB->insert("consent_info_history", $participant_vals); 
-           if (Utility::isErrorX($success)) {
-               return PEAR::raiseError(
-                       "NDB_Form_candidate_parameters::_process: ".$success->getMessage()
-                       );
-           }
        }
        $this->tpl_data['success'] = true;
 
