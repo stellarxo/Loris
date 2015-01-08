@@ -382,7 +382,7 @@ class NDB_BVL_Instrument_dna_tracking extends NDB_BVL_Instrument
                   $errors["blood_notcollected_group"] = "Specify reason for $subject";
              }
              if($values[$field] == 'no' && $values["blood_notcollected_".$subject] == "other" 
-                 && empty($values["blood_notcollected_other_".$subject]) ) {
+                 && empty($values["blood_notcollected_".$subject."_other"]) ) {
                  $errors["blood_notcollected_other_group"] = "Specify other for $subject";
              }
              $saliva_field = "saliva_collected_".$subject;
