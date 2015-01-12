@@ -209,7 +209,7 @@ class NDB_BVL_Instrument_tsi extends NDB_BVL_Instrument
     	);
 		
 	   $this->addDateElement('mother_dob', "Date of Birth:");
-       
+       $this->addScoreColumn('mother_age_yrs', "Mother's age (in years) at time of candidate's<br> birth (Calculated)"); 
 	    //Father's Information
 	    
         $this->form->addElement("static", null, "<br><br><b>Father's Information</b><br>");
@@ -233,7 +233,8 @@ class NDB_BVL_Instrument_tsi extends NDB_BVL_Instrument
     	$config =& NDB_Config::singleton();
 
 	$this->addDateElement('father_dob', "Date of Birth:");
-      		
+    $this->addScoreColumn('father_age_yrs', "Father's age (in years) at time of candidate's<br> birth (Calculated)"); 
+	
       	$this->form->addElement("static", null, "<br><br>");
       	
 	$this->form->addElement("select", "ses_income", "SES:", array(null=>"", "less_than_25K"=>"less than $24,999", "25K-35K"=>"$25,000 - 34,999", "35K-50K"=>"$35,000 - 49,999", "50K-75K"=>"$50,000 - 74,999", "75K-100K"=>"$75,000 - 99,999", "100K-150K"=>"$100,000 - 149,999", "150K-200K"=>"$150,000 - 199,000", "over_200K"=>"over $200,000", "not_answered"=>"Not Answered"));
