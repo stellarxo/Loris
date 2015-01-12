@@ -515,14 +515,14 @@ class NDB_BVL_Instrument_tsi extends NDB_BVL_Instrument
         $candidate_dob = $db->pselectOne("SELECT c.DoB from session as s, flag as f, candidate c where f.sessionId = s.ID and
                                  s.CandID=c.CandID and f.CommentID=:cid", array('cid'=>$this->getCommentID())); 
 
-        $score['mother_age'] = 'Unknown';$score['father_age'] = 'Unknown';
+        $score['mother_age_yrs'] = 'Unknown';$score['father_age_yrs'] = 'Unknown';
         $parents = array('mother','father');
         foreach ($parents as $parent) {
             if (!empty($record[$parent.'_dob_date']) & !empty($candidate_dob) ) {
                 $age = Utility::calculateAge($record[$parent.'_dob_date'],
                         $candidate_dob);
-                $score[$parent.'_age'] = $age['year']*12 + $age['mon'] + 
-                    round($age['day']/30, 2);
+                $score[$parent.'_age_yrs'] = $age['year'] + round($age['mon']/12,2) +
+                    round($age['day']/365, 2);
             }
         }
         $result = $db->update($this->table, $score, array('CommentID'=>$this->getCommentID()));
