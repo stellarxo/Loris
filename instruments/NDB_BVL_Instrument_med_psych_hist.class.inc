@@ -219,12 +219,11 @@ class NDB_BVL_Instrument_med_psych_hist extends NDB_BVL_Instrument
     function _main(){
  
         $db = & Database::singleton();
-         
-        $timepoint =& TimePoint::singleton($this->getSessionID());
-        if (Utility::isErrorX($timepoint)) {
-            return PEAR::raiseError("Candidate Error ($this->identifier): ".$timepoint->getMessage());
-        }
-        $candidate =& Candidate::singleton($timepoint->getCandID() );
+
+        $cand = $db->pselectRow("SELECT c.CandID, s.Visit_label from session as s, flag as f, candidate c where f.sessionId = s.ID and
+                                 s.CandID=c.CandID and f.CommentID=:cid", array('cid'=>$this->getCommentID())); 
+
+        $candidate =& Candidate::singleton($cand['CandID'] );
         if (Utility::isErrorX($candidate)) {
             return PEAR::raiseError("Candidate Error ($this->identifier): ".$candidate->getMessage());
         }
@@ -232,11 +231,11 @@ class NDB_BVL_Instrument_med_psych_hist extends NDB_BVL_Instrument
         $firstVisit = false;
         $vLabel = $db->pselectOne("SELECT Visit_label FROM session s JOIN candidate c 
                                    ON (c.CandID = s.CandID) WHERE c.CandID=:cid 
-                                   ORDER BY Date_Visit", array('cid'=>$timepoint->getCandID()));//get first visit for candidate 
-        if($vLabel ==  $timepoint->getVisitLabel()){
+                                   ORDER BY Date_Visit", array('cid'=>$candID));//get first visit for candidate 
+        if($vLabel ==  $cand['Visit_label']){
             $firstVisit = true; //if current visit label is same as visit label returned must be first visit   
         }
-        $current_visitlabel = $timepoint->getVisitLabel();
+        $current_visitlabel = $cand['Visit_label'];
         // display test name
         $this->form->addElement('header', 'instrument_title', "Medical and Psychiatric History");
 
@@ -619,13 +618,13 @@ class NDB_BVL_Instrument_med_psych_hist extends NDB_BVL_Instrument
         return $errors;
     }
     function firstVisitCheck($values) {
-         $db = & Database::singleton();
+        $db = & Database::singleton();
 
-        $timepoint =& TimePoint::singleton($this->getSessionID());
-        if (Utility::isErrorX($timepoint)) {
-            return PEAR::raiseError("Candidate Error ($this->identifier): ".$timepoint->getMessage());
-        }
-        $candidate =& Candidate::singleton($timepoint->getCandID() );
+        $cand = $db->pselectRow("SELECT c.CandID, s.Visit_label from session as s, flag as f, candidate c where f.sessionId = s.ID and
+                                 s.CandID=c.CandID and f.CommentID=:cid", array('cid'=>$this->getCommentID())); 
+
+
+        $candidate =& Candidate::singleton($cand['CandID']);
         if (Utility::isErrorX($candidate)) {
             return PEAR::raiseError("Candidate Error ($this->identifier): ".$candidate->getMessage());
         }
@@ -633,11 +632,11 @@ class NDB_BVL_Instrument_med_psych_hist extends NDB_BVL_Instrument
         $firstVisit = false;
         $vLabel = $db->pselectOne("SELECT Visit_label FROM session s JOIN candidate c 
                                    ON (c.CandID = s.CandID) WHERE c.CandID=:cid 
-                                   ORDER BY Date_Visit", array('cid'=>$timepoint->getCandID()));//get first visit for candidate 
-        if($vLabel ==  $timepoint->getVisitLabel()){
+                                   ORDER BY Date_Visit", array('cid'=>$cand['CandID']));//get first visit for candidate 
+        if($vLabel ==  $cand['Visit_label']){
             $firstVisit = true; //if current visit label is same as visit label returned must be first visit   
         }
-        $current_visitlabel = $timepoint->getVisitLabel();
+        $current_visitlabel = $cand['Visit_label'];
         if($vLabel != $current_visitlabel && empty($values['followup_form_updated'])) { 
             $errors['followup_form_updated'] = "PLease indicate if there were changes";
         }
