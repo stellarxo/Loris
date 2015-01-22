@@ -1588,7 +1588,7 @@ class NDAR_Release_2015 {
                             } else {
                                 $row[$key] = $matches[1];
                             }
-                        } else if ($val == 'not_answered') {
+                        } else if ($val == 'not_answered' && $key === 'relationship') {
                             $row[$key] = '-999';
                         }
 
