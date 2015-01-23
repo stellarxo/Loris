@@ -108,18 +108,18 @@ class NDAR_Release_2015 {
         if(strpos($this->instrument, '_proband') !== FALSE) {
             if($this->instrument == 'm_chat_proband' || $this->instrument =='scq_proband' ) {
                 // No validity
-                return "c.IBISID,  c.ProbandGUID,  CASE c.ProbandGender WHEN 'Male' THEN 'M' WHEN 'Female' THEN 'F' END AS ProbandGender, ROUND(DATEDIFF(i.Date_taken, c.ProbandDoB) / (365/12)) AS Proband_Age_in_Months, i.Date_taken, ";
+                return "c.IBISID,  c.ProbandGUID,  CASE c.ProbandGender WHEN 'Male' THEN 'M' WHEN 'Female' THEN 'F' END AS ProbandGender, ROUND(DATEDIFF(i.Date_taken, c.ProbandDoB) / (365/12)) AS Proband_Age_in_Months, i.Date_taken as interview_date, ";
             }
-                return "c.IBISID, c.ProbandGUID,  CASE c.ProbandGender WHEN 'Male' THEN 'M' WHEN 'Female' THEN 'F' END AS ProbandGender, ROUND(DATEDIFF(i.Date_taken, c.ProbandDoB) / (365/12)) AS Proband_Age_in_Months, f.Validity as validity_of_data, i.Date_taken, ";
+                return "c.IBISID, c.ProbandGUID,  CASE c.ProbandGender WHEN 'Male' THEN 'M' WHEN 'Female' THEN 'F' END AS ProbandGender, ROUND(DATEDIFF(i.Date_taken, c.ProbandDoB) / (365/12)) AS Proband_Age_in_Months, f.Validity as validity_of_data, i.Date_taken as interview_date, ";
         } else {
             $NoValidities = array('macarthur_words_gestures', 'seq','rbs_r', 'ibq_r', 'head_measurements_subject', 'prefrontal_task', 'fyi','scq_proband');
             if(in_array($this->instrument, $NoValidities)) {
                 if($this->instrument == 'head_measurements_subject') {
-                return "c.IBISID, c.CandidateGUID as subjectkey, CASE c.Gender WHEN 'Male' THEN 'M' WHEN 'Female' THEN 'F' END AS Gender, ROUND(DATEDIFF(i.Date_taken, c.DoB) / (365/12)) AS Candidate_Age_in_Months, i.Date_taken, ";
+                return "c.IBISID, c.CandidateGUID as subjectkey, CASE c.Gender WHEN 'Male' THEN 'M' WHEN 'Female' THEN 'F' END AS Gender, ROUND(DATEDIFF(i.Date_taken, c.DoB) / (365/12)) AS Candidate_Age_in_Months, i.Date_taken as interview_date, ";
                 }
-                return "c.IBISID, c.CandidateGUID, CASE c.Gender WHEN 'Male' THEN 'M' WHEN 'Female' THEN 'F' END AS Gender , ROUND(DATEDIFF(i.Date_taken, c.DoB) / (365/12)) AS Candidate_Age_in_Months, i.Date_taken, ";
+                return "c.IBISID, c.CandidateGUID, CASE c.Gender WHEN 'Male' THEN 'M' WHEN 'Female' THEN 'F' END AS Gender , ROUND(DATEDIFF(i.Date_taken, c.DoB) / (365/12)) AS Candidate_Age_in_Months, i.Date_taken as interview_date, ";
             }
-            return "c.IBISID, c.CandidateGUID, CASE c.Gender WHEN 'Male' THEN 'M' WHEN 'Female' THEN 'F' END AS Gender , ROUND(DATEDIFF(i.Date_taken, c.DoB) / (365/12)) AS Candidate_Age_in_Months, f.Validity as validity_of_data, i.Date_taken, ";
+            return "c.IBISID, c.CandidateGUID, CASE c.Gender WHEN 'Male' THEN 'M' WHEN 'Female' THEN 'F' END AS Gender , ROUND(DATEDIFF(i.Date_taken, c.DoB) / (365/12)) AS Candidate_Age_in_Months, f.Validity as validity_of_data, i.Date_taken as interview_date, ";
         }
     }
     function getInstrumentFields() {
@@ -751,7 +751,7 @@ class NDAR_Release_2015 {
                 'i.WRN_SW',
                 'i.WRN_VSCALE');
         } else if($this->instrument == 'rbs_r') {
-            $fields = array('i.Date_taken', 'i.respondent', 'i.I_stereotyped_endorsed', 'i.I_stereotyped_score', 'i.II_self_injurious_endorsed', 'i.II_self_injurious_score', 'i.III_compulsive_endorsed', 'i.III_compulsive_score', 'i.IV_ritualistic_endorsed', 'i.IV_ritualistic_score', 'i.overall_endorsed', 'i.overall_score', 'i.q1_whole_body', 'i.q10_bites_self', 'i.q11_pulls', 'i.q12_rubs_or_scratches', 'i.q13_inserts_finger_or_object', 'i.q14_skin_picking', 'i.q15_arranging_ordering', 'i.q16_completeness', 'i.q17_washing_cleaning', 'i.q18_checking', 'i.q19_counting', 'i.q2_head', 'i.q20_hoarding_saving', 'i.q21_repeating', 'i.q22_touch_tap', 'i.q23_eating_mealtime', 'i.q24_sleeping_bedtime', 'i.q25_self_care', 'i.q26_travel_transportation', 'i.q27_play_leisure', 'i.q28_communication', 'i.q29_insists_things_remain', 'i.q3_hand_finger', 'i.q30_objects_to_visiting', 'i.q31_upset_if_interrupted', 'i.q32_walking_in_a_pattern', 'i.q33_insists_on_sitting_at_same_place', 'i.q34_dislikes_change', 'i.q35_insists_on_particular_door', 'i.q36_likes_same_cd', 'i.q37_resists_changing_activities', 'i.q38_insists_on_same_routine', 'i.q39_insists_that_specific', 'i.q4_locomotion', 'i.q40_fascination_preoccupation', 'i.q41_strongly_attached', 'i.q42_preoccupation_with_parts', 'i.q43_fascination_with_movement', 'i.q5_object_usage', 'i.q6_sensory', 'i.q7_hits_self_body_part', 'i.q8_hits_self_against_surface', 'i.q9_hits_self_with_object', 'i.V_sameness_endorsed', 'i.V_sameness_score', 'i.VI_restricted_endorsed', 'i.VI_restricted_score');
+            $fields = array('i.Date_taken as interview_date', 'i.respondent', 'i.I_stereotyped_endorsed', 'i.I_stereotyped_score', 'i.II_self_injurious_endorsed', 'i.II_self_injurious_score', 'i.III_compulsive_endorsed', 'i.III_compulsive_score', 'i.IV_ritualistic_endorsed', 'i.IV_ritualistic_score', 'i.overall_endorsed', 'i.overall_score', 'i.q1_whole_body', 'i.q10_bites_self', 'i.q11_pulls', 'i.q12_rubs_or_scratches', 'i.q13_inserts_finger_or_object', 'i.q14_skin_picking', 'i.q15_arranging_ordering', 'i.q16_completeness', 'i.q17_washing_cleaning', 'i.q18_checking', 'i.q19_counting', 'i.q2_head', 'i.q20_hoarding_saving', 'i.q21_repeating', 'i.q22_touch_tap', 'i.q23_eating_mealtime', 'i.q24_sleeping_bedtime', 'i.q25_self_care', 'i.q26_travel_transportation', 'i.q27_play_leisure', 'i.q28_communication', 'i.q29_insists_things_remain', 'i.q3_hand_finger', 'i.q30_objects_to_visiting', 'i.q31_upset_if_interrupted', 'i.q32_walking_in_a_pattern', 'i.q33_insists_on_sitting_at_same_place', 'i.q34_dislikes_change', 'i.q35_insists_on_particular_door', 'i.q36_likes_same_cd', 'i.q37_resists_changing_activities', 'i.q38_insists_on_same_routine', 'i.q39_insists_that_specific', 'i.q4_locomotion', 'i.q40_fascination_preoccupation', 'i.q41_strongly_attached', 'i.q42_preoccupation_with_parts', 'i.q43_fascination_with_movement', 'i.q5_object_usage', 'i.q6_sensory', 'i.q7_hits_self_body_part', 'i.q8_hits_self_against_surface', 'i.q9_hits_self_with_object', 'i.V_sameness_endorsed', 'i.V_sameness_score', 'i.VI_restricted_endorsed', 'i.VI_restricted_score');
         } else if($this->instrument == 'macarthur_words_gestures') {
             $fields = array('i.early_gestures_number',
                 'i.early_gestures_percentile',
@@ -1535,7 +1535,7 @@ class NDAR_Release_2015 {
                     LEFT JOIN tsi tsi ON (tsiflag.CommentID=tsi.CommentID)
                     WHERE " . $this->getWhere();
             } else if($this->instrument == 'ndar_subject') {
-                 return "SELECT c.IBISID, s.CenterID as Site, CASE s.SubprojectID WHEN 1 THEN 'High Risk' WHEN 2 THEN 'High Risk' WHEN 3 THEN 'Low Risk' WHEN 9 THEN 'High Risk' WHEN 10 THEN 'Low Risk' END as Cohort, c.ProbandGUID,   CASE c.ProbandGender WHEN 'Male' THEN 'M' WHEN 'Female' THEN 'F' END AS ProbandGender, c.CandidateGUID, CASE c.Gender WHEN 'Male' THEN 'M' WHEN 'Female' THEN 'F' END AS Gender, i.Date_taken,ROUND(DATEDIFF(i.Date_taken, c.DoB) / (365/12)) AS Candidate_Age_in_Months, i.Date_taken,ROUND(DATEDIFF(i.Date_taken, c.ProbandDoB) / (365/12)) AS Proband_Age_in_Months, i.Candidate_race as race, i.child_ethnicity as ethnic_group from candidate c  left join session s on s.CandID = c.CandID join flag f on f.SessionID = s.ID join tsi i on i.CommentID=f.CommentID join participant_status ps on ps.CandID = c.CandID WHERE ". $this->getWhere();
+                 return "SELECT c.IBISID, s.CenterID as Site, CASE s.SubprojectID WHEN 1 THEN 'High Risk' WHEN 2 THEN 'High Risk' WHEN 3 THEN 'Low Risk' WHEN 9 THEN 'High Risk' WHEN 10 THEN 'Low Risk' END as Cohort, c.ProbandGUID,   CASE c.ProbandGender WHEN 'Male' THEN 'M' WHEN 'Female' THEN 'F' END AS ProbandGender, c.CandidateGUID, CASE c.Gender WHEN 'Male' THEN 'M' WHEN 'Female' THEN 'F' END AS Gender, i.Date_taken,ROUND(DATEDIFF(i.Date_taken, c.DoB) / (365/12)) AS Candidate_Age_in_Months, i.Date_taken as interview_date,ROUND(DATEDIFF(i.Date_taken, c.ProbandDoB) / (365/12)) AS Proband_Age_in_Months, i.Candidate_race as race, i.child_ethnicity as ethnic_group from candidate c  left join session s on s.CandID = c.CandID join flag f on f.SessionID = s.ID join tsi i on i.CommentID=f.CommentID join participant_status ps on ps.CandID = c.CandID WHERE ". $this->getWhere();
             }
         return "SELECT " . $this->getFields() . " FROM " . $this->instrument . " i JOIN flag f ON (f.CommentID=i.CommentID) JOIN session s ON (s.ID=f.SessionID) JOIN candidate c ON (c.CandID=s.CandID) JOIN participant_status ps ON (ps.CandID = c.CandID) JOIN participant_status_options pso ON (pso.ID = ps.participant_status) WHERE " . $this->getWhere()." AND c.ProjectID= $this->project AND pso.Description NOT IN ('Ineligible', 'Excluded')";
     }
@@ -1566,9 +1566,9 @@ class NDAR_Release_2015 {
                     
                 }	
 
-                if(strpos($key, 'Date_taken') !== FALSE || $key == 'DoB' || strpos($key, 'Date_Taken') !== FALSE) {
+                if(strpos($key, 'interview_date') !== FALSE || $key == 'DoB' || strpos($key, 'interview_date') !== FALSE) {
                     //print "VAL: $val";
-                    $Date = explode('-', $val); //print_r($Date);
+                    $Date = explode('-', $val); print_r($Date);
                     $row[$key] = $Date[1] . '/' . '01' . '/' . $Date[0];
                 }
                 if($this->instrument == 'adi_r_proband') {
@@ -1750,7 +1750,7 @@ class NDAR_Release_2015 {
               } 
          }
 	 if($this->instrument == 'ndar_subject') {
-		 if(strpos($key, 'Date_taken') !== FALSE || $key == 'DoB' || strpos($key, 'Date_Taken') !== FALSE) {
+		 if(strpos($key, 'interview_date') !== FALSE || $key == 'DoB' || strpos($key, 'Date_Taken') !== FALSE) {
 			 $Date = explode('-', $val); //print_r($Date);
 			 $row[$key] = $Date[1] . '/' . '01' . '/' . $Date[0];
 		 }
