@@ -626,7 +626,7 @@ class NDAR_Release_2015 {
             $fields = array('i.score', 'i.q1_talk_short_phrases', 'i.q2_to_and_fro', 'i.q3_odd_phrases', 'i.q4_socially_inappropriate', 'i.q5_pronouns_mixed', 'i.q6_words_invented', 'i.q7_said_same_thing', 'i.q8_particular_way', 'i.q9_facial_expressions', 'i.q10_hand_like_tool', 'i.q11_interests_that_preoccupy', 'i.q12_interested_in_parts', 'i.q13_intense_interests', 'i.q14_sight_feel_sound', 'i.q15_mannerisms', 'i.q16_complicated_movements', 'i.q17_deliberate_injury', 'i.q18_carry_objects', 'i.q19_particular_friends', 'i.q20_talk_friendly', 'i.q21_spontaneously_copy', 'i.q22_spontaneously_point', 'i.q23_gestures', 'i.q24_nod_yes', 'i.q25_shake_no', 'i.q26_look_directly', 'i.q27_smile_back', 'i.q28_show_things', 'i.q29_offer_share', 'i.q30_join_enjoyment', 'i.q31_comfort', 'i.q32_wanted_something', 'i.q33_facial_expressions', 'i.q34_spontaneously_join', 'i.q35_play_pretend', 'i.q36_seem_interested', 'i.q37_respond_positively', 'i.q38_came_into_room', 'i.q39_play_imaginative', 'i.q40_play_cooperatively');
         } else if ($this->instrument == 'vineland_subject' || $this->instrument == 'vineland_proband') {
             $fields = array(
-                'i.RELATIONSHIP',
+                'i.RELATIONSHIP as relationship',
                 'i.`ABC_%ILE_RANK` as ABC_PERCENTILE_RANK',
                 'i.`ABC_95%_CI` as ABC_95PERCENT_CI',
                 'i.ABC_ADAPT_LEVEL',
@@ -754,10 +754,10 @@ class NDAR_Release_2015 {
             $fields = array('i.Date_taken as interview_date', 'i.respondent', 'i.I_stereotyped_endorsed', 'i.I_stereotyped_score', 'i.II_self_injurious_endorsed', 'i.II_self_injurious_score', 'i.III_compulsive_endorsed', 'i.III_compulsive_score', 'i.IV_ritualistic_endorsed', 'i.IV_ritualistic_score', 'i.overall_endorsed', 'i.overall_score', 'i.q1_whole_body', 'i.q10_bites_self', 'i.q11_pulls', 'i.q12_rubs_or_scratches', 'i.q13_inserts_finger_or_object', 'i.q14_skin_picking', 'i.q15_arranging_ordering', 'i.q16_completeness', 'i.q17_washing_cleaning', 'i.q18_checking', 'i.q19_counting', 'i.q2_head', 'i.q20_hoarding_saving', 'i.q21_repeating', 'i.q22_touch_tap', 'i.q23_eating_mealtime', 'i.q24_sleeping_bedtime', 'i.q25_self_care', 'i.q26_travel_transportation', 'i.q27_play_leisure', 'i.q28_communication', 'i.q29_insists_things_remain', 'i.q3_hand_finger', 'i.q30_objects_to_visiting', 'i.q31_upset_if_interrupted', 'i.q32_walking_in_a_pattern', 'i.q33_insists_on_sitting_at_same_place', 'i.q34_dislikes_change', 'i.q35_insists_on_particular_door', 'i.q36_likes_same_cd', 'i.q37_resists_changing_activities', 'i.q38_insists_on_same_routine', 'i.q39_insists_that_specific', 'i.q4_locomotion', 'i.q40_fascination_preoccupation', 'i.q41_strongly_attached', 'i.q42_preoccupation_with_parts', 'i.q43_fascination_with_movement', 'i.q5_object_usage', 'i.q6_sensory', 'i.q7_hits_self_body_part', 'i.q8_hits_self_against_surface', 'i.q9_hits_self_with_object', 'i.V_sameness_endorsed', 'i.V_sameness_score', 'i.VI_restricted_endorsed', 'i.VI_restricted_score');
         } else if($this->instrument == 'macarthur_words_gestures') {
             $fields = array('i.early_gestures_number',
-                'i.early_gestures_percentile',
+               // 'i.early_gestures_percentile',
                 'i.I_A_1',
                 'i.I_A_2',
-                'i.I_A_3',
+               // 'i.I_A_3',
                 'i.I_B_1',
                 'i.I_B_10',
                 'i.I_B_11',
@@ -1248,15 +1248,15 @@ class NDAR_Release_2015 {
                 'i.II_E_8',
                 'i.II_E_9',
                 'i.later_gestures_number',
-                'i.later_gestures_percentile',
+               // 'i.later_gestures_percentile',
                 'i.phrases_understood_number',
-                'i.phrases_understood_percentile',
+               // 'i.phrases_understood_percentile',
                 'i.words_produced_number',
-                'i.words_produced_percentile',
+               // 'i.words_produced_percentile',
                 'i.words_understood_number',
-                'i.words_understood_percentile',
-                'i.total_gestures_number',
-                'i.total_gestures_percentile'
+               // 'i.words_understood_percentile',
+                'i.total_gestures_number'
+               // 'i.total_gestures_percentile'
             );
         } else if ($this->instrument == 'csbs') {
             $fields = array('i.object_use_weighted',
@@ -1568,7 +1568,7 @@ class NDAR_Release_2015 {
 
                 if(strpos($key, 'interview_date') !== FALSE || $key == 'DoB' || strpos($key, 'interview_date') !== FALSE) {
                     //print "VAL: $val";
-                    $Date = explode('-', $val); print_r($Date);
+                    $Date = explode('-', $val);
                     $row[$key] = $Date[1] . '/' . '01' . '/' . $Date[0];
                 }
                 if($this->instrument == 'adi_r_proband') {
@@ -1725,7 +1725,17 @@ class NDAR_Release_2015 {
 	       }
           if($this->instrument == 'vineland_subject' || $this->instrument == 'vineland_proband'){ 
              $fieldstochange = array('ABC_STD_SCORE','COM_STD_SCORE','DLS_STD_SCORE','SOC_STD_SCORE','MS_STD_SCORE');
-	     if(in_array($key, $fieldstochange) && empty($val)) {
+             $relationships  = array('Mother'=>1,'Mom'=>1,'Father'=>2,'Dad'=>2,'dad'=>2,'Mom/Dad'=>28,'Both Parents'=>28,
+                                     'mother and father'=>28,'father and mother'=>28,'Fater'=>2,'Other'=>90);
+             if($key === 'relationship'){print "KEY $key VAL $val \n";
+                 if (!empty($val)) {
+                     $row[$key] = $relationships[$val];
+                 } else {
+                     $row[$key] = '-999';//missing
+                 }
+             }
+
+	     if(in_array($key, $fieldstochange) && (empty($val) || !isset($row[$key]))) {
 		     $row[$key]= 999;
 	     }
 	     if(strpos($val,'Moderately') !== FALSE){
