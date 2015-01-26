@@ -1,0 +1,34 @@
+-- NOTE REVIEW EACH OF THESE SCRIPTS BEFORE RUNNING
+
+- Patient name? dicom_0x0010:el_0x1001:q
+
+- Institution? dicom_0x0010:el_0x0021
+
+1. rsync -avz login.bic.mni.mcgill.ca:/nihpd/scratch02/vfonov/ACE/proc_geo3 July_2013/
+2. For IBIS2: 
+   -- Put V03s in a directory on their own
+   find July_2013 -type f -name \*deface_\*V03\* -exec cp {} IBIS2 \;
+   -- Remove _grid, not sending.
+   rm IBIS2/*_grid.mnc
+   -- Take out the ones that don't have consent or GUIDs
+   php restrict_ibis2.php
+   -- Run the anonymization script. Ensure that all paths are correct in
+      file before running.
+   cd /var/www/neurodb/project/tools/
+   php NDAR_Release_Defaced_IBIS2.php
+   -- Send the data to pinch to be released
+   rsync -avz IBIS2_anon/ driusan@pinch.bic.mni.mcgill.ca:/data/ibis/ndar/2014/ibis2/defaced
+
+3. For IBIS1: 
+   -- Put all the V06s in a directory
+   find July_2013 -type f -name \*deface_\*V06\* -exec cp {} V06 \;
+   -- Remove _grid, not sending
+   rm V06/*_grid.mnc
+   -- Take out the ones that don't have consent or GUIDs
+   php restrict_ibis1.php
+   -- Run the anonymization script. Ensure that all paths are correct in file before running
+   cd /var/www/neurodb/project/tools/
+   php NDAR_Release_Defaced_IBIS1.php
+   -- Send the data to pinch to be released
+   rsync -avz IBIS1_anon/ driusan@pinch.bic.mni.mcgill.ca:/data/ibis/ndar/2014/ibis1/defaced
+
