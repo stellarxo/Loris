@@ -1872,52 +1872,35 @@ print "#### $header";
         $db = & Database::singleton();
         $header = $headers[$this->instrument];
         if($this->instrument == 'scq_proband' || $this->instrument == 'scq_subject') {
-		if($this->project == 2) {
-                        $results = $db->pselect($Query . " AND i.scq_version='lifetime'", array());
-                        $converted = $this->process($results);
-                        $header = 'scq_lifetime04';
-                        $this->writeResults($converted,$header, '/var/www/loris/project/tools/NDAR_2015/' . $this->instrument . '_lifetime_IBIS2.csv');
-                        $results = $db->pselect($Query . " AND i.scq_version='current'", array());
-                        $converted = $this->process($results);
-                        $header = 'scq_current04';
-                        $this->writeResults($converted,$header, '/var/www/loris/project/tools/NDAR_2015/' . $this->instrument . '_current_IBIS2.csv');
-
-		} else {
-			$results = $db->pselect($Query . " AND i.scq_version='lifetime'", array());
-			$converted = $this->process($results);
-			$header = 'scq_lifetime04';
-			$this->writeResults($converted,$header, '/var/www/loris/project/tools/NDAR_2015/' . $this->instrument . '_lifetime.csv');
-			$results = $db->pselect($Query . " AND i.scq_version='current'", array());
-			$converted = $this->process($results);
-			$header = 'scq_current04';
-			$this->writeResults($converted,$header, '/var/www/loris/project/tools/NDAR_2015/' . $this->instrument . '_current.csv');
-		}
-         } else if($this->instrument == 'ndar_subject') {
-             if($this->project == 2){
-                $this->writeResults($converted,$header, '/var/www/loris/project/tools/NDAR_2015/' . $this->instrument . '_IBIS2.csv');
+            if($this->project == 2) {
+                $results = $db->pselect($Query . " AND i.scq_version='lifetime'", array());
+                $converted = $this->process($results);
+                $header = 'scq_lifetime04';
+                $this->writeResults($converted,$header, '/var/www/loris/project/tools/NDAR_2015/' . $this->instrument . '_lifetime_IBIS2.csv');
+                $results = $db->pselect($Query . " AND i.scq_version='current'", array());
+                $converted = $this->process($results);
+                $header = 'scq_current04';
+                $this->writeResults($converted,$header, '/var/www/loris/project/tools/NDAR_2015/' . $this->instrument . '_current_IBIS2.csv');
 
             } else {
-                $this->writeResults($converted,$header, '/var/www/loris/project/tools/NDAR_2015/' . $this->instrument . '.csv');
+                $results = $db->pselect($Query . " AND i.scq_version='lifetime'", array());
+                $converted = $this->process($results);
+                $header = 'scq_lifetime04';
+                $this->writeResults($converted,$header, '/var/www/loris/project/tools/NDAR_2015/' . $this->instrument . '_lifetime.csv');
+                $results = $db->pselect($Query . " AND i.scq_version='current'", array());
+                $converted = $this->process($results);
+                $header = 'scq_current04';
+                $this->writeResults($converted,$header, '/var/www/loris/project/tools/NDAR_2015/' . $this->instrument . '_current.csv');
             }
-
-   
-         } else {
+        }  else {
             $results = $db->pselect($Query, array());
             $converted = $this->process($results);
             if($this->project == 2){
                 $this->writeResults(array(),$header, '/var/www/loris/project/tools/NDAR_2015/' . $this->instrument . '_IBIS2.csv');
-                $headers = array('IBISID','SubjectKey','Gender','Site','Cohort','Candidate_Age_in_Months','Date_taken','family_study','race','ethnic_group',
-                  'twins_study','sibling_study','sample_taken','phenotype_description','subjectkey_sibling1','src_sibling1_id','sibling_type1');
-                $this->writeResults($converted,$headers, '/var/www/loris/project/tools/NDAR_2015/' . $this->instrument . '_IBIS2.csv');
             } else {
                 $this->writeResults(array(),$header, '/var/www/loris/project/tools/NDAR_2015/' . $this->instrument . '.csv');
-                 $headers = array('IBISID','SubjectKey','Gender','Site','Cohort','Candidate_Age_in_Months','Date_taken','family_study','race','ethnic_group',
-                  'twins_study','sibling_study','sample_taken','phenotype_description','subjectkey_sibling1','src_sibling1_id','sibling_type1');
-
-                $this->writeResults($converted,$headers, '/var/www/loris/project/tools/NDAR_2015/' . $this->instrument . '.csv');
             }
         }
-print "4";
         return $converted;
     }
 }
