@@ -1727,7 +1727,7 @@ class NDAR_Release_2015 {
              $fieldstochange = array('ABC_STD_SCORE','COM_STD_SCORE','DLS_STD_SCORE','SOC_STD_SCORE','MS_STD_SCORE');
              $relationships  = array('Mother'=>1,'Mom'=>1,'Father'=>2,'Dad'=>2,'dad'=>2,'Mom/Dad'=>28,'Both Parents'=>28,
                                      'mother and father'=>28,'father and mother'=>28,'Fater'=>2,'Other'=>90);
-             if($key === 'relationship'){print "KEY $key VAL $val \n";
+             if($key === 'relationship'){
                  if (!empty($val)) {
                      $row[$key] = $relationships[$val];
                  } else {
@@ -1735,7 +1735,7 @@ class NDAR_Release_2015 {
                  }
              }
 
-	     if(in_array($key, $fieldstochange) && (empty($val) || !isset($row[$key]))) {
+	     if(in_array($key, $fieldstochange) && (empty($val) || ($row[$key] == NULL))) {
 		     $row[$key]= 999;
 	     }
 	     if(strpos($val,'Moderately') !== FALSE){
