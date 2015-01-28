@@ -713,9 +713,9 @@ INSERT INTO instrument_subtests VALUES('', 'csbs', 'csbs_page2', 'Symbolic Behav
 
         $this->form->addGroup($group, null, "3. Gaze/point following", $this->_GUIDelimiter, false);
         unset($group);
-        
-        $this->form->addElement("static", "emotion_eye_gaze_weighted", "Emotion and Eye Gaze Weighted:");
-        
+        if (isset($_REQUEST['commentID'])) { 
+            $this->form->addElement("static", "emotion_eye_gaze_weighted", "Emotion and Eye Gaze Weighted:");
+        }
         //Communication
         $this->form->addElement("header", null, "Communication");
         $this->_printHeaderCols();
