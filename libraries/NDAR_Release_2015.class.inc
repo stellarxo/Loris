@@ -1605,6 +1605,16 @@ class NDAR_Release_2015 {
 		        $row[$key] = $temp[0];
 		    }
                  }
+		$relationships  = array('Mother'=>1,'Mom'=>1,'mother'=>1,'Father'=>2,'Dad'=>2,'dad'=>2,'Mom/Dad'=>28,'Both Parents'=>28,
+				'mother and father'=>28,'father and mother'=>28,'Fater'=>2,'Other'=>90,'NA'=>'-999');
+		if($key === 'relationship_to_child'){
+			if (!empty($val)) {
+				$row[$key] = $relationships[$val];
+			} else {
+				$row[$key] = '-999';//missing
+			}
+		}
+
                   $add = array('communication_concern'=>'999','communication_rs'=>'999','emotion_eyegaze_concern'=>'999','emotion_eyegaze_rs'=>'999',
                                'gestures_concern'=>'999','gestures_rs'=>'999','objec_use_concern'=>'999','object_use_rs'=>'999',
                                'social_concern'=>'999','sounds_concern'=>'999','sounds_rs'=>'999','speech_concern'=>'999','symbolic_concern'=>'999',
