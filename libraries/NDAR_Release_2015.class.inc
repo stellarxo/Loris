@@ -1745,8 +1745,10 @@ class NDAR_Release_2015 {
                  }
              }
 
-	     if(in_array($key, $fieldstochange) && (empty($val) || ($row[$key] == NULL))) {
+	     if(in_array($key, $fieldstochange)) {
+                  if ( empty($val) || trim($val) == false) {
 		     $row[$key]= 999;
+                   }
 	     }
 	     if(strpos($val,'Moderately') !== FALSE){
 		     $val = str_replace("Moderately","Mod.", $val);
