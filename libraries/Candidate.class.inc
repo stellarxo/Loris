@@ -47,9 +47,9 @@ class Candidate
     {
         // right off, set the candID
         $candID = trim($candID);
-
+        $config = NDB_Config::singleton();
         // make a local reference to the Database object
-        $db =& Database::singleton();
+        $db = Database::singleton();
         if(PEAR::isError($db)) {
             return PEAR::raiseError("Could not connect to database: ".$db->getMessage());
         }
@@ -72,20 +72,62 @@ class Candidate
         foreach($row AS $key=>$value) {
             $this->candidateInfo[$key] = $value;
         }
-       
-       // checK PSCID - only if it's passed by the open profile form
-        // PSCID is also passed by the conflict resolver filter, so we don't check in that case
-        if (isset($_REQUEST['PSCID']) && isset($_REQUEST['test_name']) && $_REQUEST['test_name'] !== 'conflicts_resolve') {
-            if (strtolower(trim($_REQUEST['PSCID'])) != strtolower($this->getPSCID())) {
-                return (PEAR::raiseError("IDs do not match"));
+        
+        if ($config->getSetting('useProjects') === 'true') {
+            $this->candidateInfo['ProjectTitle'] = $this->getProjectTitle();
+        }
+        $headerSetting = $config->getSetting('HeaderTable');
+        if (!empty($headerSetting)) {
+            $params = array();
+            $parameterCandSettings = $headerSetting['parameter_candidate'];
+            if (!is_array($parameterCandSettings)) {
+                $parameterCandSettings = array($parameterCandSettings);
+            }
+            foreach ($parameterCandSettings as $parameter_type) {
+                $row = $db->pselectRow(
+                        "SELECT Value, pt.Description
+                        FROM candidate c
+                        JOIN parameter_candidate pc ON (pc.CandID=c.CandID)
+                        LEFT JOIN parameter_type pt ON
+                        (pc.ParameterTypeID=pt.ParameterTypeID)
+                        WHERE c.CandID=:Candidate AND pt.Name=:PTName",
+                        array(
+                            'Candidate' => $candID,
+                            'PTName'    => $parameter_type,
+                            )
+                        );
+                if (!empty($row['Value'])) {
+                    $params[$row['Description']] = $row['Value'];
+                }
+            }
+            $this->candidateInfo['DisplayParameters'] = $params;
+        }
+
+        // check that PSCID matches CandID when entered into the boxes
+        // on the candidate_list form (and is therefore trying to open
+        // the timepoint_list page, which is why the if statement checks
+        // for timepoint_list instead of candidate_list)
+        //
+        // Since other pages (ie. the filter in the conflicts_resolve page)
+        // might include an element named PSCID, we also need to check that
+        // the test_name matches before throwing the error.
+        if (isset($_REQUEST['PSCID'])
+            && (isset($_REQUEST['test_name'])
+            && $_REQUEST['test_name']=='timepoint_list')
+        ) {
+            if (strtolower(
+                trim($_REQUEST['PSCID'])
+            ) != strtolower($this->getPSCID())
+            ) {
+                throw new Exception("IDs do not match");
             }
         }
-        
+
         // get Time Point SessionIDs for the $candID
         // select ALL of them - later you can filter out cancelled and inactive ones
         $query = "SELECT s.ID FROM session as s WHERE s.CandID='$candID' AND s.Active='Y' ORDER BY ID";
         $db->select($query, $row);
-        
+
         if(PEAR::isError($row)) {
             return PEAR::raiseError("Could not retrieve candidate/timepoint data from database");
         }
@@ -230,6 +272,17 @@ class Candidate
     function getProjectID()
     {
         return $this->candidateInfo["ProjectID"];
+    }
+   /**
+     * Returns the name of the candidate's project from the
+     * config file
+     *
+     * @return string Project name
+     */
+    function getProjectTitle()
+    {
+        $ProjectList = Utility::getProjectList();
+        return $ProjectList[$this->getProjectID()];
     }
 
    function getCandID()
