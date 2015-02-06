@@ -1192,7 +1192,7 @@ INSERT INTO instrument_subtests VALUES('', 'csbs', 'csbs_page2', 'Symbolic Behav
         for($int = 1; $int <= 6; $int++) {
             $group[]= &$this->form->createElement("static", "h_" . $int, null);
         }
-        $group[]= &$this->form->createElement("static", "raw_score", null);
+       // $group[]= &$this->form->createElement("static", "raw_score", null);
         $this->form->addGroup($group, "number_headers", "Sampling Opportunity", $this->_GUIDelimiter, false);
         unset($group);
 
