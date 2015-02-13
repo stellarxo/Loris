@@ -257,7 +257,7 @@ while($csv_line = fgetcsv($fp))
 {
     $DCCID = $csv_line[0];
     $VL    = $csv_line[1];
-    $Filename = $csv_line[2] . ".mnc";
+    $Filename = $csv_line[2] . "_DTIPrepReg_001.mnc";
     $results = array_slice($csv_line, 3, 36);
     print "File: $Filename\n";
     $file_info = $DB->pselectRow("SELECT FileID, SessionID FROM files WHERE
