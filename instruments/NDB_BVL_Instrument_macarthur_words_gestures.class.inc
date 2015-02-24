@@ -127,7 +127,6 @@ class NDB_BVL_Instrument_macarthur_words_gestures extends NDB_BVL_Instrument
 
         // automatically adds examiner & date of administration
         $this->_addMetadataFields();
-        if (isset($_REQUEST['commentID'])) {
             $this->form->addElement("header",null,"SUMMARY SCORES:");
 
             $this->form->addElement("header",null,"PART 1: EARLY WORDS");
@@ -252,7 +251,6 @@ class NDB_BVL_Instrument_macarthur_words_gestures extends NDB_BVL_Instrument
             $group[]= &$this->form->createElement("static", 'total_gestures_percentile', null);
             $this->form->addGroup($group, null, "<b>Total Gestures (Sections A through E):</b>", $this->_GUIDelimiter, false);
             unset($group);
-        }
     }
 
 
@@ -510,11 +508,12 @@ class NDB_BVL_Instrument_macarthur_words_gestures extends NDB_BVL_Instrument
         $this->form->addElement('header', null, "PART I EARLY WORDS");
 
         $this->form->addElement('header', null, "A. FIRST SIGNS OF UNDERSTANDING");
+        if (isset($_REQUEST['commentID'])) {
 
-        $this->form->addElement('select', "I_A_1", "1. Respond when name is called (e.g., by turning and looking at source).", $this->yesNo);
-        $this->form->addElement('select', "I_A_2", "2. Respond to `no no` (by stopping what he/she is doing, at least for a moment).", $this->yesNo);
-        $this->form->addElement('select', "I_A_3", "3. React to `there's mommy/daddy` by looking around for them.", $this->yesNo);
-
+            $this->form->addElement('select', "I_A_1", "1. Respond when name is called (e.g., by turning and looking at source).", $this->yesNo);
+            $this->form->addElement('select', "I_A_2", "2. Respond to `no no` (by stopping what he/she is doing, at least for a moment).", $this->yesNo);
+            $this->form->addElement('select', "I_A_3", "3. React to `there's mommy/daddy` by looking around for them.", $this->yesNo);
+        }
         $this->form->addElement('header', null, "B. PHRASES (28)");
         $this->form->addElement('static', null, "In the list below, please mark the phrases that your child seems to understand.");
         $questionArray = array("Are you hungry?",
