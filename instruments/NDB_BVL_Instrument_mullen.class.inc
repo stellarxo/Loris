@@ -746,6 +746,8 @@ class NDB_BVL_Instrument_mullen extends NDB_BVL_Instrument
         }
 
         $this->form->addElement("header", null, "Gross Motor Scores");
+        if (isset($_REQUEST['commentID'])) {
+
         if($this->localDefaults['age_months'] <= 33){
             $this->form->addElement("static", 'gross_motor_raw', "Raw Score");
             $this->form->addElement("static", 'gross_motor_t', "T Score");
@@ -760,6 +762,7 @@ class NDB_BVL_Instrument_mullen extends NDB_BVL_Instrument
             $this->form->addElement("static", 'gross_motor_age_equivalent', "Age Equivalent");
             $this->form->addElement("static", null, '<font color="Red">T Score N/A for children over 33 months.</font>');
          }
+        }
       }
 
     function _page2() {
@@ -836,6 +839,8 @@ class NDB_BVL_Instrument_mullen extends NDB_BVL_Instrument
         }
 
         $this->form->addElement("header", null, "Visual Reception Scores");
+        if (isset($_REQUEST['commentID'])) {
+
         $this->form->addElement("static", 'visual_reception_raw', "Raw Score");
         $this->form->addElement("static", 'visual_reception_t', "T Score");
         $this->form->addElement("static", 'visual_reception_percentile', "Percentile");
@@ -843,7 +848,7 @@ class NDB_BVL_Instrument_mullen extends NDB_BVL_Instrument
         $this->form->addElement("static", 'visual_reception_age_equivalent', "Age Equivalent");
          $this->form->addElement("static", 'visual_reception_error_90', "90% Band of Error (+/-)");
          $this->form->addElement("static", 'visual_reception_error_95', "95% Band of Error (+/-)");
-
+        }
     }
 
     function _page3() {
@@ -916,6 +921,8 @@ class NDB_BVL_Instrument_mullen extends NDB_BVL_Instrument
         }
 
         $this->form->addElement("header", null, "Fine Motor Scores");
+       if (isset($_REQUEST['commentID'])) {
+
        $this->form->addElement("static", 'fine_motor_raw', "Raw Score");
        $this->form->addElement("static", 'fine_motor_t', "T Score");
        $this->form->addElement("static", 'fine_motor_percentile', "Percentile");
@@ -923,7 +930,7 @@ class NDB_BVL_Instrument_mullen extends NDB_BVL_Instrument
        $this->form->addElement("static", 'fine_motor_age_equivalent', "Age Equivalent");
        $this->form->addElement("static", 'fine_motor_error_90', "90% Band of Error (+/-)");
         $this->form->addElement("static", 'fine_motor_error_95', "95% Band of Error (+/-)");
-
+       }
     }
 
     function _page4() {
@@ -999,6 +1006,8 @@ class NDB_BVL_Instrument_mullen extends NDB_BVL_Instrument
         }
 
          $this->form->addElement("header", null, "Receptive Language Scores");
+         if (isset($_REQUEST['commentID'])) {
+
          $this->form->addElement("static", 'receptive_language_raw', "Raw Score");
          $this->form->addElement("static", 'receptive_language_t', "T Score");
          $this->form->addElement("static", 'receptive_language_percentile', "Percentile");
@@ -1006,7 +1015,7 @@ class NDB_BVL_Instrument_mullen extends NDB_BVL_Instrument
          $this->form->addElement("static", 'receptive_language_age_equivalent', "Age Equivalent");
          $this->form->addElement("static", 'receptive_language_error_90', "90% Band of Error (+/-)");
          $this->form->addElement("static", 'receptive_language_error_95', "95% Band of Error (+/-)");
-
+         }
     }
 
     function _page5() {
@@ -1078,6 +1087,8 @@ class NDB_BVL_Instrument_mullen extends NDB_BVL_Instrument
         }
 
         $this->form->addElement("header", null, "Expressive Language Scores");
+        if (isset($_REQUEST['commentID'])) {
+
         $this->form->addElement("static", 'expressive_language_raw', "Raw Score");
         $this->form->addElement("static", 'expressive_language_t', "T Score");
         $this->form->addElement("static", 'expressive_language_percentile', "Percentile");
@@ -1085,7 +1096,8 @@ class NDB_BVL_Instrument_mullen extends NDB_BVL_Instrument
         $this->form->addElement("static", 'expressive_language_age_equivalent', "Age Equivalent");
         $this->form->addElement("static", 'expressive_language_error_90', "90% Band of Error (+/-)");
         $this->form->addElement("static", 'expressive_language_error_95', "95% Band of Error (+/-)");
-    }
+        }
+     }
 
     //Add an individual question, for now, nothing is required.
     function _addQuestion($field, $label, $maxPoints) {
