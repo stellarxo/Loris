@@ -69,10 +69,24 @@ class NDB_BVL_Instrument_parental_stress_scale extends NDB_BVL_Instrument
     */
     function _main(){
         // display test name
-        $this->addHeader("<INSTRUMENT TITLE>");
+        $this->addHeader("Parental Stress Scale");
 
         // automatically adds examiner & date of administration
         $this->_addMetadataFields();
+
+        $visit_list = array(''=>'Choose one');
+        $visit_list = array_merge($visit_list,
+                                  Utility::getExistingVisitLabels(),
+                                  array('not_answered'=>'Not Answered')
+                                  );
+        $this->addSelect('visit', 'Visit :', $visit_list);
+
+        $this->addTextElement('person_interviewed', 'Person Interviewed :');
+        $this->addTextElement('interviewed_by', 'Interviewed by :');
+
+        $recording_device = array(''=>'Choose one', 'audio'=>'Audio','video'=>'Video');
+        $this->addSelect('recording_device', 'Please choose type of recording used :', $recording_device);
+        $this->addTextAreaElement('comments', 'Comments :');
     }
 
     function _page1(){
