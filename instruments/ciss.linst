@@ -1,0 +1,68 @@
+table{@}ciss
+title{@}Coping Inventory for Stressful Situations (CISS)
+date{@}Date_taken{@}Date of Administration{@}2006{@}2012
+static{@}Candidate_Age{@}Candidate Age (Months)
+static{@}Window_Difference{@}Window Difference (+/- Days)
+select{@}Examiner{@}Examiner{@}NULL=>''
+numeric{@}respondent_age{@}Age{@}0{@}100
+select{@}respondent_age_status{@}{@}NULL=>''{-}'not_answered'=>'Not Answered'
+select{@}respondent_gender{@}Sex{@}NULL=>''{-}'male'=>'male'{-}'female'=>'female'{-}'not_answered'=>'Not Answered'
+date{@}Date_taken_date{@}Date{@}2006{@}2017
+select{@}Date_taken_date_status{@}{@}NULL=>''{-}'not_answered'=>'Not Answered'
+text{@}occupation{@}Occupation
+select{@}occupation_status{@}{@}NULL=>''{-}'not_answered'=>'Not Answered'
+text{@}education{@}Education
+select{@}education_status{@}{@}NULL=>''{-}'not_answered'=>'Not Answered'
+select{@}marital_status{@}Marital Status{@}NULL=>''{-}'single'=>'Single'{-}'married'=>'Married'{-}'widowed'=>'Widowed'{-}'divorced'=>'Divorced'{-}'separated'=>'Separated'{-}'not_answered'=>'Not Answered'
+page{@}{@}Page1
+select{@}q1_schedule_better{@}1. Schedule my time better{@}NULL=>''{-}'1'=>'1'{-}'2'=>'2'{-}'3'=>'3'{-}'4'=>'4'{-}'5'=>'5'{-}'not_answered'=>'Not Answered'
+select{@}q2_focus_on_problem{@}2. Focus on the problem and see how I can solve it.{@}NULL=>''{-}'1'=>'1'{-}'2'=>'2'{-}'3'=>'3'{-}'4'=>'4'{-}'5'=>'5'{-}'not_answered'=>'Not Answered'
+select{@}q3_think_good_times{@}3. Think about the good times I've had{@}NULL=>''{-}'1'=>'1'{-}'2'=>'2'{-}'3'=>'3'{-}'4'=>'4'{-}'5'=>'5'{-}'not_answered'=>'Not Answered'
+select{@}q4_with_people{@}4. Try to be with other people.{@}NULL=>''{-}'1'=>'1'{-}'2'=>'2'{-}'3'=>'3'{-}'4'=>'4'{-}'5'=>'5'{-}'not_answered'=>'Not Answered'
+select{@}q5_blame_procrastinating{@}5. Blame myself for procrastinating{@}NULL=>''{-}'1'=>'1'{-}'2'=>'2'{-}'3'=>'3'{-}'4'=>'4'{-}'5'=>'5'{-}'not_answered'=>'Not Answered'
+select{@}q6_do_as_best{@}6. Do what I think is best.{@}NULL=>''{-}'1'=>'1'{-}'2'=>'2'{-}'3'=>'3'{-}'4'=>'4'{-}'5'=>'5'{-}'not_answered'=>'Not Answered'
+select{@}q7_preoccupied_pain{@}7. Become preoccupied with aches and pains.{@}NULL=>''{-}'1'=>'1'{-}'2'=>'2'{-}'3'=>'3'{-}'4'=>'4'{-}'5'=>'5'{-}'not_answered'=>'Not Answered'
+select{@}q8_blame_self_situation{@}8. Blame myself for having gotten into this situation.{@}NULL=>''{-}'1'=>'1'{-}'2'=>'2'{-}'3'=>'3'{-}'4'=>'4'{-}'5'=>'5'{-}'not_answered'=>'Not Answered'
+select{@}q9_window_show{@}9. Window shop.{@}NULL=>''{-}'1'=>'1'{-}'2'=>'2'{-}'3'=>'3'{-}'4'=>'4'{-}'5'=>'5'{-}'not_answered'=>'Not Answered'
+select{@}q10_outline_priorities{@}10. Outline my priorities.{@}NULL=>''{-}'1'=>'1'{-}'2'=>'2'{-}'3'=>'3'{-}'4'=>'4'{-}'5'=>'5'{-}'not_answered'=>'Not Answered'
+select{@}q11_sleep{@}11. Try to go to sleep.{@}NULL=>''{-}'1'=>'1'{-}'2'=>'2'{-}'3'=>'3'{-}'4'=>'4'{-}'5'=>'5'{-}'not_answered'=>'Not Answered'
+select{@}q12_treat_fav_food{@}12. Treat myself to a favorite food or snack.{@}NULL=>''{-}'1'=>'1'{-}'2'=>'2'{-}'3'=>'3'{-}'4'=>'4'{-}'5'=>'5'{-}'not_answered'=>'Not Answered'
+page{@}{@}Page2
+select{@}q13_anxious_cope{@}13. Feel anxious about not being able to cope.{@}NULL=>''{-}'1'=>'1'{-}'2'=>'2'{-}'3'=>'3'{-}'4'=>'4'{-}'5'=>'5'{-}'not_answered'=>'Not Answered'
+select{@}q14_tense{@}14. Become very tense.{@}NULL=>''{-}'1'=>'1'{-}'2'=>'2'{-}'3'=>'3'{-}'4'=>'4'{-}'5'=>'5'{-}'not_answered'=>'Not Answered'
+select{@}q15_solve_similar_probs{@}15. Think about how I solve similar problems.{@}NULL=>''{-}'1'=>'1'{-}'2'=>'2'{-}'3'=>'3'{-}'4'=>'4'{-}'5'=>'5'{-}'not_answered'=>'Not Answered'
+select{@}q16_not_happening_self{@}16. Tell myself that it is really not happening to me.{@}NULL=>''{-}'1'=>'1'{-}'2'=>'2'{-}'3'=>'3'{-}'4'=>'4'{-}'5'=>'5'{-}'not_answered'=>'Not Answered'
+select{@}q17_blame_self_emotional{@}17. Blame myself for being too emotional about situation.{@}NULL=>''{-}'1'=>'1'{-}'2'=>'2'{-}'3'=>'3'{-}'4'=>'4'{-}'5'=>'5'{-}'not_answered'=>'Not Answered'
+select{@}q18_goout_snack{@}18. Go out for snack or meal.{@}NULL=>''{-}'1'=>'1'{-}'2'=>'2'{-}'3'=>'3'{-}'4'=>'4'{-}'5'=>'5'{-}'not_answered'=>'Not Answered'
+select{@}q19_become_upset{@}19. Become very upset.{@}NULL=>''{-}'1'=>'1'{-}'2'=>'2'{-}'3'=>'3'{-}'4'=>'4'{-}'5'=>'5'{-}'not_answered'=>'Not Answered'
+select{@}q20_buy_something{@}20. Buy myself something.{@}NULL=>''{-}'1'=>'1'{-}'2'=>'2'{-}'3'=>'3'{-}'4'=>'4'{-}'5'=>'5'{-}'not_answered'=>'Not Answered'
+select{@}q21_determine_action{@}21. Determine a course of action and follow it.{@}NULL=>''{-}'1'=>'1'{-}'2'=>'2'{-}'3'=>'3'{-}'4'=>'4'{-}'5'=>'5'{-}'not_answered'=>'Not Answered'
+select{@}q22_blame_self_notknowing{@}22. Blame myself for not knowing what to do.{@}NULL=>''{-}'1'=>'1'{-}'2'=>'2'{-}'3'=>'3'{-}'4'=>'4'{-}'5'=>'5'{-}'not_answered'=>'Not Answered'
+select{@}q23_go_party{@}23. Go to party.{@}NULL=>''{-}'1'=>'1'{-}'2'=>'2'{-}'3'=>'3'{-}'4'=>'4'{-}'5'=>'5'{-}'not_answered'=>'Not Answered'
+select{@}q24_understand_situation{@}24. Work to understand this situation.{@}NULL=>''{-}'1'=>'1'{-}'2'=>'2'{-}'3'=>'3'{-}'4'=>'4'{-}'5'=>'5'{-}'not_answered'=>'Not Answered'
+page{@}{@}Page3
+select{@}q25_freeup{@}25. "Freeze" and not know what to do.{@}NULL=>''{-}'1'=>'1'{-}'2'=>'2'{-}'3'=>'3'{-}'4'=>'4'{-}'5'=>'5'{-}'not_answered'=>'Not Answered'
+select{@}q26_corrective_action{@}26. Take corrective action immediately.{@}NULL=>''{-}'1'=>'1'{-}'2'=>'2'{-}'3'=>'3'{-}'4'=>'4'{-}'5'=>'5'{-}'not_answered'=>'Not Answered'
+select{@}q27_learn_from_mistakes{@}27. Think about the event and learn from my mistakes.{@}NULL=>''{-}'1'=>'1'{-}'2'=>'2'{-}'3'=>'3'{-}'4'=>'4'{-}'5'=>'5'{-}'not_answered'=>'Not Answered'
+select{@}q28_change_happened{@}28. Wish that I could change what happened or how I felt.{@}NULL=>''{-}'1'=>'1'{-}'2'=>'2'{-}'3'=>'3'{-}'4'=>'4'{-}'5'=>'5'{-}'not_answered'=>'Not Answered'
+select{@}q29_visit_friend{@}29. Visit a friend.{@}NULL=>''{-}'1'=>'1'{-}'2'=>'2'{-}'3'=>'3'{-}'4'=>'4'{-}'5'=>'5'{-}'not_answered'=>'Not Answered'
+select{@}q30_worry_what_todo{@}30. Worry about what I am going to do.{@}NULL=>''{-}'1'=>'1'{-}'2'=>'2'{-}'3'=>'3'{-}'4'=>'4'{-}'5'=>'5'{-}'not_answered'=>'Not Answered'
+select{@}q31_time_special_person{@}31. Spend time with a special person{@}NULL=>''{-}'1'=>'1'{-}'2'=>'2'{-}'3'=>'3'{-}'4'=>'4'{-}'5'=>'5'{-}'not_answered'=>'Not Answered'
+select{@}q32_go_walk{@}32. Go for a walk{@}NULL=>''{-}'1'=>'1'{-}'2'=>'2'{-}'3'=>'3'{-}'4'=>'4'{-}'5'=>'5'{-}'not_answered'=>'Not Answered'
+select{@}q33_never_again{@}33. Tell myself that it will never happen again.{@}NULL=>''{-}'1'=>'1'{-}'2'=>'2'{-}'3'=>'3'{-}'4'=>'4'{-}'5'=>'5'{-}'not_answered'=>'Not Answered'
+select{@}q34_focus_inadequacies{@}34. Focus on my general inadequcies{@}NULL=>''{-}'1'=>'1'{-}'2'=>'2'{-}'3'=>'3'{-}'4'=>'4'{-}'5'=>'5'{-}'not_answered'=>'Not Answered'
+select{@}q35_value_advice{@}35. Talk to someone whose advice I value.{@}NULL=>''{-}'1'=>'1'{-}'2'=>'2'{-}'3'=>'3'{-}'4'=>'4'{-}'5'=>'5'{-}'not_answered'=>'Not Answered'
+select{@}q36_analyze_problem{@}36. Analyze the problem before reacting.{@}NULL=>''{-}'1'=>'1'{-}'2'=>'2'{-}'3'=>'3'{-}'4'=>'4'{-}'5'=>'5'{-}'not_answered'=>'Not Answered'
+page{@}{@}Page4
+select{@}q37_phone_friend{@}37. Phone a friend.{@}NULL=>''{-}'1'=>'1'{-}'2'=>'2'{-}'3'=>'3'{-}'4'=>'4'{-}'5'=>'5'{-}'not_answered'=>'Not Answered'
+select{@}q38_get_angry{@}38. Get angry.{@}NULL=>''{-}'1'=>'1'{-}'2'=>'2'{-}'3'=>'3'{-}'4'=>'4'{-}'5'=>'5'{-}'not_answered'=>'Not Answered'
+select{@}q39_adjust_priorities{@}39. Adjust my priorities.{@}NULL=>''{-}'1'=>'1'{-}'2'=>'2'{-}'3'=>'3'{-}'4'=>'4'{-}'5'=>'5'{-}'not_answered'=>'Not Answered'
+select{@}q40_see_movie{@}40. See a movie{@}NULL=>''{-}'1'=>'1'{-}'2'=>'2'{-}'3'=>'3'{-}'4'=>'4'{-}'5'=>'5'{-}'not_answered'=>'Not Answered'
+select{@}q41_control_situation{@}41. Get control of the situation{@}NULL=>''{-}'1'=>'1'{-}'2'=>'2'{-}'3'=>'3'{-}'4'=>'4'{-}'5'=>'5'{-}'not_answered'=>'Not Answered'
+select{@}q42_extra_effort{@}42. Make an extra effort to get things done.{@}NULL=>''{-}'1'=>'1'{-}'2'=>'2'{-}'3'=>'3'{-}'4'=>'4'{-}'5'=>'5'{-}'not_answered'=>'Not Answered'
+select{@}q43_diff_solutions{@}43. Come up with several different solutions to the problem.{@}NULL=>''{-}'1'=>'1'{-}'2'=>'2'{-}'3'=>'3'{-}'4'=>'4'{-}'5'=>'5'{-}'not_answered'=>'Not Answered'
+select{@}q44_time_off{@}44. Take some time off and get away from the situation.{@}NULL=>''{-}'1'=>'1'{-}'2'=>'2'{-}'3'=>'3'{-}'4'=>'4'{-}'5'=>'5'{-}'not_answered'=>'Not Answered'
+select{@}q45_takeout_people{@}45. Take it out on the other people.{@}NULL=>''{-}'1'=>'1'{-}'2'=>'2'{-}'3'=>'3'{-}'4'=>'4'{-}'5'=>'5'{-}'not_answered'=>'Not Answered'
+select{@}q46_use_situation_prove{@}46. Use the situation to prove that I can do it.{@}NULL=>''{-}'1'=>'1'{-}'2'=>'2'{-}'3'=>'3'{-}'4'=>'4'{-}'5'=>'5'{-}'not_answered'=>'Not Answered'
+select{@}q47_organized{@}47. Try to be organized so that I can be on top of the situation.{@}NULL=>''{-}'1'=>'1'{-}'2'=>'2'{-}'3'=>'3'{-}'4'=>'4'{-}'5'=>'5'{-}'not_answered'=>'Not Answered'
+select{@}q48_watch_tv{@}48. Watch TV.{@}NULL=>''{-}'1'=>'1'{-}'2'=>'2'{-}'3'=>'3'{-}'4'=>'4'{-}'5'=>'5'{-}'not_answered'=>'Not Answered'
