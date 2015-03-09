@@ -151,14 +151,14 @@ class NDB_BVL_Instrument_RSMS extends NDB_BVL_Instrument{
         $sample_choices = array(null=> "", "Sample Taken", "NA" => "NA" );
         $this->form->addElement("static", null, "Repetitive Movements or Posturing of Body, <br> Arms, Hands, or Fingers (RSM with Body)<br>");
 
-                
-        for($int=1; $int<=6; $int++){
-            $group[] = &$this->form->createElement("static", "sample_body_static" . $int, "", $int);    
-             if($int > 1){
+        if (isset($_REQUEST['commentID'])) { 
+            for($int=1; $int<=6; $int++){
+                $group[] = &$this->form->createElement("static", "sample_body_static" . $int, "", $int);    
+                if($int > 1){
                     $group[] = $this->form->createElement("static", null, $this->indent);
-            }  
+                }  
+            }
         }
-        
         
         $this->form->addGroup($group, null, "Sampling Opportunity", $this->_GUIDelimiter, false);
         unset($group);
