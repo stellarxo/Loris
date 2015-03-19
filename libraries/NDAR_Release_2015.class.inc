@@ -626,6 +626,7 @@ class NDAR_Release_2015 {
             $fields = array('i.score', 'i.q1_talk_short_phrases', 'i.q2_to_and_fro', 'i.q3_odd_phrases', 'i.q4_socially_inappropriate', 'i.q5_pronouns_mixed', 'i.q6_words_invented', 'i.q7_said_same_thing', 'i.q8_particular_way', 'i.q9_facial_expressions', 'i.q10_hand_like_tool', 'i.q11_interests_that_preoccupy', 'i.q12_interested_in_parts', 'i.q13_intense_interests', 'i.q14_sight_feel_sound', 'i.q15_mannerisms', 'i.q16_complicated_movements', 'i.q17_deliberate_injury', 'i.q18_carry_objects', 'i.q19_particular_friends', 'i.q20_talk_friendly', 'i.q21_spontaneously_copy', 'i.q22_spontaneously_point', 'i.q23_gestures', 'i.q24_nod_yes', 'i.q25_shake_no', 'i.q26_look_directly', 'i.q27_smile_back', 'i.q28_show_things', 'i.q29_offer_share', 'i.q30_join_enjoyment', 'i.q31_comfort', 'i.q32_wanted_something', 'i.q33_facial_expressions', 'i.q34_spontaneously_join', 'i.q35_play_pretend', 'i.q36_seem_interested', 'i.q37_respond_positively', 'i.q38_came_into_room', 'i.q39_play_imaginative', 'i.q40_play_cooperatively');
         } else if ($this->instrument == 'vineland_subject' || $this->instrument == 'vineland_proband') {
             $fields = array(
+                'i.CommentID',
                 'i.RELATIONSHIP as relationship',
                 'i.`ABC_%ILE_RANK` as ABC_PERCENTILE_RANK',
                 'i.`ABC_95%_CI` as ABC_95PERCENT_CI',
@@ -1755,6 +1756,8 @@ class NDAR_Release_2015 {
 	     }
              $add_columns = array('communicationdomain_totala'=>999,'livingskillsdomain_totala'=>999,'motorskillsdomain_totala'=>999,'socializationdomain_totala'=>999);
              $row = array_merge($row, $add_columns);
+             $ndar_vineland_columns = getMoreNDARFields($this->instrument, $row['CommentID']);
+             print_r($ndar_vineland_columns);
            }
           if($this->instrument == 'mullen') {
               if( strpos($key,'expressive_lang_15') !== FALSE){
@@ -1901,6 +1904,48 @@ print "#### $header";
             $this->writeResults($converted,$header, '/var/www/loris/project/tools/NDAR_2015/' . $this->instrument .$ending);
         }
         return $converted;
+    }
+
+    function getMoreNDARFields($table, $commentID) {
+         $db = Database::singleton();
+         $sections = array(
+            array('Name' => "REC", 'Items' => 21),
+            array('Name' => "EXP", 'Items' => 55),
+            array('Name' => "WRN", 'Items' => 26),
+            array('Name' => "PER", 'Items' => 42),
+            array('Name' => "DOM", 'Items' => 25),
+            array('Name' => "CMM", 'Items' => 45),
+            array('Name' => "IPR", 'Items' => 39),
+            array('Name' => "PL", 'Items' => 32),
+            array('Name' => "CS", 'Items' => 31),
+            array('Name' => "GMS", 'Items' => 41),
+            array('Name' => "FMS", 'Items' => 37),
+            array('Name' => "INT", 'Items' => 12),
+            array('Name' => "EXT", 'Items' => 11),
+            array('Name' => "OTH", 'Items' => 16)
+        );
+         $setvalue = array();
+         foreach($sections as $section) {
+            $numq = $section['Items'];
+            for($i = 1; $i < $numq; $i++) {
+                //$this->setValueScore($qprefix . $i, $qcorrprefix . $i);
+                $item = $section['Name'] . "_ITEM_".$i;
+                $corritem = $section['Name'] . "_CORRECTED_ITEM_".$i;
+                $ndar_item = $item . "_NDAR";
+                $commentid = $this->getCommentID();
+
+                $record = $db->pSelectRow("select $item, $corritem from " . $table . " WHERE CommentID=:cid", array('cid' => $commentID));
+
+                if($record[$corritem] == "") {
+                    $setvalue[$ndar_item] = $record[$item];
+                } else {
+                    $setvalue[$ndar_item] = $record[$corritem];
+                }
+
+            }
+        }
+
+     return $setvalue;
     }
 }
 ?>
