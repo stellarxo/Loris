@@ -608,8 +608,8 @@ class NDB_BVL_Instrument_mullen extends NDB_BVL_Instrument
           $this->form->addElement("static", 'composite_error_95', "95% Band of Error (+/-)");
 
          $this->form->addElement("header", null, "Gross Motor Scores");
-          if(isset($this->localDefaults['age_months'])
-              && $this->localDefaults['age_months'] <= 33
+          if((isset($this->localDefaults['age_months'])
+              && $this->localDefaults['age_months'] <= 33) || empty($this->CommentID)
           ) {
              $this->form->addElement("static", 'gross_motor_raw', "Raw Score");
              $this->form->addElement("static", 'gross_motor_t', "T Score");
