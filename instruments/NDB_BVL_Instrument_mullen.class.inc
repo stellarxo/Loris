@@ -1,6 +1,4 @@
 <?php
- include_once 'HTML/QuickForm.php';
-
 class NDB_BVL_Instrument_mullen extends NDB_BVL_Instrument
 {
 
@@ -626,16 +624,7 @@ class NDB_BVL_Instrument_mullen extends NDB_BVL_Instrument
              $this->form->addElement("static", 'gross_motor_age_equivalent', "Age Equivalent");
              $this->form->addElement("static", null, '<font color="Red">T Score N/A for children over 33 months.</font>');
           }
-         if(!isset($_REQUEST['CommentID'])) {
-             $this->form->addElement("static", 'gross_motor_raw', "Raw Score");
-             $this->form->addElement("static", 'gross_motor_t', "T Score");
-             $this->form->addElement("static", 'gross_motor_percentile', "Percentile");
-             $this->form->addElement("static", 'gross_motor_description', "Description");
-             $this->form->addElement("static", 'gross_motor_age_equivalent', "Age Equivalent");
-             $this->form->addElement("static", 'gross_motor_error_90', "90% Band of Error (+/-)");
-             $this->form->addElement("static", 'gross_motor_error_95', "95% Band of Error (+/-)");
 
-         }
          $this->form->addElement("header", null, "Visual Reception Scores");
         $this->form->addElement("static", 'visual_reception_raw', "Raw Score");
         $this->form->addElement("static", 'visual_reception_t', "T Score");
