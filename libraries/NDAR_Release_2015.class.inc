@@ -48,7 +48,7 @@ class NDAR_Release_2015 {
                }  
         } else if ($this->instrument == 'vineland_proband') {
            if ($this->project == 1) {
-               return "COALESCE(s.Current_stage, '') <> 'Recycling Bin' AND COALESCE(s.Visit, '') NOT IN ('Failure', 'Withdrawal') AND COALESCE(s.Screening, '') NOT IN ('Failure', 'Withdrawal') AND f.Administration='All' AND f.Data_entry='Complete' AND s.CenterID IN (2, 3, 4, 5) AND s.SubprojectID IN (1, 2) AND ( ps.study_consent = 'yes' AND ps.study_consent_withdrawal IS NULL) AND (ps.ndar_consent = 'yes' AND ps.ndar_consent_withdrawal IS NULL) $GUID ";
+               return "COALESCE(s.Current_stage, '') <> 'Recycling Bin' AND COALESCE(s.Visit, '') NOT IN ('Failure', 'Withdrawal') AND COALESCE(s.Screening, '') NOT IN ('Failure', 'Withdrawal') AND f.Administration='All' AND f.Data_entry='Complete' AND s.CenterID IN (2, 3, 4, 5) AND s.SubprojectID IN (1, 2) AND ( ps.study_consent = 'yes' AND ps.study_consent_withdrawal IS NULL) AND (ps.ndar_consent = 'yes' AND ps.ndar_consent_withdrawal IS NULL) $GUID";
             } else {
             // No DDE
             return "COALESCE(s.Current_stage, '') <> 'Recycling Bin' AND COALESCE(s.Visit, '') NOT IN ('Failure', 'Withdrawal') AND COALESCE(s.Screening, '') NOT IN ('Failure', 'Withdrawal') AND 
@@ -648,6 +648,20 @@ class NDAR_Release_2015 {
                 'i.COM_SUM_VSCALES_FOR_DOMAIN',
                 'i.COM_SW',
                 'i.`CS_95%_CI` as CS_95PERCENT_CI',
+                'i.CRIT_ITEM_1',
+                'i.CRIT_ITEM_2',
+                'i.CRIT_ITEM_3',
+                'i.CRIT_ITEM_4',
+                'i.CRIT_ITEM_5',
+                'i.CRIT_ITEM_6',
+                'i.CRIT_ITEM_7',
+                'i.CRIT_ITEM_8',
+                'i.CRIT_ITEM_9',
+                'i.CRIT_ITEM_10',
+                'i.CRIT_ITEM_11',
+                'i.CRIT_ITEM_12',
+                'i.CRIT_ITEM_13',
+                'i.CRIT_ITEM_14',
                 'i.CRIT_SEVERITY_ITEM_10',
                 'i.CRIT_SEVERITY_ITEM_11',
                 'i.CRIT_SEVERITY_ITEM_12',
@@ -1513,7 +1527,7 @@ class NDAR_Release_2015 {
         } else if ($this->instrument == 'fyi') {
             $fields = array('i.person_filling_out', 'i.person_filling_out_specify','i.risk_score', 'i.percentile', 'i.soc_com_risk', 'i.sen_reg_risk', 'i.orientrec', 'i.affeng', 'i.imitate', 'i.express', 'i.senproc', 'i.regpat', 'i.react', 'i.repplay', 'i.q_1', 'i.q_2', 'i.q_3', 'i.q_4', 'i.q_5', 'i.q_6', 'i.q_7', 'i.q_8', 'i.q_9', 'i.q_10', 'i.q_11', 'i.q_12', 'i.q_13', 'i.q_14', 'i.q_15', 'i.q_16', 'i.q_17', 'i.q_18', 'i.q_19', 'i.q_20', 'i.q_21', 'i.q_22', 'i.q_23', 'i.q_24', 'i.q_25', 'i.q_26', 'i.q_27', 'i.q_28', 'i.q_29', 'i.q_30', 'i.q_31', 'i.q_32', 'i.q_33', 'i.q_34', 'i.q_35', 'i.q_36', 'i.q_37', 'i.q_38', 'i.q_39', 'i.q_40', 'i.q_41', 'i.q_42', 'i.q_43', 'i.q_44', 'i.q_45', 'i.q_46', 'i.q_47', 'i.q_48', 'i.q_49', 'i.q_50', 'i.q_51', 'i.q_52', 'i.q_53', 'i.q_54', 'i.q_55', 'i.q_56', 'i.q_57', 'i.q_58', 'i.q_59', 'i.q_60', 'i.sounds_p', 'i.sounds_b', 'i.sounds_t', 'i.sounds_d', 'i.sounds_k', 'i.sounds_g', 'i.sounds_m', 'i.sounds_n', 'i.sounds_w', 'i.sounds_y', 'i.sounds_h', 'i.sounds_s', 'i.q_62', 'i.q_63');
         } else if ($this->instrument == 'edi' || $this->instrument == 'edi2') {
-            $fields = array('i.score_0_3_regulatory', 'i.score_0_3_total_symptoms', 'i.score_10_12_communication', 'i.score_10_12_regulatory', 'i.score_10_12_repetitive_behaviour', 'i.score_10_12_social', 'i.score_10_12_total_symptoms', 'i.score_13_15_communication', 'i.score_13_15_regulatory', 'i.score_13_15_repetitive_behaviour', 'i.score_13_15_social', 'i.score_13_15_total_symptoms', 'i.score_16_18_communication', 'i.score_16_18_regulatory', 'i.score_16_18_repetitive_behaviour', 'i.score_16_18_social', 'i.score_16_18_total_symptoms', 'i.score_19_21_communication', 'i.score_19_21_regulatory', 'i.score_19_21_repetitive_behaviour', 'i.score_19_21_social', 'i.score_19_21_total_symptoms', 'i.score_22_24_communication', 'i.score_22_24_regulatory', 'i.score_22_24_repetitive_behaviour', 'i.score_22_24_social', 'i.score_22_24_total_symptoms', 'i.score_4_6_regulatory', 'i.score_4_6_social', 'i.score_4_6_total_symptoms', 'i.score_7_9_communication', 'i.score_7_9_regulatory', 'i.score_7_9_social', 'i.score_7_9_total_symptoms', 'i.EDI1', 'i.EDI2', 'i.EDI3', 'i.EDI4', 'i.EDI5', 'i.EDI6', 'i.EDI7', 'i.EDI8', 'i.EDI9', 'i.EDI10', 'i.EDI11', 'i.EDI12', 'i.EDI13', 'i.EDI14', 'i.EDI15', 'i.EDI16', 'i.EDI17', 'i.EDI18', 'i.EDI19', 'i.EDI20', 'i.EDI21', 'i.EDI22', 'i.EDI23', 'i.EDI24', 'i.EDI25', 'i.EDI26', 'i.EDI27', 'i.EDI28', 'i.EDI29', 'i.EDI30', 'i.EDI31', 'i.EDI32', 'i.EDI33', 'i.EDI34', 'i.EDI35', 'i.EDI36', 'i.EDI37', 'i.EDI38', 'i.EDI39', 'i.EDI40', 'i.EDI41', 'i.EDI42', 'i.EDI43', 'i.EDI44', 'i.EDI45', 'i.EDI46', 'i.EDI47', 'i.EDI48', 'i.EDI49', 'i.EDI50', 'i.EDI51', 'i.EDI52', 'i.EDI53', 'i.EDI54', 'i.EDI55', 'i.EDI56', 'i.EDI57', 'i.EDI58','i.EDI59', 'i.EDI60', 'i.EDI61', 'i.EDI62', 'i.EDI63', 'i.EDI64', 'i.EDI65', 'i.EDI66', 'i.EDI67', 'i.EDI68', 'i.EDI69', 'i.EDI70','i.EDI71', 'i.EDI72', 'i.EDI73', 'i.EDI74', 'i.EDI75', 'i.EDI76', 'i.EDI77', 'i.EDI78', 'i.EDI79', 'i.EDI80', 'i.EDI81', 'i.EDI82','i.EDI83', 'i.EDI84', 'i.EDI85', 'i.EDI86', 'i.EDI87', 'i.EDI88', 'i.EDI89', 'i.EDI90', 'i.EDI91', 'i.EDI92', 'i.EDI93', 'i.EDI94', 'i.EDI95', 'i.EDI96', 'i.inj', 'i.dear', 'i.conf', 'i.legl', 'i.emp', 'i.crim' );
+            $fields = array('i.score_0_3_regulatory', 'i.score_0_3_total_symptoms', 'i.score_10_12_communication', 'i.score_10_12_regulatory', 'i.score_10_12_repetitive_behaviour', 'i.score_10_12_social', 'i.score_10_12_total_symptoms', 'i.score_13_15_communication', 'i.score_13_15_regulatory', 'i.score_13_15_repetitive_behaviour', 'i.score_13_15_social', 'i.score_13_15_total_symptoms', 'i.score_16_18_communication', 'i.score_16_18_regulatory', 'i.score_16_18_repetitive_behaviour', 'i.score_16_18_social', 'i.score_16_18_total_symptoms', 'i.score_19_21_communication', 'i.score_19_21_regulatory', 'i.score_19_21_repetitive_behaviour', 'i.score_19_21_social', 'i.score_19_21_total_symptoms', 'i.score_22_24_communication', 'i.score_22_24_regulatory', 'i.score_22_24_repetitive_behaviour', 'i.score_22_24_social', 'i.score_22_24_total_symptoms', 'i.score_4_6_regulatory', 'i.score_4_6_social', 'i.score_4_6_total_symptoms', 'i.score_7_9_communication', 'i.score_7_9_regulatory', 'i.score_7_9_social', 'i.score_7_9_total_symptoms', 'i.EDI1', 'i.EDI2', 'i.EDI3', 'i.EDI4', 'i.EDI5', 'i.EDI6', 'i.EDI7', 'i.EDI8', 'i.EDI9', 'i.EDI10', 'i.EDI11', 'i.EDI12', 'i.EDI13', 'i.EDI14', 'i.EDI15', 'i.EDI16', 'i.EDI17', 'i.EDI18', 'i.EDI19', 'i.EDI20', 'i.EDI21', 'i.EDI22', 'i.EDI23', 'i.EDI24', 'i.EDI25', 'i.EDI26', 'i.EDI27', 'i.EDI28', 'i.EDI29', 'i.EDI30', 'i.EDI31', 'i.EDI32', 'i.EDI33', 'i.EDI34', 'i.EDI35', 'i.EDI36', 'i.EDI37', 'i.EDI38', 'i.EDI39', 'i.EDI40', 'i.EDI41', 'i.EDI42', 'i.EDI43', 'i.EDI44', 'i.EDI45', 'i.EDI46', 'i.EDI47', 'i.EDI48', 'i.EDI49', 'i.EDI50', 'i.EDI51', 'i.EDI52', 'i.EDI53', 'i.EDI54', 'i.EDI55', 'i.EDI56', 'i.EDI57', 'i.EDI58','i.EDI59', 'i.EDI60', 'i.EDI61', 'i.EDI62', 'i.EDI63', 'i.EDI64', 'i.EDI65', 'i.EDI66', 'i.EDI67', 'i.EDI68', 'i.EDI69', 'i.EDI70','i.EDI71', 'i.EDI72', 'i.EDI73', 'i.EDI74', 'i.EDI75', 'i.EDI76', 'i.EDI77', 'i.EDI78', 'i.EDI79', 'i.EDI80', 'i.EDI81', 'i.EDI82','i.EDI83', 'i.EDI84', 'i.EDI85', 'i.EDI86', 'i.EDI87', 'i.EDI88', 'i.EDI89', 'i.EDI90', 'i.EDI91', 'i.EDI92', 'i.EDI93', 'i.EDI94', 'i.EDI95', 'i.EDI96', 'i.inj', 'i.dear', 'i.conf', 'i.legl', 'i.emp', 'i.crim','i.hea AS edihea','i.hosp as edihosp' );
         } else if($this->instrument == 'charge') {
             $fields = array('c.CandidateGUID',"CASE c.Gender WHEN 'Male' THEN 'M' WHEN 'Female' THEN 'F' END AS Gender",'medpsych.Date_taken as Med_Psych_Hist_Date_Taken', 'medpsych.Candidate_Age as Med_Psych_Hist_Candidate_Age', 'medpsych.q16_has_child_ever', 'medpsych.q15_c_fever_seizures', 'medpsych.q15_seizures_convulsions', 'medpsych.q17_birth_defects', 'neuroscreen.Date_taken as Neuroscreen_Date_Taken', 'neuroscreen.Candidate_Age as Neuroscreen_Candidate_Age', 'neuroscreen.q19_other_physical_abnormalities', 'neuroscreen.q1_strabismus', 'neuroscreen.q6_ear_formation', 'tsi.Date_taken as TSI_Date_Taken', 'tsi.Candidate_Age as TSI_Candidate_Age', 'tsi.med_his_q_5_medications', 'tsi.med_his_q_5_medications_describe', 'tsi.med_his_q_8_brain_MRI_results', 'tsi.congenital_heart_problems', 'tsi.med_his_q_6_allergies', 'tsi.med_his_q_6_allergies_describe');
         }
@@ -1553,7 +1567,7 @@ class NDAR_Release_2015 {
                 } else {
                     $row['subject_verbal'] = '';
                 }
-                $add = array('method_adi'=>1);
+                $add = array('method_adi'=>1,'rx'=>999);
                 $row = array_merge($row, $add);
             }
             if(strpos($this->instrument, '_proband') !== FALSE) {
@@ -1730,12 +1744,23 @@ class NDAR_Release_2015 {
                                $row = array_merge($row, $new);
                                
 		       }
+                       if(strpos($key,'edihosp') !== FALSE || strpos($key,'edihea') !== FALSE ) {
+                           if($val == 'not_answered' || empty($val)){
+                               $row[$key] = 9;
+                            } else {
+                               $temp = explode('_', $val);
+		               $row[$key] = $temp[0];
+                            }
+                       }
                  $addfields = array('edict_c'=>999,'edict_r'=>999,'edict_rg'=>999,'edict_s'=>999,'edict_se'=>999,'edict_t'=>999,
                                     'edict_x'=>999,'edifamt'=>999,'edigtot'=>999,'edimedt'=>999,'edistrt'=>999);
                  $row = array_merge($row, $addfields);
 	       }
           if($this->instrument == 'vineland_subject' || $this->instrument == 'vineland_proband'){ 
-             $fieldstochange = array('ABC_STD_SCORE','COM_STD_SCORE','DLS_STD_SCORE','SOC_STD_SCORE','MS_STD_SCORE');
+             $fieldstochange = array('ABC_STD_SCORE','COM_STD_SCORE','DLS_STD_SCORE','SOC_STD_SCORE','MS_STD_SCORE',
+                                     'CRIT_ITEM_1','CRIT_ITEM_2','CRIT_ITEM_3','CRIT_ITEM_4','CRIT_ITEM_5','CRIT_ITEM_6',
+                                     'CRIT_ITEM_7','CRIT_ITEM_8','CRIT_ITEM_9','CRIT_ITEM_10','CRIT_ITEM_11','CRIT_ITEM_12',
+                                     'CRIT_ITEM_13','CRIT_ITEM_14');
              $relationships  = array('Mother'=>1,'Mom'=>1,'Father'=>2,'Dad'=>2,'dad'=>2,'Mom/Dad'=>28,'Both Parents'=>28,
                                      'mother and father'=>28,'father and mother'=>28,'Fater'=>2,'Other'=>90);
              if($key === 'relationship'){
@@ -1756,15 +1781,26 @@ class NDAR_Release_2015 {
 	     }
              $add_columns = array('communicationdomain_totala'=>999,'livingskillsdomain_totala'=>999,'motorskillsdomain_totala'=>999,'socializationdomain_totala'=>999);
              $row = array_merge($row, $add_columns);
-             $ndar_vineland_columns = getMoreNDARFields($this->instrument, $row['CommentID']);
-             print_r($ndar_vineland_columns);
-           }
+           //  print "CommentID - ".$row['CommentID'] ."\n ";
+             $ndar_vineland_columns = $this->getMoreNDARFields($this->instrument, $row['CommentID']);
+             $row = array_merge($row, $ndar_vineland_columns);
+             if($key === 'CommentID'){
+                 unset($row[$key]);
+             }
+          }
           if($this->instrument == 'mullen') {
-              if( strpos($key,'expressive_lang_15') !== FALSE){
+              if( strpos($key,'expressive_lang_') !== FALSE || strpos($key,'gross_motor_') !== FALSE || 
+                  strpos($key,'visual_recept_') !== FALSE || strpos($key,'fine_motor_') !== FALSE ||
+                  strpos($key,'receptive_lang_') !== FALSE){
                   if(is_null($val) || empty($val)){
-                     $row[$key] = 'not_answered';
+                     $row[$key] = 9;
                   }
-              } 
+              }
+              $add_columns = array('info_med'=>999,'scl2_mtchsize_largered'=>999,'scl2_mtchsize_largeyellow'=>999,
+                                   'scl2_mtchsize_smallred'=>999,'scl2_mtchsize_smallyellow'=>999,'scl4_color_black'=>999,
+                                   'scl4_color_blue'=>999,'scl4_color_brown'=>999,'scl4_color_green'=>999,'scl4_color_orange'=>999,
+                                   'scl4_color_purple'=>999,'scl4_color_red'=>999,'scl4_color_yellow'=>'999');
+              $row = array_merge($row, $add_columns);
           }
          if($this->instrument == 'aosi') {
              $score_fields = array('aosi_totalscore','aosi_numbermarkers','aosi_q1_visualinstructions',
@@ -1773,6 +1809,16 @@ class NDAR_Release_2015 {
                 (strpos($val,'N') !== FALSE || strpos($val,'Unable') !== FALSE)) {
                   $row[$key] = 8; 
               } 
+         }
+        if($this->instrument == 'scq_proband' || $this->instrument == 'scq_subject') {
+            if( strpos($key,'q') !== FALSE && empty($val) ) {
+                $row[$key] = 'not_answered';
+            } 
+ 
+         }
+         if($this->instrument == 'm_chat_proband') {
+             $add_columns = array('fu_q8_proper_play_shapes'=>999);
+             $row = array_merge($row, $add_columns);
          }
 	 if($this->instrument == 'ndar_subject') {
 		 if(strpos($key, 'interview_date') !== FALSE || $key == 'DoB' || strpos($key, 'Date_Taken') !== FALSE) {
@@ -1803,55 +1849,7 @@ class NDAR_Release_2015 {
           
              $row = array_merge($row, $add_columns);
        }
-       if($this->instrument == 'ndar_subject') {
-          $data = array('twins_populate'=>'No','sibling_study'=>'Yes','family_study'=>'No','sample_taken'=>'No');
-          $row = array_merge($row,$data);
- 
-          if($row['Candidate_Age_in_Months'] < 0){
-		  $row['Candidate_Age_in_Months'] =0;
-	  }
-	  $type='';
-	  $type_pr ='';
-	  if($row['ProbandGender']== 'Male') {
-		  $type = "Full Brother FB";
-	  } else if($row['ProbandGender'] == 'Female'){
-		  $type = "Full Sister FS";
-	  } else {
-		  $type = " ";
-	  }
-	  if($row['Gender']== 'Male') {
-		  $type_pr = "Full Brother FB";
-	  } else if($row['Gender'] == 'Female'){
-		  $type_pr = "Full Sister FS";
-	  }
-	  $race = $row['race'];
-	  if(strpos($race,'more_than_one_race') !== FALSE){
-		  $race_final = "More than one race";
-	  } else {
-		  if(strpos($race,'white') !== FALSE){
-			  $race_final = "White";
-		  } else  if(strpos($race,'asian') !== FALSE){
-			  $race_final = "Asian";
-		  } else if(strpos($race,'black_african_american') !== FALSE){
-			  $race_final = "Black or African American";
-		  } else if(strpos($race,'white') !== FALSE){
-			  $race_final = "White";
-		  }
-	  }
-	  $candidate = array($row['IBISID'], $row['CandidateGUID'], $row['Gender'], $row['Site'], $row['Cohort'], $row['Candidate_Age_in_Months'], $row['Date_taken'],
-			  'No',$race_final,$row['ethnic_group'],'No','Yes','No', $row['Cohort']." Sibling",$row['ProbandGUID'],$row['IBISID']."pr", $type);
-        
-	  
-          //fputcsv($fd, $candidate);
-          $converted = $candidate;
-	  if(!empty($row['ProbandGUID'])){
-		  $proband   = array($row['IBISID']."pr", $row['ProbandGUID'], $row['ProbandGender'], $row['Site'], "Proband", $row['Proband_Age_in_Months'], $row['Date_taken'],
-				  'No',"Unknown or not reported","Unknown or not reported",'No','Yes','No', "Proband of Sibling",$row['CandidateGUID'], $row['IBISID'], $type_pr);
-                  $converted[] = $proband;
-	//	  fputcsv($fd, $proband);
-	  }
-          return $converted;
-        }
+      
         if(array_key_exists('validity_of_data', $row) && empty($row['validity_of_data'])) {
             $row['validity_of_data'] = 999;
         }        
@@ -1922,27 +1920,39 @@ print "#### $header";
             array('Name' => "FMS", 'Items' => 37),
             array('Name' => "INT", 'Items' => 12),
             array('Name' => "EXT", 'Items' => 11),
-            array('Name' => "OTH", 'Items' => 16)
+            array('Name' => "OTH", 'Items' => 16) 
         );
          $setvalue = array();
          foreach($sections as $section) {
             $numq = $section['Items'];
-            for($i = 1; $i < $numq; $i++) {
-                //$this->setValueScore($qprefix . $i, $qcorrprefix . $i);
-                $item = $section['Name'] . "_ITEM_".$i;
-                $corritem = $section['Name'] . "_CORRECTED_ITEM_".$i;
-                $ndar_item = $item . "_NDAR";
-                $commentid = $this->getCommentID();
-
-                $record = $db->pSelectRow("select $item, $corritem from " . $table . " WHERE CommentID=:cid", array('cid' => $commentID));
-
-                if($record[$corritem] == "") {
-                    $setvalue[$ndar_item] = $record[$item];
-                } else {
-                    $setvalue[$ndar_item] = $record[$corritem];
-                }
-
+            $record = array();
+            $for_select = '';
+            for($i = 1; $i < $numq; $i++ ) {
+               $item = $section['Name'] . "_ITEM_".$i;
+               $corritem = $section['Name'] . "_CORRECTED_ITEM_".$i;
+               array_push($record, array($corritem=>'',$item=>'')); 
+               $for_select .= $item.",".$corritem.",";
             }
+//            print $for_select . "CommentID - $commentID \n";
+	    $record = $db->pSelectRow("select $for_select Date_taken from " . $table . " WHERE CommentID=:cid", array('cid' => $commentID));
+	    if(!empty($record)) {
+		    for($i = 1; $i < $numq; $i++) {
+			    $ndar_item = $section['Name'] . "_ITEM_".$i. "_NDAR";
+			    $item = $section['Name'] . "_ITEM_".$i;
+			    $corritem = $section['Name'] . "_CORRECTED_ITEM_".$i;
+			    if ($record[$corritem] == "" && $record[$item] == "") {
+				    $setvalue[$ndar_item] = '999';
+			    } elseif ($record[$corritem] == "") {
+				    $setvalue[$ndar_item] = $record[$item];
+			    } else {
+				    $setvalue[$ndar_item] = $record[$corritem];
+			    }
+
+                            if($setvalue[$ndar_item] == 'N') {
+                                $setvalue[$ndar_item] = 'N/O';
+                            }
+		    } //end for
+	  }
         }
 
      return $setvalue;
