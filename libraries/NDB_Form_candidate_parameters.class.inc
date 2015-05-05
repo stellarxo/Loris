@@ -86,9 +86,9 @@ class NDB_Form_candidate_parameters extends NDB_Form
             $proband_info = $DB->pselectRow("SELECT ProbandDoB,ProbandGender FROM
                     candidate WHERE CandID=:CandidateID",
                     array('CandidateID' => $this->identifier));
-            if ($proband_info['ProbandDoB']=== '0000-00-00') {
+           /* if ($proband_info['ProbandDoB']=== '0000-00-00') {
                 $proband_info['ProbandDoB'] = '';
-            }
+            }*/
             if (!empty($proband_info['ProbandDoB']) & !empty($candidate_dob) ) {
                 $age = Utility::calculateAge($proband_info['ProbandDoB'],
                                              $candidate_dob);
@@ -178,9 +178,9 @@ class NDB_Form_candidate_parameters extends NDB_Form
         }
         foreach ($ps_info as $key => &$val) {
 
-            if ($val === '0000-00-00') {
+           /* if ($val === '0000-00-00') {
                 $val = '';
-            }
+            }*/
             if (!empty($ps_info[$key])) {
                 $consent_info[$key] = $val;
             }
@@ -383,7 +383,7 @@ class NDB_Form_candidate_parameters extends NDB_Form
        //updating consent information
        $config  =& NDB_Config::singleton();
        $consent = $config->getSetting('ConsentModule');
-       if ($consent['useConsent'] === 'true') {
+       if ($consent['useConsent'] === 'true' && isset($values['study_consent'])) {
 
            $participant_vals = array();
            foreach (Utility::asArray($consent['Consent']) as $question) {
@@ -392,9 +392,9 @@ class NDB_Form_candidate_parameters extends NDB_Form
                foreach($consent_dates as $field) {
                    $value = $this->_getDatabaseDate($values[$field]);
                    if($value === '--') {
-                       $value = '';
+                       $value = NULL;
                    }
-                   $participant_vals[$field] = $value;  
+                   $participant_vals[$field] = $value;
                }
            }
            $participant_vals['entry_staff'] = $id;
@@ -444,14 +444,6 @@ class NDB_Form_candidate_parameters extends NDB_Form
         $DB =& Database::singleton();
         $config =& NDB_Config::singleton();
 
-        $ethnicityList = array(null=>'');
-        $success = Utility::getEthnicityList();
-        if (Utility::isErrorX($success)) {
-        	return PEAR::raiseError("Utility::getEthnicityList error: ".$success->getMessage());
-        }
-        $ethnicityList = array_merge($ethnicityList,$success);
-        unset($success);
-        
         $candidate =& Candidate::singleton($this->identifier);
         if (Utility::isErrorX($candidate)) {
             return PEAR::raiseError("Candidate Error ($this->identifier): ".$candidate->getMessage());
@@ -466,7 +458,7 @@ class NDB_Form_candidate_parameters extends NDB_Form
 
  		//Extract the fields from the parameter_type table
         $DB->select("SELECT pt.ParameterTypeID, pt.Name, pt.Type, Description 
-                     FROM parameter_type as pt, parameter_type_category as ptc, parameter_type_category_rel as ptcr 
+                     FROM parameter_type as pt, parameter_type_category as ptc, parameter_type_category_rel as ptcr , candidate c
                      WHERE pt.ParameterTypeID=ptcr.ParameterTypeID AND ptcr.ParameterTypeCategoryID=ptc.ParameterTypeCategoryID 
                      AND ptc.Name='Candidate Parameters' ORDER BY pt.ParameterTypeID, pt.name ASC", $field_results);
         //If there are no defined fields print a message to that effect
