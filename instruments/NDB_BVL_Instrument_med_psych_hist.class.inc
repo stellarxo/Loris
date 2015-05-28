@@ -219,14 +219,11 @@ class NDB_BVL_Instrument_med_psych_hist extends NDB_BVL_Instrument
     function _main(){
  
         $db = & Database::singleton();
-
+        if(isset($_REQUEST['CommentID'])){
         $cand = $db->pselectRow("SELECT c.CandID, s.Visit_label from session as s, flag as f, candidate c where f.sessionId = s.ID and
                                  s.CandID=c.CandID and f.CommentID=:cid", array('cid'=>$this->getCommentID())); 
 
-        $candidate =& Candidate::singleton($cand['CandID'] );
-        if (Utility::isErrorX($candidate)) {
-            return PEAR::raiseError("Candidate Error ($this->identifier): ".$candidate->getMessage());
-        }
+        $candidate = Candidate::singleton($cand['CandID'] ); 
 
         $firstVisit = false;
         $vLabel = $db->pselectOne("SELECT Visit_label FROM session s JOIN candidate c 
@@ -236,6 +233,8 @@ class NDB_BVL_Instrument_med_psych_hist extends NDB_BVL_Instrument
             $firstVisit = true; //if current visit label is same as visit label returned must be first visit   
         }
         $current_visitlabel = $cand['Visit_label'];
+        $this->form->addFormRule(array(&$this, 'firstVisitCheck'));
+        }
         // display test name
         $this->form->addElement('header', 'instrument_title', "Medical and Psychiatric History");
 
@@ -259,7 +258,6 @@ class NDB_BVL_Instrument_med_psych_hist extends NDB_BVL_Instrument
         $this->XINRegisterRule("followup_form_updated", array("followup_form_updated{@}=={@}NEVER_REQUIRED"));
  
 		$this->addLabel("NOTE: If 'No' is entered, continue data entry at item 4, unless the <BR>abbreviated version was administered (in which case, no further <BR> data entry is required).");
-        $this->form->addFormRule(array(&$this, 'firstVisitCheck'));
 
     }
 
