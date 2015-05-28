@@ -484,30 +484,21 @@ class NDB_BVL_Instrument_mullen extends NDB_BVL_Instrument
         // Get the subject age in months for scoring
 
         $db =& Database::singleton();
-        if(PEAR::isError($db)) {
-            return PEAR::raiseError ("Could not connect to database: ".$db->getMessage());
-        }
 
         $record = array();
         $query = "SELECT * FROM ".$this->table." WHERE CommentID='".$this->getCommentID()."'";
         $db->selectRow($query, $record);
 
-        if (PEAR::isError($record)) {
-           return PEAR::raiseError("Could not get scores: ".$record->getMessage());
-        }
 
         // Get the subject DoB for scoring
         if($this->getSessionID() != NULL) { //quickform_parser doesn't use any specific session
             $timepoint =& TimePoint::singleton($this->getSessionID());
-            if($this->isError($timepoint)) {
-                return PEAR::raiseError("Invalid timepoint.");
-            }
             $dob = $timepoint->getEffectiveDateOfBirth();
         }
         if(!empty($dob) && !empty($record['Date_taken'])) {
             $age = Utility::calculateAge($dob, $record["Date_taken"]);
         } 
-        if(isset($age) && !$this->isError($age) && is_array($age)) {
+        if(isset($age)  && is_array($age)) {
           $age_months = $age['year'] * 12 + $age['mon'];
           $this->localDefaults = array_merge($this->localDefaults, array('age_months' => $age_months));
           $this->localDefaults = array_merge($this->localDefaults, $this->band_of_error($age_months));
@@ -1118,28 +1109,16 @@ class NDB_BVL_Instrument_mullen extends NDB_BVL_Instrument
          $score_record=array();
 
          $db =& Database::singleton();
-         if(PEAR::isError($db)) {
-             return PEAR::raiseError ("Could not connect to database: ".$db->getMessage());
-         }
 
 
    		$query = "SELECT * FROM ".$this->table." WHERE CommentID='".$this->getCommentID()."'";
          $db->selectRow($query, $score_record);
 
-         if (PEAR::isError($score_record)) {
-             return PEAR::raiseError("Could not get scores: ".$score_record->getMessage());
-         }
 
          // Get the subject age in months for scoring
          $timepoint =& TimePoint::singleton($this->getSessionID());
-         if($this->isError($timepoint)) {
-             return PEAR::raiseError("Invalid timepoint.");
-         }
          $dob = $timepoint->getEffectiveDateOfBirth();
          $age = Utility::calculateAge($dob, $score_record["Date_taken"]);
-         if($this->isError($age)) {
-             return PEAR::raiseError("Could not calculate age.");
-         }
          $age_months = $age['year'] * 12 + $age['mon'];
 
 
@@ -1163,9 +1142,6 @@ class NDB_BVL_Instrument_mullen extends NDB_BVL_Instrument
                 $calculatedScores[$scale_name . '_raw'] === 0 || $calculatedScores[$scale_name . '_raw'] === '0' ) {
                 $query = "SELECT * FROM mullen_lookup WHERE age_months=:CandAge AND raw_score=:ScaleScore";
                 $record = $db->pselectRow($query, array('CandAge' => $age_months, 'ScaleScore' => $calculatedScores[$scale_name . '_raw']));
-                if (PEAR::isError($record)) {
-                    return PEAR::raiseError("Could not retrieve scores: " . $record->getMessage());
-                }
 
             // If the score is above or below the highest score in the table,
             // get the closest score
@@ -1181,9 +1157,7 @@ class NDB_BVL_Instrument_mullen extends NDB_BVL_Instrument
                 }
                 $query = "SELECT * FROM mullen_lookup WHERE age_months=:CandAge AND raw_score=:MiniMax";
          	    $record = $db->pselectRow($query, array('CandAge' => $age_months, 'MiniMax' => $minimax));
-                if (PEAR::isError($record)) {
-                    return PEAR::raiseError("Could not retrieve scores: " . $record->getMessage());
-                }
+                
 
             }
             
@@ -1210,9 +1184,6 @@ class NDB_BVL_Instrument_mullen extends NDB_BVL_Instrument
             $query = "SELECT * FROM mullen_composite_lookup WHERE cognitive_t_sum=".$calculatedScores['cognitive_t_score_sum'];
             $record = array();
          	$db->selectRow($query, $record);
-             	if (PEAR::isError($record)) {
-             		return PEAR::raiseError("Could not retrieve scores: " . $record->getMessage());
-             	}
 
 
             $calculatedScores["composite_standard_score"] = $record['composite_standard_score'];
@@ -1224,9 +1195,6 @@ class NDB_BVL_Instrument_mullen extends NDB_BVL_Instrument
          // save the resultant total
          $result = $db->update($this->table, $calculatedScores, array('CommentID'=>$this->getCommentID()));
 
-         if($db->isError($result)) {
-            return PEAR::raiseError("Could not save total score: ".$result->getMessage());
-         }
      }
 
      function get_raw_score($score_record, $age, $scale, $num_questions){
@@ -1568,14 +1536,10 @@ class NDB_BVL_Instrument_mullen extends NDB_BVL_Instrument
                  'cid' => $centerID,
                  'vl' => $visit_label
              ));
-             if($db->isError($results)) {
-                 return $this->raiseError("Could not get examiner names: ". $results->getMessage());
-             }
+             
          } else {
              $results = $db->pselect("SELECT examinerID, full_name FROM examiners WHERE centerID=:centre ORDER BY full_name", array('centre' => $centerID));
-             if($db->isError($results)) {
-                 return $this->raiseError("Could not get examiner names: ".$results->getMessage());
-             }
+             
          }
 
          $examiners = array('' => '');
