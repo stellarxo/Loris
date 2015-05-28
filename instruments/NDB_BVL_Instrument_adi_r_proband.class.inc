@@ -49,9 +49,6 @@ DoB Proband should be somewhere in the candidate table.  For now, we'll just mak
     function score() {
                 
         $db =& Database::singleton();
-        if(PEAR::isError($db)) {
-            return PEAR::raiseError ("Could not connect to database: ".$db->getMessage());
-        }
 
         //skip scoring if all data has not yet been entered.
         if($this->_determineDataEntryCompletionStatus() == "Incomplete") {
@@ -67,24 +64,15 @@ DoB Proband should be somewhere in the candidate table.  For now, we'll just mak
     
     function _getAge() {
         $db =& Database::singleton();
-        if(PEAR::isError($db)) {
-            return PEAR::raiseError ("Could not connect to database: ".$db->getMessage());
-        }
-        
+
         // Get the proband DoB from the field in the form for age-dependent scoring
         $query = "SELECT DoB_proband from $this->testName WHERE CommentID = '".$this->getCommentID()."'";
         $DoB_proband = $db->selectOne($query);
-        if(PEAR::isError($DoB_proband)){
-            return PEAR::raiseError("Query has failed to select Starting Age in Months: ".$result->getMessage());
-        }
-        
+ 
         // Get the Date of administration
         $query = "SELECT Date_taken from $this->testName WHERE CommentID = '".$this->getCommentID()."'";
         $Date_taken = $db->selectOne($query);
-        if(PEAR::isError($Date_taken)){
-            return PEAR::raiseError("Query has failed to select the Date of Administration: ".$result->getMessage());
-        }
-        
+       
         //print "DoB: $DoB_proband Taken: $Date_taken xxx";
         if(empty($DoB_proband) || empty($Date_taken)) {
             // Must be more than 2 years old to score. So if we return -1, we won't score (and avoid the errors from
@@ -94,10 +82,7 @@ DoB Proband should be somewhere in the candidate table.  For now, we'll just mak
         }
         //Call to calculateAge generates an error in the quickFormParser.  I don't know why.  Everything works despite.
 		$age = Utility::calculateAge($DoB_proband, $Date_taken);
-        if($this->isError($age)) {
-            return $this->raiseError("Could not compute age");
-        }
-
+      
         //Current Behaviour algorithm uses age in months.
 //		$this->respondentAgeMonths = $age['year'] * 12 + $age['$mon'];
         //Diagnostic algorithm uses age in years.

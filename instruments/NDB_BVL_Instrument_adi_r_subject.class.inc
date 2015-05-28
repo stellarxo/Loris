@@ -87,9 +87,7 @@ DoB subject should be somewhere in the candidate table.  For now, we'll just mak
         } else { 
             $age = Utility::calculateAge($dob, $Date_taken); 
         }
-        if($this->isError($age)) {
-            return $this->raiseError("Could not compute age");
-        }
+        
 
         //Diagnostic algorithm uses age in years.
 //		$this->respondentAgeMonths = $age['year'] * 12 + $age['$mon'];

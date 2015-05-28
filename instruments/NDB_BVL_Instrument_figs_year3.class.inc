@@ -499,7 +499,6 @@ class NDB_BVL_Instrument_figs_year3 extends NDB_BVL_Instrument
         $this->form->addElement("static", 'incompleteRelatives', "Relatives: ");
         
         $db =& Database::singleton();
-        if($this->isError($db)) return false;
 
         $query = "SELECT RelativeCode from figs_year3_relatives WHERE CommentID='".$this->getCommentID()."' AND DataEntryCompleted=0";
 
@@ -1745,10 +1744,10 @@ work or with social relationships?", $questionOptions);
         
         $results = array();
         $db->select("SELECT RelativeID, RelativeCode FROM figs_year3_relatives WHERE CommentID='".$this->getCommentID()."'", $results);
-        if($this->isError($results)) {
+       /* if($this->isError($results)) {
             print $results->getMessage()."<br>\n";
             return false;
-        }
+        }*/
         
         $relatives = array();
         foreach($results AS $row) {
