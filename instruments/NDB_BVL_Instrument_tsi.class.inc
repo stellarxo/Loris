@@ -518,8 +518,10 @@ class NDB_BVL_Instrument_tsi extends NDB_BVL_Instrument
 
         $score['mother_age_yrs'] = 'Unknown';$score['father_age_yrs'] = 'Unknown';
         $parents = array('mother','father');
-        foreach ($parents as $parent) {
-            if (!empty($record[$parent.'_dob_date']) & !empty($candidate_dob) ) {
+        foreach ($parents as $parent) { 
+            if (!empty($record[$parent.'_dob_date']) & !empty($candidate_dob) & 
+                $record[$parent.'_dob_date']!='0000-00-00' 
+               ) {
                 $age = Utility::calculateAge($record[$parent.'_dob_date'],
                         $candidate_dob);
                 $score[$parent.'_age_yrs'] = $age['year'] + round($age['mon']/12,2) +
