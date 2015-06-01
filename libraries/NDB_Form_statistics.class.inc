@@ -371,7 +371,7 @@ class NDB_Form_statistics extends NDB_Form
           // MRI parameter form completed, but nothing in browser
           $DB->select("SELECT s.CenterID as CenterID, 
                   COUNT(distinct f.CommentID) as val
-                  FROM mri_parameter_form m LEFT JOIN flag f ON (f.CommentID=m.CommentID)
+                  FROM candidate c, mri_parameter_form m LEFT JOIN flag f ON (f.CommentID=m.CommentID)
                   LEFT JOIN session s ON (s.ID=f.SessionID) 
                   LEFT JOIN files fi ON (fi.SessionID=f.SessionID) 
                   WHERE (m.DTI_Scan_done <> 'No' 
