@@ -1100,14 +1100,14 @@ class NDB_Form_adi_r_reliability extends NDB_Form
 
                
             echo('<br>');
-            print_r($denominator);
+           // print_r($denominator);
             echo('<br>');
-            print_r($reliability_count_raw);
+           // print_r($reliability_count_raw);
             echo('<br>');
             echo('<br>');
-            print_r($denominator_scored);
+           // print_r($denominator_scored);
             echo('<br>');
-            print_r($reliability_count_scored);
+           // print_r($reliability_count_scored);
             echo('<br>');
 
             // Score the reliability
@@ -2083,7 +2083,7 @@ if($score_record['q_2_age_first_noticed_code']=='8' AND $score_record3['q_2_age_
             // Score the reliability
             $reliability['Reliability_score_all_items']= (($denominator-$reliability_count_raw)/$denominator*100);
             $reliability['Reliability_score_scored_items']= (($denominator_scored-$reliability_count_scored)/$denominator_scored*100);
-print_r($reliability['Reliability_score_all_items']);
+//print_r($reliability['Reliability_score_all_items']);
            
          }
          // If the reliability is to be compared to the initial data entry
