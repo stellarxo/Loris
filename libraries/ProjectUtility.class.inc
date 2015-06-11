@@ -89,7 +89,9 @@ class ProjectUtility extends PEAR
 
     function SetSupplementalGrantStatus($SessionID) {
         $DB =& Database::singleton();
-        $IDs = $DB->pselect("SELECT ID FROM session WHERE CandID=(SELECT CandID FROM session WHERE ID=:SessionID)", array(":SessionID"=>$SessionID));
+        $IDs = $DB->pselect("SELECT ID FROM session WHERE Active='Y' AND
+                             CandID=(SELECT CandID FROM session WHERE ID=:SessionID)", 
+                             array(":SessionID"=>$SessionID));
         $IDs_string = join(',', array_map(array('ProjectUtility', 'FlattenID'),$IDs));
         $DB->run("delete from session_status WHERE ID IN ($IDs_string) AND Name='Grant Status'");
         foreach($IDs as $ID ) {
