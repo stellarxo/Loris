@@ -91,9 +91,6 @@ class NDB_BVL_Instrument_m_chat extends NDB_BVL_Instrument
 		}
 
 		$db =& Database::singleton();
-		if(PEAR::isError($db)) {
-			return PEAR::raiseError ("Could not connect to : ".$db->getMessage());
-		}
 
 		// null scores
 		$this->_nullScores($this->scoreCols);
@@ -102,9 +99,6 @@ class NDB_BVL_Instrument_m_chat extends NDB_BVL_Instrument
 		$query = "SELECT * FROM $this->table WHERE CommentID='".$this->getCommentID()."'";
 		$record=array();
 		$db->selectRow($query, $record);
-		if (PEAR::isError($record)) {
-			return PEAR::raiseError("Could not get scores: ".$record->getMessage());
-		}
 
 		//take only question fields, not metadata
         $scores = array();
@@ -168,9 +162,7 @@ class NDB_BVL_Instrument_m_chat extends NDB_BVL_Instrument
 
 		// save the resultant total
 		$result = $db->update($this->table, $calculatedScores, array('CommentID'=>$this->getCommentID()));
-		if($db->isError($result)) {
-			return PEAR::raiseError("Could not save total score: ".$result->getMessage());
-		}
+
 	}
     function _addAdditionalComments() {
     }

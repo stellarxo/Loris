@@ -232,9 +232,7 @@ INSERT INTO instrument_subtests VALUES('', 'rbs_r', 'rbs_r_page1', 'Subscales', 
 		}
 
 		$db =& Database::singleton();
-		if(PEAR::isError($db)) {
-			return PEAR::raiseError ("Could not connect to database: ".$db->getMessage());
-		}
+
 
 		// null scores ...not currently doing anything...  Don't have an array of scores to nullify.
 //		$this->_nullScores($this->scoreCols);
@@ -250,9 +248,6 @@ INSERT INTO instrument_subtests VALUES('', 'rbs_r', 'rbs_r_page1', 'Subscales', 
 		$query = "SELECT * FROM $this->table WHERE CommentID='".$this->getCommentID()."'";
 		$record=array();
 		$db->selectRow($query, $record);
-		if (PEAR::isError($record)) {
-			return PEAR::raiseError("Could not get scores: ".$record->getMessage());
-		}
 
 		//convert answers to numerical scores
 		foreach ($record as $field=>$value) {
@@ -298,9 +293,6 @@ INSERT INTO instrument_subtests VALUES('', 'rbs_r', 'rbs_r_page1', 'Subscales', 
 		
 		// save the resultant total
 		$result = $db->update($this->table, $this->calculatedScores, array('CommentID'=>$this->getCommentID()));
-		if($db->isError($result)) {
-			return PEAR::raiseError("Could not save total score: ".$result->getMessage());
-		}
 
 	}
 
