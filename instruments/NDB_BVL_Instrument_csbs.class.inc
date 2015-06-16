@@ -251,7 +251,7 @@ INSERT INTO instrument_subtests VALUES('', 'csbs', 'csbs_page2', 'Symbolic Behav
 
 //        $this->addTextElement("filled_out_by", "Filled out by:");
         $this->form->addElement("select", "relationship_to_child", "Relationship to child:", array(null=>"", "1_Mother"=>"1. Mother", "2_Father"=>"2. Father", "3_Other"=>"3. Other (Specify)", "not_answered"=>"Not Answered"));
-        $this->addTextElement("relationship_to_child_specify", $this->indent . "Specify:", array("relationship_to_child{@}=={@}3_Other"), "Please specify.");
+        $this->addTextElement("relationship_to_child_specify", $this->indent . "If other is selected, specify:", array("relationship_to_child{@}=={@}3_Other"), "Please specify.");
 
         
         $this->form->addElement("static", null, "<br/>");
