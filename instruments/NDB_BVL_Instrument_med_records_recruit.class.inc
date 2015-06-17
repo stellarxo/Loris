@@ -242,7 +242,7 @@ class NDB_BVL_Instrument_med_records_recruit extends NDB_BVL_Instrument_med_reco
                 $this->form->addElement ( "static", null, "<BR>" ); //line space
         $this->form->addElement("static",null,"If an audiology evaluation was completed, please provide the following information:");
         $this->addDateElement('hearing_screening', "Date of audiology evaluation:");
-        $this->XINRegisterRule("hearing_screening_date", array("hearing_screening_date_status{@}=={@}", "not_completed{@}!={@}not_complete"), "Please specify date of hearing");
+        $this->XINRegisterRule("hearing_screening", array("hearing_screening_date_status{@}=={@}", "not_completed{@}!={@}not_complete"), "Please specify date of hearing");
 
         $this->form->addElement("static", null);
         $this->form->addElement("header", null, "Methods used: (check all that apply)");
