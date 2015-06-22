@@ -55,7 +55,8 @@ class NDB_BVL_Instrument_neuro_screen extends NDB_BVL_Instrument
 	/**
 	 * Array of column names to be ignored by the double data entry conflict detector.
 	 */
-	$this->_doubleDataEntryDiffIgnoreColumns = array('CommentID', 'UserID', 'Testdate',  'Window_Difference', 'Candidate_Age','Data_entry_completion_status',
+	$this->_doubleDataEntryDiffIgnoreColumns = array('CommentID', 'UserID', 'Testdate',  'Window_Difference', 'Candidate_Age',
+                            'Data_entry_completion_status',
 							 'q1_strabismus_specify',
 							 'q2_specify',
 							 'q7_cleft_describe',
@@ -560,16 +561,11 @@ class NDB_BVL_Instrument_neuro_screen extends NDB_BVL_Instrument
 
             // DB Object
             $db =& Database::singleton();
-            if(PEAR::isError($db)) {
-                return PEAR::raiseError ("Could not connect to database: ".$db->getMessage());
-            }
 
             //applicable visit version
             $query = "SELECT visit from neuro_screen WHERE CommentID = '".$this->getCommentID()."'";
             $visit = $db->selectOne($query);
-            if(PEAR::isError($visit)){
-                return PEAR::raiseError("Query has failed to select Visit: ".$visit->getMessage());
-            }
+
 
             $requiredQuestions = array(); //moving it outside of the scope of the switch.  Seems to help.
             //which questions must be answered for this particular visit
@@ -1022,16 +1018,11 @@ class NDB_BVL_Instrument_neuro_screen extends NDB_BVL_Instrument
 
             // DB Object
             $db =& Database::singleton();
-            if(PEAR::isError($db)) {
-                return PEAR::raiseError ("Could not connect to database: ".$db->getMessage());
-            }
 
             //applicable visit version
             $query = "SELECT visit from neuro_screen WHERE CommentID = '".$this->getCommentID()."'";
             $visit = $db->selectOne($query);
-            if(PEAR::isError($visit)){
-                return PEAR::raiseError("Query has failed to select Visit: ".$visit->getMessage());
-            }
+
 
             $requiredQuestions = array(); //moving it outside of the scope of the switch.  Seems to help.
             //which questions must be answered for this particular visit

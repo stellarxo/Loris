@@ -355,7 +355,7 @@ class NDB_Reliability_adi_r_reliability extends NDB_Reliability
         $algorithm_mismatches  = 0;
         $algorithm_denominator = 0;
         $age_months = $this->_getAgeInMonths($instrument_record, $reliability_record);
-        print $age_months;
+        //print $age_months;
         if($age_months < 48 ) {
 //echo("Less than 4 years<BR>");
             $algorithm_questions =  array( "q_2_age_first_noticed_code",

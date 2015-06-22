@@ -11,7 +11,7 @@ class NDB_BVL_Instrument_med_records_recruit extends NDB_BVL_Instrument_med_reco
 	 INSERT INTO test_battery VALUES ('', 'med_records_recruit', '300', '420', 'Y', 'Visit', '2'); -- 12month recruit
 	 INSERT INTO test_battery VALUES ('', 'med_records_recruit', '150', '270', 'Y', 'Visit', '3'); -- controls
 	*/
-        var $developmental_concerns = array ('language' => "language", 'social' => "social", 'motor' => "motor",
+        var $developmental_concerns = array (''=>NULL,'language' => "language", 'social' => "social", 'motor' => "motor",
                                          'other' => "other",'not_answered'=>'Not Answered');
 	
 	
@@ -182,6 +182,8 @@ class NDB_BVL_Instrument_med_records_recruit extends NDB_BVL_Instrument_med_reco
 
                 $this->form->addElement ( "select", "developmental_concerns", "Are there any developmental concerns?", $this->yesNo );
                 $this->addSelect( "developmental_concerns_specify", $this->indent . "1. If there were developmental concerns pleases specify first concern:", $this->developmental_concerns,"multiple size='5'" );
+                $this->XINRegisterRule("developmental_concerns_specify",array("developmental_concerns{@}=={@}yes" ),
+                                       "Please specify developmental concern");
                 $this->addTextElement ( "developmental_concerns_other_specify", $this->indent .$this->indent. "If other is selected, specify:", array ("developmental_concerns{@}=={@}yes", "developmental_concerns_specify{@}=={@}other" ), "This field is required." );
 
                 $mapping = array(2=>'second',3=>'third',4=>'fourth',5=>'fifth');
@@ -195,7 +197,9 @@ class NDB_BVL_Instrument_med_records_recruit extends NDB_BVL_Instrument_med_reco
                 $this->form->addGroup($group, "date_development_concern_group", $this->indent.$this->indent."Date of first developmental concern:", $this->_GUIDelimiter, FALSE);
                 unset($group);
                 $status = "date_development_concern_status";
-                $this->XINRegisterRule("date_development_concern", array("$status{@}=={@}", "developmental_concerns_specify{@}!={@}"), "A Date, not answered is required", "date_development_concern_group");
+                $this->XINRegisterRule("date_development_concern", array("$status{@}=={@}",
+                                       "developmental_concerns_specify{@}!={@}"),
+                                       "A Date, not answered is required", "date_development_concern_group");
 
                  for ($i=2;$i <=5;$i++) {
                    $this->addSelect( "developmental_concerns_specify".$i, $this->indent . "$i. If there were developmental concerns please specify $mapping[$i] concern:", $this->developmental_concerns,"multiple size='5'" );
@@ -238,7 +242,7 @@ class NDB_BVL_Instrument_med_records_recruit extends NDB_BVL_Instrument_med_reco
                 $this->form->addElement ( "static", null, "<BR>" ); //line space
         $this->form->addElement("static",null,"If an audiology evaluation was completed, please provide the following information:");
         $this->addDateElement('hearing_screening', "Date of audiology evaluation:");
-        $this->XINRegisterRule("hearing_screening_date", array("hearing_screening_date_status{@}=={@}", "not_completed{@}!={@}not_complete"), "Please specify date of hearing");
+        $this->XINRegisterRule("hearing_screening", array("hearing_screening_date_status{@}=={@}", "not_completed{@}!={@}not_complete"), "Please specify date of hearing");
 
         $this->form->addElement("static", null);
         $this->form->addElement("header", null, "Methods used: (check all that apply)");
