@@ -1,6 +1,12 @@
 <?php
 set_include_path(get_include_path().":../libraries:../../php/libraries:");
 require_once 'NDB_Factory.class.inc';
+$client = new NDB_Client();
+$client->makeCommandLine();
+$client->initialize('../config.xml');
+
+require_once "Database.class.inc";
+require_once "Utility.class.inc";
 
 
 class NDAR_Release_Defaced {
@@ -63,9 +69,7 @@ class NDAR_Release_Defaced {
 
     var $CSVData = array();
     function copyFile($origin, $dest) {
-        if(!is_dir(dirname($dest))) {
-            mkdir(dirname($dest), 0777, true);
-        }
+        mkdir(dirname($dest), 0777, true);
         return copy($origin, $dest);
     }
     function replaceID($string, $CandID, $IBISID) {
@@ -92,7 +96,6 @@ class NDAR_Release_Defaced {
     function getHeader($file, $header) {
         $data = shell_exec("mincheader $file | grep $header");
         $val = explode('"', $data);
-        //print "Getting header $header from $file\n";
         if(count($val) > 1) {
             return $val[1];
         } else {
@@ -111,6 +114,7 @@ class NDAR_Release_Defaced {
     function addToCSV($file, $info) {
         $StudyDate = $this->getHeader($info['File'], 'study:start_date');
         $ScannerID = $this->getHeader($info['File'], 'study:serial_no');
+        print "ScannerID " . $ScannerID . " " . md5($ScannerID) . "\n";
         $XSpace    = $this->getHeader($info['File'], 'xspace:length');
         $YSpace    = $this->getHeader($info['File'], 'yspace:length');
         $ZSpace    = $this->getHeader($info['File'], 'zspace:length');
@@ -135,29 +139,29 @@ class NDAR_Release_Defaced {
             'subjectkey'           => $info['CandidateGUID'],
             'src_subject_ID'       => $info['IBISID'],
             'gender'               => $info['Gender'],
-            'ScanDate'             => $StudyDate,
+            //'ScanDate'             => $StudyDate,
             'Site'                 => $info['CenterID'],
             'ScannerID'            => md5($ScannerID),
             'interview_date'       => "$StudyMo/01/$StudyYear",
             'interview_age'        => round(date_diff(new DateTime("$StudyYear-$StudyMo-$StudyDay"), new DateTime($info['DoB']))->format('%a') / (365/12)),
-            'image_file_format'    => 'MINC',
-            'image_modality'       => 'MRI',
             'image_description'    => $desc,
             'image_num_dimensions' => 3,
             'image_extent1'        => $XSpace,
             'image_extent2'        => $YSpace,
             'image_extent3'        => $ZSpace,
             'image_thumbnail_file' => '',
+            'image_file_format'    => 'MINC',
+            'image_modality'       => 'MRI', 
             'scanner_manufacturer_pd'=> 'Siemens',
             'transformation_performed'=> 'Yes',
-            'transformation_type' => 'DICOM to MINC',
+            'transformation_type'  => 'DICOM to MINC',
             'image_unit1'          => 'millimeters',
             'image_unit2'          => 'millimeters',
             'image_unit3'          => 'millimeters',
-            'image_orientation'    => 'sagittal',
             'image_resolution1'    => abs($XStep),
             'image_resolution2'    => abs($YStep),
             'image_resolution3'    => abs($ZStep),
+            'image_orientation'    => 'sagittal',
             'image_slice_thickness'=> abs($XStep)
 
         );
@@ -166,7 +170,7 @@ class NDAR_Release_Defaced {
         $factory = NDB_Factory::singleton();
         $db = $factory->Database();
 
-        $files = scandir("/home/driusan/NDAR/V06/Valid");
+        $files = scandir("/data/not_backedup/IBIS2/Valid");
         foreach($files as $file) {
             if(strpos($file, ".mnc") === FALSE 
                 || (strpos($file, "t1w") === FALSE
@@ -179,10 +183,10 @@ class NDAR_Release_Defaced {
             $info = $db->pselectRow("SELECT ProbandGUID, CandidateGUID, CenterID, DoB, IBISID, Gender FROM candidate WHERE CandID=:dccid", array('dccid' => $pieces[1]));
 
             $file_anonymized = $this->replaceID($file, $pieces[1], $info['IBISID']);
-            $this->anonFile("/home/driusan/NDAR/V06/Valid/$file", "IBIS1_anon/$file_anonymized");
+            $this->anonFile("/data/not_backedup/IBIS2/Valid/$file", "IBIS2_anon/$file_anonymized");
             $this->addToCSV($file_anonymized, array
                 (
-                    'File' => "/home/driusan/NDAR/V06/Valid/$file",
+                    'File' => "/data/not_backedup/IBIS2/Valid/$file",
                     'ProbandGUID' => $info['ProbandGUID'],
                     'CandidateGUID' => $info['CandidateGUID'],
                     'CenterID' => $info['CenterID'],
@@ -192,7 +196,7 @@ class NDAR_Release_Defaced {
                 )
             );
         }
-        $fp = fopen("IBIS1_anon/NDARMRI_Defaced.csv", 'w');
+        $fp = fopen("IBIS2_anon/NDARMRI_Defaced_IBIS2.csv", 'w');
         fputcsv($fp, array('image03'));
         fputcsv($fp, array_keys($this->CSVData[0]));
         foreach ($this->CSVData as $row) {
