@@ -1,0 +1,579 @@
+<?php
+class NDB_BVL_Instrument_das extends NDB_BVL_Instrument
+{
+
+    // TO DO LIST:
+    // update answer/q arrays
+    // SQL queries
+    // Age constraints
+    // Add comment section to each page?
+
+    // Check rules
+
+
+
+
+
+    /*
+    INSERT INTO test_names VALUES
+    INSERT INTO instrument_subtests VALUES
+    INSERT INTO test_battery VALUES
+    */
+
+    /*
+     * sets up basic data, such as the HTML_Quickform object, and so on.
+     *
+     * @param string $commentID  the CommentID identifying the data to load
+     * @param string $page       if a multipage form, the page to show
+     * @return void
+     * @access public
+     */
+    function setup($commentID, $page){
+
+        $this->formType="XIN";
+        $this->form = new HTML_Quickform('test_form');
+        $this->page = $page;            // page label (number or
+        // string - used by
+        // user-defined child classes)
+
+        // object properties
+        $this->testName = "das";
+        $this->table = 'das';
+
+        // data keyed by commentID
+        $this->commentID = $commentID;
+
+        //The array of dates/timestamps to convert to database dates/timestamps
+        //Any HTML_Quickform date elements must be listed here
+        $this->dateTimeFields=array("Date_taken");
+        // DoB_proband needed ??????????????????????
+
+        //The array of selects with multiple answers allowed
+        //Any HTML_Quickform multiple selects must be listed here
+        $this->_selectMultipleElements = array();
+
+        // required fields for data entry completion status
+        $this->_requiredElements = array('Examiner');
+        // FINISH THIS!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+//        $this->localDefaults = array_merge($this->localDefaults, array("trial"=>"Trial", "outcome"=>"Outcome", "correct"=>"# Correct", "trials"=>"# Trials"));
+
+
+	    // Array of column names to be ignored by the double data entry conflict detector
+        $this->_doubleDataEntryDiffIgnoreColumns =
+            array('CommentID', 'UserID', 'Testdate',  'Window_Difference', 'Candidate_Age');
+
+        // setup the form
+        $this->_setupForm();
+
+    }
+
+    /*
+     * method to build the HTML_Quickform object into a paged form
+     *
+     * @return void
+     * @access private
+     */
+    function _setupForm(){
+
+//        $this->_getAge();
+
+        // AGE RELATED CONSTRAINTS HERE !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+        if(preg_match("/(_page[0-9]+)/",$this->page,$matches)){
+            call_user_method($matches[1], $this);
+        } else {
+            $this->_main();
+        }
+
+        //Defines the call back function for HTML Quickform to use when validating the form.
+        $this->form->addFormRule(array(&$this,'XINValidate'));
+
+    }
+
+    /*
+     * generates the main page of the form
+     *
+     * @return void
+     * @access private
+     *
+     */
+    function _main(){
+
+        // display test name
+        $this->form->addElement('header', 'instrument_title', "DAS");
+
+        // automatically adds examiner & date of administration
+        $this->_addMetadataFields();
+
+
+
+        $this->form->addElement('header', 'Raw Scores', "DAS");
+        $this->form->addElement("static", null, "Final scores must be calculated.");
+
+        // totals for each page
+        // Go
+        // Here
+
+
+//        $this->form->addElement("static", null, "<BR>");
+//
+//        $scoreLabels = array("Total_A1"=>"Total A1",
+//            "Total_A2"=>"Total A2",
+//            "Total_A3"=>"Total A3",
+//            "Total_A4"=>"Total A4",
+//            "A_Total"=>"A Total (cutoff = 10)",
+//            "Total_B1"=>"Total B1",
+//            "Total_B4"=>"Total B4",
+//            "Total_B2V"=>"Total B2(V)",
+//            "Total_B3V"=>"Total B3V",
+//            "BV_Total"=>"B(V) Total (cutoff = 8)",
+//            "BNV_Total"=>"B(NV) Total (cutoff = 7)",
+//            "Total_C1"=>"Total C1",
+//            "Total_C2"=>"Total C2",
+//            "Total_C3"=>"Total C3",
+//            "Total_C4"=>"Total C4",
+//            "C_Total"=>"C Total (cutoff = 3)",
+//            "D_Total"=>"D Total (cutoff = 1)",
+//            "summary_diagnosis"=>"Summary Diagnosis"
+//        );
+//        foreach ($scoreLabels as $field=>$label) {
+//            if(in_array($field, array("A_Total", "BV_Total", "BNV_Total", "C_Total", "D_Total")) == TRUE) {
+//                $label = $this->indent . $this->indent . $label;
+//            }
+//            $this->form->addElement("static", $field, $label);
+//        }
+//        $this->form->addElement('static', null, "<br /><br />");
+//        $this->form->addElement("header", null, "Scores based on 2012 Algorithm");
+//        $this->form->addElement("static", null, "<BR>");
+//        $scoreLabels_2012alg = array("social_affect" => "Social Affect",
+//            "repeat_restrict_behavior" => "Repetitive & Restricted Behavior",
+//            "imitation" => "Imitation, Gestures & Play Imitation",
+//            "reciprocal_interaction" => "Reciprocal and Peer Interaction",
+//            "2012alg_research_diag"  => "Research diagnosis",
+//            "2012alg_clinical_diag"  => "Clinical diagnosis",
+//            "2012alg_range_concern" => "Ranges of Concern"
+//        );
+//
+//        foreach ($scoreLabels_2012alg as $field=>$label) {
+//            $this->form->addElement("static", $field, $label);
+//        }
+//
+//        $this->form->addElement('static', null, "<br /><br />");
+//        $this->form->addElement("textarea", "other_comments", "Comments about Validity:", array('cols'=>25, 'rows'=>4));
+//        $this->XINRegisterRule("other_comments", array("{other_comments}{@}=={@}NEVER_REQUIRED"));
+
+
+    }
+
+    function _score(){
+
+        $db =& Database::singleton();
+
+        // skip scoring if proband DoB was not entered, i.e. data entry is not completed
+        if(empty($this->respondentAgeYears)){
+            return;
+        }
+
+        // null scores
+        $this->_nullScores($this->scoreCols);
+        // Get the item scores
+        $query = "SELECT * FROM $this->table WHERE CommentID='".$this->getCommentID()."'";
+        $record=array();
+        $db->selectRow($query, $record);
+
+
+        $conversion = array('incorrect'=>0,'correct'=>1,0=>0,1=>1,2=>2);
+
+        foreach ($record as $field=>$code) {
+            if(!in_array($field, array(""))) {
+                $this->scores[$field] = substr($code,0,1);
+                if(is_numeric($this->scores[$field])) {
+                    $intval = intval($this->scores[$field]);
+                    $this->scores[$field] = $conversion[$intval];
+                }
+                else {
+                    $this->scores[$field] = 0; // for 'not_answered'
+                }
+            }
+        }
+
+        //Age 0 years 0 months to 2 years 5 months
+        if ($this->respondentAgeYears < 2) {
+            $scoreCols["A_Total"] = "Respondent too young to score";
+            //Diagnostic Algorithm, 2y -> 3y11m
+        }
+        elseif ($this->respondentAgeYears >= 2 && $this->respondentAgeYears < 3.5) {
+
+            // 1. Block Building
+            $scoreCols["Total_A1a"] = $this->scores["q_1_trial1"];
+            $scoreCols["Total_A1b"] = $this->scores["q_1_trial2"];
+            $scoreCols["Total_A2"] = 0;
+            $j = 2;
+            $numItems = 12;
+            for ($i = 2; $i <= $numItems; $i++) {
+                $scoreCols["Total_A2"] += $this->scores["q_{$j}_item{$i}"];
+                $j++;
+            }
+            $scoreCols["Total_A"] = max($scoreCols["TotalA1a"], $scoreCols["TotalA1b"]) + $scoreCols["TotalA2"];
+
+            // 2. Verbal Comprehension
+            $scoreCols["Total_B"] = 0;
+            $j = 13;
+            $numItems = 36;
+            for ($i = 1; $i <= $numItems; $i++) {
+                $scoreCols["Total_B"] = $this->scores["q_{$j}_item{$i}"];
+                $j++;
+            }
+
+            // 3. Picture Similarities
+            $scoreCols["Total_C"] = 0;
+            $j=37;
+            $numItems=#;
+            for ($i = 1; $i <= $numItems; $i++) {
+                $scoreCols["Total_C"] = $this->scores["q_{$j}_item{$i}"];
+                $j++;
+            }
+
+            // 4. Naming Vocabulary
+            $scoreCols["Total_D"] = 0;
+            $j=37;
+            $numItems=#;
+            for ($i = 1; $i <= $numItems; $i++) {
+                $scoreCols["Total_D"] = $this->scores["q_{$j}_item{$i}"];
+                $j++;
+            }
+
+            // 5. Recall of Objects - Immediate
+
+            $scoreCols["Total_E1"] = $this->scores["q_70_trial1"];
+            $scoreCols["Total_E2"] = $this->scores["q_70_trial2"];
+            $scoreCols["Total_E3"] = 0;
+            if ($scoreCols["Total_E1"] + $scoreCols["Total_E2"] == 40) {
+                $scoreCols["Total_E3"] = 20;
+            }
+            else {
+                $scoreCols["Total_E3"] = $this->scores["q_70_trial3"];
+            }
+            // if not spoiled
+            $scoreCols["Total_E"] = ($scoreCols["Total_E1"] + $scoreCols["Total_E2"] + $scoreCols["Total_E3"]);
+            // else add the two successful * 1.5 -- round up to whole number
+
+
+            // 6. Pattern Construction
+            $scoreCols["Total_F1"] = $this->scores["q_{$j}_item1"];
+            $scoreCols["Total_F"] = 0;
+//            $j=37;
+//            $numItems=#;
+//            for ($i = 1; $i <= $numItems; $i++) {
+//                $scoreCols["Total_D"] = $this->scores["q_{$j}_item{$i}"];
+//                $j++;
+            }
+
+        }
+
+
+
+    }
+
+    function _page1() {
+
+        // Usual Age Range: 2 years 6 months to 3 years 5 months
+        // Extended Age Range: 3 years 6 months to 4 years 11 months
+        // All start at Item 1 unless Alternative Stopping Point is reached
+        // Alternative Stopping Point - after 4 consecutive failures, STOP
+
+        $this->form->addElement("header", null, "Block Building");
+
+        // Item 1 - score better of two attempts
+        $this->form->addElement("q_1_trial1", "Trial 1 - Number of blocks used:", array("" => NULL, "2"=>"8 blocks","1"=>"4-7 blocks","0"=>"0-3 blocks","not_answered" => "Not Answered"));
+        $this->XINRegisterRule("q_1_trial1", array("q_70_trial1_status{@}=={@}"), "Required");
+        $this->form->addElement("select", "q_1_trial2done", "Was a second trial performed?", array("" => NULL, "yes" => "Yes", "no" => "No", "not_answered" => "Not Answered"));
+        $this->XINRegisterRule("q_1_trial2done", array("q_70_trial2done_status{@}=={@}"), "Required");
+        $this->form->addElement("q_1_trial2", "Trial 2 - Number of blocks used:", array("" => NULL, "2"=>"8 blocks","1"=>"4-7 blocks","0"=>"0-3 blocks","not_answered" => "Not Answered"));
+        $this->XINRegisterRule("q_1_trial2", array("q_1_trial2done{@}=={@}yes"), "This is required if a second trial was attempted");
+//
+
+        $answerArray = array(""=>NULL, "incorrect"=>"Incorrect (0 points)", "correct"=>"Correct (1 point)", "not_answered"=>"Not Answered");
+        $failArray = array(""=>NULL,"rotation"=>"Rotation", "reversal"=>"Reversal", "not_answered"=>"Not Answered");
+
+        // Items 2 to 12
+        $j=2;
+        $numItems=12;
+        for ($i = 2; $i <= $numItems; $i++) {
+            $group[]=&$this->form->addElement("select", "q_{$j}_item{$i}", "Item $i", $answerArray);
+            $group[]=&$this->form->addElement("select", "q_{$j}_item{$i}_f", "Failure Type:", $failArray);
+            $this->XINRegisterRule("q_{$j}_item{$i}_f", array("q_{$j}_item{$i}{@}=={@}'incorrect"), "This is required if the response was a failure");
+//            $this->form->addGroup($group, "q_{$j}_item{$i}"."_group", $label, null, false);
+            $j++;
+        }
+
+        // Alternative Stopping Point - after 4 consecutive failures, STOP
+        // Change to make it not answerable
+        $this->XINRegisterRule("q_{$j}_item{$i}_f",
+            array("q_{$j-1}_item{$i-1}{@}=={@}'incorrect",
+                "q_{$j-2}_item{$i-2}{@}=={@}'incorrect",
+                "q_{$j-3}_item{$i-3}{@}=={@}'incorrect",
+                "q_{$j-4}_item{$i-4}{@}=={@}'incorrect"),
+            "This field cannot be filled due to an Alternative Stopping Point (4 consecutive failures).");
+
+
+
+    }
+
+    function _page2() {
+
+        // Usual Age Range: 2 years 6 months to 5 years 11 months
+        // Extended Age Range: 6 years 0 months to 6 years 11 months
+
+        // Alternative Stopping Point: After 5 consecutive failures, if at least 3 passes STOP
+        // <3 passes on all, go back to previous starting point
+
+
+        $this->form->addElement("header", null, "Verbal Comprehension");
+
+        $answerArray = array(""=>NULL, "incorrect"=>"Incorrect (0 points)", "correct"=>"Correct (1 point)", "not_answered"=>"Not Answered");
+
+        // If you suspect that a child will have difficulty with the starting items for his or her age,
+        // use the Starting and Decision Points for a younger age group.
+        // Out-of-level testing for children of average or low ability only
+
+        $j=13;
+        $numItems=36;
+        for ($i = 1; $i <= $numItems; $i++) {
+            switch ($i) {
+                case 1:
+                    $this->form->addElement("static", null, "<br /><br />>");
+                    $this->form->addElement("header", null, "Items 1-6: Teddy Bear");
+                    break;
+                case 7:
+                    $this->form->addElement("static", null, "<br /><br />>");
+                    $this->form->addElement("header", null, "Items 7-18: Toys");
+                    break;
+                case 19:
+                    $this->form->addElement("static", null, "<br /><br />>");
+                    $this->form->addElement("header", null, "Items 19-29: Inset Tray");
+                    break;
+                case 30:
+                    $this->form->addElement("static", null, "<br /><br />>");
+                    $this->form->addElement("header", null, "Items 30-36: Chips");
+                    break;
+            }
+            $this->form->addElement("select", "q_{$j}_item{$i}", "Item $i", $answerArray);
+            $j++;
+        }
+
+        // 2 years 6 months to 3 years 11 months
+        // Item 1 to 12 (Decision Point), 13 to 29 (Decision Point)
+        // Decision Point: stop unless <3 failures on all given continue to next DP;
+        // <3 passes on all items go back to previous starting point
+
+        // 4 years 0 months to 5 years 11 months
+        // Item 13 to 36
+        // 6 years 0 months to 6 years 11 months
+        // * Out-of-level testing for children of average or low ability only
+        // Item 13 to 36
+
+
+    }
+
+    function _page3() {
+
+        // Usual Age Range: years months to years months
+        // Out of Level: years months to years months
+
+        $this->form->addElement("header", null, "Picture Similarities");
+
+        $answerArray = array(""=>NULL, "incorrect"=>"Incorrect (0 points)", "correct"=>"Correct (1 point)");
+        $radioArray = array(""=>NULL, 1=>1, 2=>2, 3=>3, 4=>4, "not_answered"=>"Not Answered");
+
+        $j=37;
+        $numItems=32;
+        for ($i = 1; $i <= $numItems; $i++) {
+            $this->form->addElement("select", "q_{$j}_item{$i}", "Item $i", $answerArray);
+            $this->form->addElement("radio", "q_{$j}_item{$i}_response", "Child's Response:", $radioArray);
+            $j++;
+        }
+    }
+
+
+    function _page4() {
+
+        // Usual Age Range: 2 years 6 months to years months
+        // Extended Age Range: 6 years 0 months to 7 years 11 months
+        // Out of Level: 8 years 0 months to 8 years 11 months
+
+        $this->form->addElement("header", null, "Naming Vocabulary");
+
+        $answerArray = array(""=>NULL, "incorrect"=>"Incorrect (0 points)", "correct"=>"Correct (1 point)");
+
+        $j=37;
+        $numItems=32;
+        for ($i = 1; $i <= $numItems; $i++) {
+            $this->form->addElement("select", "q_{$j}_item{$i}", "Item $i", $answerArray);
+
+            // Does this include "Other acceptable responses????"
+            // Change answerArray to Object or Picture, Other Acceptable Response, Incorrect Response??
+            $this->form->addElement("select", "q_{$j}_item{$i}_other",
+                "Did the child give a response other than the one listed on the Record Form?",
+                array(""=>NULL, "yes"=>"Yes", "no"=>"No", "not_answered"=>"Not Answered"));
+            $this->XINRegisterRule("q_{$j}_item{$i}_other", array("q_{$j}_item{$i}{@}=={@}yes"), "Required");
+            // Don't allow to fill out if no or other answer
+
+            $this->form->addElement("radio", "q_{$j}_item{$i}_q", $this->indent . "Q?");
+            $this->XINRegisterRule("q_{$j}_item{$i}_q", array("q_{$j}_item{$i}{@}=={@}no"), "Required");
+
+            $this->addLargeTextAreaElement("q_{$j}_item{$i}_text", $this->indent . "Response:");
+            $this->XINRegisterRule("q_{$j}_item{$i}_text",
+                array("q_{$j}_item{$i}{@}=={@}no","q_{$j}_item{$i}{@}=={@}yes"), "Required");
+
+            $j++;
+        }
+
+    // Q if incorrect
+
+        // only record if not listed in Record form
+
+        // 2:6-4>5 Item 1-16
+        // 4:6-7:11 Item 8-26
+        // 8:0-8:11 Item 8-26
+
+        // Decision Point: Stop unless <3 failures (con't), <3 passes (SP)
+        // ASP: 5 consecutive failures, 3+ passes (Stop), <3 passes (SP)
+
+
+    }
+
+
+    function _page5() {
+
+        // Usual Age Range: years months to years months
+        // Out of Level: years months to years months
+
+        // Range must be 0 to 20 for each trial
+
+        $this->form->addElement("header", null, "Recall of Objects - Immediate");
+
+        $yesNoNa = array(""=>NULL, "yes"=>"Yes", "no"=>"No", "not_answered"=>"Not Answered");
+
+        $this->addElement("select", "q_70_trial1_success", "Was the trial successful?", $yesNoNa);
+        $this->XINRegisterRule("q_70_trial1_success", array("q_70_trial1_success_status{@}=={@}"), "Required");
+        $this->addNumericElement("q_70_trial1", "Trial 1 - Number of objects recalled correctly:");
+        $this->XINRegisterRule("q_70_trial1", array("q_70_trial1_success"), "Required");
+
+        $this->addElement("select", "q_71_trial2_success", "Was the trial successful?", $yesNoNa);
+        $this->XINRegisterRule("q_71_trial2_success", array("q_71_trial2_success_status{@}=={@}"), "Required");
+        $this->addNumericElement("q_71_trial2", "Trial 2 - Number of objects recalled correctly:");
+        $this->XINRegisterRule("q_71_trial2", array("q_71_trial2_success{@}=={@}yes"), "Required");
+
+        // if first two = 20, skip 30 and make equal to 30
+        $this->addElement("select", "q_72_trial3_success", "Was the trial successful?", $yesNoNa);
+        $this->XINRegisterRule("q_72_trial3_success", array("q_72_trial3_success_status{@}=={@}"), "Required");
+        $this->addNumericElement("q_72_trial3", "Trial 3 - Number of objects recalled correctly:");
+        $this->XINRegisterRule("q_72_trial3", array("q_72_trial3_success"), "Required");
+
+        // require 2 trials
+        // if spoiled or unscorable...
+
+    }
+
+
+    function _page6(){      /*CONTINUE HERE!*/
+
+        // Usual Age Range: 3 years 6 months to 17 years 11 months
+        // Out of Level: 3 years 0 months to 3 years 5 months
+
+        // DP
+        //ASP
+
+        $this->form->addElement("header", null, "Pattern Construction");
+
+        $answerArray = array(""=>NULL, "incorrect"=>"Incorrect (0 points)", "correct"=>"Correct (1 point)", "not_answered"=>"Not Answered");
+        $successArray = array(""=>NULL, "p"=>"Pass", "f"=>"Fail", "not_answered"=>"Not Answered");
+
+        $j=73;
+
+        // 2 trials --> 3 for correct on 1st, 1 for 2nd, 0 otherwise
+        $this->form->addElement("select", "q_{$j}_item1", "Item 1", $answerArray);
+
+
+        // Formatting of a/b?
+
+        $numItems=#;
+        for ($i = 1; $i <= $numItems; $i++) {
+            $this->form->addElement("static","null","Item $i");
+            $this->addNumericElement("q_{$j}_item{$i}_response_time", "Response Time:");
+            $this->form->addElement("select", "q_{$j}_item{$i}", "Trial Outcome:", $successArray);
+//            $this->form->addElement("radio", "q_{$j}_item{$i}_q", $this->indent . "Q?");
+//            $this->addLargeTextAreaElement("q_{$j}_item{$i}_text", $this->indent . "Response:");
+            $j++;
+        }
+
+        // 2 - 23 --> two trials
+        // response time, pass, fail P or F
+        // If F in (a), allow (b) P or F
+
+    }
+
+    function _page7(){
+
+        // Usual Age Range: years months to years months
+        // Out of Level: years months to years months
+
+        $this->form->addElement("header", null, "Early Number Concepts");
+
+        $answerArray = array(""=>NULL, "incorrect"=>"Incorrect (0 points)", "correct"=>"Correct (1 point)");
+
+        $j=#;
+
+        $this->form->addElement("select", "q_{$j}_item1", "Item 1", $answerArray);
+
+        $numItems=32;
+        for ($i = 1; $i <= $numItems; $i++) {
+            $this->form->addElement("select", "q_{$j}_item{$i}", "Item $i", $answerArray);
+//            $this->form->addElement("radio", "q_{$j}_item{$i}_q", $this->indent . "Q?");
+//            $this->addLargeTextAreaElement("q_{$j}_item{$i}_text", $this->indent . "Response:");
+            $j++;
+        }
+
+
+
+
+    }
+
+    function _page8(){
+
+        // Usual Age Range: years months to years months
+        // Out of Level: years months to years months
+
+        $this->form->addElement("header", null, "Recall of Objects - Delayed");
+
+
+    }
+
+    function _page9(){
+
+        // Usual Age Range: years months to years months
+        // Out of Level: years months to years months
+
+        $this->form->addElement("header", null, "Copying");
+
+
+    }
+
+
+    function addASPElement($field, $label = "&nbsp;&nbsp;&nbsp;&nbsp;Describe:", $rules=array(), $rule_message='This field cannot be filled due to an Alternative Stopping Point.') {
+        return;  //removed all free form comment text boxes.
+        $group[]=&$this->form->createElement("textarea", $field, null, array('cols'=>60, 'rows'=>6));
+        $group[]=&$this->form->createElement("select", $field."_status", "", array(NULL=>'', 'not_answered'=>'Not Answered'));
+        $this->form->addGroup($group, $field.'_group', $label, null, false);
+        unset($group);
+        $rules_array=array_merge(array($field.'_status{@}=={@}'),$rules);
+        $this->XINRegisterRule($field, $rules_array, $rule_message, $field.'_group');
+    }
+
+
+}
+
+
+?>
