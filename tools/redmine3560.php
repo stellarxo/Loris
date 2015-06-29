@@ -7,6 +7,8 @@
  */
 
 set_include_path(get_include_path().":../libraries:../../php/libraries:");
+require_once __DIR__ . "/../../vendor/autoload.php";
+//require_once "generic_includes.php";
 require_once "NDB_Client.class.inc";
 require_once"Utility.class.inc";
 require_once"Database.class.inc";
