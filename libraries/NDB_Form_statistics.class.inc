@@ -837,7 +837,7 @@ class NDB_Form_statistics extends NDB_Form
         }
         $ethnic_categories = array("hispanic","non_hispanic","not_answered");
         $ethnic_name = array("Hispanic or Latino", "Not Hispanic or Latino", 
-                "Unknown (individuals not reporting ethnicity");
+                "Unknown or Not Reported");
         $cat_count = 0;
         $cat_total = array('Female' =>0, 'Male' =>0, 'Unknown' =>0);
         foreach($ethnic_categories as $ethnic_cat){
