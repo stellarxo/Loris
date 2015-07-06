@@ -637,8 +637,7 @@ class NDB_Form_statistics extends NDB_Form
         }
         if(isset($_REQUEST['DemographicSite']) && $_REQUEST['DemographicSite'] != '') {
             $ExtraSite_Criteria = 'AND (c.CenterID IS NULL OR c.CenterID=' . $_REQUEST['DemographicSite'] . ')';
-        }
-        else {
+        } else {
             $ExtraSite_Criteria = '';
         }
         $currentProject = null;
