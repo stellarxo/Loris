@@ -850,7 +850,7 @@ class NDB_Form_statistics extends NDB_Form
                     AND fg.CommentID NOT LIKE 'DDE%' AND sn.CenterID <> '1' AND sn.Active='Y' 
                     AND cad.Active='Y' AND fg.Data_Entry='Complete' $Extra_Where AND fg.Administration <> 'None' GROUP BY Gender", $params);
             if(is_null($results)){
-            }else{
+            } else {
                 foreach($results as $row){
                     $Gender = $row['Gender'];
                     $Count = $row['val'];
@@ -862,7 +862,8 @@ class NDB_Form_statistics extends NDB_Form
                         $cat_total[$Gender] += $Count;
                     }
 
-                }}
+                }
+            }
             $enroll_data[] = array('ethnic_cat' => $ethnic_name[$cat_count],'female_count' => $gender['Female'],'male_count' => $gender['Male'],'unknown_count' => $gender['Unknown'],'total_count' =>array_sum($gender) );
             $cat_count++;
         }
