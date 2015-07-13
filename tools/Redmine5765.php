@@ -4,6 +4,11 @@
  * User: Stella
  * Date: 15-06-17
  * Time: 10:17 AM
+ *
+ * PATCH : Saves relationship_to_child entries in temp column relationship_to_child_temp
+ *  and maps text answers in relationship_to_child column to drop down choices
+ *
+ *
  */
 
 set_include_path(get_include_path().":../libraries:../../php/libraries:");
@@ -17,8 +22,18 @@ $client->initialize('../config.xml');
 
 $db =& Database::singleton();
 
+// create temp column to hold previous values
+$tempCol = $db->run("ALTER TABLE csbs ADD relationship_to_child_temp VARCHAR(255)");
+
 $query = $db->pselect("SELECT relationship_to_child, relationship_to_child_specify, relationship_to_child_status FROM csbs", array());
 
+// copy previous values into temp column
+foreach ($query as $row) {
+    $RTC = $row['relationship_to_child'];
+    $query = $db->update('csbs', array($row['relationship_to_child_temp'] => $RTC));
+}
+
+// map text values to drop down options
 foreach ($query as $row) {
 
     // Mother
