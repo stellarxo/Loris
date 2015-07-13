@@ -2,6 +2,13 @@
 
 class NDB_BVL_Instrument_BSRC extends NDB_BVL_Instrument
 {
+
+
+/*
+INSERT INTO test_names (Test_name, Full_name, Sub_group) VALUES ('BSRC', 'BSRC', '1');
+INSERT INTO test_battery (Test_name, AgeMinDays, AgeMaxDays, Active, Stage, SubprojectID, Visit_label, CenterID) VALUES ('BSRC', '1', '99999', 'Y', 'Visit', '1', '2', NULL);
+*/
+
    var $yesNo = array(""=>null, "no"=>"No", "yes"=>"Yes", "not_answered"=>"Not Answered");
    var $indgrp = array(""=>null,"individual"=>"Individual","group"=>"Group",
                        "not_answered"=>"Not Answered");
