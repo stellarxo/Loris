@@ -613,6 +613,7 @@ class NDB_BVL_Instrument_das extends NDB_BVL_Instrument
         $answerArray = array(""=>NULL, "correct"=>"Correct", "incorrect"=>"Incorrect", "not_answered"=>"Not Answered");
         $failArray = array(""=>NULL,"rotation"=>"Rotation", "reversal"=>"Reversal", "not_answered"=>"Not Answered");
 
+
         // Items 2 to 12
         $j=2;
         $numItems=12;
@@ -658,6 +659,24 @@ class NDB_BVL_Instrument_das extends NDB_BVL_Instrument
 
         $answerArray = array(""=>NULL, "correct"=>"Correct", "incorrect"=>"Incorrect", "not_answered"=>"Not Answered");
 
+        $item = array(1=>"Show me teddy's eyes.", 2=>"Show me teddy's mouth.", 3=>"Show me teddy's arms.",
+            4=>"Show me teddy's ears.", 5=>"Show me teddy's legs.", 6=>"Show me teddy's ribbon.",
+            7=>"Give me the car.", 8=>"Give me the horse.", 9=>"Give me the pencil.", 10=>"Give me the watch.",
+            11=>"Give me the button.", 12=>"Put the horse in the box.", 13=>"Give me the one we draw with.",
+            14=>"Give me the one that shows the time.", 15=>"Give me all the things that have hair.",
+            16=>"Give me all the things you can wear.", 17=>"Give me all the animals except the cats.",
+            18=>"Give me all the things that don't eat.", 19=>"Put a tree behind your back.",
+            20=>"Make the truck move to me.", 21=>"Make a child stand on the bridge.", 22=>"Put the car under the bridge.",
+            23=>"Make the two children face each other.", 24=>"When I put down the tree, pick up the car.",
+            25=>"Put the tree that is little next to the house that is big.",
+            26=>"Before you give me the truck, give me the little house.", 27=>"Put a house on each side of the car.",
+            28=>"While you touch the truck, give me the car.", 29=>"Put a chid between the trees.",
+            30=>"Put the circle farther away from you than the square.", 31=>"Give me the chips that are blue but not round.",
+            32=>"Pick up the circles if they are blue or yellow.", 33=>"Give me all the red chips except the square.",
+            34=>"Give me not only all the red but also all the round chips.",
+            35=>"Give me all the chips that are neither yellow nor blue.", 36=>"Give me all the chips that are neither red nor square.");
+
+
         $j=13;
         $numItems=36;
         for ($i = 1; $i <= $numItems; $i++) {
@@ -678,7 +697,7 @@ class NDB_BVL_Instrument_das extends NDB_BVL_Instrument
                     $this->form->addElement("header", null, "Items 30-36: Chips");
                     break;
             }
-            $this->form->addElement("select", "q_{$j}_item{$i}", $this->indent . $this->indent . "Item $i", $answerArray);
+            $this->form->addElement("select", "q_{$j}_item{$i}", $this->indent . $this->indent . "Item $i: {$item[$i]}", $answerArray);
             $j++;
         }
 
@@ -744,10 +763,15 @@ class NDB_BVL_Instrument_das extends NDB_BVL_Instrument
         $answerArray = array(""=>NULL, "correct"=>"Correct", "incorrect"=>"Incorrect", "not_answered"=>"Not Answered");
         $yesNoNa = array(""=>NULL, "yes"=>"Yes", "no"=>"No", "not_answered"=>"Not Answered");
 
+        $item = array(1=>"Paper", 2=>"Box (Closed)", 3=>"Chair", 4=>"Key", 5=>"Fish", 6=>"Scissors", 7=>"Watch",
+            8=>"Window", 9=>"Sink", 10=>"Brush", 11=>"Helicopter", 12=>"Triangle", 13=>"Ring", 14=>"Chain",
+            15=>"Shell, Seashell", 16=>"Jar", 17=>"Switch", 18=>"Volcano", 19=>"Thermometer", 20=>"Measuring Cup",
+            21=>"Igloo", 22=>"Paper Clip", 23=>"Anchor",  24=>"Hourglass", 25=>"Funnel", 26=>"Easel");
+
         $j=81;
         $numItems=26;
         for ($i = 1; $i <= $numItems; $i++) {
-            $this->form->addElement("select", "q_{$j}_item{$i}", "Item {$i}", $answerArray);
+            $this->form->addElement("select", "q_{$j}_item{$i}", "Item {$i}: {$item[$i]}", $answerArray);
 
             // Does this include "Other acceptable responses????"
             // Change answerArray to Object or Picture, Other Acceptable Response, Incorrect Response??
@@ -843,14 +867,24 @@ class NDB_BVL_Instrument_das extends NDB_BVL_Instrument
         // radio - was a second trial completed/needed?
         // Correctness, response time - check paper form!
 
+        $item = array();
+
         $j=108;
 
-        $this->form->addElement("select", "q_{$j}_item1", "Item 1", $doubleTrialArray);
+        $this->form->addElement("select", "q_{$j}_item1", "Item 1: Model & Picture", $doubleTrialArray);
         $j++;
 
         $numItems=25; //26 including item 1
         for ($i = 2; $i <= $numItems; $i++) {
-            $this->form->addElement("static","null","Item $i");
+
+            if ($i=2 || $i=4) {
+                $item[$i]="Picture & Demonstration";
+            }
+            else {
+                $item[$i]="Picture";
+            }
+
+            $this->form->addElement("static","null","Item $i: {$item[$i]}");
 
             switch ($i) {
                 case 2:
