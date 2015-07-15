@@ -22,15 +22,12 @@ $client->initialize('../config.xml');
 
 $db =& Database::singleton();
 
-// create temp column to hold previous values
-$tempCol = $db->run("ALTER TABLE csbs ADD relationship_to_child_temp VARCHAR(255)");
 
 $query = $db->pselect("SELECT relationship_to_child, relationship_to_child_specify, relationship_to_child_status FROM csbs", array());
 
 // copy previous values into temp column
 foreach ($query as $row) {
-    $RTC = $row['relationship_to_child'];
-    $query = $db->update('csbs', array($row['relationship_to_child_temp'] => $RTC));
+    $query = $db->update('csbs', array($row['relationship_to_child_temp'] => $row['relationship_to_child']));
 }
 
 // map text values to drop down options
