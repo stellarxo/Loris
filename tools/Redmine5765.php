@@ -27,7 +27,7 @@ $query = $db->pselect("SELECT CommentID, relationship_to_child, relationship_to_
 
 // copy previous values into temp column
 foreach ($query as $row) {
-    if (array('relationship_to_child_temp'=>NULL)) {
+    if ($row['relationship_to_child_temp']==NULL) {
         $vals = array('relationship_to_child_temp' => $row['relationship_to_child']);
         $Where = array('CommentID'=>$row['CommentID']);
         $result = $db->update('csbs', $vals, $Where);
