@@ -34,7 +34,7 @@ foreach ($query as $row) {
     }
 }
 
-$options = array('not_answered', '1_Mother', '1_Father', '3_Other');
+$options = array('not_answered', '1_Mother', '2_Father', '3_Other');
 
 // map text values to drop down options
 foreach ($query as $row) {
