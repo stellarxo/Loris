@@ -101,7 +101,6 @@ class CandidateListTestIntegrationTest extends LorisIntegrationTest
     }
 
 
-
     /**
      * Restore the values backed up in the setUp function
      *
@@ -131,7 +130,6 @@ class CandidateListTestIntegrationTest extends LorisIntegrationTest
         parent::tearDown();
 
     }
-
 
 
     /**
@@ -221,7 +219,6 @@ class CandidateListTestIntegrationTest extends LorisIntegrationTest
         );
 
     }
-
 
 
     /**
@@ -333,8 +330,6 @@ class CandidateListTestIntegrationTest extends LorisIntegrationTest
     }
 
 
-
-
     /**
      * 4.
      * Test that checks initial filter state:
@@ -359,6 +354,12 @@ class CandidateListTestIntegrationTest extends LorisIntegrationTest
 
     }
 
+
+    /**
+     * 5.
+     * Tests that results filter using site filter
+     * (Redundant - see #9)
+     */
 
 
     /**
@@ -396,7 +397,6 @@ class CandidateListTestIntegrationTest extends LorisIntegrationTest
         $this->assertFalse($this->webDriver->findElement(WebDriverBy::Name("Feedback"))->isDisplayed());
 
     }
-
 
 
     /**
@@ -450,7 +450,6 @@ class CandidateListTestIntegrationTest extends LorisIntegrationTest
         $this->assertEquals("select", $feedbackOptions->getTagName());
 
     }
-
 
 
     /**
@@ -552,7 +551,6 @@ class CandidateListTestIntegrationTest extends LorisIntegrationTest
                 $this->assertNotContains($option, $bodyText);
             }
         }
-
     }
 
     function providerTestFilters() {
@@ -575,7 +573,6 @@ class CandidateListTestIntegrationTest extends LorisIntegrationTest
         );
 
     }
-
 
 
     /**
@@ -650,7 +647,6 @@ class CandidateListTestIntegrationTest extends LorisIntegrationTest
     }
 
 
-
     /**
      * 11.
      * Tests that, if a column is clicked,
@@ -709,8 +705,6 @@ class CandidateListTestIntegrationTest extends LorisIntegrationTest
     }
 
 
-
-
     /**
      * 12.
      * Tests that, if "Yes" link under column 'Scan Done' is clicked,
@@ -738,10 +732,8 @@ class CandidateListTestIntegrationTest extends LorisIntegrationTest
 
             $PSCIDField = $this->webDriver->findElement(WebDriverBy::Name("pscid"))->getAttribute('value');
             $this->assertEquals($PSCID, $PSCIDField);
-
         }
     }
-
 
 
     /**
@@ -781,7 +773,6 @@ class CandidateListTestIntegrationTest extends LorisIntegrationTest
     }
 
 
-
     /**
      * 14.
      * Tests that, if a candidate has feedback,
@@ -816,9 +807,7 @@ class CandidateListTestIntegrationTest extends LorisIntegrationTest
                 $this->assertContains("#FFFFFF", $feedbackStyle);
             }
         }
-
     }
-
 
 
     /**
@@ -897,9 +886,7 @@ class CandidateListTestIntegrationTest extends LorisIntegrationTest
             "user_perm_rel",
             array("UserID" => $this->_uID, "permID" => $this->_SUPermId)
         );
-
     }
-
 
 
     /**
@@ -980,7 +967,6 @@ class CandidateListTestIntegrationTest extends LorisIntegrationTest
     }
 
 
-
     /**
      * 17.
      * Tests that, without access_all_profiles permission,
@@ -1021,7 +1007,6 @@ class CandidateListTestIntegrationTest extends LorisIntegrationTest
             $this->assertEquals($URL1, $URL2);
         }
     }
-
 
 
     /**
