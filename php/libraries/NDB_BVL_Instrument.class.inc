@@ -158,6 +158,13 @@ class NDB_BVL_Instrument extends NDB_Page
         include_once 'HTML/QuickForm.php';
         $class = "NDB_BVL_Instrument_$instrument";
 
+        print "STELLA class: ";
+        print $class . "\n";
+
+        print "STELLA instrument: ";
+        print $instrument . "\n";
+
+
         // Make sure the instrument class has been included/required!
         $config =& NDB_Config::singleton();
         $base   = $config->getSetting('base');
