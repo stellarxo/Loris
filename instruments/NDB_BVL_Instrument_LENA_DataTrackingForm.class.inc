@@ -454,8 +454,21 @@ class NDB_BVL_Instrument_LENA_DataTrackingForm extends NDB_BVL_Instrument
 
                     }
                 }
+
+                //get earliest age
+                //age format in CSV file: example: 9m; 17d
+                if (!isset($upload_values['Candidate_Age']) && strtolower($value) == 'age' && !empty($data[$id]))
+                {
+                    $ageInMonths =  $this->extractCandidateAge($data[$id]);
+                    if (!is_null($ageInMonths))
+                    {
+                        $upload_values['Candidate_Age'] = $ageInMonths;
+                    }
+                }
+
             }   
         }
+
         $total_rows = sizeof($lines) -2; //first line contains header information
         if($total_rows > 0) {
             foreach($avgs as $key=>$value) {
@@ -512,6 +525,34 @@ class NDB_BVL_Instrument_LENA_DataTrackingForm extends NDB_BVL_Instrument
      }
 
     }
+
+    /**
+     * Extracts candidate's age in months from age string
+     * If number of days is above 15 days, round up to next month
+     *
+     * @param $ageStr age string from CSV file
+     *                    expected format: {number of months}m; {number of days}d
+     *                    example: 9m; 17d
+     * @return int candidate's age in months
+     */
+    private function extractCandidateAge($ageStr)
+    {
+        $months = null;
+        if (preg_match("/^(\d+)m;\s(\d+)d/",$ageStr, $ageMatches))
+        {
+            $months = $ageMatches[1];
+            $days = $ageMatches[2];
+
+            if ($days>15)
+            {
+                $months++;
+            }
+        }
+
+        return $months;
+    }
+
+
     /**
      * getTargetDirectory retrieves info about where the file should be stored.
      *
