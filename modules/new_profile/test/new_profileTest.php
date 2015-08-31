@@ -15,7 +15,7 @@ require_once __DIR__ . "/../../../test/integrationtests/LorisIntegrationTest.cla
 class newProfileTestIntegrationTest extends LorisIntegrationTest
 {
     /**
-     * Tests that, when loading the new_profile module with all settings
+     * 1. Tests that, when loading the new_profile module with all settings
      * enabled, the correct fields all appear in the body.
      *
      * @return void
@@ -56,8 +56,8 @@ class newProfileTestIntegrationTest extends LorisIntegrationTest
     }
 
     /**
-     * Tests that with useProjects turned off, project related fields do not
-     * appear on the page
+     * 2. Tests that with useProjects turned off, project related fields do not
+     * appear on the page.
      *
      * @return none
      */
@@ -77,7 +77,7 @@ class newProfileTestIntegrationTest extends LorisIntegrationTest
     }
 
     /**
-     * Tests that with useEDC turned off, edc related fields do not appear
+     * 3. Tests that with useEDC turned off, edc related fields do not appear
      * on the page.
      *
      * @return none
@@ -103,5 +103,120 @@ class newProfileTestIntegrationTest extends LorisIntegrationTest
         $this->assertNull($edc2);
         $this->restoreConfigSetting("useEDC");
     }
+
+    /**
+     * 4. Tests that an error occurs,
+     * if dates don't match (both DoB and EDC)
+     *
+     * @param string $dob1 Date of Birth
+     * @param string $dob2 Confirm Date of Birth
+     * @param string $edc1 Expected Date of Confinement
+     * @param string $edc2 Confirm Expected Date of Confinement
+     *
+     * @dataProvider providerTestDateMismatchError
+     *
+     * @return none
+     */
+    function testDateMismatchError($dob1, $dob2, $edc1, $edc2) {
+        $this->webDriver->get($this->url . "?test_name=new_profile");
+
+        $this->webDriver->findElement(WebDriverBy::Name('dob1'))->click();
+        $this->webDriver->getKeyboard()->sendKeys($dob1);
+        $this->webDriver->findElement(WebDriverBy::Name('dob2'))->click();
+        $this->webDriver->getKeyboard()->sendKeys($dob2);
+        $this->webDriver->findElement(WebDriverBy::Name('edc1'))->click();
+        $this->webDriver->getKeyboard()->sendKeys($edc1);
+        $this->webDriver->findElement(WebDriverBy::Name('edc2'))->click();
+        $this->webDriver->getKeyboard()->sendKeys($edc2);
+
+        $fields = array('gender', 'ProjectID');
+        foreach ($fields as $field) {
+            $dropDown = $this->webDriver->findElement(WebDriverBy::Name($field));
+            $allOptions = $dropDown->findElement(WebDriverBy::tagName('option'));
+            foreach ($allOptions as $option) {
+                if ($option == '1') {
+                    $option->click();
+                    break;
+                }
+            }
+        }
+        $createButton = $this->webDriver->findElement(WebDriverBy::Name("fire_away"));
+        $createButton->click();
+
+        // Wait until page loads
+        $this->webDriver->wait(120, 1000)->until(
+            WebDriverExpectedCondition::presenceOfElementLocated(
+                WebDriverBy::id("page")
+            )
+        );
+
+        $bodyText = $this->webDriver->findElement(
+            WebDriverBy::cssSelector("body")
+        )->getText();
+        if ($edc1 != $edc2) {
+            $this->assertContains(
+                "Estimated Due date fields must match.",
+                $bodyText
+            );
+        }
+        if ($dob1 != $dob2) {
+            $this->assertContains(
+                "Date of Birth fields must match.",
+                $bodyText
+            );
+        }
+
+    }
+
+    /*
+     * Data provider for testDateMismatchError()
+     * @return array
+     */
+    function providerTestDateMismatchError() {
+        return array(
+            array('2000-11-11', '2000-11-12', '2005-05-05', '2005-05-05'),
+            array('2000-11-11', '2000-11-11', '2005-05-05', '2005-05-06'),
+            array('2000-11-11', '2000-11-12', '2005-05-05', '2005-05-06'),
+        );
+    }
+
+    /**
+     * 5. Tests that an error occurs,
+     * if any field is missing.
+     *
+     * @return none
+     */
+    function testMissingFieldError() {
+        $this->webDriver->get($this->url . "?test_name=new_profile");
+
+    }
+
+    /**
+     * 6. Tests that a new candidate is created
+     *  with auto-generated PSCID (if PSCID generation is "sequential"),
+     *  when all valid fields are added.
+     *
+     * @return none
+     */
+    function testAddNewCandidate() {
+        $this->webDriver->get($this->url . "?test_name=new_profile");
+
+    }
+
+    /**
+     * 7. Tests that error occurs,
+     * if an invalid PSCID entered (and not if a valid PSCID is entered)
+     *
+     * @return none
+     */
+    function testInvalidPSCIDError() {
+
+        // Change PSCID generation configuration to "user"
+        $this->webDriver->get($this->url . "?test_name=new_profile");
+
+    }
+
+
 }
+
 ?>
