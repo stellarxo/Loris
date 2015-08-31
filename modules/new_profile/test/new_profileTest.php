@@ -165,7 +165,6 @@ class newProfileTestIntegrationTest extends LorisIntegrationTest
                 $bodyText
             );
         }
-
     }
 
     /*
@@ -176,7 +175,7 @@ class newProfileTestIntegrationTest extends LorisIntegrationTest
         return array(
             array('2000-11-11', '2000-11-12', '2005-05-05', '2005-05-05'),
             array('2000-11-11', '2000-11-11', '2005-05-05', '2005-05-06'),
-            array('2000-11-11', '2000-11-12', '2005-05-05', '2005-05-06'),
+            array('2000-11-11', '2000-11-12', '2005-05-05', '2005-05-06')
         );
     }
 
@@ -184,11 +183,86 @@ class newProfileTestIntegrationTest extends LorisIntegrationTest
      * 5. Tests that an error occurs,
      * if any field is missing.
      *
+     * @param string $dob1 Date of Birth
+     * @param string $dob2 Confirm Date of Birth
+     * @param string $edc1 Expected Date of Confinement
+     * @param string $edc2 Confirm Expected Date of Confinement
+     * @param string $gender Gender
+     * @param string $project Project
+     *
+     * @dataProvider providerTestMissingFieldError
+     *
      * @return none
      */
-    function testMissingFieldError() {
+    function testMissingFieldError($dob1, $dob2, $edc1, $edc2, $gender, $project) {
+
         $this->webDriver->get($this->url . "?test_name=new_profile");
 
+        if ($dob1 != NULL) {
+            $this->webDriver->findElement(WebDriverBy::Name('dob1'))->click();
+            $this->webDriver->getKeyboard()->sendKeys($dob1);
+        }
+        if ($dob2 != NULL) {
+            $this->webDriver->findElement(WebDriverBy::Name('dob2'))->click();
+            $this->webDriver->getKeyboard()->sendKeys($dob2);
+        }
+        if ($edc1 != NULL) {
+            $this->webDriver->findElement(WebDriverBy::Name('edc1'))->click();
+            $this->webDriver->getKeyboard()->sendKeys($edc1);
+        }
+        if ($edc2 != NULL) {
+            $this->webDriver->findElement(WebDriverBy::Name('edc2'))->click();
+            $this->webDriver->getKeyboard()->sendKeys($edc2);
+        }
+
+        if ($gender != NULL) {
+            $genderDropDown = $this->webDriver->findElement(WebDriverBy::Name('gender'));
+            $allOptions = $genderDropDown->findElement(WebDriverBy::tagName('option'));
+            foreach ($allOptions as $option) {
+                if ($option == $gender) {
+                    $option->click();
+                    break;
+                }
+            }
+        }
+
+        if ($project != NULL) {
+            $projectDropDown = $this->webDriver->findElement(WebDriverBy::Name('ProjectID'));
+            $allOptions = $projectDropDown->findElement(WebDriverBy::tagName('option'));
+            foreach ($allOptions as $option) {
+                if ($option == $project) {
+                    $option->click();
+                    break;
+                }
+            }
+        }
+
+        $createButton = $this->webDriver->findElement(WebDriverBy::Name("fire_away"));
+        $createButton->click();
+
+        // Wait until page loads
+        $this->webDriver->wait(120, 1000)->until(
+            WebDriverExpectedCondition::presenceOfElementLocated(
+                WebDriverBy::id("page")
+            )
+        );
+
+        $bodyText = $this->webDriver->findElement(
+            WebDriverBy::cssSelector("body")
+        )->getText();
+
+        // error message
+
+    }
+
+    /*
+    * Data provider for testDateMismatchError()
+    * @return array
+    */
+    function providerTestMissingFieldError() {
+        return array(
+            array('2000-11-11', '2000-11-11', '2005-05-05', '2005-05-05', 1, 1),
+        );
     }
 
     /**
