@@ -275,6 +275,47 @@ class newProfileTestIntegrationTest extends LorisIntegrationTest
     function testAddNewCandidate() {
         $this->webDriver->get($this->url . "?test_name=new_profile");
 
+        $dob1 = '2011-11-11';
+        $dob2 = $dob1;
+        $edc1 = '2011-12-12';
+        $edc2 = $edc1;
+
+        $this->webDriver->findElement(WebDriverBy::Name('dob1'))->click();
+        $this->webDriver->getKeyboard()->sendKeys($dob1);
+        $this->webDriver->findElement(WebDriverBy::Name('dob2'))->click();
+        $this->webDriver->getKeyboard()->sendKeys($dob2);
+        $this->webDriver->findElement(WebDriverBy::Name('edc1'))->click();
+        $this->webDriver->getKeyboard()->sendKeys($edc1);
+        $this->webDriver->findElement(WebDriverBy::Name('edc2'))->click();
+        $this->webDriver->getKeyboard()->sendKeys($edc2);
+
+        $fields = array('gender', 'ProjectID');
+        foreach ($fields as $field) {
+            $dropDown = $this->webDriver->findElement(WebDriverBy::Name($field));
+            $allOptions = $dropDown->findElement(WebDriverBy::tagName('option'));
+            foreach ($allOptions as $option) {
+                if ($option == '1') {
+                    $option->click();
+                    break;
+                }
+            }
+        }
+        $createButton = $this->webDriver->findElement(WebDriverBy::Name("fire_away"));
+        $createButton->click();
+
+        // Wait until page loads
+        $this->webDriver->wait(120, 1000)->until(
+            WebDriverExpectedCondition::presenceOfElementLocated(
+                WebDriverBy::id("page")
+            )
+        );
+
+        $bodyText = $this->webDriver->findElement(
+            WebDriverBy::cssSelector("body")
+        )->getText();
+
+        // check that candidate now exists
+
     }
 
     /**
