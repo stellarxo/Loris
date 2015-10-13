@@ -1,11 +1,11 @@
 <?php
 
 /**
- * Script which  compares the currently assigned battery with the expected
+ * Script which compares the currently assigned battery with the expected
  * battery at a particular timepoint for all candidates.
  *
  * It has two modes:
- *     regular mode -> Prints the instruments found missing, but does not acutally
+ *     regular mode -> Prints the instruments found missing, but does not
  *                     add them to the battery.
  *
  *     confirm mode -> Actually assigns the instruments found missing in the
@@ -14,10 +14,16 @@
  * Usage: php assign_missing_instrument.php [Visit_label] [confirm]
  *
  * Example: php assign_missing_instrument.php 18month
- * (Will use regular mode and print the missing instruments)
+ * (Will use regular mode and print the missing instruments for the 18month timepoint)
  *
  * Example: php assign_missing_instrument.php 18month confirm
  * (Will use confirm mode and assign the missing instruments)
+ *
+ * Example: php assign_missing_instrument.php
+ * (Will use regular mode and print the missing instruments for all timepoints)
+ *
+ * Example: php assign_missing_instrument.php confirm
+ * (Will use confirm mode and assign the missing instruments for all timepoints)
  *
  * Note:  As per ... only timepoints in the 'Visit' stage are examined.
  *
@@ -35,10 +41,10 @@
  * @link     https://github.com/mohadesz/Loris-Trunk
  */
 
-//get a list of all the candidates
-//foreach candidate we need to look at each timepoint
-//compare the looked up battery to the actual assigned battery
-//add missing instruments.
+// get a list of all the candidates
+// foreach candidate we need to look at each timepoint
+// compare the looked up battery to the actual assigned battery
+// add missing instruments.
 set_include_path(get_include_path().":../project/libraries:../php/libraries:");
 
 require_once __DIR__ . "/../vendor/autoload.php";
@@ -49,14 +55,13 @@ $client->initialize();
 
 $confirm = false;
 if ((isset($argv[1]) && $argv[1] === "confirm")
-    || (isset($argv[2]) && $argv[2] === "confirm")
-) {
+    || (isset($argv[2]) && $argv[2] === "confirm")) {
     $confirm = true;
 }
 
 $DB    = Database::singleton();
-$query = "SELECT ID, subprojectID from session";
-if (!empty($argv[1]) && $argv[1]!="confirm") {
+$query = "SELECT ID, subprojectID FROM session";
+if (!empty($argv[1]) && $argv[1] != "confirm") {
     $query .=" WHERE visit_label='$argv[1]'";
 } else {
     $visit_labels = $DB->pselect(
@@ -66,6 +71,7 @@ if (!empty($argv[1]) && $argv[1]!="confirm") {
         array()
     );
 }
+
 /**
  * Adds the missing instruments based on the visit_label
  *
@@ -87,12 +93,12 @@ function populateVisitLabel($result, $visit_label)
     $DB        = Database::singleton();
     $candidate = Candidate::singleton($result['CandID']);
     $result_firstVisit = $candidate->getFirstVisit();
-    $isFirstVisit      = false;//adding check for first visit
+    $isFirstVisit      = false; //adding check for first visit
     if ($result_firstVisit == $visit_label) {
         $isFirstVisit = true;
     }
 
-    //To assign missing instruments to all sessions, sent to DCC or not.
+    // To assign missing instruments to all sessions, sent to DCC or not.
     $defined_battery =$battery->lookupBattery(
         $battery->age,
         $result['subprojectID'],
@@ -125,7 +131,7 @@ function populateVisitLabel($result, $visit_label)
 }
 
 if (isset($visit_label)) {
-    $query   ="SELECT s.ID, s.subprojectID, s.CandID from session 
+    $query   = "SELECT s.ID, s.subprojectID, s.CandID FROM session
             s LEFT JOIN candidate c USING (CandID) 
             WHERE s.Active='Y'
             AND c.Active='Y' AND s.visit_label=:vl";
@@ -135,7 +141,7 @@ if (isset($visit_label)) {
         populateVisitLabel($result, $visit_label);
     }
 } else if (isset($visit_labels)) {
-    $query   ="SELECT s.ID, s.subprojectID, s.Visit_label, s.CandID from session s 
+    $query   = "SELECT s.ID, s.subprojectID, s.Visit_label, s.CandID FROM session s
             LEFT JOIN candidate c USING (CandID) WHERE s.Active='Y' 
             AND c.Active='Y' AND s.Visit_label NOT LIKE 'Vsup%'";
     $results = $DB->pselect($query, array());
@@ -146,6 +152,6 @@ if (isset($visit_label)) {
 
 if ($confirm === false) {
     echo "\n\nRun this tool again with the argument 'confirm' to ".
-    "perform the changes\n\n";
+    "perform the changes.\n\n";
 }
 ?>
