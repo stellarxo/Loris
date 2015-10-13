@@ -3,7 +3,8 @@
 /**
  * @version $Id: fix_timepoint_date_problems.php,v 1.21 2006/05/05 15:42:25 dario Exp $
  *
- * This is the tool to diagnose and correct the date problems in a candidate profile and add missing instruments to the bvl battery.
+ * This is the tool to diagnose and correct the date problems in a candidate profile
+ * and add missing instruments to the bvl battery.
  *
  * Currently the tool does the following:
  * - corrects DOB and EDC (candidate table)
@@ -54,10 +55,6 @@ $client->makeCommandLine();
 $client->initialize($configFile);
 
 $db =& Database::singleton();
-if(PEAR::isError($db)) {
-    fwrite(STDERR, "Could not connect to database: ".$db->getMessage());
-    return false;
-}
 
 /**
  * HELP SCREEN
@@ -115,28 +112,28 @@ switch ($action) {
 }
 
 /**
-* check arguments for valididty
+* check arguments for validity
 * combinations of arguments are tested for each option in the $action switch below and in local functions
 */
 // check the $action options
 if (!in_array($action, array('diagnose', 'fix_date', 'add_instrument'))) {
-    fwrite(STDERR, "Error, invalid 1st argument ($action).\n Available options are:'diagnose','fix_date','add_instrument'\n");
-    fwrite(STDERR, "For the script syntax type: fix_timepoint_date_problems.php help \n");
+    fwrite(STDERR, "Error: invalid 1st argument ($action).\n Available options are:'diagnose','fix_date','add_instrument'\n");
+    fwrite(STDERR, "For the script syntax, type: fix_timepoint_date_problems.php help \n");
     return false;
 }
 // check $candID
 if (!preg_match("/^([0-9]{6})$/", $candID)) {
-    fwrite(STDERR, "Error, invalid 2st argument CandID ($candID).\n It has to be a 6-digit number\n");
-    fwrite(STDERR, "For the script syntax type: fix_timepoint_date_problems.php help \n");
+    fwrite(STDERR, "Error: invalid 2nd argument CandID ($candID).\nPlease enter a 6-digit number.\n");
+    fwrite(STDERR, "For the script syntax, type: fix_timepoint_date_problems.php help \n");
     return false;
 }
 // Candidate object - to check if valid $candID
 $candidate =& Candidate::singleton($candID);
 if (PEAR::isError($candidate)) {
-    fwrite(STDERR, "Problem with CandID ($candID)!\n Failed to create candidate object: ".$candidate->getMessage()." \n");
+    fwrite(STDERR, "Problem with CandID ($candID)!\nFailed to create candidate object: ".$candidate->getMessage()." \n");
     return false;
 }
-//get the list of timepoints (sessionIDs) for the profile
+// get the list of timepoints (sessionIDs) for the profile
 $listOfTimePoints = $candidate->getListOfTimePoints();
 if (!is_array($listOfTimePoints)) {
     fwrite(STDERR, "This candidate profile has no registered timepoints. Cannot proceed. \n");
@@ -144,13 +141,13 @@ if (!is_array($listOfTimePoints)) {
 }
 // check sessionID
 if (!empty($sessionID)) {
-    // check SessionID - if supplied as an argument, it has to be in the list of existing timepoints
+    // check sessionID - if supplied as an argument, it has to be in the list of existing timepoints
     if (!in_array($sessionID, $listOfTimePoints)) {
         fwrite(STDERR, "Please specify a valid SessionID for candidate ($candID).\n Valid SessionIDs for this subject are:\n");
         foreach ($listOfTimePoints as $key=>$val) {
             fwrite(STDERR, "$val\n");
         }
-        fwrite(STDERR, "For the script syntax type: fix_timepoint_date_problems.php help \n");
+        fwrite(STDERR, "For the script syntax, type: fix_timepoint_date_problems.php help \n");
         return false;
     }
 }
@@ -296,7 +293,7 @@ function addInstrument($sessionID, $testName)
 
     // return error if instrument is in the battery
     if (in_array($testName, $existingBattery)) {
-        return PEAR::raiseError("WARNING, cannot add new instrument ($testName) b/c it's already part of the battery for timepoint ($sessionID) \n");
+        return PEAR::raiseError("WARNING, cannot add new instrument ($testName) because it is already part of the battery for timepoint ($sessionID) \n");
     }
     
     // add to battery - this method check if the $testName is valid
@@ -586,7 +583,7 @@ function diagnose($sessionID, $dateType=null, $newDate=null)
                 return PEAR::raiseError("Error, failed to get the needed battery: ".$neededTests->getMessage());
             }
 
-            // get the differnce between the two batteries
+            // get the difference between the two batteries
             $difference = array_diff($neededTests, $existingTests);
             
             // add to array to missing instruments
