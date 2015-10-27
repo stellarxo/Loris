@@ -200,7 +200,9 @@ class Candidate
            if(PEAR::isError($PSCID)) return $PSCID;
        }
        
-       $ibisid = Candidate::_generateIBISID();
+       $ibisid = Candidate::_generateID("IBIS");
+       $drexid = Candidate::_generateID("DREX");
+       
        // insert the new candidate into the database
        $setArray = array('CandID'       => $candID,
                          'CenterID'     => $centerID,
@@ -213,7 +215,8 @@ class Candidate
                          'Entity_type'  => 'Human',
                          'RegisteredBy' => $user->getUsername(),
                          'UserID'       => $user->getUsername(),
-                         'IBISID'      => $ibisid
+                         'IBISID'       => $ibisid,
+                         'DREXID'       => $drexid
                          );
        
        $db->insert('candidate', $setArray);
@@ -553,16 +556,17 @@ class Candidate
         return $pscid;
     }
 
-    function _generateIBISID() {
+    function _generateID($ID) {
         $db =& Database::singleton();
-        if(PEAR::isError($db)) {
-            return $db;
-        }
+
         do {
-            $ibisid = rand(1000, 9999);
-        } while($db->selectOne("SELECT count(IBISID) FROM candidate WHERE IBISID='IBIS$ibisid'") > 0);
-        return "IBIS$ibisid";
+            $randid = $ID . rand(1000, 9999);
+            $randidq = $db->quote($randid);
+            $nid = $ID . "ID";
+        } while($db->selectOne("SELECT count($nid) FROM candidate WHERE `$nid`=$randidq") > 0);
+        return $randid;
     }
+    
     function validatePSCID($PSCID, $siteAbbrev=null)
     {
         $config =& NDB_Config::singleton();
