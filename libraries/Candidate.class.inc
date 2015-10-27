@@ -201,6 +201,8 @@ class Candidate
        }
        
        $ibisid = Candidate::_generateID("IBIS");
+       $drexid = Candidate::_generateID("DREX");
+       
        // insert the new candidate into the database
        $setArray = array('CandID'       => $candID,
                          'CenterID'     => $centerID,
@@ -213,7 +215,8 @@ class Candidate
                          'Entity_type'  => 'Human',
                          'RegisteredBy' => $user->getUsername(),
                          'UserID'       => $user->getUsername(),
-                         'IBISID'      => $ibisid
+                         'IBISID'       => $ibisid,
+                         'DREXID'       => $drexid
                          );
        
        $db->insert('candidate', $setArray);
@@ -555,13 +558,12 @@ class Candidate
 
     function _generateID($ID) {
         $db =& Database::singleton();
-        if(PEAR::isError($db)) {
-            return $db;
-        }
+
         do {
             $randid = $ID . rand(1000, 9999);
+            $randidq = $db->quote($randid);
             $nid = $ID . "ID";
-        } while($db->selectOne("SELECT count($nid) FROM candidate WHERE $nid=\"$randid\"") > 0);
+        } while($db->selectOne("SELECT count($nid) FROM candidate WHERE `$nid`=$randidq") > 0);
         return $randid;
     }
     
