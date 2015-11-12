@@ -19,18 +19,20 @@ if (empty($argv[1])) {
     $DB = Database::singleton();
 
     $pparam = array(
-        'Data_entry' => 'Complete',
-        'Administration' => 'None',
-        'CenterID' => '5',
-        'ProjectID' => '1',
-        'CommentID' => 'DDE%'
+        'Dat' => 'Complete',
+        'Adm' => 'None',
+        'Cen' => '5',
+        'PID' => '1',
+        'Com' => 'DDE%'
     );
 
     $rows = $DB->pselect(
-        "SELECT f.* FROM flag AS f JOIN session s ON f.SessionID = s.ID JOIN " .
-        "project_rel p USING (SubprojectID) WHERE f.Data_entry=:Data_entry " .
-        "AND f.Administration=:Administration AND s.CenterID=:CenterID AND " .
-        "p.ProjectID=:ProjectID AND CommentID NOT LIKE :CommentID", $pparam
+        "SELECT f.* FROM flag AS f " .
+        "JOIN session s ON f.SessionID = s.ID " . 
+        "JOIN candidate c USING (CandID) " .
+        "WHERE f.Data_entry=:Dat " .
+        "AND f.Administration=:Adm AND s.CenterID=:Cen AND " .
+        "c.ProjectID=:PID AND f.CommentID NOT LIKE :Com", $pparam
     );
 
     $count = 0;
@@ -39,18 +41,18 @@ if (empty($argv[1])) {
 
         //print $row['CommentID'] . "\n";
         
-        $DDE = $DB->pselect("SELECT f.ID, f.Data_entry, f.Administration FROM flag AS f where CommentID = :CommentID", array('CommentID' => 'DDE_' . $row['CommentID']));
+        $DDE = $DB->pselectRow("SELECT f.ID, f.Data_entry, f.Administration FROM flag AS f where CommentID = :CommentID", array('CommentID' => 'DDE_' . $row['CommentID']));
         
-        if ($DDE[0]['Data_entry'] != 'Complete' or $DDE[0]['Administration'] != 'None') {
+        if ($DDE['Data_entry'] != 'Complete' or $DDE['Administration'] != 'None') {
             
             if ($argv[1] == 'Undo') {
-                if ($DDE[0]['Data_entry'] == '') { $Data_entry = "NULL"; } else { $Data_entry = "'" . $DDE[0]['Data_entry'] . "'"; } 
-                if ($DDE[0]['Administration'] == '') { $Administration = "NULL"; } else { $Administration = "'" . $DDE[0]['Administration'] . "'"; } 
-                print "UPDATE flag SET Data_entry=" . $Data_entry . ", Administration=" . $Administration . " WHERE ID=" . $DDE[0]['ID'] . ";\n";
+                if ($DDE['Data_entry'] == '') { $Data_entry = "NULL"; } else { $Data_entry = "'" . $DDE['Data_entry'] . "'"; } 
+                if ($DDE['Administration'] == '') { $Administration = "NULL"; } else { $Administration = "'" . $DDE['Administration'] . "'"; } 
+                print "UPDATE flag SET Data_entry=" . $Data_entry . ", Administration=" . $Administration . " WHERE ID=" . $DDE['ID'] . ";\n";
             } elseif ($argv[1] == 'Show') {
-                print "UPDATE flag SET Data_entry='Complete', Administration='None' WHERE ID=" . $DDE[0]['ID'] . ";\n";
+                print "UPDATE flag SET Data_entry='Complete', Administration='None' WHERE ID=" . $DDE['ID'] . ";\n";
             } elseif ($argv[1] == 'Confirm') {
-                $result = $DB->update('flag', array('Data_entry' => 'Complete', 'Administration' => 'None'), array('ID' => $DDE[0]['ID']));
+                $result = $DB->update('flag', array('Data_entry' => 'Complete', 'Administration' => 'None'), array('ID' => $DDE['ID']));
 
                 if ($DB->isError($result)) {
                     print "Could not update new ID: ". $result->getMessage();
