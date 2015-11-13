@@ -69,9 +69,7 @@ UPDATE flag SET Data_entry='Complete', Administration='None' WHERE ID=61985;
 UPDATE flag SET Data_entry='Complete', Administration='None' WHERE ID=62157;
 UPDATE flag SET Data_entry='Complete', Administration='None' WHERE ID=63351;
 UPDATE flag SET Data_entry='Complete', Administration='None' WHERE ID=63575;
-UPDATE flag SET Data_entry='Complete', Administration='None' WHERE ID=63703;
 UPDATE flag SET Data_entry='Complete', Administration='None' WHERE ID=64267;
-UPDATE flag SET Data_entry='Complete', Administration='None' WHERE ID=64723;
 UPDATE flag SET Data_entry='Complete', Administration='None' WHERE ID=66725;
 UPDATE flag SET Data_entry='Complete', Administration='None' WHERE ID=67151;
 UPDATE flag SET Data_entry='Complete', Administration='None' WHERE ID=67367;
@@ -106,7 +104,7 @@ UPDATE flag SET Data_entry='Complete', Administration='None' WHERE ID=103968;
 UPDATE flag SET Data_entry='Complete', Administration='None' WHERE ID=105236;
 UPDATE flag SET Data_entry='Complete', Administration='None' WHERE ID=105456;
 UPDATE flag SET Data_entry='Complete', Administration='None' WHERE ID=105818;
--- 107 Show updates to 'Complete,None' were done.
+-- 105 Show updates to 'Complete,None' were done.
 
 -- Test_name: figs_year3 / Visit_label: V12
 UPDATE flag SET Data_entry='Complete', Administration='None' WHERE ID=9673;
@@ -135,16 +133,11 @@ UPDATE flag SET Data_entry='Complete', Administration='None' WHERE ID=114174;
 -- 7 Show updates to 'Complete,None' were done.
 
 -- Test_name: i3 / Visit_label: V18,V24
-UPDATE flag SET Data_entry='Complete', Administration='None' WHERE ID=38983;
-UPDATE flag SET Data_entry='Complete', Administration='None' WHERE ID=63697;
-UPDATE flag SET Data_entry='Complete', Administration='None' WHERE ID=74155;
-UPDATE flag SET Data_entry='Complete', Administration='None' WHERE ID=85728;
--- 4 Show updates to 'Complete,None' were done.
+-- 0 Show updates to 'Complete,None' were done.
 
 -- Test_name: ibq_r / Visit_label: V06,V12
 UPDATE flag SET Data_entry='Complete', Administration='None' WHERE ID=67617;
 UPDATE flag SET Data_entry='Complete', Administration='None' WHERE ID=68457;
-UPDATE flag SET Data_entry='Complete', Administration='None' WHERE ID=70993;
 UPDATE flag SET Data_entry='Complete', Administration='None' WHERE ID=73967;
 UPDATE flag SET Data_entry='Complete', Administration='None' WHERE ID=75433;
 UPDATE flag SET Data_entry='Complete', Administration='None' WHERE ID=78294;
@@ -152,10 +145,9 @@ UPDATE flag SET Data_entry='Complete', Administration='None' WHERE ID=82420;
 UPDATE flag SET Data_entry='Complete', Administration='None' WHERE ID=85110;
 UPDATE flag SET Data_entry='Complete', Administration='None' WHERE ID=85230;
 UPDATE flag SET Data_entry='Complete', Administration='None' WHERE ID=87820;
--- 10 Show updates to 'Complete,None' were done.
+-- 9 Show updates to 'Complete,None' were done.
 
 -- Test_name: macarthur_words_gestures / Visit_label: V12,V18,V24
-UPDATE flag SET Data_entry='Complete', Administration='None' WHERE ID=76073;
 UPDATE flag SET Data_entry='Complete', Administration='None' WHERE ID=81394;
 UPDATE flag SET Data_entry='Complete', Administration='None' WHERE ID=81406;
 UPDATE flag SET Data_entry='Complete', Administration='None' WHERE ID=81794;
@@ -163,10 +155,9 @@ UPDATE flag SET Data_entry='Complete', Administration='None' WHERE ID=82440;
 UPDATE flag SET Data_entry='Complete', Administration='None' WHERE ID=87008;
 UPDATE flag SET Data_entry='Complete', Administration='None' WHERE ID=88234;
 UPDATE flag SET Data_entry='Complete', Administration='None' WHERE ID=95162;
-UPDATE flag SET Data_entry='Complete', Administration='None' WHERE ID=97518;
 UPDATE flag SET Data_entry='Complete', Administration='None' WHERE ID=97776;
 UPDATE flag SET Data_entry='Complete', Administration='None' WHERE ID=115894;
--- 11 Show updates to 'Complete,None' were done.
+-- 9 Show updates to 'Complete,None' were done.
 
 -- Test_name: med_psych_hist / Visit_label: V06,V12,V18,V24
 UPDATE flag SET Data_entry='Complete', Administration='None' WHERE ID=6710;
@@ -212,7 +203,6 @@ UPDATE flag SET Data_entry='Complete', Administration='None' WHERE ID=115890;
 -- 11 Show updates to 'Complete,None' were done.
 
 -- Test_name: rbs_r / Visit_label: V12,V18,V24
-UPDATE flag SET Data_entry='Complete', Administration='None' WHERE ID=41685;
 UPDATE flag SET Data_entry='Complete', Administration='None' WHERE ID=49255;
 UPDATE flag SET Data_entry='Complete', Administration='None' WHERE ID=75447;
 UPDATE flag SET Data_entry='Complete', Administration='None' WHERE ID=76065;
@@ -223,16 +213,10 @@ UPDATE flag SET Data_entry='Complete', Administration='None' WHERE ID=87000;
 UPDATE flag SET Data_entry='Complete', Administration='None' WHERE ID=88228;
 UPDATE flag SET Data_entry='Complete', Administration='None' WHERE ID=95154;
 UPDATE flag SET Data_entry='Complete', Administration='None' WHERE ID=97512;
--- 11 Show updates to 'Complete,None' were done.
+-- 10 Show updates to 'Complete,None' were done.
 
 -- Test_name: RSMS / Visit_label: V12,V24
-UPDATE flag SET Data_entry='Complete', Administration='None' WHERE ID=36429;
-UPDATE flag SET Data_entry='Complete', Administration='None' WHERE ID=36905;
-UPDATE flag SET Data_entry='Complete', Administration='None' WHERE ID=38985;
-UPDATE flag SET Data_entry='Complete', Administration='None' WHERE ID=39191;
-UPDATE flag SET Data_entry='Complete', Administration='None' WHERE ID=39329;
-UPDATE flag SET Data_entry='Complete', Administration='None' WHERE ID=47173;
--- 6 Show updates to 'Complete,None' were done.
+-- 0 Show updates to 'Complete,None' were done.
 
 -- Test_name: scq_proband / Visit_label: V06,V12
 UPDATE flag SET Data_entry='Complete', Administration='None' WHERE ID=3722;
