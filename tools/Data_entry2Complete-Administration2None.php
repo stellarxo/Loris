@@ -20,8 +20,8 @@ if (empty($argv[1])) {
     $TP = explode(',', $argv[3]);
     
     $pparam = array(
-        'DAT' => 'Complete',
-        'ADM' => 'None',
+        //'DAT' => 'Complete',
+        //'ADM' => 'None',
         'CEN' => '5',
         'PID' => '1',
         'COM' => 'DDE%',
@@ -39,7 +39,7 @@ if (empty($argv[1])) {
         "WHERE s.CenterID=:CEN AND c.ProjectID=:PID " .
         "AND f.Test_name=:TES AND (s.Visit_label=:VI0 OR s.Visit_label=:VI1 OR " .
         "s.Visit_label=:VI2 OR s.Visit_label=:VI3) " .
-        "AND (f.Data_entry!=:DAT OR f.Administration!=:ADM) " .
+        "AND (f.Data_entry IS NULL OR f.Administration IS NULL) " .
         "AND f.CommentID NOT LIKE :COM " .
         "ORDER BY f.ID", $pparam
     );
