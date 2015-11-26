@@ -87,11 +87,11 @@ class NDB_Reliability_ados_module1_reliability extends NDB_Reliability
         $query3 = "SELECT * FROM ados_module1_reliability_lookup WHERE CommentID='standard_ados_module1_SEA0015'";
         $query4 = "SELECT * FROM ados_module1_reliability_lookup WHERE CommentID='standard_ados_module1_SEA0017'";
   
-        $db->selectRow($query, $score_record);             
-        $db->selectRow($query1, $score_record1);      
+        $db->selectRow($query, $score_record);
+        $db->selectRow($query1, $score_record1);
         $db->selectRow($query2, $score_record2);
         $db->selectRow($query3, $score_record3);
-        $db->selectRow($query4, $score_record4);
+         $db->selectRow($query4, $score_record4);
 
         // If the reliability is to be compared to the gold standard
         if ($score_record['Gold_standard']=='Gold_standard_SEA0010'){
@@ -1987,7 +1987,7 @@ class NDB_Reliability_ados_module1_reliability extends NDB_Reliability
 
     function _process($values)
     {
-        $DB =& Database::singleton();   
+        $DB =& Database::singleton();
         
         $user =& User::singleton();
         // if(!$user->hasPermission('tracking_logs_edit_all')) {
