@@ -382,7 +382,6 @@ INSERT INTO instrument_subtests VALUES('', 'csbs', 'csbs_page2', 'Symbolic Behav
     	$query = "SELECT * FROM $this->table WHERE CommentID = '$this->commentID'";
     	$record = array();
     	$db->selectRow($query, $record);
-
        $scores['score_validity'] = "";	
        // Get the subject age in months for scoring
         $timepoint =& TimePoint::singleton($this->getSessionID());

@@ -44,10 +44,6 @@ class ProjectUtility extends PEAR
     function GetSupplementalGrantStatus($sessionID) {
         $timePoint =& TimePoint::singleton($sessionID);
 
-        if(PEAR::isError($timePoint)) {
-            return PEAR::raiseError("Timepoint Error ".$timePoint->getMessage());
-        }
-
         $tpd = $timePoint->getData();
         if($tpd['Visit_label'] == 'v06' || $tpd['Visit_label'] == 'V06') {
             return 'Parent Grant';
@@ -145,10 +141,6 @@ class ProjectUtility extends PEAR
 
         //$query = "select distinct Visit_label from test_battery where Test_name = '$test_name'";
         $db->select($query,$visitlabels);
-
-        if(PEAR::isError($visitlabels)) {
-            return PEAR::raiseError("Could not get visit label: ".$visitlabels->getMessage());
-        }
 
         return $visitlabels;
     }

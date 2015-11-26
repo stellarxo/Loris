@@ -15,14 +15,8 @@ class NDB_Form_new_profile extends NDB_Form
     {
         // create user object
         $user =& User::singleton();
-        if(PEAR::isError($user)) {
-            return PEAR::raiseError("User Error: ".$user->getMessage());
-        }
 
         $site =& Site::singleton($user->getData('CenterID'));
-        if (PEAR::isError($site)) {
-            return PEAR::raiseError("Unable to construct the list_of_sites array: ".$site->getMessage());
-        }
         if ($site->isStudySite()) {
             return $user->hasPermission('data_entry');
         }
@@ -50,9 +44,6 @@ class NDB_Form_new_profile extends NDB_Form
             $startNum = 1000;
         }
         $candID = Candidate::createNew($user->getData('CenterID'), $dob, $edc, $values['gender'], $values['PSCID'], $startNum);
-        if (PEAR::isError($candID)) {
-            return PEAR::raiseError("new_profile::_process(): ".$candID->getMessage());
-        }
 
         // get the candidate
         $candidate =& Candidate::singleton($candID);
@@ -60,9 +51,6 @@ class NDB_Form_new_profile extends NDB_Form
         if($config->getSetting('useProjects') == "true") {
             $candidate->setData('ProjectID', $values['ProjectID']);
 
-        }
-        if (PEAR::isError($candidate)) {
-            return PEAR::raiseError("Candidate Error ($candID): ".$candidate->getMessage());
         }
 
         $db = Database::singleton(); 

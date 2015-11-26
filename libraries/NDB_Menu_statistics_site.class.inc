@@ -12,9 +12,6 @@ class NDB_Menu_statistics_site extends NDB_Menu
     }
     function _getInstrumentList() {
         $DB =& Database::singleton();
-        if(PEAR::isError($DB)) {
-            return PEAR::raiseError("Could not connect to database: ".$DB->getMessage());
-        }
 
         $instrumentList = $DB->pselect("SELECT Test_name FROM test_names ORDER BY Test_name", array());
         if(Utility::isErrorX($instrumentList)) {
@@ -33,9 +30,6 @@ class NDB_Menu_statistics_site extends NDB_Menu
     function _getInstrumentName($instrument) {
 
         $DB =& Database::singleton();
-        if(PEAR::isError($DB)) {
-            return PEAR::raiseError("Could not connect to database: ".$DB->getMessage());
-        }
 
         $instrumentName = $DB->pselectOne("SELECT Full_name FROM test_names WHERE Test_name=:tname", array('tname'=>$instrument));
         if(Utility::isErrorX($instrumentName)) {
@@ -91,9 +85,6 @@ class NDB_Menu_statistics_site extends NDB_Menu
             header("Location: ?test_name=statistics#data_entry");
         }
         $DB =& Database::singleton();
-        if(PEAR::isError($DB)) {
-            return PEAR::raiseError("Could not connect to database: ".$DB->getMessage());
-        }
         $DB->selectRow("SELECT CenterID as ID, PSCArea as Name FROM psc WHERE CenterID=" . $_REQUEST['CenterID'], $center);
         $id = $center['ID'];
         $name = $center['Name'];

@@ -514,8 +514,7 @@ function _possibleExclusionaryCriteria() {
         //set for med_records_recruit - so watch out needs to be fixed
         $query = "SELECT s.CandID from session as s, flag as f where f.sessionId = s.ID and f.CommentID= '". $this->getCommentID() . "'";
                
-       	$db->selectRow($query, $result_cand);
-         	         	 
+       	$db->selectRow($query, $result_cand);	         	 
         $CandID = $result_cand["CandID"];
          	
        	$candidate_query = "SELECT * from candidate where CandID=" . $CandID;
