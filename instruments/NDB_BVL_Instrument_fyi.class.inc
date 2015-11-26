@@ -343,18 +343,12 @@ INSERT INTO instrument_subtests VALUES('', 'fyi', 'fyi_page2', '#47-#63', 2);
          $score_record=array();
 
          $db =& Database::singleton();
-         if(PEAR::isError($db)) {
-             return PEAR::raiseError ("Could not connect to database: ".$db->getMessage());
-         }
 
          $this->_nullScores($this->scoreCols);
    		
    		$query = "SELECT * FROM ".$this->table." WHERE CommentID='".$this->getCommentID()."'";
          $db->selectRow($query, $score_record);
          
-         if (PEAR::isError($score_record)) {
-            return PEAR::raiseError("Could not get scores: ".$score_record->getMessage());
-         }
          
          //print_r($score_record);
          

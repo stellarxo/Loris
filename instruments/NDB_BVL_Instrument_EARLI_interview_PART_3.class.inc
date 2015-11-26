@@ -1362,9 +1362,6 @@ class NDB_BVL_Instrument_EARLI_interview_PART_3 extends NDB_BVL_Instrument_EARLI
 
                 $db =& Database::singleton();
 
-                if(PEAR::isError($db)) {
-                    return PEAR::raiseError ("Could not connect to database: ". $db->getMessage());
-                }
 
                 $db->selectRow("SELECT q8_32_c, q8_32_d FROM EARLI_interview_PART_3 WHERE CommentID='".$this->getCommentID()."'", $answer);
 
@@ -1766,9 +1763,6 @@ class NDB_BVL_Instrument_EARLI_interview_PART_3 extends NDB_BVL_Instrument_EARLI
 
                 $db =& Database::singleton();
 
-                if(PEAR::isError($db)) {
-                    return PEAR::raiseError ("Could not connect to database: ". $db->getMessage());
-                }
 
                 $db->selectRow("SELECT q8_32_e, q8_32_f, q8_32_g FROM EARLI_interview_PART_3 WHERE CommentID='".$this->getCommentID()."'", $answer);
 
@@ -2255,11 +2249,6 @@ class NDB_BVL_Instrument_EARLI_interview_PART_3 extends NDB_BVL_Instrument_EARLI
 		$errors = array();
 
 		$db =& Database::singleton();
-
-
-		if(PEAR::isError($db)) {
-	            return PEAR::raiseError ("Could not connect to database: ".$db->getMessage());
-        	}
 
 		$db->selectRow("SELECT q8_5, q8_6_9 FROM EARLI_interview_PART_3 WHERE CommentID='".$this->getCommentID()."'", $occupation); 
 
@@ -2804,10 +2793,6 @@ class NDB_BVL_Instrument_EARLI_interview_PART_3 extends NDB_BVL_Instrument_EARLI
 		$errors = array();
 
                 $db =& Database::singleton();
-
-                if(PEAR::isError($db)) {
-                    return PEAR::raiseError ("Could not connect to database: ". $db->getMessage());
-                }
 
                 $db->selectRow("SELECT q8_5, q8_6_1, q8_6_2, q8_6_3, q8_6_4, q8_6_5, q8_6_7, q8_6_8, q8_6_9 FROM EARLI_interview_PART_3 WHERE CommentID='".$this->getCommentID()."'", $occupation);
 
@@ -3683,10 +3668,6 @@ class NDB_BVL_Instrument_EARLI_interview_PART_3 extends NDB_BVL_Instrument_EARLI
 		$errors = array();
 
                 $db =& Database::singleton();
-
-                if(PEAR::isError($db)) {
-                    return PEAR::raiseError ("Could not connect to database: ". $db->getMessage());
-                }
 
                 $db->selectRow("SELECT q8_5, q8_6_1, q8_6_2, q8_6_3, q8_6_4, q8_6_5, q8_6_6, q8_6_7, q8_6_8, q8_6_9 FROM EARLI_interview_PART_3 WHERE CommentID='".$this->getCommentID()."'", $occupation);
 

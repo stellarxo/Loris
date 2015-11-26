@@ -156,9 +156,6 @@ class NDB_BVL_Instrument_scq extends NDB_BVL_Instrument
 		}
 
 		$db =& Database::singleton();
-		if(PEAR::isError($db)) {
-			return PEAR::raiseError ("Could not connect to database: ".$db->getMessage());
-		}
 
 		// null scores
 		$this->_nullScores($this->scoreCols);
@@ -167,9 +164,6 @@ class NDB_BVL_Instrument_scq extends NDB_BVL_Instrument
 		$query = "SELECT * FROM $this->table WHERE CommentID='".$this->getCommentID()."'";
 		$record=array();
 		$db->selectRow($query, $record);
-		if (PEAR::isError($record)) {
-			return PEAR::raiseError("Could not get scores: ".$record->getMessage());
-		}
 
 		//take only question fields, not metadata
 		foreach ($record as $field=>$value) {

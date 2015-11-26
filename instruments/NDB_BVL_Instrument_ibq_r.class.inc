@@ -113,16 +113,10 @@ class NDB_BVL_Instrument_ibq_r extends NDB_BVL_Instrument
 
 		//get the saved scores
     	$db =& Database::singleton();
-    	if(PEAR::isError($db)) {
-			return PEAR::raiseError ("Could not connect to database".$db->getMessage());
-    	}
     	
     	$query = "SELECT * FROM $this->table WHERE CommentID = '$this->commentID'";
     	$record = array();
     	$db->selectRow($query, $record);
-    	if (PEAR::isError($record)) {
-    		return PEAR::raiseError("Could not retrieve scores: " . $record->getMessage());
-    	}
     	
     	//do the math...
     	$reverseItems = array(1, 14, 117,

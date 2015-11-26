@@ -37,9 +37,6 @@ class NDB_BVL_Instrument_eye_tracking extends NDB_BVL_Instrument
         // Get the subject age in months for scoring
 
         $db =& Database::singleton();
-        if(PEAR::isError($db)) {
-            return PEAR::raiseError ("Could not connect to database: ".$db->getMessage());
-        }
         // required fields for data entry completion status
         $this->_requiredElements = array();
 

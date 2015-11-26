@@ -377,18 +377,12 @@ INSERT INTO instrument_subtests VALUES('', 'csbs', 'csbs_page2', 'Symbolic Behav
 		
         //get the saved scores
     	$db =& Database::singleton();
-    	if(PEAR::isError($db)) {
-			return PEAR::raiseError ("Could not connect to database".$db->getMessage());
-    	}
   	
 	
     	$query = "SELECT * FROM $this->table WHERE CommentID = '$this->commentID'";
     	$record = array();
     	$db->selectRow($query, $record);
-    	if (PEAR::isError($record)) {
-    		return PEAR::raiseError("Could not retrieve scores: " . $record->getMessage());
-    	}
-   
+
        $scores['score_validity'] = "";	
        // Get the subject age in months for scoring
         $timepoint =& TimePoint::singleton($this->getSessionID());
@@ -543,9 +537,6 @@ INSERT INTO instrument_subtests VALUES('', 'csbs', 'csbs_page2', 'Symbolic Behav
 	$query_scores1 = "SELECT * FROM csbs_lookup WHERE age_months=".$age_months. " AND score_weighted=".$scores['emotion_eye_gaze_weighted']." AND subscale='emotion_eye_gaze_weighted'";
     	$record_1 = array();
 	$db->selectRow($query_scores1, $record_1);
-    	if (PEAR::isError($record_1)) {
-    		return PEAR::raiseError("Could not retrieve scores: " . $record_1->getMessage());
-    	}
 	$scores['emotion_eye_gaze_standard']=($record_1['score_standard']);
 	$scores['emotion_eye_gaze_percentile']=($record_1['score_percentile']);
 
@@ -553,9 +544,6 @@ INSERT INTO instrument_subtests VALUES('', 'csbs', 'csbs_page2', 'Symbolic Behav
 	$query_scores2 = "SELECT * FROM csbs_lookup WHERE age_months=".$age_months. " AND score_weighted=".$scores['communication_weighted']." AND subscale='communication_weighted'";
     	$record_2 = array();
 	$db->selectRow($query_scores2, $record_2);
-    	if (PEAR::isError($record_2)) {
-    		return PEAR::raiseError("Could not retrieve scores: " . $record_2->getMessage());
-    	}
 	$scores['communication_standard']=($record_2['score_standard']);
 	$scores['communication_percentile']=($record_2['score_percentile']);
 
@@ -563,9 +551,6 @@ INSERT INTO instrument_subtests VALUES('', 'csbs', 'csbs_page2', 'Symbolic Behav
 	$query_scores3 = "SELECT * FROM csbs_lookup WHERE age_months=".$age_months. " AND score_weighted=".$scores['gestures_weighted']." AND subscale='gestures_weighted'";
     	$record_3 = array();
 	$db->selectRow($query_scores3, $record_3);
-    	if (PEAR::isError($record_3)) {
-    		return PEAR::raiseError("Could not retrieve scores: " . $record_3->getMessage());
-    	}
 	$scores['gestures_standard']=($record_3['score_standard']);
 	$scores['gestures_percentile']=($record_3['score_percentile']);
 
@@ -573,9 +558,6 @@ INSERT INTO instrument_subtests VALUES('', 'csbs', 'csbs_page2', 'Symbolic Behav
 	$query_scores4 = "SELECT * FROM csbs_lookup WHERE age_months=".$age_months. " AND score_weighted=".$scores['sounds_weighted']." AND subscale='sounds_weighted'";
     	$record_4 = array();
 	$db->selectRow($query_scores4, $record_4);
-    	if (PEAR::isError($record_4)) {
-    		return PEAR::raiseError("Could not retrieve scores: " . $record_4->getMessage());
-    	}
 	$scores['sounds_standard']=($record_4['score_standard']);
 	$scores['sounds_percentile']=($record_4['score_percentile']);
 
@@ -583,9 +565,6 @@ INSERT INTO instrument_subtests VALUES('', 'csbs', 'csbs_page2', 'Symbolic Behav
 	$query_scores5 = "SELECT * FROM csbs_lookup WHERE age_months=".$age_months. " AND score_weighted=".$scores['words_weighted']." AND subscale='words_weighted'";
     	$record_5 = array();
 	$db->selectRow($query_scores5, $record_5);
-    	if (PEAR::isError($record_5)) {
-    		return PEAR::raiseError("Could not retrieve scores: " . $record_5->getMessage());
-    	}
 	$scores['words_standard']=($record_5['score_standard']);
 	$scores['words_percentile']=($record_5['score_percentile']);
 
@@ -595,9 +574,6 @@ INSERT INTO instrument_subtests VALUES('', 'csbs', 'csbs_page2', 'Symbolic Behav
         $query_scores6 = "SELECT * FROM csbs_lookup WHERE age_months=".$age_months. " AND score_weighted=".$scores['understanding_weighted']." AND subscale='understanding_weighted'";
         $record_6 = array();
         $db->selectRow($query_scores6, $record_6);
-            if (PEAR::isError($record_6)) {
-                return PEAR::raiseError("Could not retrieve scores: " . $record_6->getMessage());
-            }
         $scores['understanding_standard']=($record_6['score_standard']);
         $scores['understanding_percentile']=($record_6['score_percentile']);
     } else {
@@ -610,9 +586,6 @@ INSERT INTO instrument_subtests VALUES('', 'csbs', 'csbs_page2', 'Symbolic Behav
 	$query_scores7 = "SELECT * FROM csbs_lookup WHERE age_months=".$age_months. " AND score_weighted=".$scores['object_use_weighted']." AND subscale='object_use_weighted'";
     	$record_7 = array();
 	$db->selectRow($query_scores7, $record_7);
-    	if (PEAR::isError($record_7)) {
-    		return PEAR::raiseError("Could not retrieve scores: " . $record_7->getMessage());
-    	}
 	$scores['object_use_standard']=($record_7['score_standard']);
 	$scores['object_use_percentile']=($record_7['score_percentile']);
 
@@ -620,9 +593,6 @@ INSERT INTO instrument_subtests VALUES('', 'csbs', 'csbs_page2', 'Symbolic Behav
 	$query_scores8 = "SELECT * FROM csbs_lookup WHERE age_months=".$age_months. " AND score_weighted=".$scores['social_composite_score']." AND subscale='social_composite_score'";
     	$record_8 = array();
 	$db->selectRow($query_scores8, $record_8);
-    	if (PEAR::isError($record_8)) {
-    		return PEAR::raiseError("Could not retrieve scores: " . $record_8->getMessage());
-    	}
 	$scores['social_composite_standard']=($record_8['score_standard']);
 	$scores['social_composite_percentile']=($record_8['score_percentile']);
 
@@ -631,9 +601,6 @@ INSERT INTO instrument_subtests VALUES('', 'csbs', 'csbs_page2', 'Symbolic Behav
 	$query_scores9 = "SELECT * FROM csbs_lookup WHERE age_months=".$age_months. " AND score_weighted=".$scores['speech_composite_score']." AND subscale='speech_composite_score'";
     	$record_9 = array();
 	$db->selectRow($query_scores9, $record_9);
-    	if (PEAR::isError($record_9)) {
-    		return PEAR::raiseError("Could not retrieve scores: " . $record_9->getMessage());
-    	}
 	$scores['speech_composite_standard']=($record_9['score_standard']);
 	$scores['speech_composite_percentile']=($record_9['score_percentile']);
 
@@ -642,9 +609,6 @@ INSERT INTO instrument_subtests VALUES('', 'csbs', 'csbs_page2', 'Symbolic Behav
 	$query_scores10 = "SELECT * FROM csbs_lookup WHERE age_months=".$age_months. " AND score_weighted=".$scores['symbolic_composite_score']." AND subscale='symbolic_composite_score'";
     	$record_10 = array();
 	$db->selectRow($query_scores10, $record_10);
-    	if (PEAR::isError($record_10)) {
-    		return PEAR::raiseError("Could not retrieve scores: " . $record_10->getMessage());
-    	}
 	$scores['symbolic_composite_standard']=($record_10['score_standard']);
 	$scores['symbolic_composite_percentile']=($record_10['score_percentile']);
 
@@ -653,18 +617,12 @@ INSERT INTO instrument_subtests VALUES('', 'csbs', 'csbs_page2', 'Symbolic Behav
 	$query_scores11 = "SELECT * FROM csbs_lookup WHERE age_months=".$age_months. " AND score_weighted=".$scores['total_weighted_raw_score']." AND subscale='total_weighted_raw_score'";
     	$record_11 = array();
 	$db->selectRow($query_scores11, $record_11);
-    	if (PEAR::isError($record_11)) {
-    		return PEAR::raiseError("Could not retrieve scores: " . $record_11->getMessage());
-    	}
 	$scores['total_standard']=($record_11['score_standard']);
 	$scores['total_percentile']=($record_11['score_percentile']);
 /*
 	$query_scores_OUTOFRANGE = "SELECT * FROM csbs_lookup WHERE age_months = '24' AND score_weighted = ".$scores['total_weighted_raw_score']." AND subscale='total_weighted_raw_score'";
 	$record_OUTOFRANGE = array();
 	$db->selectRow($query_scores_OUTOFRANGE, $record_OUTOFRANGE);
-	if (PEAR::isError($record_OUTOFRANGE)) {
-		return PEAR::raiseError("Could not retrieve scores: " . $record_11->getMessage());
-        }
 	
 */
 
