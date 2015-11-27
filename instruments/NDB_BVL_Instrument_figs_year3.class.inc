@@ -245,9 +245,6 @@ class NDB_BVL_Instrument_figs_year3 extends NDB_BVL_Instrument
             $relativeWhere = "AND RelativeID='".$this->relativeID."'";
         }
         $GLOBALS['DB']->select("SELECT * FROM $this->table WHERE CommentID='".$this->getCommentID()."' $relativeWhere", $defaults);
-        if($this->isError($defaults)) {
-            return $this->raiseError('Could not get default values for form');
-        }
         
         // set the defaults (call private method _setDefaultsArray
         // which could be overridden if necessary)
@@ -363,7 +360,6 @@ class NDB_BVL_Instrument_figs_year3 extends NDB_BVL_Instrument
         // if we're saving the relatives page, do magic
         if(empty($this->relativeID)) {
             $db =& Database::singleton();
-            if($this->isError($db)) die($db->getMessage());
             
             // This used to be written this way, but that caused information to get thrown away when
             // called from the conflict resolver where only a subset of these might be set.
@@ -380,24 +376,20 @@ class NDB_BVL_Instrument_figs_year3 extends NDB_BVL_Instrument
             $setArray = $this->_addSetArrayElement('other_comments', $setArray, $values);
             $whereArray = array('CommentID'=>$this->getCommentID());
             $ok = $db->update('figs_year3', $setArray, $whereArray);
-            if($this->isError($ok)) die($db->getMessage());
             
             // if we're deleting, then delete...
             if(!empty($values['removeRelativeID'])) {
                 // delete from figs_year3_relatives...
                 $ok = $db->delete('figs_year3_relatives', array_merge($whereArray, array('RelativeID'=>$values['removeRelativeID'])));
-                if($this->isError($ok)) die($db->getMessage());
             }
             
             // if we're adding, then add...
             if(!empty($values['addRelativeCode'])) {
                 // insert into figs_year3_relatives...
                 $ok = $db->insert('figs_year3_relatives', array_merge($whereArray, array('RelativeCode'=>$values['addRelativeCode'])));
-                if($this->isError($ok)) die($db->getMessage());
             }
         } else {
             $ok = $this->_save($values);
-            if($this->isError($ok)) print $ok->getMessage()."\n";
         }
         if(!empty($this->relativeID)) $this->_setDataEntryCompletedRelative($this->relativeID);
         // $this->_setDataEntryCompleted();
@@ -432,10 +424,6 @@ class NDB_BVL_Instrument_figs_year3 extends NDB_BVL_Instrument
         $whereArray = array('CommentID'=>$this->getCommentID());
         if(!empty($this->relativeID)) $whereArray = array_merge($whereArray, array('RelativeID'=>$this->relativeID));
         $result = $GLOBALS['DB']->update($this->table, $values, $whereArray);
-        if($this->isError($result)) {
-	  //print "Error saving data: ".$result->getMessage()."<br>\n";
-            return $this->raiseError('Could not save to database' . $result->getMessage());
-        }
     }
 
     /**
@@ -1744,10 +1732,6 @@ work or with social relationships?", $questionOptions);
         
         $results = array();
         $db->select("SELECT RelativeID, RelativeCode FROM figs_year3_relatives WHERE CommentID='".$this->getCommentID()."'", $results);
-       /* if($this->isError($results)) {
-            print $results->getMessage()."<br>\n";
-            return false;
-        }*/
         
         $relatives = array();
         foreach($results AS $row) {
@@ -1761,7 +1745,6 @@ work or with social relationships?", $questionOptions);
         if(empty($relativeID)) return false;
 
         $db =& Database::singleton();
-        if($this->isError($db)) return false;
 
         $query = "SELECT
                      (GS_Q01_Adopted is not null) AND
@@ -1780,16 +1763,8 @@ work or with social relationships?", $questionOptions);
                   FROM figs_year3_relatives WHERE RelativeID='$relativeID'";
 
         $complete = $db->selectOne($query);
-        if($this->isError($complete)) {
-            print $complete->getMessage()."<br>\n";
-            return false;
-        }
 
         $ok = $db->update('figs_year3_relatives', array('DataEntryCompleted'=>$complete), array('RelativeID'=>$relativeID));
-        if($this->isError($ok)) {
-            print $ok->getMessage()."<br>\n";
-            return false;
-        }
 
         return true;
     }
@@ -1797,8 +1772,6 @@ work or with social relationships?", $questionOptions);
     function _determineDataEntryCompletionStatus()
     {
         $db =& Database::singleton();
-        if($this->isError($db)) 
-            return $this->raiseError ("Could not connect to database: ".$db->getMessage());
 
         $relatives = $this->_getRelatives();
         if(!is_array($relatives) || count($relatives)==0) {
@@ -1808,9 +1781,6 @@ work or with social relationships?", $questionOptions);
         $query = "SELECT count(*) FROM figs_year3_relatives WHERE CommentID='".$this->getCommentID()."' AND DataEntryCompleted=0";
         
         $incompleteRelatives = $db->selectOne($query);
-        if($this->isError($incompleteRelatives)) {
-            return $this->raiseError ("Could not connect to database: ".$db->getMessage());
-        }
         
         if($incompleteRelatives > 0) {
             return 'Incomplete';
@@ -1828,17 +1798,15 @@ work or with social relationships?", $questionOptions);
     */
     function _setDataEntryCompletionStatus($status)
     {
-        if(!in_array($status, array('Complete', 'Incomplete'))) return $this->raiseError("Invalid status passed to _setDataEntryCompletionStatus - '$status' should have been either 'Complete' or 'Incomplete'<br>\n");
+        if(!in_array($status, array('Complete', 'Incomplete'))) throw new LorisException("Invalid status passed to _setDataEntryCompletionStatus - '$status' should have been either 'Complete' or 'Incomplete'<br>\n");
 
         $db =& Database::singleton();
-        if($this->isError($db)) return $this->raiseError("Could not connect to database: ".$db->getMessage()."<br>\n");
 
         $success = $db->update('figs_year3',
         array('Data_entry_completion_status'=>$status),
         array('CommentID'=>$this->getCommentID())
         );
 
-        if($this->isError($success)) return $this->raiseError("Could not update status: ".$success->getMessage()."<br>\n");
     } // end function
 
     /**
@@ -1849,7 +1817,6 @@ work or with social relationships?", $questionOptions);
     function getDataEntryCompletionStatus()
     {
         $db =& Database::singleton();
-        if($this->isError($db)) return $this->raiseError("Could not connect to database: ".$db->getMessage()."<br>\n");
 
         $query = "SELECT Data_entry_completion_status FROM figs_year3 WHERE CommentID='".$this->getCommentID()."'";
         return $db->selectOne($query);
@@ -1863,7 +1830,6 @@ work or with social relationships?", $questionOptions);
     function score()
     {
         $db =& Database::singleton();
-        if($this->isError($db)) return $this->raiseError("Could not connect to database: ".$db->getMessage());
 
         // null the existing scores
         $success = $this->_nullScores();
@@ -1875,10 +1841,6 @@ work or with social relationships?", $questionOptions);
             $relativeScores = array();
             foreach($relatives AS $relativeID) {
                 $success = $this->_scoreRelative($relativeID['RelativeID']);
-                if ($this->isError($success)) {
-                	$this->_nullScores();
-                	return $this->raiseError("Error, failed to score FIGS \n".$success->getMessage());
-                }
                 $relativeScores = array_merge($relativeScores, $success);
             }
         }
@@ -1971,14 +1933,8 @@ work or with social relationships?", $questionOptions);
             $query = "SELECT $final_query FROM figs_year3_relatives WHERE CommentID=:cID";
 
             $scores = $db->pselectRow($query, $param);
-            if ($this->isError($scores)) {
-                return $this->raiseError("DB Error, failed to select relatives' scores\n".$scores->getMessage());
-            }
 
             $success = $db->update('figs_year3', $scores, array('CommentID'=>$this->getCommentID()));
-            if ($this->isError($success)) {
-                return $this->raiseError("DB Error, failed to save candidate's scores [".$this->getCommentID()."]\n".$success->getMessage());
-            }
         }
         // return an array w/ all scores
         return array('instrument'=>$scores, 'relatives'=>$relativeScores);
@@ -1991,18 +1947,14 @@ work or with social relationships?", $questionOptions);
     function _scoreRelative($relativeID)
     {
         $db =& Database::singleton();
-        if($this->isError($db)) return $this->raiseError("Could not connect to database: ".$db->getMessage());
 
         $query = "SELECT Checklist_Other, Checklist_ADHD, Checklist_Depression, Checklist_Mania, Checklist_Psychosis, Checklist_Alcohol, Checklist_Drugs, Checklist_Nicotine, Checklist_OCD, Checklist_Tic, Checklist_ASP, Checklist_Schizoid FROM figs_year3_relatives WHERE RelativeID='$relativeID'";
         $checklists=array();
         $db->selectRow($query, $checklists);
-        if ($this->isError($checklists)) {
-            return $this->raiseError("DBError, failed to get the list of checklists for the relative [$relativeID] \n".$checklists->getMessage());
-        }
         
         // return error in case 0 rows returned, i.e. no record for the RecordID in the relatives table
         if (count($checklists)==0) {
-            return $this->raiseError("Error, no data returned!");
+            throw new LorisException("Error, no data returned!");
         }
 
         $scores=array();
@@ -2012,10 +1964,6 @@ work or with social relationships?", $questionOptions);
                 $scoringFunction = "_scoreRelative".$checklistName;
                 if(method_exists($this, $scoringFunction)) {
                     $success = $this->$scoringFunction($relativeID);
-                    if ($this->isError($success)) {
-                        return $this->raiseError("Could not get checklist values: \n".$success->getMessage());
-
-                    }
                     $scores = array_merge($scores, $success);
                 }
             }
@@ -2030,7 +1978,6 @@ work or with social relationships?", $questionOptions);
     function _scoreRelativeDepression($relativeID)
     {
         $db =& Database::singleton();
-        if($this->isError($db)) return $this->raiseError("Could not connect to database: ".$db->getMessage());
 
         $scores['Score_depression'] = 'N';
         $scores['Score_recurrent_depression'] = 'N';
@@ -2057,7 +2004,6 @@ Depression_Q8_Impairment,
 Depression_Q9_Reliability
  FROM figs_year3_relatives WHERE RelativeID='$relativeID'";
         $db->selectRow($query, $fields); 
-        if($this->isError($fields)) return $this->raiseError("DB Error, failed to get figs data: \n".$db->getMessage());
 
         // Item 2 = yes to any of the following: 1,2,3,4 AND 9 = 1 or 2
         if(($fields['Depression_Q2_Treatment2'] == '1'
@@ -2109,7 +2055,6 @@ Depression_Q9_Reliability
 
         // update database with score
         $success = $db->update('figs_year3_relatives', $scores, array('RelativeID'=>$relativeID));
-        if ($this->isError($success)) return $this->raiseError("Error, failed to score Depression checklist \n".$success->getMessage());
 
         return $scores;
     }
@@ -2121,7 +2066,6 @@ Depression_Q9_Reliability
     function _scoreRelativeMania($relativeID)
     {
         $db =& Database::singleton();
-        if($this->isError($db)) return $this->raiseError("Could not connect to database: ".$db->getMessage());
 
         $scores['Score_mania'] = 'N';
 
@@ -2144,7 +2088,6 @@ Mania_Q7_Impairment,
 Mania_Q8_Reliability
 FROM figs_year3_relatives WHERE RelativeID='$relativeID'";
         $db->selectRow($query, $fields); 
-        if($this->isError($fields)) return $this->raiseError("DB Error, failed to get figs data: \n".$db->getMessage());
 
         // item 2 = yes to any of (1, 2, 3, 4) AND 9 in (1,2)
         if(($fields['Mania_Q2_Treatment2'] == '1'
@@ -2197,7 +2140,6 @@ FROM figs_year3_relatives WHERE RelativeID='$relativeID'";
         
         // update database with score
         $success = $db->update('figs_year3_relatives', $scores, array('RelativeID'=>$relativeID));
-        if ($this->isError($success)) return $this->raiseError("Error, failed to score Mania checklist \n".$success->getMessage());
 
         return $scores;
     }
@@ -2209,7 +2151,6 @@ FROM figs_year3_relatives WHERE RelativeID='$relativeID'";
     function _scoreRelativePsychosis($relativeID)
     {
         $db =& Database::singleton();
-        if($this->isError($db)) return $this->raiseError("Could not connect to database: ".$db->getMessage());
 
         $scores['Score_psychosis_schizophrenia'] = 'N';
         $scores['Score_psychosis_depression'] = 'N';
@@ -2241,7 +2182,6 @@ Score_mania,
 Score_recurrent_depression
  FROM figs_year3_relatives WHERE RelativeID='$relativeID'";
         $db->selectRow($query, $fields); 
-        if($this->isError($fields)) return $this->raiseError("DB Error, failed to get figs data: \n".$db->getMessage());
 
         // PSYCHOTIC SCHIZOPHRENIA
         // OPTION 1
@@ -2316,7 +2256,6 @@ Score_recurrent_depression
         
         // update database with score
         $success = $db->update('figs_year3_relatives', $scores, array('RelativeID'=>$relativeID));
-        if ($this->isError($success)) return $this->raiseError("Error, failed to score Psychosis checklist \n".$success->getMessage());
 
         return $scores;
     }
@@ -2328,7 +2267,6 @@ Score_recurrent_depression
     function _scoreRelativeAlcohol($relativeID)
     {
         $db =& Database::singleton();
-        if($this->isError($db)) return $this->raiseError("Could not connect to database: ".$db->getMessage());
 
         $scores['Score_alcohol_abuse'] = 'N';
         $scores['Score_alcohol_dependence'] = 'N';
@@ -2351,7 +2289,6 @@ Alcohol_Q2_Treatment5,
 Alcohol_Q5a_Reliability
 FROM figs_year3_relatives WHERE RelativeID='$relativeID'";
         $db->selectRow($query, $fields); 
-        if($this->isError($fields)) return $this->raiseError("DB Error, failed to get figs data: \n".$db->getMessage());
 
         // Alcohol dependence
         // OPTION 1
@@ -2398,7 +2335,6 @@ FROM figs_year3_relatives WHERE RelativeID='$relativeID'";
                 
         // update database with score
         $success = $db->update('figs_year3_relatives', $scores, array('RelativeID'=>$relativeID));
-        if ($this->isError($success)) return $this->raiseError("Error, failed to score Alcohol checklist \n".$success->getMessage());
 
         return $scores;
     }
@@ -2410,7 +2346,6 @@ FROM figs_year3_relatives WHERE RelativeID='$relativeID'";
     function _scoreRelativeDrugs($relativeID)
     {
         $db =& Database::singleton();
-        if($this->isError($db)) return $this->raiseError("Could not connect to database: ".$db->getMessage());
        
         $scores['Score_alcohol_drug_substance'] = 'N';
         
@@ -2430,7 +2365,6 @@ Alcohol_Q8_Treatment5
  FROM figs_year3_relatives WHERE RelativeID='$relativeID'";
         
         $db->selectRow($query, $fields); 
-        if($this->isError($fields)) return $this->raiseError("DB Error, failed to get figs data: \n".$db->getMessage());
         
         // Drug Abuse
         // Q6 has 3 or more characters in it
@@ -2453,7 +2387,6 @@ Alcohol_Q8_Treatment5
         
         // update database with score
         $success = $db->update('figs_year3_relatives', $scores, array('RelativeID'=>$relativeID));
-        if ($this->isError($success)) return $this->raiseError("Error, failed to score Drug checklist \n".$success->getMessage());
         
         return $scores;
     }
@@ -2465,7 +2398,6 @@ Alcohol_Q8_Treatment5
     function _scoreRelativeNicotine($relativeID)
     {
         $db =& Database::singleton();
-        if($this->isError($db)) return $this->raiseError("Could not connect to database: ".$db->getMessage());
         
         $scores['Score_alcohol_nicotine'] = 'N';
         
@@ -2477,7 +2409,6 @@ Alcohol_Q19_Reliability
 FROM figs_year3_relatives WHERE RelativeID='$relativeID'";
         
         $db->selectRow($query, $fields); 
-        if($this->isError($fields)) return $this->raiseError("DB Error, failed to get figs data: \n".$db->getMessage());
         
         // nicotine dependence
         // 13a = 1
@@ -2492,7 +2423,6 @@ FROM figs_year3_relatives WHERE RelativeID='$relativeID'";
         
         // update database with score
         $success = $db->update('figs_year3_relatives', $scores, array('RelativeID'=>$relativeID));
-        if ($this->isError($success)) return $this->raiseError("Error, failed to score Nicotine checklist \n".$success->getMessage());
         
         return $scores;
     }
@@ -2500,7 +2430,6 @@ FROM figs_year3_relatives WHERE RelativeID='$relativeID'";
     function _scoreRelativeSchizoid($relativeID)
     {
         $db =& Database::singleton();
-        if($this->isError($db)) return $this->raiseError("Could not connect to database: ".$db->getMessage());
         
         $scores['Score_paranoid_personality'] = 'N';
         $scores['Score_pervasive_development'] = 'N';
@@ -2545,7 +2474,6 @@ Schizoid_Q4g_Before3Yrs,
 Schizoid_Q4h_Reliability
  FROM figs_year3_relatives WHERE RelativeID='$relativeID'";
         $db->selectRow($query, $fields); 
-        if($this->isError($fields)) return $this->raiseError("DB Error, failed to get figs data: \n".$db->getMessage());
 
         // paranoid personality
         // OPTION 1
@@ -2729,7 +2657,6 @@ Schizoid_Q4h_Reliability
 
         // update database with score
         $success = $db->update('figs_year3_relatives', $scores, array('RelativeID'=>$relativeID));
-        if ($this->isError($success)) return $this->raiseError("Error, failed to score Schizoid checklist \n".$success->getMessage());
         
         return $scores;
     }
@@ -2737,14 +2664,12 @@ Schizoid_Q4h_Reliability
     function _scoreRelativeASP($relativeID)
     {
         $db =& Database::singleton();
-        if($this->isError($db)) return $this->raiseError("Could not connect to database: ".$db->getMessage());
         
         $scores['Score_asp'] = 'N';
         
         $query = "SELECT ASP_Q1a,ASP_Q1b,ASP_Q1c,ASP_Q1d,ASP_Q1e,ASP_Q1f,ASP_Q1g,ASP_Q2_Over15Yrs,ASP_Q3_Under15Yrs
  FROM figs_year3_relatives WHERE RelativeID='$relativeID'";
         $db->selectRow($query, $fields); 
-        if($this->isError($fields)) return $this->raiseError("DB Error, failed to get figs data: \n".$db->getMessage());
 
         // yes to >=2 of 1a, 1b, 1c, 1d, 1e, 1f, 1g
         if((($fields['ASP_Q1a'] == '1')
@@ -2762,7 +2687,6 @@ Schizoid_Q4h_Reliability
         
         // update database with score
         $success = $db->update('figs_year3_relatives', $scores, array('RelativeID'=>$relativeID));
-        if ($this->isError($success)) return $this->raiseError("Error, failed to score ASP checklist \n".$success->getMessage());
         
         return $scores;
     }
@@ -2770,7 +2694,6 @@ Schizoid_Q4h_Reliability
     function _scoreRelativeTic($relativeID)
     {
         $db =& Database::singleton();
-        if($this->isError($db)) return $this->raiseError("Could not connect to database: ".$db->getMessage());
         
         $scores['Score_tic_tourettes'] = 'N';
         $scores['Score_tic_motor_c'] = 'N';
@@ -2799,7 +2722,6 @@ Tic_Q3e_Impairment,
 Tic_Q3f_Reliability
  FROM figs_year3_relatives WHERE RelativeID='$relativeID'";
         $db->selectRow($query, $fields); 
-        if($this->isError($fields)) return $this->raiseError("DB Error, failed to get figs data: \n".$db->getMessage());
  
         // tourette's disorder
         // OPTION 1
@@ -2917,7 +2839,6 @@ Tic_Q3f_Reliability
         
         // update database with score
         $success = $db->update('figs_year3_relatives', $scores, array('RelativeID'=>$relativeID));
-        if ($this->isError($success)) return $this->raiseError("Error, failed to score Tic checklist \n".$success->getMessage());
         
         return $scores;
     }
@@ -2925,7 +2846,6 @@ Tic_Q3f_Reliability
     function _scoreRelativeOCD($relativeID)
     {
         $db =& Database::singleton();
-        if($this->isError($db)) return $this->raiseError("Could not connect to database: ".$db->getMessage());
         
         $scores['Score_ocd'] = 'N';
         
@@ -2944,7 +2864,6 @@ OCD_Q4e_Impairment,
 OCD_Q4f_Reliability
  FROM figs_year3_relatives WHERE RelativeID='$relativeID'";
         $db->selectRow($query, $fields); 
-        if($this->isError($fields)) return $this->raiseError("DB Error, failed to get figs data: \n".$db->getMessage());
 
         // OPTION 1
         // yes to 1a
@@ -2991,7 +2910,6 @@ OCD_Q4f_Reliability
 
         // update database with score
         $success = $db->update('figs_year3_relatives', $scores, array('RelativeID'=>$relativeID));
-        if ($this->isError($success)) return $this->raiseError("Error, failed to score OCD checklist \n".$success->getMessage());
         
         return $scores;
     }
@@ -2999,7 +2917,6 @@ OCD_Q4f_Reliability
     function _scoreRelativeADHD($relativeID)
     {
         $db =& Database::singleton();
-        if($this->isError($db)) return $this->raiseError("Could not connect to database: ".$db->getMessage());
         
         $scores['Score_adhd_combined'] = 'N';
         $scores['Score_adhd_inattentive'] = 'N';
@@ -3040,7 +2957,6 @@ ADHD_Q3a_Treatment4,
 ADHD_Q3g_Reliability
  FROM figs_year3_relatives WHERE RelativeID='$relativeID'";
         $db->selectRow($query, $fields); 
-        if($this->isError($fields)) return $this->raiseError("DB Error, failed to get figs data: \n".$db->getMessage());
  
 
         // ADHD combined
@@ -3140,7 +3056,6 @@ ADHD_Q3g_Reliability
 
         // update database with score
         $success = $db->update('figs_year3_relatives', $scores, array('RelativeID'=>$relativeID));
-        if ($this->isError($success)) return $this->raiseError("Error, failed to score ADHD checklist \n".$success->getMessage());
         
         return $scores;
     }
@@ -3155,9 +3070,6 @@ ADHD_Q3g_Reliability
     function _nullScores()
     {
         $db=& Database::singleton();
-        if ($this->isError($db)) {
-            return $this->raiseError("Could not connect to database: ".$db->getMessage()."\n");
-        }
         
         // set the scoring cols to NULL
         foreach ($this->scoreCols as $val) {
@@ -3166,18 +3078,12 @@ ADHD_Q3g_Reliability
         
         // update the scores
         $success = $db->update('figs_year3',$scores,array('CommentID'=>$this->getCommentID()));
-        if ($this->isError($success)) {
-            return $this->raiseError("DB Error, failed to null the scores:\n".$success->getMessage()."\n");
-        }
 
         // null the relatives' scores
         foreach ($this->scoreColsRelative as $val) {
         	$scores1[$val]=null;
         }
         $success = $db->update('figs_year3_relatives',$scores1,array('CommentID'=>$this->getCommentID()));
-        if ($this->isError($success)) {
-            return $this->raiseError("DB Error, failed to null the scores:\n".$success->getMessage()."\n");
-        }
         
         return;
     }

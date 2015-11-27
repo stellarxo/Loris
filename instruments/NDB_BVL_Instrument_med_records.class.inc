@@ -545,9 +545,6 @@ function _possibleExclusionaryCriteria() {
          //Hard coded date of birth for testing purposes
          
          $age = Utility::calculateAge($date_of_birth, $Date_taken);
-         if($this->isError($age)) {
-             return $this->raiseError("Could not compute age");
-         }
 
           
           $age_in_days = $age['year'] * 365 + $age['mon'] * 30 + $age['day'] ;
@@ -805,9 +802,6 @@ function _possibleExclusionaryCriteria() {
 }
     //echo("Result");
     $result = $db->update($this->table, $newValues, array('CommentID' => $this->getCommentID()));
-    if($db->isError($result)) {
-        return PEAR::raiseError("Could not save total score: ".$result->getMessage());
-    }
 }
 }
 

@@ -460,9 +460,6 @@ INSERT INTO instrument_subtests VALUES('', 'csbs_sponteneity', 'csbs_sponteneity
 
         // save scores
         $resultScores = $db->update($this->table, $scores, array("CommentID"=>$this->getCommentID()));
-	if($db->isError($resultScores)) {
-                return PEAR::raiseError("Could not save total score: ". $resultScores->getMessage());
-		}
 	}
 }
 

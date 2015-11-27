@@ -328,9 +328,6 @@ INSERT INTO help(hash, topic) VALUES (md5('edi2'),'EDI_IBIS2');
         $projID = $candidate->getProjectID();
         $plan = $candidate->getCandidatePlan(); 
         $age = Utility::calculateAge($dob, $this->Date_taken);
-        if($this->isError($age)) {
-            return $this->raiseError("Could not compute age");
-        }
 
         //determine subProjectID
         $subProjectID = $timepoint->getSubprojectID();
@@ -667,9 +664,6 @@ INSERT INTO help(hash, topic) VALUES (md5('edi2'),'EDI_IBIS2');
         // update if any scores
         if (is_array($this->scores) && count($this->scores)>0) {
             $result = $db->update($this->table, $this->scores, array('CommentID'=>$this->getCommentID()));
-            if($db->isError($result)) {
-                return PEAR::raiseError("Could not save total score: ".$result->getMessage());
-            }
         }
 
     }

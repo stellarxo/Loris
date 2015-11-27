@@ -80,10 +80,6 @@ foreach ($achievement as $key=>$value) {
 
 //save scores
 $result = $db->update('FamilyEnvironmentScales', $scores, $WhereCriteria);
-if ($db->isError($result)) {
-    print "Could not save total score: ". $result->getMessage();
-    exit(3);
-}
 
 
 exit(0);

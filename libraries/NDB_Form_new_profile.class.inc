@@ -57,7 +57,7 @@ class NDB_Form_new_profile extends NDB_Form
 	if( $values['ProjectID'] == '2'){
 		$PTID = $db->pselectOne("SELECT ParameterTypeID FROM parameter_type WHERE Name='candidate_plan'", array());
 		if(!is_numeric($PTID)) {
-			return PEAR::raiseError("Missing ParameterTypeID for candidate_plan");
+			throw new LorisException("Missing ParameterTypeID for candidate_plan");
 		}
 		$db->insert("parameter_candidate", array('ParameterTypeID' => $PTID,
 					'CandID' => $candID,

@@ -83,14 +83,12 @@ class NDB_BVL_Instrument_DSMV_checklist extends NDB_BVL_Instrument
     function getDataEntryCompletionStatus()
     {
         $db =& Database::singleton();
-        if(Utility::isErrorX($db)) return PEAR::raiseError("Could not connect to database: ".$db->getMessage()."<br>\n");
         $query_asd ="SELECT meet_dsm_asd FROM DSMV_checklist WHERE CommentID=:cid";
         $where = array('cid'=>$this->getCommentID());
         $result = $db->pselectOne($query_asd, $where);
         if($result == 'no') {
             $query = "SELECT qa1_deficit_communication_social FROM $this->table WHERE CommentID=:CID";
             $val   = $db->pselectOne($query,array('CID' => $this->getCommentID()));
-            if(Utility::isErrorX($val)) return PEAR::raiseError("Could not select required elements from database: ".$val->getMessage()."<br>\n");
             if(is_null($val) || $val === ""){ 
                 return 'Incomplete';
              } else { 

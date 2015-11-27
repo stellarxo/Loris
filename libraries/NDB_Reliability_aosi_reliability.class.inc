@@ -119,20 +119,10 @@ class NDB_Reliability_aosi_reliability extends NDB_Reliability
       
         // Do the update here for the relibaility scores - saving the scores
 		$result = $db->update("aosi_$this->codingtype", $reliability, array("CommentID"=>$this->identifier, "reliability_center_id" => $this->reliability_center_id));
-		if($db->isError($result)) {
-			return PEAR::raiseError("Could not save total score: ". $result->getMessage());
-		}
-		
 		$result = $db->update($this->codingtype, $reliability, array("CommentID"=>$this->identifier, "Instrument" => 'aosi', "reliability_center_id" => $this->reliability_center_id));
-		if($db->isError($result)) {
-			return PEAR::raiseError("Could not save total score: ". $result->getMessage());
-		}
     
 /*	 // Update the main relibaility table with the overall reliability score 
                 $result1 = $db->update("reliability", $reliability['reliability_score'], array("CommentID"=>$this->identifier));
-                if($db->isError($result1)) {
-                        return PEAR::raiseError("Could not save total score: ". $result1->getMessage());
-                }
 */
 
     } // end function score
@@ -494,10 +484,6 @@ class NDB_Reliability_aosi_reliability extends NDB_Reliability
         }
         
         $scoreResult = $this->score();
-        
-        if($this->isError($scoreResult)) {
-            return PEAR::raiseError($scoreResult->getMessage());
-        }
         
         $this->form->freeze();
         $this->tpl_data['success'] = true;

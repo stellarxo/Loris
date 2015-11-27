@@ -203,9 +203,6 @@ class NDB_BVL_Instrument_scq extends NDB_BVL_Instrument
 
 		//save the resultant total
 		$result = $db->update($this->table, $calculatedScores, array('CommentID'=>$this->getCommentID()));
-		if($db->isError($result)) {
-			return PEAR::raiseError("Could not save total score: ".$result->getMessage());
-		}
 	}
     function _addAdditionalComments() {
     }

@@ -430,14 +430,7 @@ class NDB_Reliability_ados_module2_reliability extends NDB_Reliability
         
         // Do the update here for the relibaility scores - saving the scores
 		$result = $db->update("ados_module2_reliability", $reliability, array("CommentID"=>$this->identifier, "reliability_center_id" => $this->reliability_center_id));
-		if($db->isError($result)) {
-			return PEAR::raiseError("Could not save total score: ". $result->getMessage());
-		}
-		
 		$result = $db->update("reliability", array("Reliability_score" => $reliability['Reliability_score_all_items']), array("CommentID"=>$this->identifier, "Instrument" => 'ados_module2', "reliability_center_id" => $this->reliability_center_id));
-		if($db->isError($result)) {
-			return PEAR::raiseError("Could not save total score: ". $result->getMessage());
-		}
     } // end function score
     
     function _nullScores()
@@ -714,10 +707,6 @@ class NDB_Reliability_ados_module2_reliability extends NDB_Reliability
         }
         
          $scoreResult = $this->score();
-
-          if($this->isError($scoreResult)) {
-                   return PEAR::raiseError($scoreResult->getMessage());
-               }
         
         $this->form->freeze();
         $this->tpl_data['success'] = true;

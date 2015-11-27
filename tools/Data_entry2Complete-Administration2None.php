@@ -58,14 +58,11 @@ if (empty($argv[1])) {
             print "UPDATE flag SET Data_entry=" . $Data_entry . ", Administration=" . $Administration . " WHERE ID=" . $row['fID'] . ";\n";
         } elseif ($argv[1] == 'Show') {
             print "UPDATE flag SET Data_entry='Complete', Administration='None' WHERE ID=" . $row['fID'] . ";\n";
-        } elseif ($argv[1] == 'Confirm') {
-            $result = $DB->update('flag', array('Data_entry' => 'Complete', 'Administration' => 'None'), array('ID' => $row['fID']));
-
-            if ($DB->isError($result)) {
-                print "Could not update new ID: ". $result->getMessage();
-            } else {
+        } elseif ($argv[1] == 'Confirm') { 
+            try {
+                $result = $DB->update('flag', array('Data_entry' => 'Complete', 'Administration' => 'None'), array('ID' => $row['fID']));
                 print ".";
-            }
+            } catch (LorisException $ex) {}
         }
 
         $count++;

@@ -16,14 +16,8 @@ class NDB_Reliability_ados2_module2_reliability extends NDB_Reliability
 //     {
 //         // create user object
 //         $user =& User::singleton();
-//         if (Utility::isErrorX($user)) {
-//             return PEAR::raiseError("User Error: ".$user->getMessage());
-//         }
 
 //         $DB =& Database::singleton();
-//         if (Utility::isErrorX($DB)) {
-//             return PEAR::raiseError("Could not connect to database: ".$DB->getMessage());
-//         }
        
 //         if(!empty($this->identifier)) {
 //             $query = "SELECT psc.CenterID FROM tracking_logs, candidate, psc WHERE tracking_logs.CandID=candidate.CandID AND candidate.CenterID=psc.CenterID AND tracking_logs.Tracking_log_ID='$this->identifier'";
@@ -49,28 +43,18 @@ class NDB_Reliability_ados2_module2_reliability extends NDB_Reliability
  
 
     function _getAgeInMonths() {
-        return PEAR::raiseError("Could not calculate age because don't know if subject or proband");
+        throw new LorisException("Could not calculate age because don't know if subject or proband");
     }
     function _getDefaults()
     {
           
         $DB =& Database::singleton();
-        if(Utility::isErrorX($DB)) {
-            return PEAR::raiseError("Could not connect to database: ".$DB->getMessage());
-        }
-
         $DB->select("SELECT * FROM {$this->name}", $result);
-        if (Utility::isErrorX($result)) {
-            return PEAR::raiseError("DB Error: ".$result->getMessage());
-        }
                
         //print_r($this->identifier);
         if (!empty($this->identifier)) { 
             // set the ados2_module2_reliability values 
             $DB->selectRow("SELECT * FROM {$this->name} WHERE CommentID = '$this->identifier' AND reliability_center_id='$this->reliability_center_id'", $row);
-            if (Utility::isErrorX($row)) {
-                return PEAR::raiseError("DB Error: ".$row->getMessage());
-            }
      
             // Set the defaults
             // print_r($row['CommentID']);
@@ -97,9 +81,6 @@ class NDB_Reliability_ados2_module2_reliability extends NDB_Reliability
         $score_record = array();
         //holds calculated
         $db =& Database::singleton();
-        if(Utility::isErrorX($db)) {
-            return PEAR::raiseError ("Could not connect to database: ".$db->getMessage());
-        }
 
         // null scores
         //$this->_nullScores();
@@ -109,23 +90,13 @@ class NDB_Reliability_ados2_module2_reliability extends NDB_Reliability
         $query = "SELECT * FROM {$this->name} WHERE CommentID='".$this->identifier."'  AND reliability_center_id='$this->reliability_center_id'";
         $query1 = "SELECT * FROM {$initial_table} WHERE CommentID='".$this->identifier."'";
 
-        $db->selectRow($query, $score_record);
-        if (Utility::isErrorX($score_record)) {
-            return PEAR::raiseError("Could not get scores: ".$score_record->getMessage() . " - Query: {$query}");
-        }
-              
+        $db->selectRow($query, $score_record);              
         $db->selectRow($query1, $score_record1);
-        if (Utility::isErrorX($score_record1)) {
-            return PEAR::raiseError("Could not get scores: ".$score_record1->getMessage() . " - Query: {$query1}");
-        }
         $session = $db->pselectOne("SELECT s.ID from session s JOIN flag f ON s.ID=f.SessionID WHERE f.CommentID=:cid", array('cid'=>$this->identifier));
 		// Get the subject age in months for scoring
         $timepoint =& TimePoint::singleton($session);
         $dob = $timepoint->getEffectiveDateOfBirth();
 	$age = Utility::calculateAge($dob, $score_record1["Date_taken"]);
-        if(Utility::isErrorX($age)) {
-            return PEAR::raiseError("Could not compute age");
-        }  
         $age_years = $age['year'] + ($age['mon']/12);
         $instrument_record = $this->_convertScore($score_record1); 
         $reliability_record = $this->_convertScore($score_record);        
@@ -167,19 +138,9 @@ class NDB_Reliability_ados2_module2_reliability extends NDB_Reliability
       
         // Do the update here for the relibaility scores - saving the scores
 		$result = $db->update("{$this->name}", $reliability, array("CommentID"=>$this->identifier, 'reliability_center_id' => $this->reliability_center_id));
-		if($db->isError($result)) {
-			return PEAR::raiseError("Could not save total score: ". $result->getMessage());
-		}
-		
 		$result = $db->update("reliability", array("Reliability_score" => round(min($reliability['Reliability_score_all_items'], $reliability['Reliability_score_scored_items']),3)), array("CommentID"=>$this->identifier, "Instrument" => preg_replace("/_reliability$/", "", $this->name), 'reliability_center_id' => $this->reliability_center_id));
-		if($db->isError($result)) {
-			return PEAR::raiseError("Could not save total score : ". $result->getMessage());
-		}
 	 // Update the main relibaility table with the overall reliability score 
                 $result1 = $db->update("reliability", array('reliability_score'=> $reliability['Reliability_score_all_items']), array("CommentID"=>$this->identifier));
-                if($db->isError($result1)) {
-                        return PEAR::raiseError("Could not save total score: ". $result1->getMessage());
-                }
     } // end function score
     
     function _convertScore( $scores) {
@@ -203,9 +164,6 @@ class NDB_Reliability_ados2_module2_reliability extends NDB_Reliability
     function _nullScores()
     {
         $db=& Database::singleton();
-        if (Utility::isErrorX($db)) {
-            return PEAR::raiseError("Could not connect to database: ".$db->getMessage()."\n");
-        }
         
         // set the scores to NULL
         foreach ($this->scores as $val) {
@@ -214,9 +172,6 @@ class NDB_Reliability_ados2_module2_reliability extends NDB_Reliability
 
         // update the scores
         $success = $db->update("{$this->name}",$scores,array("CommentID"=>$this->identifier, 'reliability_center_id' => $this->reliability_center_id));
-        if (Utility::isErrorX($success)) {
-            return PEAR::raiseError("DB Error, fail null the scores:\n".$success->getMessage()."\n");
-        }
         return;
     }    
 
@@ -356,16 +311,9 @@ class NDB_Reliability_ados2_module2_reliability extends NDB_Reliability
  {
        
         $DB =& Database::singleton();
-        if(Utility::isErrorX($DB)) {
-            return PEAR::raiseError("Could not connect to database: ".$DB->getMessage());
-        }
-
         $user =& User::singleton();
           
         $DB->selectRow("SELECT * FROM {$this->name} WHERE CommentID = '$this->identifier' AND reliability_center_id = $this->reliability_center_id", $row);
-          if (Utility::isErrorX($row)) {
-              return PEAR::raiseError("DB Error: ".$row->getMessage());
-          }
           
           $invalid = $values['invalid'];
           $DB->update("reliability", array('invalid' => $invalid), array("CommentID"=>$this->identifier, "Instrument" => preg_replace("/_reliability$/", "", $this->name), "reliability_center_id" => $this->reliability_center_id));
@@ -387,26 +335,14 @@ class NDB_Reliability_ados2_module2_reliability extends NDB_Reliability
             $values['reliability_center_id'] = $this->reliability_center_id;
             // insert the event
             $success = $DB->insert($this->name, $values);
-            if (Utility::isErrorX($success)) {
-                return PEAR::raiseError("DB Error: ".$success->getMessage());
-            }
         } else {
             // update the event 
             $success = $DB->update($this->name, $values,          
                                    array('CommentID'=>$this->identifier, 'reliability_center_id' => $this->reliability_center_id)
                                    ); 
-            if (Utility::isErrorX($success)) {
-                return PEAR::raiseError("DB Error: ".$success->getMessage());
-            }
         }
         
         $scoreResult = $this->score();
-        
-        if($this->isError($scoreResult)) {
-             
-
-             return PEAR::raiseError($scoreResult->getMessage());
-          }
         
         $this->form->freeze();
         $this->tpl_data['success'] = true;
@@ -439,9 +375,6 @@ class NDB_Reliability_ados2_module2_reliability extends NDB_Reliability
      
      // get the defaults
      $localDefaults = $this->_getDefaults();
-     if (Utility::isErrorX($localDefaults)) {
-         return PEAR::raiseError("NDB_Form::display(): ".$localDefaults->getMessage());
-     }
      if(!is_array($localDefaults)) { $localDefaults = array(); }
      // set the quickform object defaults
      $this->form->setDefaults(array_merge($this->defaults, $localDefaults));

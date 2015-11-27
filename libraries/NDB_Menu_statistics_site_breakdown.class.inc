@@ -14,10 +14,6 @@ class NDB_Menu_statistics_site_breakdown extends NDB_Menu
         $DB =& Database::singleton();
 
         $instrumentName = $DB->pselectOne("SELECT Full_name FROM test_names WHERE Test_name=:tname", array('tname'=>$instrument));
-        if(Utility::isErrorX($instrumentName)) {
-            return PEAR::raiseError("DB Error: ".$instrumentName->getMessage());
-        }
-
         return $instrumentName;
 
     }

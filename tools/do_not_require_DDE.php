@@ -52,13 +52,10 @@ if (empty($argv[1])) {
             } elseif ($argv[1] == 'Show') {
                 print "UPDATE flag SET Data_entry='Complete', Administration='None' WHERE ID=" . $DDE['ID'] . ";\n";
             } elseif ($argv[1] == 'Confirm') {
-                $result = $DB->update('flag', array('Data_entry' => 'Complete', 'Administration' => 'None'), array('ID' => $DDE['ID']));
-
-                if ($DB->isError($result)) {
-                    print "Could not update new ID: ". $result->getMessage();
-                } else {
+                try {
+                    $result = $DB->update('flag', array('Data_entry' => 'Complete', 'Administration' => 'None'), array('ID' => $DDE['ID']));
                     print ".";
-                }
+                } catch (LorisException $ex) {}
             }
                 
             $count++;

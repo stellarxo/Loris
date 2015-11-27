@@ -627,9 +627,6 @@ INSERT INTO instrument_subtests VALUES('', 'csbs', 'csbs_page2', 'Symbolic Behav
 
 	// save scores
 	$result = $db->update($this->table, $scores, array("CommentID"=>$this->getCommentID()));
-	if($db->isError($result)) {
-		return PEAR::raiseError("Could not save total score: ". $result->getMessage());
-	}
 		
     }    // end score function
 

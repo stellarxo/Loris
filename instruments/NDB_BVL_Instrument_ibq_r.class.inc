@@ -175,9 +175,6 @@ class NDB_BVL_Instrument_ibq_r extends NDB_BVL_Instrument
 		
     	//save scores
 		$result = $db->update($this->table, $scores, array("CommentID"=>$this->getCommentID()));
-		if($db->isError($result)) {
-			return PEAR::raiseError("Could not save total score: ". $result->getMessage());
-		}
 		
     }    
         

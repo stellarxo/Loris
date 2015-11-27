@@ -572,9 +572,6 @@ INSERT INTO instrument_subtests VALUES('', 'aosi', 'aosi_page2', 'General Observ
         // update if any scores
         if (is_array($this->scores) && count($this->scores)>0) {
             $result = $db->update($this->table, $this->scores, array('CommentID'=>$this->getCommentID()));
-            if($db->isError($result)) {
-                return PEAR::raiseError("Could not save total score: ".$result->getMessage());
-            }
         }
         
     }
