@@ -408,10 +408,6 @@ class NDB_BVL_Instrument_EARLI_interview_PART_4 extends NDB_BVL_Instrument_EARLI
 
                 $db =& Database::singleton();
 
-                if(PEAR::isError($db)) {
-                    return PEAR::raiseError ("Could not connect to database: ". $db->getMessage());
-                }
-
 		$otherCommentID = $db->selectOne("SELECT CommentID from flag where Test_name='EARLI_interview_PART_3' and SessionID=" . $this->getSessionID()); 
 
                 $db->selectRow("SELECT q8_5, q8_6_3 FROM EARLI_interview_PART_3 WHERE CommentID='". $otherCommentID."'", $occupation);
@@ -1531,10 +1527,6 @@ class NDB_BVL_Instrument_EARLI_interview_PART_4 extends NDB_BVL_Instrument_EARLI
 
                 $db =& Database::singleton();
 
-                if(PEAR::isError($db)) {
-                    return PEAR::raiseError ("Could not connect to database: ". $db->getMessage());
-                }
-
                 $otherCommentID = $db->selectOne("SELECT CommentID from flag where Test_name='EARLI_interview_PART_3' and SessionID=" . $this->getSessionID());
 
                 $db->selectRow("SELECT q8_5, q8_6_4 FROM EARLI_interview_PART_3 WHERE CommentID='". $otherCommentID."'", $occupation);
@@ -2140,10 +2132,6 @@ class NDB_BVL_Instrument_EARLI_interview_PART_4 extends NDB_BVL_Instrument_EARLI
 
                 $db =& Database::singleton();
 
-                if(PEAR::isError($db)) {
-                    return PEAR::raiseError ("Could not connect to database: ". $db->getMessage());
-                }
-
                 $otherCommentID = $db->selectOne("SELECT CommentID from flag where Test_name='EARLI_interview_PART_3' and SessionID=" . $this->getSessionID());
 
                 $db->selectRow("SELECT q8_5, q8_6_1, q8_6_2, q8_6_3, q8_6_4, q8_6_5, q8_6_6, q8_6_7, q8_6_8, q8_6_9 FROM EARLI_interview_PART_3 WHERE CommentID='". $otherCommentID."'", $occupation);
@@ -2445,10 +2433,6 @@ class NDB_BVL_Instrument_EARLI_interview_PART_4 extends NDB_BVL_Instrument_EARLI
 
 
                 $db =& Database::singleton();
-
-                if(PEAR::isError($db)) {
-                    return PEAR::raiseError ("Could not connect to database: ". $db->getMessage());
-                }
 
 
                 $otherCommentID = $db->selectOne("SELECT CommentID from flag where Test_name='EARLI_interview_PART_3' and SessionID=" . $this->getSessionID());
@@ -2797,10 +2781,6 @@ class NDB_BVL_Instrument_EARLI_interview_PART_4 extends NDB_BVL_Instrument_EARLI
 
 
                 $db =& Database::singleton();
-
-                if(PEAR::isError($db)) {
-                    return PEAR::raiseError ("Could not connect to database: ". $db->getMessage());
-                }
 
                 $otherCommentID = $db->selectOne("SELECT CommentID from flag where Test_name='EARLI_interview_PART_3' and SessionID=" . $this->getSessionID());
                 $db->selectRow("SELECT q8_5, q8_6_8 FROM EARLI_interview_PART_3 WHERE CommentID='".$otherCommentID."'", $occupation);
@@ -3298,10 +3278,6 @@ class NDB_BVL_Instrument_EARLI_interview_PART_4 extends NDB_BVL_Instrument_EARLI
 
 
                 $db =& Database::singleton();
-
-                if(PEAR::isError($db)) {
-                    return PEAR::raiseError ("Could not connect to database: ". $db->getMessage());
-                }
 
                 $otherCommentID = $db->selectOne("SELECT CommentID from flag where Test_name='EARLI_interview_PART_3' and SessionID=" . $this->getSessionID());
                 $db->selectRow("SELECT q8_5, q8_6_8 FROM EARLI_interview_PART_3 WHERE CommentID='".$otherCommentID."'", $occupation);
@@ -3864,10 +3840,6 @@ class NDB_BVL_Instrument_EARLI_interview_PART_4 extends NDB_BVL_Instrument_EARLI
 
 
                 $db =& Database::singleton();
-
-                if(PEAR::isError($db)) {
-                    return PEAR::raiseError ("Could not connect to database: ". $db->getMessage());
-                }
 
                 $otherCommentID = $db->selectOne("SELECT CommentID from flag where Test_name='EARLI_interview_PART_3' and SessionID=" . $this->getSessionID());
                 $db->selectRow("SELECT q8_5, q8_6_8 FROM EARLI_interview_PART_3 WHERE CommentID='".$otherCommentID."'", $occupation);

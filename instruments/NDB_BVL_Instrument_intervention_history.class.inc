@@ -249,16 +249,10 @@ INSERT INTO test_battery VALUES ('', 'intervention_history', '1053', '1179', 'Y'
 
 
         $db =& Database::singleton();
-        if(PEAR::isError($db)) {
-            return PEAR::raiseError ("Could not connect to database: ".$db->getMessage());
-        }
 
         $query = "SELECT * FROM ".$this->table." WHERE CommentID='".$this->getCommentID()."'";
 	$values = array();
         $db->selectRow($query, $values);
-        if (PEAR::isError($values)) {
-            return PEAR::raiseError("Could not get values: ".$values->getMessage());
-        }
 
 
 	for ($i=1; $i < 11; $i++)

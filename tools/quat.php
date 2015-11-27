@@ -51,9 +51,6 @@ $config =& NDB_Config::singleton();
 $dbConfig = $config->getSetting('database');
 $db = new Database;
 $result = $db->connect($dbConfig['database'], $dbConfig['quatUser'], $dbConfig['quatPassword'], $dbConfig['host'], false);
-if(PEAR::isError($result)) {
-    die("Could not connect to database: ".$result->getMessage());
-}
 
 // nuke the current data query tables
 $query = "SELECT DISTINCT CurrentGUITable FROM parameter_type";

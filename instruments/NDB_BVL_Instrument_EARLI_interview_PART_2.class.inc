@@ -625,9 +625,6 @@ class NDB_BVL_Instrument_EARLI_interview_PART_2 extends NDB_BVL_Instrument_EARLI
         $db =& Database::singleton();
 
 
-        if(PEAR::isError($db)) {
-            return PEAR::raiseError ("Could not connect to database: ".$db->getMessage());
-        }
 
         $db->selectRow("SELECT q5_16 FROM EARLI_interview_PART_2 WHERE CommentID='".$this->getCommentID()."'", $answer);
 
@@ -968,9 +965,6 @@ class NDB_BVL_Instrument_EARLI_interview_PART_2 extends NDB_BVL_Instrument_EARLI
 
         $db =& Database::singleton();
 
-        if(PEAR::isError($db)) {
-            return PEAR::raiseError ("Could not connect to database: ".$db->getMessage());
-        }
 
         function multSelect($fields, $question1, $question2)
         {

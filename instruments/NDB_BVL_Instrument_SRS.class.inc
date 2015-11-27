@@ -140,9 +140,6 @@ class NDB_BVL_Instrument_SRS extends NDB_BVL_Instrument
         // Get the subject age in months for scoring
 
         $db =& Database::singleton();
-        if(PEAR::isError($db)) {
-            return PEAR::raiseError ("Could not connect to database: ".$db->getMessage());
-        }
         // required fields for data entry completion status
         $this->_requiredElements = array('Examiner', "Date_taken", 'q1_fidgety_social_situations', "q17_recognizes_unfair",
                 "q43_separates_from_caregivers");

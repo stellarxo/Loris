@@ -353,16 +353,10 @@ class NDB_BVL_Instrument_ados_module3 extends NDB_BVL_Instrument
 
         //get the saved scores
     	$db =& Database::singleton();
-    	if (PEAR::isError($db)) {
-			return PEAR::raiseError ("Could not connect to database".$db->getMessage());
-    	}
   	
     	$query = "SELECT * FROM $this->table WHERE CommentID = '$this->commentID'";
     	$record = array();
     	$db->selectRow($query, $record);
-    	if (PEAR::isError($record)) {
-    		return PEAR::raiseError("Could not retrieve scores: " . $record->getMessage());
-    	}
  
 
        // Get the subject age in months for scoring
@@ -432,9 +426,6 @@ class NDB_BVL_Instrument_ados_module3 extends NDB_BVL_Instrument
                     'agemonths' => $age_months,
                     'rawscore' => $scoreCols['social_affect_restricted_repetitive_behavior_total']
             ));
-            if (PEAR::isError($record_lookup)) {
-                return PEAR::raiseError("Could not retrieve scores: " . $record_lookup->getMessage());
-            }
             if(empty($sevscore)) {
                 $scoreCols['severity_score_lookup']= "N/A";
             } else {

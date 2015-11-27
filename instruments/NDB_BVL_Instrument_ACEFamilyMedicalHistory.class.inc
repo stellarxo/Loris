@@ -35,9 +35,6 @@ class NDB_BVL_Instrument_ACEFamilyMedicalHistory extends NDB_BVL_Instrument
         );
 
         $db =& Database::singleton();
-        if(PEAR::isError($db)) {
-            return PEAR::raiseError ("Could not connect to database: ".$db->getMessage());
-        }
         // setup the form
         $this->_setupForm();
 

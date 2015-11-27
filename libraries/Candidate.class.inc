@@ -35,9 +35,6 @@ class Candidate
             $candidateList[$candID] = new Candidate();
             $success = $candidateList[$candID]->select($candID);
 
-            if (PEAR::isError($success)) {
-                return PEAR::raiseError($success->getMessage());
-            }
         }
 
         return $candidateList[$candID];
@@ -50,18 +47,12 @@ class Candidate
         $config = NDB_Config::singleton();
         // make a local reference to the Database object
         $db = Database::singleton();
-        if(PEAR::isError($db)) {
-            return PEAR::raiseError("Could not connect to database: ".$db->getMessage());
-        }
 
         // get candidate data from database
         $query = "SELECT c.CenterID, c.CandID, c.PSCID, c.DoB, c.EDC, c.Gender, p.Name AS PSC, c.Ethnicity, c.Active, u1.Real_name as RegisteredBy, c.UserID, c.Entity_type, c.ProjectID FROM candidate as c left join psc as p using (CenterID) left join users as u1 on (u1.UserID = c.RegisteredBy) WHERE c.CandID='$candID' AND c.Active = 'Y'";
         $row = array();
         $db->selectRow($query, $row);
         
-        if(PEAR::isError($row)) {
-            return PEAR::raiseError("DB Error: " . $row->getMessage());
-        }
 
         if (!is_array($row) || sizeof($row) == 0) {
             return PEAR::raiseError("Could not select Candidate data from the database (DCCID: $candID)", 
@@ -128,9 +119,6 @@ class Candidate
         $query = "SELECT s.ID FROM session as s WHERE s.CandID='$candID' AND s.Active='Y' ORDER BY ID";
         $db->select($query, $row);
 
-        if(PEAR::isError($row)) {
-            return PEAR::raiseError("Could not retrieve candidate/timepoint data from database");
-        }
 
         // store user data in object property
         foreach($row AS $value) {
@@ -157,23 +145,13 @@ class Candidate
        }
        
        $db =& Database::singleton();
-       if(PEAR::isError($db)) {
-           return PEAR::raiseError("Could not connect to database: ".$db->getMessage());
-       }
        
        $site =& Site::singleton($centerID);
-       if(PEAR::isError($site)) {
-           return PEAR::raiseError("Could not create a new candidate for site: (".$site->getMessage().")");
-       }
        
        $user =& User::singleton($_SESSION['State']->getUsername());
-       if(PEAR::isError($user)) {
-           return PEAR::raiseError("Could not create a new candidate for user: (".$user->getMessage().")");
-       }
        
        // generate candid
        $candID = Candidate::_generateCandID();
-       if(PEAR::isError($candID)) return $candID;
 
        // figure out how to generate PSCID
        $config =& NDB_Config::singleton();
@@ -197,7 +175,6 @@ class Candidate
            }
        } else {           
            $PSCID = Candidate::_generatePSCID($site->getSiteAlias(), $startNumber);
-           if(PEAR::isError($PSCID)) return $PSCID;
        }
        
        $ibisid = Candidate::_generateID("IBIS");
@@ -262,13 +239,7 @@ class Candidate
         $this->candidateInfo = array_merge($this->candidateInfo, $setData);
 
         $db =& Database::singleton();
-        if(PEAR::isError($db)) {
-            return PEAR::raiseError("Could not connect to database: ".$db->getMessage());
-        }
         $success = $db->update('candidate', $setData, array('CandID'=>$this->getData('CandID')));
-        if (PEAR::isError($success)) {
-        	return PEAR::raiseError("Candidate::setData: ".$success->getMessage());
-        }
         return true;
     }
 
@@ -362,15 +333,9 @@ class Candidate
         $candID=$this->getCandID();
        // make a local reference to the Database object
         $db =& Database::singleton();
-        if(PEAR::isError($db)) {
-            return PEAR::raiseError("Could not connect to database: ".$db->getMessage());
-        }
 
         $query  = "SELECT ID, Visit_label FROM session WHERE CandID='$candID' AND Active='Y' ORDER BY ID";
         $db->select($query, $result);
-        if(PEAR::isError($result)) {
-            return PEAR::raiseError("Could not retrieve existing data for session");
-        }
 
         // map the array [VisitNo]=>Visit_label
         foreach ($result as $row) {
@@ -409,15 +374,9 @@ class Candidate
         $candID=$this->getCandID();
         // make a local reference to the Database object
         $db =& Database::singleton();
-        if(PEAR::isError($db)) {
-            return PEAR::raiseError("Could not connect to database: ".$db->getMessage());
-        }
 
         $query  = "SELECT IFNULL(max(VisitNo)+1, 1) AS nextVisitNo FROM session WHERE CandID='$candID' AND (Active='Y' OR Active is null) GROUP BY CandID";
         $db->selectRow($query, $result);
-        if(PEAR::isError($result)) {
-            return PEAR::raiseError("Could not retrieve existing data for session");
-        }
         
         //return the next visit No
         return $result["nextVisitNo"];
@@ -437,17 +396,11 @@ class Candidate
         $candID=$this->getCandID();
         // make a local reference to the Database object
         $db =& Database::singleton();
-        if(PEAR::isError($db)) {
-            return PEAR::raiseError("Could not connect to database: ".$db->getMessage());
-        }
 
         if($visitLabelSettings['generation'] == 'user' && !empty($visitLabelSettings['suggest'])) {
             $existingVisitLabels = $this->getListOfVisitLabels();
             $query  = "SELECT IFNULL(max(VisitNo)+1, 1) AS nextVisitLabel FROM session WHERE CandID='$candID' AND (Active='Y' OR Active is null) GROUP BY CandID";
             $db->selectRow($query, $result);
-            if(PEAR::isError($result)) {
-                return PEAR::raiseError("Could not retrieve existing data for session");
-            }
     
             $nextVisitLabel = $result['nextVisitLabel'];
             if(!empty($existingVisitLabels)){
@@ -492,9 +445,6 @@ class Candidate
     {
         // get a database connection
         $db =& Database::singleton();
-        if(PEAR::isError($db)) {
-            return $db;
-        }
         
         // generate a candidate id
         $candID = rand(CANDIDATE_MIN_CANDID, CANDIDATE_MAX_CANDID);
@@ -525,9 +475,6 @@ class Candidate
         // If it does, it increments the number until it gets a unique PSCID.
         // - Dave
         $db =& Database::singleton();
-        if(PEAR::isError($db)) {
-            return $db;
-        }
         
         $config =& NDB_Config::singleton();
         $PSCIDSettings = $config->getSetting('PSCID');

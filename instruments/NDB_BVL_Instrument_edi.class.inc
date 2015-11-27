@@ -219,15 +219,9 @@ INSERT INTO test_battery VALUES ('', 'edi', '1050', '1140', 'Y', 'Visit', '2');
 
         // Find the Date_taken
         $db =& Database::singleton();
-        if(PEAR::isError($db)) {
-            return PEAR::raiseError ("Could not connect to database: ".$db->getMessage());
-        }
         
         $query = "SELECT Date_taken from " . $this->testName . " WHERE CommentID = '".$this->getCommentID()."'";
         $result = $db->selectOne($query);
-        if(PEAR::isError($result)){
-            return PEAR::raiseError("Query has failed to select Date_taken.".$result->getMessage());
-        }
         $this->Date_taken=$result;
 
         //Scoring column headers
@@ -341,9 +335,6 @@ INSERT INTO test_battery VALUES ('', 'edi', '1050', '1140', 'Y', 'Visit', '2');
         
         //get DoB
         $db =& Database::singleton();
-        if(PEAR::isError($db)) {
-            return PEAR::raiseError ("Could not connect to database: ".$db->getMessage());
-        }
 
         // Get the subject DoB for scoring
         $timepoint =& TimePoint::singleton($this->getSessionID());
@@ -362,10 +353,8 @@ INSERT INTO test_battery VALUES ('', 'edi', '1050', '1140', 'Y', 'Visit', '2');
         if(empty($this->_requiredElements)) return 'Complete';
 
         $db =& Database::singleton();
-        if(PEAR::isError($db)) return PEAR::raiseError("Could not connect to database: ".$db->getMessage()."<br>\n");
         $query = "SELECT ".join(',', $this->_requiredElements)." FROM $this->table WHERE CommentID='".$this->getCommentID()."'";
         $success = $db->selectRow($query, $dataFields);
-        if(PEAR::isError($success)) return PEAR::raiseError("Could not select required elements from database: ".$success->getMessage()."<br>\n");
 
         //compare
         return parent::_determineDataEntryCompletionStatus();
@@ -676,9 +665,6 @@ INSERT INTO test_battery VALUES ('', 'edi', '1050', '1140', 'Y', 'Visit', '2');
         $score_record=array();
         
         $db =& Database::singleton();
-        if(PEAR::isError($db)) {
-            return PEAR::raiseError ("Could not connect to database: ".$db->getMessage());
-        }
 
         // null scores
         $this->_nullScores($this->regulatoryAnchors);
@@ -688,9 +674,6 @@ INSERT INTO test_battery VALUES ('', 'edi', '1050', '1140', 'Y', 'Visit', '2');
 
         $query = "SELECT * FROM ".$this->table." WHERE CommentID='".$this->getCommentID()."'";
         $db->selectRow($query, $score_record);
-        if (PEAR::isError($score_record)) {
-            return PEAR::raiseError("Could not get scores: ".$score_record->getMessage());
-        }
         
         //convert answers to numbers only
         foreach($score_record as $field=>$score) {
