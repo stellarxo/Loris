@@ -55,7 +55,9 @@ if (empty($argv[1])) {
                 try {
                     $result = $DB->update('flag', array('Data_entry' => 'Complete', 'Administration' => 'None'), array('ID' => $DDE['ID']));
                     print ".";
-                } catch (LorisException $ex) {}
+                } catch (DatabaseException $ex) {
+                    print "Could not update new ID: ". $result->getMessage();
+                }
             }
                 
             $count++;

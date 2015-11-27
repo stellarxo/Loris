@@ -118,13 +118,10 @@ class NDB_Reliability_aims_reliability extends NDB_Reliability
         
       
         // Do the update here for the relibaility scores - saving the scores
-        try {
             $result = $db->update("{$this->name}", $reliability, array("CommentID"=>$this->identifier, 'reliability_center_id' => $this->reliability_center_id));
-        } catch (LogicException $ex) {
             $result = $db->update("reliability", array("Reliability_score" => round(min($reliability['Reliability_score_all_items'], $reliability['Reliability_score_scored_items']),3)), array("CommentID"=>$this->identifier, "Instrument" => preg_replace("/_reliability$/", "", $this->name), 'reliability_center_id' => $this->reliability_center_id));
             // Update the main relibaility table with the overall reliability score 
             $result1 = $db->update("reliability", array('reliability_score'=> $reliability['Reliability_score_all_items']), array("CommentID"=>$this->identifier));
-        }
     } // end function score
     
     function _checkEquivalency( $val, $rel_val) {

@@ -27,7 +27,9 @@ if (empty($argv[1])) {
             $result = $DB->update('candidate', array($nid => $newid), array('ID' => $cand['ID']));
             print ".";
             $count++;
-        } catch (LorisException $ex) {}
+        } catch (DatabaseException $ex) {
+            print "Could not save new ID: ". $result->getMessage();
+        }
     }        
 
     print "\n" . $count . " new IDs with prefix \"$prefix\" were inserted.\n";

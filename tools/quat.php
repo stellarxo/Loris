@@ -182,6 +182,7 @@ foreach($parameterTypes AS $parameterType) {
     } catch (LorisException $ex) {
         print "Failed to retrieve $parameterType[Name]: ".$dataColumn->getMessage()."\n";
         print "$query\n";
+        continue;
     }
 
     // store the column
