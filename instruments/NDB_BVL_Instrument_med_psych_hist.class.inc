@@ -617,9 +617,6 @@ class NDB_BVL_Instrument_med_psych_hist extends NDB_BVL_Instrument
 
 
         $candidate =& Candidate::singleton($cand['CandID']);
-        if (Utility::isErrorX($candidate)) {
-            return PEAR::raiseError("Candidate Error ($this->identifier): ".$candidate->getMessage());
-        }
 
         $firstVisit = false;
         $vLabel = $db->pselectOne("SELECT Visit_label FROM session s JOIN candidate c 

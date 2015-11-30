@@ -588,9 +588,6 @@ class NDB_BVL_Instrument_adi_r extends NDB_BVL_Instrument
         }
         // save the resultant total
         $result = $db->update($this->table, $scoreCols, array('CommentID'=>$this->getCommentID()));
-        if($db->isError($result)) {
-            return PEAR::raiseError("Could not save total score: ".$result->getMessage());
-        }
 		
     }
     
@@ -1304,14 +1301,8 @@ e skills first apparent");               // $this->form->addElement('select', 'q
             // Just use the testID for proband, because that's the one that's saved.
             $test_id = $db->pselectOne("SELECT ID FROM test_names WHERE Test_name =:tst_name", array('tst_name'=>'adi_r_proband'));
             $results = $db->pselect("SELECT certification.examinerID, full_name FROM certification JOIN examiners ON (certification.examinerID=examiners.examinerID) WHERE testID =:tid AND pass =:cert_id AND centerID =:cid ORDER BY full_name",array('tid'=>$test_id,'cert_id'=>'certified','cid'=>$centerID));
-            if($db->isError($results)) {
-                return $this->raiseError("Could not get examiner names: ".$results->getMessage());
-            }
         } else {
             $results = $db->pselect("SELECT examinerID, full_name FROM examiners WHERE centerID=:centID ORDER BY full_name", array('centID' => $centerID));
-            if($db->isError($results)) {
-                return $this->raiseError("Could not get examiner names: ".$results->getMessage());
-            }
         }
         
         $examiners = array(''=>'');

@@ -14,9 +14,6 @@ class NDB_Menu_statistics_site extends NDB_Menu
         $DB =& Database::singleton();
 
         $instrumentList = $DB->pselect("SELECT Test_name FROM test_names ORDER BY Test_name", array());
-        if(Utility::isErrorX($instrumentList)) {
-            return PEAR::raiseError("DB Error: ".$instrumentList->getMessage());
-        }
         $instruments = array();
         foreach($instrumentList as $list) {
             $instruments[] = $list['Test_name'];    
@@ -32,9 +29,6 @@ class NDB_Menu_statistics_site extends NDB_Menu
         $DB =& Database::singleton();
 
         $instrumentName = $DB->pselectOne("SELECT Full_name FROM test_names WHERE Test_name=:tname", array('tname'=>$instrument));
-        if(Utility::isErrorX($instrumentName)) {
-            return PEAR::raiseError("DB Error: ".$instrumentName->getMessage());
-        }
 
         return $instrumentName;
     }
@@ -51,9 +45,6 @@ class NDB_Menu_statistics_site extends NDB_Menu
                 AND f.Administration='All'
                 $ExtraProject_Criteria
                 AND i.CommentID NOT LIKE 'DDE%';", array());
-        if (Utility::isErrorX($result)) {
-            return PEAR::raiseError("DB Error: ".$result->getMessage());
-        }
         return $count;
 
     }
@@ -71,9 +62,6 @@ class NDB_Menu_statistics_site extends NDB_Menu
                 AND (f.Data_entry is NULL OR f.Data_entry<>'Complete')
                 $ExtraProject_Criteria
                 AND i.CommentID NOT LIKE 'DDE%' ORDER BY s.Visit_label, c.PSCID;", array());
-        if (Utility::isErrorX($result)) {
-            return PEAR::raiseError("DB Error: ".$result->getMessage());
-        }
         return $result;
     }
     function setup()

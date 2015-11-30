@@ -343,9 +343,6 @@ class NDB_BVL_Instrument_macarthur_words_gestures extends NDB_BVL_Instrument
 
         $age = Utility::calculateAge($dob, $record["Date_taken"]);
         $age_months = $age['year'] * 12 + $age['mon'];
-        if($this->isError($age)) {
-            return $this->raiseError("Could not compute age");
-        }
 
 
         //calculate Section B (28): Phrases Understood
@@ -472,9 +469,6 @@ class NDB_BVL_Instrument_macarthur_words_gestures extends NDB_BVL_Instrument
 
         // save scores
         $result = $db->update($this->table, $scores, array("CommentID"=>$this->getCommentID()));
-        if($db->isError($result)) {
-            return PEAR::raiseError("Could not save total score: ". $result->getMessage());
-        }
 
 
 

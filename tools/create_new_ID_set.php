@@ -23,13 +23,12 @@ if (empty($argv[1])) {
     foreach($candidate_list as $cand) {
 
         $newid = Candidate::_generateID($prefix);
-        $result = $DB->update('candidate', array($nid => $newid), array('ID' => $cand['ID']));
-
-        if ($DB->isError($result)) {
-            print "Could not save new ID: ". $result->getMessage();
-        } else {
+        try {
+            $result = $DB->update('candidate', array($nid => $newid), array('ID' => $cand['ID']));
             print ".";
             $count++;
+        } catch (DatabaseException $ex) {
+            print "Could not save new ID: ". $result->getMessage();
         }
     }        
 

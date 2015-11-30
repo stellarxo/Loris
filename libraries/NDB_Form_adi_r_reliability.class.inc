@@ -2080,15 +2080,9 @@ if($score_record['q_2_age_first_noticed_code']=='8' AND $score_record3['q_2_age_
       
         // Do the update here for the relibaility scores - saving the scores
 		$result = $db->update("adi_r_reliability", $reliability, array("CommentID"=>$this->identifier));
-		if($db->isError($result)) {
-			return PEAR::raiseError("Could not save total score: ". $result->getMessage());
-		}
     
 /*	 // Update the main relibaility table with the overall reliability score 
                 $result1 = $db->update("reliability", $reliability['reliability_score'], array("CommentID"=>$this->identifier));
-                if($db->isError($result1)) {
-                        return PEAR::raiseError("Could not save total score: ". $result1->getMessage());
-                }
 */
 
     } // end function score
@@ -2648,11 +2642,6 @@ if($score_record['q_2_age_first_noticed_code']=='8' AND $score_record3['q_2_age_
        
         $scoreResult = $this->score();
         
-        if($this->isError($scoreResult)) {
-           echo($scoreResult->getMessage());
-           
-           return PEAR::raiseError($scoreResult->getMessage());
-        }
 
         $user =& User::singleton();
         // if(!$user->hasPermission('tracking_logs_edit_all')) {
@@ -3101,9 +3090,6 @@ if($score_record['q_2_age_first_noticed_code']=='8' AND $score_record3['q_2_age_
        $centerID = $db->selectOne("SELECT session.CenterID FROM session, flag WHERE session.ID=flag.SessionID and flag.CommentID='".$this->identifier."'");
 
        $db->select("SELECT examinerID, full_name FROM examiners WHERE centerID='$centerID' ORDER BY full_name", $results);
-       if($db->isError($results)) {
-           return $this->raiseError("Could not get examiner names: ".$results->getMessage());
-       }
        
        $examiners = array(''=>'');
        if(is_array($results) && !empty($results)) {

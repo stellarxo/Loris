@@ -96,15 +96,9 @@ class NDB_Reliability_csbs_reliability extends NDB_Reliability
         
 
         $score_percent = ($score / 22.0) * 100;
-		if($db->isError($result)) {
-			return PEAR::raiseError("Could not save total score: ". $result->getMessage());
-		}
     
         $result = $db->update("reliability", array('Reliability_score' => $score_percent), array("CommentID"=>$this->identifier, "Instrument" => 'csbs', "reliability_center_id" => $this->reliability_center_id));
         $result = $db->update("csbs_reliability", array('reliability_score' => $score_percent), array("CommentID"=>$this->identifier, "reliability_center_id" => $this->reliability_center_id));
-		if($db->isError($result)) {
-			return PEAR::raiseError("Could not save total score: ". $result->getMessage());
-		}
     } // end function score
 
     function compareScore($field, $original, $comparison) {
@@ -195,9 +189,6 @@ class NDB_Reliability_csbs_reliability extends NDB_Reliability
         }
 
         $scoreResult = $this->score();
-        if($this->isError($scoreResult)) {
-            return PEAR::raiseError($scoreResult->getMessage());
-        }
 
         $this->form->freeze();
         $this->tpl_data['success'] = true;

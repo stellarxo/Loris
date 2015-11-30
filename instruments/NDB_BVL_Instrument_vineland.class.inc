@@ -656,10 +656,6 @@ $db->_trackChanges = false;
 ////////////////////////////////////////////////////////////////
 
           $result = $db->update($this->testName, $values, array('CommentID'=>$args['CommentID']));
-          if($this->isError($result)) {
-              print $result->getMessage();
-              return $this->raiseError('Could not save to database');
-          }
           return true;
       }
 

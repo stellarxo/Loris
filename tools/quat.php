@@ -63,9 +63,6 @@ if(is_array($dataQueryTables) && count($dataQueryTables)) {
 
         $query = "DROP TABLE $table[CurrentGUITable]";
         $result = $db->run($query);
-        if($db->isError($result)) {
-            die( "Failed to drop table $table: ".$result->getMessage()."\n" );
-        }
 
         $db->update('parameter_type', array('CurrentGUITable'=>null), array('CurrentGUITable'=>$table['CurrentGUITable']));
     }
@@ -99,9 +96,6 @@ for($idx=0; $idx<$countParameterTypes; $idx++) {
         $quatTableCounter++;
         $nextTableName = $quatTableBasename . $quatTableCounter;
         $result = $db->run($createSQL);
-        if($db->isError($result)) {
-            die( "Failed to create table $nextTableName: ".$result->getMessage()."\n" );
-        }
 
         // reset the column counter and create table statement
         $createSQL = "";
@@ -183,9 +177,9 @@ foreach($parameterTypes AS $parameterType) {
 
     // get column of data
     $dataColumn = array();
-    $db->select($query, $dataColumn);
-    //print count($dataColumn)."\t".$query."\n";
-    if($db->isError($dataColumn)) {
+    try {
+        $db->select($query, $dataColumn);
+    } catch (LorisException $ex) {
         print "Failed to retrieve $parameterType[Name]: ".$dataColumn->getMessage()."\n";
         print "$query\n";
         continue;

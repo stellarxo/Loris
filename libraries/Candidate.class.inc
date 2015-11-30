@@ -55,7 +55,7 @@ class Candidate
         
 
         if (!is_array($row) || sizeof($row) == 0) {
-            return PEAR::raiseError("Could not select Candidate data from the database (DCCID: $candID)", 
+            throw new LorisException("Could not select Candidate data from the database (DCCID: $candID)", 
                                      CANDIDATE_INVALID);
         }
 
@@ -141,7 +141,7 @@ class Candidate
    function createNew($centerID, $dateOfBirth, $edc, $gender, $PSCID=null, $startNumber=0)
    {
        if(!empty($this->candidateInfo['candID'])) {
-           return PEAR::raiseError("createNew must be called statically");
+           throw new LorisException("createNew must be called statically");
        }
        
        $db =& Database::singleton();
@@ -161,17 +161,17 @@ class Candidate
        if($PSCIDSettings['generation'] == 'user') {
            // check pscid is specified
            if(empty($PSCID)) {
-               return PEAR::raiseError("PSCID must be specified", PSCID_NOT_SPECIFIED);
+               throw new LorisException("PSCID must be specified", PSCID_NOT_SPECIFIED);
            }
 
            // check pscid structure
            if(!Candidate::validatePSCID($PSCID, $site->getSiteAlias())) {
-               return PEAR::raiseError("PSCID has an invalid structure", PSCID_INVALID_STRUCTURE);
+               throw new LorisException("PSCID has an invalid structure", PSCID_INVALID_STRUCTURE);
            }
 
            // check pscid uniqueness
            if($db->selectOne("SELECT count(PSCID) FROM candidate WHERE PSCID='$PSCID'") > 0) {
-               return PEAR::raiseError("PSCID not unique", PSCID_NOT_UNIQUE);
+               throw new LorisException("PSCID not unique", PSCID_NOT_UNIQUE);
            }
        } else {           
            $PSCID = Candidate::_generatePSCID($site->getSiteAlias(), $startNumber);
@@ -347,18 +347,12 @@ class Candidate
     function getFirstVisit() {
         $candID = $this->getCandID();
         $db =& Database::singleton();
-        if(Utility::isErrorX($db)) {
-            return PEAR::raiseError("Could not connect to database: ".$db->getMessage());
-        }
 
         $query  = "SELECT Visit_label FROM session s JOIN candidate c ON (c.CandID = s.CandID)
             WHERE c.CandID=:cid AND Visit_label NOT LIKE '%Screening%' AND Date_Visit IS NOT NULL
             ORDER BY Date_Visit";
         $where  = array('cid'=>$candID);
         $vLabel = $db->pselectOne($query, $where);
-        if(Utility::isErrorX($vLabel)) {
-            return PEAR::raiseError("Could not connect to database: ".$vLabel->getMessage());
-        }
 
         return $vLabel;
     }
@@ -423,15 +417,9 @@ class Candidate
 	    $candID=$this->getCandID();
 	    // make a local reference to the Database object
 	    $db =& Database::singleton();
-	    if(Utility::isErrorX($db)) {
-		    return PEAR::raiseError("Could not connect to database: ".$db->getMessage());
-	    }
 	    $query = "SELECT Value as Plan FROM candidate c JOIN parameter_candidate pc ON (pc.CandID=c.CandID) LEFT JOIN parameter_type pt ON (pc.ParameterTypeID=pt.ParameterTypeID) WHERE c.CandID=:CandidateID AND pt.Name='candidate_plan';";
         $params = array('CandidateID'=>$candID);
         $plan = $db->pselectOne($query, $params);
-	    if(Utility::isErrorX($plan)) {
-		    return PEAR::raiseError("Could not connect to database: ".$plan->getMessage());
-	    }
 	    return $plan;
 
     }    
@@ -603,15 +591,9 @@ class Candidate
     {
         $projID = $this->getProjectID();
         $db =& Database::singleton();
-        if(Utility::isErrorX($db)) {
-            return PEAR::raiseError("Could not connect to database: ".$db->getMessage());
-        }
         $query  = "SELECT SubprojectID from project_rel where ProjectID = :prj";
         $params = array('prj'=>$projID);
         $subproj   = $db->pselect($query, $params);
-        if(Utility::isErrorX($subproj)) {
-            return PEAR::raiseError("Could not connect to database: ".$subproj->getMessage());
-        }
         foreach($subproj as $row){
             foreach($row as $key =>$val){
                 if($key == 'SubprojectID') {

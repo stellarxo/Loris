@@ -188,10 +188,6 @@ class NDB_Form_video_upload extends NDB_Form
           if(!empty($this->identifier)){
             $db=& Database::singleton();
             $result = $db->update('videos', $values, array('record_id'=>$this->identifier));
-            if($this->isError($result)) {
-                print $result->getMessage();
-                return $this->raiseError('Could not save to database');
-            }
             return true;
           }else{
             require_once "File_Upload.class.inc";
@@ -325,10 +321,6 @@ class NDB_Form_video_upload extends NDB_Form
         }
 
         //$result = $db->update('videos', $values, array('PSCID'=>$args['values']['PSCID'], 'Instrument'=>$args['values']['Instrument'], 'visitLabel' => $args['values']['visitLabel']));
-        if($this->isError($result)) {
-            print $result->getMessage();
-            return $this->raiseError('Could not save to database');
-        }
         return true;
       }
 }

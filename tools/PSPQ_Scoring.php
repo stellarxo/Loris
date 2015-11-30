@@ -77,9 +77,6 @@ foreach($candidate_list as $cand) {
             $scores[$key."_informant_gender"] = $val['informant_gender'];
             //save scores
             $result = $db->update('pspq_score', $scores, array('CommentID'=>$scoreID));
-            if ($db->isError($result)) {
-                print "Could not save total score: ". $result->getMessage();
-            }
 
         }
     }

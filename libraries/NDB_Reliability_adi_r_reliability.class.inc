@@ -31,7 +31,7 @@ class NDB_Reliability_adi_r_reliability extends NDB_Reliability
 //     }
 
     function _getAgeInMonths() {
-        return PEAR::raiseError("Could not calculate age because don't know if subject or proband");
+        throw new LorisException("Could not calculate age because don't know if subject or proband");
     }
     function _getDefaults()
     {
@@ -461,20 +461,11 @@ class NDB_Reliability_adi_r_reliability extends NDB_Reliability
       
         // Do the update here for the relibaility scores - saving the scores
 		$result = $db->update("{$this->name}", $reliability, array("CommentID"=>$this->identifier, 'reliability_center_id' => $this->reliability_center_id));
-		if($db->isError($result)) {
-			return PEAR::raiseError("Could not save total score: ". $result->getMessage());
-		}
 		
 		$result = $db->update("reliability", array("Reliability_score" => min($reliability['Reliability_score_all_items'], $reliability['Reliability_score_scored_items'])), array("CommentID"=>$this->identifier, "Instrument" => preg_replace("/_reliability$/", "", $this->name), 'reliability_center_id' => $this->reliability_center_id));
-		if($db->isError($result)) {
-			return PEAR::raiseError("Could not save total score: ". $result->getMessage());
-		}
     
 /*	 // Update the main relibaility table with the overall reliability score 
                 $result1 = $db->update("reliability", $reliability['reliability_score'], array("CommentID"=>$this->identifier));
-                if($db->isError($result1)) {
-                        return PEAR::raiseError("Could not save total score: ". $result1->getMessage());
-                }
 */
 
     } // end function score
@@ -1374,12 +1365,6 @@ class NDB_Reliability_adi_r_reliability extends NDB_Reliability
         }
         
         $scoreResult = $this->score();
-        
-        if($this->isError($scoreResult)) {
-             
-
-             return PEAR::raiseError($scoreResult->getMessage());
-          }
         
         $this->form->freeze();
         $this->tpl_data['success'] = true;

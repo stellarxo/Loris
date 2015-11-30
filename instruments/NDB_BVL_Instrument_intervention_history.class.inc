@@ -278,9 +278,6 @@ INSERT INTO test_battery VALUES ('', 'intervention_history', '1053', '1179', 'Y'
 
 	        $result = $db->update($this->table, $scores, array("CommentID"=>$this->getCommentID()));
 
-        	if($db->isError($result)) {
-	                return PEAR::raiseError("Could not save intensity: ". $result->getMessage());
-		}
 	}
 
 	}

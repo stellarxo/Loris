@@ -79,10 +79,6 @@ $WhereCriteria['CommentID'] = $db->pselectOne("SELECT i.CommentID FROM ACEFamily
                                                WHERE s.ID =:sid AND f.CommentID NOT LIKE 'DDE%'",
                                                array('sid'=>$sessionID['ID']));
 $result = $db->update('ACEFamilyMedicalHistory', $final_result, $WhereCriteria);
-if ($db->isError($result)) {
-    print "Could not update ACEFamilyMedicalHistory: ". $result->getMessage();
-    //                        exit(3);
-}
 
 }
 ?>

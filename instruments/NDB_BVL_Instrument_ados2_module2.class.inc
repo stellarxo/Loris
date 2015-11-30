@@ -368,8 +368,8 @@ class NDB_BVL_Instrument_ados2_module2 extends NDB_BVL_Instrument
         
 		$age = Utility::calculateAge($dob, $record["Date_taken"]);
        		$age_years = $age['year'] + ($age['mon']/12);
-        if($this->isError($age)) {
-            return $this->raiseError("Could not compute age");
+        if(!is_array($age)) {
+            throw new LorisException("Could not compute age");
         }  
 
 	
@@ -432,7 +432,7 @@ class NDB_BVL_Instrument_ados2_module2 extends NDB_BVL_Instrument
 
        if(!empty($dob) && !empty($Answers['Date_taken'])) {
             $age = Utility::calculateAge($dob, $Answers["Date_taken"]);
-            if(!$this->isError($age)) {
+            if(is_array($age)) {
                 $age_months = $age['year'] * 12 + $age['mon'];
             }
        }
@@ -481,9 +481,6 @@ class NDB_BVL_Instrument_ados2_module2 extends NDB_BVL_Instrument
 
         // save scores to database
     	$result = $db->update($this->table, $scoreCols, array("CommentID"=>$this->getCommentID()));
-    	if($db->isError($result)) {
-    		return PEAR::raiseError("Could not save total score: ". $result->getMessage());
-    	}
     }    // end score function
 }
 ?>
