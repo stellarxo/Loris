@@ -558,16 +558,17 @@ if (empty($argv[1])) {
     $name = "Head Circumference";
     $query = "SELECT
         DISTINCT c.IBISId AS id_number, 
-        null AS date_of_testing,
-        null AS age_at_testing,
+        h.Date_taken AS date_of_testing,
+        ROUND(h.Candidate_Age) AS age_at_testing,
         null AS data_method,
-        null AS head_circumference,
-        null AS hc_units,
-        null AS weight,
-        null AS weight_units,
-        null AS height,
-        null AS height_units
-        FROM flag f JOIN session s ON (f.SessionID=s.ID) 
+        h.head_circumference1 AS head_circumference,
+        h.head_circumference_unit AS hc_units,
+        h.weight1 AS weight,
+        h.weight_unit AS weight_units,
+        h.length1 AS height,
+        h.head_length_unit AS height_units
+        FROM flag f JOIN session s ON (f.SessionID=s.ID)
+        JOIN head_measurements_subject h ON (d.CommentID=f.CommentID) 
         JOIN candidate c ON (s.CandID=c.CandID)
         JOIN participant_status ps ON (ps.CandID=c.CandID)
         WHERE ps.study_consent='yes' AND s.CenterID!=1 
