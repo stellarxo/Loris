@@ -99,7 +99,7 @@ if (empty($argv[1])) {
         AND f.CommentID NOT LIKE 'DDE_%' AND cu.CommentID2 is null 
         AND s.Current_stage<>'Recycling Bin' AND m.Date_taken is not null 
         AND (s.SubprojectID=1 OR s.SubprojectID=2 OR s.SubprojectID=3);";    
-    //addSheet($query, $name);
+    addSheet($query, $name);
     
     // s.SubprojectID, s.Current_stage, s.Visit, 
     $name = "Vineland";
@@ -161,7 +161,7 @@ if (empty($argv[1])) {
         AND f.CommentID NOT LIKE 'DDE_%' AND cu.CommentID2 is null 
         AND s.Current_stage<>'Recycling Bin' AND v.Date_taken is not null 
         AND (s.SubprojectID=1 OR s.SubprojectID=2 OR s.SubprojectID=3);";
-    //addSheet($query, $name);
+    addSheet($query, $name);
        
     //         s.SubprojectID, s.Current_stage, s.Visit,
     $name = "ADI";
@@ -197,7 +197,7 @@ if (empty($argv[1])) {
         AND f.CommentID NOT LIKE 'DDE_%' AND cu.CommentID2 is null 
         AND s.Current_stage<>'Recycling Bin' AND a.Date_taken is not null 
         AND (s.SubprojectID=1 OR s.SubprojectID=2 OR s.SubprojectID=3);";
-    //addSheet($query, $name);
+    addSheet($query, $name);
     
     //         s.SubprojectID, s.Current_stage, s.Visit,
     $name = "MacArthur Words & Gestures";
@@ -276,27 +276,390 @@ if (empty($argv[1])) {
         AND f.CommentID NOT LIKE 'DDE_%' AND cu.CommentID2 is null 
         AND s.Current_stage<>'Recycling Bin' AND m.Date_taken is not null 
         AND (s.SubprojectID=1 OR s.SubprojectID=2 OR s.SubprojectID=3);";
-    //addSheet($query, $name);    
+    addSheet($query, $name);    
     
     //         s.SubprojectID, s.Current_stage, s.Visit,
     $name = "MacArthur Words & Sentences";
     $query = "SELECT
-        c.IBISId AS id_number, 
-        m.Date_taken AS date_of_testing,
-        ROUND(m.Candidate_Age) AS age_at_testing,
-        m.version as version,
-        m.respondent as repondent,
-        m.cdi_ws_a_total AS cdi_ws_a_total,
-        m.cdi_ws_part_ii_b AS cdi_ws_part_ii_b,
-        m.cdi_ws_part_ii_c AS cdi_ws_part_ii_c,
-        m.cdi_ws_part_ii_e AS cdi_ws_part_ii_e
+        DISTINCT c.IBISId AS id_number, 
+        null AS date_of_testing,
+        null AS age_at_testing,
+        null AS version,
+        null AS respondent,
+        null AS cdi_ws_a1,
+        null AS cdi_ws_a2,
+        null AS cdi_ws_a3,
+        null AS cdi_ws_a4,
+        null AS cdi_ws_a5,
+        null AS cdi_ws_a6,
+        null AS cdi_ws_a7,
+        null AS cdi_ws_a8,
+        null AS cdi_ws_a9,
+        null AS cdi_ws_a10,
+        null AS cdi_ws_a11,
+        null AS cdi_ws_a12,
+        null AS cdi_ws_a13,
+        null AS cdi_ws_a14,
+        null AS cdi_ws_a15,
+        null AS cdi_ws_a16,
+        null AS cdi_ws_a17,
+        null AS cdi_ws_a18,
+        null AS cdi_ws_a19,
+        null AS cdi_ws_a20,
+        null AS cdi_ws_a21,
+        null AS cdi_ws_a22,
+        null AS cdi_ws_a_total,
+        null AS cdi_ws_a_total_percentile,
+        null AS cdi_ws_b1,
+        null AS cdi_ws_b2,
+        null AS cdi_ws_b3,
+        null AS cdi_ws_b4,
+        null AS cdi_ws_b5,
+        null AS cdi_ws_part_ii_a1,
+        null AS cdi_ws_part_ii_a2,
+        null AS cdi_ws_part_ii_a3,
+        null AS cdi_ws_part_ii_a4,
+        null AS cdi_ws_part_ii_b,
+        null AS cdi_ws_part_ii_b_percentile,
+        null AS cdi_ws_part_ii_c,
+        null AS cdi_ws_part_ii_combine_words,
+        null AS cdi_ws_part_ii_d1,
+        null AS cdi_ws_part_ii_d2,
+        null AS cdi_ws_part_ii_d3,
+        null AS cdi_ws_part_ii_m3l,
+        null AS cdi_ws_part_ii_m3l_percentile,
+        null AS cdi_ws_part_ii_e,
+        null AS cdi_ws_part_ii_e_percentile
         FROM flag f JOIN session s ON (f.SessionID=s.ID) 
         JOIN candidate c ON (s.CandID=c.CandID)
-        JOIN mullen m ON (m.CommentID=f.CommentID) 
         JOIN participant_status ps ON (ps.CandID=c.CandID)
         WHERE ps.study_consent='yes' AND s.CenterID!=1 
         AND (s.SubprojectID=1 OR s.SubprojectID=2 OR s.SubprojectID=3);";
     addSheet($query, $name);
+        
+    $name = "Family Info";
+    $query = "SELECT
+        null AS family_id,
+        null AS recruitment_date,
+        null AS referral_source,
+        null AS risk_status,
+        null AS drop_status,
+        null AS attrition_reason
+        ";
+    addSheet($query, $name);
+    
+    $name = "Person Info";
+    $query = "SELECT DISTINCT 
+        null AS family_id,
+        c.IBISId AS id_number, 
+        null AS family_member_type,
+        null AS date_of_birth,
+        null AS NDAR_GUID,
+        null AS diagnosis,
+        null AS method_of_diagnosis,
+        null AS grant_number
+        FROM flag f JOIN session s ON (f.SessionID=s.ID) 
+        JOIN candidate c ON (s.CandID=c.CandID) 
+        JOIN participant_status ps ON (ps.CandID=c.CandID)
+        WHERE ps.study_consent='yes' AND s.CenterID!=1 
+        AND (s.SubprojectID=1 OR s.SubprojectID=2 OR s.SubprojectID=3);";
+    addSheet($query, $name);
+     
+    $name = "Demographics";
+    $query = "SELECT
+        DISTINCT c.IBISId AS id_number, 
+        null AS date_of_testing,
+        null AS age_at_testing,
+        null AS baby_dob,
+        null AS baby_gender,
+        null AS baby_race,
+        null AS baby_ethnicity,
+        null AS baby_birth_order,
+        null AS bio_mother_dob,
+        null AS bio_mother_race,
+        null AS bio_mother_ethnicity,
+        null AS bio_father_dob,
+        null AS bio_father_race,
+        null AS bio_father_ethnicity,
+        null AS respondent_relationship,
+        null AS other_dob,
+        null AS other_race,
+        null AS other_ethnicity,
+        null AS respondent_ed,
+        null AS respondent_marital_status,
+        null AS respondent_employment,
+        null AS respondnet_occupation,
+        null AS household_income,
+        null AS adults,
+        null AS children,
+        null AS number_asd,
+        null AS child_1_dob,
+        null AS child_1_gender,
+        null AS child_1_diagnosis,
+        null AS child_2_dob,
+        null AS child_2_gender,
+        null AS child_2_diagnosis,
+        null AS child_3_dob,
+        null AS child_3_gender,
+        null AS child_3_diagnosis,
+        null AS child_4_dob,
+        null AS child_4_gender,
+        null AS child_4_diagnosis,
+        null AS child_5_dob,
+        null AS child_5_gender,
+        null AS child_5_diagnosis,
+        null AS child_6_dob,
+        null AS child_6_gender,
+        null AS child_6_diagnosis,
+        null AS spouse_dob,
+        null AS spouse_relation_to_baby,
+        null AS spouse_ed,
+        null AS spouse_employment,
+        null AS spouse_occupation,
+        null AS spouse_child_care,
+        null AS home_languages,
+        null AS frequency_english
+        FROM flag f JOIN session s ON (f.SessionID=s.ID) 
+        JOIN candidate c ON (s.CandID=c.CandID)
+        JOIN participant_status ps ON (ps.CandID=c.CandID)
+        WHERE ps.study_consent='yes' AND s.CenterID!=1 
+        AND (s.SubprojectID=1 OR s.SubprojectID=2 OR s.SubprojectID=3);";
+    addSheet($query, $name);
+    
+    $name = "Clinical Best Estimate";
+    $query = "SELECT
+        DISTINCT c.IBISId AS id_number, 
+        null AS date_of_testing,
+        null AS age_at_testing,
+        null AS cbe_method,
+        null AS cbe_professional,
+        null AS cbe_diagnosis
+        FROM flag f JOIN session s ON (f.SessionID=s.ID) 
+        JOIN candidate c ON (s.CandID=c.CandID) 
+        JOIN participant_status ps ON (ps.CandID=c.CandID)
+        WHERE ps.study_consent='yes' AND s.CenterID!=1 
+        AND (s.SubprojectID=1 OR s.SubprojectID=2 OR s.SubprojectID=3);";
+    addSheet($query, $name);
+      
+    //        s.SubprojectID,        s.Current_stage,         f.Validity,
+    $name = "ADOS";
+    $query = "SELECT
+        c.IBISId as id_number, 
+        a.Date_taken AS date_of_testing,
+        ROUND(a.Candidate_Age) AS age_at_testing,
+        'module 1' AS module,
+        null AS version,
+        null AS algorithm_type,
+        null AS communication_total,
+        null AS social_interaction_total,
+        null AS communication_social_total,
+        null AS play_imagination_creativity,
+        null AS stereotyped_behaviors,
+        social_affect_total,
+        restricted_repetitive_behavior_total
+        FROM flag f JOIN session s ON (f.SessionID=s.ID)
+        JOIN candidate c ON (s.CandID=c.CandID)
+        JOIN ados_module1 a ON (a.CommentID=f.CommentID)
+        JOIN participant_status ps ON (ps.CandID=c.CandID)
+        LEFT JOIN conflicts_unresolved cu ON (cu.CommentId2=f.CommentID)
+        WHERE ps.study_consent='yes' AND s.CenterID!=1 AND f.Data_entry='Complete'
+        AND f.CommentID NOT LIKE 'DDE_%' AND cu.CommentID2 is null
+        AND (s.SubprojectID=1 OR s.SubprojectID=2 OR s.SubprojectID=3)
+        UNION
+        SELECT
+        c.IBISId as id_number, 
+        a.Date_taken AS date_of_testing,
+        ROUND(a.Candidate_Age) AS age_at_testing,
+        'module 2' AS module,
+        null AS version,
+        null AS algorithm_type,
+        null AS communication_total,
+        null AS social_interaction_total,
+        null AS communication_social_total,
+        null AS play_imagination_creativity,
+        null AS stereotyped_behaviors,
+        social_affect_total,
+        restricted_repetitive_behavior_total
+        FROM flag f JOIN session s ON (f.SessionID=s.ID)
+        JOIN candidate c ON (s.CandID=c.CandID)
+        JOIN ados_module2 a ON (a.CommentID=f.CommentID)
+        JOIN participant_status ps ON (ps.CandID=c.CandID)
+        LEFT JOIN conflicts_unresolved cu ON (cu.CommentId2=f.CommentID)
+        WHERE ps.study_consent='yes' AND s.CenterID!=1 AND f.Data_entry='Complete'
+        AND f.CommentID NOT LIKE 'DDE_%' AND cu.CommentID2 is null
+        AND (s.SubprojectID=1 OR s.SubprojectID=2 OR s.SubprojectID=3)
+        UNION
+        SELECT
+        c.IBISId as id_number, 
+        a.Date_taken AS date_of_testing,
+        ROUND(a.Candidate_Age) AS age_at_testing,
+        'module 3' AS module,
+        null AS version,
+        null AS algorithm_type,
+        null AS communication_total,
+        null AS social_interaction_total,
+        null AS communication_social_total,
+        null AS play_imagination_creativity,
+        null AS stereotyped_behaviors,
+        social_affect_total,
+        restricted_repetitive_behavior_total
+        FROM flag f JOIN session s ON (f.SessionID=s.ID)
+        JOIN candidate c ON (s.CandID=c.CandID)
+        JOIN ados_module3 a ON (a.CommentID=f.CommentID)
+        JOIN participant_status ps ON (ps.CandID=c.CandID)
+        LEFT JOIN conflicts_unresolved cu ON (cu.CommentId2=f.CommentID)
+        WHERE ps.study_consent='yes' AND s.CenterID!=1 AND f.Data_entry='Complete'
+        AND f.CommentID NOT LIKE 'DDE_%' AND cu.CommentID2 is null
+        AND (s.SubprojectID=1 OR s.SubprojectID=2 OR s.SubprojectID=3);";
+    addSheet($query, $name);
+    
+    $name = "SCQ";
+    $query = "SELECT
+        DISTINCT c.IBISId AS id_number, 
+        null AS date_of_testing,
+        null AS age_at_testing,
+        null AS version,
+        null AS respondent,
+        null AS scq_total_score
+        FROM flag f JOIN session s ON (f.SessionID=s.ID) 
+        JOIN candidate c ON (s.CandID=c.CandID)
+        JOIN participant_status ps ON (ps.CandID=c.CandID)
+        WHERE ps.study_consent='yes' AND s.CenterID!=1 
+        AND (s.SubprojectID=1 OR s.SubprojectID=2 OR s.SubprojectID=3);";
+    addSheet($query, $name);
+    
+    $name = "SRS";
+    $query = "SELECT
+        DISTINCT c.IBISId AS id_number, 
+        null AS date_of_testing,
+        null AS age_at_testing,
+        null AS version,
+        null AS test_form,
+        null AS respondent,
+        null AS srs_total_raw,
+        null AS srs_total_t_score,
+        null AS srs_social_awareness_raw,
+        null AS srs_social_cognition_raw,
+        null AS srs_social_communication_raw,
+        null AS srs_social_motivation_raw,
+        null AS srs_autistic_mannerisms_raw,
+        null AS srs_social_awareness_t_score,
+        null AS srs_social_cognition_t_score,
+        null AS srs_social_communication_t_score,
+        null AS srs_social_motivation_t_score,
+        null AS srs_autistic_mannerisms_t_score
+        FROM flag f JOIN session s ON (f.SessionID=s.ID) 
+        JOIN candidate c ON (s.CandID=c.CandID)
+        JOIN participant_status ps ON (ps.CandID=c.CandID)
+        WHERE ps.study_consent='yes' AND s.CenterID!=1 
+        AND (s.SubprojectID=1 OR s.SubprojectID=2 OR s.SubprojectID=3);";
+    addSheet($query, $name);
+    
+    $name = "Head Circumference";
+    $query = "SELECT
+        DISTINCT c.IBISId AS id_number, 
+        null AS date_of_testing,
+        null AS age_at_testing,
+        null AS data_method,
+        null AS head_circumference,
+        null AS hc_units,
+        null AS weight,
+        null AS weight_units,
+        null AS height,
+        null AS height_units
+        FROM flag f JOIN session s ON (f.SessionID=s.ID) 
+        JOIN candidate c ON (s.CandID=c.CandID)
+        JOIN participant_status ps ON (ps.CandID=c.CandID)
+        WHERE ps.study_consent='yes' AND s.CenterID!=1 
+        AND (s.SubprojectID=1 OR s.SubprojectID=2 OR s.SubprojectID=3);";
+    addSheet($query, $name);
+    
+    $name = "Intervention History";
+    $query = "SELECT
+        DISTINCT c.IBISId AS id_number, 
+        null AS visit,
+        null AS date_of_testing,
+        null AS age_at_testing,
+        null AS test_version,
+        null AS date_last_visit,
+        null AS inthx1,
+        null AS inthx2,
+        null AS inthx2_avg_hrs,
+        null AS inthx2_total_since,
+        null AS inthx3,
+        null AS inthx4,
+        null AS inthx5,
+        null AS inthx_ot,
+        null AS inthx_ot_start,
+        null AS inthx_ot_start_age,
+        null AS inthx_ot_still,
+        null AS inthx_ot_stop,
+        null AS inthx_ot_stop_age,
+        null AS inthx_ot_ind_grp,
+        null AS inthx_ot_setting,
+        null AS inthx_ot_setting_other,
+        null AS inthx_ot_avg_hrs_week,
+        null AS inthx_pt,
+        null AS inthx_pt_start,
+        null AS inthx_pt_start_age,
+        null AS inthx_pt_still,
+        null AS inthx_pt_stop,
+        null AS inthx_pt_stop_age,
+        null AS inthx_pt_ind_grp,
+        null AS inthx_pt_setting,
+        null AS inthx_pt_setting_other,
+        null AS inthx_pt_avg_hrs_week,
+        null AS inthx_speech,
+        null AS inthx_speech_start,
+        null AS inthx_speech_start_age,
+        null AS inthx_speech_still,
+        null AS inthx_speech_stop,
+        null AS inthx_speech_stop_age,
+        null AS inthx_speech_ind_grp,
+        null AS inthx_speech_setting,
+        null AS inthx_speech_setting_other,
+        null AS inthx_speech_avg_hrs_week,
+        null AS inthx_comp,
+        null AS inthx_comp_start,
+        null AS inthx_comp_start_age,
+        null AS inthx_comp_still,
+        null AS inthx_comp_stop,
+        null AS inthx_comp_stop_age,
+        null AS inthx_comp_ind_grp,
+        null AS inthx_comp_setting,
+        null AS inthx_comp_setting_other,
+        null AS inthx_comp_avg_hrs_week,
+        null AS inthx_other,
+        null AS inthx_other_description,
+        null AS inthx_other_start,
+        null AS inthx_other_start_age,
+        null AS inthx_other_still,
+        null AS inthx_other_stop,
+        null AS inthx_other_stop_age,
+        null AS inthx_other_ind_grp,
+        null AS inthx_other_setting,
+        null AS inthx_other_setting_other,
+        null AS inthx_other_avg_hrs_week,
+        null AS inthx6_a_since_last,
+        null AS inthx6_b_past_year,
+        null AS inthx7,
+        null AS inthx7_specify,
+        null AS inthx8,
+        null AS inthx8_specify,
+        null AS inthx9,
+        null AS inthx10_speech,
+        null AS inthx10_ot,
+        null AS inthx10_pt,
+        null AS inthx10_comp,
+        null AS inthx10_other,
+        null AS inthx_comments
+        FROM flag f JOIN session s ON (f.SessionID=s.ID) 
+        JOIN candidate c ON (s.CandID=c.CandID)
+        JOIN participant_status ps ON (ps.CandID=c.CandID)
+        WHERE ps.study_consent='yes' AND s.CenterID!=1 
+        AND (s.SubprojectID=1 OR s.SubprojectID=2 OR s.SubprojectID=3);";
+    addSheet($query, $name);
+    
     
     // Writing the excel file out
     $writer = PHPExcel_IOFactory::createWriter($ExcelApplication, 'Excel2007');
