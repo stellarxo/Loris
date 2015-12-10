@@ -13,10 +13,6 @@ $query = "SELECT * from HandPreference WHERE CommentID = :CommentID";
 
 $WhereCriteria = array('CommentID'=>$CommentID);
 $result = $db->pselectRow($query, $WhereCriteria);
-if(Utility::isErrorX($result)){
-	print "Query has failed to select: ".$result->getMessage();
-    exit(2);
-}
 //Uni Manual Response: no. times right hand used + no. time left hand used
 $UMR = 0;
 //Right-Handed Response
