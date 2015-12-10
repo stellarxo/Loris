@@ -109,14 +109,11 @@ class NDB_BVL_Instrument_peer_socialcontact extends NDB_BVL_Instrument
                 );
         
         $db =& Database::singleton();
-        if(Utility::isErrorX($db)) {
-            print "Could not connect to database: ".$db->getMessage();
-        }
-        $record = $db->pselectRow("SELECT * FROM ".$this->table." WHERE CommentID=:cid",
+        try {
+            $record = $db->pselectRow("SELECT * FROM ".$this->table." WHERE CommentID=:cid",
                 array('cid' =>$this->getCommentID()));
-
-        if (Utility::isErrorX($record)) {
-            print "Query has failed to select: ".$record->getMessage();
+        } catch (DatabaseException $ex) {
+            print "Query has failed to select";
             $record = array();
         }
         $fields = array('peer_initials_1','peer_initials_2','peer_initials_3','peer_initials_4','peer_initials_5');
@@ -200,15 +197,9 @@ class NDB_BVL_Instrument_peer_socialcontact extends NDB_BVL_Instrument
         
        // $this->form->addElement("static",null,"In the table below indicate which children know each other.<BR>You must select `Yes` or `No` fields to save this form.<BR>");
         $db =& Database::singleton();
-        if(Utility::isErrorX($db)) {
-            print "Could not connect to database: ".$db->getMessage();
-        }
         $numplaymates = $db->pselectOne("SELECT total_playmates FROM ".$this->table." WHERE CommentID=:cid",
                 array('cid' =>$this->getCommentID()));
 
-        if (Utility::isErrorX($numplaymates)) {
-            print "Query has failed to select: ".$numplaymates->getMessage();
-        }
           if(isset($_GET["key"])) {
             $key = $_GET["key"]; 
         }
@@ -503,16 +494,10 @@ class NDB_BVL_Instrument_peer_socialcontact extends NDB_BVL_Instrument
             $key = $_GET["key"];
         }
         $db =& Database::singleton();
-        if(Utility::isErrorX($db)) {
-            print "Could not connect to database: ".$db->getMessage();
-        }
 
         $numplaymates = $db->pselectOne("SELECT total_playmates FROM ".$this->table." WHERE CommentID=:cid",
                 array('cid' =>$this->getCommentID()));
 
-        if (Utility::isErrorX($numplaymates)) {
-            print "Query has failed to select: ".$numplaymates->getMessage();
-        }
 
          if($playmate > $numplaymates) {
               $this->form->addElement('static', 'lorisSubHeader',"<strong>NOTE: You only need to fill this form if the playmate initals are specified below.<BR>If no initials are specified click here go to the next section:<a href=\"survey.php?key=$key&pageNum=7\"><font color=\"#0000FF\"> <u>Section 2 </u></font></a> <strong>");
@@ -663,16 +648,13 @@ class NDB_BVL_Instrument_peer_socialcontact extends NDB_BVL_Instrument
     {
         $errors = array();
          $db =& Database::singleton();
-        if(Utility::isErrorX($db)) {
-            print "Could not connect to database: ".$db->getMessage();
-        }
         reset($values);
         $first =key($values);
-        $playmates_listed = $db->pselectOne("SELECT total_playmates FROM ".$this->table." WHERE CommentID=:cid",
+        try {
+            $playmates_listed = $db->pselectOne("SELECT total_playmates FROM ".$this->table." WHERE CommentID=:cid",
                 array('cid' =>$this->getCommentID()));
-
-        if (Utility::isErrorX($playamtes_listed)) {
-            print "Query has failed to select: ".$playmantes_listed->getMessage();
+        } catch (DatabaseException $ex) {
+            print "Query has failed to select";
             $playmates_listed = array();
         }
        

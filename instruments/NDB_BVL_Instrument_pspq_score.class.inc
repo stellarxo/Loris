@@ -24,14 +24,11 @@ class NDB_BVL_Instrument_pspq_score extends NDB_BVL_Instrument
         // data keyed by commentHe/SheD
         $this->commentID = $commentID;
         $db =& Database::singleton();
-        if(Utility::isErrorX($db)) {
-            print "Could not connect to database: ".$db->getMessage();
-        }
-        $record = $db->pselectRow("SELECT * FROM ".$this->table." WHERE CommentID=:cid",
+        try {
+            $record = $db->pselectRow("SELECT * FROM ".$this->table." WHERE CommentID=:cid",
                 array('cid' =>$this->getCommentID()));
-
-        if (Utility::isErrorX($record)) {
-            print "Query has failed to select: ".$record->getMessage();
+        } catch (DatabaseException $ex) {
+            print "Query has failed to select";
             $record = array();
         }
         if(!empty($record)) {
