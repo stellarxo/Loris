@@ -523,25 +523,26 @@ if (empty($argv[1])) {
                 AND (s.SubprojectID=1 OR s.SubprojectID=2 OR s.SubprojectID=3);",
            "SCQ"                         => "SELECT
                 DISTINCT c.IBISId AS id_number, 
-                null AS date_of_testing,
-                null AS age_at_testing,
-                null AS version,
+                q.Date_taken AS date_of_testing,
+                ROUND(q.Candidate_Age) AS age_at_testing,
+                q.scq_version AS version,
                 null AS respondent,
-                null AS scq_total_score
+                q.score AS scq_total_score
                 FROM flag f JOIN session s ON (f.SessionID=s.ID) 
+                JOIN scq_subject q ON (q.CommentID=f.CommentID)
                 JOIN candidate c ON (s.CandID=c.CandID)
                 JOIN participant_status ps ON (ps.CandID=c.CandID)
                 WHERE ps.study_consent='yes' AND s.CenterID!=1 
                 AND (s.SubprojectID=1 OR s.SubprojectID=2 OR s.SubprojectID=3);",
            "SRS"                         => "SELECT
                 DISTINCT c.IBISId AS id_number, 
-                null AS date_of_testing,
-                null AS age_at_testing,
+                r.Date_taken AS date_of_testing,
+                ROUND(r.Candidate_Age) AS age_at_testing,
                 null AS version,
                 null AS test_form,
-                null AS respondent,
+                r.completed_by AS respondent,
                 null AS srs_total_raw,
-                null AS srs_total_t_score,
+                r.srs_score AS srs_total_t_score,
                 null AS srs_social_awareness_raw,
                 null AS srs_social_cognition_raw,
                 null AS srs_social_communication_raw,
@@ -552,7 +553,8 @@ if (empty($argv[1])) {
                 null AS srs_social_communication_t_score,
                 null AS srs_social_motivation_t_score,
                 null AS srs_autistic_mannerisms_t_score
-                FROM flag f JOIN session s ON (f.SessionID=s.ID) 
+                FROM flag f JOIN session s ON (f.SessionID=s.ID)
+                JOIN SRS r ON (r.CommentID=f.CommentID)
                 JOIN candidate c ON (s.CandID=c.CandID)
                 JOIN participant_status ps ON (ps.CandID=c.CandID)
                 WHERE ps.study_consent='yes' AND s.CenterID!=1 
