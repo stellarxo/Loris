@@ -276,7 +276,7 @@ INSERT INTO instrument_subtests VALUES('', 'csbs', 'csbs_page2', 'Symbolic Behav
         $this->form->addElement("select", "q_7_play_behaviour", "7. Play behavior", array(null=>"", "1_less_organized"=>"1. less organized", "2_typical"=>"2. typical", "3_more_organized"=>"3. more organized", "not_answered"=>"Not Answered"));
         $this->XINRegisterRule("q_7_play_behaviour", array("q_7_play_behaviour{@}=={@}NEVER_REQUIRED"));
 //        $this->form->addElement("select", "q_", "", array(null=>"", "1_"=>"1. ", "2_typical"=>"2. typical", "3_"=>"3. ", "not_answered"=>"Not Answered"));
-        if (1==1 || isset($_REQUEST['commentID'])) { 
+        if (isset($_REQUEST['commentID'])) { 
 
         $this->addTextAreaElement("comments", "Comments:");
 
