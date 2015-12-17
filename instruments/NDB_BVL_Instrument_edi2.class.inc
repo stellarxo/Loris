@@ -1,6 +1,10 @@
 <?php
+
+require_once 'HTML/QuickForm.php';
+require_once 'HTML/QuickForm/Renderer/Array.php';
 require_once "Utility.class.inc";
 require_once "Candidate.class.inc";
+
 class NDB_BVL_Instrument_edi2 extends NDB_BVL_Instrument
 {
 	

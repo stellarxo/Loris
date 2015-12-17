@@ -1,4 +1,8 @@
 <?php
+
+require_once 'HTML/QuickForm.php';
+require_once 'HTML/QuickForm/Renderer/Array.php';
+
 class NDB_BVL_Instrument_LENA_DailyActivityLog extends NDB_BVL_Instrument
 {
     var  $rate_day = array(""=>null,"typical"=>"A. typical/ordinary talk time",
