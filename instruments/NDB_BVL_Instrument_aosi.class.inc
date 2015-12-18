@@ -1,5 +1,8 @@
 <?php
-		    
+
+require_once 'HTML/QuickForm.php';
+require_once 'HTML/QuickForm/Renderer/Array.php';
+
 function TrialName($press, $trial) {
 	return "q3_orients_to_name_press_" . $press . 
 	"_trial_" . $trial;

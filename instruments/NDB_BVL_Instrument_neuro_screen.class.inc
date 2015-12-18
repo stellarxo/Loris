@@ -1,5 +1,8 @@
 <?php
 
+require_once 'HTML/QuickForm.php';
+require_once 'HTML/QuickForm/Renderer/Array.php';
+
 /*
 INSERT INTO test_names VALUES ('', 'neuro_screen', 'Neuro Screener', '0', '1');
 

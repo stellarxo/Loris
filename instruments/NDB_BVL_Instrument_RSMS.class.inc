@@ -4,6 +4,7 @@
 require_once('RequiredIfGroup.inc');
 require_once('RequiredIf.inc');
 require_once 'HTML/QuickForm.php';
+require_once 'HTML/QuickForm/Renderer/Array.php';
 
 class NDB_BVL_Instrument_RSMS extends NDB_BVL_Instrument{
     var $ValidityEnabled = false;
