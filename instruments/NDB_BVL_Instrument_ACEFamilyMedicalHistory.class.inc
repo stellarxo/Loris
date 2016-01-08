@@ -1,4 +1,7 @@
 <?php
+require_once 'HTML/QuickForm.php';
+require_once 'HTML/QuickForm/Renderer/Array.php';
+
 class NDB_BVL_Instrument_ACEFamilyMedicalHistory extends NDB_BVL_Instrument
 {
    var $indent = "&nbsp;&nbsp;&nbsp;&nbsp;";
@@ -35,9 +38,6 @@ class NDB_BVL_Instrument_ACEFamilyMedicalHistory extends NDB_BVL_Instrument
         );
 
         $db =& Database::singleton();
-        if(PEAR::isError($db)) {
-            return PEAR::raiseError ("Could not connect to database: ".$db->getMessage());
-        }
         // setup the form
         $this->_setupForm();
 

@@ -1,4 +1,7 @@
 <?php
+
+require_once 'HTML/QuickForm.php';
+require_once 'HTML/QuickForm/Renderer/Array.php';
 require_once 'NDB_BVL_Instrument_m_chat.class.inc';
 
 class NDB_BVL_Instrument_m_chat_proband extends NDB_BVL_Instrument_m_chat

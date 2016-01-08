@@ -37,17 +37,11 @@ class NDB_Reliability_csbs_reliability extends NDB_Reliability
     function _getDefaults()
     {
         $DB =& Database::singleton();
-        if(PEAR::isError($DB)) {
-            return PEAR::raiseError("Could not connect to database: ".$DB->getMessage());
-        }
                
         if (!empty($this->identifier)) { 
             
             // get the csbs_reliability values 
             $DB->selectRow("SELECT * FROM csbs_reliability WHERE CommentID = '$this->identifier' AND reliability_center_id = '$this->reliability_center_id'", $defaults);
-            if (PEAR::isError($defaults)) {
-                return PEAR::raiseError("DB Error: ".$defaults->getMessage());
-            }
 
             // Make the CommentID a link to the comparison page
             $initial_table = preg_replace('/_reliability/', '', $this->name);
@@ -69,9 +63,6 @@ class NDB_Reliability_csbs_reliability extends NDB_Reliability
         
         //holds calculated
         $db =& Database::singleton();
-        if(PEAR::isError($db)) {
-            return PEAR::raiseError ("Could not connect to database: ".$db->getMessage());
-        }
 
         // null scores
         //$this->_nullScores();
@@ -82,19 +73,8 @@ class NDB_Reliability_csbs_reliability extends NDB_Reliability
         $query2 = "SELECT * FROM csbs_wetherby_lookup WHERE CommentID='standard1'";
  
         $db->selectRow($query, $score_record);
-        if (PEAR::isError($score_record)) {
-            return PEAR::raiseError("Could not get scores: ".$score_record->getMessage());
-        }
-      
         $db->selectRow($query1, $score_record1);
-        if (PEAR::isError($score_record1)) {
-            return PEAR::raiseError("Could not get scores: ".$score_record1->getMessage());
-        }
-
         $db->selectRow($query2, $score_record2);
-        if (PEAR::isError($score_record2)) {
-            return PEAR::raiseError("Could not get scores: ".$score_record2->getMessage());
-        }
      
         // Do the actual CSBS scoring (as is done for regular data entry)
         if ($score_record['Gold_standard']=='Initial_entry') {
@@ -116,15 +96,9 @@ class NDB_Reliability_csbs_reliability extends NDB_Reliability
         
 
         $score_percent = ($score / 22.0) * 100;
-		if($db->isError($result)) {
-			return PEAR::raiseError("Could not save total score: ". $result->getMessage());
-		}
     
         $result = $db->update("reliability", array('Reliability_score' => $score_percent), array("CommentID"=>$this->identifier, "Instrument" => 'csbs', "reliability_center_id" => $this->reliability_center_id));
         $result = $db->update("csbs_reliability", array('reliability_score' => $score_percent), array("CommentID"=>$this->identifier, "reliability_center_id" => $this->reliability_center_id));
-		if($db->isError($result)) {
-			return PEAR::raiseError("Could not save total score: ". $result->getMessage());
-		}
     } // end function score
 
     function compareScore($field, $original, $comparison) {
@@ -215,9 +189,6 @@ class NDB_Reliability_csbs_reliability extends NDB_Reliability
         }
 
         $scoreResult = $this->score();
-        if($this->isError($scoreResult)) {
-            return PEAR::raiseError($scoreResult->getMessage());
-        }
 
         $this->form->freeze();
         $this->tpl_data['success'] = true;
@@ -237,9 +208,6 @@ class NDB_Reliability_csbs_reliability extends NDB_Reliability
 
         // get the defaults
         $localDefaults = $this->_getDefaults();
-        if (PEAR::isError($localDefaults)) {
-            return PEAR::raiseError("NDB_Form::display(): ".$localDefaults->getMessage());
-        }
         if(!is_array($localDefaults)) { $localDefaults = array(); }
         // set the quickform object defaults
         $this->form->setDefaults(array_merge($this->defaults, $localDefaults));

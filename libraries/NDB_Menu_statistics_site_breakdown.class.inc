@@ -12,15 +12,8 @@ class NDB_Menu_statistics_site_breakdown extends NDB_Menu
     // names like "Tarchive_Missing" for "MRI Parameter Form Completed but Missing Tarchive Entry"
     function _getInstrumentName($instrument) {
         $DB =& Database::singleton();
-        if(PEAR::isError($DB)) {
-            return PEAR::raiseError("Could not connect to database: ".$DB->getMessage());
-        }
 
         $instrumentName = $DB->pselectOne("SELECT Full_name FROM test_names WHERE Test_name=:tname", array('tname'=>$instrument));
-        if(Utility::isErrorX($instrumentName)) {
-            return PEAR::raiseError("DB Error: ".$instrumentName->getMessage());
-        }
-
         return $instrumentName;
 
     }
@@ -42,9 +35,6 @@ class NDB_Menu_statistics_site_breakdown extends NDB_Menu
                 AND f.Administration='All'
                 $ExtraProject_Criteria
                 AND i.CommentID $op 'DDE%';");
-        if (PEAR::isError($result)) {
-            return PEAR::raiseError("DB Error: ".$result->getMessage());
-        }
         return $count;
 
     }
@@ -68,9 +58,6 @@ class NDB_Menu_statistics_site_breakdown extends NDB_Menu
                 AND i.CommentID $op 'DDE%'
                 $ExtraProject_Criteria  
                 ORDER BY s.Visit_label, c.PSCID", $result);
-        if (PEAR::isError($result)) {
-            return PEAR::raiseError("DB Error: ".$result->getMessage());
-        }
         return $result;
     }
 
@@ -82,9 +69,6 @@ class NDB_Menu_statistics_site_breakdown extends NDB_Menu
             header("Location: ?test_name=statistics#data_entry");
         }
         $DB =& Database::singleton();
-        if(PEAR::isError($DB)) {
-            return PEAR::raiseError("Could not connect to database: ".$DB->getMessage());
-        }
         $DB->selectRow("SELECT CenterID as ID, PSCArea as Name FROM psc WHERE CenterID=" . $_REQUEST['CenterID'], $center);
         $id = $center['ID'];
         $name = $center['Name'];

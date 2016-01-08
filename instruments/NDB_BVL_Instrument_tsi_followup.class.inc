@@ -1,7 +1,8 @@
 <?php
 
 require_once('RequiredIf.inc');
-
+require_once 'HTML/QuickForm.php';
+require_once 'HTML/QuickForm/Renderer/Array.php';
 
 class NDB_BVL_Instrument_tsi_followup extends NDB_BVL_Instrument
 {
@@ -499,15 +500,9 @@ class NDB_BVL_Instrument_tsi_followup extends NDB_BVL_Instrument
      
      function score() {
             $db =& Database::singleton();
-            if (Utility::isErrorX($db)) {
-                print "Could not connect to database: " . $db->getMessage();
-            }
 
             // Get the item scores
             $record= $db->pselectRow("SELECT * FROM $this->table WHERE CommentID=:cid", array('cid'=>$this->getCommentID()));
-            if (Utility::isErrorX($record)) {
-                print "Query has failed to select: ".$record->getMessage();
-            }
             $score = array();
 
             if($record['relative_mr'] == 'yes' || $record['relative_schizophrenia']== 'yes'
@@ -517,9 +512,6 @@ class NDB_BVL_Instrument_tsi_followup extends NDB_BVL_Instrument
                 $score['relative_with_disorder'] = 'no';
             }
             $result = $db->update($this->table, $score, array('CommentID'=>$this->getCommentID()));
-            if(Utility::isErrorX($result)) {
-                print "Could not save total score: ".$result->getMessage();
-            }
         }
 
 

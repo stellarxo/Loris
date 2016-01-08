@@ -15,14 +15,8 @@ class NDB_Form_new_profile extends NDB_Form
     {
         // create user object
         $user =& User::singleton();
-        if(PEAR::isError($user)) {
-            return PEAR::raiseError("User Error: ".$user->getMessage());
-        }
 
         $site =& Site::singleton($user->getData('CenterID'));
-        if (PEAR::isError($site)) {
-            return PEAR::raiseError("Unable to construct the list_of_sites array: ".$site->getMessage());
-        }
         if ($site->isStudySite()) {
             return $user->hasPermission('data_entry');
         }
@@ -50,9 +44,6 @@ class NDB_Form_new_profile extends NDB_Form
             $startNum = 1000;
         }
         $candID = Candidate::createNew($user->getData('CenterID'), $dob, $edc, $values['gender'], $values['PSCID'], $startNum);
-        if (PEAR::isError($candID)) {
-            return PEAR::raiseError("new_profile::_process(): ".$candID->getMessage());
-        }
 
         // get the candidate
         $candidate =& Candidate::singleton($candID);
@@ -61,15 +52,12 @@ class NDB_Form_new_profile extends NDB_Form
             $candidate->setData('ProjectID', $values['ProjectID']);
 
         }
-        if (PEAR::isError($candidate)) {
-            return PEAR::raiseError("Candidate Error ($candID): ".$candidate->getMessage());
-        }
 
         $db = Database::singleton(); 
 	if( $values['ProjectID'] == '2'){
 		$PTID = $db->pselectOne("SELECT ParameterTypeID FROM parameter_type WHERE Name='candidate_plan'", array());
 		if(!is_numeric($PTID)) {
-			return PEAR::raiseError("Missing ParameterTypeID for candidate_plan");
+			throw new LorisException("Missing ParameterTypeID for candidate_plan");
 		}
 		$db->insert("parameter_candidate", array('ParameterTypeID' => $PTID,
 					'CandID' => $candID,

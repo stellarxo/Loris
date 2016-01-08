@@ -1,4 +1,8 @@
 <?php
+
+require_once 'HTML/QuickForm.php';
+require_once 'HTML/QuickForm/Renderer/Array.php';
+
 class NDB_BVL_Instrument_vineland extends NDB_BVL_Instrument
 {
     /**
@@ -87,16 +91,10 @@ class NDB_BVL_Instrument_vineland extends NDB_BVL_Instrument
          $record=array();
 
          $db =& Database::singleton();
-         if(PEAR::isError($db)) {
-             return PEAR::raiseError ("Could not connect to database: ".$db->getMessage());
-         }
          
          $query = "SELECT * FROM ".$this->table." WHERE CommentID='".$this->getCommentID()."'";
          $db->selectRow($query, $record);
          
-         if (PEAR::isError($record)) {
-            $record = array();
-         }
 
          $this->_addMetadataFields();
          $this->form->addElement("advcheckbox", "dde_check", "Performed in-software double data entry:", null, null, array(false, true));
@@ -662,10 +660,6 @@ $db->_trackChanges = false;
 ////////////////////////////////////////////////////////////////
 
           $result = $db->update($this->testName, $values, array('CommentID'=>$args['CommentID']));
-          if($this->isError($result)) {
-              print $result->getMessage();
-              return $this->raiseError('Could not save to database');
-          }
           return true;
       }
 

@@ -9,18 +9,12 @@ class NDB_Menu_reliability_breakdown extends NDB_Menu
 {
     function _hasAccess() {
         $user =& User::singleton();
-        if (PEAR::isError($user)) {
-            return PEAR::raiseError("User Error: " .$user->getMessage());
-        }
         return $user->hasPermission('send_to_dcc');
     }
 
     function setup()
     {
         $DB =& Database::singleton();
-        if (PEAR::isError($DB)) {
-            return PEAR::raiseError("Could not connect to database: ".$DB->getMessage());
-        }
 
         $CommentID = $_REQUEST['CommentID'];
         $instrument_name = $_REQUEST['instrument'];

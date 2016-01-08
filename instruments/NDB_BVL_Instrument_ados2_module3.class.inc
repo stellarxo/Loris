@@ -1,4 +1,8 @@
 <?php
+
+require_once 'HTML/QuickForm.php';
+require_once 'HTML/QuickForm/Renderer/Array.php';
+
 class NDB_BVL_Instrument_ados2_module3 extends NDB_BVL_Instrument
 {
 /*
@@ -356,17 +360,10 @@ class NDB_BVL_Instrument_ados2_module3 extends NDB_BVL_Instrument
 
         //get the saved scores
     	$db =& Database::singleton();
-    	if (PEAR::isError($db)) {
-			return PEAR::raiseError ("Could not connect to database".$db->getMessage());
-    	}
   	
     	$query = "SELECT * FROM $this->table WHERE CommentID = '$this->commentID'";
     	$record = array();
     	$db->selectRow($query, $record);
-    	if (PEAR::isError($record)) {
-    		return PEAR::raiseError("Could not retrieve scores: " . $record->getMessage());
-    	}
- 
 
        // Get the subject age in months for scoring
         $timepoint =& TimePoint::singleton($this->getSessionID());
@@ -374,9 +371,6 @@ class NDB_BVL_Instrument_ados2_module3 extends NDB_BVL_Instrument
         
 		$age = Utility::calculateAge($dob, $record["Date_taken"]);
        		$age_years = $age['year'] + ($age['mon']/12);
-	    if($this->isError($age)) {
-  	         return $this->raiseError("Could not compute age");
-     	}
 
         // For severity score from ados_lookup table
         $age_months = 0;
@@ -388,7 +382,7 @@ class NDB_BVL_Instrument_ados2_module3 extends NDB_BVL_Instrument
         $db->selectRow("SELECT * FROM $this->table WHERE CommentID='".$this->getCommentID()."'", $Answers);
         if(!empty($dob) && !empty($Answers['Date_taken'])) {
             $age = Utility::calculateAge($dob, $Answers["Date_taken"]);
-            if(!$this->isError($age)) {
+            if(is_array($age)) {
                 $age_months = $age['year'] * 12 + $age['mon'];
             }
         }
@@ -435,9 +429,6 @@ class NDB_BVL_Instrument_ados2_module3 extends NDB_BVL_Instrument
                     'agemonths' => $age_months,
                     'rawscore' => $scoreCols['social_affect_restricted_repetitive_behavior_total']
             ));
-            if (PEAR::isError($record_lookup)) {
-                return PEAR::raiseError("Could not retrieve scores: " . $record_lookup->getMessage());
-            }
             if(empty($sevscore)) {
                 $scoreCols['severity_score_lookup']= "N/A";
             } else {
@@ -472,9 +463,6 @@ class NDB_BVL_Instrument_ados2_module3 extends NDB_BVL_Instrument
         // save scores to database
 
     	$result = $db->update($this->table, $scoreCols, array("CommentID"=>$this->getCommentID()));
-    	if($db->isError($result)) {
-    		return PEAR::raiseError("Could not save total score: ". $result->getMessage());
-    	}
     }    // end score function
 }
 ?>

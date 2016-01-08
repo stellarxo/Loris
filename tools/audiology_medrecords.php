@@ -64,10 +64,6 @@ foreach($record as $row){
     $WhereCriteria = array('CommentID'=> $med_commentid);
     if($addData != null & $WhereCriteria != null){
         $result = $db->update('med_records_24', $addData, $WhereCriteria);
-        if ($db->isError($result)) {
-            print "Could not update med records: ". $result->getMessage();
-            //                        exit(3);
-        }
     }
 
 }

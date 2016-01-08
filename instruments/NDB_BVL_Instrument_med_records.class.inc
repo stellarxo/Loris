@@ -1,5 +1,8 @@
 <?php
 
+require_once 'HTML/QuickForm.php';
+require_once 'HTML/QuickForm/Renderer/Array.php';
+
 class NDB_BVL_Instrument_med_records extends NDB_BVL_Instrument {
     var $ValidityEnabled = false;
     var $ValidityRequired = false;
@@ -444,9 +447,6 @@ function _possibleExclusionaryCriteria() {
         $array_of_conversion=array();
 
         $db =& Database::singleton();
-        if(PEAR::isError($db)) {
-            return PEAR::raiseError ("Could not connect to database: ".$db->getMessage());
-        }
 
 
        $query = "SELECT * FROM ".$this->table." WHERE CommentID='".$this->getCommentID()."'";
@@ -455,9 +455,6 @@ function _possibleExclusionaryCriteria() {
        $db->selectRow($query, $result);
 
         //if you cannot get the score
-       if (PEAR::isError($result)) {
-          return PEAR::raiseError("Could not get scores: ".$result->getMessage());
-       }
 
       // Get the subject age in months for scoring
        $administrations = array ("first" => "1", "second" => "2", "third" => "3", "fourth" => "4", "fifth" => "5", "sixth" => "6", "seventh" => "7", "eighth" => "8", "ninth" => "9", "tenth" => "10", "eleventh" => "11", "twelfth" =>"12", "thirteenth" => "13", "fourteenth" => "14", "fifteenth" => "15", "sixteenth" =>  "16", "seventeenth" => "17", "eighteenth" => "18", "nineteenth" =>"19", "twenty" => "20", "twentyone" => "21", "twentytwo" => "22", "twentythree" => "23", "twentyfour" => "24", "twentyfive" => "25", "twentysix" => "26", "twentyseven" => "27", "twentyeight" => "28", "twentynine" => "29", "thirty" => "30", "thirtyone" => "31", "thirtytwo" => "32", "thirtythree" => "33", "thirtyfour" => "34", "thirtyfive" => "35");
@@ -521,21 +518,11 @@ function _possibleExclusionaryCriteria() {
         $query = "SELECT s.CandID from session as s, flag as f where f.sessionId = s.ID and f.CommentID= '". $this->getCommentID() . "'";
                
        	$db->selectRow($query, $result_cand);
-         	 
-        //if you cannot get the score
-        if (PEAR::isError($result_cand)) {
-            return PEAR::raiseError("Could not get scores: ".$result_cand->getMessage());
-        } 
-         	 
         $CandID = $result_cand["CandID"];
          	
        	$candidate_query = "SELECT * from candidate where CandID=" . $CandID;
 
         $db->selectRow($candidate_query, $info_candidate);
-          
-        if (PEAR::isError($info_candidate)) {
-             return PEAR::raiseError("Could not get scores: ".$info_candidate->getMessage());
-        }
          
         //get the sex of the candidate  
         $gender = $info_candidate["Gender"];
@@ -561,9 +548,6 @@ function _possibleExclusionaryCriteria() {
          //Hard coded date of birth for testing purposes
          
          $age = Utility::calculateAge($date_of_birth, $Date_taken);
-         if($this->isError($age)) {
-             return $this->raiseError("Could not compute age");
-         }
 
           
           $age_in_days = $age['year'] * 365 + $age['mon'] * 30 + $age['day'] ;
@@ -821,9 +805,6 @@ function _possibleExclusionaryCriteria() {
 }
     //echo("Result");
     $result = $db->update($this->table, $newValues, array('CommentID' => $this->getCommentID()));
-    if($db->isError($result)) {
-        return PEAR::raiseError("Could not save total score: ".$result->getMessage());
-    }
 }
 }
 

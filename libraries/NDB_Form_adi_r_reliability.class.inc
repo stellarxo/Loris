@@ -14,14 +14,8 @@ class NDB_Form_adi_r_reliability extends NDB_Form
 //     {
 //         // create user object
 //         $user =& User::singleton();
-//         if (PEAR::isError($user)) {
-//             return PEAR::raiseError("User Error: ".$user->getMessage());
-//         }
 
 //         $DB =& Database::singleton();
-//         if (PEAR::isError($DB)) {
-//             return PEAR::raiseError("Could not connect to database: ".$DB->getMessage());
-//         }
        
 //         if(!empty($this->identifier)) {
 //             $query = "SELECT psc.CenterID FROM tracking_logs, candidate, psc WHERE tracking_logs.CandID=candidate.CandID AND candidate.CenterID=psc.CenterID AND tracking_logs.Tracking_log_ID='$this->identifier'";
@@ -39,23 +33,14 @@ class NDB_Form_adi_r_reliability extends NDB_Form
     function _getDefaults()
     {
         $DB =& Database::singleton();
-        if(PEAR::isError($DB)) {
-            return PEAR::raiseError("Could not connect to database: ".$DB->getMessage());
-        }
 
         $DB->select("SELECT * FROM adi_r_reliability", $result);
-        if (PEAR::isError($result)) {
-            return PEAR::raiseError("DB Error: ".$result->getMessage());
-        }
                
         //print_r($this->identifier);
         if (!empty($this->identifier)) { 
             
             // set the adi_r_reliability values 
             $DB->selectRow("SELECT * FROM adi_r_reliability WHERE CommentID = '$this->identifier'", $row);
-            if (PEAR::isError($row)) {
-                return PEAR::raiseError("DB Error: ".$row->getMessage());
-            }
      
             // Set the defaults
             // print_r($row['CommentID']);
@@ -271,9 +256,6 @@ class NDB_Form_adi_r_reliability extends NDB_Form
        
         //holds calculated
         $db =& Database::singleton();
-        if(PEAR::isError($db)) {
-            return PEAR::raiseError ("Could not connect to database: ".$db->getMessage());
-        }
 
         // null scores
         //$this->_nullScores();
@@ -286,24 +268,12 @@ class NDB_Form_adi_r_reliability extends NDB_Form
 
 
         $db->selectRow($query, $score_record);
-        if (PEAR::isError($score_record)) {
-            return PEAR::raiseError("Could not get scores: ".$score_record->getMessage() . " - Query: {$query}");
-        }
               
         $db->selectRow($query1, $score_record1);
-        if (PEAR::isError($score_record1)) {
-            return PEAR::raiseError("Could not get scores: ".$score_record1->getMessage() . " - Query: {$query1}");
-        }
         
         $db->selectRow($query2, $score_record2);
-        if (PEAR::isError($score_record2)) {
-            return PEAR::raiseError("Could not get scores: ".$score_record2->getMessage() . " - Query: {$query2}");
-        }
         
         $db->selectRow($query3, $score_record3);
-        if (PEAR::isError($score_record3)) {
-            return PEAR::raiseError("Could not get scores: ".$score_record3->getMessage() . " - Query: {$query3}");
-        }
         
      
         // If the reliability is to be compared to the gold standard
@@ -2110,15 +2080,9 @@ if($score_record['q_2_age_first_noticed_code']=='8' AND $score_record3['q_2_age_
       
         // Do the update here for the relibaility scores - saving the scores
 		$result = $db->update("adi_r_reliability", $reliability, array("CommentID"=>$this->identifier));
-		if($db->isError($result)) {
-			return PEAR::raiseError("Could not save total score: ". $result->getMessage());
-		}
     
 /*	 // Update the main relibaility table with the overall reliability score 
                 $result1 = $db->update("reliability", $reliability['reliability_score'], array("CommentID"=>$this->identifier));
-                if($db->isError($result1)) {
-                        return PEAR::raiseError("Could not save total score: ". $result1->getMessage());
-                }
 */
 
     } // end function score
@@ -2126,9 +2090,6 @@ if($score_record['q_2_age_first_noticed_code']=='8' AND $score_record3['q_2_age_
     function _nullScores()
     {
         $db=& Database::singleton();
-        if (PEAR::isError($db)) {
-            return PEAR::raiseError("Could not connect to database: ".$db->getMessage()."\n");
-        }
         
         // set the scores to NULL
         foreach ($this->scores as $val) {
@@ -2137,9 +2098,6 @@ if($score_record['q_2_age_first_noticed_code']=='8' AND $score_record3['q_2_age_
 
         // update the scores
         $success = $db->update("adi_r_reliability",$scores,array("CommentID"=>$this->identifier));
-        if (PEAR::isError($success)) {
-            return PEAR::raiseError("DB Error, fail null the scores:\n".$success->getMessage()."\n");
-        }
         return;
     }    
 
@@ -2609,9 +2567,6 @@ if($score_record['q_2_age_first_noticed_code']=='8' AND $score_record3['q_2_age_
 
 //         // My get defaults function sets $defaults array
 //         $localDefaults = $this->_getDefaults();
-//         if (PEAR::isError($localDefaults)) {
-//             return PEAR::raiseError("NDB_Form::display(): ".$localDefaults->getMessage());
-//         }
 //         if(!is_array($localDefaults)) { $localDefaults = array(); }
 
 
@@ -2684,17 +2639,9 @@ if($score_record['q_2_age_first_noticed_code']=='8' AND $score_record3['q_2_age_
  function _process($values)
     {
         $DB =& Database::singleton();
-        if(PEAR::isError($DB)) {
-            return PEAR::raiseError("Could not connect to database: ".$DB->getMessage());
-        }
        
         $scoreResult = $this->score();
         
-        if($this->isError($scoreResult)) {
-           echo($scoreResult->getMessage());
-           
-           return PEAR::raiseError($scoreResult->getMessage());
-        }
 
         $user =& User::singleton();
         // if(!$user->hasPermission('tracking_logs_edit_all')) {
@@ -2877,9 +2824,6 @@ if($score_record['q_2_age_first_noticed_code']=='8' AND $score_record3['q_2_age_
                                                              'q_93_computational_ability_current_code' => $values['q_93_computational_ability_current_code'],
                                                              'q_93_computational_ability_ever_code' => $values['q_93_computational_ability_ever_code']
                                                              ));
-            if (PEAR::isError($success)) {
-                return PEAR::raiseError("DB Error: ".$success->getMessage());
-            }
             $this->identifier = $DB->lastInsertID;
         } else {
             // update the event
@@ -3058,9 +3002,6 @@ if($score_record['q_2_age_first_noticed_code']=='8' AND $score_record3['q_2_age_
                                                               ),          
                                    array('CommentID'=>$this->identifier)
                                    ); 
-            if (PEAR::isError($success)) {
-                return PEAR::raiseError("DB Error: ".$success->getMessage());
-            }
         }
         
         $this->form->freeze();
@@ -3093,9 +3034,6 @@ if($score_record['q_2_age_first_noticed_code']=='8' AND $score_record3['q_2_age_
      
      // get the defaults
      $localDefaults = $this->_getDefaults();
-     if (PEAR::isError($localDefaults)) {
-         return PEAR::raiseError("NDB_Form::display(): ".$localDefaults->getMessage());
-     }
      if(!is_array($localDefaults)) { $localDefaults = array(); }
      // set the quickform object defaults
      $this->form->setDefaults(array_merge($this->defaults, $localDefaults));
@@ -3152,9 +3090,6 @@ if($score_record['q_2_age_first_noticed_code']=='8' AND $score_record3['q_2_age_
        $centerID = $db->selectOne("SELECT session.CenterID FROM session, flag WHERE session.ID=flag.SessionID and flag.CommentID='".$this->identifier."'");
 
        $db->select("SELECT examinerID, full_name FROM examiners WHERE centerID='$centerID' ORDER BY full_name", $results);
-       if($db->isError($results)) {
-           return $this->raiseError("Could not get examiner names: ".$results->getMessage());
-       }
        
        $examiners = array(''=>'');
        if(is_array($results) && !empty($results)) {

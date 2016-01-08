@@ -21,14 +21,8 @@ class NDB_Form_video_upload extends NDB_Form
     {
         // create user object
         $user =& User::singleton();
-        if(PEAR::isError($user)) {
-            return PEAR::raiseError("User Error: ".$user->getMessage());
-        }
 
         $site =& Site::singleton($user->getData('CenterID'));
-        if (PEAR::isError($site)) {
-            return PEAR::raiseError("Unable to construct the list_of_sites array: ".$site->getMessage());
-        }
         if ($user->hasPermission('earli_videos')) {
             return true;
         }
@@ -69,20 +63,11 @@ class NDB_Form_video_upload extends NDB_Form
     {
         // create user object
         $user =& User::singleton();
-        if(PEAR::isError($user)) {
-            return PEAR::raiseError("User Error: ".$user->getMessage());
-        }
         
         $site =& Site::singleton($user->getData('CenterID'));
-        if (PEAR::isError($site)) {
-            return PEAR::raiseError("Unable to construct the list_of_sites array: ".$site->getMessage());
-        }
       
         $config =& NDB_Config::singleton();
         $db =& Database::singleton();
-         if(PEAR::isError($db)) {
-             return PEAR::raiseError ("Could not connect to database: ".$db->getMessage());
-         }
          
         $db->select("SELECT test_name FROM test_names ORDER BY test_name", $instruments);
          
@@ -203,10 +188,6 @@ class NDB_Form_video_upload extends NDB_Form
           if(!empty($this->identifier)){
             $db=& Database::singleton();
             $result = $db->update('videos', $values, array('record_id'=>$this->identifier));
-            if($this->isError($result)) {
-                print $result->getMessage();
-                return $this->raiseError('Could not save to database');
-            }
             return true;
           }else{
             require_once "File_Upload.class.inc";
@@ -226,9 +207,6 @@ class NDB_Form_video_upload extends NDB_Form
             //$file->setFilenamePrefix($timepoint->getVisitLabel()."-".$this->testName."-");
 
             $user =& User::singleton();
-            if(PEAR::isError($user)) {
-                return PEAR::raiseError("User Error: ".$user->getMessage());
-            }
 
             //set the the IDs to the handler functions.
             $file->setHandlerArgs(array("user_id" => $user->getUsername(), "values"=>$values));
@@ -261,9 +239,6 @@ class NDB_Form_video_upload extends NDB_Form
             $db=& Database::singleton();
 
             $db->selectRow("SELECT * FROM videos WHERE record_id = '{$this->identifier}'", $row);
-            if (PEAR::isError($row)) {
-              return PEAR::raiseError("DB Error: ".$row->getMessage());
-            }
 
               // get the user defaults
   	        $defaults = $row;
@@ -321,9 +296,6 @@ class NDB_Form_video_upload extends NDB_Form
         }
 
         $db->selectRow($Stmt, $row);
-          if (PEAR::isError($row)) {
-              return PEAR::raiseError("DB Error: ".$row->getMessage());
-          }
 
           if (empty($row)) {
             
@@ -349,10 +321,6 @@ class NDB_Form_video_upload extends NDB_Form
         }
 
         //$result = $db->update('videos', $values, array('PSCID'=>$args['values']['PSCID'], 'Instrument'=>$args['values']['Instrument'], 'visitLabel' => $args['values']['visitLabel']));
-        if($this->isError($result)) {
-            print $result->getMessage();
-            return $this->raiseError('Could not save to database');
-        }
         return true;
       }
 }

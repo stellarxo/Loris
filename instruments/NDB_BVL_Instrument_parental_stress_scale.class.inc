@@ -1,4 +1,8 @@
 <?php
+
+require_once 'HTML/QuickForm.php';
+require_once 'HTML/QuickForm/Renderer/Array.php';
+
 class NDB_BVL_Instrument_parental_stress_scale extends NDB_BVL_Instrument
 {
     /**

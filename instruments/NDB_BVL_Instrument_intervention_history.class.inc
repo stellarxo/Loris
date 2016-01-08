@@ -1,5 +1,8 @@
 <?php
 		    
+require_once 'HTML/QuickForm.php';
+require_once 'HTML/QuickForm/Renderer/Array.php';
+
 class NDB_BVL_Instrument_intervention_history extends NDB_BVL_Instrument
 {
 /**
@@ -249,16 +252,10 @@ INSERT INTO test_battery VALUES ('', 'intervention_history', '1053', '1179', 'Y'
 
 
         $db =& Database::singleton();
-        if(PEAR::isError($db)) {
-            return PEAR::raiseError ("Could not connect to database: ".$db->getMessage());
-        }
 
         $query = "SELECT * FROM ".$this->table." WHERE CommentID='".$this->getCommentID()."'";
 	$values = array();
         $db->selectRow($query, $values);
-        if (PEAR::isError($values)) {
-            return PEAR::raiseError("Could not get values: ".$values->getMessage());
-        }
 
 
 	for ($i=1; $i < 11; $i++)
@@ -284,9 +281,6 @@ INSERT INTO test_battery VALUES ('', 'intervention_history', '1053', '1179', 'Y'
 
 	        $result = $db->update($this->table, $scores, array("CommentID"=>$this->getCommentID()));
 
-        	if($db->isError($result)) {
-	                return PEAR::raiseError("Could not save intensity: ". $result->getMessage());
-		}
 	}
 
 	}

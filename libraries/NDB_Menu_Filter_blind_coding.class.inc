@@ -16,17 +16,11 @@ class NDB_Menu_Filter_blind_coding extends NDB_Menu_Filter
 
     function _hasAccess() {
         $user =& User::singleton();
-        if(PEAR::isError($user)) {
-            return PEAR::raiseError("User Error: ".$user->getMessage());
-        }
         return $user->hasPermission('blind_add_candidates');
     }
     function _setupVariables()
     {
         $user =& User::singleton();
-        if(PEAR::isError($user)) {
-            return PEAR::raiseError("User Error: ".$user->getMessage());
-        }
 
         // create the centerID map
         $db =& Database::singleton();
@@ -75,25 +69,16 @@ class NDB_Menu_Filter_blind_coding extends NDB_Menu_Filter
     {
     	// create user object
         $user =& User::singleton();
-        if(PEAR::isError($user)) {
-            return PEAR::raiseError("User Error: ".$user->getMessage());
-        }
 
            // allow to view all sites data through filter
         if ($user->hasPermission('access_all_profiles') || $user->hasPermission('blind_edit_all')) {
             // get the list of study sites - to be replaced by the Site object
             $list_of_sites = Utility::getSiteList(false);
-            if(PEAR::isError($list_of_sites)) {
-                return PEAR::raiseError("DB Error: ".$list_of_sites->getMessage());
-            }
             if(is_array($list_of_sites)) $list_of_sites = array('' => 'Any') + $list_of_sites;
         }
         else {
             // allow only to view own site data
             $site =& Site::singleton($user->getData('CenterID'));
-            if (PEAR::isError($site)) {
-                return PEAR::raiseError("DB Error: ".$site->getMessage());
-            }
             if ($site->isStudySite()) {
                 $list_of_sites = array($user->getData('CenterID') => $user->getData('Site'));
             }
@@ -251,9 +236,6 @@ class NDB_Menu_Filter_blind_coding extends NDB_Menu_Filter
     
     function _swap_candidates() {
         $user =& User::singleton();
-        if(PEAR::isError($user)) {
-            return PEAR::raiseError("User Error: ".$user->getMessage());
-        }
         if (!($user->hasPermission('blind_swap_candidates'))) {
             return array("error" => "You do not have permission to swap candidates");
         }
@@ -311,9 +293,6 @@ class NDB_Menu_Filter_blind_coding extends NDB_Menu_Filter
     function _addCandidate() {
         $user =& User::singleton();
         $DB =& Database::singleton();
-        if(PEAR::isError($user)) {
-            return PEAR::raiseError("User Error: ".$user->getMessage());
-        }
         if (!($user->hasPermission('blind_add_candidates'))) {
             return array("error" => "You do not have permission to add blind coding candidates");
         }

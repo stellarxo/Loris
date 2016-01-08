@@ -1,4 +1,8 @@
 <?php
+
+require_once 'HTML/QuickForm.php';
+require_once 'HTML/QuickForm/Renderer/Array.php';
+
 class NDB_BVL_Instrument_LENA_DailyActivityLog extends NDB_BVL_Instrument
 {
     var  $rate_day = array(""=>null,"typical"=>"A. typical/ordinary talk time",
@@ -55,9 +59,6 @@ class NDB_BVL_Instrument_LENA_DailyActivityLog extends NDB_BVL_Instrument
         );
         
         $db =& Database::singleton();
-        if(PEAR::isError($db)) {
-            return PEAR::raiseError ("Could not connect to database: ".$db->getMessage());
-        }
         // setup the form
         $this->_setupForm();
 
@@ -82,7 +83,6 @@ class NDB_BVL_Instrument_LENA_DailyActivityLog extends NDB_BVL_Instrument
     function getDataEntryCompletionStatus()
     {
         $db =& Database::singleton();
-        if(Utility::isErrorX($db)) return PEAR::raiseError("Could not connect to database: ".$db->getMessage()."<br>\n");
         $query_lena ="SELECT day1_more_recordings,day2_more_recordings,day3_more_recordings FROM $this->table WHERE CommentID=:cid";
         $where = array('cid'=>$this->getCommentID());
         $result_recordings = $db->pselectRow($query_lena, $where);
@@ -98,7 +98,6 @@ class NDB_BVL_Instrument_LENA_DailyActivityLog extends NDB_BVL_Instrument
             $field = "day".$num_max."_child_sick";
             $query = "SELECT $field FROM $this->table WHERE CommentID=:cid";
             $val   = $db->pselectOne($query,$where);
-            if(Utility::isErrorX($val)) return PEAR::raiseError("Could not select required elements from database: ".$val->getMessage()."<br>\n");
             if(is_null($val) || $val === "" || empty($val)){ 
                 return 'Incomplete';
             } else {
