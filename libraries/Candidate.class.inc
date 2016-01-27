@@ -604,5 +604,33 @@ class Candidate
         return $subprojList;
     }
 
+
+    static function candidateExists($candID, $PSCID)
+    {   
+        // make a local reference to the Database object
+        $factory = NDB_Factory::singleton();
+        $db      = $factory->database();
+
+        $candidateIDs = array(
+                         ':candidate_id' => $candID,
+                         ':pscid'        => $PSCID,
+                        );  
+
+        // get candidate data from database
+        $query = "SELECT CandID
+            FROM candidate
+            WHERE CandID = :candidate_id AND PSCID = :pscid
+            AND Active = 'Y'";
+
+        $row = $db->pselectRow($query, $candidateIDs);
+
+        if (!empty($row)) {
+            return true;
+        }   
+
+        return false;
+
+    }   
+
 }
 ?>
