@@ -385,7 +385,7 @@ class Candidate
     function getNextVisitLabel()
     {
         $config =& NDB_Config::singleton();
-        $visitLabelSettings = $config->getSetting('visitLabels');
+        $visitLabelSettings = $config->getSetting('visitLabel');
         
         $candID=$this->getCandID();
         // make a local reference to the Database object
