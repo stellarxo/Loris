@@ -10,6 +10,7 @@ class NDAR_Release_MRI {
         'dicom_0x0008:el_0x0081',
         'dicom_0x0008:el_0x1010',
         'dicom_0x0008:el_0x1030',
+        'dicom_0x0008:el_0x1070',
         'dicom_0x0018:el_0x1000',
         'dicom_0x0010:el_0x0010',
         'dicom_0x0010:el_0x0020',
@@ -18,6 +19,7 @@ class NDAR_Release_MRI {
         'dicom_0x0008:el_0x0090',
         'dicom_0x0008:el_0x1048',
         'dicom_0x0010:el_0x1010',
+        'dicom_0x0010:el_0x1030',
         'dicom_0x0020:el_0x000d',
         'dicom_0x0032:el_0x1032',
         'dicom_0x0032:el_0x1060',
@@ -27,9 +29,11 @@ class NDAR_Release_MRI {
         'patient:birthdate',
         'patient:sex',
         'patient:full_name',
+        'patient:weight',
+        'patient:age',
+        'study:operator',
         'study:institution',
         'study:referring_physician',
-        'patient:age',
         'study:serial_no',
         'study:station_id',
         'study:procedure'
@@ -167,7 +171,6 @@ class NDAR_Release_MRI {
         /*
         $files = $db->pselect("SELECT c.CandID, c.PSCID, c.IBISID, c.CandidateGUID, c.ProbandGUID, c.DoB, s.CenterID, s.Visit_label, s.Current_stage, f.File, fqc.QCStatus, c.Gender from files f left join files_qcstatus fqc USING (FileID) LEFT JOIN session s ON (s.ID=f.SessionID) LEFT JOIN candidate c on (c.CandID=s.CandID) LEFT JOIN parameter_file AS pf ON (f.FileID=pf.FileID) LEFT JOIN parameter_type AS pt ON (pt.ParameterTypeID=pf.ParameterTypeID) LEFT JOIN participant_status ps ON (c.CandID=ps.CandID) WHERE pt.Name='time' AND pf.Value=26 AND lower(s.Visit_label)='v06' AND s.Active='Y' AND c.Active='Y' AND File like '%dti%' AND COALESCE(c.CandidateGUID, '') <> '' AND s.Current_stage <> 'Recycling Bin' AND s.SubprojectID IN (1, 2, 3) AND ( ps.study_consent = 'yes' AND (COALESCE(ps.study_consent_withdrawal,'0000-00-00') = '0000-00-00' )) AND (ps.ndar_consent = 'yes' AND (COALESCE(ps.ndar_consent_withdrawal,'0000-00-00') = '0000-00-00')) ORDER BY PSCID", array());
         // IBIS2 - v03 - 25 direction DTI, 65 direction, and fMRI
-       */ 
         $files = $db->pselect("select c.CandID, c.PSCID, c.IBISID, c.CandidateGUID, c.ProbandGUID, c.DoB, s.CenterID, s.Visit_label, s.Current_stage, f.File, fqc.QCStatus, c.Gender FROM files f left join files_qcstatus fqc USING (FileID) LEFT JOIN session s ON (s.ID=f.SessionID) LEFT JOIN candidate c on (c.CandID=s.CandID) LEFT JOIN parameter_file AS pf ON (f.FileID=pf.FileID) LEFT JOIN parameter_type AS pt ON (pt.ParameterTypeID=pf.ParameterTypeID) LEFT JOIN participant_status ps ON (c.CandID=ps.CandID) WHERE pt.Name='time' AND LOWER(s.Visit_label)='v03' AND s.Active='Y' AND c.Active='Y' AND 
             (
                 (lower(File) like '%dti%' AND pf.Value IN (26, 66)) OR
@@ -177,8 +180,31 @@ class NDAR_Release_MRI {
             AND ( ps.study_consent = 'yes' AND (COALESCE(ps.study_consent_withdrawal,'0000-00-00') = '0000-00-00' )) AND (ps.ndar_consent = 'yes' AND (COALESCE(ps.ndar_consent_withdrawal,'0000-00-00') = '0000-00-00'))
             ORDER BY PSCID", array());
         
+        // IBIS2 - v03 - 25 direction DTI, 65 direction 2016
+        $files = $db->pselect("select c.CandID, c.PSCID, c.IBISID, c.CandidateGUID, c.ProbandGUID, c.DoB, s.CenterID, s.Visit_label, s.Current_stage, f.File, fqc.QCStatus, c.Gender FROM files f left join files_qcstatus fqc USING (FileID) LEFT JOIN session s ON (s.ID=f.SessionID) LEFT JOIN candidate c on (c.CandID=s.CandID) LEFT JOIN parameter_file AS pf ON (f.FileID=pf.FileID) LEFT JOIN parameter_type AS pt ON (pt.ParameterTypeID=pf.ParameterTypeID) LEFT JOIN participant_status ps ON (c.CandID=ps.CandID) WHERE pt.Name='time' AND LOWER(s.Visit_label)='v03' AND s.Active='Y' AND c.Active='Y'
+            AND (lower(File) like '%dti%' AND pf.Value IN (26, 66))
+            AND COALESCE(c.CandidateGUID, '') <> '' AND s.Current_stage <> 'Recycling Bin' AND s.SubprojectID IN (9, 10)
+            AND ( ps.study_consent = 'yes' AND (COALESCE(ps.study_consent_withdrawal,'0000-00-00') = '0000-00-00' )) AND (ps.ndar_consent = 'yes' AND (COALESCE(ps.ndar_consent_withdrawal,'0000-00-00') = '0000-00-00'))
+            ORDER BY PSCID", array());
+        */
+        // Casey's request
+        $files = $db->pselect("select pt.Name, c.CandID, c.PSCID, c.IBISID, c.CandidateGUID, c.ProbandGUID, c.DoB, s.CenterID, s.Visit_label, s.Current_stage, f.File, fqc.QCStatus, c.Gender 
+            FROM files f 
+            LEFT JOIN files_qcstatus fqc USING (FileID) 
+            LEFT JOIN session s ON (s.ID=f.SessionID) 
+            LEFT JOIN candidate c on (c.CandID=s.CandID) 
+            LEFT JOIN parameter_file AS pf ON (f.FileID=pf.FileID) 
+            LEFT JOIN parameter_type AS pt ON (pt.ParameterTypeID=pf.ParameterTypeID) 
+            LEFT JOIN participant_status ps ON (c.CandID=ps.CandID) 
+            WHERE pf.ParameterTypeID='1' 
+            AND ((f.acquisitionprotocolid = 44 and pf.value = 't1w') or (f.acquisitionprotocolid = 45 and pf.value = 't2w'))
+            AND s.SubprojectID IN (1, 2, 3, 9, 10)
+            AND ( ps.study_consent = 'yes' AND (COALESCE(ps.study_consent_withdrawal,'0000-00-00') = '0000-00-00' )) 
+            AND c.candID in (216477, 274101, 755073, 842426, 924951)          
+            ORDER BY PSCID", array());
+        
         foreach($files as $row) {
-            print "Replacing file: $row[File]\n";
+            print "Replacing file: ". $row['File'] ."\n";
             $file_anonymized = $this->replaceID($row['File'], $row['CandID'], $row['IBISID']);
             $split_file = explode("/", $file_anonymized);
             $only_anon_file = $split_file[count($split_file)-1];print $row['File']."\n";
@@ -187,7 +213,7 @@ class NDAR_Release_MRI {
             $this->addToCSV($only_anon_file, $row);
         }
 
-        $fp = fopen("/home/rathi/tmp/NDARMRI.csv", 'w');
+        $fp = fopen("~/NDARMRI.csv", 'w');
         fputcsv($fp, array('image03'));
         fputcsv($fp, array_keys($this->CSVData[0]));
         foreach ($this->CSVData as $row) {
