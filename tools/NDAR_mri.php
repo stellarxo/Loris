@@ -208,12 +208,20 @@ class NDAR_Release_MRI {
             $file_anonymized = $this->replaceID($row['File'], $row['CandID'], $row['IBISID']);
             $split_file = explode("/", $file_anonymized);
             $only_anon_file = $split_file[count($split_file)-1];print $row['File']."\n";
-            $this->anonFile('/data/ibis/data/'.$row['File'], "/home/rathi/tmp/$only_anon_file");
+            // NDAR
+            // $anonFilePath = "/data/ibis/data/";
+            // Casey´s
+            $anonFilePath = "/data/not_backed_up/";
+            $row['File'] = str_replace("assembly", "Defaced_data_20160122_anon", $row['File']);
+            $row['File'] = str_replace("native/ibis", "deface/deface", $row['File']);
+            $row['File'] = preg_replace("/_00\d/", "$1", $row['File']);
+                
+            $this->anonFile($anonFilePath . $row['File'], "~/tmp/$only_anon_file");
             // cut off the directory portion of the filename for the CSV..
             $this->addToCSV($only_anon_file, $row);
         }
 
-        $fp = fopen("~/NDARMRI.csv", 'w');
+        $fp = fopen("~/tmp/NDARMRI.csv", 'w');
         fputcsv($fp, array('image03'));
         fputcsv($fp, array_keys($this->CSVData[0]));
         foreach ($this->CSVData as $row) {
