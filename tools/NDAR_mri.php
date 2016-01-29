@@ -213,13 +213,14 @@ class NDAR_Release_MRI {
             // $anonFilePath = "/data/ibis/data/";
             // Casey´s
             $anonFilePath = "/data/not_backed_up/";
+            $FileBackupName['File'] = $row['File'];
             $row['File'] = str_replace("assembly", "Defaced_data_20160122_anon", $row['File']);
             $row['File'] = str_replace("mri/native/ibis", "deface/deface", $row['File']);
             $row['File'] = preg_replace("/_00\d/", "$1", $row['File']);
                 
             $this->anonFile($anonFilePath . $row['File'], "~/tmp/$only_anon_file");
             // cut off the directory portion of the filename for the CSV..
-            $this->addToCSV($only_anon_file, $row);
+            $this->addToCSV($only_anon_file, $FileBackupName);
         }
 
         $fp = fopen("~/tmp/NDARMRI.csv", 'w');
