@@ -17,9 +17,6 @@ class QC_Checks {
         $factory = NDB_Factory::singleton();
         $DB = $factory->Database();
         $list_of_sites = Utility::getSiteList(false);
-        if(Utility::isErrorX($list_of_sites)) {
-            return PEAR::raiseError("DB Error: ".$list_of_sites->getMessage());
-        }
         print " \nQC REPORT FOR SITE ".$list_of_sites[$this->site]. "\n\n";       
 
         $tests = $DB->pselect("SELECT Test_name FROM test_names WHERE Test_name NOT LIKE '%_proband' AND Test_name NOT LIKE 'EARLI%' AND Test_name NOT LIKE 'figs%'", array()) ;

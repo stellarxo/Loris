@@ -4,19 +4,11 @@ require_once "../tools/generic_includes.php";
 
 $CommentID = $argv[1];
 $db =& Database::singleton();
-if(PEAR::isError($db)) {
-        print "Could not connect to database: " . $db->getMessage();
-    exit(1);
-}
 $query = "SELECT * from ECBQ WHERE CommentID = :CommentID";
 
 $WhereCriteria = array('CommentID'=>$CommentID);
 $record = array();
 $record = $db->pselectRow($query, $WhereCriteria);
-if(PEAR::isError($record)){
-        print "Query has failed to select: ".$record->getMessage();
-    exit(2);
-}
 //do the math...
 $reverseItems = array(41,70,102,110,49,90,92,126,196,197,167,169,61,158,15,16,17,80,81,159,177,87,45,124,23,25,82,141,26,27,28,113,142,143,132,166,89,3,79,150,47,48,186,116);
 //restrict to numerical scores
@@ -99,10 +91,6 @@ foreach($subScales as $field=>$array) {
 
 //save scores
 $result = $db->update('ECBQ', $scores, $WhereCriteria);
-if($db->isError($result)) {
-    print "Could not save total score: ". $result->getMessage();
-    exit(3);
-}
 
 
 exit(0);

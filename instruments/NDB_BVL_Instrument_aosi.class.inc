@@ -1,5 +1,8 @@
 <?php
-		    
+
+require_once 'HTML/QuickForm.php';
+require_once 'HTML/QuickForm/Renderer/Array.php';
+
 function TrialName($press, $trial) {
 	return "q3_orients_to_name_press_" . $press . 
 	"_trial_" . $trial;
@@ -364,9 +367,6 @@ INSERT INTO instrument_subtests VALUES('', 'aosi', 'aosi_page2', 'General Observ
         
         //holds calculated
         $db =& Database::singleton();
-        if(PEAR::isError($db)) {
-            return PEAR::raiseError ("Could not connect to database: ".$db->getMessage());
-        }
 
         // null scores
         $this->_nullScores();
@@ -374,9 +374,6 @@ INSERT INTO instrument_subtests VALUES('', 'aosi', 'aosi_page2', 'General Observ
         //Get raw questions point values
         $query = "SELECT * FROM ".$this->table." WHERE CommentID='".$this->getCommentID()."'";
         $db->selectRow($query, $score_record);
-        if (PEAR::isError($score_record)) {
-            return PEAR::raiseError("Could not get scores: ".$score_record->getMessage());
-        }
         
         //Calculate first 6 item scores from their input grids
         
@@ -578,9 +575,6 @@ INSERT INTO instrument_subtests VALUES('', 'aosi', 'aosi_page2', 'General Observ
         // update if any scores
         if (is_array($this->scores) && count($this->scores)>0) {
             $result = $db->update($this->table, $this->scores, array('CommentID'=>$this->getCommentID()));
-            if($db->isError($result)) {
-                return PEAR::raiseError("Could not save total score: ".$result->getMessage());
-            }
         }
         
     }
@@ -595,9 +589,6 @@ INSERT INTO instrument_subtests VALUES('', 'aosi', 'aosi_page2', 'General Observ
     function _nullScores()
     {
         $db=& Database::singleton();
-        if (PEAR::isError($db)) {
-            return PEAR::raiseError("Could not connect to database: ".$db->getMessage()."\n");
-        }
         
         // set the scores to NULL
         foreach ($this->scores as $key => $val) {
@@ -606,9 +597,6 @@ INSERT INTO instrument_subtests VALUES('', 'aosi', 'aosi_page2', 'General Observ
 
         // update the scores
         $success = $db->update($this->table,$scores,array('CommentID'=>$this->getCommentID()));
-        if (PEAR::isError($success)) {
-            return PEAR::raiseError("DB Error, fail null the scores:\n".$success->getMessage()."\n");
-        }
         return;
     }    
 

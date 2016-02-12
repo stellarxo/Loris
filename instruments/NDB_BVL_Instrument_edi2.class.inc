@@ -1,6 +1,10 @@
 <?php
+
+require_once 'HTML/QuickForm.php';
+require_once 'HTML/QuickForm/Renderer/Array.php';
 require_once "Utility.class.inc";
 require_once "Candidate.class.inc";
+
 class NDB_BVL_Instrument_edi2 extends NDB_BVL_Instrument
 {
 	
@@ -226,15 +230,9 @@ INSERT INTO help(hash, topic) VALUES (md5('edi2'),'EDI_IBIS2');
 
         // Find the Date_taken
         $db =& Database::singleton();
-        if(PEAR::isError($db)) {
-            return PEAR::raiseError ("Could not connect to database: ".$db->getMessage());
-        }
         
         $query = "SELECT Date_taken from " . $this->testName . " WHERE CommentID = '".$this->getCommentID()."'";
         $result = $db->selectOne($query);
-        if(PEAR::isError($result)){
-            return PEAR::raiseError("Query has failed to select Date_taken.".$result->getMessage());
-        }
         $this->Date_taken=$result;
 
         //Scoring column headers
@@ -325,9 +323,6 @@ INSERT INTO help(hash, topic) VALUES (md5('edi2'),'EDI_IBIS2');
         
         //get DoB
         $db =& Database::singleton();
-        if(PEAR::isError($db)) {
-            return PEAR::raiseError ("Could not connect to database: ".$db->getMessage());
-        }
 
         // Get the subject DoB for scoring
         $timepoint =& TimePoint::singleton($this->getSessionID());
@@ -337,9 +332,6 @@ INSERT INTO help(hash, topic) VALUES (md5('edi2'),'EDI_IBIS2');
         $projID = $candidate->getProjectID();
         $plan = $candidate->getCandidatePlan(); 
         $age = Utility::calculateAge($dob, $this->Date_taken);
-        if($this->isError($age)) {
-            return $this->raiseError("Could not compute age");
-        }
 
         //determine subProjectID
         $subProjectID = $timepoint->getSubprojectID();
@@ -348,10 +340,8 @@ INSERT INTO help(hash, topic) VALUES (md5('edi2'),'EDI_IBIS2');
         if(empty($this->_requiredElements)) return 'Complete';
 
         $db =& Database::singleton();
-        if(PEAR::isError($db)) return PEAR::raiseError("Could not connect to database: ".$db->getMessage()."<br>\n");
         $query = "SELECT ".join(',', $this->_requiredElements)." FROM $this->table WHERE CommentID='".$this->getCommentID()."'";
         $success = $db->selectRow($query, $dataFields);
-        if(PEAR::isError($success)) return PEAR::raiseError("Could not select required elements from database: ".$success->getMessage()."<br>\n");
 
         //compare
         return parent::_determineDataEntryCompletionStatus();
@@ -589,9 +579,6 @@ INSERT INTO help(hash, topic) VALUES (md5('edi2'),'EDI_IBIS2');
         $score_record=array();
         
         $db =& Database::singleton();
-        if(PEAR::isError($db)) {
-            return PEAR::raiseError ("Could not connect to database: ".$db->getMessage());
-        }
 
         // null scores
         $this->_nullScores($this->regulatoryAnchors);
@@ -601,9 +588,6 @@ INSERT INTO help(hash, topic) VALUES (md5('edi2'),'EDI_IBIS2');
 
         $query = "SELECT * FROM ".$this->table." WHERE CommentID='".$this->getCommentID()."'";
         $db->selectRow($query, $score_record);
-        if (PEAR::isError($score_record)) {
-            return PEAR::raiseError("Could not get scores: ".$score_record->getMessage());
-        }
         
         //convert answers to numbers only
         foreach($score_record as $field=>$score) {
@@ -684,9 +668,6 @@ INSERT INTO help(hash, topic) VALUES (md5('edi2'),'EDI_IBIS2');
         // update if any scores
         if (is_array($this->scores) && count($this->scores)>0) {
             $result = $db->update($this->table, $this->scores, array('CommentID'=>$this->getCommentID()));
-            if($db->isError($result)) {
-                return PEAR::raiseError("Could not save total score: ".$result->getMessage());
-            }
         }
 
     }

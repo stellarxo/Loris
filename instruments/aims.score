@@ -18,19 +18,11 @@ require_once "NDB_BVL_Instrument.class.inc";
 require_once "TimePoint.class.inc";
 $CommentID = $argv[1];
 $db        =& Database::singleton();
-if (Utility::isErrorX($db)) {
-    print "Could not connect to database: " . $db->getMessage();
-    exit(1);
-}
 
 $query         = "SELECT * from aims WHERE CommentID = :CommentID";
 $WhereCriteria = array('CommentID'=>$CommentID);
 $record        = array();
 $record        = $db->pselectRow($query, $WhereCriteria);
-if (Utility::isErrorX($record)) {
-    print "Query has failed to select: ".$record->getMessage();
-    exit(2);
-}
 $instrument =& NDB_BVL_Instrument::factory('aims', $record['CommentID'], null, false);
 if($instrument->getSessionID() != NULL) { //quickform_parser doesn't use any specific session
      $timepoint =& TimePoint::singleton($instrument->getSessionID());
@@ -267,10 +259,6 @@ if ($scores['total_score'] > 0) {
                              AND Age = :val_age";
     $WhereCriteria_p      = array('val_score'=>$scores['total_score'],'val_age'=>$Age);
     $percentile           =  $db->pselectOne($query_score, $WhereCriteria_p);
-    if (Utility::isErrorX($percentile)) {
-        print "Query has failed to select: ".$percentile->getMessage();
-        exit(2);
-    } 
     if(is_array($percentile)) {
         $scores['percentile'] = 'N/A';
     } else {
@@ -288,10 +276,6 @@ if ($scores['total_score'] > 0) {
     }
     //save scores
     $result = $db->update('aims', $scores, $WhereCriteria);
-    if ($db->isError($result)) {
-        print "Could not save total score: ". $result->getMessage();
-        exit(3);
-    }
 
 }
 exit(0);

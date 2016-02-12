@@ -11,9 +11,6 @@ $client->makeCommandLine();
 $client->initialize('../config.xml');
 
 $DB =& Database::singleton();
-if(Utility::isErrorX($DB)) {
-    return PEAR::raiseError("Could not connect to database: ".$DB->getMessage());
-}
 
 $file = "QCResults.csv";
 $fp = fopen($file, "r");
@@ -60,37 +57,22 @@ $InsertTypes = array(
 );
 function GetPredefinedCommentID($name) {
    $DB = Database::singleton();
-    if(Utility::isErrorX($DB)) {
-        return PEAR::raiseError("Could not connect to database: ".$DB->getMessage());
-    }
 
     $commentID = $DB->pselectOne("SELECT PredefinedCommentID FROM feedback_mri_predefined_comments
                                  WHERE Comment=:Name", array('Name'=>$name));
-   if(Utility::isErrorX($commentID)) {
-        return PEAR::raiseError("Cannot find CommentTypeID: ".$commentID->getMessage());
-    }
     return $commentID;
 
 }
 function GetCommentIDType($name) {
     $DB = Database::singleton();
-    if(Utility::isErrorX($DB)) {
-        return PEAR::raiseError("Could not connect to database: ".$DB->getMessage());
-    }
 
     $commentID = $DB->pselectOne("SELECT CommentTypeID FROM feedback_mri_comment_types
                             WHERE CommentName=:Name", array('Name'=>$name));
-    if(Utility::isErrorX($commentID)) {
-        return PEAR::raiseError("Cannot find CommentTypeID: ".$commentID->getMessage());
-    }
     return $commentID;
 
 }
 function GetParameterTypeID($name) {
     $DB = Database::singleton();
-    if(Utility::isErrorX($DB)) {
-        return PEAR::raiseError("Could not connect to database: ".$DB->getMessage());
-    }
 
    $parameterTypeID = $DB->pselectOne("SELECT ParameterTypeID FROM parameter_type
                                        WHERE Name=:param",
@@ -100,9 +82,6 @@ function GetParameterTypeID($name) {
 }
 function InsertDropdown($typeID, $value, $fileID) {
     $DB = Database::singleton();
-    if(Utility::isErrorX($DB)) {
-        return PEAR::raiseError("Could not connect to database: ".$DB->getMessage());
-    }
     $name='';
     if(!empty($typeID) ) {
     $name = $DB->pselectOne("SELECT Name from parameter_type Where ParameterTypeID=:pid",
@@ -138,13 +117,6 @@ function InsertDropdown($typeID, $value, $fileID) {
                                        'ParameterTypeID'=>$typeID,'FileID'=>$fileID)
                         );
             }
-
-            if (Utility::isErrorX($success)) {
-                return PEAR::raiseError(
-                        "Could not update file qc status: ".$success->getMessage()
-                        );
-            }
-
         }
 
         return;
@@ -153,9 +125,6 @@ function InsertDropdown($typeID, $value, $fileID) {
 }
 function InsertCheckbox($typeID, $value, $comments) {
    $DB = Database::singleton();
-    if(Utility::isErrorX($DB)) {
-        return PEAR::raiseError("Could not connect to database: ".$DB->getMessage());
-    }
     if($value === 'No'
         || $value === ''
         || $value === 'NULL'
@@ -181,9 +150,6 @@ function InsertComment($type, $value, $comments) {
 }
 function InsertQCStatus($fileID, $value) {
     $DB = Database::singleton();
-    if(Utility::isErrorX($DB)) {
-        return PEAR::raiseError("Could not connect to database: ".$DB->getMessage());
-    }
     if(!empty($fileID)) {
        $FileCount = $DB->pselectOne(
                    "SELECT COUNT(*) FROM files_qcstatus WHERE FileID = :fid",
@@ -201,20 +167,10 @@ function InsertQCStatus($fileID, $value) {
                                                               'FileID'=>$fileID)
                                       );
            }
-
-           if (Utility::isErrorX($success)) {
-               return PEAR::raiseError(
-                       "Could not update file qc status: ".$success->getMessage()
-                       );
-           }
-
     }
 }
 function InsertQCInfo($fileID, $typeID, $value) {
     $DB = Database::singleton();
-    if (Utility::isErrorX($DB)) {
-        return PEAR::raiseError("Could not connect to database: ".$DB->getMessage());
-    }
    if (strtoupper($value) === 'TRUE' && !empty($fileID)) {
         $FileCount = $DB->pselectOne("SELECT COUNT(*) FROM parameter_file WHERE FileID = :fid AND ParameterTypeID = :pid",
             array("fid"=>$fileID, 'pid' => $typeID)
@@ -232,19 +188,10 @@ function InsertQCInfo($fileID, $typeID, $value) {
                                                       'ParameterTypeID'=>$typeID));
 
            }
-           if (Utility::isErrorX($success)) {
-               return PEAR::raiseError(
-                       "Could not update file qc status: ".$success->getMessage()
-                       );
-           }
-
           }
 }
 function UpdateCaveat($fileID, $value) {
     $DB = Database::singleton();
-    if(Utility::isErrorX($DB)) {
-        return PEAR::raiseError("Could not connect to database: ".$DB->getMessage());
-    }
     if (!empty($fileID)) {
        if ($value === 'TRUE') {
            $DB->update('files', array('Caveat'=>1), array('FileID'=>$fileID));

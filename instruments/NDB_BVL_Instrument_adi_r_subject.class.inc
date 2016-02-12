@@ -50,9 +50,6 @@ DoB subject should be somewhere in the candidate table.  For now, we'll just mak
     function score() {
         
         $db =& Database::singleton();
-        if(PEAR::isError($db)) {
-            return PEAR::raiseError ("Could not connect to database: ".$db->getMessage());
-        }
 
         //skip scoring if all data has not yet been entered.
         if($this->_determineDataEntryCompletionStatus() == "Incomplete") {
@@ -68,9 +65,6 @@ DoB subject should be somewhere in the candidate table.  For now, we'll just mak
     
     function _getAge() {
         $db =& Database::singleton();
-        if(PEAR::isError($db)) {
-            return PEAR::raiseError ("Could not connect to database: ".$db->getMessage());
-        }
 
         // Get the subject DoB for scoring
         if($this->getSessionID() != NULL) { //quickform_parser doesn't use any specific session

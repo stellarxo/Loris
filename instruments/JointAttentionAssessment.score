@@ -30,19 +30,11 @@ function standard_deviation($aValues, $bSample = false)
 }
 $CommentID = $argv[1];
 $db        =& Database::singleton();
-if (Utility::isErrorX($db)) {
-                print "Could not connect to database: " . $db->getMessage();
-                                        exit(1);
-}
 
 $query = "SELECT * from JointAttentionAssessment WHERE CommentID = :CommentID";
 
 $WhereCriteria = array('CommentID'=>$CommentID);
 $result        = $db->pselectRow($query, $WhereCriteria);
-if (Utility::isErrorX($result)) {
-                print "Query has failed to select: ".$result->getMessage();
-                                        exit(2);
-}
 $valid_scores = array ('4points','3points','2points','1point','05points','no_response');
 $num_validresponse = 0;
 $total_rawscore = 0;
@@ -97,10 +89,6 @@ $scores['coefficient_variation'] = round($coefficient_variation,3);
 $scores['standard_deviation'] = round($std_deviation, 3);
 //save scores
 $result = $db->update('JointAttentionAssessment', $scores, $WhereCriteria);
-if ($db->isError($result)) {
-        print "Could not save total score: ". $result->getMessage();
-            exit(3);
-}
 
 
 exit(0);

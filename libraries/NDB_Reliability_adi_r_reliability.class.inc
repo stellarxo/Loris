@@ -14,14 +14,8 @@ class NDB_Reliability_adi_r_reliability extends NDB_Reliability
 //     {
 //         // create user object
 //         $user =& User::singleton();
-//         if (PEAR::isError($user)) {
-//             return PEAR::raiseError("User Error: ".$user->getMessage());
-//         }
 
 //         $DB =& Database::singleton();
-//         if (PEAR::isError($DB)) {
-//             return PEAR::raiseError("Could not connect to database: ".$DB->getMessage());
-//         }
        
 //         if(!empty($this->identifier)) {
 //             $query = "SELECT psc.CenterID FROM tracking_logs, candidate, psc WHERE tracking_logs.CandID=candidate.CandID AND candidate.CenterID=psc.CenterID AND tracking_logs.Tracking_log_ID='$this->identifier'";
@@ -37,28 +31,19 @@ class NDB_Reliability_adi_r_reliability extends NDB_Reliability
 //     }
 
     function _getAgeInMonths() {
-        return PEAR::raiseError("Could not calculate age because don't know if subject or proband");
+        throw new LorisException("Could not calculate age because don't know if subject or proband");
     }
     function _getDefaults()
     {
           
         $DB =& Database::singleton();
-        if(PEAR::isError($DB)) {
-            return PEAR::raiseError("Could not connect to database: ".$DB->getMessage());
-        }
 
         $DB->select("SELECT * FROM {$this->name}", $result);
-        if (PEAR::isError($result)) {
-            return PEAR::raiseError("DB Error: ".$result->getMessage());
-        }
                
         //print_r($this->identifier);
         if (!empty($this->identifier)) { 
             // set the adi_r_reliability values 
             $DB->selectRow("SELECT * FROM {$this->name} WHERE CommentID = '$this->identifier' AND reliability_center_id='$this->reliability_center_id'", $row);
-            if (PEAR::isError($row)) {
-                return PEAR::raiseError("DB Error: ".$row->getMessage());
-            }
      
             // Set the defaults
             // print_r($row['CommentID']);
@@ -279,9 +264,6 @@ class NDB_Reliability_adi_r_reliability extends NDB_Reliability
        
         //holds calculated
         $db =& Database::singleton();
-        if(PEAR::isError($db)) {
-            return PEAR::raiseError ("Could not connect to database: ".$db->getMessage());
-        }
 
         // null scores
         //$this->_nullScores();
@@ -300,24 +282,12 @@ class NDB_Reliability_adi_r_reliability extends NDB_Reliability
 
 
         $db->selectRow($query, $score_record);
-        if (PEAR::isError($score_record)) {
-            return PEAR::raiseError("Could not get scores: ".$score_record->getMessage() . " - Query: {$query}");
-        }
               
         $db->selectRow($query1, $score_record1);
-        if (PEAR::isError($score_record1)) {
-            return PEAR::raiseError("Could not get scores: ".$score_record1->getMessage() . " - Query: {$query1}");
-        }
         
         $db->selectRow($query2, $score_record2);
-        if (PEAR::isError($score_record2)) {
-            return PEAR::raiseError("Could not get scores: ".$score_record2->getMessage() . " - Query: {$query2}");
-        }
         
         $db->selectRow($query3, $score_record3);
-        if (PEAR::isError($score_record3)) {
-            return PEAR::raiseError("Could not get scores: ".$score_record3->getMessage() . " - Query: {$query3}");
-        }
         
         
      
@@ -491,20 +461,11 @@ class NDB_Reliability_adi_r_reliability extends NDB_Reliability
       
         // Do the update here for the relibaility scores - saving the scores
 		$result = $db->update("{$this->name}", $reliability, array("CommentID"=>$this->identifier, 'reliability_center_id' => $this->reliability_center_id));
-		if($db->isError($result)) {
-			return PEAR::raiseError("Could not save total score: ". $result->getMessage());
-		}
 		
 		$result = $db->update("reliability", array("Reliability_score" => min($reliability['Reliability_score_all_items'], $reliability['Reliability_score_scored_items'])), array("CommentID"=>$this->identifier, "Instrument" => preg_replace("/_reliability$/", "", $this->name), 'reliability_center_id' => $this->reliability_center_id));
-		if($db->isError($result)) {
-			return PEAR::raiseError("Could not save total score: ". $result->getMessage());
-		}
     
 /*	 // Update the main relibaility table with the overall reliability score 
                 $result1 = $db->update("reliability", $reliability['reliability_score'], array("CommentID"=>$this->identifier));
-                if($db->isError($result1)) {
-                        return PEAR::raiseError("Could not save total score: ". $result1->getMessage());
-                }
 */
 
     } // end function score
@@ -512,9 +473,6 @@ class NDB_Reliability_adi_r_reliability extends NDB_Reliability
     function _nullScores()
     {
         $db=& Database::singleton();
-        if (PEAR::isError($db)) {
-            return PEAR::raiseError("Could not connect to database: ".$db->getMessage()."\n");
-        }
         
         // set the scores to NULL
         foreach ($this->scores as $val) {
@@ -523,9 +481,6 @@ class NDB_Reliability_adi_r_reliability extends NDB_Reliability
 
         // update the scores
         $success = $db->update("{$this->name}",$scores,array("CommentID"=>$this->identifier, 'reliability_center_id' => $this->reliability_center_id));
-        if (PEAR::isError($success)) {
-            return PEAR::raiseError("DB Error, fail null the scores:\n".$success->getMessage()."\n");
-        }
         return;
     }    
 
@@ -1002,9 +957,6 @@ class NDB_Reliability_adi_r_reliability extends NDB_Reliability
 
 //         // My get defaults function sets $defaults array
 //         $localDefaults = $this->_getDefaults();
-//         if (PEAR::isError($localDefaults)) {
-//             return PEAR::raiseError("NDB_Form::display(): ".$localDefaults->getMessage());
-//         }
 //         if(!is_array($localDefaults)) { $localDefaults = array(); }
 
 
@@ -1038,13 +990,6 @@ class NDB_Reliability_adi_r_reliability extends NDB_Reliability
     {
        
         $DB =& Database::singleton();
-        if(PEAR::isError($DB)) {
-            return PEAR::raiseError("Could not connect to database: ".$DB->getMessage());
-        }
-       
-        
-        
-        
 
         $user =& User::singleton();
         // if(!$user->hasPermission('tracking_logs_edit_all')) {
@@ -1052,9 +997,6 @@ class NDB_Reliability_adi_r_reliability extends NDB_Reliability
         // }
            
         $DB->selectRow("SELECT * FROM {$this->name} WHERE CommentID = '$this->identifier' AND reliability_center_id = $this->reliability_center_id", $row);
-          if (PEAR::isError($row)) {
-              return PEAR::raiseError("DB Error: ".$row->getMessage());
-          }
           
           $invalid = $values['invalid'];
           $DB->update("reliability", array('invalid' => $invalid), array("CommentID"=>$this->identifier, "Instrument" => preg_replace("/_reliability$/", "", $this->name), "reliability_center_id" => $this->reliability_center_id));
@@ -1243,9 +1185,6 @@ class NDB_Reliability_adi_r_reliability extends NDB_Reliability
                                                              'q_93_computational_ability_current_code' => $values['q_93_computational_ability_current_code'],
                                                              'q_93_computational_ability_ever_code' => $values['q_93_computational_ability_ever_code']
                                                              ));
-            if (PEAR::isError($success)) {
-                return PEAR::raiseError("DB Error: ".$success->getMessage());
-            }
         } else {
             // update the event
             $success = $DB->update($this->name, array(
@@ -1423,18 +1362,9 @@ class NDB_Reliability_adi_r_reliability extends NDB_Reliability
                                                               ),          
                                    array('CommentID'=>$this->identifier, 'reliability_center_id' => $this->reliability_center_id)
                                    ); 
-            if (PEAR::isError($success)) {
-                return PEAR::raiseError("DB Error: ".$success->getMessage());
-            }
         }
         
         $scoreResult = $this->score();
-        
-        if($this->isError($scoreResult)) {
-             
-
-             return PEAR::raiseError($scoreResult->getMessage());
-          }
         
         $this->form->freeze();
         $this->tpl_data['success'] = true;
@@ -1467,9 +1397,6 @@ class NDB_Reliability_adi_r_reliability extends NDB_Reliability
      
      // get the defaults
      $localDefaults = $this->_getDefaults();
-     if (PEAR::isError($localDefaults)) {
-         return PEAR::raiseError("NDB_Form::display(): ".$localDefaults->getMessage());
-     }
      if(!is_array($localDefaults)) { $localDefaults = array(); }
      // set the quickform object defaults
      $this->form->setDefaults(array_merge($this->defaults, $localDefaults));

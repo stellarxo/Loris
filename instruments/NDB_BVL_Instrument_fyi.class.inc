@@ -1,5 +1,9 @@
 <?php
+
+require_once 'HTML/QuickForm.php';
+require_once 'HTML/QuickForm/Renderer/Array.php';
 require_once "ProjectUtility.class.inc";
+
 class NDB_BVL_Instrument_fyi extends NDB_BVL_Instrument
 {
 /*
@@ -343,18 +347,12 @@ INSERT INTO instrument_subtests VALUES('', 'fyi', 'fyi_page2', '#47-#63', 2);
          $score_record=array();
 
          $db =& Database::singleton();
-         if(PEAR::isError($db)) {
-             return PEAR::raiseError ("Could not connect to database: ".$db->getMessage());
-         }
 
          $this->_nullScores($this->scoreCols);
    		
    		$query = "SELECT * FROM ".$this->table." WHERE CommentID='".$this->getCommentID()."'";
          $db->selectRow($query, $score_record);
          
-         if (PEAR::isError($score_record)) {
-            return PEAR::raiseError("Could not get scores: ".$score_record->getMessage());
-         }
          
          //print_r($score_record);
          
@@ -1364,9 +1362,6 @@ INSERT INTO instrument_subtests VALUES('', 'fyi', 'fyi_page2', '#47-#63', 2);
          
          // save the resultant total
          $result = $db->update($this->table, $calculatedScores, array('CommentID'=>$this->getCommentID()));
-          if($db->isError($result)) {
-             return PEAR::raiseError("Could not save total score: ".$result->getMessage());
-          }
           ProjectUtility::SetSupplementalGrantStatus($this->getSessionID());
          #echo("D118: " . $D118);
          #echo("\nBDM: " . $BDM_total);

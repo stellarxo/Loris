@@ -10,14 +10,8 @@ class NDB_Menu_reliability_diagnostic_calls extends NDB_Menu
     function setup()
     {   
        $DB =& Database::singleton();
-         if (PEAR::isError($DB)) {
-             return PEAR::raiseError("Could not connect to database: ".$DB->getMessage());
-         }
        
         $DB->select("SELECT * FROM reliability_diagnostic_calls", $result);
-            if (PEAR::isError($result)) {
-                return PEAR::raiseError("DB Error: ".$result->getMessage());
-            }            
             foreach($result as $row){          
                $data[] = array('date_of_review' => $row['date_of_review'], 'caseID_1' => $row['caseID_1'], 'caseID_2' => $row['caseID_2'], 'caseID_3' => $row['caseID_3']);
             }
