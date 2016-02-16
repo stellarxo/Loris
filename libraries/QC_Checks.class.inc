@@ -401,7 +401,13 @@ class QC_Checks {
 
         print "\n\n CHECK multiple selected T1 files \n";
         print "--------------------------------------\n";
-        $data = $DB->pselect("SELECT CandID, Visit_label, count(f.FileID), Value FROM files f JOIN parameter_file pf ON (pf.FileID=f.FileID) JOIN session s ON (s.ID=f.SessionID) WHERE pf.ParameterTypeID=1 AND pf.Value='t1w' AND File not like '%lego%' AND File not like '%phantom%' AND CenterID=$this->site GROUP BY SessionID HAVING count(f.FileID)>1 ORDER BY count(f.FileID)");
+        $data = $DB->pselect("SELECT CandID, Visit_label, count(f.FileID), Value "
+            . "FROM files f JOIN parameter_file pf ON (pf.FileID=f.FileID) "
+            . "JOIN session s ON (s.ID=f.SessionID) WHERE pf.ParameterTypeID=1 "
+            . "AND pf.Value='t1w' AND File not like '%lego%' "
+            . "AND File not like '%phantom%' AND CenterID=:CID "
+            . "GROUP BY SessionID HAVING count(f.FileID)>1 "
+            . "ORDER BY count(f.FileID)", array("CID" => $this->site));
         $header = array('CandID', 'Visit_label', 'Num_Files', 'Value');
         if(sizeof($data) > 0 ){
             foreach($header as $row) {

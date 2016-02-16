@@ -535,6 +535,10 @@ class NDB_BVL_Instrument_vineland extends NDB_BVL_Instrument
             $visit = "v12";
          }else if($visit == "24m"){
             $visit = "v24";
+         }else if($visit == "36m"){
+             $visit = "v36";
+         }else if($visit == "v37plus"){
+              $visit = "v37";
          }
          
          $correct_id = $args['candID'] .'-'. substr($args['PSCID'], -4, 4) .'-'. substr($visit, -2, 2);
