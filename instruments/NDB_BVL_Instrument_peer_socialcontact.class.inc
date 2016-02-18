@@ -229,7 +229,7 @@ class NDB_BVL_Instrument_peer_socialcontact extends NDB_BVL_Instrument
 	    } else if($numplaymates == 0) {
             $group[] = &$this->form->createElement("static", null, null,"");
 
-            $this->form->addGroup($group,"page2_header","<td colspan= $colspan>In the previous page you have indicated $numplaymates playmate(s). <BR>Click here go to the next section:<a href=\"survey.php?key=$key&pageNum=7\"><font color=\"#0000FF\"> <u>Section 2 </u></font></a> </td>", null,false);
+            $this->form->addGroup($group,"page2_header","<td colspan= $colspan>In the previous page you have indicated $numplaymates playmate(s). <BR> IF so, please click here go to the next section:<a href=\"survey.php?key=$key&pageNum=7\"><font color=\"#0000FF\"> <u>Section 2 </u></font></a> </td>", null,false);
             unset($group);
 
         }
@@ -252,7 +252,7 @@ class NDB_BVL_Instrument_peer_socialcontact extends NDB_BVL_Instrument
         }
 
         //$this->form->addGroup($group, "table_headers","<td colspan= 2></td>" , $this->_GUIDelimiter, false);
-        if($this->localDefaults['total_peer'] >= 1 ) {
+        if($this->localDefaults['total_peer'] > 1 ) {
             $this->form->addGroup($group, "table_headers",null , $this->_GUIDelimiter, false);
             unset($group);
         }
@@ -275,15 +275,21 @@ class NDB_BVL_Instrument_peer_socialcontact extends NDB_BVL_Instrument
             unset($group);
         }
 
-        // the following if statement was created to submit a hidden value of null to know_1_2 since
-        // it is hardcoded that each iteration must update the code somehow
-        //find a better fix !!!
+        /* the following "if" statement was created to submit a hidden value of null to know_1_2 since
+        * it is hardcoded that each iteration must update the code somehow
+        *find a better fix !!!
+        */
+
 
         if ($this->localDefaults['total_peer'] == 1 || $this->localDefaults['total_peer'] == 0){
             $field = "know_1_2";
             $group[] =& $this->form->createElement("hidden", $field, null);
+            $group[] = &$this->form->createElement("static", null, null,"");
+            $group[] = &$this->form->createElement("static", null, null,"");
+            $this->form->addGroup($group, $groupname, " ", $this->_GUIDelimiter, false);
+            unset($group);
         }
-        $this->form->addGroup($group, $groupname, "Child ".$i, $this->_GUIDelimiter, false);
+
 
         if($this->localDefaults['total_peer'] > 0) {
             $group[] = &$this->form->createElement("static", null, null,"");
