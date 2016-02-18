@@ -212,7 +212,7 @@ class NDB_BVL_Instrument_peer_socialcontact extends NDB_BVL_Instrument
         if(is_numeric($numplaymates)) {
             $colspan = $numplaymates -1;
         } else {
-            $numplaymates = 0;
+            $numplaymates = 5;
         }
 
 	    if($numplaymates > 1) {
