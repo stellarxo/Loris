@@ -189,7 +189,8 @@ if (empty($argv[1])) {
                 JOIN vineland_proband v ON (v.CommentID=f.CommentID) 
                 JOIN participant_status ps ON (ps.CandID=c.CandID)
                 LEFT JOIN conflicts_unresolved cu ON (cu.CommentId2=f.CommentID)
-                WHERE ps.study_consent='yes' AND s.CenterID!=1 
+                WHERE ps.study_consent='yes' AND s.CenterID!=1 AND c.Active='Y' 
+                AND (COALESCE(ps.study_consent_withdrawal,'0000-00-00')='0000-00-00')
                 AND f.Data_entry='Complete' 
                 AND f.CommentID NOT LIKE 'DDE_%' AND cu.CommentID2 is null 
                 AND s.Current_stage<>'Recycling Bin' AND v.Date_taken is not null 
@@ -222,7 +223,8 @@ if (empty($argv[1])) {
                 JOIN adi_r_proband a ON (a.CommentID=f.CommentID) 
                 JOIN participant_status ps ON (ps.CandID=c.CandID)
                 LEFT JOIN conflicts_unresolved cu ON (cu.CommentId2=f.CommentID)
-                WHERE ps.study_consent='yes' AND s.CenterID!=1 
+                WHERE ps.study_consent='yes' AND s.CenterID!=1 AND c.Active='Y' 
+                AND (COALESCE(ps.study_consent_withdrawal,'0000-00-00')='0000-00-00')
                 AND f.Data_entry='Complete' 
                 AND f.CommentID NOT LIKE 'DDE_%' AND cu.CommentID2 is null 
                 AND s.Current_stage<>'Recycling Bin' AND a.Date_taken is not null 
@@ -356,7 +358,8 @@ if (empty($argv[1])) {
                 FROM flag f JOIN session s ON (f.SessionID=s.ID) 
                 JOIN candidate c ON (s.CandID=c.CandID)
                 JOIN participant_status ps ON (ps.CandID=c.CandID)
-                WHERE ps.study_consent='yes' AND s.CenterID!=1 
+                WHERE ps.study_consent='yes' AND s.CenterID!=1 AND c.Active='Y' 
+                AND (COALESCE(ps.study_consent_withdrawal,'0000-00-00')='0000-00-00')
                 AND (s.SubprojectID=1 OR s.SubprojectID=2 OR s.SubprojectID=3);",
            "Family Info"                 => "SELECT
                 null AS family_id,
@@ -377,14 +380,14 @@ if (empty($argv[1])) {
                 FROM flag f JOIN session s ON (f.SessionID=s.ID) 
                 JOIN candidate c ON (s.CandID=c.CandID) 
                 JOIN participant_status ps ON (ps.CandID=c.CandID)
-                WHERE ps.study_consent='yes' AND s.CenterID!=1 
+                WHERE ps.study_consent='yes' AND s.CenterID!=1 AND c.Active='Y' 
+                AND (COALESCE(ps.study_consent_withdrawal,'0000-00-00')='0000-00-00')
                 AND (s.SubprojectID=1 OR s.SubprojectID=2 OR s.SubprojectID=3);",
-           "Demographics"                => "SELECT
-                DISTINCT c.IBISId AS id_number, 
+           "Demographics"                => "SELECT DISTINCT c.IBISId AS id_number, 
                 t.Date_taken AS date_of_testing,
                 ROUND(t.Candidate_Age) AS age_at_testing,
-                null AS baby_dob,
-                null AS baby_gender,
+                c.DoB AS baby_dob,
+                c.Gender AS baby_gender,
                 t.candidate_race AS baby_race,
                 t.child_ethnicity AS baby_ethnicity,
                 null AS baby_birth_order,
@@ -406,9 +409,9 @@ if (empty($argv[1])) {
                 null AS adults,
                 null AS children,
                 null AS number_asd,
-                null AS child_1_dob,
-                null AS child_1_gender,
-                null AS child_1_diagnosis,
+                c.ProbandDoB AS child_1_dob,
+                c.ProbandGender AS child_1_gender,
+                p.2012alg_clinical_diag AS child_1_diagnosis,
                 null AS child_2_dob,
                 null AS child_2_gender,
                 null AS child_2_diagnosis,
@@ -431,13 +434,26 @@ if (empty($argv[1])) {
                 t.father_occupation AS spouse_occupation,
                 null AS spouse_child_care,
                 t.primary_language AS home_languages,
-                null AS frequency_english
-                FROM flag f JOIN session s ON (f.SessionID=s.ID) 
-                JOIN tsi t ON (t.CommentID=f.CommentID) 
-                JOIN candidate c ON (s.CandID=c.CandID)
+                null AS frequency_english,
+                CASE s.SubprojectID WHEN 1 THEN 'high-risk' WHEN 2 THEN 'high-risk' 
+                WHEN 3 THEN 'low-risk' END AS cohort
+                FROM candidate c 
+                JOIN session s ON (s.CandID=c.CandID) 
+                LEFT JOIN flag ft ON (ft.SessionID=s.ID and ft.Test_name='tsi')
+                JOIN tsi t ON (t.CommentID=ft.CommentID 
+                and t.CommentID not like 'DDE_%')
+                LEFT JOIN flag fp ON (fp.SessionID=s.ID 
+                and fp.Test_name='adi_r_proband')
+                JOIN adi_r_proband p ON (p.CommentID=fp.CommentID 
+                and p.CommentID not like 'DDE_%')
                 JOIN participant_status ps ON (ps.CandID=c.CandID)
-                WHERE ps.study_consent='yes' AND s.CenterID!=1 
-                AND (s.SubprojectID=1 OR s.SubprojectID=2 OR s.SubprojectID=3);",
+                WHERE ps.study_consent='yes' AND s.CenterID!=1 AND c.Active='Y' 
+                AND (COALESCE(ps.study_consent_withdrawal,'0000-00-00')='0000-00-00')
+                AND (s.SubprojectID=1 OR s.SubprojectID=2 OR s.SubprojectID=3)
+                AND (((ft.administration <> 'None' AND ft.administration is not null)
+                OR t.data_entry_completion_status='Complete') 
+                OR ((fp.administration <> 'None' AND fp.administration is not null) 
+                OR p.data_entry_completion_status='Complete'));",
            "Clinical Best Estimate"      => "SELECT
                 DISTINCT c.IBISId AS id_number, 
                 null AS date_of_testing,
@@ -448,9 +464,10 @@ if (empty($argv[1])) {
                 FROM flag f JOIN session s ON (f.SessionID=s.ID) 
                 JOIN candidate c ON (s.CandID=c.CandID) 
                 JOIN participant_status ps ON (ps.CandID=c.CandID)
-                WHERE ps.study_consent='yes' AND s.CenterID!=1 
+                WHERE ps.study_consent='yes' AND s.CenterID!=1 AND c.Active='Y' 
+                AND (COALESCE(ps.study_consent_withdrawal,'0000-00-00')='0000-00-00')
                 AND (s.SubprojectID=1 OR s.SubprojectID=2 OR s.SubprojectID=3);",
-           "ADOS"                        => "SELECT
+           "ADOS"                        => "SELECT 
                 c.IBISId as id_number, 
                 a.Date_taken AS date_of_testing,
                 ROUND(a.Candidate_Age) AS age_at_testing,
@@ -462,14 +479,47 @@ if (empty($argv[1])) {
                 null AS communication_social_total,
                 null AS play_imagination_creativity,
                 null AS stereotyped_behaviors,
+                a1,
+                a2,
+                a3,
+                a4,
+                a5,
+                a6,
+                a7,
+                a8,
+                ADOS_classification,
+                b1,
+                b10,
+                b11,
+                b12,
+                b2,
+                b3,
+                b4,
+                b5,
+                b6,
+                b7,
+                b8,
+                b9,
+                c1,
+                c2,
+                d1,
+                d2,
+                d3,
+                d4,
+                e1,
+                e2,
+                e3,
+                restricted_repetitive_behavior_total,
+                social_affect_restricted_repetitive_behavior_total,
                 social_affect_total,
-                restricted_repetitive_behavior_total
+                Validity
                 FROM flag f JOIN session s ON (f.SessionID=s.ID)
                 JOIN candidate c ON (s.CandID=c.CandID)
                 JOIN ados_module1 a ON (a.CommentID=f.CommentID)
                 JOIN participant_status ps ON (ps.CandID=c.CandID)
                 LEFT JOIN conflicts_unresolved cu ON (cu.CommentId2=f.CommentID)
-                WHERE ps.study_consent='yes' AND s.CenterID!=1 
+                WHERE ps.study_consent='yes' AND s.CenterID!=1 AND c.Active='Y' 
+                AND (COALESCE(ps.study_consent_withdrawal,'0000-00-00')='0000-00-00')
                 AND f.Data_entry='Complete'
                 AND f.CommentID NOT LIKE 'DDE_%' AND cu.CommentID2 is null
                 AND (s.SubprojectID=1 OR s.SubprojectID=2 OR s.SubprojectID=3)
@@ -486,14 +536,47 @@ if (empty($argv[1])) {
                 null AS communication_social_total,
                 null AS play_imagination_creativity,
                 null AS stereotyped_behaviors,
+                a1,
+                a2,
+                a3,
+                a4,
+                a5,
+                a6,
+                a7,
+                a8,
+                ADOS_classification,
+                b1,
+                b10,
+                b11,
+                null AS b12,
+                b2,
+                b3,
+                b4,
+                b5,
+                b6,
+                b7,
+                b8,
+                b9,
+                c1,
+                c2,
+                d1,
+                d2,
+                d3,
+                d4,
+                e1,
+                e2,
+                e3,
+                restricted_repetitive_behavior_total,
+                social_affect_restricted_repetitive_behavior_total,
                 social_affect_total,
-                restricted_repetitive_behavior_total
+                Validity
                 FROM flag f JOIN session s ON (f.SessionID=s.ID)
                 JOIN candidate c ON (s.CandID=c.CandID)
                 JOIN ados_module2 a ON (a.CommentID=f.CommentID)
                 JOIN participant_status ps ON (ps.CandID=c.CandID)
                 LEFT JOIN conflicts_unresolved cu ON (cu.CommentId2=f.CommentID)
-                WHERE ps.study_consent='yes' AND s.CenterID!=1 
+                WHERE ps.study_consent='yes' AND s.CenterID!=1 AND c.Active='Y' 
+                AND (COALESCE(ps.study_consent_withdrawal,'0000-00-00')='0000-00-00')
                 AND f.Data_entry='Complete'
                 AND f.CommentID NOT LIKE 'DDE_%' AND cu.CommentID2 is null
                 AND (s.SubprojectID=1 OR s.SubprojectID=2 OR s.SubprojectID=3)
@@ -510,14 +593,47 @@ if (empty($argv[1])) {
                 null AS communication_social_total,
                 null AS play_imagination_creativity,
                 null AS stereotyped_behaviors,
+                a1,
+                a2,
+                a3,
+                a4,
+                a5,
+                a6,
+                a7,
+                a8,
+                ADOS_classification,
+                b1,
+                b10,
+                null AS b11,
+                null AS b12,
+                b2,
+                b3,
+                b4,
+                b5,
+                b6,
+                b7,
+                b8,
+                b9,
+                c1,
+                null AS c2,
+                d1,
+                d2,
+                d3,
+                d4,
+                e1,
+                e2,
+                e3,
+                restricted_repetitive_behavior_total,
+                social_affect_restricted_repetitive_behavior_total,
                 social_affect_total,
-                restricted_repetitive_behavior_total
+                Validity
                 FROM flag f JOIN session s ON (f.SessionID=s.ID)
                 JOIN candidate c ON (s.CandID=c.CandID)
                 JOIN ados_module3 a ON (a.CommentID=f.CommentID)
                 JOIN participant_status ps ON (ps.CandID=c.CandID)
                 LEFT JOIN conflicts_unresolved cu ON (cu.CommentId2=f.CommentID)
-                WHERE ps.study_consent='yes' AND s.CenterID!=1 
+                WHERE ps.study_consent='yes' AND s.CenterID!=1 AND c.Active='Y' 
+                AND (COALESCE(ps.study_consent_withdrawal,'0000-00-00')='0000-00-00')
                 AND f.Data_entry='Complete'
                 AND f.CommentID NOT LIKE 'DDE_%' AND cu.CommentID2 is null
                 AND (s.SubprojectID=1 OR s.SubprojectID=2 OR s.SubprojectID=3);",
@@ -532,7 +648,8 @@ if (empty($argv[1])) {
                 JOIN scq_subject q ON (q.CommentID=f.CommentID)
                 JOIN candidate c ON (s.CandID=c.CandID)
                 JOIN participant_status ps ON (ps.CandID=c.CandID)
-                WHERE ps.study_consent='yes' AND s.CenterID!=1 
+                WHERE ps.study_consent='yes' AND s.CenterID!=1 AND c.Active='Y' 
+                AND (COALESCE(ps.study_consent_withdrawal,'0000-00-00')='0000-00-00')
                 AND (s.SubprojectID=1 OR s.SubprojectID=2 OR s.SubprojectID=3);",
            "SRS"                         => "SELECT
                 DISTINCT c.IBISId AS id_number, 
@@ -557,7 +674,8 @@ if (empty($argv[1])) {
                 JOIN SRS r ON (r.CommentID=f.CommentID)
                 JOIN candidate c ON (s.CandID=c.CandID)
                 JOIN participant_status ps ON (ps.CandID=c.CandID)
-                WHERE ps.study_consent='yes' AND s.CenterID!=1 
+                WHERE ps.study_consent='yes' AND s.CenterID!=1 AND c.Active='Y' 
+                AND (COALESCE(ps.study_consent_withdrawal,'0000-00-00')='0000-00-00')
                 AND (s.SubprojectID=1 OR s.SubprojectID=2 OR s.SubprojectID=3);",
            "Head Circumference"          => "SELECT
                 DISTINCT c.IBISId AS id_number, 
@@ -574,7 +692,8 @@ if (empty($argv[1])) {
                 JOIN head_measurements_subject h ON (h.CommentID=f.CommentID) 
                 JOIN candidate c ON (s.CandID=c.CandID)
                 JOIN participant_status ps ON (ps.CandID=c.CandID)
-                WHERE ps.study_consent='yes' AND s.CenterID!=1 
+                WHERE ps.study_consent='yes' AND s.CenterID!=1 AND c.Active='Y' 
+                AND (COALESCE(ps.study_consent_withdrawal,'0000-00-00')='0000-00-00')
                 AND (s.SubprojectID=1 OR s.SubprojectID=2 OR s.SubprojectID=3);",
            "Intervention History"        => "SELECT
                 DISTINCT c.IBISId AS id_number, 
@@ -658,7 +777,8 @@ if (empty($argv[1])) {
                 JOIN BSRC b ON (b.CommentID=f.CommentID)
                 JOIN candidate c ON (s.CandID=c.CandID)
                 JOIN participant_status ps ON (ps.CandID=c.CandID)
-                WHERE ps.study_consent='yes' AND s.CenterID!=1 
+                WHERE ps.study_consent='yes' AND s.CenterID!=1 AND c.Active='Y' 
+                AND (COALESCE(ps.study_consent_withdrawal,'0000-00-00')='0000-00-00')
                 AND (s.SubprojectID=1 OR s.SubprojectID=2 OR s.SubprojectID=3);",
           );
 

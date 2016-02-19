@@ -15,7 +15,7 @@ class NDB_BVL_Instrument_peer_socialcontact extends NDB_BVL_Instrument
                         '3_occasionally'=>"3. Occasionally",'4_somewhat_often'=>'4. Somewhat Often',
                         '5_often'=>'5. Often','6_very_often'=>'6. Very Often','refused_dontknow'=>"Refused/I Don't Know","not_answered"=>"Not answered");
     var $respondent = array(''=>NULL,'mother'=>'Mother','father'=>'Father','other'=>'Other',"not_answered"=>"Not answered");
-    var $num_playmates = array(''=>NULL,0=>0,1=>1,2=>2,3=>3,4=>4,5=>5,"not_answered"=>"Not answered");
+    var $num_playmates = array(''=>NULL,'0'=>0,'1'=>1,'2'=>2,'3'=>3,'4'=>4,'5'=>5,'not_answered'=>"Not answered");
     var $total_peer = 5;
     var $age_yrs = array(''=>NULL,'0'=>'0yrs','1'=>'1 yr','2'=>'2 yrs','3'=>'3 yrs','4'=>'4 yrs','5'=>'5 yrs',
                          '6'=>'6 yrs','7'=>'7 yrs','8'=>'8 yrs','9'=>'9 yrs','10'=>'10 yrs',
@@ -198,39 +198,42 @@ class NDB_BVL_Instrument_peer_socialcontact extends NDB_BVL_Instrument
     }
 
     function _page2() {
-        
+
        // $this->form->addElement("static",null,"In the table below indicate which children know each other.<BR>You must select `Yes` or `No` fields to save this form.<BR>");
         $db =& Database::singleton();
         $numplaymates = $db->pselectOne("SELECT total_playmates FROM ".$this->table." WHERE CommentID=:cid",
                 array('cid' =>$this->getCommentID()));
 
-          if(isset($_GET["key"])) {
-            $key = $_GET["key"]; 
+        if(isset($_GET["key"])) {
+            $key = $_GET["key"];
         }
         $colspan = 2;
-        if(is_numeric($numplaymates)) { 
-            $colspan = $numplaymates -1; 
+
+        if(is_numeric($numplaymates)) {
+            $colspan = $numplaymates -1;
         } else {
-            $numplaymates =5;
+            $numplaymates = 5;
         }
-	if($numplaymates > 1) {
-		$group[] = &$this->form->createElement("static", null, null,"");
-		$this->form->addGroup($group,"page2_header","<td colspan= $colspan>In the table below indicate which of your children's playmates know<BR> each other. You must select 'Yes' or 'No' in all fields to save this form.</td>", null,false);
- 		unset($group);
 
-	} else if($numplaymates == 1) {
-                $group[] = &$this->form->createElement("static", null, null,""); 
-                
-                $this->form->addGroup($group,"page2_header","<td colspan= $colspan>In the previous page you have indicated $numplaymates playmate(s).<BR> Please click 'Save and Continue' to go to the next section. </td>", null,false);
-                unset($group);
+	    if($numplaymates > 1) {
+		    $group[] = &$this->form->createElement("static", null, null,"");
+		    $this->form->addGroup($group,"page2_header","<td colspan= $colspan>In the table below indicate which of your children's playmates know<BR> each other. You must select 'Yes' or 'No' in all fields to save this form.</td>", null,false);
+ 		    unset($group);
 
-	} else if($numplaymates == 0) {
-                 $group[] = &$this->form->createElement("static", null, null,"");
+	    } else if($numplaymates == 1) {
+            $group[] = &$this->form->createElement("static", null, null,"");
 
-                $this->form->addGroup($group,"page2_header","<td colspan= $colspan>In the previous page you have indicated $numplaymates playmate(s). <BR>Click here go to the next section:<a href=\"survey.php?key=$key&pageNum=7\"><font color=\"#0000FF\"> <u>Section 2 </u></font></a> </td>", null,false);
-                unset($group);
+            $this->form->addGroup($group,"page2_header","<td colspan= $colspan>In the previous page you have indicated $numplaymates playmate(s).<BR> Please click 'Save and Continue' to go to the next section. </td>", null,false);
+            unset($group);
+
+	    } else if($numplaymates == 0) {
+            $group[] = &$this->form->createElement("static", null, null,"");
+
+            $this->form->addGroup($group,"page2_header","<td colspan= $colspan>In the previous page you have indicated $numplaymates playmate(s). <BR> IF so, please click here go to the next section:<a href=\"survey.php?key=$key&pageNum=7\"><font color=\"#0000FF\"> <u>Section 2 </u></font></a> </td>", null,false);
+            unset($group);
 
         }
+
         $this->localDefaults['total_peer'] = $numplaymates;
         if($this->localDefaults['total_peer'] > 1) {
             $group[] = &$this->form->createElement("static", null, null, "Child 1");
@@ -246,45 +249,66 @@ class NDB_BVL_Instrument_peer_socialcontact extends NDB_BVL_Instrument
         }
         if($this->localDefaults['total_peer'] == 5) {
             $group[] = &$this->form->createElement("static", null, null, "Child 5");
-        }  
+        }
+
         //$this->form->addGroup($group, "table_headers","<td colspan= 2></td>" , $this->_GUIDelimiter, false);
-        if($this->localDefaults['total_peer'] >1 ) {
+        if($this->localDefaults['total_peer'] > 1 ) {
             $this->form->addGroup($group, "table_headers",null , $this->_GUIDelimiter, false);
             unset($group);
         }
+
         $know_eachother = array(""=>null,"yes"=>"Yes","no"=>"No","refused_dontknow"=>"Refused/I Don't Know");
         for($i = 1; $i < $this->localDefaults['total_peer']; $i++){
             $groupname = $i."_group";
-            for($j = 1; $j <= $this->localDefaults['total_peer']; $j++ )  {
-                $field = "know_".$i."_".$j;
-                if($j <= $i){
-                    $group[] =& $this->form->createElement("static", null,null,"-");
+            for($j = 1; $j <= $this->localDefaults['total_peer']; $j++ ) {
+                $field = "know_" . $i . "_" . $j;
+                if ($j <= $i) {
+                    $group[] =& $this->form->createElement("static", null, null, "-");
 
                 } else {
-                    $group[] =& $this->form->createElement("select", $field,null,$know_eachother);
+                    $group[] =& $this->form->createElement("select", $field, null, $know_eachother);
                 }
-            $this->XINRegisterRule($field, array("$field{@}=={@}NEVER_REQUIRED"), $groupname);
+
+                $this->XINRegisterRule($field, array("$field{@}=={@}NEVER_REQUIRED"), $groupname);
             }
             $this->form->addGroup($group, $groupname, "Child ".$i, $this->_GUIDelimiter, false);
             unset($group);
         }
-	if($this->localDefaults['total_peer'] > 0) {
-		$group[] = &$this->form->createElement("static", null, null,"");
-		$this->form->addGroup($group,"page2_header","<td colspan= $colspan>Initials of the playmates are :<BR></td>", null,false);
-		unset($group);
-	}
-         for ($i = 1; $i<= $this->localDefaults['total_peer']; $i++) {
+
+        /* the following "if" statement was created to submit a hidden value of null to know_1_2 since
+        * it is hardcoded that each iteration must update the code somehow
+        *find a better fix !!!
+        */
+
+
+        if ($this->localDefaults['total_peer'] == 1 || $this->localDefaults['total_peer'] == 0){
+            $field = "know_1_2";
+            $group[] =& $this->form->createElement("hidden", $field, null);
+            $group[] = &$this->form->createElement("static", null, null,"");
+            $group[] = &$this->form->createElement("static", null, null,"");
+            $this->form->addGroup($group, $groupname, " ", $this->_GUIDelimiter, false);
+            unset($group);
+        }
+
+
+        if($this->localDefaults['total_peer'] > 0) {
+            $group[] = &$this->form->createElement("static", null, null,"");
+            $this->form->addGroup($group,"page2_header","<td colspan= $colspan>Initials of the playmates are :<BR></td>", null,false);
+            unset($group);
+        }
+        for ($i = 1; $i<= $this->localDefaults['total_peer']; $i++) {
              if(!empty($this->localDefaults["peer_initials_".$i])) {
                $group[] =& $this->form->createElement("static", "peer_initials_".$i,null,null);
                $this->form->addGroup($group,$i."_header","<td colspan= $colspan>Initials of child $i:</td>", null,false);
                unset($group);
 
              }
-          }
-       $this->form->addFormRule(array(&$this, 'Peer_Rules'));    
-    } 
+        }
+        $this->form->addFormRule(array(&$this, 'Peer_Rules'));
+
+    }
+
     function _page3(){
-       
          $this->_generate_Questions(1); // playmate #1
          $this->form->addFormRule(array(&$this, 'Peer_Rules'));
     }

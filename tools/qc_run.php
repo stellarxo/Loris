@@ -1,5 +1,7 @@
 <?php
 set_include_path(get_include_path().":../libraries:../../php/libraries:");
+
+require_once "../../vendor/autoload.php";
 require_once "NDB_Client.class.inc";
 require_once "QC_Checks.class.inc";
 require_once "NDB_Config.class.inc";
