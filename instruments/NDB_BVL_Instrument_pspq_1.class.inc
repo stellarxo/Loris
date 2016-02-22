@@ -215,11 +215,11 @@ class NDB_BVL_Instrument_pspq_1 extends NDB_BVL_Instrument
 
         //TOBE VERIFIED
         $this->addSelect('informant_child',"Your partner’s relationship to child", $this->informant_child);
-        $group [] = $this->createText('informant_other_child',$this->indent."If Other please specify");
-        $this->addGroup($group,"informant_other_child_group",$this->indent."If Other please specify",null,false);
+        $group [] = $this->createText('informant_child_other',$this->indent."If Other please specify");
+        $this->addGroup($group,"informant_child_other_group",$this->indent."If Other please specify",null,false);
         unset($group);
         $rules_array = array("informant_child{@}=={@}other");
-        $this->XINRegisterRule('informant_other_child', $rules_array, "Please specify relationship", 'informant_other_child_group');
+        $this->XINRegisterRule('informant_child_other', $rules_array, "Please specify relationship", 'informant_child_other_group');
         //END
 
 
@@ -331,7 +331,7 @@ class NDB_BVL_Instrument_pspq_1 extends NDB_BVL_Instrument
                    unset($list_questions[$key]);
                 } else if($key == 'informant_other' && $questions['informant'] != 'other') {
                    unset($list_questions[$key]);
-                } else if($key == 'informant_other_child' && $questions['informant_child'] != 'other') {
+                } else if($key == 'informant_child_other' && $questions['informant_child'] != 'other') {
                     unset($list_questions[$key]);
                 } elseif (empty ($row) )  {
                    unset($list_questions[$key]);
@@ -397,7 +397,7 @@ class NDB_BVL_Instrument_pspq_1 extends NDB_BVL_Instrument
                    unset($tpl_data['questions'][$key]); 
                 } else if($row['SourceField'] == 'informant_other' && $Responses['informant'] != 'other') { 
                    unset($tpl_data['questions'][$key]);
-                } else if($row['SourceField'] == 'informant_other_child' && $Responses['informant_child'] != 'other') {
+                } else if($row['SourceField'] == 'informant_child_other' && $Responses['informant_child'] != 'other') {
                     unset($tpl_data['questions'][$key]);
                 } elseif (empty ($row['question'] ) || empty($row['SourceField']) ) { 
                    unset($tpl_data['questions'][$key]);
