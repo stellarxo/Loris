@@ -1,5 +1,6 @@
 <?php
 set_include_path(get_include_path().":../libraries:../../php/libraries:");
+require_once '../../vendor/autoload.php';
 require_once "NDB_Client.class.inc";
 require_once "Utility.class.inc";
 require_once "Database.class.inc";
@@ -28,7 +29,7 @@ if (Utility::isErrorX($record)) {
         print "Query has failed to select: ".$record->getMessage();
         //        exit(2);
 }
- $filename = "ndar_subject_".$name."csv";
+ $filename = "ndar_subject_".$name.".csv";
   $fd = fopen($filename, 'w+');
   if ($fd === FALSE) {
     exit(-1);
