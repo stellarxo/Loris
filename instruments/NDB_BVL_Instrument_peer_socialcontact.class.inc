@@ -593,7 +593,7 @@ class NDB_BVL_Instrument_peer_socialcontact extends NDB_BVL_Instrument
          $this->XINRegisterRule('q8_specialneeds_other_playmate'.$i, array("q8_specialneeds_other_playmate.$i{@}=={@}NEVER_REQUIRED"),'q8_specialneeds_other_playmate'.$i."_group");
          unset($group);
          $rules_array = array("q8_specialneeds_playmate$i{@}=={@}other");
-         $this->XINRegisterRule('q8_specialneeds_other_playmate'.$i, $rules_array, "Please specify play area", 'q8_specialneeds_other_playmate'.$i.'_group');
+         $this->XINRegisterRule('q8_specialneeds_other_playmate'.$i, $rules_array, "Please specify", 'q8_specialneeds_other_playmate'.$i.'_group');
 
          $this->addSelect('q9_yourchild_like_playmate'.$i,"9. How much does your child like this playmate?",
                           $this->q9_options);
@@ -707,25 +707,7 @@ class NDB_BVL_Instrument_peer_socialcontact extends NDB_BVL_Instrument
             foreach($questions as $qstn) {
                 $q = $qstn.$i; //print "QQQQQ8";// print_r( $values['q8_specialneeds_playmate'.$i]); 
                 if(empty($values[$q]) && $i <= $playmates_listed && ($i == substr($first, -1))) { 
-                   if(in_array($qstn, $group_qstn)) {
-                       if($values[$q] == null) { 
-                           if (strpos($qstn, "age_") !== FALSE) {
-                                $errors["age_playmate".$i."_group"] = "Please specify";
-                            } else {
-                                $errors[$q."_group"] = "Please specify";
-                            }
-                       } 
-                    } else {
-                        if (strpos($qstn, "q18_") !== FALSE) {
-                            if($values[$q] == null) {
-                                $errors[$q] = "Please specify";
-                            }
-                        } else {
-                            if(empty($values[$q])) {
-                                $errors[$q] = "Please specify";
-                            }
-                        }
-                   }
+                
                     foreach($values['q8_specialneeds_playmate'.$i ] as $key=>$val) { 
                         if(empty($val)) { 
                            $errors['q8_specialneeds_playmate'.$i] = "Please specify";
@@ -740,7 +722,7 @@ class NDB_BVL_Instrument_peer_socialcontact extends NDB_BVL_Instrument
             } 
             foreach($values["q8_specialneeds_playmate".$i] as $key=>$value) {
                 if($value  == 'other' && empty($values["q8_specialneeds_other_playmate".$i])) {
-                    $errors["q8_specialneeds_other_playmate".$i."_group"] = "Please specify play area";
+                    $errors["q8_specialneeds_other_playmate".$i."_group"] = "Please specify";
                 }
             }
 	    $q18 = array("q18_arrangeplay_you_playmate".$i,
@@ -748,7 +730,7 @@ class NDB_BVL_Instrument_peer_socialcontact extends NDB_BVL_Instrument
 			    "q18_arrangeplay_other_playmate".$i);
 	    $total = $values["q18_arrangeplay_you_playmate".$i] + $values["q18_arrangeplay_yourchild_playmate".$i] +
 		    $values["q18_arrangeplay_other_playmate".$i];
-	    if($total > 100  || $total < 100) { 
+	    if(($total > 100  || $total < 100) && (!empty($values["q18_arrangeplay_you_playmate".$i]) || !empty($values["q18_arrangeplay_yourchild_playmate".$i]) || !empty($values["q18_arrangeplay_other_playmate".$i]))) {
 		    $errors["q18_arrangeplay_you_playmate".$i] = "The total percent should add up to 100";
 	    }
           }
