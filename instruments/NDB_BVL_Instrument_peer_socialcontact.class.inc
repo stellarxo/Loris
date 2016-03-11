@@ -762,10 +762,7 @@ class NDB_BVL_Instrument_peer_socialcontact extends NDB_BVL_Instrument
 	  }
           if(!is_numeric($values['q27_numchildren_perclass'])   && $values['q23_childin_school'] == 'yes') {
                   $errors["q27_numchildren_perclass"] = "Please specify numerical values only";
-          }/*
-          if( $values['q28_numchildren_specialneeds'] == null && $values['q23_childin_school'] == 'yes') {
-                  $errors["q28_numchildren_specialneeds"] = "Please specify";
-          }*/
+          }
           if(! is_numeric($values['q28_numchildren_specialneeds']) && $values['q23_childin_school'] == 'yes' && $values['q28_numchildren_specialneeds'] != null) {
                   $errors["q28_numchildren_specialneeds"] = "Please specify numerical values only";
           }
@@ -774,10 +771,7 @@ class NDB_BVL_Instrument_peer_socialcontact extends NDB_BVL_Instrument
           }
           if( !is_numeric ($values['q33_numchildren_perclass']) && $values['q29_childin_childcare'] == 'yes') {
                   $errors["q33_numchildren_perclass"] = "Please specify numerical values only";
-          }/*
-         if( $values['q34_numchildren_specialneeds'] == null && $values['q29_childin_childcare'] == 'yes') {
-                  $errors["q34_numchildren_specialneeds"] = "Please specify";
-          }*/
+          }
           if(!is_numeric( $values['q34_numchildren_specialneeds']) && $values['q29_childin_childcare'] == 'yes' && $values['q34_numchildren_specialneeds'] != null) {
                   $errors["q34_numchildren_specialneeds"] = "Please specify numerical values only";
           }
