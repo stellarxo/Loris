@@ -825,7 +825,9 @@ class NDB_BVL_Instrument_peer_socialcontact extends NDB_BVL_Instrument
                          $errors[$q] = "Please specify";
                      }
                 }
-
+               if(!is_numeric( $values['activity'.$i."_numchildren_spneeds"]) && !empty($values['activity_'.$i]) && $values['activity'.$i."_numchildren_spneeds"] != null) {
+                   $errors['activity'.$i."_numchildren_spneeds"] = "Please specify numerical values only";
+               }
            }
           
       }
