@@ -131,7 +131,7 @@ if (empty($argv[1])) {
                 JOIN participant_status ps ON (ps.CandID=c.CandID)
                 LEFT JOIN conflicts_unresolved cu ON (cu.CommentId2=f.CommentID)
                 WHERE ps.study_consent='yes' AND s.CenterID!=1 
-                AND f.Data_entry='Complete' 
+                AND f.Data_entry='Complete' AND s.Visit_label <='V24'
                 AND f.CommentID NOT LIKE 'DDE_%' AND cu.CommentID2 is null 
                 AND s.Current_stage<>'Recycling Bin' AND m.Date_taken is not null 
                 AND (s.SubprojectID=1 OR s.SubprojectID=2 OR s.SubprojectID=3);",
@@ -186,15 +186,16 @@ if (empty($argv[1])) {
                 null AS maladapative_behavior_externalizing_v_scale_score
                 FROM flag f JOIN session s ON (f.SessionID=s.ID) 
                 JOIN candidate c ON (s.CandID=c.CandID)
-                JOIN vineland_proband v ON (v.CommentID=f.CommentID) 
+                JOIN vineland_subject v ON (v.CommentID=f.CommentID) 
                 JOIN participant_status ps ON (ps.CandID=c.CandID)
                 LEFT JOIN conflicts_unresolved cu ON (cu.CommentId2=f.CommentID)
                 WHERE ps.study_consent='yes' AND s.CenterID!=1 AND c.Active='Y' 
                 AND (COALESCE(ps.study_consent_withdrawal,'0000-00-00')='0000-00-00')
-                AND f.Data_entry='Complete' 
+                AND f.Data_entry='Complete' AND s.Visit_label <='V24'
                 AND f.CommentID NOT LIKE 'DDE_%' AND cu.CommentID2 is null 
                 AND s.Current_stage<>'Recycling Bin' AND v.Date_taken is not null 
-                AND (s.SubprojectID=1 OR s.SubprojectID=2 OR s.SubprojectID=3);",
+                AND (s.SubprojectID=1 OR s.SubprojectID=2 OR s.SubprojectID=3)
+                AND v.Candidate_Age >= 0;",
            "ADI"                         => "SELECT
                 c.IBISId AS id_number, 
                 a.Date_taken AS date_of_testing,
@@ -220,15 +221,16 @@ if (empty($argv[1])) {
                 a.D_Total AS adi_d_total
                 FROM flag f JOIN session s ON (f.SessionID=s.ID) 
                 JOIN candidate c ON (s.CandID=c.CandID)
-                JOIN adi_r_proband a ON (a.CommentID=f.CommentID) 
+                JOIN adi_r_subject a ON (a.CommentID=f.CommentID) 
                 JOIN participant_status ps ON (ps.CandID=c.CandID)
                 LEFT JOIN conflicts_unresolved cu ON (cu.CommentId2=f.CommentID)
                 WHERE ps.study_consent='yes' AND s.CenterID!=1 AND c.Active='Y' 
                 AND (COALESCE(ps.study_consent_withdrawal,'0000-00-00')='0000-00-00')
-                AND f.Data_entry='Complete' 
+                AND f.Data_entry='Complete' AND s.Visit_label <='V24'
                 AND f.CommentID NOT LIKE 'DDE_%' AND cu.CommentID2 is null 
                 AND s.Current_stage<>'Recycling Bin' AND a.Date_taken is not null 
-                AND (s.SubprojectID=1 OR s.SubprojectID=2 OR s.SubprojectID=3);",
+                AND (s.SubprojectID=1 OR s.SubprojectID=2 OR s.SubprojectID=3)
+                AND a.Candidate_Age >= 0;",
            "MacArthur Words & Gestures"  => "SELECT
                 c.IBISId AS id_number, 
                 m.Date_taken AS date_of_testing,
@@ -301,7 +303,7 @@ if (empty($argv[1])) {
                 JOIN participant_status ps ON (ps.CandID=c.CandID)
                 LEFT JOIN conflicts_unresolved cu ON (cu.CommentId2=f.CommentID)
                 WHERE ps.study_consent='yes' AND s.CenterID!=1 
-                AND f.Data_entry='Complete' 
+                AND f.Data_entry='Complete' AND s.Visit_label <='V24'
                 AND f.CommentID NOT LIKE 'DDE_%' AND cu.CommentID2 is null 
                 AND s.Current_stage<>'Recycling Bin' AND m.Date_taken is not null 
                 AND (s.SubprojectID=1 OR s.SubprojectID=2 OR s.SubprojectID=3);",
@@ -358,7 +360,8 @@ if (empty($argv[1])) {
                 FROM flag f JOIN session s ON (f.SessionID=s.ID) 
                 JOIN candidate c ON (s.CandID=c.CandID)
                 JOIN participant_status ps ON (ps.CandID=c.CandID)
-                WHERE ps.study_consent='yes' AND s.CenterID!=1 AND c.Active='Y' 
+                WHERE ps.study_consent='yes' AND s.CenterID!=1 AND c.Active='Y'
+                AND f.CommentID NOT LIKE 'DDE_%' AND s.Visit_label <='V24'
                 AND (COALESCE(ps.study_consent_withdrawal,'0000-00-00')='0000-00-00')
                 AND (s.SubprojectID=1 OR s.SubprojectID=2 OR s.SubprojectID=3);",
            "Family Info"                 => "SELECT
@@ -380,7 +383,8 @@ if (empty($argv[1])) {
                 FROM flag f JOIN session s ON (f.SessionID=s.ID) 
                 JOIN candidate c ON (s.CandID=c.CandID) 
                 JOIN participant_status ps ON (ps.CandID=c.CandID)
-                WHERE ps.study_consent='yes' AND s.CenterID!=1 AND c.Active='Y' 
+                WHERE ps.study_consent='yes' AND s.CenterID!=1 AND c.Active='Y'
+                AND f.CommentID NOT LIKE 'DDE_%' AND s.Visit_label <='V24'
                 AND (COALESCE(ps.study_consent_withdrawal,'0000-00-00')='0000-00-00')
                 AND (s.SubprojectID=1 OR s.SubprojectID=2 OR s.SubprojectID=3);",
            "Demographics"                => "SELECT DISTINCT c.IBISId AS id_number, 
@@ -453,7 +457,8 @@ if (empty($argv[1])) {
                 AND (((ft.administration <> 'None' AND ft.administration is not null)
                 OR t.data_entry_completion_status='Complete') 
                 OR ((fp.administration <> 'None' AND fp.administration is not null) 
-                OR p.data_entry_completion_status='Complete'));",
+                OR p.data_entry_completion_status='Complete'))
+                AND t.Candidate_Age >= 0 AND s.Visit_label <='V24';",
            "Clinical Best Estimate"      => "SELECT
                 DISTINCT c.IBISId AS id_number, 
                 null AS date_of_testing,
@@ -464,7 +469,8 @@ if (empty($argv[1])) {
                 FROM flag f JOIN session s ON (f.SessionID=s.ID) 
                 JOIN candidate c ON (s.CandID=c.CandID) 
                 JOIN participant_status ps ON (ps.CandID=c.CandID)
-                WHERE ps.study_consent='yes' AND s.CenterID!=1 AND c.Active='Y' 
+                WHERE ps.study_consent='yes' AND s.CenterID!=1 AND c.Active='Y'
+                AND f.CommentID NOT LIKE 'DDE_%' AND s.Visit_label <='V24'
                 AND (COALESCE(ps.study_consent_withdrawal,'0000-00-00')='0000-00-00')
                 AND (s.SubprojectID=1 OR s.SubprojectID=2 OR s.SubprojectID=3);",
            "ADOS"                        => "SELECT 
@@ -520,7 +526,7 @@ if (empty($argv[1])) {
                 LEFT JOIN conflicts_unresolved cu ON (cu.CommentId2=f.CommentID)
                 WHERE ps.study_consent='yes' AND s.CenterID!=1 AND c.Active='Y' 
                 AND (COALESCE(ps.study_consent_withdrawal,'0000-00-00')='0000-00-00')
-                AND f.Data_entry='Complete'
+                AND f.Data_entry='Complete' AND s.Visit_label <='V24'
                 AND f.CommentID NOT LIKE 'DDE_%' AND cu.CommentID2 is null
                 AND (s.SubprojectID=1 OR s.SubprojectID=2 OR s.SubprojectID=3)
                 UNION
@@ -577,7 +583,7 @@ if (empty($argv[1])) {
                 LEFT JOIN conflicts_unresolved cu ON (cu.CommentId2=f.CommentID)
                 WHERE ps.study_consent='yes' AND s.CenterID!=1 AND c.Active='Y' 
                 AND (COALESCE(ps.study_consent_withdrawal,'0000-00-00')='0000-00-00')
-                AND f.Data_entry='Complete'
+                AND f.Data_entry='Complete' AND s.Visit_label <='V24'
                 AND f.CommentID NOT LIKE 'DDE_%' AND cu.CommentID2 is null
                 AND (s.SubprojectID=1 OR s.SubprojectID=2 OR s.SubprojectID=3)
                 UNION
@@ -634,7 +640,7 @@ if (empty($argv[1])) {
                 LEFT JOIN conflicts_unresolved cu ON (cu.CommentId2=f.CommentID)
                 WHERE ps.study_consent='yes' AND s.CenterID!=1 AND c.Active='Y' 
                 AND (COALESCE(ps.study_consent_withdrawal,'0000-00-00')='0000-00-00')
-                AND f.Data_entry='Complete'
+                AND f.Data_entry='Complete' AND s.Visit_label <='V24'
                 AND f.CommentID NOT LIKE 'DDE_%' AND cu.CommentID2 is null
                 AND (s.SubprojectID=1 OR s.SubprojectID=2 OR s.SubprojectID=3);",
            "SCQ"                         => "SELECT
@@ -643,12 +649,53 @@ if (empty($argv[1])) {
                 ROUND(q.Candidate_Age) AS age_at_testing,
                 q.scq_version AS version,
                 null AS respondent,
-                q.score AS scq_total_score
+                q.score AS scq_total_score,
+                scq_diagnosis,
+                q1_talk_short_phrases,
+                q2_to_and_fro,
+                q3_odd_phrases,
+                q4_socially_inappropriate,
+                q5_pronouns_mixed,
+                q6_words_invented,
+                q7_said_same_thing,
+                q8_particular_way,
+                q9_facial_expressions,
+                q10_hand_like_tool,
+                q11_interests_that_preoccupy,
+                q12_interested_in_parts	q13_intense_interests,
+                q14_sight_feel_sound,
+                q15_mannerisms,
+                q16_complicated_movements,
+                q17_deliberate_injury,
+                q18_carry_objects,
+                q19_particular_friends,
+                q20_talk_friendly,
+                q21_spontaneously_copy,
+                q22_spontaneously_point,
+                q23_gestures,
+                q24_nod_yes,
+                q25_shake_no,
+                q26_look_directly,
+                q27_smile_back,
+                q28_show_things,
+                q29_offer_share,
+                q30_join_enjoyment,
+                q31_comfort	q32_wanted_something,
+                q33_facial_expressions,
+                q34_spontaneously_join,
+                q35_play_pretend,
+                q36_seem_interested,
+                q37_respond_positively,
+                q38_came_into_room,
+                q39_play_imaginative,
+                q40_play_cooperatively,
+                scq_version
                 FROM flag f JOIN session s ON (f.SessionID=s.ID) 
-                JOIN scq_subject q ON (q.CommentID=f.CommentID)
+                JOIN scq_proband q ON (q.CommentID=f.CommentID)
                 JOIN candidate c ON (s.CandID=c.CandID)
                 JOIN participant_status ps ON (ps.CandID=c.CandID)
-                WHERE ps.study_consent='yes' AND s.CenterID!=1 AND c.Active='Y' 
+                WHERE ps.study_consent='yes' AND s.CenterID!=1 AND c.Active='Y'
+                AND f.CommentID NOT LIKE 'DDE_%' AND s.Visit_label <='V24'
                 AND (COALESCE(ps.study_consent_withdrawal,'0000-00-00')='0000-00-00')
                 AND (s.SubprojectID=1 OR s.SubprojectID=2 OR s.SubprojectID=3);",
            "SRS"                         => "SELECT
@@ -669,12 +716,78 @@ if (empty($argv[1])) {
                 null AS srs_social_cognition_t_score,
                 null AS srs_social_communication_t_score,
                 null AS srs_social_motivation_t_score,
-                null AS srs_autistic_mannerisms_t_score
+                null AS srs_autistic_mannerisms_t_score,
+                q1_fidgety_social_situations,
+                q2_expressions_dont_match,
+                q3_seems_self_confident,
+                q4_auto_pilot_under_stress,
+                q5_no_recognize_take_advantage,
+                q6_rather_be_alone,
+                q7_aware_others_feeling,
+                q8_behaves_strange,
+                q9_clings_to_adults,
+                q10_unable_pickup_meaning,
+                q11_good_self_confidence,
+                q12_able_communicate_feelings,
+                q13_slow_turntaking_interactions,
+                q14_not_well_coordinated,
+                q15_able_understand_meaning,
+                q16_avoids_eye_contact,
+                q17_recognizes_unfair,
+                q18_playground_no_interaction,
+                q19_frustrated_conversations,
+                q20_strange_playing,
+                q21_able_imitate_others,
+                q22_play_appropriately,
+                q23_no_group_activities,
+                q24_more_difficulty_routine,
+                q25_doesnt_mind_out_of_step,
+                q26_offers_comfort_to_others,
+                q27_avoids_social_interactions,
+                q28_talks_about_same_thing,
+                q29_regarded_as_weird,
+                q30_becomes_upset,
+                q31_cant_get_mind_off_something,
+                q32_wants_to_be_changed,
+                q33_socially_awkward,
+                q34_avoids_emotional_close,
+                q35_trouble_keeping_flow,
+                q36_difficulty_relating_adults,
+                q37_difficulty_relating_peers,
+                q38_responds_to_mood_changes,
+                q39_restricted_interests,
+                q40_imaginative,
+                q41_wanders_aimlessly_activities,
+                q42_overly_sensitive_sounds_smells,
+                q43_separates_from_caregivers,
+                q44_doesnt_understand_events,
+                q45_focuses_attention_others,
+                q46_overly_serious_expressions,
+                q47_too_silly,
+                q48_sense_of_humor,
+                q49_does_well_few_tasks,
+                q50_repetitive_odd_behaviors,
+                q51_responds_odd_ways,
+                q52_knows_talking_too_loud,
+                q53_talks_unusual_tone_of_voice,
+                q54_reacts_people_as_objects,
+                q55_knows_invading_space,
+                q56_walks_between_people,
+                q57_other_children_dont_like,
+                q58_concentrates_on_parts,
+                q59_overly_suspicious,
+                q60_is_emotionally_distant,
+                q61_inflexible,
+                q62_unusual_reasons,
+                q63_touches_others_usually,
+                q64_tense_social_settings,
+                q65_stares_into_space
                 FROM flag f JOIN session s ON (f.SessionID=s.ID)
                 JOIN SRS r ON (r.CommentID=f.CommentID)
                 JOIN candidate c ON (s.CandID=c.CandID)
                 JOIN participant_status ps ON (ps.CandID=c.CandID)
-                WHERE ps.study_consent='yes' AND s.CenterID!=1 AND c.Active='Y' 
+                WHERE ps.study_consent='yes' AND s.CenterID!=1 AND c.Active='Y'
+                AND f.CommentID NOT LIKE 'DDE_%'
                 AND (COALESCE(ps.study_consent_withdrawal,'0000-00-00')='0000-00-00')
                 AND (s.SubprojectID=1 OR s.SubprojectID=2 OR s.SubprojectID=3);",
            "Head Circumference"          => "SELECT
@@ -692,7 +805,8 @@ if (empty($argv[1])) {
                 JOIN head_measurements_subject h ON (h.CommentID=f.CommentID) 
                 JOIN candidate c ON (s.CandID=c.CandID)
                 JOIN participant_status ps ON (ps.CandID=c.CandID)
-                WHERE ps.study_consent='yes' AND s.CenterID!=1 AND c.Active='Y' 
+                WHERE ps.study_consent='yes' AND s.CenterID!=1 AND c.Active='Y'
+                AND f.CommentID NOT LIKE 'DDE_%' AND s.Visit_label <='V24'
                 AND (COALESCE(ps.study_consent_withdrawal,'0000-00-00')='0000-00-00')
                 AND (s.SubprojectID=1 OR s.SubprojectID=2 OR s.SubprojectID=3);",
            "Intervention History"        => "SELECT
@@ -777,7 +891,8 @@ if (empty($argv[1])) {
                 JOIN BSRC b ON (b.CommentID=f.CommentID)
                 JOIN candidate c ON (s.CandID=c.CandID)
                 JOIN participant_status ps ON (ps.CandID=c.CandID)
-                WHERE ps.study_consent='yes' AND s.CenterID!=1 AND c.Active='Y' 
+                WHERE ps.study_consent='yes' AND s.CenterID!=1 AND c.Active='Y'
+                AND f.CommentID NOT LIKE 'DDE_%' AND s.Visit_label <='V24'
                 AND (COALESCE(ps.study_consent_withdrawal,'0000-00-00')='0000-00-00')
                 AND (s.SubprojectID=1 OR s.SubprojectID=2 OR s.SubprojectID=3);",
           );

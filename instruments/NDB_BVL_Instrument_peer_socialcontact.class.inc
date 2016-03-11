@@ -505,8 +505,9 @@ class NDB_BVL_Instrument_peer_socialcontact extends NDB_BVL_Instrument
 
       foreach($questions as $field=>$label) {
              $this->addBasicText($field, $label);
-             $this->XINRegisterRule($field,array("$field{@}=={@}NEVER_REQUIRED"));
+             $this->XINRegisterRule($field , array($field."{@}=={@}NEVER_REQUIRED"));
          }
+
 
        $this->addBasicTextArea("q11_comments", "11. Feel free to describe any other ways in which you have noticed that having autism has<BR> affected your child's social contacts with peers:");
        $this->XINRegisterRule('q11_comments', array('q11_comments{@}=={@}NEVER_REQUIRED'));
@@ -786,11 +787,8 @@ class NDB_BVL_Instrument_peer_socialcontact extends NDB_BVL_Instrument
           $q_list = array ('q10a_autism_effect_other_children_autism','q10b_autism_effect_other_children_devdelay', 
                            'q10c_autism_effect_sameage','q10d_autism_effect_younger','q10e_autism_effect_older');
           foreach($q_list as $q) {
-              if($values[$q] == null) {
-                  $errors[$q] = "Please specify";
-              }
-              if($values[$q] < 1 || $values[$q] > 5 ) {
-                  $errors[$q] = "Please rank order 1 through 5";
+              if(($values[$q] < 1 || $values[$q] > 5 ) && ($values[$q] != null)) {
+                  $errors[$q] = "Please rank order 1 through 5 or leave box empty";
               }
            }
       }

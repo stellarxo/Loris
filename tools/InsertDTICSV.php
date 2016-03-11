@@ -12,7 +12,8 @@ $client->initialize('../config.xml');
 
 $DB =& Database::singleton();
 
-$file = "QCResults.csv";
+//$file = "QCResults.csv";
+$file = "~/Dropbox/Downloads/QC_RESULTS_DTIPrep1.2.3_AsOf_5June2015_IBIS1_FRX_DCCvaluesOnly_withDWI.csv";
 $fp = fopen($file, "r");
 $headers = fgetcsv($fp);
 $headers = array_slice($headers, 3, 36);
@@ -55,6 +56,7 @@ $InsertTypes = array(
     34 => GetParameterTypeID("Selected"),
     35 => GetCommentIDType("Overall"),
 );
+
 function GetPredefinedCommentID($name) {
    $DB = Database::singleton();
 
@@ -63,6 +65,7 @@ function GetPredefinedCommentID($name) {
     return $commentID;
 
 }
+
 function GetCommentIDType($name) {
     $DB = Database::singleton();
 
@@ -71,6 +74,7 @@ function GetCommentIDType($name) {
     return $commentID;
 
 }
+
 function GetParameterTypeID($name) {
     $DB = Database::singleton();
 
@@ -80,6 +84,7 @@ function GetParameterTypeID($name) {
    return $parameterTypeID;
 
 }
+
 function InsertDropdown($typeID, $value, $fileID) {
     $DB = Database::singleton();
     $name='';
@@ -123,6 +128,7 @@ function InsertDropdown($typeID, $value, $fileID) {
     }
    // print "\t$typeID: $value\n";
 }
+
 function InsertCheckbox($typeID, $value, $comments) {
    $DB = Database::singleton();
     if($value === 'No'
@@ -141,13 +147,14 @@ function InsertCheckbox($typeID, $value, $comments) {
     }
    // print "\t$typeID: $value\n";
  //clear predefined comments
-   }
+}
 
 function InsertComment($type, $value, $comments) {
 
    $comments->addTextComment($value, $type);
    // print "\t$type: $value\n";
 }
+
 function InsertQCStatus($fileID, $value) {
     $DB = Database::singleton();
     if(!empty($fileID)) {
@@ -169,6 +176,7 @@ function InsertQCStatus($fileID, $value) {
            }
     }
 }
+
 function InsertQCInfo($fileID, $typeID, $value) {
     $DB = Database::singleton();
    if (strtoupper($value) === 'TRUE' && !empty($fileID)) {
@@ -190,6 +198,7 @@ function InsertQCInfo($fileID, $typeID, $value) {
            }
           }
 }
+
 function UpdateCaveat($fileID, $value) {
     $DB = Database::singleton();
     if (!empty($fileID)) {
@@ -200,11 +209,13 @@ function UpdateCaveat($fileID, $value) {
         }
     }
 }
+
 while($csv_line = fgetcsv($fp))
 {
     $DCCID = $csv_line[0];
     $VL    = $csv_line[1];
-    $Filename = $csv_line[2] . "_DTIPrepReg_001.mnc";
+//    $Filename = $csv_line[2] . "_DTIPrepReg_001.mnc";
+    $Filename = $csv_line[40] . "_DTIPrepReg_001.mnc";
     $results = array_slice($csv_line, 3, 36);
     print "File: $Filename\n";
     $file_info = $DB->pselectRow("SELECT FileID, SessionID FROM files WHERE

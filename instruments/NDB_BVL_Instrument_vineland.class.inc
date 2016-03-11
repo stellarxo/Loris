@@ -528,7 +528,7 @@ class NDB_BVL_Instrument_vineland extends NDB_BVL_Instrument
              return $errors;
          }
          
-         $visit = $args['visitLabel'];
+         $visit = strtolower($args['visitLabel']);
          if($visit == "6mo"){
             $visit = "v06";
          }else if($visit == "12m"){

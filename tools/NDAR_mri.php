@@ -64,9 +64,11 @@ class NDAR_Release_MRI {
         }
         return copy($origin, $dest);
     }
+    
     function replaceID($string, $CandID, $IBISID) {
         return preg_replace("/$CandID/", $IBISID, $string);
     }
+    
     function anonFile($original, $output) {
         print "Copying $original\n";
         $this->copyFile($original, $output);
@@ -76,7 +78,7 @@ class NDAR_Release_MRI {
         }
         print "Anonymized replacement headers\n";
         foreach ($this->DateHeaders as $header) {
-            $date = $this->getHeader($original, $header);
+            $date = $this->getHeader($output, $header);
             if($date != array()) {
                 $anon_date = substr($date, 0, 6);
                 $this->anonHeader($output, $header, $anon_date);
@@ -85,9 +87,9 @@ class NDAR_Release_MRI {
         print "Done anonymizing all $output\n\n";
     }
 
-    function getHeader($file, $header) {
+    function getHeader_old($file, $header) {
         $factory = NDB_Factory::singleton();
-        $db = $factory->Database();
+        $db = $factory->Database();        
         return trim(
             $db->pselectOne("SELECT parameter_file.Value FROM files JOIN parameter_file USING (FileID) JOIN parameter_type USING (ParameterTypeID) WHERE parameter_type.Name=:header AND files.file=:filename",
             array(
@@ -96,23 +98,32 @@ class NDAR_Release_MRI {
             ))
         );
     }
+    
+    function getHeader($file, $header) {
+        $line = system("mincheader \\$file | grep $header");
+        $output_array = explode("=", $line);
+        $value = trim(str_replace("\"", "", $output_array[1]));
+        
+        return $value;
+    }
+    
     function anonHeader($file, $header, $value='ibis') {
-        system("minc_modify_header -sinsert " . escapeshellarg($header . "=" . $value) . " $file");
+        system("minc_modify_header -sinsert " . escapeshellarg($header . "=" . $value) . " \\$file");
     }
 
     function addToCSV($file, $info) {
-        $StudyDate = $this->getHeader($info['File'], 'study:start_date');
-        $ScannerID = $this->getHeader($info['File'], 'study:serial_no');
+        $StudyDate = $this->getHeader($file, 'study:start_date');
+        $ScannerID = $this->getHeader($file, 'study:serial_no');
 
-        $XSpace     = $this->getHeader($info['File'], 'xspace:length');
-        $YSpace     = $this->getHeader($info['File'], 'yspace:length');
-        $ZSpace     = $this->getHeader($info['File'], 'zspace:length');
-        $TimeLength = $this->getHeader($info['File'], 'time:length');
+        $XSpace     = $this->getHeader($file, 'xspace:length');
+        $YSpace     = $this->getHeader($file, 'yspace:length');
+        $ZSpace     = $this->getHeader($file, 'zspace:length');
+        $TimeLength = $this->getHeader($file, 'time:length');
 
-        $XStep     = $this->getHeader($info['File'], 'xspace:step');
-        $YStep     = $this->getHeader($info['File'], 'yspace:step');
-        $ZStep     = $this->getHeader($info['File'], 'zspace:step');
-        $TimeStep  = $this->getHeader($info['File'], 'time:step');
+        $XStep     = $this->getHeader($file, 'xspace:step');
+        $YStep     = $this->getHeader($file, 'yspace:step');
+        $ZStep     = $this->getHeader($file, 'zspace:step');
+        $TimeStep  = $this->getHeader($file, 'time:step');
 
         $StudyYear = substr($StudyDate, 0, 4);
         $StudyMo   = substr($StudyDate, 4, 2);
@@ -201,7 +212,7 @@ class NDAR_Release_MRI {
             AND ((f.acquisitionprotocolid = 44 and pf.value = 't1w') or (f.acquisitionprotocolid = 45 and pf.value = 't2w'))
             AND s.SubprojectID IN (1, 2, 3, 9, 10)
             AND ( ps.study_consent = 'yes' AND (COALESCE(ps.study_consent_withdrawal,'0000-00-00') = '0000-00-00' )) 
-            AND c.candID in (216477, 274101, 755073, 842426, 924951)          
+            AND c.candID in (216477, 274101, 755073, 842426, 924951)
             ORDER BY PSCID", array());
         
         foreach($files as $row) {
@@ -213,14 +224,13 @@ class NDAR_Release_MRI {
             // $anonFilePath = "/data/ibis/data/";
             // Casey´s
             $anonFilePath = "/data/not_backed_up/";
-            $FileBackupName['File'] = $row['File'];
             $row['File'] = str_replace("assembly", "Defaced_data_20160122_anon", $row['File']);
             $row['File'] = str_replace("mri/native/ibis", "deface/deface", $row['File']);
             $row['File'] = preg_replace("/_00\d/", "$1", $row['File']);
                 
             $this->anonFile($anonFilePath . $row['File'], "~/tmp/$only_anon_file");
             // cut off the directory portion of the filename for the CSV..
-            $this->addToCSV($only_anon_file, $FileBackupName);
+            $this->addToCSV($anonFilePath . $row['File'], $row);
         }
 
         $fp = fopen("~/tmp/NDARMRI.csv", 'w');
