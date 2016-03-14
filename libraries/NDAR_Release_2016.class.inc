@@ -1,87 +1,94 @@
 <?php
-set_include_path(get_include_path().":../libraries:../../php/libraries:");
+set_include_path(get_include_path() . ":../libraries:../../php/libraries:");
 require_once "Database.class.inc";
-class NDAR_Release_2016 {
 
-    function __construct($instrument, $project) {
+class NDAR_Release_2016
+{
+
+    function __construct($instrument, $project)
+    {
         $this->instrument = $instrument;
         $this->project = $project;
     }
 
-    function getWhere() {
-        if(strpos($this->instrument, '_proband') !== FALSE) {
+    function getWhere()
+    {
+        if (strpos($this->instrument, '_proband') !== FALSE) {
             $GUID = "AND COALESCE(c.ProbandGUID, '') <> ''";
         } else {
             $GUID = "AND COALESCE(c.CandidateGUID, '') <> ''";
         }
         $Base = "COALESCE(s.Current_stage, '') <> 'Recycling Bin' AND COALESCE(s.Visit, '') NOT IN ('Failure', 'Withdrawal') AND COALESCE(s.Screening, '') NOT IN ('Failure', 'Withdrawal') AND f.Administration='All' AND f.Data_entry='Complete' AND EXISTS (SELECT 'x' FROM flag df WHERE df.CommentID=CONCAT('DDE_', i.CommentID) AND df.Data_entry='Complete') AND NOT EXISTS (SELECT 'x' FROM conflicts_unresolved cu WHERE cu.CommentId1=i.CommentID OR cu.CommentId2=i.CommentID) AND s.CenterID IN (2, 3, 4, 5) AND ( ps.study_consent = 'yes' AND ps.study_consent_withdrawal IS NULL) AND (ps.ndar_consent = 'yes' AND ps.ndar_consent_withdrawal IS NULL) AND c.Active='Y' AND s.Active ='Y'";
-	if($this->instrument == 'adi_r_proband') {
-		if($this->project == 2){
-			return $Base . " AND i.Summary_diagnosis='ASD+' AND s.SubprojectID IN (9,10) AND s.Visit_label ='Screening' $GUID";
-		} else {
-			// Check Summary_diagnosis=ASD+
-			return $Base . " AND i.Summary_diagnosis='ASD+' AND s.SubprojectID IN (1,2) $GUID";
-		}
-} else if($this->instrument == 'm_chat_proband') {
+        if ($this->instrument == 'adi_r_proband') {
+            if ($this->project == 2) {
+                return $Base . " AND i.Summary_diagnosis='ASD+' AND s.SubprojectID IN (9,10) AND s.Visit_label ='Screening' $GUID";
+            } else {
+                // Check Summary_diagnosis=ASD+
+                return $Base . " AND i.Summary_diagnosis='ASD+' AND s.SubprojectID IN (1,2) $GUID";
+            }
+        } else if ($this->instrument == 'm_chat_proband') {
             // Check score=Fail and not Control
-            if($this->project == 2 ) {
+            if ($this->project == 2) {
                 return $Base . " AND s.Visit_label='Screening' $GUID";
             } else {
                 return $Base . " AND s.SubprojectID <> 3 AND i.score='Fail' $GUID";
             }
-        } else if($this->instrument == 'scq_proband') {
+        } else if ($this->instrument == 'scq_proband') {
             // Check scq_diagnosis=ASD_Positive and 6/12mo recruit
-             if($this->project == 2 ) {
+            if ($this->project == 2) {
                 return $Base . " AND s.Visit_label='Screening' $GUID";
-            }
-            else {
+            } else {
                 return $Base . " AND s.SubprojectID IN (1, 2) AND i.scq_diagnosis='ASD Positive' $GUID";
             }
-        } else if($this->instrument == 'aosi' || $this->instrument =='ibq_r') {
-               if($this->project == 2 && $this->instrument == 'aosi'){
-                 return $Base . " AND s.SubprojectID = 10 AND UPPER(s.Visit_label) IN ('V06','V09', 'V12', 'V15') $GUID";
-               } else if($this->project == 2 && $this->instrument == 'ibq_r' ) {
-                 return $Base . " AND s.SubprojectID = 10 AND UPPER(s.Visit_label) IN ('V12', 'V15', 'V24') $GUID";
+        } else if ($this->instrument == 'aosi' || $this->instrument == 'ibq_r') {
+            if ($this->project == 2 && $this->instrument == 'aosi') {
+                return $Base . " AND s.SubprojectID = 10 AND UPPER(s.Visit_label) IN ('V06','V09', 'V12', 'V15') $GUID";
+            } else if ($this->project == 2 && $this->instrument == 'ibq_r') {
+                return $Base . " AND (s.SubprojectID=10 AND UPPER(s.Visit_label) IN ('V03','V06','V09','V12') OR s.SubprojectID=9 AND UPPER(s.Visit_label) IN ('V03')) $GUID";
 
-               } else {
-                   return $Base . " AND ((s.SubprojectID=1 AND UPPER(s.Visit_label)='V06') OR (s.SubprojectID=3 AND UPPER(s.Visit_label) IN ('V06', 'V12'))) $GUID";
-               }  
-        } else if ($this->instrument == 'vineland_proband') {
-           if ($this->project == 1) {
-               return "COALESCE(s.Current_stage, '') <> 'Recycling Bin' AND COALESCE(s.Visit, '') NOT IN ('Failure', 'Withdrawal') AND COALESCE(s.Screening, '') NOT IN ('Failure', 'Withdrawal') AND f.Administration='All' AND f.Data_entry='Complete' AND s.CenterID IN (2, 3, 4, 5) AND s.SubprojectID IN (1, 2) AND ( ps.study_consent = 'yes' AND ps.study_consent_withdrawal IS NULL) AND (ps.ndar_consent = 'yes' AND ps.ndar_consent_withdrawal IS NULL) $GUID";
             } else {
-            // No DDE
-            return "COALESCE(s.Current_stage, '') <> 'Recycling Bin' AND COALESCE(s.Visit, '') NOT IN ('Failure', 'Withdrawal') AND COALESCE(s.Screening, '') NOT IN ('Failure', 'Withdrawal') AND 
-             f.Administration='All' AND f.Data_entry='Complete' AND s.CenterID IN (2, 3, 4, 5) AND s.SubprojectID IN (9,10 ) AND s.Visit_label='Screening' AND ( ps.study_consent = 'yes' AND ps.study_consent_withdrawal IS NULL) AND (ps.ndar_consent = 'yes' AND ps.ndar_consent_withdrawal IS NULL) $GUID ";
-           }
-        } else if($this->instrument == 'vineland_subject') {
-            // No DDE
-           if($this->project == 2){
-            return "COALESCE(s.Current_stage, '') <> 'Recycling Bin' AND COALESCE(s.Visit, '') NOT IN ('Failure', 'Withdrawal') AND COALESCE(s.Screening, '') NOT IN ('Failure', 'Withdrawal') AND f.Administration='All' AND f.Data_entry='Complete' AND s.CenterID IN (2, 3, 4, 5) AND ((s.SubprojectID=9 AND UPPER(s.Visit_label)='V03') OR (s.SubprojectID=10 AND UPPER(s.Visit_label) IN ('V03','V06','V09', 'V12','V15','V18', 'V24'))) AND ( ps.study_consent = 'yes' AND ps.study_consent_withdrawal IS NULL) AND (ps.ndar_consent = 'yes' AND ps.ndar_consent_withdrawal IS NULL) $GUID ";
-            } else { 
-            return "COALESCE(s.Current_stage, '') <> 'Recycling Bin' AND COALESCE(s.Visit, '') NOT IN ('Failure', 'Withdrawal') AND COALESCE(s.Screening, '') NOT IN ('Failure', 'Withdrawal') AND f.Administration='All' AND f.Data_entry='Complete' AND s.CenterID IN (2, 3, 4, 5) AND ((s.SubprojectID=1 AND UPPER(s.Visit_label)='V06') OR (s.SubprojectID=3 AND UPPER(s.Visit_label) IN ('V06', 'V12', 'V24'))) AND ( ps.study_consent = 'yes' AND ps.study_consent_withdrawal IS NULL) AND (ps.ndar_consent = 'yes' AND ps.ndar_consent_withdrawal IS NULL) $GUID ";
-   
-             }
-        } else if ($this->instrument == 'prefrontal_task' || $this->instrument == 'csbs') {
-            if($this->project == 2 && $this->instrument == 'csbs') {
-                return $Base . " AND s.SubprojectID=10 AND UPPER(s.Visit_label) IN ('V09', 'V15') $GUID";
+                return $Base . " AND ((s.SubprojectID=1 AND UPPER(s.Visit_label)='V06') OR (s.SubprojectID=3 AND UPPER(s.Visit_label) IN ('V06', 'V12'))) $GUID";
             }
-            else {
+        } else if ($this->instrument == 'vineland_proband') {
+            if ($this->project == 1) {
+                return "COALESCE(s.Current_stage, '') <> 'Recycling Bin' AND COALESCE(s.Visit, '') NOT IN ('Failure', 'Withdrawal') AND COALESCE(s.Screening, '') NOT IN ('Failure', 'Withdrawal') AND f.Administration='All' AND f.Data_entry='Complete' AND s.CenterID IN (2, 3, 4, 5) AND s.SubprojectID IN (1, 2) AND ( ps.study_consent = 'yes' AND ps.study_consent_withdrawal IS NULL) AND (ps.ndar_consent = 'yes' AND ps.ndar_consent_withdrawal IS NULL) $GUID";
+            } else {
+                // No DDE
+                return "COALESCE(s.Current_stage, '') <> 'Recycling Bin' AND COALESCE(s.Visit, '') NOT IN ('Failure', 'Withdrawal') AND COALESCE(s.Screening, '') NOT IN ('Failure', 'Withdrawal') AND
+             f.Administration='All' AND f.Data_entry='Complete' AND s.CenterID IN (2, 3, 4, 5) AND s.SubprojectID IN (9,10 ) AND s.Visit_label='Screening' AND ( ps.study_consent = 'yes' AND ps.study_consent_withdrawal IS NULL) AND (ps.ndar_consent = 'yes' AND ps.ndar_consent_withdrawal IS NULL) $GUID ";
+            }
+        } else if ($this->instrument == 'vineland_subject') {
+            // No DDE
+            if ($this->project == 2) {
+                return "COALESCE(s.Current_stage, '') <> 'Recycling Bin' AND COALESCE(s.Visit, '') NOT IN ('Failure', 'Withdrawal') AND COALESCE(s.Screening, '') NOT IN ('Failure', 'Withdrawal') AND f.Administration='All' AND f.Data_entry='Complete' AND s.CenterID IN (2, 3, 4, 5) AND ((s.SubprojectID=9 AND UPPER(s.Visit_label)='V03') OR (s.SubprojectID=10 AND UPPER(s.Visit_label) IN ('V03','V06','V09', 'V12','V15','V18', 'V24'))) AND ( ps.study_consent = 'yes' AND ps.study_consent_withdrawal IS NULL) AND (ps.ndar_consent = 'yes' AND ps.ndar_consent_withdrawal IS NULL) $GUID ";
+            } else {
+                return "COALESCE(s.Current_stage, '') <> 'Recycling Bin' AND COALESCE(s.Visit, '') NOT IN ('Failure', 'Withdrawal') AND COALESCE(s.Screening, '') NOT IN ('Failure', 'Withdrawal') AND f.Administration='All' AND f.Data_entry='Complete' AND s.CenterID IN (2, 3, 4, 5) AND ((s.SubprojectID=1 AND UPPER(s.Visit_label)='V06') OR (s.SubprojectID=3 AND UPPER(s.Visit_label) IN ('V06', 'V12', 'V24'))) AND ( ps.study_consent = 'yes' AND ps.study_consent_withdrawal IS NULL) AND (ps.ndar_consent = 'yes' AND ps.ndar_consent_withdrawal IS NULL) $GUID ";
+            }
+        } else if ($this->instrument == 'prefrontal_task' || $this->instrument == 'csbs') {
+            if ($this->project == 2 && $this->instrument == 'csbs') {
+                return $Base . " AND s.SubprojectID=10 AND UPPER(s.Visit_label) IN ('V09', 'V15') $GUID";
+            } else {
                 return $Base . " AND s.SubprojectID=3 AND UPPER(s.Visit_label) IN ('V12', 'V24') $GUID";
             }
-        } else if ($this->instrument == 'fyi' ) {
+        } else if ($this->instrument == 'fyi') {
             return $Base . " AND s.SubprojectID=3 AND UPPER(s.Visit_label)='V12' $GUID";
-        } else if($this->instrument == 'edi') {
+        } else if ($this->instrument == 'edi') {
             return $Base . " AND ((s.SubprojectID=1 AND UPPER(s.Visit_label)='V06') OR  (s.SubprojectID=3 AND UPPER(s.Visit_label) IN ('V06', 'V12', 'V24' ))) AND s.SubprojectID <> 2 $GUID";
-        } else if($this->instrument == 'scq' || $this->instrument =='rbs_r' ) {
-          if($this->project == 2 && $this->instrument == 'rbs_r') {
+        } else if ($this->instrument == 'scq' || $this->instrument == 'rbs_r') {
+            if ($this->project == 2 && $this->instrument == 'rbs_r') {
                 return $Base . " AND s.SubprojectID=10 AND s.Visit_label ='V12' $GUID";
-            }
-            else {
+            } else {
                 return $Base . " AND UPPER(s.Visit_label) IN ('V12', 'V24') $GUID";
             }
-        } else if( ($this->instrument== 'mullen' || $this->instrument == 'edi2') && $this->project == 2){
-            return $Base . " AND (s.SubprojectID=10 AND UPPER(s.Visit_label) IN ('V03','V06','V09','V12','V15','V18','V24') OR s.SubprojectID=9 AND UPPER(s.Visit_label) IN ('V03')) $GUID";
+        } else if ($this->instrument == 'seq' && $this->project == 1) {
+            return $Base . " AND UPPER(s.Visit_label) IN ('V12', 'V24') $GUID";
+        } else if ($this->instrument == 'mullen' || $this->instrument == 'edi2') {
+            if ($this->project == 2) {
+                return $Base . " AND (s.SubprojectID=10 AND UPPER(s.Visit_label) IN ('V03','V06','V09','V12','V15','V18','V24') OR s.SubprojectID=9 AND UPPER(s.Visit_label) IN ('V03')) $GUID";
+            }
+            else {
+                return $Base . " AND UPPER(s.Visit_label) IN ('V06', 'V12', 'V24') $GUID";
+            }
         } else if ($this->instrument == 'charge') {
             // Don't use Base because there's multiple instruments
             // All the conflicts don't exist is done in the join, since they need to be part of the left join
@@ -90,40 +97,51 @@ class NDAR_Release_2016 {
                     COALESCE(s.Current_stage, '') <> 'Recycling Bin' AND COALESCE(s.Visit, '') NOT IN ('Failure', 'Withdrawal')
                     AND COALESCE(s.Screening, '') NOT IN ('Failure', 'Withdrawal')
                     AND s.CenterID IN (2, 3, 4, 5) AND ((s.SubprojectID=1 AND UPPER(s.Visit_label)='V06') OR (s.SubprojectID=3 AND UPPER(s.Visit_label) IN ('V06', 'V12', 'V24'))) AND ( ps.study_consent = 'yes' AND ps.study_consent_withdrawal IS NULL) AND (ps.ndar_consent = 'yes' AND ps.ndar_consent_withdrawal IS NULL) $GUID";
-        } else if ($this->instrument == 'head_measurements_subject' && $this->project ==2) {
-             return $Base . " AND ((s.SubprojectID=9 AND UPPER(s.Visit_label)='V03') OR (s.SubprojectID=10 AND UPPER(s.Visit_label) IN ('V03','V06','V09','V12', 'V15', 'V24'))) $GUID" ; 
-        } else if ($this->instrument == 'macarthur_words_gestures' && $this->project ==2) {    
-             return $Base . " AND (s.SubprojectID=10 AND UPPER(s.Visit_label) IN ('V12', 'V24')) $GUID";
-        } else if($this->instrument == 'ndar_subject') {
-            return  $Base ." AND c.ProjectID = $this->project $GUID";
+        } else if ($this->instrument == 'head_measurements_subject' && $this->project == 2) {
+            return $Base . " AND ((s.SubprojectID=9 AND UPPER(s.Visit_label)='V03') OR (s.SubprojectID=10 AND UPPER(s
+            .Visit_label) IN ('V03','V06','V09','V12','V15','V18','V24'))) $GUID";
+        } else if ($this->instrument == 'macarthur_words_gestures') {
+            if ($this->project == 2) {
+                return $Base . " AND (s.SubprojectID=10 AND UPPER(s.Visit_label) IN ('V12', 'V24')) $GUID";
+            } else {
+                return $Base . " AND UPPER(s.Visit_label) IN ('V12', 'V24') $GUID";
+            }
+        } else if ($this->instrument == 'ndar_subject') {
+            if ($this->project == 2) {
+                return $Base . " AND UPPER(s.Visit_label) IN ('V03') $GUID";
+            }
+            return $Base . " AND c.ProjectID = $this->project $GUID";
         }
         return $Base . " AND ((s.SubprojectID=1 AND UPPER(s.Visit_label)='V06') OR (s.SubprojectID=3 AND UPPER(s.Visit_label) IN ('V06', 'V12', 'V24'))) $GUID";
     }
 
-    function getCommonFields() {
+    function getCommonFields()
+    {
         $ndar_info = " ps.study_consent AS 'Study Consent', ps.study_consent_date AS 'Study Consent Date', ps.ndar_consent AS 'NDAR Consent', ps.ndar_consent_date AS 'NDAR Consent Date',ps.ndar_consent_withdrawal,ps.study_consent_withdrawal, ";
-        if($this->instrument == 'charge') {
+        if ($this->instrument == 'charge') {
             return "c.IBISID, ";
         }
-        if(strpos($this->instrument, '_proband') !== FALSE) {
-            if($this->instrument == 'm_chat_proband' || $this->instrument =='scq_proband' ) {
+        if (strpos($this->instrument, '_proband') !== FALSE) {
+            if ($this->instrument == 'm_chat_proband' || $this->instrument == 'scq_proband') {
                 // No validity
                 return "c.IBISID,  c.ProbandGUID,  CASE c.ProbandGender WHEN 'Male' THEN 'M' WHEN 'Female' THEN 'F' END AS ProbandGender, ROUND(DATEDIFF(i.Date_taken, c.ProbandDoB) / (365/12)) AS Proband_Age_in_Months, i.Date_taken as interview_date, ";
             }
-                return "c.IBISID, c.ProbandGUID,  CASE c.ProbandGender WHEN 'Male' THEN 'M' WHEN 'Female' THEN 'F' END AS ProbandGender, ROUND(DATEDIFF(i.Date_taken, c.ProbandDoB) / (365/12)) AS Proband_Age_in_Months, f.Validity as validity_of_data, i.Date_taken as interview_date, ";
+            return "c.IBISID, c.ProbandGUID,  CASE c.ProbandGender WHEN 'Male' THEN 'M' WHEN 'Female' THEN 'F' END AS ProbandGender, ROUND(DATEDIFF(i.Date_taken, c.ProbandDoB) / (365/12)) AS Proband_Age_in_Months, f.Validity as validity_of_data, i.Date_taken as interview_date, ";
         } else {
-            $NoValidities = array('macarthur_words_gestures', 'seq','rbs_r', 'ibq_r', 'head_measurements_subject', 'prefrontal_task', 'fyi','scq_proband');
-            if(in_array($this->instrument, $NoValidities)) {
-                if($this->instrument == 'head_measurements_subject') {
-                return "c.IBISID, c.CandidateGUID as subjectkey, CASE c.Gender WHEN 'Male' THEN 'M' WHEN 'Female' THEN 'F' END AS Gender, ROUND(DATEDIFF(i.Date_taken, c.DoB) / (365/12)) AS Candidate_Age_in_Months, i.Date_taken as interview_date, ";
+            $NoValidities = array('macarthur_words_gestures', 'seq', 'rbs_r', 'ibq_r', 'head_measurements_subject', 'prefrontal_task', 'fyi', 'scq_proband');
+            if (in_array($this->instrument, $NoValidities)) {
+                if ($this->instrument == 'head_measurements_subject') {
+                    return "c.IBISID, c.CandidateGUID as subjectkey, CASE c.Gender WHEN 'Male' THEN 'M' WHEN 'Female' THEN 'F' END AS Gender, ROUND(DATEDIFF(i.Date_taken, c.DoB) / (365/12)) AS Candidate_Age_in_Months, i.Date_taken as interview_date, ";
                 }
                 return "c.IBISID, c.CandidateGUID, CASE c.Gender WHEN 'Male' THEN 'M' WHEN 'Female' THEN 'F' END AS Gender , ROUND(DATEDIFF(i.Date_taken, c.DoB) / (365/12)) AS Candidate_Age_in_Months, i.Date_taken as interview_date, ";
             }
             return "c.IBISID, c.CandidateGUID, CASE c.Gender WHEN 'Male' THEN 'M' WHEN 'Female' THEN 'F' END AS Gender , ROUND(DATEDIFF(i.Date_taken, c.DoB) / (365/12)) AS Candidate_Age_in_Months, f.Validity as validity_of_data, i.Date_taken as interview_date, ";
         }
     }
-    function getInstrumentFields() {
-        if($this->instrument == 'adi_r_proband') {
+
+    function getInstrumentFields()
+    {
+        if ($this->instrument == 'adi_r_proband') {
             $fields = array(
                 'i.A_Total',
                 'i.BNV_Total',
@@ -298,7 +316,7 @@ class NDAR_Release_2016 {
                 'i.q_93_computational_ability_current_code',
                 'i.q_93_computational_ability_ever_code'
             );
-        } else if($this->instrument === 'aosi') {
+        } else if ($this->instrument === 'aosi') {
             $fields = array(
                 'i.examiner_location',
                 'i.total_score_1_18 AS aosi_totalscore',
@@ -402,7 +420,7 @@ class NDAR_Release_2016 {
                 'i.q41_f_touch',
                 'i.q42_sensory_change',
             );
-        } else if($this->instrument == 'm_chat_proband') {
+        } else if ($this->instrument == 'm_chat_proband') {
             $fields = array(
                 'i.total_item_fails',
                 'i.total_critical_fails',
@@ -431,198 +449,198 @@ class NDAR_Release_2016 {
                 'i.q22_stare_no_purpose',
                 'i.q23_look_at_face'
             );
-        } else if($this->instrument == 'mullen') {
+        } else if ($this->instrument == 'mullen') {
             $fields = array('i.other_comments',
-            'i.expressive_lang_1',
-            'i.expressive_lang_2',
-            'i.expressive_lang_3',
-            'i.expressive_lang_4',
-            'i.expressive_lang_5',
-            'i.expressive_lang_6',
-            'i.expressive_lang_7',
-            'i.expressive_lang_8',
-            'i.expressive_lang_9',
-            'i.expressive_lang_10',
-            'i.expressive_lang_11',
-            'i.expressive_lang_12',
-            'i.expressive_lang_13',
-            'i.expressive_lang_14',
-            'i.expressive_lang_15',
-            'i.expressive_lang_16',
-            'i.expressive_lang_17',
-            'i.expressive_lang_18',
-            'i.expressive_lang_19',
-            'i.expressive_lang_20',
-            'i.expressive_lang_21',
-            'i.expressive_lang_22',
-            'i.expressive_lang_23',
-            'i.expressive_lang_24',
-            'i.expressive_lang_25',
-            'i.expressive_lang_26',
-            'i.expressive_lang_27',
-            'i.expressive_lang_28',
-            'i.expressive_language_raw',
-            'i.expressive_language_t',
-            'i.expressive_language_percentile',
-            'i.expressive_language_description',
-            'i.expressive_language_age_equivalent',
-            'i.cognitive_t_score_sum',
-            'i.composite_standard_score',
-            'i.composite_percentile',
-            'i.composite_description',
-            'i.gross_motor_1',
-            'i.gross_motor_2',
-            'i.gross_motor_3',
-            'i.gross_motor_4',
-            'i.gross_motor_5',
-            'i.gross_motor_6',
-            'i.gross_motor_7',
-            'i.gross_motor_8',
-            'i.gross_motor_9',
-            'i.gross_motor_10',
-            'i.gross_motor_11',
-            'i.gross_motor_12',
-            'i.gross_motor_13',
-            'i.gross_motor_14',
-            'i.gross_motor_15',
-            'i.gross_motor_16',
-            'i.gross_motor_17',
-            'i.gross_motor_18',
-            'i.gross_motor_19',
-            'i.gross_motor_20',
-            'i.gross_motor_21',
-            'i.gross_motor_22',
-            'i.gross_motor_23',
-            'i.gross_motor_24',
-            'i.gross_motor_25',
-            'i.gross_motor_26',
-            'i.gross_motor_27',
-            'i.gross_motor_28',
-            'i.gross_motor_29',
-            'i.gross_motor_30',
-            'i.gross_motor_31',
-            'i.gross_motor_32',
-            'i.gross_motor_33',
-            'i.gross_motor_34',
-            'i.gross_motor_35',
-            'i.gross_motor_raw',
-            'i.gross_motor_t',
-            'i.gross_motor_percentile',
-            'i.gross_motor_description',
-            'i.gross_motor_age_equivalent',
-            'i.visual_recept_1',
-            'i.visual_recept_2',
-            'i.visual_recept_3',
-            'i.visual_recept_4',
-            'i.visual_recept_5',
-            'i.visual_recept_6',
-            'i.visual_recept_7',
-            'i.visual_recept_8',
-            'i.visual_recept_9',
-            'i.visual_recept_10',
-            'i.visual_recept_11',
-            'i.visual_recept_12',
-            'i.visual_recept_13',
-            'i.visual_recept_14',
-            'i.visual_recept_15',
-            'i.visual_recept_16',
-            'i.visual_recept_17',
-            'i.visual_recept_18',
-            'i.visual_recept_19',
-            'i.visual_recept_20',
-            'i.visual_recept_21',
-            'i.visual_recept_22',
-            'i.visual_recept_23',
-            'i.visual_recept_24',
-            'i.visual_recept_25',
-            'i.visual_recept_26',
-            'i.visual_recept_27',
-            'i.visual_recept_28',
-            'i.visual_recept_29',
-            'i.visual_recept_30',
-            'i.visual_recept_31',
-            'i.visual_recept_32',
-            'i.visual_recept_33',
-            'i.visual_reception_raw',
-            'i.visual_reception_t',
-            'i.visual_reception_percentile',
-            'i.visual_reception_description',
-            'i.visual_reception_age_equivalent',
-            'i.fine_motor_1',
-            'i.fine_motor_2',
-            'i.fine_motor_3',
-            'i.fine_motor_4',
-            'i.fine_motor_5',
-            'i.fine_motor_6',
-            'i.fine_motor_7',
-            'i.fine_motor_8',
-            'i.fine_motor_9',
-            'i.fine_motor_10',
-            'i.fine_motor_11',
-            'i.fine_motor_12',
-            'i.fine_motor_13',
-            'i.fine_motor_14',
-            'i.fine_motor_15',
-            'i.fine_motor_16',
-            'i.fine_motor_17',
-            'i.fine_motor_18',
-            'i.fine_motor_19',
-            'i.fine_motor_20',
-            'i.fine_motor_21',
-            'i.fine_motor_22',
-            'i.fine_motor_23',
-            'i.fine_motor_24',
-            'i.fine_motor_25',
-            'i.fine_motor_26',
-            'i.fine_motor_27',
-            'i.fine_motor_28',
-            'i.fine_motor_29',
-            'i.fine_motor_30',
-            'i.fine_motor_raw',
-            'i.fine_motor_t',
-            'i.fine_motor_percentile',
-            'i.fine_motor_description',
-            'i.fine_motor_age_equivalent',
-            'i.receptive_lang_1',
-            'i.receptive_lang_2',
-            'i.receptive_lang_3',
-            'i.receptive_lang_4',
-            'i.receptive_lang_5',
-            'i.receptive_lang_6',
-            'i.receptive_lang_7',
-            'i.receptive_lang_8',
-            'i.receptive_lang_9',
-            'i.receptive_lang_10',
-            'i.receptive_lang_11',
-            'i.receptive_lang_12',
-            'i.receptive_lang_13',
-            'i.receptive_lang_14',
-            'i.receptive_lang_15',
-            'i.receptive_lang_16',
-            'i.receptive_lang_17',
-            'i.receptive_lang_18',
-            'i.receptive_lang_19',
-            'i.receptive_lang_20',
-            'i.receptive_lang_21',
-            'i.receptive_lang_22',
-            'i.receptive_lang_23',
-            'i.receptive_lang_24',
-            'i.receptive_lang_25',
-            'i.receptive_lang_26',
-            'i.receptive_lang_27',
-            'i.receptive_lang_28',
-            'i.receptive_lang_29',
-            'i.receptive_lang_30',
-            'i.receptive_lang_31',
-            'i.receptive_lang_32',
-            'i.receptive_lang_33',
-            'i.receptive_language_raw',
-            'i.receptive_language_t',
-            'i.receptive_language_percentile',
-            'i.receptive_language_description',
-            'i.receptive_language_age_equivalent'
-        );
-        } else if($this->instrument == 'scq_proband' || $this->instrument == 'scq_subject') {
+                'i.expressive_lang_1',
+                'i.expressive_lang_2',
+                'i.expressive_lang_3',
+                'i.expressive_lang_4',
+                'i.expressive_lang_5',
+                'i.expressive_lang_6',
+                'i.expressive_lang_7',
+                'i.expressive_lang_8',
+                'i.expressive_lang_9',
+                'i.expressive_lang_10',
+                'i.expressive_lang_11',
+                'i.expressive_lang_12',
+                'i.expressive_lang_13',
+                'i.expressive_lang_14',
+                'i.expressive_lang_15',
+                'i.expressive_lang_16',
+                'i.expressive_lang_17',
+                'i.expressive_lang_18',
+                'i.expressive_lang_19',
+                'i.expressive_lang_20',
+                'i.expressive_lang_21',
+                'i.expressive_lang_22',
+                'i.expressive_lang_23',
+                'i.expressive_lang_24',
+                'i.expressive_lang_25',
+                'i.expressive_lang_26',
+                'i.expressive_lang_27',
+                'i.expressive_lang_28',
+                'i.expressive_language_raw',
+                'i.expressive_language_t',
+                'i.expressive_language_percentile',
+                'i.expressive_language_description',
+                'i.expressive_language_age_equivalent',
+                'i.cognitive_t_score_sum',
+                'i.composite_standard_score',
+                'i.composite_percentile',
+                'i.composite_description',
+                'i.gross_motor_1',
+                'i.gross_motor_2',
+                'i.gross_motor_3',
+                'i.gross_motor_4',
+                'i.gross_motor_5',
+                'i.gross_motor_6',
+                'i.gross_motor_7',
+                'i.gross_motor_8',
+                'i.gross_motor_9',
+                'i.gross_motor_10',
+                'i.gross_motor_11',
+                'i.gross_motor_12',
+                'i.gross_motor_13',
+                'i.gross_motor_14',
+                'i.gross_motor_15',
+                'i.gross_motor_16',
+                'i.gross_motor_17',
+                'i.gross_motor_18',
+                'i.gross_motor_19',
+                'i.gross_motor_20',
+                'i.gross_motor_21',
+                'i.gross_motor_22',
+                'i.gross_motor_23',
+                'i.gross_motor_24',
+                'i.gross_motor_25',
+                'i.gross_motor_26',
+                'i.gross_motor_27',
+                'i.gross_motor_28',
+                'i.gross_motor_29',
+                'i.gross_motor_30',
+                'i.gross_motor_31',
+                'i.gross_motor_32',
+                'i.gross_motor_33',
+                'i.gross_motor_34',
+                'i.gross_motor_35',
+                'i.gross_motor_raw',
+                'i.gross_motor_t',
+                'i.gross_motor_percentile',
+                'i.gross_motor_description',
+                'i.gross_motor_age_equivalent',
+                'i.visual_recept_1',
+                'i.visual_recept_2',
+                'i.visual_recept_3',
+                'i.visual_recept_4',
+                'i.visual_recept_5',
+                'i.visual_recept_6',
+                'i.visual_recept_7',
+                'i.visual_recept_8',
+                'i.visual_recept_9',
+                'i.visual_recept_10',
+                'i.visual_recept_11',
+                'i.visual_recept_12',
+                'i.visual_recept_13',
+                'i.visual_recept_14',
+                'i.visual_recept_15',
+                'i.visual_recept_16',
+                'i.visual_recept_17',
+                'i.visual_recept_18',
+                'i.visual_recept_19',
+                'i.visual_recept_20',
+                'i.visual_recept_21',
+                'i.visual_recept_22',
+                'i.visual_recept_23',
+                'i.visual_recept_24',
+                'i.visual_recept_25',
+                'i.visual_recept_26',
+                'i.visual_recept_27',
+                'i.visual_recept_28',
+                'i.visual_recept_29',
+                'i.visual_recept_30',
+                'i.visual_recept_31',
+                'i.visual_recept_32',
+                'i.visual_recept_33',
+                'i.visual_reception_raw',
+                'i.visual_reception_t',
+                'i.visual_reception_percentile',
+                'i.visual_reception_description',
+                'i.visual_reception_age_equivalent',
+                'i.fine_motor_1',
+                'i.fine_motor_2',
+                'i.fine_motor_3',
+                'i.fine_motor_4',
+                'i.fine_motor_5',
+                'i.fine_motor_6',
+                'i.fine_motor_7',
+                'i.fine_motor_8',
+                'i.fine_motor_9',
+                'i.fine_motor_10',
+                'i.fine_motor_11',
+                'i.fine_motor_12',
+                'i.fine_motor_13',
+                'i.fine_motor_14',
+                'i.fine_motor_15',
+                'i.fine_motor_16',
+                'i.fine_motor_17',
+                'i.fine_motor_18',
+                'i.fine_motor_19',
+                'i.fine_motor_20',
+                'i.fine_motor_21',
+                'i.fine_motor_22',
+                'i.fine_motor_23',
+                'i.fine_motor_24',
+                'i.fine_motor_25',
+                'i.fine_motor_26',
+                'i.fine_motor_27',
+                'i.fine_motor_28',
+                'i.fine_motor_29',
+                'i.fine_motor_30',
+                'i.fine_motor_raw',
+                'i.fine_motor_t',
+                'i.fine_motor_percentile',
+                'i.fine_motor_description',
+                'i.fine_motor_age_equivalent',
+                'i.receptive_lang_1',
+                'i.receptive_lang_2',
+                'i.receptive_lang_3',
+                'i.receptive_lang_4',
+                'i.receptive_lang_5',
+                'i.receptive_lang_6',
+                'i.receptive_lang_7',
+                'i.receptive_lang_8',
+                'i.receptive_lang_9',
+                'i.receptive_lang_10',
+                'i.receptive_lang_11',
+                'i.receptive_lang_12',
+                'i.receptive_lang_13',
+                'i.receptive_lang_14',
+                'i.receptive_lang_15',
+                'i.receptive_lang_16',
+                'i.receptive_lang_17',
+                'i.receptive_lang_18',
+                'i.receptive_lang_19',
+                'i.receptive_lang_20',
+                'i.receptive_lang_21',
+                'i.receptive_lang_22',
+                'i.receptive_lang_23',
+                'i.receptive_lang_24',
+                'i.receptive_lang_25',
+                'i.receptive_lang_26',
+                'i.receptive_lang_27',
+                'i.receptive_lang_28',
+                'i.receptive_lang_29',
+                'i.receptive_lang_30',
+                'i.receptive_lang_31',
+                'i.receptive_lang_32',
+                'i.receptive_lang_33',
+                'i.receptive_language_raw',
+                'i.receptive_language_t',
+                'i.receptive_language_percentile',
+                'i.receptive_language_description',
+                'i.receptive_language_age_equivalent'
+            );
+        } else if ($this->instrument == 'scq_proband' || $this->instrument == 'scq_subject') {
             $fields = array('i.score', 'i.q1_talk_short_phrases', 'i.q2_to_and_fro', 'i.q3_odd_phrases', 'i.q4_socially_inappropriate', 'i.q5_pronouns_mixed', 'i.q6_words_invented', 'i.q7_said_same_thing', 'i.q8_particular_way', 'i.q9_facial_expressions', 'i.q10_hand_like_tool', 'i.q11_interests_that_preoccupy', 'i.q12_interested_in_parts', 'i.q13_intense_interests', 'i.q14_sight_feel_sound', 'i.q15_mannerisms', 'i.q16_complicated_movements', 'i.q17_deliberate_injury', 'i.q18_carry_objects', 'i.q19_particular_friends', 'i.q20_talk_friendly', 'i.q21_spontaneously_copy', 'i.q22_spontaneously_point', 'i.q23_gestures', 'i.q24_nod_yes', 'i.q25_shake_no', 'i.q26_look_directly', 'i.q27_smile_back', 'i.q28_show_things', 'i.q29_offer_share', 'i.q30_join_enjoyment', 'i.q31_comfort', 'i.q32_wanted_something', 'i.q33_facial_expressions', 'i.q34_spontaneously_join', 'i.q35_play_pretend', 'i.q36_seem_interested', 'i.q37_respond_positively', 'i.q38_came_into_room', 'i.q39_play_imaginative', 'i.q40_play_cooperatively');
         } else if ($this->instrument == 'vineland_subject' || $this->instrument == 'vineland_proband') {
             $fields = array(
@@ -749,7 +767,7 @@ class NDAR_Release_2016 {
                 'i.`REC_95%_CI` AS REC_95PERCENT_CI',
                 'i.REC_ADAPT_LEVEL',
                 'i.REC_AGE_EQUIV',
-                   'i.REC_RAW',
+                'i.REC_RAW',
                 'i.REC_SW',
                 'i.REC_VSCALE',
                 'i.`SOC_%ILE_RANK` AS SOC_PERCENTILE_RANK',
@@ -765,14 +783,14 @@ class NDAR_Release_2016 {
                 'i.WRN_RAW',
                 'i.WRN_SW',
                 'i.WRN_VSCALE');
-        } else if($this->instrument == 'rbs_r') {
+        } else if ($this->instrument == 'rbs_r') {
             $fields = array('i.Date_taken as interview_date', 'i.respondent', 'i.I_stereotyped_endorsed', 'i.I_stereotyped_score', 'i.II_self_injurious_endorsed', 'i.II_self_injurious_score', 'i.III_compulsive_endorsed', 'i.III_compulsive_score', 'i.IV_ritualistic_endorsed', 'i.IV_ritualistic_score', 'i.overall_endorsed', 'i.overall_score', 'i.q1_whole_body', 'i.q10_bites_self', 'i.q11_pulls', 'i.q12_rubs_or_scratches', 'i.q13_inserts_finger_or_object', 'i.q14_skin_picking', 'i.q15_arranging_ordering', 'i.q16_completeness', 'i.q17_washing_cleaning', 'i.q18_checking', 'i.q19_counting', 'i.q2_head', 'i.q20_hoarding_saving', 'i.q21_repeating', 'i.q22_touch_tap', 'i.q23_eating_mealtime', 'i.q24_sleeping_bedtime', 'i.q25_self_care', 'i.q26_travel_transportation', 'i.q27_play_leisure', 'i.q28_communication', 'i.q29_insists_things_remain', 'i.q3_hand_finger', 'i.q30_objects_to_visiting', 'i.q31_upset_if_interrupted', 'i.q32_walking_in_a_pattern', 'i.q33_insists_on_sitting_at_same_place', 'i.q34_dislikes_change', 'i.q35_insists_on_particular_door', 'i.q36_likes_same_cd', 'i.q37_resists_changing_activities', 'i.q38_insists_on_same_routine', 'i.q39_insists_that_specific', 'i.q4_locomotion', 'i.q40_fascination_preoccupation', 'i.q41_strongly_attached', 'i.q42_preoccupation_with_parts', 'i.q43_fascination_with_movement', 'i.q5_object_usage', 'i.q6_sensory', 'i.q7_hits_self_body_part', 'i.q8_hits_self_against_surface', 'i.q9_hits_self_with_object', 'i.V_sameness_endorsed', 'i.V_sameness_score', 'i.VI_restricted_endorsed', 'i.VI_restricted_score');
-        } else if($this->instrument == 'macarthur_words_gestures') {
+        } else if ($this->instrument == 'macarthur_words_gestures') {
             $fields = array('i.early_gestures_number',
-               // 'i.early_gestures_percentile',
+                // 'i.early_gestures_percentile',
                 'i.I_A_1',
                 'i.I_A_2',
-               // 'i.I_A_3',
+                // 'i.I_A_3',
                 'i.I_B_1',
                 'i.I_B_10',
                 'i.I_B_11',
@@ -1263,379 +1281,382 @@ class NDAR_Release_2016 {
                 'i.II_E_8',
                 'i.II_E_9',
                 'i.later_gestures_number',
-               // 'i.later_gestures_percentile',
+                // 'i.later_gestures_percentile',
                 'i.phrases_understood_number',
-               // 'i.phrases_understood_percentile',
+                // 'i.phrases_understood_percentile',
                 'i.words_produced_number',
-               // 'i.words_produced_percentile',
+                // 'i.words_produced_percentile',
                 'i.words_understood_number',
-               // 'i.words_understood_percentile',
+                // 'i.words_understood_percentile',
                 'i.total_gestures_number'
-               // 'i.total_gestures_percentile'
+                // 'i.total_gestures_percentile'
             );
         } else if ($this->instrument == 'csbs') {
             $fields = array('i.object_use_weighted',
-            'i.relationship_to_child',
-            'i.q_1_alertness',
-            'i.q_2_emotional_reaction',
-            'i.q_3_level_of_interest',
-            'i.q_4_comfort_level',
-            'i.q_5_level_of_activity',
-            'i.q_6_level_of_communication',
-            'i.q_7_play_behaviour',
-            'i.emotion_eye_gaze_standard',
-            'i.emotion_eye_gaze_percentile',
-            'i.communication_standard',
-            'i.communication_percentile',
-            'i.gestures_standard',
-            'i.gestures_percentile',
-            'i.sounds_standard',
-            'i.sounds_percentile',
-            'i.words_standard',
-            'i.words_percentile',
-            'i.understanding_standard',
-            'i.understanding_percentile',
-            'i.object_use_standard',
-            'i.object_use_percentile',
-            'i.social_composite_score',
-            'i.social_composite_standard',
-            'i.social_composite_percentile',
-            'i.speech_composite_score',
-            'i.speech_composite_standard',
-            'i.speech_composite_percentile',
-            'i.symbolic_composite_score',
-            'i.symbolic_composite_standard',
-            'i.symbolic_composite_percentile',
-            'i.total_weighted_raw_score',
-            'i.total_standard',
-            'i.total_percentile',
-            'i.q_1_gaze_shifts_1',
-            'i.q_1_gaze_shifts_2',
-            'i.q_1_gaze_shifts_3',
-            'i.q_1_gaze_shifts_4',
-            'i.q_1_gaze_shifts_5',
-            'i.q_1_gaze_shifts_6',
-            'i.q_1_gaze_shifts_raw_score',
-            'i.q_2_shared_positive_affect_1',
-            'i.q_2_shared_positive_affect_2',
-            'i.q_2_shared_positive_affect_3',
-            'i.q_2_shared_positive_affect_4',
-            'i.q_2_shared_positive_affect_5',
-            'i.q_2_shared_positive_affect_6',
-            'i.q_2_shared_positive_affect_raw_score',
-            'i.q_3_gaze_point_following_2',
-            'i.q_3_gaze_point_following_5',
-            'i.q_3_gaze_point_following_raw_score',
-            'i.emotion_eye_gaze_weighted',
-            'i.q_4_rate_of_communicating_1',
-            'i.q_4_rate_of_communicating_2',
-            'i.q_4_rate_of_communicating_3',
-            'i.q_4_rate_of_communicating_4',
-            'i.q_4_rate_of_communicating_5',
-            'i.q_4_rate_of_communicating_6',
-            'i.q_4_rate_of_communicating_raw_score',
-            'i.q_5_behaviour_regulation_1',
-            'i.q_5_behaviour_regulation_2',
-            'i.q_5_behaviour_regulation_3',
-            'i.q_5_behaviour_regulation_4',
-            'i.q_5_behaviour_regulation_5',
-            'i.q_5_behaviour_regulation_6',
-            'i.q_5_behaviour_regulation_raw_score',
-            'i.q_6_social_interaction_1',
-            'i.q_6_social_interaction_2',
-            'i.q_6_social_interaction_3',
-            'i.q_6_social_interaction_4',
-            'i.q_6_social_interaction_5',
-            'i.q_6_social_interaction_6',
-            'i.q_6_social_interaction_raw_score',
-            'i.q_7_joint_attention_1',
-            'i.q_7_joint_attention_2',
-            'i.q_7_joint_attention_3',
-            'i.q_7_joint_attention_4',
-            'i.q_7_joint_attention_5',
-            'i.q_7_joint_attention_6',
-            'i.q_7_joint_attention_raw_score',
-            'i.communication_weighted',
-            'i.q_8_conventional_gestures_gives',
-            'i.q_8_conventional_gestures_shows',
-            'i.q_8_conventional_gestures_pushes_pulls',
-            'i.q_8_conventional_gestures_reaches',
-            'i.q_8_conventional_gestures_raw_score',
-            'i.q_8_conventional_gestures_points',
-            'i.q_8_conventional_gestures_waves',
-            'i.q_8_conventional_gestures_nods_head',
-            'i.q_8_conventional_gestures_shakes_head',
-            'i.q_9_distal_gestures_1',
-            'i.q_9_distal_gestures_2',
-            'i.q_9_distal_gestures_3',
-            'i.q_9_distal_gestures_4',
-            'i.q_9_distal_gestures_5',
-            'i.q_9_distal_gestures_6',
-            'i.q_9_distal_gestures_raw_score',
-            'i.gestures_weighted',
-            'i.q_10_syllables_consonants_1',
-            'i.q_10_syllables_consonants_2',
-            'i.q_10_syllables_consonants_3',
-            'i.q_10_syllables_consonants_4',
-            'i.q_10_syllables_consonants_5',
-            'i.q_10_syllables_consonants_6',
-            'i.q_10_syllables_consonants_raw_score',
-            'i.q_11_inventory_of_consonants_m',
-            'i.q_11_inventory_of_consonants_n',
-            'i.q_11_inventory_of_consonants_b_p',
-            'i.q_11_inventory_of_consonants_d_t',
-            'i.q_11_inventory_of_consonants_g_k',
-            'i.q_11_inventory_of_consonants_raw_score',
-            'i.q_11_inventory_of_consonants_w',
-            'i.q_11_inventory_of_consonants_l',
-            'i.q_11_inventory_of_consonants_y',
-            'i.q_11_inventory_of_consonants_s',
-            'i.q_11_inventory_of_consonants_sh',
-            'i.sounds_weighted',
-            'i.q_12_words_1',
-            'i.q_12_words_2',
-            'i.q_12_words_3',
-            'i.q_12_words_4',
-            'i.q_12_words_5',
-            'i.q_12_words_6',
-            'i.q_12_words_raw_score',
-            'i.q_13_words_1',
-            'i.q_13_words_2',
-            'i.q_13_words_3',
-            'i.q_13_words_4',
-            'i.q_13_words_raw_score',
-            'i.q_13_words_5',
-            'i.q_13_words_6',
-            'i.q_13_words_7',
-            'i.q_13_words_8',
-            'i.q_13_words_9',
-            'i.q_13_words_10',
-            'i.q_13_words_11',
-            'i.q_13_words_12',
-            'i.q_13_words_13',
-            'i.q_13_words_14',
-            'i.q_13_words_15',
-            'i.q_13_words_16',
-            'i.q_14_word_combos_1',
-            'i.q_14_word_combos_2',
-            'i.q_14_word_combos_3',
-            'i.q_14_word_combos_4',
-            'i.q_14_word_combos_5',
-            'i.q_14_word_combos_6',
-            'i.q_14_word_combos_raw_score',
-            'i.q_15_word_combos_1',
-            'i.q_15_word_combos_2',
-            'i.q_15_word_combos_raw_score',
-            'i.q_15_word_combos_3',
-            'i.q_15_word_combos_4',
-            'i.q_15_word_combos_5',
-            'i.q_15_word_combos_6',
-            'i.q_16_language_comp_raw_score',
-            'i.q_15_word_combos_7',
-            'i.q_15_word_combos_8',
-            'i.words_weighted',
-            'i.wind_up_admin',
-            'i.q_16_language_comp_objects_1_name',
-            'i.balloon_admin',
-            'i.q_16_language_comp_objects_1',
-            'i.bubbles_admin',
-            'i.q_16_language_comp_objects_2_name',
-            'i.jar_admin',
-            'i.q_16_language_comp_objects_2',
-            'i.books_admin',
-            'i.q_16_language_comp_objects_3_name',
-            'i.play_admin',
-            'i.q_16_language_comp_objects_3',
-            'i.q_16_language_comp_objects_4_name',
-            'i.q_16_language_comp_objects_4',
-            'i.q_16_language_comp_person_1_name',
-            'i.q_16_language_comp_person_1',
-            'i.q_16_language_comp_person_2_name',
-            'i.q_16_language_comp_person_2',
-            'i.q_16_language_comp_person_3_name',
-            'i.q_16_language_comp_person_3',
-            'i.q_16_language_comp_body_parts_1_name',
-            'i.q_16_language_comp_body_parts_1',
-            'i.q_16_language_comp_body_parts_2_name',
-            'i.q_16_language_comp_body_parts_2',
-            'i.q_16_language_comp_body_parts_3_name',
-            'i.q_16_language_comp_body_parts_3',
-            'i.q_16_language_comp_body_parts_4_name',
-            'i.q_16_language_comp_body_parts_4',
-            'i.understanding_weighted',
-            'i.q_17_action_schemes_puts_in',
-            'i.q_17_action_schemes_puts_on',
-            'i.q_17_action_schemes_drinks_with_bottle',
-            'i.q_17_action_schemes_drinks_with_cup',
-            'i.q_18_actions_towards_other_raw_score',
-            'i.q_17_action_schemes_hugs',
-            'i.q_17_action_schemes_kisses',
-            'i.q_17_action_schemes_feeds_with_utensil',
-            'i.q_17_action_schemes_feeds_with_bowl',
-            'i.q_17_action_schemes_stirs',
-            'i.q_17_action_schemes_scoops',
-            'i.q_17_action_schemes_pours',
-            'i.q_19_sequence_action_schemes_raw_score',
-            'i.q_17_action_schemes_other',
-            'i.q_17_action_schemes_other_specify',
-            'i.q_17_action_schemes_none',
-            'i.q_17_action_schemes_raw_score',
-            'i.q_18_action_towards_other_1',
-            'i.q_18_action_towards_other_1_agent',
-            'i.q_18_action_towards_other_1_agent_specify',
-            'i.q_18_action_towards_other_2',
-            'i.q_18_action_towards_other_2_agent',
-            'i.q_18_action_towards_other_2_agent_specify',
-            'i.q_18_action_towards_other_3',
-            'i.q_18_action_towards_other_3_agent',
-            'i.q_18_action_towards_other_3_agent_specify',
-            'i.q_18_action_towards_other_4',
-            'i.q_18_action_towards_other_4_agent',
-            'i.q_18_action_towards_other_4_agent_specify',
-            'i.q_18_action_towards_other_5',
-            'i.q_18_action_towards_other_5_agent',
-            'i.q_18_action_towards_other_5_agent_specify',
-            'i.q_18_action_towards_other_6',
-            'i.q_18_action_towards_other_6_agent',
-            'i.q_18_action_towards_other_6_agent_specify',
-            'i.q_19_sequence_action_schemes_1_action1',
-            'i.q_19_sequence_action_schemes_1_action2',
-            'i.q_19_sequence_action_schemes_2_action1',
-            'i.q_19_sequence_action_schemes_2_action2',
-            'i.q_19_sequence_action_schemes_3_action1',
-            'i.q_19_sequence_action_schemes_3_action2',
-            'i.q_19_sequence_action_schemes_4_action1',
-            'i.q_19_sequence_action_schemes_4_action2',
-            'i.q_19_sequence_action_schemes_5_action1',
-            'i.q_19_sequence_action_schemes_5_action2',
-            'i.q_19_sequence_action_schemes_6_action1',
-            'i.q_19_sequence_action_schemes_6_action2',
-            'CASE i.q_20_stacks_tower WHEN \'not_administered\' THEN \'6_not_administered\' ELSE i.q_20_stacks_tower END as q_20_stacks_tower',
-            'i.q_20_stacks_tower_raw_score',
-            'gestures_standard',
-            'gestures_percentile',
-            'i.q_16a_language_comp_object_raw_score',
-            'i.q_16b_language_comp_person_name_raw_score' ,
-            'i.q_16c_language_comp_body_parts_raw_score'
-);
-        } else if($this->instrument == 'ibq_r') {
+                'i.relationship_to_child',
+                'i.q_1_alertness',
+                'i.q_2_emotional_reaction',
+                'i.q_3_level_of_interest',
+                'i.q_4_comfort_level',
+                'i.q_5_level_of_activity',
+                'i.q_6_level_of_communication',
+                'i.q_7_play_behaviour',
+                'i.emotion_eye_gaze_standard',
+                'i.emotion_eye_gaze_percentile',
+                'i.communication_standard',
+                'i.communication_percentile',
+                'i.gestures_standard',
+                'i.gestures_percentile',
+                'i.sounds_standard',
+                'i.sounds_percentile',
+                'i.words_standard',
+                'i.words_percentile',
+                'i.understanding_standard',
+                'i.understanding_percentile',
+                'i.object_use_standard',
+                'i.object_use_percentile',
+                'i.social_composite_score',
+                'i.social_composite_standard',
+                'i.social_composite_percentile',
+                'i.speech_composite_score',
+                'i.speech_composite_standard',
+                'i.speech_composite_percentile',
+                'i.symbolic_composite_score',
+                'i.symbolic_composite_standard',
+                'i.symbolic_composite_percentile',
+                'i.total_weighted_raw_score',
+                'i.total_standard',
+                'i.total_percentile',
+                'i.q_1_gaze_shifts_1',
+                'i.q_1_gaze_shifts_2',
+                'i.q_1_gaze_shifts_3',
+                'i.q_1_gaze_shifts_4',
+                'i.q_1_gaze_shifts_5',
+                'i.q_1_gaze_shifts_6',
+                'i.q_1_gaze_shifts_raw_score',
+                'i.q_2_shared_positive_affect_1',
+                'i.q_2_shared_positive_affect_2',
+                'i.q_2_shared_positive_affect_3',
+                'i.q_2_shared_positive_affect_4',
+                'i.q_2_shared_positive_affect_5',
+                'i.q_2_shared_positive_affect_6',
+                'i.q_2_shared_positive_affect_raw_score',
+                'i.q_3_gaze_point_following_2',
+                'i.q_3_gaze_point_following_5',
+                'i.q_3_gaze_point_following_raw_score',
+                'i.emotion_eye_gaze_weighted',
+                'i.q_4_rate_of_communicating_1',
+                'i.q_4_rate_of_communicating_2',
+                'i.q_4_rate_of_communicating_3',
+                'i.q_4_rate_of_communicating_4',
+                'i.q_4_rate_of_communicating_5',
+                'i.q_4_rate_of_communicating_6',
+                'i.q_4_rate_of_communicating_raw_score',
+                'i.q_5_behaviour_regulation_1',
+                'i.q_5_behaviour_regulation_2',
+                'i.q_5_behaviour_regulation_3',
+                'i.q_5_behaviour_regulation_4',
+                'i.q_5_behaviour_regulation_5',
+                'i.q_5_behaviour_regulation_6',
+                'i.q_5_behaviour_regulation_raw_score',
+                'i.q_6_social_interaction_1',
+                'i.q_6_social_interaction_2',
+                'i.q_6_social_interaction_3',
+                'i.q_6_social_interaction_4',
+                'i.q_6_social_interaction_5',
+                'i.q_6_social_interaction_6',
+                'i.q_6_social_interaction_raw_score',
+                'i.q_7_joint_attention_1',
+                'i.q_7_joint_attention_2',
+                'i.q_7_joint_attention_3',
+                'i.q_7_joint_attention_4',
+                'i.q_7_joint_attention_5',
+                'i.q_7_joint_attention_6',
+                'i.q_7_joint_attention_raw_score',
+                'i.communication_weighted',
+                'i.q_8_conventional_gestures_gives',
+                'i.q_8_conventional_gestures_shows',
+                'i.q_8_conventional_gestures_pushes_pulls',
+                'i.q_8_conventional_gestures_reaches',
+                'i.q_8_conventional_gestures_raw_score',
+                'i.q_8_conventional_gestures_points',
+                'i.q_8_conventional_gestures_waves',
+                'i.q_8_conventional_gestures_nods_head',
+                'i.q_8_conventional_gestures_shakes_head',
+                'i.q_9_distal_gestures_1',
+                'i.q_9_distal_gestures_2',
+                'i.q_9_distal_gestures_3',
+                'i.q_9_distal_gestures_4',
+                'i.q_9_distal_gestures_5',
+                'i.q_9_distal_gestures_6',
+                'i.q_9_distal_gestures_raw_score',
+                'i.gestures_weighted',
+                'i.q_10_syllables_consonants_1',
+                'i.q_10_syllables_consonants_2',
+                'i.q_10_syllables_consonants_3',
+                'i.q_10_syllables_consonants_4',
+                'i.q_10_syllables_consonants_5',
+                'i.q_10_syllables_consonants_6',
+                'i.q_10_syllables_consonants_raw_score',
+                'i.q_11_inventory_of_consonants_m',
+                'i.q_11_inventory_of_consonants_n',
+                'i.q_11_inventory_of_consonants_b_p',
+                'i.q_11_inventory_of_consonants_d_t',
+                'i.q_11_inventory_of_consonants_g_k',
+                'i.q_11_inventory_of_consonants_raw_score',
+                'i.q_11_inventory_of_consonants_w',
+                'i.q_11_inventory_of_consonants_l',
+                'i.q_11_inventory_of_consonants_y',
+                'i.q_11_inventory_of_consonants_s',
+                'i.q_11_inventory_of_consonants_sh',
+                'i.sounds_weighted',
+                'i.q_12_words_1',
+                'i.q_12_words_2',
+                'i.q_12_words_3',
+                'i.q_12_words_4',
+                'i.q_12_words_5',
+                'i.q_12_words_6',
+                'i.q_12_words_raw_score',
+                'i.q_13_words_1',
+                'i.q_13_words_2',
+                'i.q_13_words_3',
+                'i.q_13_words_4',
+                'i.q_13_words_raw_score',
+                'i.q_13_words_5',
+                'i.q_13_words_6',
+                'i.q_13_words_7',
+                'i.q_13_words_8',
+                'i.q_13_words_9',
+                'i.q_13_words_10',
+                'i.q_13_words_11',
+                'i.q_13_words_12',
+                'i.q_13_words_13',
+                'i.q_13_words_14',
+                'i.q_13_words_15',
+                'i.q_13_words_16',
+                'i.q_14_word_combos_1',
+                'i.q_14_word_combos_2',
+                'i.q_14_word_combos_3',
+                'i.q_14_word_combos_4',
+                'i.q_14_word_combos_5',
+                'i.q_14_word_combos_6',
+                'i.q_14_word_combos_raw_score',
+                'i.q_15_word_combos_1',
+                'i.q_15_word_combos_2',
+                'i.q_15_word_combos_raw_score',
+                'i.q_15_word_combos_3',
+                'i.q_15_word_combos_4',
+                'i.q_15_word_combos_5',
+                'i.q_15_word_combos_6',
+                'i.q_16_language_comp_raw_score',
+                'i.q_15_word_combos_7',
+                'i.q_15_word_combos_8',
+                'i.words_weighted',
+                'i.wind_up_admin',
+                'i.q_16_language_comp_objects_1_name',
+                'i.balloon_admin',
+                'i.q_16_language_comp_objects_1',
+                'i.bubbles_admin',
+                'i.q_16_language_comp_objects_2_name',
+                'i.jar_admin',
+                'i.q_16_language_comp_objects_2',
+                'i.books_admin',
+                'i.q_16_language_comp_objects_3_name',
+                'i.play_admin',
+                'i.q_16_language_comp_objects_3',
+                'i.q_16_language_comp_objects_4_name',
+                'i.q_16_language_comp_objects_4',
+                'i.q_16_language_comp_person_1_name',
+                'i.q_16_language_comp_person_1',
+                'i.q_16_language_comp_person_2_name',
+                'i.q_16_language_comp_person_2',
+                'i.q_16_language_comp_person_3_name',
+                'i.q_16_language_comp_person_3',
+                'i.q_16_language_comp_body_parts_1_name',
+                'i.q_16_language_comp_body_parts_1',
+                'i.q_16_language_comp_body_parts_2_name',
+                'i.q_16_language_comp_body_parts_2',
+                'i.q_16_language_comp_body_parts_3_name',
+                'i.q_16_language_comp_body_parts_3',
+                'i.q_16_language_comp_body_parts_4_name',
+                'i.q_16_language_comp_body_parts_4',
+                'i.understanding_weighted',
+                'i.q_17_action_schemes_puts_in',
+                'i.q_17_action_schemes_puts_on',
+                'i.q_17_action_schemes_drinks_with_bottle',
+                'i.q_17_action_schemes_drinks_with_cup',
+                'i.q_18_actions_towards_other_raw_score',
+                'i.q_17_action_schemes_hugs',
+                'i.q_17_action_schemes_kisses',
+                'i.q_17_action_schemes_feeds_with_utensil',
+                'i.q_17_action_schemes_feeds_with_bowl',
+                'i.q_17_action_schemes_stirs',
+                'i.q_17_action_schemes_scoops',
+                'i.q_17_action_schemes_pours',
+                'i.q_19_sequence_action_schemes_raw_score',
+                'i.q_17_action_schemes_other',
+                'i.q_17_action_schemes_other_specify',
+                'i.q_17_action_schemes_none',
+                'i.q_17_action_schemes_raw_score',
+                'i.q_18_action_towards_other_1',
+                'i.q_18_action_towards_other_1_agent',
+                'i.q_18_action_towards_other_1_agent_specify',
+                'i.q_18_action_towards_other_2',
+                'i.q_18_action_towards_other_2_agent',
+                'i.q_18_action_towards_other_2_agent_specify',
+                'i.q_18_action_towards_other_3',
+                'i.q_18_action_towards_other_3_agent',
+                'i.q_18_action_towards_other_3_agent_specify',
+                'i.q_18_action_towards_other_4',
+                'i.q_18_action_towards_other_4_agent',
+                'i.q_18_action_towards_other_4_agent_specify',
+                'i.q_18_action_towards_other_5',
+                'i.q_18_action_towards_other_5_agent',
+                'i.q_18_action_towards_other_5_agent_specify',
+                'i.q_18_action_towards_other_6',
+                'i.q_18_action_towards_other_6_agent',
+                'i.q_18_action_towards_other_6_agent_specify',
+                'i.q_19_sequence_action_schemes_1_action1',
+                'i.q_19_sequence_action_schemes_1_action2',
+                'i.q_19_sequence_action_schemes_2_action1',
+                'i.q_19_sequence_action_schemes_2_action2',
+                'i.q_19_sequence_action_schemes_3_action1',
+                'i.q_19_sequence_action_schemes_3_action2',
+                'i.q_19_sequence_action_schemes_4_action1',
+                'i.q_19_sequence_action_schemes_4_action2',
+                'i.q_19_sequence_action_schemes_5_action1',
+                'i.q_19_sequence_action_schemes_5_action2',
+                'i.q_19_sequence_action_schemes_6_action1',
+                'i.q_19_sequence_action_schemes_6_action2',
+                'CASE i.q_20_stacks_tower WHEN \'not_administered\' THEN \'6_not_administered\' ELSE i.q_20_stacks_tower END as q_20_stacks_tower',
+                'i.q_20_stacks_tower_raw_score',
+                'gestures_standard',
+                'gestures_percentile',
+                'i.q_16a_language_comp_object_raw_score',
+                'i.q_16b_language_comp_person_name_raw_score',
+                'i.q_16c_language_comp_body_parts_raw_score'
+            );
+        } else if ($this->instrument == 'ibq_r') {
             $fields = array('i.activity_level', 'i.approach', 'i.cuddliness', 'i.distress_to_limitations', 'i.duration_of_orienting', 'i.falling_reactivity', 'i.fear', 'i.high_pleasure', 'i.low_pleasure', 'i.perceptual_sensitivity', 'i.sadness', 'i.smiling_and_laughter', 'i.soothability', 'i.vocal_reactivity', 'i.q_1', 'i.q_10', 'i.q_100', 'i.q_101', 'i.q_102', 'i.q_103', 'i.q_104', 'i.q_105', 'i.q_106', 'i.q_107', 'i.q_108', 'i.q_109', 'i.q_11', 'i.q_110', 'i.q_111', 'i.q_112', 'i.q_113', 'i.q_114', 'i.q_115', 'i.q_116', 'i.q_117', 'i.q_118', 'i.q_119', 'i.q_12', 'i.q_120', 'i.q_121', 'i.q_122', 'i.q_123', 'i.q_124', 'i.q_125', 'i.q_126', 'i.q_127', 'i.q_128', 'i.q_129', 'i.q_13', 'i.q_130', 'i.q_131', 'i.q_132', 'i.q_133', 'i.q_134', 'i.q_135', 'i.q_136', 'i.q_137', 'i.q_138', 'i.q_139', 'i.q_14', 'i.q_140', 'i.q_141', 'i.q_142', 'i.q_143', 'i.q_144', 'i.q_145', 'i.q_146', 'i.q_147', 'i.q_148', 'i.q_149', 'i.q_15', 'i.q_150', 'i.q_151', 'i.q_152', 'i.q_153', 'i.q_154', 'i.q_155', 'i.q_156', 'i.q_157', 'i.q_158', 'i.q_159', 'i.q_16', 'i.q_160', 'i.q_161', 'i.q_162', 'i.q_163', 'i.q_164', 'i.q_165', 'i.q_166', 'i.q_167', 'i.q_168', 'i.q_169', 'i.q_17', 'i.q_170', 'i.q_171', 'i.q_172', 'i.q_173', 'i.q_174', 'i.q_175', 'i.q_176', 'i.q_177', 'i.q_178', 'i.q_179', 'i.q_18', 'i.q_180', 'i.q_181', 'i.q_182', 'i.q_183', 'i.q_184', 'i.q_185', 'i.q_186', 'i.q_187', 'i.q_188', 'i.q_189', 'i.q_19', 'i.q_190', 'i.q_191', 'i.q_2', 'i.q_20', 'i.q_21', 'i.q_22', 'i.q_23', 'i.q_24', 'i.q_25', 'i.q_26', 'i.q_27', 'i.q_28', 'i.q_29', 'i.q_3', 'i.q_30', 'i.q_31', 'i.q_32', 'i.q_33', 'i.q_34', 'i.q_35', 'i.q_36', 'i.q_37', 'i.q_38', 'i.q_39', 'i.q_4', 'i.q_40', 'i.q_41', 'i.q_42', 'i.q_43', 'i.q_44', 'i.q_45', 'i.q_46', 'i.q_47', 'i.q_48', 'i.q_49', 'i.q_5', 'i.q_50', 'i.q_51', 'i.q_52', 'i.q_53', 'i.q_54', 'i.q_55', 'i.q_56', 'i.q_57', 'i.q_58', 'i.q_59', 'i.q_6', 'i.q_60', 'i.q_61', 'i.q_62', 'i.q_63', 'i.q_64', 'i.q_65', 'i.q_66', 'i.q_67', 'i.q_68', 'i.q_69', 'i.q_7', 'i.q_70', 'i.q_71', 'i.q_72', 'i.q_73', 'i.q_74', 'i.q_75', 'i.q_76', 'i.q_77', 'i.q_78', 'i.q_79', 'i.q_8', 'i.q_80', 'i.q_81', 'i.q_82', 'i.q_83', 'i.q_84', 'i.q_85', 'i.q_86', 'i.q_87', 'i.q_88', 'i.q_89', 'i.q_9', 'i.q_90', 'i.q_91', 'i.q_92', 'i.q_93', 'i.q_94', 'i.q_95', 'i.q_96', 'i.q_97', 'i.q_98', 'i.q_99');
         } else if ($this->instrument == 'head_measurements_subject') {
-            $fields = array('i.length1', 'i.length2', 'i.head_length_unit', 'i.weight1', 'i.weight2','i.weight_unit');
+            $fields = array('i.length1', 'i.length2', 'i.head_length_unit', 'i.weight1', 'i.weight2', 'i.weight_unit');
         } else if ($this->instrument == 'prefrontal_task') {
             $fields = array('i.training', 'i.training_finds_partially_covered', 'i.training_finds_fully_covered', 'i.training_retrieves_R_well', 'i.training_retrieves_R_well_trial', 'i.training_retrieves_R_well_trial_of', 'i.training_retrieves_L_well', 'i.training_retrieves_L_well_trial', 'i.training_retrieves_L_well_trial_of', 'i.start_side', 'i.trial_1', 'i.trial_2', 'i.trial_3', 'i.trial_4', 'i.trial_5', 'i.trial_6', 'i.trial_7', 'i.trial_8', 'i.trial_9', 'i.trial_10', 'i.trial_11', 'i.trial_12', 'i.trial_13', 'i.trial_14', 'i.trial_15', 'i.trial_16', 'i.trial_17', 'i.trial_18', 'i.trial_19', 'i.trial_20', 'i.trial_21', 'i.trial_22', 'i.trial_23', 'i.trial_24', 'i.first_reversal', 'i.second_reversal', 'i.third_reversal', 'i.fourth_reversal', 'i.validity_of_data', 'i.invalidity_reason', 'i.invalidity_comment', 'i.invalidity_comment_status', 'i.5sec_overall_correct', 'i.5sec_overall_trials', 'i.5sec_reversals_correct', 'i.5sec_reversals_trials', 'i.12sec_overall_correct', 'i.12sec_overall_trials', 'i.12sec_reversals_correct', 'i.12sec_reversals_trials');
         } else if ($this->instrument == 'fyi') {
-            $fields = array('i.person_filling_out', 'i.person_filling_out_specify','i.risk_score', 'i.percentile', 'i.soc_com_risk', 'i.sen_reg_risk', 'i.orientrec', 'i.affeng', 'i.imitate', 'i.express', 'i.senproc', 'i.regpat', 'i.react', 'i.repplay', 'i.q_1', 'i.q_2', 'i.q_3', 'i.q_4', 'i.q_5', 'i.q_6', 'i.q_7', 'i.q_8', 'i.q_9', 'i.q_10', 'i.q_11', 'i.q_12', 'i.q_13', 'i.q_14', 'i.q_15', 'i.q_16', 'i.q_17', 'i.q_18', 'i.q_19', 'i.q_20', 'i.q_21', 'i.q_22', 'i.q_23', 'i.q_24', 'i.q_25', 'i.q_26', 'i.q_27', 'i.q_28', 'i.q_29', 'i.q_30', 'i.q_31', 'i.q_32', 'i.q_33', 'i.q_34', 'i.q_35', 'i.q_36', 'i.q_37', 'i.q_38', 'i.q_39', 'i.q_40', 'i.q_41', 'i.q_42', 'i.q_43', 'i.q_44', 'i.q_45', 'i.q_46', 'i.q_47', 'i.q_48', 'i.q_49', 'i.q_50', 'i.q_51', 'i.q_52', 'i.q_53', 'i.q_54', 'i.q_55', 'i.q_56', 'i.q_57', 'i.q_58', 'i.q_59', 'i.q_60', 'i.sounds_p', 'i.sounds_b', 'i.sounds_t', 'i.sounds_d', 'i.sounds_k', 'i.sounds_g', 'i.sounds_m', 'i.sounds_n', 'i.sounds_w', 'i.sounds_y', 'i.sounds_h', 'i.sounds_s', 'i.q_62', 'i.q_63');
+            $fields = array('i.person_filling_out', 'i.person_filling_out_specify', 'i.risk_score', 'i.percentile', 'i.soc_com_risk', 'i.sen_reg_risk', 'i.orientrec', 'i.affeng', 'i.imitate', 'i.express', 'i.senproc', 'i.regpat', 'i.react', 'i.repplay', 'i.q_1', 'i.q_2', 'i.q_3', 'i.q_4', 'i.q_5', 'i.q_6', 'i.q_7', 'i.q_8', 'i.q_9', 'i.q_10', 'i.q_11', 'i.q_12', 'i.q_13', 'i.q_14', 'i.q_15', 'i.q_16', 'i.q_17', 'i.q_18', 'i.q_19', 'i.q_20', 'i.q_21', 'i.q_22', 'i.q_23', 'i.q_24', 'i.q_25', 'i.q_26', 'i.q_27', 'i.q_28', 'i.q_29', 'i.q_30', 'i.q_31', 'i.q_32', 'i.q_33', 'i.q_34', 'i.q_35', 'i.q_36', 'i.q_37', 'i.q_38', 'i.q_39', 'i.q_40', 'i.q_41', 'i.q_42', 'i.q_43', 'i.q_44', 'i.q_45', 'i.q_46', 'i.q_47', 'i.q_48', 'i.q_49', 'i.q_50', 'i.q_51', 'i.q_52', 'i.q_53', 'i.q_54', 'i.q_55', 'i.q_56', 'i.q_57', 'i.q_58', 'i.q_59', 'i.q_60', 'i.sounds_p', 'i.sounds_b', 'i.sounds_t', 'i.sounds_d', 'i.sounds_k', 'i.sounds_g', 'i.sounds_m', 'i.sounds_n', 'i.sounds_w', 'i.sounds_y', 'i.sounds_h', 'i.sounds_s', 'i.q_62', 'i.q_63');
         } else if ($this->instrument == 'edi' || $this->instrument == 'edi2') {
-            $fields = array('i.score_0_3_regulatory', 'i.score_0_3_total_symptoms', 'i.score_10_12_communication', 'i.score_10_12_regulatory', 'i.score_10_12_repetitive_behaviour', 'i.score_10_12_social', 'i.score_10_12_total_symptoms', 'i.score_13_15_communication', 'i.score_13_15_regulatory', 'i.score_13_15_repetitive_behaviour', 'i.score_13_15_social', 'i.score_13_15_total_symptoms', 'i.score_16_18_communication', 'i.score_16_18_regulatory', 'i.score_16_18_repetitive_behaviour', 'i.score_16_18_social', 'i.score_16_18_total_symptoms', 'i.score_19_21_communication', 'i.score_19_21_regulatory', 'i.score_19_21_repetitive_behaviour', 'i.score_19_21_social', 'i.score_19_21_total_symptoms', 'i.score_22_24_communication', 'i.score_22_24_regulatory', 'i.score_22_24_repetitive_behaviour', 'i.score_22_24_social', 'i.score_22_24_total_symptoms', 'i.score_4_6_regulatory', 'i.score_4_6_social', 'i.score_4_6_total_symptoms', 'i.score_7_9_communication', 'i.score_7_9_regulatory', 'i.score_7_9_social', 'i.score_7_9_total_symptoms', 'i.EDI1', 'i.EDI2', 'i.EDI3', 'i.EDI4', 'i.EDI5', 'i.EDI6', 'i.EDI7', 'i.EDI8', 'i.EDI9', 'i.EDI10', 'i.EDI11', 'i.EDI12', 'i.EDI13', 'i.EDI14', 'i.EDI15', 'i.EDI16', 'i.EDI17', 'i.EDI18', 'i.EDI19', 'i.EDI20', 'i.EDI21', 'i.EDI22', 'i.EDI23', 'i.EDI24', 'i.EDI25', 'i.EDI26', 'i.EDI27', 'i.EDI28', 'i.EDI29', 'i.EDI30', 'i.EDI31', 'i.EDI32', 'i.EDI33', 'i.EDI34', 'i.EDI35', 'i.EDI36', 'i.EDI37', 'i.EDI38', 'i.EDI39', 'i.EDI40', 'i.EDI41', 'i.EDI42', 'i.EDI43', 'i.EDI44', 'i.EDI45', 'i.EDI46', 'i.EDI47', 'i.EDI48', 'i.EDI49', 'i.EDI50', 'i.EDI51', 'i.EDI52', 'i.EDI53', 'i.EDI54', 'i.EDI55', 'i.EDI56', 'i.EDI57', 'i.EDI58','i.EDI59', 'i.EDI60', 'i.EDI61', 'i.EDI62', 'i.EDI63', 'i.EDI64', 'i.EDI65', 'i.EDI66', 'i.EDI67', 'i.EDI68', 'i.EDI69', 'i.EDI70','i.EDI71', 'i.EDI72', 'i.EDI73', 'i.EDI74', 'i.EDI75', 'i.EDI76', 'i.EDI77', 'i.EDI78', 'i.EDI79', 'i.EDI80', 'i.EDI81', 'i.EDI82','i.EDI83', 'i.EDI84', 'i.EDI85', 'i.EDI86', 'i.EDI87', 'i.EDI88', 'i.EDI89', 'i.EDI90', 'i.EDI91', 'i.EDI92', 'i.EDI93', 'i.EDI94', 'i.EDI95', 'i.EDI96', 'i.inj', 'i.dear', 'i.conf', 'i.legl', 'i.emp', 'i.crim','i.hea AS edihea','i.hosp as edihosp' );
-        } else if($this->instrument == 'charge') {
+            $fields = array('i.score_0_3_regulatory', 'i.score_0_3_total_symptoms', 'i.score_10_12_communication', 'i.score_10_12_regulatory', 'i.score_10_12_repetitive_behaviour', 'i.score_10_12_social', 'i.score_10_12_total_symptoms', 'i.score_13_15_communication', 'i.score_13_15_regulatory', 'i.score_13_15_repetitive_behaviour', 'i.score_13_15_social', 'i.score_13_15_total_symptoms', 'i.score_16_18_communication', 'i.score_16_18_regulatory', 'i.score_16_18_repetitive_behaviour', 'i.score_16_18_social', 'i.score_16_18_total_symptoms', 'i.score_19_21_communication', 'i.score_19_21_regulatory', 'i.score_19_21_repetitive_behaviour', 'i.score_19_21_social', 'i.score_19_21_total_symptoms', 'i.score_22_24_communication', 'i.score_22_24_regulatory', 'i.score_22_24_repetitive_behaviour', 'i.score_22_24_social', 'i.score_22_24_total_symptoms', 'i.score_4_6_regulatory', 'i.score_4_6_social', 'i.score_4_6_total_symptoms', 'i.score_7_9_communication', 'i.score_7_9_regulatory', 'i.score_7_9_social', 'i.score_7_9_total_symptoms', 'i.EDI1', 'i.EDI2', 'i.EDI3', 'i.EDI4', 'i.EDI5', 'i.EDI6', 'i.EDI7', 'i.EDI8', 'i.EDI9', 'i.EDI10', 'i.EDI11', 'i.EDI12', 'i.EDI13', 'i.EDI14', 'i.EDI15', 'i.EDI16', 'i.EDI17', 'i.EDI18', 'i.EDI19', 'i.EDI20', 'i.EDI21', 'i.EDI22', 'i.EDI23', 'i.EDI24', 'i.EDI25', 'i.EDI26', 'i.EDI27', 'i.EDI28', 'i.EDI29', 'i.EDI30', 'i.EDI31', 'i.EDI32', 'i.EDI33', 'i.EDI34', 'i.EDI35', 'i.EDI36', 'i.EDI37', 'i.EDI38', 'i.EDI39', 'i.EDI40', 'i.EDI41', 'i.EDI42', 'i.EDI43', 'i.EDI44', 'i.EDI45', 'i.EDI46', 'i.EDI47', 'i.EDI48', 'i.EDI49', 'i.EDI50', 'i.EDI51', 'i.EDI52', 'i.EDI53', 'i.EDI54', 'i.EDI55', 'i.EDI56', 'i.EDI57', 'i.EDI58', 'i.EDI59', 'i.EDI60', 'i.EDI61', 'i.EDI62', 'i.EDI63', 'i.EDI64', 'i.EDI65', 'i.EDI66', 'i.EDI67', 'i.EDI68', 'i.EDI69', 'i.EDI70', 'i.EDI71', 'i.EDI72', 'i.EDI73', 'i.EDI74', 'i.EDI75', 'i.EDI76', 'i.EDI77', 'i.EDI78', 'i.EDI79', 'i.EDI80', 'i.EDI81', 'i.EDI82', 'i.EDI83', 'i.EDI84', 'i.EDI85', 'i.EDI86', 'i.EDI87', 'i.EDI88', 'i.EDI89', 'i.EDI90', 'i.EDI91', 'i.EDI92', 'i.EDI93', 'i.EDI94', 'i.EDI95', 'i.EDI96', 'i.inj', 'i.dear', 'i.conf', 'i.legl', 'i.emp', 'i.crim', 'i.hea AS edihea', 'i.hosp as edihosp');
+        } else if ($this->instrument == 'charge') {
             $fields = array(
                 'c.CandidateGUID',
                 "CASE c.Gender WHEN 'Male' THEN 'M' WHEN 'Female' THEN 'F' END AS Gender",
                 "IF(medpsych.Date_taken != '', DATE_FORMAT(medpsych.Date_taken, '%m/%d/%Y'), '01/01/1900') as Med_Psych_Hist_Date_Taken",
                 'medpsych.Candidate_Age as Med_Psych_Hist_Candidate_Age',
                 "CASE medpsych.q16_has_child_ever WHEN 'b_meningitis_encephalitis' THEN 'Yes' WHEN 'b_meningitis_encephalitis{@}c_lost_consciousness_head_injury' THEN 'Yes' ELSE 'NK' END as q16_has_child_ever",
-                'medpsych.q15_c_fever_seizures', 
+                'medpsych.q15_c_fever_seizures',
                 "CASE medpsych.q15_seizures_convulsions WHEN '0_no' THEN 'No' WHEN '1_yes' THEN 'Yes' ELSE 'NK' END AS q15_seizures_convulsions",
-                'medpsych.q17_birth_defects', 
-                'neuroscreen.q19_other_physical_abnormalities', 
-                "CASE neuroscreen.q1_strabismus WHEN '0_absent' THEN 'No' WHEN '1_covert' THEN 'Yes' WHEN '2_overt' THEN 'Yes' WHEN '7_can_t_tell' THEN 'NK' WHEN '8_no_overt' THEN 'NK' WHEN '9_not_tested' THEN 'NK' WHEN 'not_answered' THEN 'NK' END AS q1_strabismus", 
-                'neuroscreen.q6_ear_formation', 
-                'tsi.med_his_q_5_medications_describe', 
-                'tsi.med_his_q_8_brain_MRI_results', 
-                "CASE tsi.congenital_heart_problems WHEN 'yes' THEN 'Yes' WHEN 'no' THEN 'No' ELSE 'NK' END AS congenital_heart_problems", 
-                "CASE tsi.med_his_q_6_allergies WHEN 'yes' THEN 'Yes' WHEN 'no' THEN 'No' ELSE 'NK' END AS med_his_q_6_allergies", 
+                'medpsych.q17_birth_defects',
+                'neuroscreen.q19_other_physical_abnormalities',
+                "CASE neuroscreen.q1_strabismus WHEN '0_absent' THEN 'No' WHEN '1_covert' THEN 'Yes' WHEN '2_overt' THEN 'Yes' WHEN '7_can_t_tell' THEN 'NK' WHEN '8_no_overt' THEN 'NK' WHEN '9_not_tested' THEN 'NK' WHEN 'not_answered' THEN 'NK' END AS q1_strabismus",
+                'neuroscreen.q6_ear_formation',
+                'tsi.med_his_q_5_medications_describe',
+                'tsi.med_his_q_8_brain_MRI_results',
+                "CASE tsi.congenital_heart_problems WHEN 'yes' THEN 'Yes' WHEN 'no' THEN 'No' ELSE 'NK' END AS congenital_heart_problems",
+                "CASE tsi.med_his_q_6_allergies WHEN 'yes' THEN 'Yes' WHEN 'no' THEN 'No' ELSE 'NK' END AS med_his_q_6_allergies",
                 'tsi.med_his_q_6_allergies_describe',
-                "'NK' as develop_regression", 
-                "'NK' as rev_earrecuotitis", 
-                "'NK' as rev_endodiabetes", 
-                "'999' as rev_endodiabetestype", 
-                "'NK' as rev_endohyperthyroidism", 
-                "'NK' as rev_endohypothyroidism", 
-                "'NK' as rev_gastroreflux", 
-                "'NK' as rev_gastrorefluxmed", 
-                "'NK' as rev_headseizurecontrol", 
-                "'NK' as rev_immunoenvallergy", 
-                "'NK' as rev_immunoinfluenzvacc", 
-                "'999' as rev_immunoinfluenzvacc1_h1n1", 
-                "'999' as rev_immunoinfluenzvacc2_h1n1", 
-                "'999' as rev_immunoinfluenzvacc3_h1n1", 
-                "'999' as rev_immunoinfluenzvacc4_h1n1", 
-                "'999' as rev_immunoinfluenzvacc5_h1n1", 
-                "'NK' as rev_immunorecurinfection", 
-                "'NK' as rev_immunosepsis", 
-                "'NK' as rev_pulasthma", 
+                "'NK' as develop_regression",
+                "'NK' as rev_earrecuotitis",
+                "'NK' as rev_endodiabetes",
+                "'999' as rev_endodiabetestype",
+                "'NK' as rev_endohyperthyroidism",
+                "'NK' as rev_endohypothyroidism",
+                "'NK' as rev_gastroreflux",
+                "'NK' as rev_gastrorefluxmed",
+                "'NK' as rev_headseizurecontrol",
+                "'NK' as rev_immunoenvallergy",
+                "'NK' as rev_immunoinfluenzvacc",
+                "'999' as rev_immunoinfluenzvacc1_h1n1",
+                "'999' as rev_immunoinfluenzvacc2_h1n1",
+                "'999' as rev_immunoinfluenzvacc3_h1n1",
+                "'999' as rev_immunoinfluenzvacc4_h1n1",
+                "'999' as rev_immunoinfluenzvacc5_h1n1",
+                "'NK' as rev_immunorecurinfection",
+                "'NK' as rev_immunosepsis",
+                "'NK' as rev_pulasthma",
                 "'NK' as rev_skinabcesses"
             );
         }
         return implode($fields, ", ");
     }
 
-    function getFields() {
+    function getFields()
+    {
         return $this->getCommonFields() . $this->getInstrumentFields();
     }
 
-    function getQuery() {
-        if($this->instrument == 'demographics') {
+    function getQuery()
+    {
+        if ($this->instrument == 'demographics') {
             return "SELECT DISTINCT IBISID, CandidateGUID, ProbandGUID, CASE c.Gender WHEN 'Male' THEN 'M' WHEN 'Female' THEN 'F' END AS Gender, CASE c.ProbandGender WHEN 'Male' THEN 'M' WHEN 'Female' THEN 'F' END as ProbandGender, c.CenterID as Site, CASE s.SubprojectID WHEN 1 THEN 'High Risk' WHEN 2 THEN 'High Risk' WHEN 3 THEN 'Low Risk' END as Cohort FROM candidate c JOIN session s ON (s.CandID=c.CandID) WHERE c.Active='Y' AND s.Active='Y' AND COALESCE(s.Current_stage, '') <> 'Recycling Bin' AND COALESCE(s.Visit, '') NOT IN ('Failure', 'Withdrawal') AND COALESCE(s.Screening, '') NOT IN ('Failure', 'Withdrawal') AND c.CandidateGUID IS NOT NULL AND s.SubprojectID IN (1, 2, 3) AND c.CenterID IN (2, 3, 4, 5) ";
-            } else if($this->instrument == 'charge') {
-                return "SELECT " . $this->getFields() . " FROM session s JOIN candidate c USING (CandID) JOIN participant_status ps ON (ps.CandID = c.CandID) LEFT JOIN flag medpsychflag ON (s.ID=medpsychflag.SessionID AND medpsychflag.Test_name='med_psych_hist' AND medpsychflag.Administration='All' AND medpsychflag.Data_entry='Complete' AND EXISTS (SELECT 'x' FROM flag df WHERE df.CommentID=CONCAT('DDE_', medpsychflag.CommentID) AND df.Data_entry='Complete') AND NOT EXISTS (SELECT 'x' FROM conflicts_unresolved cu WHERE cu.CommentId1=medpsychflag.CommentID OR cu.CommentId2=medpsychflag.CommentID) )
+        } else if ($this->instrument == 'charge') {
+            return "SELECT " . $this->getFields() . " FROM session s JOIN candidate c USING (CandID) JOIN participant_status ps ON (ps.CandID = c.CandID) LEFT JOIN flag medpsychflag ON (s.ID=medpsychflag.SessionID AND medpsychflag.Test_name='med_psych_hist' AND medpsychflag.Administration='All' AND medpsychflag.Data_entry='Complete' AND EXISTS (SELECT 'x' FROM flag df WHERE df.CommentID=CONCAT('DDE_', medpsychflag.CommentID) AND df.Data_entry='Complete') AND NOT EXISTS (SELECT 'x' FROM conflicts_unresolved cu WHERE cu.CommentId1=medpsychflag.CommentID OR cu.CommentId2=medpsychflag.CommentID) )
                     LEFT JOIN flag neuroscreenflag ON (s.ID=neuroscreenflag.SessionID AND neuroscreenflag.Test_name='neuro_screen' AND neuroscreenflag.Administration='All' AND neuroscreenflag.Data_entry='Complete' AND EXISTS (SELECT 'x' FROM flag df WHERE df.CommentID=CONCAT('DDE_', neuroscreenflag.CommentID) AND df.Data_entry='Complete') AND NOT EXISTS (SELECT 'x' FROM conflicts_unresolved cu WHERE cu.CommentId1=neuroscreenflag.CommentID OR cu.CommentId2=neuroscreenflag.CommentID))
                     LEFT JOIN flag tsiflag ON (s.ID=tsiflag.SessionID AND tsiflag.Test_name='tsi' AND tsiflag.Administration='All' AND tsiflag.Data_entry='Complete' AND EXISTS (SELECT 'x' FROM flag df WHERE df.CommentID=CONCAT('DDE_', tsiflag.CommentID) AND df.Data_entry='Complete') AND NOT EXISTS (SELECT 'x' FROM conflicts_unresolved cu WHERE cu.CommentId1=tsiflag.CommentID OR cu.CommentId2=tsiflag.CommentID) )
                     LEFT JOIN med_psych_hist medpsych ON (medpsychflag.CommentID=medpsych.CommentID)
                     LEFT JOIN neuro_screen neuroscreen ON (neuroscreenflag.CommentID=neuroscreen.CommentID)
                     LEFT JOIN tsi tsi ON (tsiflag.CommentID=tsi.CommentID)
                     WHERE " . $this->getWhere();
-            } else if($this->instrument == 'ndar_subject') {
-                 return "SELECT c.IBISID, s.CenterID as Site, CASE s.SubprojectID WHEN 1 THEN 'High Risk' WHEN 2 THEN 'High Risk' WHEN 3 THEN 'Low Risk' WHEN 9 THEN 'High Risk' WHEN 10 THEN 'Low Risk' END as Cohort, c.ProbandGUID,   CASE c.ProbandGender WHEN 'Male' THEN 'M' WHEN 'Female' THEN 'F' END AS ProbandGender, c.CandidateGUID, CASE c.Gender WHEN 'Male' THEN 'M' WHEN 'Female' THEN 'F' END AS Gender, i.Date_taken,ROUND(DATEDIFF(i.Date_taken, c.DoB) / (365/12)) AS Candidate_Age_in_Months, i.Date_taken as interview_date,ROUND(DATEDIFF(i.Date_taken, c.ProbandDoB) / (365/12)) AS Proband_Age_in_Months, i.Candidate_race as race, i.child_ethnicity as ethnic_group from candidate c  left join session s on s.CandID = c.CandID join flag f on f.SessionID = s.ID join tsi i on i.CommentID=f.CommentID join participant_status ps on ps.CandID = c.CandID WHERE ". $this->getWhere();
-            }
-        print  "SELECT " . $this->getFields() . " FROM " . $this->instrument . " i JOIN flag f ON (f.CommentID=i.CommentID) JOIN session s ON (s.ID=f.SessionID) JOIN candidate c ON (c.CandID=s.CandID) JOIN participant_status ps ON (ps.CandID = c.CandID) JOIN participant_status_options pso ON (pso.ID =  ps.participant_status) WHERE " . $this->getWhere()." AND c.ProjectID= $this->project AND pso.Description NOT IN ('Ineligible', 'Excluded')";
-        return "SELECT " . $this->getFields() . " FROM " . $this->instrument . " i JOIN flag f ON (f.CommentID=i.CommentID) JOIN session s ON (s.ID=f.SessionID) JOIN candidate c ON (c.CandID=s.CandID) JOIN participant_status ps ON (ps.CandID = c.CandID) JOIN participant_status_options pso ON (pso.ID = ps.participant_status) WHERE " . $this->getWhere()." AND c.ProjectID= $this->project AND pso.Description NOT IN ('Ineligible', 'Excluded')";
+        } else if ($this->instrument == 'ndar_subject') {
+            return "SELECT c.IBISID, s.CenterID as Site, CASE s.SubprojectID WHEN 1 THEN 'High Risk' WHEN 2 THEN 'High Risk' WHEN 3 THEN 'Low Risk' WHEN 9 THEN 'High Risk' WHEN 10 THEN 'Low Risk' END as Cohort, c.ProbandGUID,   CASE c.ProbandGender WHEN 'Male' THEN 'M' WHEN 'Female' THEN 'F' END AS ProbandGender, c.CandidateGUID, CASE c.Gender WHEN 'Male' THEN 'M' WHEN 'Female' THEN 'F' END AS Gender, i.Date_taken,ROUND(DATEDIFF(i.Date_taken, c.DoB) / (365/12)) AS Candidate_Age_in_Months, i.Date_taken as interview_date,ROUND(DATEDIFF(i.Date_taken, c.ProbandDoB) / (365/12)) AS Proband_Age_in_Months, i.Candidate_race as race, i.child_ethnicity as ethnic_group from candidate c  left join session s on s.CandID = c.CandID join flag f on f.SessionID = s.ID join tsi i on i.CommentID=f.CommentID join participant_status ps on ps.CandID = c.CandID WHERE " . $this->getWhere();
+        }
+        print  "SELECT " . $this->getFields() . " FROM " . $this->instrument . " i JOIN flag f ON (f.CommentID=i.CommentID) JOIN session s ON (s.ID=f.SessionID) JOIN candidate c ON (c.CandID=s.CandID) JOIN participant_status ps ON (ps.CandID = c.CandID) JOIN participant_status_options pso ON (pso.ID =  ps.participant_status) WHERE " . $this->getWhere() . " AND c.ProjectID= $this->project AND pso.Description NOT IN ('Ineligible', 'Excluded')";
+        return "SELECT " . $this->getFields() . " FROM " . $this->instrument . " i JOIN flag f ON (f.CommentID=i.CommentID) JOIN session s ON (s.ID=f.SessionID) JOIN candidate c ON (c.CandID=s.CandID) JOIN participant_status ps ON (ps.CandID = c.CandID) JOIN participant_status_options pso ON (pso.ID = ps.participant_status) WHERE " . $this->getWhere() . " AND c.ProjectID= $this->project AND pso.Description NOT IN ('Ineligible', 'Excluded')";
     }
 
-    function process($results) {
+    function process($results)
+    {
         $converted = array();
-        foreach($results as $row) {
-            
-            if($this->instrument === 'adi_r_proband') {
-                if($row['BNV_Total'] == 'Verbal') {
+        foreach ($results as $row) {
+
+            if ($this->instrument === 'adi_r_proband') {
+                if ($row['BNV_Total'] == 'Verbal') {
                     $row['subject_verbal'] = 'yes';
-                }  else if($row['BV_Total'] == 'Nonverbal') {
+                } else if ($row['BV_Total'] == 'Nonverbal') {
                     $row['subject_verbal'] = 'no';
                 } else {
                     $row['subject_verbal'] = '';
                 }
-                $add = array('method_adi'=>1,'rx'=>999);
+                $add = array('method_adi' => 1, 'rx' => 999);
                 $row = array_merge($row, $add);
             }
-            if(strpos($this->instrument, '_proband') !== FALSE) {
-		$row['IBISID'] = $row['IBISID']."pr";
-			    
-	    }
-            foreach($row as $key => $val) {
-	        
-                if( strpos($key, 'IBISID') !== FALSE) {
-                        $ibis[] = $val;
-                    
-                }	
+            if (strpos($this->instrument, '_proband') !== FALSE) {
+                $row['IBISID'] = $row['IBISID'] . "pr";
 
-                if(strpos($key, 'interview_date') !== FALSE || $key == 'DoB' || strpos($key, 'interview_date') !== FALSE) {
+            }
+            foreach ($row as $key => $val) {
+
+                if (strpos($key, 'IBISID') !== FALSE) {
+                    $ibis[] = $val;
+
+                }
+
+                if (strpos($key, 'interview_date') !== FALSE || $key == 'DoB' || strpos($key, 'interview_date') !== FALSE) {
                     //print "VAL: $val";
                     $Date = explode('-', $val);
                     $row[$key] = $Date[1] . '/' . '01' . '/' . $Date[0];
                 }
-                if($this->instrument == 'adi_r_proband') {
-                    if($key == 'Total_B2V' || $key == 'Total_B3V' || $key == 'BV_Total' || $key == 'BNV_Total') {
-                        if($val == 'Verbal' || $val == 'Nonverbal') {
+                if ($this->instrument == 'adi_r_proband') {
+                    if ($key == 'Total_B2V' || $key == 'Total_B3V' || $key == 'BV_Total' || $key == 'BNV_Total') {
+                        if ($val == 'Verbal' || $val == 'Nonverbal') {
                             $row[$key] = '';
                         }
                     }
 
-                    if(strpos($key, 'q_') === 0 || $key === 'relationship') {
+                    if (strpos($key, 'q_') === 0 || $key === 'relationship') {
                         $matches = array();
-                         //ndar mapping - 1=mom, 2=dad,28=both parents, 13=other, -999= Missing
-                        $relationships = array(0=>1, 1=>2, 3=>28, 5=>13,9=>'-999');
-                        if(preg_match('/(\d+)_(.*)/', $val, $matches) === 1) {
+                        //ndar mapping - 1=mom, 2=dad,28=both parents, 13=other, -999= Missing
+                        $relationships = array(0 => 1, 1 => 2, 3 => 28, 5 => 13, 9 => '-999');
+                        if (preg_match('/(\d+)_(.*)/', $val, $matches) === 1) {
                             if ($key === 'relationship') {
                                 $row[$key] = $relationships[$matches[1]];
                             } else {
@@ -1647,304 +1668,313 @@ class NDAR_Release_2016 {
 
                     }
                 }
-                if(strpos($key,'Candidate_Age') !== FALSE){
-                  $row[$key] = intval($val);
+                if (strpos($key, 'Candidate_Age') !== FALSE) {
+                    $row[$key] = intval($val);
                 }
 
-               if($this->instrument == 'csbs'){
-                if(strpos($key,'q_20_stacks_tower') !== FALSE){
-                    $temp = explode("_", $val);
-		    if(is_numeric($temp[0])){
-		        $row[$key] = $temp[0];
-		    }
-                 }
-		$relationships  = array('Mother'=>1,'Mom'=>1,'mother'=>1,'Father'=>2,'Dad'=>2,'dad'=>2,'Mom/Dad'=>28,'Both Parents'=>28,
-				'mother and father'=>28,'father and mother'=>28,'Fater'=>2,'Other'=>90,'NA'=>'-999');
-		if($key === 'relationship_to_child'){
-			if (!empty($val)) {
-				$row[$key] = $relationships[$val];
-			} else {
-				$row[$key] = '-999';//missing
-			}
-		}
-
-                  $add = array('communication_concern'=>'999','communication_rs'=>'999','emotion_eyegaze_concern'=>'999','emotion_eyegaze_rs'=>'999',
-                               'gestures_concern'=>'999','gestures_rs'=>'999','objec_use_concern'=>'999','object_use_rs'=>'999',
-                               'social_concern'=>'999','sounds_concern'=>'999','sounds_rs'=>'999','speech_concern'=>'999','symbolic_concern'=>'999',
-                               'total_concern'=>'999','understanding_concern'=>'999','understanding_rs'=>'999','words_concern'=>'999','words_rs'=>'999');
-                $row = array_merge($row, $add);
-                   if (strpos($key,'understanding_standard') !== FALSE || strpos($key,'understanding_percentile') !== FALSE) {
-                     if( empty($val) ){
-                        $row[$key] = '999';
-                     }
+                if ($this->instrument == 'csbs') {
+                    if (strpos($key, 'q_20_stacks_tower') !== FALSE) {
+                        $temp = explode("_", $val);
+                        if (is_numeric($temp[0])) {
+                            $row[$key] = $temp[0];
+                        }
                     }
-		   $map= array( 'q_4_rate_of_communicating_raw_score'=>'communication_scale4',
-				   'q_5_behaviour_regulation_raw_score'=>'communication_scale5',
-				   'q_6_social_interaction_raw_score'=>'communication_scale6',
-				   'q_7_joint_attention_raw_score'=>'communication_scale7',
-				   'q_1_gaze_shifts_raw_score'=>'emotion_eyegaze_scale1',
-				   'q_2_shared_positive_affect_raw_score'=>'emotion_eyegaze_scale2',
-				   'q_3_gaze_point_following_raw_score'=>'emotion_eyegaze_scale3',
-				   'q_8_conventional_gestures_raw_score'=>'gestures_scale8',
-				   'q_9_distal_gestures_raw_score'=>'gestures_scale9',
-				   'q_17_action_schemes_raw_score'=>'object_use_scale17',
-				   'q_18_actions_towards_other_raw_score'=>'object_use_scale18',
-				   'q_20_stacks_tower_raw_score'=>'object_use_scale20',
-				   'q_10_syllables_consonants_raw_score'=>'sounds_scale10',
-				   'q_11_inventory_of_consonants_raw_score'=>'sounds_scale11',
-				   'q_16a_language_comp_object_raw_score'=>'understanding_scale16a',
-				   'q_16b_language_comp_person_name_raw_score'=>'understanding_scale16b',
-				   'q_12_words_raw_score'=>'words_scale12',
-				   'q_13_words_raw_score'=>'words_scale13',
-				   'q_14_word_combos_raw_score'=>'words_scale14',
-				   'q_15_word_combos_raw_score'=>'words_scale15',
-				   'q_19_sequence_action_schemes_raw_score'=>'object_use_scale19',
-				   'q_16c_language_comp_body_parts_raw_score'=>'understanding_scale16c');
+                    $relationships = array('Mother' => 1, 'Mom' => 1, 'mother' => 1, 'Father' => 2, 'Dad' => 2, 'dad' => 2, 'Mom/Dad' => 28, 'Both Parents' => 28,
+                        'mother and father' => 28, 'father and mother' => 28, 'Fater' => 2, 'Other' => 90, 'NA' => '-999');
+                    if ($key === 'relationship_to_child') {
+                        if (!empty($val)) {
+                            $row[$key] = $relationships[$val];
+                        } else {
+                            $row[$key] = '-999';//missing
+                        }
+                    }
+
+                    $add = array('communication_concern' => '999', 'communication_rs' => '999', 'emotion_eyegaze_concern' => '999', 'emotion_eyegaze_rs' => '999',
+                        'gestures_concern' => '999', 'gestures_rs' => '999', 'objec_use_concern' => '999', 'object_use_rs' => '999',
+                        'social_concern' => '999', 'sounds_concern' => '999', 'sounds_rs' => '999', 'speech_concern' => '999', 'symbolic_concern' => '999',
+                        'total_concern' => '999', 'understanding_concern' => '999', 'understanding_rs' => '999', 'words_concern' => '999', 'words_rs' => '999');
+                    $row = array_merge($row, $add);
+                    if (strpos($key, 'understanding_standard') !== FALSE || strpos($key, 'understanding_percentile') !== FALSE) {
+                        if (empty($val)) {
+                            $row[$key] = '999';
+                        }
+                    }
+                    $map = array('q_4_rate_of_communicating_raw_score' => 'communication_scale4',
+                        'q_5_behaviour_regulation_raw_score' => 'communication_scale5',
+                        'q_6_social_interaction_raw_score' => 'communication_scale6',
+                        'q_7_joint_attention_raw_score' => 'communication_scale7',
+                        'q_1_gaze_shifts_raw_score' => 'emotion_eyegaze_scale1',
+                        'q_2_shared_positive_affect_raw_score' => 'emotion_eyegaze_scale2',
+                        'q_3_gaze_point_following_raw_score' => 'emotion_eyegaze_scale3',
+                        'q_8_conventional_gestures_raw_score' => 'gestures_scale8',
+                        'q_9_distal_gestures_raw_score' => 'gestures_scale9',
+                        'q_17_action_schemes_raw_score' => 'object_use_scale17',
+                        'q_18_actions_towards_other_raw_score' => 'object_use_scale18',
+                        'q_20_stacks_tower_raw_score' => 'object_use_scale20',
+                        'q_10_syllables_consonants_raw_score' => 'sounds_scale10',
+                        'q_11_inventory_of_consonants_raw_score' => 'sounds_scale11',
+                        'q_16a_language_comp_object_raw_score' => 'understanding_scale16a',
+                        'q_16b_language_comp_person_name_raw_score' => 'understanding_scale16b',
+                        'q_12_words_raw_score' => 'words_scale12',
+                        'q_13_words_raw_score' => 'words_scale13',
+                        'q_14_word_combos_raw_score' => 'words_scale14',
+                        'q_15_word_combos_raw_score' => 'words_scale15',
+                        'q_19_sequence_action_schemes_raw_score' => 'object_use_scale19',
+                        'q_16c_language_comp_body_parts_raw_score' => 'understanding_scale16c');
 //print_r($map);
-		   foreach($map as $field=>$new_val){
-			   if( strpos($key, $field) !== FALSE ){
-				   $new_field = $new_val;
-				   //print $key;
-                                   if(strpos($key,'q_15_word_combos_raw_score') !== FALSE || strpos($key,'q_13_words_raw_score') !== FALSE){
-                                       if(empty($val)){
-                                           $val = 0;
-                                       }
-                                   }
-				   unset($row[$key]);
-				   $add = array($new_field =>$val);
-				   $row = array_merge($row, $add);
-			   }
-		   } 
-               
-                if( strpos($key,'q_1_alertness') !== FALSE || strpos($key,'q_2_emotional_reaction') !== FALSE || strpos($key,'q_3_level_of_interest') !== FALSE
-                      || strpos($key,'q_4_comfort_level') !== FALSE || strpos($key,'q_5_level_of_activity') !== FALSE || strpos($key,'q_6_level_of_communication') !== FALSE
-                      || strpos($key,'q_7_play_behaviour') !== FALSE ){
-                 $temp = explode("_", $val);
-                 if(is_numeric($temp[0])){
-                        $row[$key] = $temp[0];
-                 } else {
-                        $row[$key] = 4;
-                 }
-                }
-               }
-               if( $this->instrument == 'macarthur_words_gestures'){
-                   $fieldstochange = array('I_B_1','I_B_2', 'I_B_3', 'I_B_4','I_B_5','I_B_6', 'I_B_7', 'I_B_8','I_B_9',  'I_B_10',
-                                           'I_B_11', 'I_B_12', 'I_B_13', 'I_B_14', 'I_B_15', 'I_B_16', 'I_B_17', 'I_B_18', 'I_B_19',
-                                           'I_B_20', 'I_B_21', 'I_B_22', 'I_B_23', 'I_B_24', 'I_B_25', 'I_B_26', 'I_B_27', 'I_B_28' );
-                   if(in_array($key, $fieldstochange)){
-                       if($val == 'understands'){
-                           $row[$key] = 1;
-                       } elseif ($val == null) {
-                           $row[$key] =0;
-                       }
-                   }
-                   if( strpos($key,'I_C_1') !== FALSE || strpos($key,'I_C_2') !== FALSE){
-                       if($val == 'never') {
-                           $row[$key] = 0; 
-                       } elseif ($val == 'sometimes') {
-                           $row[$key] = 1;
-                       } elseif ($val == 'often') {
-			   $row[$key] = 2;
-		       } elseif ($val == 'not_answered') {
-			   $row[$key] = 'not_answered';
-		       }
-                    }
-		   if( strpos($key,'I_A_1') !== FALSE || strpos($key,'I_A_2') !== FALSE || strpos($key,'I_A_3') !== FALSE ){
-                       if($val == 'yes'){
-                            $row[$key] = 1;
-                       }	
-                       if($val == 'no'){
-                            $row[$key] = 0;
-                       }	   
-                   }
-                   if( strpos($key,'percentile') !== FALSE && strpos($val,'old') !== FALSE) {
-                        $row[$key] = 999;
-                   }
-            }
-	    if( $this->instrument == 'edi' || $this->instrument == 'edi2') {
-	       $fieldstochange = array('EDI1', 'EDI2', 'EDI3', 'EDI4', 'EDI5', 'EDI6', 'EDI7', 'EDI8', 'EDI9', 'EDI10', 'EDI11', 'EDI12', 
-				       'EDI13', 'EDI14', 'EDI15', 'EDI16', 'EDI17', 'EDI18', 'EDI19', 'EDI20', 'EDI21', 'EDI22', 'EDI23',
-				       'EDI24', 'EDI25', 'EDI26', 'EDI27', 'EDI28', 'EDI29', 'EDI30', 'EDI31', 'EDI32', 'EDI33', 'EDI34',
-				       'EDI35', 'EDI36', 'EDI37', 'EDI38', 'EDI39', 'EDI40', 'EDI41', 'EDI42', 'EDI43', 'EDI44', 'EDI45', 
-				       'EDI46', 'EDI47', 'EDI48', 'EDI49', 'EDI50', 'EDI51', 'EDI52', 'EDI53', 'EDI54', 'EDI55', 'EDI56',
-				       'EDI57', 'EDI58','EDI59', 'EDI60', 'EDI61', 'EDI62', 'EDI63', 'EDI64', 'EDI65', 'EDI66', 'EDI67', 
-				       'EDI68', 'EDI69', 'EDI70','EDI71', 'EDI72', 'EDI73', 'EDI74', 'EDI75', 'EDI76', 'EDI77', 'EDI78', 
-				       'EDI79', 'EDI80', 'EDI81', 'EDI82','EDI83', 'EDI84', 'EDI85', 'EDI86', 'EDI87', 'EDI88', 'EDI89', 
-				       'EDI90', 'EDI91', 'EDI92', 'EDI93', 'EDI94', 'EDI95', 'EDI96');
-		       if(in_array($key, $fieldstochange)){
-			       $key_new = $key."_NDAR";
-                               unset($row[$key]);
-			       if($val == 'not_answered'){
-                                   $new = array($key_new=>9);
-			       } else {
-				   $new = array($key_new=>$val);
-			       }
-                               $row = array_merge($row, $new);
-                               
-		       }
-                       if(strpos($key,'edihosp') !== FALSE || strpos($key,'edihea') !== FALSE ) {
-                           if($val == 'not_answered' || empty($val)){
-                               $row[$key] = 9;
-                            } else {
-                               $temp = explode('_', $val);
-		               $row[$key] = $temp[0];
+                    foreach ($map as $field => $new_val) {
+                        if (strpos($key, $field) !== FALSE) {
+                            $new_field = $new_val;
+                            //print $key;
+                            if (strpos($key, 'q_15_word_combos_raw_score') !== FALSE || strpos($key, 'q_13_words_raw_score') !== FALSE) {
+                                if (empty($val)) {
+                                    $val = 0;
+                                }
                             }
-                       }
-                 $addfields = array('edict_c'=>999,'edict_r'=>999,'edict_rg'=>999,'edict_s'=>999,'edict_se'=>999,'edict_t'=>999,
-                                    'edict_x'=>999,'edifamt'=>999,'edigtot'=>999,'edimedt'=>999,'edistrt'=>999);
-                 $row = array_merge($row, $addfields);
-	       }
-          if($this->instrument == 'vineland_subject' || $this->instrument == 'vineland_proband'){ 
-             $fieldstochange = array('ABC_STD_SCORE','COM_STD_SCORE','DLS_STD_SCORE','SOC_STD_SCORE','MS_STD_SCORE',
-                                     'CRIT_ITEM_1','CRIT_ITEM_2','CRIT_ITEM_3','CRIT_ITEM_4','CRIT_ITEM_5','CRIT_ITEM_6',
-                                     'CRIT_ITEM_7','CRIT_ITEM_8','CRIT_ITEM_9','CRIT_ITEM_10','CRIT_ITEM_11','CRIT_ITEM_12',
-                                     'CRIT_ITEM_13','CRIT_ITEM_14');
-             $relationships  = array('Mother'=>1,'Mom'=>1,'Father'=>2,'Dad'=>2,'dad'=>2,'Mom/Dad'=>28,'Both Parents'=>28,
-                                     'mother and father'=>28,'father and mother'=>28,'Fater'=>2,'Other'=>90);
-             if($key === 'relationship'){
-                 if (!empty($val)) {
-                     $row[$key] = $relationships[$val];
-                 } else {
-                     $row[$key] = '-999';//missing
-                 }
-             }
+                            unset($row[$key]);
+                            $add = array($new_field => $val);
+                            $row = array_merge($row, $add);
+                        }
+                    }
 
-             if(in_array($key, $fieldstochange)) {
-                 if ( empty($val) || trim($val) == false) {
-                     $row[$key]= 999;
-                 }
-             }
-	     if(strpos($val,'Moderately') !== FALSE){
-		     $val = str_replace("Moderately","Mod.", $val);
-	     }
-             $add_columns = array('communicationdomain_totala'=>999,'livingskillsdomain_totala'=>999,'motorskillsdomain_totala'=>999,'socializationdomain_totala'=>999);
-             $row = array_merge($row, $add_columns);
-           //  print "CommentID - ".$row['CommentID'] ."\n ";
-             $ndar_vineland_columns = $this->getMoreNDARFields($this->instrument, $row['CommentID']);
-             $row = array_merge($row, $ndar_vineland_columns);
-             if($key === 'CommentID'){
-                 unset($row[$key]);
-             }
-          }
-          if($this->instrument == 'mullen') {
-              if( strpos($key,'expressive_lang_') !== FALSE || strpos($key,'gross_motor_') !== FALSE || 
-                  strpos($key,'visual_recept_') !== FALSE || strpos($key,'fine_motor_') !== FALSE ||
-                  strpos($key,'receptive_lang_') !== FALSE){
-                  if(is_null($val) || empty($val)){
-                     $row[$key] = 9;
-                  }
-              }
-              $add_columns = array('info_med'=>999,'scl2_mtchsize_largered'=>999,'scl2_mtchsize_largeyellow'=>999,
-                                   'scl2_mtchsize_smallred'=>999,'scl2_mtchsize_smallyellow'=>999,'scl4_color_black'=>999,
-                                   'scl4_color_blue'=>999,'scl4_color_brown'=>999,'scl4_color_green'=>999,'scl4_color_orange'=>999,
-                                   'scl4_color_purple'=>999,'scl4_color_red'=>999,'scl4_color_yellow'=>'999');
-              $row = array_merge($row, $add_columns);
-          }
-         if($this->instrument == 'aosi') {
-             $score_fields = array('aosi_totalscore','aosi_numbermarkers','aosi_q1_visualinstructions',
-                                   'aosi_q2_disengagementscore','aosi_q3_orientsnameinstruct','aosi_q6_activitiesinstruction');
-             if(in_array($key,$score_fields) && 
-                (strpos($val,'N') !== FALSE || strpos($val,'Unable') !== FALSE)) {
-                  $row[$key] = 8; 
-              } 
-         }
-        if($this->instrument == 'scq_proband' || $this->instrument == 'scq_subject') {
-            if( strpos($key,'q') !== FALSE && empty($val) ) {
-                $row[$key] = 'not_answered';
-            } 
- 
-         }
-         if($this->instrument == 'm_chat_proband') {
-             $add_columns = array('fu_q8_proper_play_shapes'=>999);
-             $row = array_merge($row, $add_columns);
-         }
-	 if($this->instrument == 'ndar_subject') {
-		 if(strpos($key, 'interview_date') !== FALSE || $key == 'DoB' || strpos($key, 'Date_Taken') !== FALSE) {
-			 $Date = explode('-', $val); //print_r($Date);
-			 $row[$key] = $Date[1] . '/' . '01' . '/' . $Date[0];
-		 }
+                    if (strpos($key, 'q_1_alertness') !== FALSE || strpos($key, 'q_2_emotional_reaction') !== FALSE || strpos($key, 'q_3_level_of_interest') !== FALSE
+                        || strpos($key, 'q_4_comfort_level') !== FALSE || strpos($key, 'q_5_level_of_activity') !== FALSE || strpos($key, 'q_6_level_of_communication') !== FALSE
+                        || strpos($key, 'q_7_play_behaviour') !== FALSE
+                    ) {
+                        $temp = explode("_", $val);
+                        if (is_numeric($temp[0])) {
+                            $row[$key] = $temp[0];
+                        } else {
+                            $row[$key] = 4;
+                        }
+                    }
+                }
+                if ($this->instrument == 'macarthur_words_gestures') {
+                    $fieldstochange = array('I_B_1', 'I_B_2', 'I_B_3', 'I_B_4', 'I_B_5', 'I_B_6', 'I_B_7', 'I_B_8', 'I_B_9', 'I_B_10',
+                        'I_B_11', 'I_B_12', 'I_B_13', 'I_B_14', 'I_B_15', 'I_B_16', 'I_B_17', 'I_B_18', 'I_B_19',
+                        'I_B_20', 'I_B_21', 'I_B_22', 'I_B_23', 'I_B_24', 'I_B_25', 'I_B_26', 'I_B_27', 'I_B_28');
+                    if (in_array($key, $fieldstochange)) {
+                        if ($val == 'understands') {
+                            $row[$key] = 1;
+                        } elseif ($val == null) {
+                            $row[$key] = 0;
+                        }
+                    }
+                    if (strpos($key, 'I_C_1') !== FALSE || strpos($key, 'I_C_2') !== FALSE) {
+                        if ($val == 'never') {
+                            $row[$key] = 0;
+                        } elseif ($val == 'sometimes') {
+                            $row[$key] = 1;
+                        } elseif ($val == 'often') {
+                            $row[$key] = 2;
+                        } elseif ($val == 'not_answered') {
+                            $row[$key] = 'not_answered';
+                        }
+                    }
+                    if (strpos($key, 'I_A_1') !== FALSE || strpos($key, 'I_A_2') !== FALSE || strpos($key, 'I_A_3') !== FALSE) {
+                        if ($val == 'yes') {
+                            $row[$key] = 1;
+                        }
+                        if ($val == 'no') {
+                            $row[$key] = 0;
+                        }
+                    }
+                    if (strpos($key, 'percentile') !== FALSE && strpos($val, 'old') !== FALSE) {
+                        $row[$key] = 999;
+                    }
+                }
+                if ($this->instrument == 'edi' || $this->instrument == 'edi2') {
+                    $fieldstochange = array('EDI1', 'EDI2', 'EDI3', 'EDI4', 'EDI5', 'EDI6', 'EDI7', 'EDI8', 'EDI9', 'EDI10', 'EDI11', 'EDI12',
+                        'EDI13', 'EDI14', 'EDI15', 'EDI16', 'EDI17', 'EDI18', 'EDI19', 'EDI20', 'EDI21', 'EDI22', 'EDI23',
+                        'EDI24', 'EDI25', 'EDI26', 'EDI27', 'EDI28', 'EDI29', 'EDI30', 'EDI31', 'EDI32', 'EDI33', 'EDI34',
+                        'EDI35', 'EDI36', 'EDI37', 'EDI38', 'EDI39', 'EDI40', 'EDI41', 'EDI42', 'EDI43', 'EDI44', 'EDI45',
+                        'EDI46', 'EDI47', 'EDI48', 'EDI49', 'EDI50', 'EDI51', 'EDI52', 'EDI53', 'EDI54', 'EDI55', 'EDI56',
+                        'EDI57', 'EDI58', 'EDI59', 'EDI60', 'EDI61', 'EDI62', 'EDI63', 'EDI64', 'EDI65', 'EDI66', 'EDI67',
+                        'EDI68', 'EDI69', 'EDI70', 'EDI71', 'EDI72', 'EDI73', 'EDI74', 'EDI75', 'EDI76', 'EDI77', 'EDI78',
+                        'EDI79', 'EDI80', 'EDI81', 'EDI82', 'EDI83', 'EDI84', 'EDI85', 'EDI86', 'EDI87', 'EDI88', 'EDI89',
+                        'EDI90', 'EDI91', 'EDI92', 'EDI93', 'EDI94', 'EDI95', 'EDI96');
+                    if (in_array($key, $fieldstochange)) {
+                        $key_new = $key . "_NDAR";
+                        unset($row[$key]);
+                        if ($val == 'not_answered') {
+                            $new = array($key_new => 9);
+                        } else {
+                            $new = array($key_new => $val);
+                        }
+                        $row = array_merge($row, $new);
+
+                    }
+                    if (strpos($key, 'edihosp') !== FALSE || strpos($key, 'edihea') !== FALSE) {
+                        if ($val == 'not_answered' || empty($val)) {
+                            $row[$key] = 9;
+                        } else {
+                            $temp = explode('_', $val);
+                            $row[$key] = $temp[0];
+                        }
+                    }
+                    $addfields = array('edict_c' => 999, 'edict_r' => 999, 'edict_rg' => 999, 'edict_s' => 999, 'edict_se' => 999, 'edict_t' => 999,
+                        'edict_x' => 999, 'edifamt' => 999, 'edigtot' => 999, 'edimedt' => 999, 'edistrt' => 999);
+                    $row = array_merge($row, $addfields);
+                }
+                if ($this->instrument == 'vineland_subject' || $this->instrument == 'vineland_proband') {
+                    $fieldstochange = array('ABC_STD_SCORE', 'COM_STD_SCORE', 'DLS_STD_SCORE', 'SOC_STD_SCORE', 'MS_STD_SCORE',
+                        'CRIT_ITEM_1', 'CRIT_ITEM_2', 'CRIT_ITEM_3', 'CRIT_ITEM_4', 'CRIT_ITEM_5', 'CRIT_ITEM_6',
+                        'CRIT_ITEM_7', 'CRIT_ITEM_8', 'CRIT_ITEM_9', 'CRIT_ITEM_10', 'CRIT_ITEM_11', 'CRIT_ITEM_12',
+                        'CRIT_ITEM_13', 'CRIT_ITEM_14');
+                    $relationships = array('Mother' => 1, 'Mom' => 1, 'Father' => 2, 'Dad' => 2, 'dad' => 2, 'Mom/Dad' => 28, 'Both Parents' => 28,
+                        'mother and father' => 28, 'father and mother' => 28, 'Fater' => 2, 'Other' => 90);
+                    if ($key === 'relationship') {
+                        if (!empty($val)) {
+                            $row[$key] = $relationships[$val];
+                        } else {
+                            $row[$key] = '-999';//missing
+                        }
+                    }
+
+                    if (in_array($key, $fieldstochange)) {
+                        if (empty($val) || trim($val) == false) {
+                            $row[$key] = 999;
+                        }
+                    }
+                    if (strpos($val, 'Moderately') !== FALSE) {
+                        $val = str_replace("Moderately", "Mod.", $val);
+                    }
+                    $add_columns = array('communicationdomain_totala' => 999, 'livingskillsdomain_totala' => 999, 'motorskillsdomain_totala' => 999, 'socializationdomain_totala' => 999);
+                    $row = array_merge($row, $add_columns);
+                    //  print "CommentID - ".$row['CommentID'] ."\n ";
+                    $ndar_vineland_columns = $this->getMoreNDARFields($this->instrument, $row['CommentID']);
+                    $row = array_merge($row, $ndar_vineland_columns);
+                    if ($key === 'CommentID') {
+                        unset($row[$key]);
+                    }
+                }
+                if ($this->instrument == 'mullen') {
+                    if (strpos($key, 'expressive_lang_') !== FALSE || strpos($key, 'gross_motor_') !== FALSE ||
+                        strpos($key, 'visual_recept_') !== FALSE || strpos($key, 'fine_motor_') !== FALSE ||
+                        strpos($key, 'receptive_lang_') !== FALSE
+                    ) {
+                        if (is_null($val) || empty($val)) {
+                            $row[$key] = 9;
+                        }
+                    }
+                    $add_columns = array('info_med' => 999, 'scl2_mtchsize_largered' => 999, 'scl2_mtchsize_largeyellow' => 999,
+                        'scl2_mtchsize_smallred' => 999, 'scl2_mtchsize_smallyellow' => 999, 'scl4_color_black' => 999,
+                        'scl4_color_blue' => 999, 'scl4_color_brown' => 999, 'scl4_color_green' => 999, 'scl4_color_orange' => 999,
+                        'scl4_color_purple' => 999, 'scl4_color_red' => 999, 'scl4_color_yellow' => '999');
+                    $row = array_merge($row, $add_columns);
+                }
+                if ($this->instrument == 'aosi') {
+                    $score_fields = array('aosi_totalscore', 'aosi_numbermarkers', 'aosi_q1_visualinstructions',
+                        'aosi_q2_disengagementscore', 'aosi_q3_orientsnameinstruct', 'aosi_q6_activitiesinstruction');
+                    if (in_array($key, $score_fields) &&
+                        (strpos($val, 'N') !== FALSE || strpos($val, 'Unable') !== FALSE)
+                    ) {
+                        $row[$key] = 8;
+                    }
+                }
+                if ($this->instrument == 'scq_proband' || $this->instrument == 'scq_subject') {
+                    if (strpos($key, 'q') !== FALSE && empty($val)) {
+                        $row[$key] = 'not_answered';
+                    }
+
+                }
+                if ($this->instrument == 'm_chat_proband') {
+                    $add_columns = array('fu_q8_proper_play_shapes' => 999);
+                    $row = array_merge($row, $add_columns);
+                }
+                if ($this->instrument == 'ndar_subject') {
+                    if (strpos($key, 'interview_date') !== FALSE || $key == 'DoB' || strpos($key, 'Date_Taken') !== FALSE) {
+                        $Date = explode('-', $val); //print_r($Date);
+                        $row[$key] = $Date[1] . '/' . '01' . '/' . $Date[0];
+                    }
 
 
-	 }
-       
-       }
-       if($this->instrument == 'head_measurements_subject') {
-            $add_columns = array('height_met'=>'','height_std'=>'','weight_met'=>'','weight_std'=>'');
-            if($row['head_length_unit'] == 'cm') {
-                 $add_columns['height_met'] = $row['length1'];
-            } else if ($row['head_length_unit'] == 'inches' ) {
-                  $add_columns['height_std'] = $row['length1'];
+                }
+
             }
-            if($row['weight_unit'] == 'kg') {
-                 $add_columns['weight_met'] = $row['weight1']; 
-            } else if($row['weight_unit'] == 'lbs') {
-                 $add_columns['weight_std'] = $row['weight1'];
-            } 
-            unset($row['head_length_unit']) ;
-            unset($row['weight_unit']);
-            unset($row['length1']);unset($row['length2']);
-            unset($row['weight1']);unset($row['weight2']);
-          
-             $row = array_merge($row, $add_columns);
-       }
-      
-        if(array_key_exists('validity_of_data', $row) && empty($row['validity_of_data'])) {
-            $row['validity_of_data'] = 999;
-        }        
-            $converted[] = $row;
-        
-      }
-        return $converted;
-   }
+            if ($this->instrument == 'head_measurements_subject') {
+                $add_columns = array('height_met' => '', 'height_std' => '', 'weight_met' => '', 'weight_std' => '');
+                if ($row['head_length_unit'] == 'cm') {
+                    $add_columns['height_met'] = $row['length1'];
+                } else if ($row['head_length_unit'] == 'inches') {
+                    $add_columns['height_std'] = $row['length1'];
+                }
+                if ($row['weight_unit'] == 'kg') {
+                    $add_columns['weight_met'] = $row['weight1'];
+                } else if ($row['weight_unit'] == 'lbs') {
+                    $add_columns['weight_std'] = $row['weight1'];
+                }
+                unset($row['head_length_unit']);
+                unset($row['weight_unit']);
+                unset($row['length1']);
+                unset($row['length2']);
+                unset($row['weight1']);
+                unset($row['weight2']);
 
-    function writeResults($results,$header, $filename) {
+                $row = array_merge($row, $add_columns);
+            }
+
+            if (array_key_exists('validity_of_data', $row) && empty($row['validity_of_data'])) {
+                $row['validity_of_data'] = 999;
+            }
+            $converted[] = $row;
+
+        }
+        return $converted;
+    }
+
+    function writeResults($results, $header, $filename)
+    {
         $fd = fopen($filename, 'w+');
-        if($fd === FALSE) {
+        if ($fd === FALSE) {
             exit(-1);
         }
-print "#### $header";
-       $headers = array ($header);
-       fputcsv($fd, $headers);
+        print "#### $header";
+        $headers = array($header);
+        fputcsv($fd, $headers);
 
-      fputcsv($fd,array_keys($results[0]));
-        foreach($results as $row) {
+        fputcsv($fd, array_keys($results[0]));
+        foreach ($results as $row) {
             fputcsv($fd, $row);
         }
         return $fd;
     }
-    function run() {
-        $headers = array('adi_r_proband'=>'adi_200304','aosi'=>'earli_aosi01','csbs'=>'csbs_dp_behavior02','edi'=>'edi01','charge'=>'charge_medical_history02',
-                         'fyi'=>'fyi01','ibq_r'=>'ibq_r01','macarthur_words_gestures'=>'mci_words_gestures01','vineland_proband'=>'vinelandsurvey_200505',
-                         'm_chat_proband'=>'m_chat02','mullen'=>'mullen03','prefrontal_task'=>'prefront_task01','edi2'=>'edi01',
-                         'rbs_r'=>'rbs_r02','seq'=>'seq01','vineland_subject'=>'vinelandsurvey_200505','adi_r_subject'=>'adir_200304',
-                         'head_measurements_subject'=>'charge_physicalexam01','ndar_subject'=>'ndar_subject01');
+
+    function run()
+    {
+        $headers = array('adi_r_proband' => 'adi_200304', 'aosi' => 'earli_aosi01', 'csbs' => 'csbs_dp_behavior02', 'edi' => 'edi01', 'charge' => 'charge_medical_history02',
+            'fyi' => 'fyi01', 'ibq_r' => 'ibq_r01', 'macarthur_words_gestures' => 'mci_words_gestures01', 'vineland_proband' => 'vinelandsurvey_200505',
+            'm_chat_proband' => 'm_chat02', 'mullen' => 'mullen03', 'prefrontal_task' => 'prefront_task01', 'edi2' => 'edi01',
+            'rbs_r' => 'rbs_r02', 'seq' => 'seq01', 'vineland_subject' => 'vinelandsurvey_200505', 'adi_r_subject' => 'adir_200304',
+            'head_measurements_subject' => 'charge_physicalexam01', 'ndar_subject' => 'ndar_subject01');
         $Query = $this->getQuery();
-    // print $Query; 
-        $db = & Database::singleton();
+        // print $Query;
+        $db = &Database::singleton();
         $header = $headers[$this->instrument];
-        $project_map = array(1=>'',2=>'_IBIS2');
-        $ending = $project_map[$this->project].".csv";
-        if($this->instrument == 'scq_proband' || $this->instrument == 'scq_subject') {
+        $project_map = array(1 => '', 2 => '_IBIS2');
+        $ending = $project_map[$this->project] . ".csv";
+        if ($this->instrument == 'scq_proband' || $this->instrument == 'scq_subject') {
             $results = $db->pselect($Query . " AND i.scq_version='lifetime'", array());
             $converted = $this->process($results);
             $header = 'scq_lifetime04';
-            $this->writeResults($converted,$header, '/var/www/loris/project/tools/NDAR_2016/' . $this->instrument . '_lifetime'.$ending);
+            $this->writeResults($converted, $header, '/var/www/loris/project/tools/NDAR_2016/' . $this->instrument . '_lifetime' . $ending);
             $results = $db->pselect($Query . " AND i.scq_version='current'", array());
             $converted = $this->process($results);
             $header = 'scq_current04';
-            $this->writeResults($converted,$header, '/var/www/loris/project/tools/NDAR_2016/' . $this->instrument .'_current'.$ending);
+            $this->writeResults($converted, $header, '/var/www/loris/project/tools/NDAR_2016/' . $this->instrument . '_current' . $ending);
 
-        }  else {
+        } else {
             $results = $db->pselect($Query, array());
             $converted = $this->process($results);
-            $this->writeResults($converted,$header, '/var/www/loris/project/tools/NDAR_2016/' . $this->instrument .$ending);
+            $this->writeResults($converted, $header, '/var/www/loris/project/tools/NDAR_2016/' . $this->instrument . $ending);
         }
         return $converted;
     }
 
-    function getMoreNDARFields($table, $commentID) {
-         $db = Database::singleton();
-         $sections = array(
+    function getMoreNDARFields($table, $commentID)
+    {
+        $db = Database::singleton();
+        $sections = array(
             array('Name' => "REC", 'Items' => 21),
             array('Name' => "EXP", 'Items' => 55),
             array('Name' => "WRN", 'Items' => 26),
@@ -1958,42 +1988,43 @@ print "#### $header";
             array('Name' => "FMS", 'Items' => 37),
             array('Name' => "INT", 'Items' => 12),
             array('Name' => "EXT", 'Items' => 11),
-            array('Name' => "OTH", 'Items' => 16) 
+            array('Name' => "OTH", 'Items' => 16)
         );
-         $setvalue = array();
-         foreach($sections as $section) {
+        $setvalue = array();
+        foreach ($sections as $section) {
             $numq = $section['Items'];
             $record = array();
             $for_select = '';
-            for($i = 1; $i < $numq; $i++ ) {
-               $item = $section['Name'] . "_ITEM_".$i;
-               $corritem = $section['Name'] . "_CORRECTED_ITEM_".$i;
-               array_push($record, array($corritem=>'',$item=>'')); 
-               $for_select .= $item.",".$corritem.",";
+            for ($i = 1; $i < $numq; $i++) {
+                $item = $section['Name'] . "_ITEM_" . $i;
+                $corritem = $section['Name'] . "_CORRECTED_ITEM_" . $i;
+                array_push($record, array($corritem => '', $item => ''));
+                $for_select .= $item . "," . $corritem . ",";
             }
 //            print $for_select . "CommentID - $commentID \n";
-	    $record = $db->pSelectRow("select $for_select Date_taken from " . $table . " WHERE CommentID=:cid", array('cid' => $commentID));
-	    if(!empty($record)) {
-		    for($i = 1; $i < $numq; $i++) {
-			    $ndar_item = $section['Name'] . "_ITEM_".$i. "_NDAR";
-			    $item = $section['Name'] . "_ITEM_".$i;
-			    $corritem = $section['Name'] . "_CORRECTED_ITEM_".$i;
-			    if ($record[$corritem] == "" && $record[$item] == "") {
-				    $setvalue[$ndar_item] = '999';
-			    } elseif ($record[$corritem] == "") {
-				    $setvalue[$ndar_item] = $record[$item];
-			    } else {
-				    $setvalue[$ndar_item] = $record[$corritem];
-			    }
+            $record = $db->pSelectRow("select $for_select Date_taken from " . $table . " WHERE CommentID=:cid", array('cid' => $commentID));
+            if (!empty($record)) {
+                for ($i = 1; $i < $numq; $i++) {
+                    $ndar_item = $section['Name'] . "_ITEM_" . $i . "_NDAR";
+                    $item = $section['Name'] . "_ITEM_" . $i;
+                    $corritem = $section['Name'] . "_CORRECTED_ITEM_" . $i;
+                    if ($record[$corritem] == "" && $record[$item] == "") {
+                        $setvalue[$ndar_item] = '999';
+                    } elseif ($record[$corritem] == "") {
+                        $setvalue[$ndar_item] = $record[$item];
+                    } else {
+                        $setvalue[$ndar_item] = $record[$corritem];
+                    }
 
-                            if($setvalue[$ndar_item] == 'N') {
-                                $setvalue[$ndar_item] = 'N/O';
-                            }
-		    } //end for
-	  }
+                    if ($setvalue[$ndar_item] == 'N') {
+                        $setvalue[$ndar_item] = 'N/O';
+                    }
+                } //end for
+            }
         }
 
-     return $setvalue;
+        return $setvalue;
     }
 }
+
 ?>
