@@ -13,7 +13,7 @@ $client->initialize('../config.xml');
 $DB =& Database::singleton();
 
 //$file = "QCResults.csv";
-$file = "~/Dropbox/Downloads/QC_RESULTS_DTIPrep1.2.3_AsOf_5June2015_IBIS1_FRX_DCCvaluesOnly_withDWI.csv";
+$file = "DTI/QC_RESULTS_DTIPrep1.2.3_AsOf_5June2015_IBIS1_FRX_DCCvaluesOnly_withDWI.csv";
 $fp = fopen($file, "r");
 $headers = fgetcsv($fp);
 $headers = array_slice($headers, 3, 36);
@@ -214,8 +214,8 @@ while($csv_line = fgetcsv($fp))
 {
     $DCCID = $csv_line[0];
     $VL    = $csv_line[1];
-//    $Filename = $csv_line[2] . "_DTIPrepReg_001.mnc";
-    $Filename = $csv_line[40] . "_DTIPrepReg_001.mnc";
+    $Filename = $csv_line[2] . "_DTIPrepReg_001.mnc";
+//    $Filename = $csv_line[40] . "_DTIPrepReg_001.mnc";
     $results = array_slice($csv_line, 3, 36);
     print "File: $Filename\n";
     $file_info = $DB->pselectRow("SELECT FileID, SessionID FROM files WHERE
