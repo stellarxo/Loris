@@ -75,8 +75,13 @@ class NDAR_Release_2016
         } else if ($this->instrument == 'edi') {
             return $Base . " AND ((s.SubprojectID=1 AND UPPER(s.Visit_label)='V06') OR  (s.SubprojectID=3 AND UPPER(s.Visit_label) IN ('V06', 'V12', 'V24' ))) AND s.SubprojectID <> 2 $GUID";
         } else if ($this->instrument == 'scq' || $this->instrument == 'rbs_r') {
-            if ($this->project == 2 && $this->instrument == 'rbs_r') {
-                return $Base . " AND s.SubprojectID=10 AND s.Visit_label ='V12' $GUID";
+            if ($this->project == 2) {
+                if ($this->instrument == 'rbs_r') {
+                    return $Base . " AND s.SubprojectID=10 AND s.Visit_label ='V12' $GUID";
+                }
+                else {
+                    return $Base . " AND s.SubprojectID=9 AND UPPER(s.Visit_label) IN ('V12', 'V24') $GUID";
+                }
             } else {
                 return $Base . " AND UPPER(s.Visit_label) IN ('V12', 'V24') $GUID";
             }
@@ -87,7 +92,7 @@ class NDAR_Release_2016
                 return $Base . " AND (s.SubprojectID=10 AND UPPER(s.Visit_label) IN ('V03','V06','V09','V12','V15','V18','V24') OR s.SubprojectID=9 AND UPPER(s.Visit_label) IN ('V03')) $GUID";
             }
             else {
-                return $Base . " AND UPPER(s.Visit_label) IN ('V06', 'V12', 'V24') $GUID";
+                return $Base . " AND s.SubprojectID<>7 AND UPPER(s.Visit_label) IN ('V06', 'V12', 'V24') $GUID";
             }
         } else if ($this->instrument == 'charge') {
             // Don't use Base because there's multiple instruments
