@@ -175,19 +175,19 @@ class NDB_Form_statistics extends NDB_Form
                     floor($c['all']['complete'] / $c['all']['total']*100);
             }
         }
-        // DDE STATS
-        $DB->select("SELECT s.CenterID, 
-                f.Data_Entry as Data_Entry, 
+        $DB->select("SELECT s.CenterID,
+                f.Data_Entry as Data_Entry,
                 s.visit_label as VLabel,
                 COUNT(s.CandID) as val
-                FROM session as s JOIN candidate as c ON (s.CandID=c.CandID) JOIN flag as f ON (f.SessionID=s.ID) 
-                WHERE s.Active='Y' 
+                FROM session as s JOIN candidate as c ON (s.CandID=c.CandID) JOIN flag as f ON (f.SessionID=s.ID)
+                WHERE s.Active='Y'
                 AND s.Current_stage <> 'Recycling Bin'
-                AND f.CommentID LIKE 'DDE%' 
-                AND c.Active='Y' 
-                AND (f.Test_name NOT LIKE '%parameter%' 
-                    AND f.Test_name NOT LIKE '%radiological%' 
+                AND f.CommentID LIKE 'DDE%'
+                AND c.Active='Y'
+                AND (f.Test_name NOT LIKE '%parameter%'
+                    AND f.Test_name NOT LIKE '%radiological%'
                     AND f.Test_name NOT LIKE '%vineland%')
+                $ExtraProject_Criteria
                 GROUP BY s.CenterID, VLabel, f.Data_Entry ORDER BY c.PSCID;",
             $result);
         foreach($result as $row) {
