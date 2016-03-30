@@ -175,8 +175,9 @@ class NDB_Form_statistics extends NDB_Form
                     floor($c['all']['complete'] / $c['all']['total']*100);
             }
         }
-        $DB->select("SELECT s.CenterID,
-                f.Data_Entry as Data_Entry,
+        // DDE STATS
+        $DB->select("SELECT s.CenterID, 
+                f.Data_Entry as Data_Entry, 
                 s.visit_label as VLabel,
                 COUNT(s.CandID) as val
                 FROM session as s JOIN candidate as c ON (s.CandID=c.CandID) JOIN flag as f ON (f.SessionID=s.ID)
