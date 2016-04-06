@@ -13,8 +13,8 @@
 
 set_include_path(get_include_path().":../../libraries:../../../php/libraries:");
 require_once __DIR__ . "/../../../vendor/autoload.php";
-//require('../../externals/spreadsheet-reader/php-excel-reader/excel_reader2.php');
-//require('../../externals/spreadsheet-reader/SpreadsheetReader.php');
+require('../../externals/spreadsheet-reader/php-excel-reader/excel_reader2.php');
+require('../../externals/spreadsheet-reader/SpreadsheetReader.php');
 //require_once "NDB_Page.class.inc";
 require_once "NDB_Client.class.inc";
 require_once "Utility.class.inc";
@@ -44,14 +44,9 @@ while($excel_row = fgetcsv($fp))
     // _DTIPrepReg_001.mnc 
     // "SELECT * FROM files where File like '%" . $excel_row[2] . "%' and SeriesUID is not null"
     // "SELECT * FROM files where File like '%" . $excel_row[2] . "_DTIPrepReg_001.mnc'"
-
-    // column 40 is new file name 
-    //$name_prep = $excel_row[40] . "_DTIPrepReg_001.mnc";
-    //$name_wild = $excel_row[40] . ".mnc";
-
-
-    $name_prep = $excel_row[2] . "_DTIPrepReg_001.mnc";
-    $name_wild = $excel_row[2] . ".mnc";
+    
+    $name_prep = $excel_row[40] . "_DTIPrepReg_001.mnc";
+    $name_wild = $excel_row[40] . ".mnc";
     
     $db_files_prep = $DB->pselectRow("SELECT * FROM files where File like '%" . $name_prep . "'", array());
     $db_files_wild = $DB->pselectRow("SELECT * FROM files where File like '%" . $name_wild . "%'", array());    
@@ -75,10 +70,10 @@ while($excel_row = fgetcsv($fp))
         $db_files_qcstatus = $DB->pselectRow("SELECT * FROM files_qcstatus where FileID=:FID", array("FID" => $db_files["FileID"]));
         if (!$db_files_qcstatus)
         {
-            print $i . ":" . $name_file . " no db_files_qcstatus\n";
+            print $i .": no db_files_qcstatus.\n";
         }
         else {
-            print $i . ":" . $name_file . " yes db_files_qcstatus\n";
+            print $i . ":" . $name_file . " db_files_qcstatus found.\n";
         }
         //print_r($db_files_qcstatus);
         
@@ -106,7 +101,7 @@ while($excel_row = fgetcsv($fp))
     else
     {
         // file not found, explain
-        print $i . ":" . $name_file . " File not_found_in_db\n";
+        print $i . ":" . $name_file . " File not found in the db, can't insert QC data.\n";
     }    
     
     //print ".";
