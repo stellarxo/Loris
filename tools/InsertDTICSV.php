@@ -155,12 +155,14 @@ function InsertDropdown($typeID, $value, $fileID)
                 'Value'           => $value,
                 'ParameterTypeID' => $typeID,
                 'FileID'          => $fileID,
-                'InsertTime'      => 'UNIX_TIMESTAMP()'
+                'InsertTime'      => time()
                 )
             );
 
         }
         return;
+    } else {
+        print "Warning: Invalid option in CSV: $value";
     }
     
     // print "\t$typeID: $value\n";
@@ -197,13 +199,11 @@ function InsertCheckbox($typeID, $value, $comments)
 
 /*
  * from FeedbackMRI.class.inc
- * 
+ * clearing comments in main
+ * $comments->clearAllComments();
  */   
 function InsertComment($type, $value, $comments) 
-{
-
-    $comments->clearAllComments();
-   
+{  
     $comments->addTextComment($value, $type);
     // print "\t$type: $value\n";
 }
@@ -242,8 +242,8 @@ function InsertQCStatus($fileID, $value)
                 'FileID'            => $fileID,
                 'SeriesUID'         => $files['SeriesUID'],
                 'EchoTime'          => $files['EchoTime'],
-                'QCFirstChangeTime' => 'UNIX_TIMESTAMP()',
-                'QCLastChangeTime'  => 'UNIX_TIMESTAMP()'
+                'QCFirstChangeTime' => time(),
+                'QCLastChangeTime'  => time()
 
                    )
             );
@@ -271,7 +271,7 @@ function InsertDTIselected($fileID, $typeID, $value)
             'FileID'          => $fileID,
             'Value'           => 'DTI',
             'ParameterTypeID' => $typeID,
-            'InsertTime'      => 'UNIX_TIMESTAMP()'
+            'InsertTime'      => time()
             )
         );
     }
@@ -313,6 +313,7 @@ while($csv_line = fgetcsv($fp))
     // instantiate feedback mri object
     if (!empty($file_info['FileID'])) {
         $comments = new FeedbackMRI($file_info['FileID'], $file_info['SessionID']);
+        $comments->clearAllComments();
 
         foreach($results as $i => $value) {
             switch($i) {
