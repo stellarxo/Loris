@@ -177,11 +177,16 @@ function InsertCheckbox($typeID, $value, $comments)
     if ($value === 'No'
         || $value === ''
         || $value === 'NULL'
-    ) {
+        || $value === 'None') 
+    {
         return;
     }
     
-    if ($value === 'Yes') {
+    if ($value === 'Yes'
+        || $value === 'Slight'
+        || $value === 'Poor'
+        || $value === 'Unacceptable') 
+    {
         //insert
         $success = $DB->delete(
             "feedback_mri_comments", array(
@@ -287,7 +292,7 @@ function UpdateCaveat($fileID, $value)
     if (!empty($fileID)) {
         if ($value === 'TRUE') {
             $DB->update('files', array('Caveat'=>1), array('FileID'=>$fileID));
-        } else if ($value == 'FALSE') {
+        } else if ($value === 'FALSE') {
             $DB->update('files', array('Caveat'=>0), array('FileID'=>$fileID));
         }
     }
