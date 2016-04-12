@@ -62,6 +62,7 @@ $InsertTypes = array(
     33 => /* Pending, ignored */ '',
     34 => getParameterTypeID("Selected"),
     35 => getCommentIDType("Overall"),
+    36 => getCommentIDType("Overall"),
 );
 
 function getPredefinedCommentID($name) 
@@ -307,7 +308,13 @@ while($csv_line = fgetcsv($fp))
 {
     $DCCID = $csv_line[0];
     $VL    = $csv_line[1];
-    $Filename = $csv_line[2] . "_DTIPrepReg_001.mnc";
+    if (strpos($csv_line[2],"_QCed_VC") !== false) 
+    {
+        $Filename = $csv_line[2] . "_DTIPrepVC_001.mnc";
+    } else {
+        $Filename = $csv_line[2] . "_DTIPrepReg_001.mnc";
+    }
+    
     // $Filename = $csv_line[2] . ".mnc";
     $results = array_slice($csv_line, 3, 36);
     print "File: $Filename\n";
@@ -357,7 +364,7 @@ while($csv_line = fgetcsv($fp))
             case 9:
             case 18:
             case 24:
-            case 35:
+            case 35: /* Exclude Reason */
                 InsertComment($InsertTypes[$i], $results[$i], $comments);
                 break;
             case 31: /* QC related types */
@@ -374,6 +381,7 @@ while($csv_line = fgetcsv($fp))
                 );
                 break;
             case 33:
+            case 36: /* Notes */
                 break;
             default:
                 print "Unhandled type: $i\n";
