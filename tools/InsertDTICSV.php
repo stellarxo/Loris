@@ -242,6 +242,7 @@ function InsertQCStatus($fileID, $value)
                 array("fid"=>$fileID)
             );               
                
+            print_r($files);
             $success = $DB->insert(
                 'files_qcstatus', array(
                 'QCStatus'          => $value,
@@ -264,7 +265,7 @@ function InsertQCStatus($fileID, $value)
 function InsertDTIselected($fileID, $typeID, $value) 
 {
     $DB = Database::singleton();
-    if (strtoupper($value) === 'TRUE' && !empty($fileID)) {
+    if (((strtoupper($value) === 'TRUE') || ($value >= 1)) && !empty($fileID)) {
         $DB->delete(
             'parameter_file', array(
             'FileID' => $fileID,
@@ -310,7 +311,7 @@ while($csv_line = fgetcsv($fp))
     $VL    = $csv_line[1];
     if (strpos($csv_line[2],"_QCed_VC") !== false) 
     {
-        $Filename = $csv_line[2] . "_DTIPrepVC_001.mnc";
+        $Filename = str_replace("_QCed_VC", "_DTIPrepVC_001.mnc", $csv_line[2]);
     } else {
         $Filename = $csv_line[2] . "_DTIPrepReg_001.mnc";
     }
