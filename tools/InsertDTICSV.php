@@ -265,7 +265,7 @@ function InsertQCStatus($fileID, $value)
 function InsertDTIselected($fileID, $typeID, $value) 
 {
     $DB = Database::singleton();
-    if (((strtoupper($value) === 'TRUE') || ($value >= 1)) && !empty($fileID)) {
+    if (((strtoupper($value) === 'TRUE') or ($value >= 1)) and !empty($fileID)) {
         $DB->delete(
             'parameter_file', array(
             'FileID' => $fileID,
@@ -276,7 +276,7 @@ function InsertDTIselected($fileID, $typeID, $value)
         $DB->insert(
             'parameter_file', array(
             'FileID'          => $fileID,
-            'Value'           => 'DTI',
+            'Value'           => 'dti',
             'ParameterTypeID' => $typeID,
             'InsertTime'      => time()
             )
