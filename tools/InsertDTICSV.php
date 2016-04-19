@@ -316,13 +316,22 @@ while($csv_line = fgetcsv($fp))
         $Filename = $csv_line[2] . "_DTIPrepReg_001.mnc";
     }
     
-    // $Filename = $csv_line[2] . ".mnc";
     $results = array_slice($csv_line, 3, 36);
     print "File: $Filename\n";
     $file_info = $DB->pselectRow(
         "SELECT FileID, SessionID FROM files WHERE
                              File LIKE '%$Filename'", array()
     );
+
+    // Failed DTIPrepReg will get their comments inserted on the unprocessed version
+    if(empty($file_info)) {
+        $Filename = $csv_line[2] . ".mnc";
+        $file_info = $DB->pselectRow(
+            "SELECT FileID, SessionID FROM files WHERE
+                             File LIKE '%$Filename'", array()
+    );
+    }
+    
     // instantiate feedback mri object
     if (!empty($file_info['FileID'])) {
         $comments = new FeedbackMRI($file_info['FileID'], $file_info['SessionID']);
