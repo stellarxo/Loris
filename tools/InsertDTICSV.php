@@ -242,7 +242,6 @@ function InsertQCStatus($fileID, $value)
                 array("fid"=>$fileID)
             );               
                
-            print_r($files);
             $success = $DB->insert(
                 'files_qcstatus', array(
                 'QCStatus'          => $value,
