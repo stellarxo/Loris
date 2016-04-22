@@ -294,7 +294,7 @@ class NDB_BVL_Instrument_tsi_followup extends NDB_BVL_Instrument
         $nonAskedQuestions = array("<br>Parent's Telephone:",
 		"Parent's Address:",
 		"$this->indent a) Older sibling",
-		"$this->indent b) other siblings:",
+		"$this->indent b) Other siblings",
 		"Nature of Referral:",
 		);
 		foreach ($nonAskedQuestions as $field) {
@@ -302,7 +302,7 @@ class NDB_BVL_Instrument_tsi_followup extends NDB_BVL_Instrument
 		}
 
         $this->form->addElement("static", null, "<br><br><b>Other siblings</b><br>");
-	for($i = 1; $i<=4; $i++) {
+	for($i = 1; $i<=10; $i++) {
 		$this->addScoreColumn(null, "Sibling $i");
 		$field = 'age_sibling'.$i; $label = $this->indent. 'Age (Please indicate age in years):';
 		$group [] = $this->createText($field, $label);
