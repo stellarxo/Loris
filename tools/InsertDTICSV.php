@@ -14,7 +14,7 @@ $client->initialize('../config.xml');
 
 $DB =& Database::singleton();
 
-$file    = "QC_RESULTS_DTIPrep1.2.3_AsOf_5June2015_IBIS1_FRX_DCCvaluesOnly.csv";
+$file    = $argv[1];
 $fp      = fopen($file, "r");
 $headers = fgetcsv($fp);
 $headers = array_slice($headers, 3, 36);
@@ -292,9 +292,9 @@ function UpdateCaveat($fileID, $value)
 {
     $DB = Database::singleton();
     if (!empty($fileID)) {
-        if ($value === 'TRUE') {
+        if (($value === 'TRUE') or ($value == 1)) {
             $DB->update('files', array('Caveat'=>1), array('FileID'=>$fileID));
-        } else if ($value === 'FALSE') {
+        } else if (($value === 'FALSE') or ($value == 0)) {
             $DB->update('files', array('Caveat'=>0), array('FileID'=>$fileID));
         }
     }
