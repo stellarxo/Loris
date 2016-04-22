@@ -356,6 +356,7 @@ class NDB_BVL_Instrument_peer_socialcontact extends NDB_BVL_Instrument
            $this->addBasicText($field, $label);
            $this->XINRegisterRule($field, array("$field{@}=={@}NEVER_REQUIRED"));
        }
+
        $this->form->addElement('header','section2_b',"Childcare");
 
        $this->addSelect('q29_childin_childcare',"29. Is your child in a childcare setting?",$this->q23_options);
@@ -742,20 +743,20 @@ class NDB_BVL_Instrument_peer_socialcontact extends NDB_BVL_Instrument
 	  if($values['q27_numchildren_perclass'] == null   && $values['q23_childin_school'] == 'yes') {
 		  $errors["q27_numchildren_perclass"] = "Please specify";
 	  }
-          if(!is_numeric($values['q27_numchildren_perclass'])   && $values['q23_childin_school'] == 'yes') {
-                  $errors["q27_numchildren_perclass"] = "Please specify numerical values only";
+          if(!is_numeric($values['q27_numchildren_perclass'])   && $values['q23_childin_school'] == 'yes' && strtolower($values['q27_numchildren_perclass']) != 'dont know') {
+                  $errors["q27_numchildren_perclass"] = "Please specify numerical values only or use 'dont know'";
           }
-          if(! is_numeric($values['q28_numchildren_specialneeds']) && $values['q23_childin_school'] == 'yes' && $values['q28_numchildren_specialneeds'] != null) {
-                  $errors["q28_numchildren_specialneeds"] = "Please specify numerical values only";
+          if(!is_numeric($values['q28_numchildren_specialneeds']) && $values['q23_childin_school'] == 'yes' && $values['q28_numchildren_specialneeds'] != null && strtolower($values['q28_numchildren_specialneeds']) != 'dont know') {
+                  $errors["q28_numchildren_specialneeds"] = "Please specify numerical values only or use 'dont know'";
           }
           if( $values['q33_numchildren_perclass'] == null && $values['q29_childin_childcare'] == 'yes') {
                   $errors["q33_numchildren_perclass"] = "Please specify";
           }
-          if( !is_numeric ($values['q33_numchildren_perclass']) && $values['q29_childin_childcare'] == 'yes') {
-                  $errors["q33_numchildren_perclass"] = "Please specify numerical values only";
+          if( !is_numeric ($values['q33_numchildren_perclass']) && $values['q29_childin_childcare'] == 'yes' && strtolower($values['q33_numchildren_perclass']) != 'dont know') {
+                  $errors["q33_numchildren_perclass"] = "Please specify numerical values only or use 'dont know'";
           }
-          if(!is_numeric( $values['q34_numchildren_specialneeds']) && $values['q29_childin_childcare'] == 'yes' && $values['q34_numchildren_specialneeds'] != null) {
-                  $errors["q34_numchildren_specialneeds"] = "Please specify numerical values only";
+          if(!is_numeric( $values['q34_numchildren_specialneeds']) && $values['q29_childin_childcare'] == 'yes' && $values['q34_numchildren_specialneeds'] != null && strtolower($values['q34_numchildren_specialneeds']) != 'dont know') {
+                  $errors["q34_numchildren_specialneeds"] = "Please specify numerical values only or use 'dont know'";
           }
 
      }
