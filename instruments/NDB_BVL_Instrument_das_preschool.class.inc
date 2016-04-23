@@ -39,6 +39,9 @@ class NDB_BVL_Instrument_das_preschool extends NDB_BVL_Instrument_das
 //    var $scores = array("q_70_trial1"=>"","q_71_trial2"=>"","q_72_trial3"=>"");
 //    var $questions = array();
 
+    var $answerArray = array(""=>NULL, 0=>0, 1=>1, "not_answered"=>"Not Answered");
+    var $yesNoNa = array(""=>NULL, "yes"=>"Yes", "no"=>"No", "not_answered"=>"Not Answered");
+
 
 
     /*
@@ -610,7 +613,6 @@ class NDB_BVL_Instrument_das_preschool extends NDB_BVL_Instrument_das
         $this->form->addElement("select", "q_1_trial2", $this->indent . $this->indent . "Number of blocks used:", array("" => NULL,2=>"8 blocks",1=>"4-7 blocks",0=>"0-3 blocks","not_answered" => "Not Answered"));
         $this->XINRegisterRule("q_1_trial2", array("q_1_trial2done{@}=={@}yes"), "This is required if a second trial was attempted.");
 
-        $answerArray = array(""=>NULL, "correct"=>"Correct", "incorrect"=>"Incorrect", "not_answered"=>"Not Answered");
         $failArray = array(""=>NULL,"rotation"=>"Rotation", "reversal"=>"Reversal", "not_answered"=>"Not Answered");
 
 
@@ -656,8 +658,6 @@ class NDB_BVL_Instrument_das_preschool extends NDB_BVL_Instrument_das
         // If you suspect that a child will have difficulty with the starting items for his or her age,
         // use the Starting and Decision Points for a younger age group.
         // Out-of-level testing for children of average or low ability only
-
-        $answerArray = array(""=>NULL, "correct"=>"Correct", "incorrect"=>"Incorrect", "not_answered"=>"Not Answered");
 
         $item = array(1=>"Show me teddy's eyes.", 2=>"Show me teddy's mouth.", 3=>"Show me teddy's arms.",
             4=>"Show me teddy's ears.", 5=>"Show me teddy's legs.", 6=>"Show me teddy's ribbon.",
@@ -729,7 +729,6 @@ class NDB_BVL_Instrument_das_preschool extends NDB_BVL_Instrument_das
         $this->form->addElement("header", null, "Picture Similarities");
         $this->form->addElement('static', null, "<br />");
 
-        $answerArray = array(""=>NULL, "correct"=>"Correct", "incorrect"=>"Incorrect", "not_answered"=>"Not Answered");
         $responseArray = array(""=>NULL, 1=>1, 2=>2, 3=>3, 4=>4, "not_answered"=>"Not Answered");
 
         $j=49;
@@ -760,8 +759,7 @@ class NDB_BVL_Instrument_das_preschool extends NDB_BVL_Instrument_das
         $this->form->addElement("header", null, "Naming Vocabulary");
         $this->form->addElement('static', null, "<br />");
 
-        $answerArray = array(""=>NULL, "correct"=>"Correct", "incorrect"=>"Incorrect", "not_answered"=>"Not Answered");
-        $yesNoNa = array(""=>NULL, "yes"=>"Yes", "no"=>"No", "not_answered"=>"Not Answered");
+
 
         $item = array(1=>"Paper", 2=>"Box (Closed)", 3=>"Chair", 4=>"Key", 5=>"Fish", 6=>"Scissors", 7=>"Watch",
             8=>"Window", 9=>"Sink", 10=>"Brush", 11=>"Helicopter", 12=>"Triangle", 13=>"Ring", 14=>"Chain",
@@ -926,8 +924,6 @@ class NDB_BVL_Instrument_das_preschool extends NDB_BVL_Instrument_das
         $this->form->addElement("header", null, "Early Number Concepts");
         $this->form->addElement('static', null, "<br />");
 
-        $answerArray = array(""=>NULL, "correct"=>"Correct", "incorrect"=>"Incorrect", "not_answered"=>"Not Answered");
-
         $j=134;
 
         $this->form->addElement("select", "q_{$j}_item1", $this->indent . $this->indent . "Item 1", $answerArray);
@@ -1008,7 +1004,6 @@ class NDB_BVL_Instrument_das_preschool extends NDB_BVL_Instrument_das
 
         // Total: out of 44 ?
 
-        $answerArray1 = array(""=>NULL, 0=>0, 1=>1, "not_answered"=>"Not Answered");
         $answerArray2 = array(""=>NULL, 0=>0, 1=>1, 2=>2, "not_answered"=>"Not Answered");
         $answerArray3 = array(""=>NULL, 0=>0, 1=>1, 2=>2, 3=>3, "not_answered"=>"Not Answered");
 
@@ -1017,7 +1012,7 @@ class NDB_BVL_Instrument_das_preschool extends NDB_BVL_Instrument_das
         for ($i = 1; $i <= $numItems; $i++) {
             switch ($i) {
                 case 1:
-                    $this->form->addElement("select", "q_{$j}_item{$i}", $this->indent . $this->indent . "Item $i", $answerArray1);
+                    $this->form->addElement("select", "q_{$j}_item{$i}", $this->indent . $this->indent . "Item $i", $answerArray);
                     break;
                 case 12:
                 case 15:
