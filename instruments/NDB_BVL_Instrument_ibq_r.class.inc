@@ -1,4 +1,8 @@
 <?php
+
+require_once 'HTML/QuickForm.php';
+require_once 'HTML/QuickForm/Renderer/Array.php';
+
 class NDB_BVL_Instrument_ibq_r extends NDB_BVL_Instrument
 {
     var $ValidityEnabled = false;
@@ -113,16 +117,10 @@ class NDB_BVL_Instrument_ibq_r extends NDB_BVL_Instrument
 
 		//get the saved scores
     	$db =& Database::singleton();
-    	if(PEAR::isError($db)) {
-			return PEAR::raiseError ("Could not connect to database".$db->getMessage());
-    	}
     	
     	$query = "SELECT * FROM $this->table WHERE CommentID = '$this->commentID'";
     	$record = array();
     	$db->selectRow($query, $record);
-    	if (PEAR::isError($record)) {
-    		return PEAR::raiseError("Could not retrieve scores: " . $record->getMessage());
-    	}
     	
     	//do the math...
     	$reverseItems = array(1, 14, 117,
@@ -181,9 +179,6 @@ class NDB_BVL_Instrument_ibq_r extends NDB_BVL_Instrument
 		
     	//save scores
 		$result = $db->update($this->table, $scores, array("CommentID"=>$this->getCommentID()));
-		if($db->isError($result)) {
-			return PEAR::raiseError("Could not save total score: ". $result->getMessage());
-		}
 		
     }    
         

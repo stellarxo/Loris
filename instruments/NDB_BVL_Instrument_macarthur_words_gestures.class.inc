@@ -1,4 +1,8 @@
 <?php
+
+require_once 'HTML/QuickForm.php';
+require_once 'HTML/QuickForm/Renderer/Array.php';
+
 class NDB_BVL_Instrument_macarthur_words_gestures extends NDB_BVL_Instrument
 {
     /*
@@ -279,18 +283,12 @@ class NDB_BVL_Instrument_macarthur_words_gestures extends NDB_BVL_Instrument
 
     function CalculatePercentile($scale, $age_months, $gender, &$scores) {
         $db =& Database::singleton();
-        if(PEAR::isError($db)) {
-            return PEAR::raiseError ("Could not connect to database".$db->getMessage());
-        }
         $scale_number = $scale . "_number";
         $scale_percentile = $scale . "_percentile";
 
         $query_scores = "SELECT * FROM macarthur_lookup WHERE age_months=".$age_months. " AND sex='$gender' AND score_raw=".$scores[$scale_number]." AND subscale='$scale_number'";
         $PercentileScore  = array();
         $db->selectRow($query_scores, $PercentileScore);
-        if (PEAR::isError($PercentileScore)) {
-            return PEAR::raiseError("Could not retrieve scores: " . $PercentileScore->getMessage());
-        }
 
         $scores[$scale_percentile]= $PercentileScore['score_percentile'];
 
@@ -299,9 +297,6 @@ class NDB_BVL_Instrument_macarthur_words_gestures extends NDB_BVL_Instrument
             $query_scores1a = "SELECT * FROM macarthur_lookup WHERE age_months=$age_months AND sex='$gender' AND subscale='$scale_number' AND score_raw>$score_holder ORDER BY score_raw ASC LIMIT 1";
             $record_1a = array();
             $db->selectRow($query_scores1a, $record_1a);
-            if (PEAR::isError($record_1a)) {
-                return PEAR::raiseError("Could not retrieve scores: " . $record_1a->getMessage());
-            }
             if(empty($record_1a)) {
                 $db->selectRow("SELECT * from macarthur_lookup WHERE age_months=$age_months AND sex='$gender'     AND subscale='$scale_number' ORDER BY score_raw ASC LIMIT 1", $record_1a);
             }
@@ -309,9 +304,6 @@ class NDB_BVL_Instrument_macarthur_words_gestures extends NDB_BVL_Instrument
             $query_scores1b = "SELECT * FROM macarthur_lookup WHERE age_months=".$age_months. " AND sex='$gender' AND subscale='$scale_number' AND score_raw<$score_holder ORDER BY score_raw DESC LIMIT 1";
             $record_1b = array();
             $db->selectRow($query_scores1b, $record_1b);
-            if (PEAR::isError($record_1b)) {
-                return PEAR::raiseError("Could not retrieve scores: " . $record_1b->getMessage());
-            }
 
             //print "scale: $scale_number score: " . $scores[$scale_number] . " x< " . $record_1b['score_raw'] . " x> " . $record_1a['score_raw'] . " Y> " . $record_1b['score_percentile'] . " Y< " . $record_1b['score_percentile'] . '<br />';
             $percentile_calculation1 = (
@@ -337,25 +329,16 @@ class NDB_BVL_Instrument_macarthur_words_gestures extends NDB_BVL_Instrument
 
         //get the saved scores
         $db =& Database::singleton();
-        if(PEAR::isError($db)) {
-            return PEAR::raiseError ("Could not connect to database".$db->getMessage());
-        }
 
 
         $query = "SELECT * FROM $this->table WHERE CommentID = '$this->commentID'";
         $record = array();
         $db->selectRow($query, $record);
-        if (PEAR::isError($record)) {
-            return PEAR::raiseError("Could not retrieve scores: " . $record->getMessage());
-        }
 
         // Get gender   
         $query_gender = "SELECT Gender FROM candidate as c, session as s, flag as f, $this->table as t WHERE t.CommentID = '$this->commentID' AND f.CommentID=t.CommentID AND s.ID=f.SessionID AND s.CandID=c.CandID";
         $record_gender = array();
         $db->selectRow($query_gender, $record_gender);
-        if (PEAR::isError($record_gender)) {
-            return PEAR::raiseError("Could not retrieve scores: " . $record_gender->getMessage());
-        }
         $gender=strtolower($record_gender['Gender']);
 
         // Get the subject age in months for scoring
@@ -364,9 +347,6 @@ class NDB_BVL_Instrument_macarthur_words_gestures extends NDB_BVL_Instrument
 
         $age = Utility::calculateAge($dob, $record["Date_taken"]);
         $age_months = $age['year'] * 12 + $age['mon'];
-        if($this->isError($age)) {
-            return $this->raiseError("Could not compute age");
-        }
 
 
         //calculate Section B (28): Phrases Understood
@@ -493,9 +473,6 @@ class NDB_BVL_Instrument_macarthur_words_gestures extends NDB_BVL_Instrument
 
         // save scores
         $result = $db->update($this->table, $scores, array("CommentID"=>$this->getCommentID()));
-        if($db->isError($result)) {
-            return PEAR::raiseError("Could not save total score: ". $result->getMessage());
-        }
 
 
 

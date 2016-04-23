@@ -36,7 +36,12 @@ class NDAR_Release_Defaced {
         // Appears to be patient name
         'dicom_0x0010:el_0x1001',
         // Appears to be institution name
-        'dicom_0x0010:el_0x0021'
+        'dicom_0x0010:el_0x0021',
+        'dicom_0x0010:el_0x1040',
+        'dicom_0x0038:el_0x0500',
+        'dicom_0x0905:el_0x1030',
+        'dicom_0x0010:el_0x1001',
+        'dicom_0x0010:el_0x2150'
     );
 
     var $DateHeaders = array(

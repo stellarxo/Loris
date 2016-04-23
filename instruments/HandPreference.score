@@ -8,19 +8,11 @@ require_once "Utility.class.inc";
 
 $CommentID = $argv[1];
 $db =& Database::singleton();
-if(PEAR::isError($db)) {
-	print "Could not connect to database: " . $db->getMessage();
-    exit(1);
-}
 
 $query = "SELECT * from HandPreference WHERE CommentID = :CommentID";
 
 $WhereCriteria = array('CommentID'=>$CommentID);
 $result = $db->pselectRow($query, $WhereCriteria);
-if(Utility::isErrorX($result)){
-	print "Query has failed to select: ".$result->getMessage();
-    exit(2);
-}
 //Uni Manual Response: no. times right hand used + no. time left hand used
 $UMR = 0;
 //Right-Handed Response
@@ -50,10 +42,6 @@ if ($result['administration_perspective'] == 'examiner_perspective') {
 }
 $values = array('LateralityIndex'=>$final_score);
 $result = $db->update('HandPreference', $values, $WhereCriteria);
-if(PEAR::isError($result)) {
-    print "Could not save to database: " . $result->getMessage();
-    exit(3);
-}
 
 exit(0);
 ?>

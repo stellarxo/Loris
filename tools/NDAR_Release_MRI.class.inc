@@ -32,7 +32,12 @@ class NDAR_Release_MRI {
         'patient:age',
         'study:serial_no',
         'study:station_id',
-        'study:procedure'
+        'study:procedure',
+        'dicom_0x0010:el_0x1040',
+        'dicom_0x0038:el_0x0500',
+        'dicom_0x0905:el_0x1030',
+        'dicom_0x0010:el_0x1001',
+        'dicom_0x0010:el_0x2150'
     );
 
     var $DateHeaders = array(

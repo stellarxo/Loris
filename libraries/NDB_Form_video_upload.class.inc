@@ -1,6 +1,8 @@
 <?php
 require_once "NDB_Form.class.inc";
 require_once "Utility.class.inc";
+require_once "HTML/QuickForm.php";
+require_once 'HTML/QuickForm/Renderer/Default.php';
 /**
  * The forms for the new profile menu
  * @package main
@@ -17,18 +19,56 @@ function hash_it($array, $item){
  
 class NDB_Form_video_upload extends NDB_Form
 {
+    
+   function _setupPage($name, $page, $identifier, $commentID, $formname)
+   {
+       $this->form       = new HTML_QuickForm($formname);
+       $this->name       = $name;
+       $this->page       = $page;
+       $this->identifier = $identifier;
+       $this->commentID  = $commentID;
+       $this->defaults   = array();
+   }
+
+   function display()
+   {
+       if (!$this->form->isFrozen()) {
+           // hidden values
+             $this->addHidden('test_name', $this->name);
+             $this->addHidden('subtest', $this->page);
+             $this->addHidden('identifier', $this->identifier);
+           // $this->form->addElement('hidden', 'test_name', $this->name);
+           // $this->form->addElement('hidden', 'subtest', $this->page);
+           // $this->form->addElement('hidden', 'identifier', $this->identifier);
+       }
+       // get the defaults
+       $localDefaults = $this->_getDefaults();
+       if (!is_array($localDefaults)) {
+           $localDefaults = array();
+       }
+       // set the quickform object defaults
+       $this->_setDefaults(array_merge($this->defaults, $localDefaults));
+           // trim all values
+       $this->form->applyFilter('__ALL__', 'trim');
+       // display the HTML_Quickform object
+       $smarty   = new Smarty_neurodb($this->name);
+       $renderer = new HTML_QuickForm_Renderer_ArraySmarty($smarty);
+       $this->form->accept($renderer);
+       $smarty->ModuleName = $this->name;
+       $smarty->assign('form', $renderer->toArray());
+       $smarty->assign($this->tpl_data);
+       $html = $smarty->fetch("form_$this->template.tpl");
+       return $html;
+       //return $this->form->toHTML();
+   }
+
     function _hasAccess()
     {
+        error_log("_hasAccess");
         // create user object
         $user =& User::singleton();
-        if(PEAR::isError($user)) {
-            return PEAR::raiseError("User Error: ".$user->getMessage());
-        }
 
         $site =& Site::singleton($user->getData('CenterID'));
-        if (PEAR::isError($site)) {
-            return PEAR::raiseError("Unable to construct the list_of_sites array: ".$site->getMessage());
-        }
         if ($user->hasPermission('earli_videos')) {
             return true;
         }
@@ -37,13 +77,16 @@ class NDB_Form_video_upload extends NDB_Form
         }
         return false;
     }
+    
     function _isEARLIUser() {
+        error_log("_isEARLIUser");
         $user =& User::singleton();
         return $user->hasPermission('earli_videos') && !$user->hasPermission('data_entry');
     }
 
     function _process($values)
     {
+        error_log("_process");
         if($values['hide_video'] || $values['hide_video_confirm']) {
             // Validate should have already checked this, but double check
             if($values['hide_video'] && $values['hide_video_confirm']) {
@@ -67,22 +110,14 @@ class NDB_Form_video_upload extends NDB_Form
 
     function video_upload()
     {
+        error_log("video_upload");
         // create user object
         $user =& User::singleton();
-        if(PEAR::isError($user)) {
-            return PEAR::raiseError("User Error: ".$user->getMessage());
-        }
         
         $site =& Site::singleton($user->getData('CenterID'));
-        if (PEAR::isError($site)) {
-            return PEAR::raiseError("Unable to construct the list_of_sites array: ".$site->getMessage());
-        }
       
         $config =& NDB_Config::singleton();
         $db =& Database::singleton();
-         if(PEAR::isError($db)) {
-             return PEAR::raiseError ("Could not connect to database: ".$db->getMessage());
-         }
          
         $db->select("SELECT test_name FROM test_names ORDER BY test_name", $instruments);
          
@@ -153,6 +188,10 @@ class NDB_Form_video_upload extends NDB_Form
 
     function _validate($values)
     {
+        error_log("_validate");
+        error_log(print_r($values, true));
+        error_log(print_r($_REQUEST, true));
+        
         $errors = array();
         if($values['hide_video'] || $values['hide_video_confirm']) {
             if(empty($values['hide_video']) || empty($values['hide_video_confirm'])) {
@@ -166,7 +205,8 @@ class NDB_Form_video_upload extends NDB_Form
 
         // if (empty($values['gender'])) {
         //         $errors['gender'] = 'Gender is required';
-        //     }    
+        //     }   
+        error_log(print_r($errors, true));
         return $errors;
     }
     
@@ -181,6 +221,7 @@ class NDB_Form_video_upload extends NDB_Form
     * @access    public
     */
     function getTargetDirectory(&$file, $args){
+        error_log("getTargetDirectory");
         $output="{$args["user_id"]}/";
         return $output;
     }
@@ -195,6 +236,8 @@ class NDB_Form_video_upload extends NDB_Form
        */
       function _saveFile($values)
       {
+          error_log(print_r($values, true));
+          
           if(isset($values['Date_taken'])) {
               $Date_taken = $values['Date_taken'];
               $values['Date_taken'] = sprintf("%04d-%02d-%02d", $Date_taken['Y'], $Date_taken['M'], $Date_taken['d']);
@@ -203,12 +246,10 @@ class NDB_Form_video_upload extends NDB_Form
           if(!empty($this->identifier)){
             $db=& Database::singleton();
             $result = $db->update('videos', $values, array('record_id'=>$this->identifier));
-            if($this->isError($result)) {
-                print $result->getMessage();
-                return $this->raiseError('Could not save to database');
-            }
             return true;
           }else{
+            error_log("in _saveFile else");
+              
             require_once "File_Upload.class.inc";
             $file=new File_Upload;
 
@@ -226,9 +267,6 @@ class NDB_Form_video_upload extends NDB_Form
             //$file->setFilenamePrefix($timepoint->getVisitLabel()."-".$this->testName."-");
 
             $user =& User::singleton();
-            if(PEAR::isError($user)) {
-                return PEAR::raiseError("User Error: ".$user->getMessage());
-            }
 
             //set the the IDs to the handler functions.
             $file->setHandlerArgs(array("user_id" => $user->getUsername(), "values"=>$values));
@@ -256,24 +294,24 @@ class NDB_Form_video_upload extends NDB_Form
           // Default to "No" for multipart, so that the behaviour doesn't
           // change
           $defaults = array('multipart' => 'No', 'EARLI' => 'No');
-
+          error_log("getDefaults");
           if (!empty($this->identifier)) {
             $db=& Database::singleton();
 
             $db->selectRow("SELECT * FROM videos WHERE record_id = '{$this->identifier}'", $row);
-            if (PEAR::isError($row)) {
-              return PEAR::raiseError("DB Error: ".$row->getMessage());
-            }
 
               // get the user defaults
   	        $defaults = $row;
           }
+          
+          error_log(print_r($defaults, true));
           return $defaults;
       }
       
       function isValid(&$file, $args){
         $errors = array();
-
+        
+        error_log("isValid");
         $correct_filename = $args['values']['PSCID'] .'_'. $args['values']['visitLabel'] .'_'. $args['values']['Instrument']; 
 
         $Stmt = "SELECT count(*) as Total FROM videos WHERE Instrument = '{$args['values']['Instrument']}' AND PSCID = '{$args['values']['PSCID']}' AND visitLabel = '{$args['values']['visitLabel']}'";
@@ -311,6 +349,9 @@ class NDB_Form_video_upload extends NDB_Form
             'EARLI' => $args['values']['EARLI']
         );
         
+        error_log("importFile");
+        error_log(print_r($values, true));
+        
         $db=& Database::singleton();
         
         // SQL to run to check if the file's already 
@@ -321,9 +362,6 @@ class NDB_Form_video_upload extends NDB_Form
         }
 
         $db->selectRow($Stmt, $row);
-          if (PEAR::isError($row)) {
-              return PEAR::raiseError("DB Error: ".$row->getMessage());
-          }
 
           if (empty($row)) {
             
@@ -349,10 +387,6 @@ class NDB_Form_video_upload extends NDB_Form
         }
 
         //$result = $db->update('videos', $values, array('PSCID'=>$args['values']['PSCID'], 'Instrument'=>$args['values']['Instrument'], 'visitLabel' => $args['values']['visitLabel']));
-        if($this->isError($result)) {
-            print $result->getMessage();
-            return $this->raiseError('Could not save to database');
-        }
         return true;
       }
 }

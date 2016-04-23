@@ -1,4 +1,8 @@
 <?php
+
+require_once 'HTML/QuickForm.php';
+require_once 'HTML/QuickForm/Renderer/Array.php';
+
 class NDB_BVL_Instrument_dna_tracking extends NDB_BVL_Instrument
 {
     /*
@@ -55,9 +59,6 @@ class NDB_BVL_Instrument_dna_tracking extends NDB_BVL_Instrument
         );
         
         $db =& Database::singleton();
-        if(PEAR::isError($db)) {
-            return PEAR::raiseError ("Could not connect to database: ".$db->getMessage());
-        }
         // setup the form
         $this->_setupForm();
 

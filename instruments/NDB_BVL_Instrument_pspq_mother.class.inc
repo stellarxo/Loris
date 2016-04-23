@@ -1,4 +1,8 @@
 <?php
+
+require_once 'HTML/QuickForm.php';
+require_once 'HTML/QuickForm/Renderer/Array.php';
+
 class NDB_BVL_Instrument_pspq_mother extends NDB_BVL_Instrument
 {
     var $ValidityEnabled = false;
@@ -83,7 +87,7 @@ class NDB_BVL_Instrument_pspq_mother extends NDB_BVL_Instrument
     function _main(){
         // display test name
         $this->form->addElement('header', 'instrument_title', "PSPQ : Personality Styles and Preferences Questionnaire - Self");
-        $this->form->addElement('static','lorisSubHeader',"<strong>Instructions:</strong><BR>Thank you for filling out this questionnaire. The questions you will be answering are about <BR>personality, habits, and lifestyle. There are no good or bad responses, just differences in <BR>people's preferences.<BR><BR>1.Many of these questions ask about your interactions with other people. <strong>Think about the way<BR>your are with <i> most</i> people, rather than the way you are in special relationships </strong> you may have <BR> with your spouse, significant other, children, siblings and parents.<BR><BR>2.Everyone changes over time, which can make it hard to fill out questions about personality.<BR><strong>Think about the way you've been most of your adult life,</strong> rather than the way you were as a <BR>teenager,or times you many have felt differently from normal.<BR><BR>3.<strong> You must answer each question</strong> and give only one answer per question. Choose the answer <BR>that best describes how often that statement applies to you. If you are confused about a <BR>question, please give it your best guess.<BR><BR>For each question, you will be given a choice of 6 answers that describe how often the statement<BR> applies to you:<BR> 1.Very Rarely<BR>2.Rarely<BR>3.Occasionally<BR>4.Somewhat Often<BR>5.Often<BR> 6.Very Often<BR><BR>Choose the number that matches the answer that comes closest to how you feel about each statement." );
+        $this->form->addElement('static','lorisSubHeader',"<strong>Instructions:</strong><BR>Thank you for filling out this questionnaire. The questions you will be answering are about <BR>personality, habits, and lifestyle. There are no good or bad responses, just differences in <BR>people's preferences.<BR><BR>1. Many of these questions ask about your interactions with other people. <strong>Think about the way<BR>your are with <i>most</i> people, rather than the way you are in special relationships </strong>you may have <BR>with your spouse, significant other, children, siblings and parents.<BR><BR>2. Everyone changes over time, which can make it hard to fill out questions about personality.<BR><strong>Think about the way you've been most of your adult life,</strong> rather than the way you were as a <BR>teenager,or times you many have felt differently from normal.<BR><BR>3.<strong> You must answer each question</strong> and give only one answer per question. Choose the answer <BR>that best describes how often that statement applies to you. If you are confused about a <BR>question, please give it your best guess.<BR><BR>For each question, you will be given a choice of 6 answers that describe how often the statement<BR> applies to you:<BR> 1.Very Rarely<BR>2.Rarely<BR>3.Occasionally<BR>4.Somewhat Often<BR>5.Often<BR> 6.Very Often<BR><BR>Choose the number that matches the answer that comes closest to how you feel about each statement." );
 
         $this->form->addElement('header', 'instrument_title', "Self Rating");
 
@@ -97,14 +101,14 @@ class NDB_BVL_Instrument_pspq_mother extends NDB_BVL_Instrument
         unset($group);
         $this->addGroupRule($field . "_group", array(array(array("Value must be numeric.", 'numeric'))));
         
-        $this->addSelect('respondent',"Relationship to child", $this->respondent);
+        $this->addSelect('respondent',"Your relationship to child", $this->respondent);
         $group [] = $this->createText('respondent_other',$this->indent."If Other please specify");
         $this->addGroup($group,"respondent_other_group",$this->indent."If Other please specify",null,false);
         unset($group);
         $rules_array = array("respondent{@}=={@}other");
         $this->XINRegisterRule('respondent_other', $rules_array, "Please specify relationship", 'respondent_other_group');
 
-        $this->addSelect('respondent_gender',"Your Gender", $this->gender); 
+        $this->addSelect('respondent_gender',"Your gender", $this->gender);
         $this->XINRegisterRule('respondent_gender',array("respondent_gender{@}=={@}NEVER_REQUIRED"));
 
         $this->form->addElement('static', null, "<br /><br />");

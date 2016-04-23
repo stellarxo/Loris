@@ -17,12 +17,9 @@ class QC_Checks {
         $factory = NDB_Factory::singleton();
         $DB = $factory->Database();
         $list_of_sites = Utility::getSiteList(false);
-        if(Utility::isErrorX($list_of_sites)) {
-            return PEAR::raiseError("DB Error: ".$list_of_sites->getMessage());
-        }
         print " \nQC REPORT FOR SITE ".$list_of_sites[$this->site]. "\n\n";       
 
-        $tests = $DB->pselect("SELECT Test_name FROM test_names WHERE Test_name NOT LIKE '%_proband' AND Test_name NOT LIKE 'EARLI%' AND Test_name NOT LIKE 'figs%'", array()) ;
+        $tests = $DB->pselect("SELECT Test_name FROM test_names WHERE Test_name NOT LIKE '%_proband' AND Test_name NOT LIKE 'EARLI%' AND Test_name NOT LIKE 'figs%' AND Test_name NOT LIKE 'ACEFamilyMedicalHistory' AND Test_name NOT LIKE 'dna_tracking' AND Test_name NOT LIKE 'LENA_DataTrackingForm' AND Test_name NOT LIKE 'SRS2%' AND Test_name NOT LIKE 'parental_stress_scale'", array()) ;
         /* ************************************************************************* */
         // Determine instruments where administration < DoB, or sessions where Visit < DoB
         /* ************************************************************************* */
@@ -35,7 +32,7 @@ class QC_Checks {
             if($test == 'tsi') {
                 continue;
             }
-            $queries[] = "SELECT c.PSCID, c.CandID, s.Visit_label, '$test' FROM candidate c LEFT JOIN session s USING (CandID) LEFT JOIN flag f ON (f.SessionID=s.ID) LEFT JOIN $test t USING (CommentID) WHERE f.Test_name=" . $DB->quote($test)  . " AND t.Date_taken < c.DoB AND f.Data_entry='Complete' AND COALESCE(s.Visit, 'NotFailure') <> 'Failure' AND c.CenterID = $this->site";
+            $queries[] = "SELECT c.PSCID, c.CandID, s.Visit_label, '$test' FROM candidate c LEFT JOIN session s USING (CandID) LEFT JOIN flag f ON (f.SessionID=s.ID) LEFT JOIN $test t USING (CommentID) WHERE f.Test_name=" . $DB->quote($test)  . " AND t.Date_taken < c.DoB AND f.Data_entry='Complete' AND COALESCE(s.Visit, 'NotFailure') <> 'Failure' AND c.CenterID = $this->site";            
             $query = implode($queries, " UNION ");
             //print "$query\n";
             $bad_entries = $DB->pselect($query . " ORDER BY PSCID", array());
@@ -126,8 +123,7 @@ class QC_Checks {
 
         print "\n\nSITES WITH LAST LEGO SCAN MORE THAN 2 MONTHS AGO\n";
         print "--------------------------------------------------- \n";
-        $query = "SELECT psc.MRI_Alias, MAX(pf.Value) as LastLego from files f left join parameter_file pf on (pf.FileID=f.FileID AND pf.ParameterTypeID=67) LEFT JOIN session s ON (s.ID=f.SessionID) LEFT JOIN psc ON (psc.CenterID=s.CenterID) WHERE File like '%lego%' AND c.CenterID = $this->site GROUP BY s.CenterID HAVING MAX(pf.Value) < :cutoff";
-
+        $query = "SELECT psc.MRI_Alias, MAX(pf.Value) as LastLego from files f left join parameter_file pf on (pf.FileID=f.FileID AND pf.ParameterTypeID=67) LEFT JOIN session s ON (s.ID=f.SessionID) LEFT JOIN psc ON (psc.CenterID=s.CenterID) WHERE File like '%lego%' AND s.CenterID = $this->site GROUP BY s.CenterID HAVING MAX(pf.Value) < :cutoff";
         $results = $DB->pselect($query, array("cutoff" => date("Ymd", strtotime('-2 months'))));
         print "\nSite\tLast Lego\n";
         foreach($results as $row) {
@@ -405,7 +401,13 @@ class QC_Checks {
 
         print "\n\n CHECK multiple selected T1 files \n";
         print "--------------------------------------\n";
-        $data = $DB->pselect("SELECT CandID, Visit_label, count(f.FileID), Value FROM files f JOIN parameter_file pf ON (pf.FileID=f.FileID) JOIN session s ON (s.ID=f.SessionID) WHERE pf.ParameterTypeID=1 AND pf.Value='t1w' AND File not like '%lego%' AND File not like '%phantom%' AND CenterID=$this->site GROUP BY SessionID HAVING count(f.FileID)>1 ORDER BY count(f.FileID)");
+        $data = $DB->pselect("SELECT CandID, Visit_label, count(f.FileID), Value "
+            . "FROM files f JOIN parameter_file pf ON (pf.FileID=f.FileID) "
+            . "JOIN session s ON (s.ID=f.SessionID) WHERE pf.ParameterTypeID=1 "
+            . "AND pf.Value='t1w' AND File not like '%lego%' "
+            . "AND File not like '%phantom%' AND CenterID=:CID "
+            . "GROUP BY SessionID HAVING count(f.FileID)>1 "
+            . "ORDER BY count(f.FileID)", array("CID" => $this->site));
         $header = array('CandID', 'Visit_label', 'Num_Files', 'Value');
         if(sizeof($data) > 0 ){
             foreach($header as $row) {

@@ -19,19 +19,11 @@ require_once "Database.class.inc";
 
 $CommentID = $argv[1];
 $db        =& Database::singleton();
-if (Utility::isErrorX($db)) {
-        print "Could not connect to database: " . $db->getMessage();
-            exit(1);
-}
 
 $query = "SELECT * from FamilyEnvironmentScales WHERE CommentID = :CommentID";
 
 $WhereCriteria = array('CommentID'=>$CommentID);
 $result        = $db->pselectRow($query, $WhereCriteria);
-if (Utility::isErrorX($result)) {
-        print "Query has failed to select: ".$result->getMessage();
-            exit(2);
-}
 $c      = array('q1','q11','q21','q31','q41','q51','q61','q71','q81');
 $ex     = array('q2','q12','q22','q32','q42','q52','q62','q72','q82');
 $con    = array('q3','q13','q23','q33','q43','q53','q63','q73','q83');
@@ -66,10 +58,6 @@ foreach ($achievement as $key=>$value) {
     $WhereCriteria_p   = array('raw_score'=>$scores[$score_query_field],
                              'criteria'=>$key);
     $percentile        = $db->pselectOne($query_score, $WhereCriteria_p);
-    if (Utility::isErrorX($percentile)) {
-        print "Query has failed to select: ".$percentile->getMessage();
-            exit(2);
-    }
     $score_field = $key."_std_score";
     if ($percentile != null) {
         $scores[$score_field] = $percentile;
@@ -80,10 +68,6 @@ foreach ($achievement as $key=>$value) {
 
 //save scores
 $result = $db->update('FamilyEnvironmentScales', $scores, $WhereCriteria);
-if ($db->isError($result)) {
-    print "Could not save total score: ". $result->getMessage();
-    exit(3);
-}
 
 
 exit(0);

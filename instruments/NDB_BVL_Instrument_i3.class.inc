@@ -1,9 +1,9 @@
 <?php
 
-
 require_once('RequiredIfGroup.inc');
 require_once('RequiredIf.inc');
 require_once 'HTML/QuickForm.php';
+require_once 'HTML/QuickForm/Renderer/Array.php';
 
 class NDB_BVL_Instrument_i3 extends NDB_BVL_Instrument{
 	var $yesNo = array(null=>"", "yes" =>"Yes", "no" =>"No", "NA" =>"NA", "Unknown" => "Unknown");	

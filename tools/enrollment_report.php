@@ -13,9 +13,6 @@ $dir = "../../htdocs/EnrollmentReport/".$date;
 mkdir($dir, 0777); //create directory where all enrollment reports will be placed
 chdir($dir);
 $DB->select("SELECT CenterID as NumericID, PSCArea as LongName, Name as ShortName FROM psc WHERE CenterID IN (2, 3, 4, 5)", $centers);
-        if(PEAR::isError($centers)) {
-            return PEAR::raiseError("DB Error: ".$centers->getMessage());
-        }
 $centers[null]= null;
 $projects[null]=null;
 foreach(Utility::getProjectList() as $key => $value) {

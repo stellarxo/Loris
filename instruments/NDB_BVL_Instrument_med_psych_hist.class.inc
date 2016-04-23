@@ -1,4 +1,7 @@
 <?php
+
+require_once 'HTML/QuickForm.php';
+require_once 'HTML/QuickForm/Renderer/Array.php';
 require_once "TimePoint.class.inc";
 
 class NDB_BVL_Instrument_med_psych_hist extends NDB_BVL_Instrument
@@ -99,18 +102,12 @@ class NDB_BVL_Instrument_med_psych_hist extends NDB_BVL_Instrument
         //Are we using the Full or Abbreviated version?
         // DB Object
         $db =& Database::singleton();
-        if(PEAR::isError($db)) {
-            return PEAR::raiseError ("Could not connect to database: ".$db->getMessage());
-        }
 
         //applicable version
         // This hasn't been implemented terrifically smoothly.  It may require an extra "Save Data" click.
         // During most regular workflows (data entry), the glitches should go unnoticed.  Hopefully.
         $query = "SELECT abbrev_full_version from med_psych_hist WHERE CommentID = '".$this->getCommentID()."'";
         $version = $db->selectOne($query);
-        if(PEAR::isError($version)){
-            return PEAR::raiseError("Query has failed to select version: ".$version->getMessage());
-        }
 
         if ($version == 'abbrev') {
             $this->_requiredElements = array_merge($this->_requiredElements, array("child_pregnancy_number"));
@@ -623,9 +620,6 @@ class NDB_BVL_Instrument_med_psych_hist extends NDB_BVL_Instrument
 
 
         $candidate =& Candidate::singleton($cand['CandID']);
-        if (Utility::isErrorX($candidate)) {
-            return PEAR::raiseError("Candidate Error ($this->identifier): ".$candidate->getMessage());
-        }
 
         $firstVisit = false;
         $vLabel = $db->pselectOne("SELECT Visit_label FROM session s JOIN candidate c 

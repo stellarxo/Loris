@@ -1,4 +1,8 @@
 <?php
+
+require_once 'HTML/QuickForm.php';
+require_once 'HTML/QuickForm/Renderer/Array.php';
+
 class NDB_BVL_Instrument_LENA_DataTrackingForm extends NDB_BVL_Instrument
 {
     var $ValidityEnabled = false;
@@ -17,7 +21,9 @@ class NDB_BVL_Instrument_LENA_DataTrackingForm extends NDB_BVL_Instrument
                                  "just_not_interested"=>"Just not interested","other"=>"Other"); 
     var $scoreCols = array ('Duration','Meaningful','Distant','TV','TV_Pct','Noise','Silence',
                             'AWC_Actual','AWC_Proj','AWC_Pct','CTC_Actual','CTC_Proj','CTC_Pct',
-                            'CVC_Actual','CVC_Proj','CVC_Pct','AVA_StdScore','AVA_StdScore_Pct');    
+                            'CVC_Actual','CVC_Proj','CVC_Pct','AVA_StdScore','AVA_StdScore_Pct');
+    const NUMB_HOURS = 68;
+
     /**
     * sets up basic data, such as the HTML_Quickform object, and so on.
     *
@@ -60,21 +66,19 @@ class NDB_BVL_Instrument_LENA_DataTrackingForm extends NDB_BVL_Instrument
        $this->_doubleDataEntryDiffIgnoreColumns = $this->getIgnorediffColumns(); 
       //print_r($this->_doubleDataEntryDiffIgnoreColumns); 
         $db =& Database::singleton();
-        if(Utility::isErrorX($db)) {
-           print "Could not connect to database: ".$db->getMessage();
-        }
-        $record = $db->pselectRow("SELECT * FROM ".$this->table." WHERE CommentID=:cid", 
+        try {
+            $record = $db->pselectRow("SELECT * FROM ".$this->table." WHERE CommentID=:cid", 
                                   array('cid' =>$this->getCommentID()));
-
-        if (Utility::isErrorX($record)) {
-             print "Query has failed to select: ".$record->getMessage();
+        } catch (DatabaseException $ex) {
+             print "Query has failed to select";
              $record = array();
         }
+
+        try {
         $record2 = $db->pselectRow("SELECT * FROM LENA_DataTrackingForm2  WHERE CommentID=:cid", 
                                    array('cid'=>$this->getCommentID()));
-
-        if (Utility::isErrorX($record2)) {
-            print "Query has failed to select: ".$record2->getMessage();
+        } catch (DatabaseException $ex) {
+            print "Query has failed to select";
             $record2 = array();
         }
 
@@ -106,7 +110,7 @@ class NDB_BVL_Instrument_LENA_DataTrackingForm extends NDB_BVL_Instrument
            }
        }
        if(!empty($record2)) {
-           for($i = 33; $i <= 64; $i++) {
+           for($i = 33; $i <= self::NUMB_HOURS; $i++) {
                foreach($fields as $field) {
                    $key = $field."_".$i;
                    $this->localDefaults[$key] = $record2[$key];
@@ -225,11 +229,11 @@ class NDB_BVL_Instrument_LENA_DataTrackingForm extends NDB_BVL_Instrument
         unset($group);
 
 
-        for($i=1; $i <= 64; $i++){
+        for($i=1; $i <= self::NUMB_HOURS; $i++){
             foreach($fields as $field) {
                //$this->form->addElement('static', $field."_".$i, "Values {$i}:");
                $group[] = $this->form->createElement('static', $field."_".$i);
-               $group[] = &$this->form->createElement("static", null, null, null);
+               $group[] = $this->form->createElement("static", null, null, null);
             }
             $this->form->addGroup($group, $i.'_group', "", $this->_GUIDelimiter, FALSE);
             unset($group);
@@ -377,9 +381,19 @@ class NDB_BVL_Instrument_LENA_DataTrackingForm extends NDB_BVL_Instrument
 
     }
 
+    /**
+     * Parses cvs file right after upload and update instrument entries in DB
+     *
+     * @param $file
+     * @param $args
+     *
+     * @return bool
+     * @throws DatabaseException
+     */
     function importFile(&$file, $args) {
         $fp=fopen($file->fileInfo['tmp_name'], "r");
-        
+
+        /** @var Database $db */
         $db=& Database::singleton();
         ///Setting trackchanges to false because getting error messages
         $db->_trackChanges = false;
@@ -442,8 +456,21 @@ class NDB_BVL_Instrument_LENA_DataTrackingForm extends NDB_BVL_Instrument
 
                     }
                 }
+
+                //get earliest age
+                //age format in CSV file: example: 9m; 17d
+                if (!isset($upload_values['Candidate_Age']) && strtolower($value) == 'age' && !empty($data[$id]))
+                {
+                    $ageInMonths =  $this->extractCandidateAge($data[$id]);
+                    if (!is_null($ageInMonths))
+                    {
+                        $upload_values['Candidate_Age'] = $ageInMonths;
+                    }
+                }
+
             }   
         }
+
         $total_rows = sizeof($lines) -2; //first line contains header information
         if($total_rows > 0) {
             foreach($avgs as $key=>$value) {
@@ -462,16 +489,10 @@ class NDB_BVL_Instrument_LENA_DataTrackingForm extends NDB_BVL_Instrument
             }
         }
         $result = $db->update($this->testName, $upload_values, array('CommentID'=>$args['CommentID']));
-        if(Utility::isErrorX($result)) {
-            print "Update has failed: ".$result->getMessage();
-        }
         
         if(!empty($upload_values2)){
             $upload_values2['CommentID'] = $args['CommentID'];
             $ok = $db->insert("LENA_DataTrackingForm2", $upload_values2);
-            if(Utility::isErrorX($ok)) {
-               print "Insert has failed: ".$ok->getMessage();
-            }
         }
         echo "<span style='color:red'><b>Upload Successful : </b>".$upload_values['Uploaded_file']."</span><br>";
         return true;
@@ -492,14 +513,39 @@ class NDB_BVL_Instrument_LENA_DataTrackingForm extends NDB_BVL_Instrument
 
          $upload_values[$field] = $file->fileInfo['name'];
          $result = $db->update($this->testName, $upload_values, array('CommentID'=>$args['CommentID']));
-         if(Utility::isErrorX($result)) {
-             print "Update has failed: ".$result->getMessage();
-         }
          echo "<span style='color:red'><b>Upload Successful : </b>".$upload_values[$field]."</span><br>";
          return true;
      }
 
     }
+
+    /**
+     * Extracts candidate's age in months from age string
+     * If number of days is above 15 days, round up to next month
+     *
+     * @param $ageStr age string from CSV file
+     *                    expected format: {number of months}m; {number of days}d
+     *                    example: 9m; 17d
+     * @return int candidate's age in months
+     */
+    private function extractCandidateAge($ageStr)
+    {
+        $months = null;
+        if (preg_match("/^(\d+)m;\s(\d+)d/",$ageStr, $ageMatches))
+        {
+            $months = $ageMatches[1];
+            $days = $ageMatches[2];
+
+            if ($days>15)
+            {
+                $months++;
+            }
+        }
+
+        return $months;
+    }
+
+
     /**
      * getTargetDirectory retrieves info about where the file should be stored.
      *
@@ -540,7 +586,7 @@ class NDB_BVL_Instrument_LENA_DataTrackingForm extends NDB_BVL_Instrument
         $fields = array('CommentID','Data_entry_completion_status','Uploaded_file','UserID', 'Testdate','comments_session1','comments_session1_status','comments_session2','comments_session2_status','comments_session3','comments_session3_status','comments_session4','comments_session4_status','Uploaded_file_its1', 'Uploaded_file_its2','Uploaded_file_its3','Uploaded_file_its3','Duration_Avg','Meaningful_Avg','Distant_Avg','TV_Avg','TV_Pct_Avg','Noise_Avg','Silence_Avg','AWC_Actual_Avg','AWC_Proj_Avg','AWC_Pct_Avg','CTC_Actual_Avg','CTC_Proj_Avg','CTC_Pct_Avg','CVC_Actual_Avg','CVC_Proj_Avg','CVC_Pct_Avg','AVA_StdScore_Avg','AVA_StdScore_Pct_Avg'); 
        
         $terms = array('Type_','ChildKey_','Id_','DLP_','ProcessingFile_','Timestamp_','Duration_','Meaningful_','Distant_','TV_','TV_Pct_','Noise_','Silence_','AWC_Actual_','AWC_Proj_','AWC_Pct_','CTC_Actual_','CTC_Proj_','CTC_Pct_','CVC_Actual_','CVC_Proj_','CVC_Pct_','AVA_StdScore_','AVA_StdScore_Pct_');
-        for($i = 1; $i<=64;$i++) {
+        for($i = 1; $i<= self::NUMB_HOURS;$i++) {
           foreach($terms as $term) {
               $value = $term.$i;
               array_push($fields, $value);

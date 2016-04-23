@@ -1,5 +1,8 @@
 <?php
 
+require_once 'HTML/QuickForm.php';
+require_once 'HTML/QuickForm/Renderer/Array.php';
+
 class NDB_BVL_Instrument_csbs_sponteneity extends NDB_BVL_Instrument
 {
 
@@ -388,66 +391,39 @@ INSERT INTO instrument_subtests VALUES('', 'csbs_sponteneity', 'csbs_sponteneity
                 
         //get the saved scores
         $db =& Database::singleton();
-        if(PEAR::isError($db)) {
-                        return PEAR::raiseError ("Could not connect to database".$db->getMessage());
-        }
 
 
   	$query_structured_prompts = "SELECT wind_up_ph1_1, wind_up_ph2_1, wind_up_ph1_2, wind_up_ph2_2, wind_up_ph1_3, wind_up_ph2_3, wind_up_ph1_4, wind_up_ph2_4 FROM $this->table WHERE CommentID = '$this->commentID'";
         $record_structured_prompts = array();
         $db->selectRow($query_structured_prompts, $record_structured_prompts);
-        if (PEAR::isError($record_structured_prompts)) {
-                return PEAR::raiseError("Could not retrieve scores: " . $record->getMessage());
-	}
 
   	$query_structured_response = "SELECT wind_up_ph1_response_1, wind_up_ph2_response_1, wind_up_ph1_response_2, wind_up_ph2_response_2, wind_up_ph1_response_3, wind_up_ph2_response_3, wind_up_ph1_response_4, wind_up_ph2_response_4 FROM $this->table WHERE CommentID = '$this->commentID'";
         $record_structured_response = array();
         $db->selectRow($query_structured_response, $record_structured_response);
-        if (PEAR::isError($record_structured_response)) {
-                return PEAR::raiseError("Could not retrieve scores: " . $record->getMessage());
-	}
 
         $querySC_yes = "SELECT wind_up_spontaneous_communication_1, wind_up_spontaneous_communication_2, wind_up_spontaneous_communication_3, wind_up_spontaneous_communication_4 FROM $this->table WHERE CommentID = '$this->commentID'";
         $recordSC_yes = array();
         $db->selectRow($querySC_yes, $recordSC_yes);
-        if (PEAR::isError($recordSC_yes)) {
-                return PEAR::raiseError("Could not retrieve scores: " . $record->getMessage());
-        }
 
         $queryNP_yes = "SELECT wind_up_additional_communication_1, wind_up_additional_communication_2, wind_up_additional_communication_3, wind_up_additional_communication_4 FROM $this->table WHERE CommentID = '$this->commentID'"; 
         $recordNP_yes = array();
         $db->selectRow($queryNP_yes, $recordNP_yes);
-        if (PEAR::isError($recordNP_yes)) {
-                return PEAR::raiseError("Could not retrieve scores: " . $record->getMessage());
-        }
 
 	$query_numPrompts = "SELECT prompt_1_a, prompt_1_b, prompt_1_c, prompt_2_a, prompt_2_b, prompt_2_c, prompt_amount_1_a, prompt_amount_1_b, prompt_amount_1_c, prompt_amount_2_a, prompt_amount_2_b, prompt_amount_2_c FROM $this->table WHERE CommentID = '$this->commentID'";
 	$record_numPrompts = array();
 	$db->selectRow($query_numPrompts, $record_numPrompts);
-        if (PEAR::isError($record_numPrompts)) {
-                return PEAR::raiseError("Could not retrieve scores: " . $record->getMessage());
-        }
 
 	$query_typePrompts = "SELECT prompt_1_a, prompt_1_b, prompt_1_c, prompt_2_a, prompt_2_b, prompt_2_c FROM $this->table WHERE CommentID = '$this->commentID'";
 	$record_typePrompts = array();
 	$db->selectRow($query_typePrompts, $record_typePrompts);
-        if (PEAR::isError($record_typePrompts)) {
-                return PEAR::raiseError("Could not retrieve scores: " . $record->getMessage());
-        }
 
         $querySC_yes2 = "SELECT free_play_spontaneous_communication_1, free_play_spontaneous_communication_2 FROM $this->table WHERE CommentID = '$this->commentID'";
         $recordSC_yes2 = array();
         $db->selectRow($querySC_yes2, $recordSC_yes2);
-        if (PEAR::isError($recordSC_yes2)) {
-        	return PEARR::raiseError("Could not retrieve scores: " . $record->getMessage());
-        }
 
   	$queryNP_yes2 = "SELECT free_play_additional_communication_1, free_play_additional_communication_2 FROM $this->table WHERE CommentID = '$this->commentID'";
         $recordNP_yes2 = array();
         $db->selectRow($queryNP_yes2, $recordNP_yes2);
-        if (PEAR::isError($recordNP_yes2)) {
-                return PEAR::raiseError("Could not retrieve scores: " . $record->getMessage());
-        }
 
 //  	$structured_total = $this->count_strucPlay($record_structured_prompts); 
 //  	$structured_average = number_format(($structured_total / (8 - $NC)), 2);
@@ -487,9 +463,6 @@ INSERT INTO instrument_subtests VALUES('', 'csbs_sponteneity', 'csbs_sponteneity
 
         // save scores
         $resultScores = $db->update($this->table, $scores, array("CommentID"=>$this->getCommentID()));
-	if($db->isError($resultScores)) {
-                return PEAR::raiseError("Could not save total score: ". $resultScores->getMessage());
-		}
 	}
 }
 

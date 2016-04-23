@@ -1,4 +1,8 @@
 <?php
+
+require_once 'HTML/QuickForm.php';
+require_once 'HTML/QuickForm/Renderer/Array.php';
+
 class NDB_BVL_Instrument_SRS extends NDB_BVL_Instrument
 {
     var $ValidityEnabled = false;
@@ -140,9 +144,6 @@ class NDB_BVL_Instrument_SRS extends NDB_BVL_Instrument
         // Get the subject age in months for scoring
 
         $db =& Database::singleton();
-        if(PEAR::isError($db)) {
-            return PEAR::raiseError ("Could not connect to database: ".$db->getMessage());
-        }
         // required fields for data entry completion status
         $this->_requiredElements = array('Examiner', "Date_taken", 'q1_fidgety_social_situations', "q17_recognizes_unfair",
                 "q43_separates_from_caregivers");
@@ -236,7 +237,7 @@ class NDB_BVL_Instrument_SRS extends NDB_BVL_Instrument
 
         if(!empty($dob) && !empty($Answers['Date_taken'])) {
             $age = Utility::calculateAge($dob, $Answers["Date_taken"]);
-             if(!$this->isError($age)) {
+             if(is_array($age)) {
                 $age_months = $age['year'] * 12 + $age['mon'];
              } else {
                 $scores['srs_score'] = "Error calculating age. Must specify date of administration.";
@@ -312,9 +313,6 @@ class NDB_BVL_Instrument_SRS extends NDB_BVL_Instrument
         // save the resultant total
         if($scores != array()) {
             $result = $db->update($this->table, $scores, array('CommentID'=>$this->getCommentID()));
-            if($db->isError($result)) {
-                return PEAR::raiseError("Could not save total score: ".$result->getMessage());
-            }
         }
     }
 }
