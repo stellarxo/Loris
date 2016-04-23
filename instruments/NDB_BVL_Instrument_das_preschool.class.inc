@@ -1,24 +1,6 @@
 <?php
-class NDB_BVL_Instrument_das extends NDB_BVL_Instrument
+class NDB_BVL_Instrument_das_preschool extends NDB_BVL_Instrument_das
 {
-
-
-
-
-
-
-
-    // similar - recall of objects - immediate/delayed
-    // pattern construction
-
-    // Need to to factor out common code
-
-    // Code below is for preschool
-
-
-
-
-
 
     // TO DO:
 
@@ -36,19 +18,20 @@ class NDB_BVL_Instrument_das extends NDB_BVL_Instrument
 
 
     /*
-    INSERT INTO test_names (Test_name, Full_name, Sub_group) VALUES ('das', 'DAS (Differential Ability Scales)', '1');
+    INSERT INTO test_names (Test_name, Full_name, Sub_group) VALUES ('das_preschool', 'DAS (Differential Ability
+    Scales) - Preschool Core', '1');
 
-    INSERT INTO instrument_subtests (Test_name, Subtest_name, Description, Order_number) VALUES ('das', 'das_page1', 'Block Building', 1);
-    INSERT INTO instrument_subtests (Test_name, Subtest_name, Description, Order_number) VALUES ('das', 'das_page2', 'Verbal Comprehension', 2);
-    INSERT INTO instrument_subtests (Test_name, Subtest_name, Description, Order_number) VALUES ('das', 'das_page3', 'Picture Similarities', 3);
-    INSERT INTO instrument_subtests (Test_name, Subtest_name, Description, Order_number) VALUES ('das', 'das_page4', 'Naming Vocabulary', 4);
-    INSERT INTO instrument_subtests (Test_name, Subtest_name, Description, Order_number) VALUES ('das', 'das_page5', 'Recall of Objects - Immediate', 5);
-    INSERT INTO instrument_subtests (Test_name, Subtest_name, Description, Order_number) VALUES ('das', 'das_page6', 'Pattern Construction', 6);
-    INSERT INTO instrument_subtests (Test_name, Subtest_name, Description, Order_number) VALUES ('das', 'das_page7', 'Early Number Concepts', 7);
-    INSERT INTO instrument_subtests (Test_name, Subtest_name, Description, Order_number) VALUES ('das', 'das_page8', 'Recall of Objects - Delayed', 8);
-    INSERT INTO instrument_subtests (Test_name, Subtest_name, Description, Order_number) VALUES ('das', 'das_page9', 'Copying', 9);
+    INSERT INTO instrument_subtests (Test_name, Subtest_name, Description, Order_number) VALUES ('das_preschool', 'das_preschool_page1', 'Block Building', 1);
+    INSERT INTO instrument_subtests (Test_name, Subtest_name, Description, Order_number) VALUES ('das_preschool', 'das_preschool_page2', 'Verbal Comprehension', 2);
+    INSERT INTO instrument_subtests (Test_name, Subtest_name, Description, Order_number) VALUES ('das_preschool', 'das_preschool_page3', 'Picture Similarities', 3);
+    INSERT INTO instrument_subtests (Test_name, Subtest_name, Description, Order_number) VALUES ('das_preschool', 'das_preschool_page4', 'Naming Vocabulary', 4);
+    INSERT INTO instrument_subtests (Test_name, Subtest_name, Description, Order_number) VALUES ('das_preschool', 'das_preschool_page5', 'Recall of Objects - Immediate', 5);
+    INSERT INTO instrument_subtests (Test_name, Subtest_name, Description, Order_number) VALUES ('das_preschool', 'das_preschool_page6', 'Pattern Construction', 6);
+    INSERT INTO instrument_subtests (Test_name, Subtest_name, Description, Order_number) VALUES ('das_preschool', 'das_preschool_page7', 'Early Number Concepts', 7);
+    INSERT INTO instrument_subtests (Test_name, Subtest_name, Description, Order_number) VALUES ('das_preschool', 'das_preschool_page8', 'Recall of Objects - Delayed', 8);
+    INSERT INTO instrument_subtests (Test_name, Subtest_name, Description, Order_number) VALUES ('das_preschool', 'das_preschool_page9', 'Copying', 9);
 
-    INSERT INTO test_battery (Test_name, AgeMinDays, AgeMaxDays, Active, Stage, SubprojectID, Visit_label, CenterID) VALUES ('das', '1', '99999', 'Y', 'Visit', '1', '2', NULL);
+    INSERT INTO test_battery (Test_name, AgeMinDays, AgeMaxDays, Active, Stage, SubprojectID, Visit_label, CenterID) VALUES ('das_preschool', '1', '99999', 'Y', 'Visit', '1', '2', NULL);
     */
 
 
@@ -75,8 +58,8 @@ class NDB_BVL_Instrument_das extends NDB_BVL_Instrument
         // user-defined child classes)
 
         // object properties
-        $this->testName = "das";
-        $this->table = 'das';
+        $this->testName = "das_preschool";
+        $this->table = 'das_preschool';
         // data keyed by commentID
         $this->commentID = $commentID;
 
@@ -91,7 +74,7 @@ class NDB_BVL_Instrument_das extends NDB_BVL_Instrument
         // required fields for data entry completion status
         $this->_requiredElements = array('Examiner');
 
-	    // Array of column names to be ignored by the double data entry conflict detector
+        // Array of column names to be ignored by the double data entry conflict detector
         $this->_doubleDataEntryDiffIgnoreColumns =
             array('CommentID', 'UserID', 'Testdate',  'Window_Difference', 'Candidate_Age',
                 'other_comments1',
@@ -103,7 +86,7 @@ class NDB_BVL_Instrument_das extends NDB_BVL_Instrument
                 'other_comments7',
                 'other_comments8',
                 'other_comments9',
-                );
+            );
 
         // setup the form
         $this->_setupForm();
@@ -118,7 +101,6 @@ class NDB_BVL_Instrument_das extends NDB_BVL_Instrument
      * @access private
      */
     function _setupForm() {
-
 
 
         $db =& Database::singleton();
@@ -370,7 +352,7 @@ class NDB_BVL_Instrument_das extends NDB_BVL_Instrument
     function _main() {
 
         // display test name
-        $this->form->addElement('header', 'instrument_title', "DAS");
+        $this->form->addElement('header', 'instrument_title', "DAS - Preschool Core");
 
         // automatically adds examiner & date of administration
         $this->_addMetadataFields();
@@ -433,18 +415,18 @@ class NDB_BVL_Instrument_das extends NDB_BVL_Instrument
             0=>0, 1=>1, 2=>2, 3=>3, 4=>4, 5=>5, 6=>6, 7=>7, 8=>8, 9=>9, 10=>10,
             11=>11, 12=>12, 13=>13, 14=>14, 15=>15, 16=>16, 17=>17, 18=>18, 19=>19, 20=>20,
             'p'=>1, 'p_1'=>3, 'p_2'=>1, 'f'=>0
-            );
+        );
 
         foreach ($record as $field=>$code) {
 //            if(!in_array($field, array(""))) {
 //                $this->scores[$field] = substr($code,0,1);
-                if(is_numeric($this->scores[$field])) {
-                    $intval = intval($this->scores[$field]);
-                    $this->scores[$field] = $conversion[$intval];
-                }
-                else {
-                    $this->scores[$field] = 0; // for 'not_answered'
-                }
+            if(is_numeric($this->scores[$field])) {
+                $intval = intval($this->scores[$field]);
+                $this->scores[$field] = $conversion[$intval];
+            }
+            else {
+                $this->scores[$field] = 0; // for 'not_answered'
+            }
 //            }
         }
 
@@ -466,15 +448,15 @@ class NDB_BVL_Instrument_das extends NDB_BVL_Instrument
                 $scoreCols["Total_1"] = "Respondent too old to score";
             }
             else {
-                    $scoreCols["Total_1a"] = $this->scores["q_1_trial1"];
-                    $scoreCols["Total_1b"] = $this->scores["q_1_trial2"];
-                    $scoreCols["Total_1"] = 0;
-                    $j = 2;
-                    $numItems = 12;
-                    for ($i = 2; $i <= $numItems; $i++) {
-                        $scoreCols["Total_A2"] += $this->scores["q_{$j}_item{$i}"];
-                        $j++;
-                    }
+                $scoreCols["Total_1a"] = $this->scores["q_1_trial1"];
+                $scoreCols["Total_1b"] = $this->scores["q_1_trial2"];
+                $scoreCols["Total_1"] = 0;
+                $j = 2;
+                $numItems = 12;
+                for ($i = 2; $i <= $numItems; $i++) {
+                    $scoreCols["Total_A2"] += $this->scores["q_{$j}_item{$i}"];
+                    $j++;
+                }
                 $scoreCols["Total_1"] += max($scoreCols["Total_1a"], $scoreCols["Total_1b"]);
             }
 
@@ -807,7 +789,7 @@ class NDB_BVL_Instrument_das extends NDB_BVL_Instrument
             $j++;
         }
 
-    // Q if incorrect
+        // Q if incorrect
 
         // only record if not listed in Record form
 
