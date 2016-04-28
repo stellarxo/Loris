@@ -45,8 +45,13 @@ INSERT INTO test_battery (Test_name, AgeMinDays, AgeMaxDays, Active, Stage, Subp
        // required fields for data entry completion status
        $this->_requiredElements = array('Examiner', "Date_taken");
 
-       $this->_doubleDataEntryDiffIgnoreColumns = array('CommentID', 'UserID', 'Testdate', 
-                                                        'Window_Difference', 'Candidate_Age');
+       $this->_doubleDataEntryDiffIgnoreColumns = array('CommentID', 'UserID', 'Testdate', 'Window_Difference', 'Candidate_Age',
+            'general comments',
+		    'general_comments_status',
+		    'other_comments',
+		    'other_comments_status',
+		    'Data_entry_completion_status'
+        );
 
        // setup the form
        $this->_setupForm();
