@@ -59,6 +59,13 @@ class NDB_BVL_Instrument_LENA_DailyActivityLog extends NDB_BVL_Instrument
         );
         
         $db =& Database::singleton();
+
+        $this->_doubleDataEntryDiffIgnoreColumns = array('CommentID', 'UserID', 'Testdate',  'Window_Difference', 'Candidate_Age', 
+            'day1_comments',
+            'day2_comments',
+            'Data_entry_completion_status'
+        );
+        
         // setup the form
         $this->_setupForm();
 
