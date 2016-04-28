@@ -79,6 +79,27 @@ class NDB_BVL_Instrument_mri_parameter_form extends NDB_BVL_Instrument
 
             $this->localDefaults["vector{$i}"] = "({$vector_x}, {$vector_y}, {$vector_z})";
         }
+
+        /*
+         * Array of column names to be ignored by the double data entry conflict detector.
+         */
+        $this->_doubleDataEntryDiffIgnoreColumns = array('CommentID', 'UserID', 'Testdate', 'Window_Difference', 'Candidate_Age',
+            'DTI_Comments',
+            'DTI_Comments_status',
+            'DTI65Dir_Comments',
+            'DTI65Dir_Comments_status',
+            'T1_Comments',
+            'T1_Comments_status',
+            'T2_Comments',
+            'T2_Comments_status',
+            'BOLD_Comments',
+            'BOLD_Comments_status',
+            'Spectroscopy_Comments',
+            'Spectroscopy_Comments_status',
+            'total_duration_status',
+            'wait_time_status',
+            'Data_entry_completion_status'
+        );
         
         // setup the form
         $this->_setupForm();
