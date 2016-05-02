@@ -112,7 +112,7 @@ class NDB_Form_Examiner extends NDB_Form
             $date_cert = $values['date_cert'][$testID];
             $comment   = trim($values['comment'][$testID]);
 
-            //addding special case for mullen to subdivide certification
+            //adding special case for mullen to subdivide certification
             $visit_label = null;
             if ($testID  == "15_3_9" ) {
                 $visit_label = '3-9mo';
@@ -399,7 +399,7 @@ class NDB_Form_Examiner extends NDB_Form
 
         foreach ($certificationInstruments['test'] as $certificationInstrument) {
             $testName = $certificationInstrument['@']['value'];
-            //addding special case for mullen to subdivide certification
+            //adding special case for mullen to subdivide certification
             if ($testName == "mullen_3_9") {
                 $testID = "15_3_9";
             } else if ($testName == "mullen_12_15") {
