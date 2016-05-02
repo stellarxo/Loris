@@ -404,8 +404,12 @@ class NDB_Form_Examiner extends NDB_Form
                 $testID = "15_3_9";
             } else if ($testName == "mullen_12_15") {
                 $testID = "15_12_15";
+            } else if ($testName == "mullen_18") {
+                $testID = "15_18";
             } else if ($testName == "mullen_24_36") {
                 $testID = "15_24_36";
+            } else if ($testName == "mullen_36plus") {
+                $testID = "15_37plus";
             } else {
                 $testID = $DB->pselectOne(
                     "SELECT ID
