@@ -118,8 +118,12 @@ class NDB_Form_Examiner extends NDB_Form
                 $visit_label = '3-9mo';
             } else if ($testID == '15_12_15') {
                 $visit_label = '12-15mo';
+            } else if ($testID == '15_18') {
+                $visit_label = '18mo';
             } else if ($testID == '15_24_36') {
                 $visit_label = '24-36mo';
+            } else if ($testID == '15_37plus') {
+                $visit_label = '37plusmo';
             }
 
             // get the examinerID - edit_examiner passes the ID through
