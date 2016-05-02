@@ -112,14 +112,18 @@ class NDB_Form_Examiner extends NDB_Form
             $date_cert = $values['date_cert'][$testID];
             $comment   = trim($values['comment'][$testID]);
 
-            //addding special case for mullen to subdivide certification
+            //adding special case for mullen to subdivide certification
             $visit_label = null;
             if ($testID  == "15_3_9" ) {
                 $visit_label = '3-9mo';
             } else if ($testID == '15_12_15') {
                 $visit_label = '12-15mo';
+            } else if ($testID == '15_18') {
+                $visit_label = '18mo';
             } else if ($testID == '15_24_36') {
                 $visit_label = '24-36mo';
+            } else if ($testID == '15_37plus') {
+                $visit_label = '37plusmo';
             }
 
             // get the examinerID - edit_examiner passes the ID through
@@ -395,13 +399,17 @@ class NDB_Form_Examiner extends NDB_Form
 
         foreach ($certificationInstruments['test'] as $certificationInstrument) {
             $testName = $certificationInstrument['@']['value'];
-            //addding special case for mullen to subdivide certification
+            //adding special case for mullen to subdivide certification
             if ($testName == "mullen_3_9") {
                 $testID = "15_3_9";
             } else if ($testName == "mullen_12_15") {
                 $testID = "15_12_15";
+            } else if ($testName == "mullen_18") {
+                $testID = "15_18";
             } else if ($testName == "mullen_24_36") {
                 $testID = "15_24_36";
+            } else if ($testName == "mullen_37plus") {
+                $testID = "15_37plus";
             } else {
                 $testID = $DB->pselectOne(
                     "SELECT ID
