@@ -84,9 +84,10 @@ class NDB_BVL_Instrument_ados2_module1 extends NDB_BVL_Instrument
 
 	    $this->_doubleDataEntryDiffIgnoreColumns = array('CommentID', 'UserID', 'Testdate', 'Window_Difference', 'Candidate_Age',
                              // Text entry columns
-							 'd1_specify',
-							 'd2_specify',
-							 'd4_specify',
+			     'd1_specify',
+    			     'd2_specify',
+		      	     'd4_specify',
+			     'other_comments',
                              // Scored columns
                              "ADOS_classification",
                              "social_affect_total", 

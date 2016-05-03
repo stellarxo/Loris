@@ -51,10 +51,18 @@ class NDB_BVL_Instrument_DSMV_checklist extends NDB_BVL_Instrument
         'addEmptyOption' => true,
         'emptyOptionValue' => null
 		);
-	/**
-	 * Array of column names to be ignored by the double data entry conflict detector.
-	 */
-	$this->_doubleDataEntryDiffIgnoreColumns = array('CommentID', 'UserID', 'Testdate', 'Window_Difference', 'Candidate_Age');
+        
+        /**
+         * Array of column names to be ignored by the double data entry conflict detector.
+         */
+        $this->_doubleDataEntryDiffIgnoreColumns = array('CommentID', 'UserID', 'Testdate', 'Window_Difference',
+            'Candidate_Age',
+            'dsm_asd_comments',
+            'dsm_asd_comments_status',
+            'dsm_scd_comments',
+            'dsm_scd_comments_status',
+            'Data_entry_completion_status'
+        );
 
         $this->_setupForm();
 

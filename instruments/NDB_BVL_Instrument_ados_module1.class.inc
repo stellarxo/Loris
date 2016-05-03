@@ -81,36 +81,36 @@ class NDB_BVL_Instrument_ados_module1 extends NDB_BVL_Instrument
         $this->_requiredElements = array('Examiner', "a1", "c1");
 
 	    $this->_doubleDataEntryDiffIgnoreColumns = array('CommentID', 'UserID', 'Testdate', 'Window_Difference', 'Candidate_Age',
-                             // Text entry columns
-							 'd1_specify',
-							 'd2_specify',
-							 'd4_specify',
-                             // Scored columns
-                             "ADOS_classification",
-                             "social_affect_total", 
-                             "restricted_repetitive_behavior_total", 
-                             "social_affect_restricted_repetitive_behavior_total", 
-                             'a2_weighted',
-                             'a3_weighted',
-                             'a8_weighted',
-                             'b1_weighted',
-                             'b3_weighted',
-                             'b4_weighted',
-                             'b5_weighted',
-                             'b9_weighted',
-                             'b10_weighted',
-                             'b11_weighted',
-                             'b12_weighted',
-                             'd1_weighted',
-                             'd2_weighted',
-                             'd4_weighted',
-                             'social_affect_gotham_weighted',
-                             'restricted_repetitive_gotham_weighted',
-                             'gotham_weighted_score',
-                             'severity_score_lookup',
-                             'Data_entry_completion_status');
-
-
+			// Text entry columns
+			'd1_specify',
+			'd2_specify',
+			'd4_specify',
+			'other_comments',
+			// Scored columns
+            "ADOS_classification",
+            "social_affect_total",
+            "restricted_repetitive_behavior_total",
+            "social_affect_restricted_repetitive_behavior_total",
+            'a2_weighted',
+            'a3_weighted',
+            'a8_weighted',
+            'b1_weighted',
+            'b3_weighted',
+            'b4_weighted',
+            'b5_weighted',
+            'b9_weighted',
+            'b10_weighted',
+            'b11_weighted',
+            'b12_weighted',
+            'd1_weighted',
+            'd2_weighted',
+            'd4_weighted',
+            'social_affect_gotham_weighted',
+            'restricted_repetitive_gotham_weighted',
+            'gotham_weighted_score',
+            'severity_score_lookup',
+            'Data_entry_completion_status'
+        );
 
        // setup the form
        $this->_setupForm();

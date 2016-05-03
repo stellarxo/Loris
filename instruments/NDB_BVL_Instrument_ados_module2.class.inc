@@ -67,6 +67,7 @@ class NDB_BVL_Instrument_ados_module2 extends NDB_BVL_Instrument
                 'd1_specify',
                 'd2_specify',
                 'd4_specify',
+		'other_comments',
                 // Scored columns
                 "ADOS_classification",
                 "social_affect_total",

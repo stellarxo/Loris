@@ -52,18 +52,23 @@ class NDB_BVL_Instrument_DSMIV_checklist extends NDB_BVL_Instrument
         'addEmptyOption' => true,
         'emptyOptionValue' => null
 		);
-	/**
-	 * Array of column names to be ignored by the double data entry conflict detector.
-	 */
-	$this->_doubleDataEntryDiffIgnoreColumns = array('CommentID', 'UserID', 'Testdate', 'Window_Difference', 'Candidate_Age',
-							 'q4b_not_ASD_specify',
-							 'q4b_not_ASD_specify_status',
-							 'confidence_rating_specify',
-							 'name_assessor',
-							 'name_confirming_clinician',
-							 'equivocal_evaluation_results_specify');
-	
-
+        /**
+         * Array of column names to be ignored by the double data entry conflict detector.
+         */
+        $this->_doubleDataEntryDiffIgnoreColumns = array('CommentID', 'UserID', 'Testdate', 'Window_Difference', 'Candidate_Age',
+            'q4b_not_ASD_specify',
+            'q4b_not_ASD_specify_status',
+            'confidence_rating_specify',
+    //            'confidence_rating_specify_status',
+    //            'date_taken_assessor_date_status',
+    //            'date_taken_confirming_clinician_date_status',
+            'dsm_asd_comments_status',
+            'dsm_scd_comments_status',
+            'Data_entry_completion_status',
+            'name_assessor',
+            'name_confirming_clinician',
+            'equivocal_evaluation_results_specify'
+        );
 
         $this->_setupForm();
 
