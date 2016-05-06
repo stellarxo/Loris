@@ -97,14 +97,15 @@ class NDB_BVL_Instrument_das_schoolage extends NDB_BVL_Instrument
         // Array of column names to be ignored by the double data entry conflict detector
         $this->_doubleDataEntryDiffIgnoreColumns =
             array('CommentID', 'UserID', 'Testdate',  'Window_Difference', 'Candidate_Age',
-                'other_comments1',
-                'other_comments2',
-                'other_comments3',
-                'other_comments4',
-                'other_comments5',
-                'other_comments6',
-                'other_comments7',
-                'other_comments8',
+//                'other_comments1',
+//                'other_comments2',
+//                'other_comments3',
+//                'other_comments4',
+//                'other_comments5',
+//                'other_comments6',
+//                'other_comments7',
+                'other_comments8'
+//,
             );
 
         // setup the form
@@ -467,6 +468,7 @@ class NDB_BVL_Instrument_das_schoolage extends NDB_BVL_Instrument
         */
     }
 
+    /*
 
     function _page1() {
 
@@ -859,7 +861,7 @@ class NDB_BVL_Instrument_das_schoolage extends NDB_BVL_Instrument
         $this->form->addElement("textarea", "other_comments8", "Comments:", array('cols'=>25, 'rows'=>4));
         $this->XINRegisterRule("other_comments8", array("{other_comments8}{@}=={@}NEVER_REQUIRED"));
         $this->form->addElement('static', null, "<br />");
-    }
+    }*/
 
 }
 
