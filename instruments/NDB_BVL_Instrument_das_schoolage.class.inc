@@ -209,7 +209,7 @@ class NDB_BVL_Instrument_das_schoolage extends NDB_BVL_Instrument
         // Out of Level: 5 years 0 months to 5 years 11 months
 
 
-        if(preg_match("/(das_schoolage_page[0-9]+)/",$this->page,$matches)){
+        if(preg_match("/das_schoolage(_page[0-9]+)/",$this->page,$matches)){
             call_user_method($matches[1], $this);
         } else {
             $this->_main();
