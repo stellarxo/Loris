@@ -1,5 +1,5 @@
 <?php
-class NDB_BVL_Instrument_das_schoolage extends NDB_BVL_Instrument_das
+class NDB_BVL_Instrument_das_schoolage extends NDB_BVL_Instrument
 {
 
     // SIMILARITIES IN BOOK AND PAPER ARE DIFFERENT
