@@ -468,7 +468,7 @@ class NDB_BVL_Instrument_das_schoolage extends NDB_BVL_Instrument
         */
     }
 
-    /*
+
 
     function _page1() {
 
@@ -861,7 +861,7 @@ class NDB_BVL_Instrument_das_schoolage extends NDB_BVL_Instrument
         $this->form->addElement("textarea", "other_comments8", "Comments:", array('cols'=>25, 'rows'=>4));
         $this->XINRegisterRule("other_comments8", array("{other_comments8}{@}=={@}NEVER_REQUIRED"));
         $this->form->addElement('static', null, "<br />");
-    }*/
+    }
 
 }
 
