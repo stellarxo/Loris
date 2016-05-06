@@ -51,10 +51,10 @@ class NDB_BVL_Instrument_das_schoolage extends NDB_BVL_Instrument_das
 //    Do we need this?????
 //    var $scores = array("q_70_trial1"=>"","q_71_trial2"=>"","q_72_trial3"=>"");
 //    var $questions = array();
-    var $answerArray = array(""=>NULL, 0=>0, 1=>1, "not_answered"=>"Not Answered");
-    var $yesNoNa = array(""=>NULL, "yes"=>"Yes", "no"=>"No", "not_answered"=>"Not Answered");
-    var $responseArray = array(""=>NULL, 1=>1, 2=>2, 3=>3, 4=>4, "not_answered"=>"Not
-        Answered");
+//    var $answerArray = array(""=>NULL, 0=>0, 1=>1, "not_answered"=>"Not Answered");
+//    var $yesNoNa = array(""=>NULL, "yes"=>"Yes", "no"=>"No", "not_answered"=>"Not Answered");
+//    var $responseArray = array(""=>NULL, 1=>1, 2=>2, 3=>3, 4=>4, "not_answered"=>"Not
+//        Answered");
 
 
     /*
@@ -709,7 +709,8 @@ class NDB_BVL_Instrument_das_schoolage extends NDB_BVL_Instrument_das
         $this->form->addElement("header", null, "Matrices");
         $this->form->addElement('static', null, "<br />");
 
-        $setAResponseArray = $responseArray;
+        $setAResponseArray = array(""=>NULL, 1=>1, 2=>2, 3=>3, 4=>4, "not_answered"=>"Not
+        Answered");
         $setBResponseArray = array(""=>NULL, 1=>1, 2=>2, 3=>3, 4=>4, 5=>5, 6=>6, "not_answered"=>"Not Answered");
 
         // include score? or automatic??
@@ -772,7 +773,8 @@ class NDB_BVL_Instrument_das_schoolage extends NDB_BVL_Instrument_das
         $this->form->addElement("header", null, "Similarities");
         $this->form->addElement('static', null, "<br />");
 
-
+        $answerArray = array(""=>NULL, 0=>0, 1=>1, "not_answered"=>"Not Answered");
+        $yesNoNa = array(""=>NULL, "yes"=>"Yes", "no"=>"No", "not_answered"=>"Not Answered");
 
         $j=81;
         $numItems=34;
@@ -824,7 +826,9 @@ class NDB_BVL_Instrument_das_schoolage extends NDB_BVL_Instrument_das
         $this->form->addElement("header", null, "Sequential and Quantitative Reasoning");
         $this->form->addElement('static', null, "<br />");
 
-
+        $answerArray = array(""=>NULL, 0=>0, 1=>1, "not_answered"=>"Not Answered");
+        $responseArray = array(""=>NULL, 1=>1, 2=>2, 3=>3, 4=>4, "not_answered"=>"Not
+        Answered");
 
         $j=134;
 
