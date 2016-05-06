@@ -481,7 +481,7 @@ class NDB_BVL_Instrument_das_schoolage extends NDB_BVL_Instrument
 
         // Include samples?
 
-
+/*
         // Item 1 - score better of two attempts
 //        $this->form->addElement("static", "null", "Item 1 - Trial 1");
 //        $this->form->addElement("select", "q_1_trial1", $this->indent . $this->indent . "Number of blocks used:", array("" => NULL,2=>"8 blocks",1=>"4-7 blocks",0=>"0-3 blocks","not_answered" => "Not Answered"));
@@ -522,7 +522,7 @@ class NDB_BVL_Instrument_das_schoolage extends NDB_BVL_Instrument
         $this->form->addElement("textarea", "other_comments1", "Comments:", array('cols'=>25, 'rows'=>4));
         $this->XINRegisterRule("other_comments1", array("{other_comments1}{@}=={@}NEVER_REQUIRED"));
         $this->form->addElement('static', null, "<br />");
-
+*/
     }
 
 
@@ -536,7 +536,7 @@ class NDB_BVL_Instrument_das_schoolage extends NDB_BVL_Instrument
 
         $this->form->addElement("header", null, "Word Definitions");
         $this->form->addElement('static', null, "<br />");
-
+/*
         // If you suspect that a child will have difficulty with the starting items for his or her age,
         // use the Starting and Decision Points for a younger age group.
         // Out-of-level testing for children of average or low ability only
@@ -595,7 +595,7 @@ class NDB_BVL_Instrument_das_schoolage extends NDB_BVL_Instrument
         $this->form->addElement("textarea", "other_comments2", "Comments:", array('cols'=>25, 'rows'=>4));
         $this->XINRegisterRule("other_comments2", array("{other_comments2}{@}=={@}NEVER_REQUIRED"));
         $this->form->addElement('static', null, "<br />");
-
+*/
     }
 
 
@@ -608,7 +608,7 @@ class NDB_BVL_Instrument_das_schoolage extends NDB_BVL_Instrument
 
         $this->form->addElement("header", null, "Recall of Objects - Immediate");
         $this->form->addElement('static', null, "<br />");
-
+/*
         $yesNoNa = array(""=>NULL, "yes"=>"Yes", "no"=>"No", "not_answered"=>"Not Answered");
 
         $this->form->addElement("static", "null", "Trial 1");
@@ -637,7 +637,7 @@ class NDB_BVL_Instrument_das_schoolage extends NDB_BVL_Instrument
         $this->form->addElement("textarea", "other_comments3", "Comments:", array('cols'=>25, 'rows'=>4));
         $this->XINRegisterRule("other_comments3", array("{other_comments3}{@}=={@}NEVER_REQUIRED"));
         $this->form->addElement('static', null, "<br />");
-
+*/
     }
 
 
@@ -651,7 +651,7 @@ class NDB_BVL_Instrument_das_schoolage extends NDB_BVL_Instrument
 
         $this->form->addElement("header", null, "Pattern Construction");
         $this->form->addElement('static', null, "<br />");
-
+/*
         $doubleTrialArray = array(""=>NULL, "p_1"=>"(a) Passed first trial", "p_2"=>"(b) Passed second trial",
             "f"=>"Failed both trials", "not_answered"=>"Not Answered");
         $singleTrialArray = array(""=>NULL, "p"=>"Pass", "f"=>"Fail", "not_answered"=>"Not Answered");
@@ -703,7 +703,7 @@ class NDB_BVL_Instrument_das_schoolage extends NDB_BVL_Instrument
         $this->form->addElement("textarea", "other_comments4", "Comments:", array('cols'=>25, 'rows'=>4));
         $this->XINRegisterRule("other_comments4", array("{other_comments4}{@}=={@}NEVER_REQUIRED"));
         $this->form->addElement('static', null, "<br />");
-
+*/
     }
 
 
@@ -715,7 +715,7 @@ class NDB_BVL_Instrument_das_schoolage extends NDB_BVL_Instrument
 
         $this->form->addElement("header", null, "Matrices");
         $this->form->addElement('static', null, "<br />");
-
+/*
         $setAResponseArray = array(""=>NULL, 1=>1, 2=>2, 3=>3, 4=>4, "not_answered"=>"Not
         Answered");
         $setBResponseArray = array(""=>NULL, 1=>1, 2=>2, 3=>3, 4=>4, 5=>5, 6=>6, "not_answered"=>"Not Answered");
@@ -743,7 +743,7 @@ class NDB_BVL_Instrument_das_schoolage extends NDB_BVL_Instrument
         $this->form->addElement("textarea", "other_comments5", "Comments:", array('cols'=>25, 'rows'=>4));
         $this->XINRegisterRule("other_comments5", array("{other_comments5}{@}=={@}NEVER_REQUIRED"));
         $this->form->addElement('static', null, "<br />");
-
+*/
     }
 
 
@@ -759,14 +759,14 @@ class NDB_BVL_Instrument_das_schoolage extends NDB_BVL_Instrument
         // only use if significantly different from immediate-recall score
         // convert immediate and delayed to T-scores
         // T scores differ by 14+ --> statistically significant
-
+/*
         $this->addNumericElement("q_162_trial1", $this->indent . $this->indent . "Number of objects recalled correctly:");
 
         $this->form->addElement('static', null, "<br />");
         $this->form->addElement("textarea", "other_comments6", "Comments:", array('cols'=>25, 'rows'=>4));
         $this->XINRegisterRule("other_comments6", array("{other_comments6}{@}=={@}NEVER_REQUIRED"));
         $this->form->addElement('static', null, "<br />");
-
+*/
     }
 
 
@@ -779,7 +779,7 @@ class NDB_BVL_Instrument_das_schoolage extends NDB_BVL_Instrument
 
         $this->form->addElement("header", null, "Similarities");
         $this->form->addElement('static', null, "<br />");
-
+/*
         $answerArray = array(""=>NULL, 0=>0, 1=>1, "not_answered"=>"Not Answered");
         $yesNoNa = array(""=>NULL, "yes"=>"Yes", "no"=>"No", "not_answered"=>"Not Answered");
 
@@ -819,7 +819,7 @@ class NDB_BVL_Instrument_das_schoolage extends NDB_BVL_Instrument
         $this->form->addElement("textarea", "other_comments7", "Comments:", array('cols'=>25, 'rows'=>4));
         $this->XINRegisterRule("other_comments7", array("{other_comments7}{@}=={@}NEVER_REQUIRED"));
         $this->form->addElement('static', null, "<br />");
-
+*/
     }
 
 
@@ -832,7 +832,7 @@ class NDB_BVL_Instrument_das_schoolage extends NDB_BVL_Instrument
 
         $this->form->addElement("header", null, "Sequential and Quantitative Reasoning");
         $this->form->addElement('static', null, "<br />");
-
+/*
         $answerArray = array(""=>NULL, 0=>0, 1=>1, "not_answered"=>"Not Answered");
         $responseArray = array(""=>NULL, 1=>1, 2=>2, 3=>3, 4=>4, "not_answered"=>"Not
         Answered");
@@ -861,6 +861,7 @@ class NDB_BVL_Instrument_das_schoolage extends NDB_BVL_Instrument
         $this->form->addElement("textarea", "other_comments8", "Comments:", array('cols'=>25, 'rows'=>4));
         $this->XINRegisterRule("other_comments8", array("{other_comments8}{@}=={@}NEVER_REQUIRED"));
         $this->form->addElement('static', null, "<br />");
+*/
     }
 
 }
