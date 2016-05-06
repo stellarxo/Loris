@@ -236,6 +236,7 @@ class NDB_BVL_Instrument_das_schoolage extends NDB_BVL_Instrument
         // automatically adds examiner & date of administration
         $this->_addMetadataFields();
 
+        /*
         $this->form->addElement('static', null, "<br />");
         $this->form->addElement('header', 'raw_scores', "Raw Scores");
         $this->form->addElement("static", null, "NOTE: Final scores still need to be calculated.");
@@ -266,11 +267,11 @@ class NDB_BVL_Instrument_das_schoolage extends NDB_BVL_Instrument
         $this->form->addElement("textarea", "other_comments", "Comments:", array('cols'=>25, 'rows'=>4));
         $this->XINRegisterRule("other_comments", array("{other_comments}{@}=={@}NEVER_REQUIRED"));
         $this->form->addElement('static', null, "<br />");
-
+*/
     }
 
 
-    function _score() {
+//    function _score() {
 /*
         $db =& Database::singleton();
 
@@ -466,7 +467,7 @@ class NDB_BVL_Instrument_das_schoolage extends NDB_BVL_Instrument
             }
         }
         */
-    }
+//    }
 
 
 
