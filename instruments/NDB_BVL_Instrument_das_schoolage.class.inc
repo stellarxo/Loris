@@ -266,7 +266,7 @@ class NDB_BVL_Instrument_das_schoolage extends NDB_BVL_Instrument
 
 
     function _score() {
-
+/*
         $db =& Database::singleton();
 
         // skip scoring if proband DoB was not entered, i.e. data entry is not completed
@@ -460,6 +460,7 @@ class NDB_BVL_Instrument_das_schoolage extends NDB_BVL_Instrument
                 $scoreCols["Total_{$i}"] = "Respondent too old to score";
             }
         }
+        */
     }
 
 
@@ -545,7 +546,7 @@ class NDB_BVL_Instrument_das_schoolage extends NDB_BVL_Instrument
             31=>"Oligarchy", 32=>"Stoic", 33=>"Alacrity", 34=>"Recalcitrant", 35=>"Misanthropy");
 
 // need to adjust j - why not make global/static??
-        $j=13;
+        $j=22;
         $numItems=count($item);
         for ($i = 1; $i <= $numItems; $i++) {
             switch ($i) {
