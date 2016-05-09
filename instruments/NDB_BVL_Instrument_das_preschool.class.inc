@@ -1,5 +1,9 @@
 <?php
-class NDB_BVL_Instrument_das_preschool extends NDB_BVL_Instrument_das
+
+require_once 'HTML/QuickForm.php';
+require_once 'HTML/QuickForm/Renderer/Array.php';
+
+class NDB_BVL_Instrument_das_preschool extends NDB_BVL_Instrument
 {
 
     // TO DO:
@@ -31,7 +35,8 @@ class NDB_BVL_Instrument_das_preschool extends NDB_BVL_Instrument_das
     INSERT INTO instrument_subtests (Test_name, Subtest_name, Description, Order_number) VALUES ('das_preschool', 'das_preschool_page8', 'Recall of Objects - Delayed', 8);
     INSERT INTO instrument_subtests (Test_name, Subtest_name, Description, Order_number) VALUES ('das_preschool', 'das_preschool_page9', 'Copying', 9);
 
-    INSERT INTO test_battery (Test_name, AgeMinDays, AgeMaxDays, Active, Stage, SubprojectID, Visit_label, CenterID) VALUES ('das_preschool', '1', '99999', 'Y', 'Visit', '1', '2', NULL);
+    INSERT INTO test_battery (Test_name, AgeMinDays, AgeMaxDays, Active, Stage, SubprojectID, Visit_label, CenterID)
+    VALUES ('das_preschool', '1', '99999', 'Y', 'Visit', '1', 'V37Plus', NULL);
     */
 
 
@@ -39,9 +44,11 @@ class NDB_BVL_Instrument_das_preschool extends NDB_BVL_Instrument_das
 //    var $scores = array("q_70_trial1"=>"","q_71_trial2"=>"","q_72_trial3"=>"");
 //    var $questions = array();
 
+    var $j = 1;
     var $answerArray = array(""=>NULL, 0=>0, 1=>1, "not_answered"=>"Not Answered");
+    var $responseArray = array(""=>NULL, 1=>1, 2=>2, 3=>3, 4=>4, "not_answered"=>"Not
+        Answered");
     var $yesNoNa = array(""=>NULL, "yes"=>"Yes", "no"=>"No", "not_answered"=>"Not Answered");
-
 
 
     /*
@@ -88,7 +95,7 @@ class NDB_BVL_Instrument_das_preschool extends NDB_BVL_Instrument_das
                 'other_comments6',
                 'other_comments7',
                 'other_comments8',
-                'other_comments9',
+                'other_comments9'
             );
 
         // setup the form
@@ -108,10 +115,10 @@ class NDB_BVL_Instrument_das_preschool extends NDB_BVL_Instrument_das
 
         $db =& Database::singleton();
 
-        $query = "SELECT * FROM $this->table WHERE CommentID='".$this->getCommentID()."'";
-        $record=array();
-        $db->selectRow($query, $record);
-
+//        $query = "SELECT * FROM $this->table WHERE CommentID='".$this->getCommentID()."'";
+//        $record=array();
+//        $db->selectRow($query, $record);
+/*
         $age = $this->respondentAgeMonths;
 //        $age = $this->getCandidateAge($values['Date_taken']);
 //        $agemonths = $age['year']*12 + $age['mon'] + ($age['day']/30);
@@ -331,9 +338,9 @@ class NDB_BVL_Instrument_das_preschool extends NDB_BVL_Instrument_das
                 }
             }
         }
+*/
 
-
-        if(preg_match("/(_page[0-9]+)/",$this->page,$matches)){
+        if(preg_match("/das_preschool(_page[0-9]+)/",$this->page,$matches)){
             call_user_method($matches[1], $this);
         } else {
             $this->_main();
@@ -394,7 +401,7 @@ class NDB_BVL_Instrument_das_preschool extends NDB_BVL_Instrument_das
 
     }
 
-
+/*
     function _score() {
 
         $db =& Database::singleton();
@@ -590,7 +597,7 @@ class NDB_BVL_Instrument_das_preschool extends NDB_BVL_Instrument_das
             }
         }
     }
-
+*/
 
     function _page1() {
 
@@ -604,36 +611,38 @@ class NDB_BVL_Instrument_das_preschool extends NDB_BVL_Instrument_das
         $this->form->addElement('static', null, "<br />");
 
         // Item 1 - score better of two attempts
-        $this->form->addElement("static", "null", "Item 1 - Trial 1");
-        $this->form->addElement("select", "q_1_trial1", $this->indent . $this->indent . "Number of blocks used:", array("" => NULL,2=>"8 blocks",1=>"4-7 blocks",0=>"0-3 blocks","not_answered" => "Not Answered"));
+        $this->form->addElement("static", null, "Item 1 - Trial 1");
+        $this->form->addElement("select", "q_{$this->j}_trial1", $this->indent . $this->indent . "Number of blocks used:", array("" => NULL,2=>"8 blocks",1=>"4-7 blocks",0=>"0-3 blocks","not_answered" => "Not Answered"));
         $this->XINRegisterRule("q_1_trial1", array("q_70_trial1_status{@}=={@}"), "Required.");
-        $this->form->addElement("static", "null", "Item 1 - Trial 2");
-        $this->form->addElement("select", "q_1_trial2done", $this->indent . $this->indent . "Was a second trial performed?", array("" => NULL, "yes" => "Yes", "no" => "No", "not_answered" => "Not Answered"));
+        $this->form->addElement("static", null, "Item 1 - Trial 2");
+        $this->form->addElement("select", "q_{$this->j}_trial2done", $this->indent . $this->indent . "Was a second trial performed?", array("" => NULL, "yes" => "Yes", "no" => "No", "not_answered" => "Not Answered"));
         $this->XINRegisterRule("q_1_trial2done", array("q_70_trial2done_status{@}=={@}"), "Required.");
-        $this->form->addElement("select", "q_1_trial2", $this->indent . $this->indent . "Number of blocks used:", array("" => NULL,2=>"8 blocks",1=>"4-7 blocks",0=>"0-3 blocks","not_answered" => "Not Answered"));
+        $this->form->addElement("select", "q_{$this->j}_trial2", $this->indent . $this->indent . "Number of blocks used:", array("" => NULL,2=>"8 blocks",1=>"4-7 blocks",0=>"0-3 blocks","not_answered" => "Not Answered"));
         $this->XINRegisterRule("q_1_trial2", array("q_1_trial2done{@}=={@}yes"), "This is required if a second trial was attempted.");
+        $this->j++;
 
         $failArray = array(""=>NULL,"rotation"=>"Rotation", "reversal"=>"Reversal", "not_answered"=>"Not Answered");
 
 
         // Items 2 to 12
-        $j=2;
         $numItems=12;
         for ($i = 2; $i <= $numItems; $i++) {
-            $group[]=&$this->form->addElement("select", "q_{$j}_item{$i}", "Item $i", $answerArray);
-            $group[]=&$this->form->addElement("select", "q_{$j}_item{$i}_f", $this->indent . $this->indent . "If incorrect, indicate the failure type:", $failArray);
-            $this->XINRegisterRule("q_{$j}_item{$i}_f", array("q_{$j}_item{$i}{@}=={@}'incorrect"), "This is required if the response was a failure");
-//            $this->form->addGroup($group, "q_{$j}_item{$i}"."_group", $label, null, false);
-            $j++;
+            $group[]=&$this->form->addElement("select", "q_{$this->j}_item{$i}", "Item $i", $this->answerArray);
+            $group[]=&$this->form->addElement("select", "q_{$this->j}_item{$i}_f", $this->indent . $this->indent . "If incorrect, indicate the failure type:", $failArray);
+            $this->XINRegisterRule("q_{$this->j}_item{$i}_f", array("q_{$this->j}_item{$i}{@}=={@}'incorrect"), "This is required if the response was a failure");
+//            $this->form->addGroup($group, "q_{$this->j}_item{$i}"."_group", $label, null, false);
+            $this->j++;
         }
+
+
 
         // Alternative Stopping Point - after 4 consecutive failures, STOP
         // Change to make it not answerable
-//        $this->XINRegisterRule("q_{$j}_item{$i}_f",
-//            array("q_{$j-1}_item{$i-1}{@}=={@}'incorrect",
-//                "q_{$j-2}_item{$i-2}{@}=={@}'incorrect",
-//                "q_{$j-3}_item{$i-3}{@}=={@}'incorrect",
-//                "q_{$j-4}_item{$i-4}{@}=={@}'incorrect"),
+//        $this->XINRegisterRule("q_{$this->j}_item{$i}_f",
+//            array("q_{$this->j-1}_item{$i-1}{@}=={@}'incorrect",
+//                "q_{$this->j-2}_item{$i-2}{@}=={@}'incorrect",
+//                "q_{$this->j-3}_item{$i-3}{@}=={@}'incorrect",
+//                "q_{$this->j-4}_item{$i-4}{@}=={@}'incorrect"),
 //            "This field cannot be filled due to an Alternative Stopping Point (4 consecutive failures).");
 
         $this->form->addElement('static', null, "<br />");
@@ -676,8 +685,6 @@ class NDB_BVL_Instrument_das_preschool extends NDB_BVL_Instrument_das
             34=>"Give me not only all the red but also all the round chips.",
             35=>"Give me all the chips that are neither yellow nor blue.", 36=>"Give me all the chips that are neither red nor square.");
 
-
-        $j=13;
         $numItems=36;
         for ($i = 1; $i <= $numItems; $i++) {
             switch ($i) {
@@ -697,8 +704,8 @@ class NDB_BVL_Instrument_das_preschool extends NDB_BVL_Instrument_das
                     $this->form->addElement("header", null, "Items 30-36: Chips");
                     break;
             }
-            $this->form->addElement("select", "q_{$j}_item{$i}", $this->indent . $this->indent . "Item $i: {$item[$i]}", $answerArray);
-            $j++;
+            $this->form->addElement("select", "q_{$this->j}_item{$i}", $this->indent . $this->indent . "Item $i: {$item[$i]}", $this->answerArray);
+            $this->j++;
         }
 
         // 2 years 6 months to 3 years 11 months
@@ -729,16 +736,32 @@ class NDB_BVL_Instrument_das_preschool extends NDB_BVL_Instrument_das
         $this->form->addElement("header", null, "Picture Similarities");
         $this->form->addElement('static', null, "<br />");
 
-        $responseArray = array(""=>NULL, 1=>1, 2=>2, 3=>3, 4=>4, "not_answered"=>"Not Answered");
+        $group[] = &$this->form->createElement("static", "static_response_label", "", "Response");
+        $group[] = &$this->form->createElement("static", "static_score_label", "", "Score");
 
-        $j=49;
+        $this->form->addGroup($group, null, "", $this->_GUIDelimiter, false);
+        unset($group);
+
         $numItems=32;
         for ($i = 1; $i <= $numItems; $i++) {
-            $this->form->addElement("select", "q_{$j}_item{$i}", "Item $i", $answerArray);
-            $this->form->addElement("select", "q_{$j}_item{$i}_response", $this->indent . $this->indent . "Child's Response:", $responseArray);
-            $this->XINRegisterRule("q_{$j}_item{$i}_response", array("q_{$j}_item{$i}{@}=={@}correct"), "This is required if the child answered Item {$i} correctly.");
-//            $this->XINRegisterRule("q_{$j}_item{$i}_response", array("q_{$j}_item{$i}{@}=={@}incorrect", "q_{$j}_item{$i}{@}=={@}not_answered"), "Any data entered will not be saved.");
-            $j++;
+            $group[]=&$this->form->createElement("select", "q_{$this->j}_item{$i}", null, $this->answerArray);
+            $group[]=&$this->form->createElement("select", "q_{$this->j}_item{$i}_response", null,
+                $this->responseArray);
+            $group[] = $this->form->createElement("static", null, $this->indent);
+            $group[] = $this->form->createElement("static", null, $this->indent);
+            $group[] = $this->form->createElement("static", null, $this->indent);
+            $group[] = $this->form->createElement("static", null, $this->indent);
+            $group[] = $this->form->createElement("static", null, $this->indent);
+            $group[] = $this->form->createElement("static", null, $this->indent);
+            $group[] = $this->form->createElement("static", null, $this->indent);
+            $group[] = $this->form->createElement("static", null, $this->indent);
+
+            $this->form->addGroup($group, "{$i}_answer", "Item $i", $this->_GUIDelimiter, false);
+            unset($group);
+
+            $this->XINRegisterRule("q_{$this->j}_item{$i}_response", array("q_{$this->j}_item{$i}{@}=={@}correct"), "This is required if the child answered Item {$i} correctly.");
+//            $this->XINRegisterRule("q_{$this->j}_item{$i}_response", array("q_{$this->j}_item{$i}{@}=={@}incorrect", "q_{$this->j}_item{$i}{@}=={@}not_answered"), "Any data entered will not be saved.");
+            $this->j++;
         }
 
         $this->form->addElement('static', null, "<br />");
@@ -766,25 +789,27 @@ class NDB_BVL_Instrument_das_preschool extends NDB_BVL_Instrument_das
             15=>"Shell, Seashell", 16=>"Jar", 17=>"Switch", 18=>"Volcano", 19=>"Thermometer", 20=>"Measuring Cup",
             21=>"Igloo", 22=>"Paper Clip", 23=>"Anchor",  24=>"Hourglass", 25=>"Funnel", 26=>"Easel");
 
-        $j=81;
         $numItems=26;
         for ($i = 1; $i <= $numItems; $i++) {
-            $this->form->addElement("select", "q_{$j}_item{$i}", "Item {$i}: {$item[$i]}", $answerArray);
+            $this->form->addElement("select", "q_{$this->j}_item{$i}", "Item $i: $item[$i]", $this->answerArray);
 
             // Does this include "Other acceptable responses????"
             // Change answerArray to Object or Picture, Other Acceptable Response, Incorrect Response??
-            $this->form->addElement("select", "q_{$j}_item{$i}_other",
-                $this->indent . $this->indent . "Did the child give a response other than the one listed on the Record Form?", $yesNoNa);
-            $this->XINRegisterRule("q_{$j}_item{$i}_other", array("q_{$j}_item{$i}_other{@}=={@}yes"), "Required.");
+
+
+            $this->form->addElement("select", "q_{$this->j}_item{$i}_other",
+                $this->indent . $this->indent . "Did the child give a response other than the one listed on the Record Form?", $this->yesNoNa);
+
+            $this->XINRegisterRule("q_{$this->j}_item{$i}_other", array("q_{$this->j}_item{$i}_other{@}=={@}yes"), "Required.");
             // Don't allow to fill out if no or other answer
 
-            $this->form->addElement("advcheckbox", "q_{$j}_item{$i}_q", $this->indent . $this->indent . "Q?", $options=null);
-            $this->XINRegisterRule("q_{$j}_item{$i}_q", array("q_{$j}_item{$i}{@}=={@}incorrect"), "Required.");
+            $this->form->addElement("advcheckbox", "q_{$this->j}_item{$i}_q", $this->indent . $this->indent . "Q?", $options=null);
+            $this->XINRegisterRule("q_{$this->j}_item{$i}_q", array("q_{$this->j}_item{$i}{@}=={@}incorrect"), "Required.");
 
-            $this->form->addElement("textarea", "q_{$j}_item{$i}_response", $this->indent . $this->indent . "Response:", array('cols'=>25, 'rows'=>1));
-            $this->XINRegisterRule("q_{$j}_item{$i}_response", array("q_{$j}_item{$i}_other{@}=={@}yes"), "Required.");
+            $this->form->addElement("textarea", "q_{$this->j}_item{$i}_response", $this->indent . $this->indent . "Response:", array('cols'=>25, 'rows'=>1));
+            $this->XINRegisterRule("q_{$this->j}_item{$i}_response", array("q_{$this->j}_item{$i}_other{@}=={@}yes"), "Required.");
 
-            $j++;
+            $this->j++;
         }
 
         // Q if incorrect
@@ -815,26 +840,27 @@ class NDB_BVL_Instrument_das_preschool extends NDB_BVL_Instrument_das
         $this->form->addElement("header", null, "Recall of Objects - Immediate");
         $this->form->addElement('static', null, "<br />");
 
-        $yesNoNa = array(""=>NULL, "yes"=>"Yes", "no"=>"No", "not_answered"=>"Not Answered");
-
-        $this->form->addElement("static", "null", "Trial 1");
-        $this->form->addElement("select", "q_107_trial1_success", $this->indent . $this->indent . "Was the trial successful?", $yesNoNa);
-        $this->addNumericElement("q_107_trial1", $this->indent . $this->indent . "Number of objects recalled correctly:");
-        $this->XINRegisterRule("q_107_trial1", array("q_107_trial1_success{@}=={@}yes"), "Required.");
+        $current = "Number of objects recalled correctly ";
+        $this->form->addElement("static", null, "Trial 1");
+        $this->form->addElement("select", "q_{$this->j}_trial1_success", $this->indent . $this->indent . "Was the trial successful?", $this->yesNoNa);
+        $this->addNumericElement("q_{$this->j}_trial1", $this->indent . $this->indent . $current);
+        $this->XINRegisterRule("q_{$this->j}_trial1", array("q_{$this->j}_trial1_success{@}=={@}yes"), "Required.");
 //        if (!in_array($q_107_trial1_success, range(0,20))) {
 //            return "Please enter a value between 0 and 20.";
 //        }
 
-        $this->form->addElement("static", "null", "Trial 2");
-        $this->form->addElement("select", "q_107_trial2_success", $this->indent . $this->indent . "Was the trial successful?", $yesNoNa);
-        $this->addNumericElement("q_107_trial2", $this->indent . $this->indent . "Number of objects recalled correctly:");
-        $this->XINRegisterRule("q_107_trial2", array("q_107_trial2_success{@}=={@}yes"), "Required.");
+        $this->form->addElement("static", null, "Trial 2");
+        $this->form->addElement("select", "q_{$this->j}_trial2_success", $this->indent . $this->indent . "Was the trial successful?", $this->yesNoNa);
+        $this->addNumericElement("q_{$this->j}_trial2", $this->indent . $this->indent . $current);
+        $this->XINRegisterRule("q_{$this->j}_trial2", array("q_{$this->j}_trial2_success{@}=={@}yes"), "Required.");
 
         // if first two = 20, skip 30 and make equal to 30
-        $this->form->addElement("static", "null", "Trial 3");
-        $this->form->addElement("select", "q_107_trial3_success", $this->indent . $this->indent . "Was the trial successful?", $yesNoNa);
-        $this->addNumericElement("q_107_trial3", $this->indent . $this->indent . "Number of objects recalled correctly:");
-        $this->XINRegisterRule("q_107_trial3", array("q_107_trial3_success{@}=={@}yes"), "Required.");
+        $this->form->addElement("static", null, "Trial 3");
+        $this->form->addElement("select", "q_{$this->j}_trial3_success", $this->indent . $this->indent . "Was the trial successful?", $this->yesNoNa);
+        $this->addNumericElement("q_{$this->j}_trial3", $this->indent . $this->indent . $current);
+        $this->XINRegisterRule("q_{$this->j}_trial3", array("q_{$this->j}_trial3_success{@}=={@}yes"), "Required.");
+
+        $this->j++;
 
         // require 2 trials
         // if spoiled or unscorable...
@@ -858,49 +884,54 @@ class NDB_BVL_Instrument_das_preschool extends NDB_BVL_Instrument_das
         $this->form->addElement("header", null, "Pattern Construction");
         $this->form->addElement('static', null, "<br />");
 
-        $doubleTrialArray = array(""=>NULL, "p_1"=>"(a) Passed first trial", "p_2"=>"(b) Passed second trial",
-            "f"=>"Failed both trials", "not_answered"=>"Not Answered");
-        $singleTrialArray = array(""=>NULL, "p"=>"Pass", "f"=>"Fail", "not_answered"=>"Not Answered");
+        $this->form->addElement("header", null, "Pattern Construction");
+        $this->form->addElement('static', null, "<br />");
+
+
+        $doubleTrialArray = array("" => NULL, "p_1" => "(a) Passed first trial", "p_2" => "(b) Passed second trial",
+            "f" => "Failed both trials", "not_answered" => "Not Answered");
+        $singleTrialArray = array("" => NULL, "p" => "Pass", "f" => "Fail", "not_answered" => "Not Answered");
+//        $options_30 = $this->_generateNumbers(0, 30);
+//        $options_45 = $this->_generateNumbers(0, 45);
+//        $options_60 = $this->_generateNumbers(0, 60);
+        $options = array("" => NULL, 1 => "TEMP");
+
 
         // radio - was a second trial completed/needed?
         // Correctness, response time - check paper form!
 
-        $item = array();
+        ///// NEED TO UPDATE OPTIONS OF TIMES
+        //// Time/PF messed up --> check book
 
-        $j=108;
+        $group[] = $this->form->createElement("static", null, $this->indent);
 
-        $this->form->addElement("select", "q_{$j}_item1", "Item 1: Model & Picture", $doubleTrialArray);
-        $j++;
+        $group[] = &$this->form->createElement("static", "static_time_label", "", "Time");
+        $group[] = &$this->form->createElement("static", "static_P/F_label", "", "P/F");
 
-        $numItems=25; //26 including item 1
-        for ($i = 2; $i <= $numItems; $i++) {
+        $this->form->addGroup($group, null, "", $this->_GUIDelimiter, false);
+        unset($group);
 
-            if ($i=2 || $i=4) {
-                $item[$i]="Picture & Demonstration";
+        $numItems = 26;
+        for ($i = 1; $i <= $numItems; $i++) {
+            for ($k = 1; $k <= 2; $k++) {
+
+                $group[] =& $this->form->createElement("static", "q_{$this->j}_item{$i}_static_trial{$k}", null, "Trial 
+            $k");
+                $group[] =& $this->form->createElement("select", "q_{$this->j}_item{$i}_trial{$k}", null, $doubleTrialArray);
+                $group[] =& $this->form->createElement("select", "q_{$this->j}_item{$i}_response_time2_trial{$k}", null,
+                    $options);
+
+                if ($k == 1) {
+                    $this->form->addGroup($group, "{$i}_answer_trial{$k}", "Item $i", $this->_GUIDelimiter,
+                        false);
+                    unset($group);
+                } else {
+                    $this->form->addGroup($group, "{$i}_answer_trial{$k}", null, $this->_GUIDelimiter,
+                        false);
+                    unset($group);
+                }
             }
-            else {
-                $item[$i]="Picture";
-            }
-
-            $this->form->addElement("static","null","Item $i: {$item[$i]}");
-
-            switch ($i) {
-                case 2:
-                case 4:
-                case 8:
-                case 9:
-                case 14:
-                case 15:
-                    $this->form->addElement("select", "q_{$j}_item{$i}", $this->indent . $this->indent . "Trial Outcome:", $doubleTrialArray);
-                    $this->addNumericElement("q_{$j}_item{$i}_response_time1", $this->indent . $this->indent . "Trial 1 Response Time (in seconds):");
-                    $this->addNumericElement("q_{$j}_item{$i}_response_time2", $this->indent . $this->indent . "Trial 2 Response Time (in seconds):");
-                    $this->XINRegisterRule("q_{$j}_item{$i}_response_time2", array("q_{$j}_item{$i}{@}=={@}p_2", "q_{$j}_item{$i}{@}=={@}f"));
-                    break;
-                default:
-                    $this->form->addElement("select", "q_{$j}_item{$i}", $this->indent . $this->indent . "Trial Outcome:", $singleTrialArray);
-                    $this->addNumericElement("q_{$j}_item{$i}_response_time1", $this->indent . $this->indent . "Response Time (in seconds):");
-            }
-            $j++;
+            $this->j++;
         }
 
         // Alternative (Unspeeded) Administration????
@@ -924,16 +955,14 @@ class NDB_BVL_Instrument_das_preschool extends NDB_BVL_Instrument_das
         $this->form->addElement("header", null, "Early Number Concepts");
         $this->form->addElement('static', null, "<br />");
 
-        $j=134;
-
-        $this->form->addElement("select", "q_{$j}_item1", $this->indent . $this->indent . "Item 1", $answerArray);
+        $this->form->addElement("select", "q_{$this->j}_item1", $this->indent . $this->indent . "Item 1", $this->answerArray);
 
         $numItems=27; // +1 for item1
         for ($i = 2; $i <= $numItems; $i++) {
-            $this->form->addElement("select", "q_{$j}_item{$i}", $this->indent . $this->indent . "Item {$i}", $answerArray);
-//            $this->form->addElement("radio", "q_{$j}_item{$i}_q", $this->indent . "Q?");
-//            $this->addLargeTextAreaElement("q_{$j}_item{$i}_text", $this->indent . "Response:");
-            $j++;
+            $this->form->addElement("select", "q_{$this->j}_item{$i}", $this->indent . $this->indent . "Item {$i}", $this->answerArray);
+//            $this->form->addElement("radio", "q_{$this->j}_item{$i}_q", $this->indent . "Q?");
+//            $this->addLargeTextAreaElement("q_{$this->j}_item{$i}_text", $this->indent . "Response:");
+            $this->j++;
 
 
             // 1 point for correct, 0 for incorrect except item 1 (2-28)
@@ -972,7 +1001,8 @@ class NDB_BVL_Instrument_das_preschool extends NDB_BVL_Instrument_das
         // convert immediate and delayed to T-scores
         // T scores differ by 14+ --> statistically significant
 
-        $this->addNumericElement("q_162_trial1", $this->indent . $this->indent . "Number of objects recalled correctly:");
+        $current = "Number of objects recalled correctly ";
+        $this->addNumericElement("q_{$this->j}_trial1", $this->indent . $this->indent . $current);
 
         $this->form->addElement('static', null, "<br />");
         $this->form->addElement("textarea", "other_comments8", "Comments:", array('cols'=>25, 'rows'=>4));
@@ -1007,26 +1037,25 @@ class NDB_BVL_Instrument_das_preschool extends NDB_BVL_Instrument_das
         $answerArray2 = array(""=>NULL, 0=>0, 1=>1, 2=>2, "not_answered"=>"Not Answered");
         $answerArray3 = array(""=>NULL, 0=>0, 1=>1, 2=>2, 3=>3, "not_answered"=>"Not Answered");
 
-        $j=163;
         $numItems=20;
         for ($i = 1; $i <= $numItems; $i++) {
             switch ($i) {
                 case 1:
-                    $this->form->addElement("select", "q_{$j}_item{$i}", $this->indent . $this->indent . "Item $i", $answerArray);
+                    $this->form->addElement("select", "q_{$this->j}_item{$i}", $this->indent . $this->indent . "Item $i", $this->answerArray);
                     break;
                 case 12:
                 case 15:
                 case 16:
                 case 17:
                 case 18:
-                    $this->form->addElement("select", "q_{$j}_item{$i}", $this->indent . $this->indent . "Item $i", $answerArray3);
+                    $this->form->addElement("select", "q_{$this->j}_item{$i}", $this->indent . $this->indent . "Item $i", $answerArray3);
                     break;
                 // items 2-11, 13, 14, 19, 20
                 default:
-                    $this->form->addElement("select", "q_{$j}_item{$i}", $this->indent . $this->indent . "Item $i", $answerArray2);
+                    $this->form->addElement("select", "q_{$this->j}_item{$i}", $this->indent . $this->indent . "Item $i", $answerArray2);
                     break;
             }
-            $j++;
+            $this->j++;
         }
 
         $this->form->addElement('static', null, "<br />");
