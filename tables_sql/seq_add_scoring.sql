@@ -1,0 +1,12 @@
+alter table seq add column `total_seq` varchar(255) default NULL;
+alter table seq add column `total_hypo` varchar(255) default NULL;
+alter table seq add column `total_hyper` varchar(255) default NULL;
+alter table seq add column `total_seeking` varchar(255) default NULL;
+alter table seq add column `total_social` varchar(255) default NULL;
+alter table seq add column `total_non-social` varchar(255) default NULL;
+alter table seq add column `total_tactile` varchar(255) default NULL;
+alter table seq add column `total_auditory` varchar(255) default NULL;
+alter table seq add column `total_visual` varchar(255) default NULL;
+alter table seq add column `total_gustatory_olfactory` varchar(255) default NULL;
+alter table seq add column `total_vestibular_proprioceptive` varchar(255) default NULL;
+alter table seq add column `other_comments` text default NULL;

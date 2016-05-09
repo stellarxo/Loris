@@ -7,11 +7,16 @@ class NDB_BVL_Instrument_seq extends NDB_BVL_Instrument
 {
     var $ValidityEnabled = false;
     var $ValidityRequired = false;
+	var $respondentAgeYears;
+	var $scoreCols = array("total_seq", "total_hypo",
+		"total_hyper", "total_seeking", "total_social", "total_non-social", "total_tactile", "total_auditory",
+		"total_visual", "total_gustatory_olfactory", "total_vestibular_proprioceptive");
+	var $scores = array();
 
 /*
 INSERT INTO test_names VALUES ('', 'seq', 'Sensory Experiences Questionnaire', '0', '1');
 INSERT INTO instrument_subtests VALUES('', 'seq', 'seq_page1', 'Sound & Sight', 1);
-INSERT INTO instrument_subtests VALUES('', 'seq', 'seq_page2', 'Touch, Tast, Smell & Movement', 2);
+INSERT INTO instrument_subtests VALUES('', 'seq', 'seq_page2', 'Touch, Taste, Smell & Movement', 2);
 INSERT INTO instrument_subtests VALUES('', 'seq', 'seq_page3', 'General and Addendum', 3);
 -- INSERT INTO test_battery VALUES ('', 'seq', '1050', '1140', 'Y', 'Visit', '3');
 */
@@ -96,7 +101,8 @@ INSERT INTO instrument_subtests VALUES('', 'seq', 'seq_page3', 'General and Adde
 	/**
 	 * Array of column names to be ignored by the double data entry conflict detector.
 	 */
-	$this->_doubleDataEntryDiffIgnoreColumns = array('CommentID', 'UserID', 'Testdate',  'Window_Difference', 'Candidate_Age','Data_entry_completion_status',
+	$this->_doubleDataEntryDiffIgnoreColumns = array_merge(array('CommentID', 'UserID', 'Testdate',
+		'Window_Difference', 'Candidate_Age','Data_entry_completion_status',
 							 'person_completing_other',
 							 'q1_react_sensitively_what_do',
 							 'q2_enjoy_music_what_do',
@@ -129,8 +135,10 @@ INSERT INTO instrument_subtests VALUES('', 'seq', 'seq_page3', 'General and Adde
 							 'q29_uneasy_dizzy_what_do',
 							 'q30_flap_arms_what_do',
 							 'q31_free_time',
-							 'q32_seem_happiest');
-           
+							 'q32_seem_happiest'),
+		$this->scoreCols
+	);
+
 
 		// setup the form
 		$this->_setupForm();
@@ -146,6 +154,15 @@ INSERT INTO instrument_subtests VALUES('', 'seq', 'seq_page3', 'General and Adde
     * @access private
     */
 	function _setupForm(){
+
+		$db =& Database::singleton();
+
+		// Get the item scores
+		$query = "SELECT * FROM $this->table WHERE CommentID='".$this->getCommentID()."'";
+		$record=array();
+		$db->selectRow($query, $record);
+
+
 		if(preg_match("/seq(_page[0-9]+)/",$this->page,$matches)){
 			call_user_method($matches[1], $this);
 		} else {
@@ -174,6 +191,170 @@ INSERT INTO instrument_subtests VALUES('', 'seq', 'seq_page3', 'General and Adde
 		$this->form->addElement("text", 'person_completing_other', $this->indent . "Other:");
 		$this->XINRegisterRule('person_completing_other', array('person_completing{@}=={@}other'), "Please indicate who is completing this form");
 
+		$this->form->addElement("static", null, "<BR>");
+		$this->form->addElement("header", null, "Scores based on the SEQ Version 2.1");
+		$this->form->addElement("static", null, "<BR>");
+		$scoreLabels1 = array(
+			"total_seq" => "Total Score",
+			"total_hypo" => "Hypo-Responsiveness Score",
+			"total_hyper" => "Hyper-Responsiveness Score",
+			"total_seeking" => "Seeking Score",
+			"total_social" => "Social Context Score",
+			"total_non-social" => "Non-Social Context Score"
+		);
+		$scoreLabels2 = array(
+			"total_tactile" => "Tactile Score",
+			"total_auditory" => "Auditory Score",
+			"total_visual" => "Visual Score",
+			"total_gustatory_olfactory" => "Gustatory/Olfactory Score",
+			"total_vestibular_proprioceptive" => "Vestibular/Proprioceptive Score"
+		);
+		$this->form->addElement("header", null, "Score Sheet 1");
+		$this->form->addElement("static", null, "<BR>");
+		foreach ($scoreLabels1 as $field => $label) {
+			$this->form->addElement("static", $field, $label);
+		}
+
+		$this->form->addElement("static", null, "<BR>");
+		$this->form->addElement("header", null, "Score Sheet 2");
+		$this->form->addElement("static", null, "<BR>");
+		$this->form->addElement("static", null, "Note: These scores should be interpreted with caution as they have fewer items and thus lower reliability than the total scores or other scales above.");
+		$this->form->addElement("static", null, "<BR>");
+		foreach ($scoreLabels2 as $field => $label) {
+			$this->form->addElement("static", $field, $label);
+		}
+
+
+
+		$this->form->addElement('static', null, "<br /><br />");
+		$this->form->addElement("textarea", "other_comments", "Comments about Validity:", array('cols' => 25, 'rows' => 4));
+		$this->XINRegisterRule("other_comments", array("{other_comments}{@}=={@}NEVER_REQUIRED"));
+
+
+	}
+
+	/*
+     * calculates SEQ score
+     */
+	function _score()
+	{
+		$db =& Database::singleton();
+		if($this->_determineDataEntryCompletionStatus() == "Incomplete") {
+			return;
+		}
+		// skip scoring if proband DoB was not entered, i.e. data entry is not completed
+		if (empty($this->respondentAgeYears)) {
+			return;
+		}
+		// null scores
+		$this->_nullScores($this->scoreCols);
+		// Get the item scores
+		$query = "SELECT * FROM $this->table WHERE CommentID='" . $this->getCommentID() . "'";
+		$record = array();
+		$db->selectRow($query, $record);
+		// Control items in version 2.1 excluded from scoring (items 2, 7, 13, 26)
+//		$excluded = array(2, 7, 13, 26);
+		$excluded = array("q2_enjoy_music", "q7_enjoy_picture_books", "q13_enjoy_watching_videos", "q26_enjoy_riding");
+		$questions = array();
+		$i = 1;
+
+		// Matches each question with its question number
+		foreach ($this->questionArray as $key => $question) {
+			if (!in_array($key, $excluded)) {
+				$questions = merge_array($questions, array($i => $key));
+				$i++;
+			}
+			else {
+				$i++;
+			}
+		}
+
+		// Convert items to algorithm scores
+		// Higher score == greater frequency/intensity of sensory features
+		$conversion = array(
+			"almost_never" => 1,
+			"once_in_a_while" => 2,
+			"sometimes" => 3,
+			"frequently" => 4,
+			"almost_always" => 5
+		);
+		foreach ($record as $field => $answer) {
+			if (in_array($field, $questions)) {
+				$this->scores[$field] = $conversion[$answer];
+			}
+		}
+
+		// check age limit
+		if ($this->respondentAgeYears < 0.5) {
+			$scoreCols["total_seq"] = "Respondent too young to score";
+		} elseif ($this->respondentAgeYears > 6) {
+			$scoreCols["total_seq"] = "Respondent too old to score";
+		} else {
+			$alg = array(
+				// SCORE SHEET 1
+
+				// SEQ Total Score - summing the raw scores of the 33 individual items
+				array('total_seq',
+					array(1, 3, 4, 5, 6, 8, 9, 10, 11, 12, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 27, 28, 29, 30,
+						'36a', '36b', '36c', '36d', '36e', '36f', '38')),
+				// Total Hypo-Responsiveness - sum the raw scores for items # 3, 4, 10, 12, 19, 21 (a total of 6 items)
+				array('total_hypo', array(3, 4, 10, 12, 19, 21)),
+				// Total Hyper-Responsiveness - sum the raw scores for items # 1, 5, 6, 8, 11, 14, 15, 16, 17, 18, 20, 22, 29, 38 (a total of 14 items)
+				array('total_hyper', array(1, 5, 6, 8, 11, 14, 15, 16, 17, 18, 20, 22, 29, 38)),
+				// Total Seeking - sum items # 9, 23, 24, 25, 27, 28, 30, 36a, 36b, 36c, 36d, 36e, 36f (a total of 13 items)
+				array('total_seeking', array(9, 23, 24, 25, 27, 28, 30, '36a', '36b', '36c', '36d', '36e', '36f')),
+				// Total Social Sensory Responsiveness - sum the raw scores for items # 3, 6, 11, 12, 14, 17, 20, 21, 24, and 28 (a total of 10 items).
+				array('total_social', array(3, 6, 11, 12, 14, 17, 20, 21, 24, 28)),
+				// Total Non-Social Sensory Responsiveness - sum the raw scores for items # 1, 4, 5, 8, 9, 15,16, 18, 19, 22, 23, 25, 27, 29, 30, 38, 36a, 36b, 36c, 36d, 36e, 36f (a total of 22 items).
+				array('total_nonsocial', array(1, 4, 5, 8, 9, 15, 16, 18, 19, 22, 23, 25, 27, 29, 30, 38, '36a', '36b', '36c', '36d', '36e', '36f')),
+
+                //SCORE SHEET 2
+
+				// Tactile - sum the raw scores for items # 14, 15, 16, 17, 18, 19, 20, 21, 36e, 36f (10 items total)
+				array('total_tactile', array(14, 15, 16, 17, 18, 19, 20, 21, '36e', '36f')),
+				// Auditory - sum the raw scores for items # 1, 3, 4, 5, 6, 36a (6 items total)
+				array('total_auditory', array(1, 3, 4, 5, 6, '36a')),
+				// Visual - sum the raw scores for items # 8, 9, 10, 11, 12, 36b (6 items total)
+				array('total_visual', array(8, 9, 10, 11, 12, '36b')),
+				// Gustatory/Olfactory - sum the raw scores for items # 22, 23, 25, 36c, 36d, 38 (7 items total)
+				array('total_gustatory_olfactory', array(22, 23, 25, '36c', '36d', 38)),
+				// Vestibular/Proprioceptive - sum the raw scores for items # 14, 15, 16, 17, 18, 19, 20, 21, 36e, 36f (10 items total)
+				array('total_vestibular_proprioceptive', array(14, 15, 16, 17, 18, 19, 20, 21, '36e', '36f'))
+			);
+
+			$fields = array();
+			foreach ($this->questionArray as $key => $question) {
+				$fields[] = $key;
+				$fields[] = ', ';
+			}
+			$query = "SELECT " . $fields . " FROM seq WHERE CommentID=:CID";
+			$results = $db->pselectOne($query, array('CommentID' => $this->getCommentID()));
+			$completely_answered = true;
+			while ($completely_answered == true) {
+				foreach ($this->questionArray as $key => $question) {
+					if ($query[$key] == NULL || $query[$key] == 'not_answered') {
+						$completely_answered = false;
+						$scoreCols["total_seq"] = "Caregivers are asked to fill out the SEQ questionnaire completely.
+            Only when all items are checked can the best and most representative score be obtained.";
+					}
+				}
+			}
+			if ($completely_answered == true) {
+				foreach ($this->scoreCols as $col) {
+					foreach ($questions as $number => $question) {
+						if (in_array($question, $alg[$col])) {
+							$this->scoreCols[$col] += $this->scores[$question];
+						}
+					}
+					$this->scoreCols[$col] = ($this->scoreCols[$col]) / count($alg[$col]);
+					print $col . ": " . $this->scoreCols[$col] . "\n";
+				}
+			}
+		}
+		// save the resultant total
+		$result = $db->update($this->table, $this->scoreCols, array('CommentID' => $this->getCommentID()));
+
+
 	}
 
 	function _page1(){
@@ -187,7 +368,7 @@ INSERT INTO instrument_subtests VALUES('', 'seq', 'seq_page3', 'General and Adde
 			if(array_key_exists($field, $this->sectionStarts)) {
 				$this->form->addElement('header', null, "Experiences with " . $this->sectionStarts[$field] . ":");
 			}
-			
+
 			$this->form->addElement('select', $field, $label, $answerOptions);
 			$this->form->addElement('select', $field . "_change", $this->indent . "Do you try to change this behavior?",  $yesNo);
 
@@ -200,7 +381,7 @@ INSERT INTO instrument_subtests VALUES('', 'seq', 'seq_page3', 'General and Adde
 
 		}
 	}
-	
+
 	function _page2(){
 	//identical to _page1(), except a differenct slice of the $this->questionArray
 
@@ -213,7 +394,7 @@ INSERT INTO instrument_subtests VALUES('', 'seq', 'seq_page3', 'General and Adde
 			if(array_key_exists($field, $this->sectionStarts)) {
 				$this->form->addElement('header', null, "Experiences with " . $this->sectionStarts[$field] . ":");
 			}
-			
+
 			$this->form->addElement('select', $field, $label, $answerOptions);
 			$this->form->addElement('select', $field . "_change", $this->indent . "Do you try to change this behavior?",  $yesNo);
 
@@ -226,7 +407,7 @@ INSERT INTO instrument_subtests VALUES('', 'seq', 'seq_page3', 'General and Adde
 
 		}
 	}
-	
+
 	function _page3(){
 	    $this->form->addElement('header', null, "General Questions:");
 
@@ -238,7 +419,7 @@ INSERT INTO instrument_subtests VALUES('', 'seq', 'seq_page3', 'General and Adde
         foreach($generalQuestions as $field=>$label) {
             $this->addTextAreaElement($field, $label);
         }
-        
+
         $this->form->addElement('header', null, "SEQ Addendum Items");
         $this->form->addElement('static', null, 'How often is your child extremely fascinated with:');
         $questionArray = array("a_sounds"=>"A. Sounds",
@@ -270,7 +451,7 @@ INSERT INTO instrument_subtests VALUES('', 'seq', 'seq_page3', 'General and Adde
         foreach($questionArray as $field=>$label) {
             $this->form->addElement('select', "q41_" . $field, $this->indent . $label, $answerOptions);
         }
-        
+
         $this->form->addElement('select', "q42_sensory_change", "Have your child's sensory preferences or aversions changed much over time?", $yesMaybeNo);
         $this->addTextAreaElement("q42_sensory_change_how", $this->indent . "If yes or maybe, how have they changed?", array("q42_sensory_change{@}=={@}yes|maybe"), "This field is required if you previously answered yes or maybe");
         $this->addTextAreaElement("q43_notice_change", "When did you first notice any difference in your child's sensory experiences?");
