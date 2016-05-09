@@ -14,9 +14,7 @@ class NDB_BVL_Instrument_das_preschool extends NDB_BVL_Instrument
     // ASP & DPs
     // age constraints
     // second attempts??
-    // paper form
     // forced numbers
-    // item 1, item 2,... OR item 1 - model & picture, item 2 - picture & demonstration,...
 
     // END
 
@@ -39,10 +37,6 @@ class NDB_BVL_Instrument_das_preschool extends NDB_BVL_Instrument
     VALUES ('das_preschool', '1', '99999', 'Y', 'Visit', '1', 'V37Plus', NULL);
     */
 
-
-//    Do we need this?????
-//    var $scores = array("q_70_trial1"=>"","q_71_trial2"=>"","q_72_trial3"=>"");
-//    var $questions = array();
 
     var $j = 1;
     var $answerArray = array(""=>NULL, 0=>0, 1=>1, "not_answered"=>"Not Answered");
