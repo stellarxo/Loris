@@ -13,7 +13,6 @@ class NDB_BVL_Instrument_das_schoolage extends NDB_BVL_Instrument
     // ASP & DPs
     // age constraints
     // second attempts??
-    // paper form
     // forced numbers
 
     // END
@@ -89,9 +88,7 @@ class NDB_BVL_Instrument_das_schoolage extends NDB_BVL_Instrument
                 'other_comments3',
                 'other_comments4',
                 'other_comments5',
-                'other_comments6',
-                'other_comments7',
-                'other_comments8'
+                'other_comments6'
             );
 
         // setup the form
@@ -256,8 +253,8 @@ class NDB_BVL_Instrument_das_schoolage extends NDB_BVL_Instrument
     }
 
 
-//    function _score() {
-/*
+  /*  function _score() {
+
         $db =& Database::singleton();
 
         // skip scoring if proband DoB was not entered, i.e. data entry is not completed
@@ -344,103 +341,73 @@ class NDB_BVL_Instrument_das_schoolage extends NDB_BVL_Instrument
             }
 
 
-            // 3. Recall of Objects - Immediate
-            // Usual Age Range: 4 years 0 months to 17 years 11 months
-            if ($age < 4*12) {
-                $scoreCols["Total_3"] = "Respondent too young to score";
-            }
-            else {
-                $scoreCols["Total_3a"] = $this->scores["q_107_trial1"];
-                $scoreCols["Total_3b"] = $this->scores["q_107_trial2"];
-                $scoreCols["Total_3c"] = 0;
-                if ($scoreCols["Total_3a"] + $scoreCols["Total_3b"] == 40) {
-                    $scoreCols["Total_3c"] = 20;
-                } else {
-                    $scoreCols["Total_5c"] = $this->scores["q_107_trial3"];
-                }
-                // if not spoiled
-                $scoreCols["Total_3"] = ($scoreCols["Total_51"] + $scoreCols["Total_52"] + $scoreCols["Total_53"]);
-                // else add the two successful * 1.5 -- round up to whole number
-            }
-
-
-            // 4. Pattern Construction
+            // 3. Pattern Construction
             // Usual Age Range: 3 years 6 months to 17 years 11 months
             // Out of Level: 3 years 0 months to 3 years 5 months
             if ($age < (3*12)) {
-                $scoreCols["Total_4"] = "Respondent too young to score";
+                $scoreCols["Total_3"] = "Respondent too young to score";
+            }
+            else {
+                $scoreCols["Total_3"] = 0;
+                $j=108;
+                $numItems=26;
+                for ($i = 1; $i <= $numItems; $i++) {
+                    $scoreCols["Total_3"] = $this->scores["q_{$j}_item{$i}"];
+                    $j++;
+                }
+            }
+
+
+            // 4. Matrices
+            // Usual Age Range: 6 years 0 months to 17 years 11 months
+            // Extended Age Range: 5 years 0 months to 5 years 11 months
+            if ($age > (7*12+11)) {
+                $scoreCols["Total_4"] = "Respondent too old to score";
             }
             else {
                 $scoreCols["Total_4"] = 0;
-                $j=108;
-                $numItems=26;
+                $j=134;
+                $numItems=28;
                 for ($i = 1; $i <= $numItems; $i++) {
                     $scoreCols["Total_4"] = $this->scores["q_{$j}_item{$i}"];
                     $j++;
                 }
             }
 
-
-            // 5. Matrices
+            // 5. Verbal Similarities
             // Usual Age Range: 6 years 0 months to 17 years 11 months
-            // Extended Age Range: 5 years 0 months to 5 years 11 months
-            if ($age > (7*12+11)) {
+            // Out of Level: 5 years 0 months to 5 years 11 months
+            if ($age < (17*12+11)) {
+                $scoreCols["Total_5"] = "Respondent too young to score";
+            }
+            elseif ($age > (7*12+11)) {
                 $scoreCols["Total_5"] = "Respondent too old to score";
             }
             else {
                 $scoreCols["Total_5"] = 0;
-                $j=134;
-                $numItems=28;
+                $j=163;
+                $numItems=20;
                 for ($i = 1; $i <= $numItems; $i++) {
                     $scoreCols["Total_5"] = $this->scores["q_{$j}_item{$i}"];
                     $j++;
                 }
             }
 
-
-            // 6. Recall of Objects - Delayed
-            // Usual Age Range: 4 years 0 months to 17 years 11 months
-            if ($age < (4*12)) {
-                $scoreCols["Total_6"] = "Respondent too young to score";
-            }
-            else {
-                $scoreCols["Total_6"] = $this->scores["q_162_trial1"];
-            }
-
-            // 7. Similarities
-            // Usual Age Range: 6 years 0 months to 17 years 11 months
-            // Out of Level: 5 years 0 months to 5 years 11 months
-            if ($age < (17*12+11)) {
-                $scoreCols["Total_7"] = "Respondent too young to score";
-            }
-            elseif ($age > (7*12+11)) {
-                $scoreCols["Total_7"] = "Respondent too old to score";
-            }
-            else {
-                $scoreCols["Total_7"] = 0;
-                $j=163;
-                $numItems=20;
-                for ($i = 1; $i <= $numItems; $i++) {
-                    $scoreCols["Total_7"] = $this->scores["q_{$j}_item{$i}"];
-                    $j++;
-                }
-            }
-
-            // 8. Sequential and Quantitative Reasoning
+            // 6. Sequential and Quantitative Reasoning
             // Usual Age Range: 6 years 0 months to 17 years 11 months
             // Out of Level: 5 years 0 months to 5 years 11 months
             if ($age < (6*12)) {
-                $scoreCols["Total_8"] = "Respondent too young to score";
+                $scoreCols["Total_6"] = "Respondent too young to score";
             }
             elseif ($age > (7*12+11)) {
-                $scoreCols["Total_8"] = "Respondent too old to score";
+                $scoreCols["Total_6"] = "Respondent too old to score";
             }
             else {
-                $scoreCols["Total_8"] = 0;
+                $scoreCols["Total_6"] = 0;
                 $j=163;
                 $numItems=20;
                 for ($i = 1; $i <= $numItems; $i++) {
-                    $scoreCols["Total_8"] = $this->scores["q_{$j}_item{$i}"];
+                    $scoreCols["Total_6"] = $this->scores["q_{$j}_item{$i}"];
                     $j++;
                 }
             }
@@ -451,9 +418,8 @@ class NDB_BVL_Instrument_das_schoolage extends NDB_BVL_Instrument
                 $scoreCols["Total_{$i}"] = "Respondent too old to score";
             }
         }
-        */
-//    }
-
+    }
+*/
 
 
     function _page1() {
@@ -464,6 +430,8 @@ class NDB_BVL_Instrument_das_schoolage extends NDB_BVL_Instrument
 
         $this->form->addElement("header", null, "Recall of Designs");
         $this->form->addElement('static', null, "<br />");
+
+        $page = 1;
 
         // Item 1 - score better of two attempts
 //        $this->form->addElement("static", null, "Item 1 - Trial 1");
@@ -478,8 +446,8 @@ class NDB_BVL_Instrument_das_schoolage extends NDB_BVL_Instrument
         $pfArray = array(""=>NULL, "p"=>"Pass", "f"=>"Fail", "not_answered"=>"Not Answered");
         $scoreArray = array(""=>NULL, 0=>0, 1=>1, 2=>2, "not_answered"=>"Not Answered");
 
-        $group[] = &$this->form->createElement("static", "static_P/F_label", "", "P/F");
-        $group[] = &$this->form->createElement("static", "static_score_label", "", "Score");
+        $group[] = &$this->form->createElement("static", "static_P/F_label_{$page}", "", "P/F");
+        $group[] = &$this->form->createElement("static", "static_score_label_{$page}", "", "Score");
         $this->form->addGroup($group, null, "", $this->_GUIDelimiter, false);
         unset($group);
 
@@ -507,14 +475,14 @@ class NDB_BVL_Instrument_das_schoolage extends NDB_BVL_Instrument
 
         // Item Set Administered
         $itemSetArray = array_merge(array("" => null), range(1, $numItems));
-        $group[]=&$this->form->createElement("select", "page_1_item_set_from", null, $itemSetArray);
-        $group[]=&$this->form->createElement("select", "page_1_item_set_to", null, $itemSetArray);
-        $this->form->addGroup($group, "page_1_item_set", "Item Set Administered", $this->_GUIDelimiter, false);
+        $group[]=&$this->form->createElement("select", "page__{$page}_item_set_from", null, $itemSetArray);
+        $group[]=&$this->form->createElement("select", "page_{$page}_item_set_to", null, $itemSetArray);
+        $this->form->addGroup($group, "page_{$page}_item_set", "Item Set Administered", $this->_GUIDelimiter, false);
         unset($group);
 
         $this->form->addElement('static', null, "<br />");
-        $this->form->addElement("textarea", "other_comments1", "Comments:", array('cols'=>25, 'rows'=>4));
-        $this->XINRegisterRule("other_comments1", array("{other_comments1}{@}=={@}NEVER_REQUIRED"));
+        $this->form->addElement("textarea", "other_comments{$page}", "Comments:", array('cols'=>25, 'rows'=>4));
+        $this->XINRegisterRule("other_comments{$page}", array("{other_comments{$page}}{@}=={@}NEVER_REQUIRED"));
         $this->form->addElement('static', null, "<br />");
 
     }
@@ -531,6 +499,8 @@ class NDB_BVL_Instrument_das_schoolage extends NDB_BVL_Instrument
         $this->form->addElement("header", null, "Word Definitions");
         $this->form->addElement('static', null, "<br />");
 
+        $page = 2;
+
         // If you suspect that a child will have difficulty with the starting items for his or her age,
         // use the Starting and Decision Points for a younger age group.
         // Out-of-level testing for children of average or low ability only
@@ -543,8 +513,8 @@ class NDB_BVL_Instrument_das_schoolage extends NDB_BVL_Instrument
             25=>"Adjacent", 26=>"Exert", 27=>"Pessimistic", 28=>"Nomadic", 29=>"Longevity", 30=>"Ostracize",
             31=>"Oligarchy", 32=>"Stoic", 33=>"Alacrity", 34=>"Recalcitrant", 35=>"Misanthropy");
 
-        $group[] = &$this->form->createElement("static", "static_response_label", "", "Response");
-        $group[] = &$this->form->createElement("static", "static_score_label", "", "Score");
+        $group[] = &$this->form->createElement("static", "static_response_label_{$page}", "", "Response");
+        $group[] = &$this->form->createElement("static", "static_score_label_{$page}", "", "Score");
         $this->form->addGroup($group, null, "", $this->_GUIDelimiter, false);
         unset($group);
 
@@ -560,14 +530,14 @@ class NDB_BVL_Instrument_das_schoolage extends NDB_BVL_Instrument
 
         // Item Set Administered
         $itemSetArray = array_merge(array("" => null), range(1, $numItems));
-        $group[]=&$this->form->createElement("select", "page_2_item_set_from", null, $itemSetArray);
-        $group[]=&$this->form->createElement("select", "page_2_item_set_to", null, $itemSetArray);
-        $this->form->addGroup($group, "page_2_item_set", "Item Set Administered", $this->_GUIDelimiter, false);
+        $group[]=&$this->form->createElement("select", "page_{$page}_item_set_from", null, $itemSetArray);
+        $group[]=&$this->form->createElement("select", "page_{$page}_item_set_to", null, $itemSetArray);
+        $this->form->addGroup($group, "page_{$page}_item_set", "Item Set Administered", $this->_GUIDelimiter, false);
         unset($group);
 
         $this->form->addElement('static', null, "<br />");
-        $this->form->addElement("textarea", "other_comments2", "Comments:", array('cols'=>25, 'rows'=>4));
-        $this->XINRegisterRule("other_comments2", array("{other_comments2}{@}=={@}NEVER_REQUIRED"));
+        $this->form->addElement("textarea", "other_comments{$page}", "Comments:", array('cols'=>25, 'rows'=>4));
+        $this->XINRegisterRule("other_comments{$page}", array("{other_comments{$page}}{@}=={@}NEVER_REQUIRED"));
         $this->form->addElement('static', null, "<br />");
 
     }
@@ -585,6 +555,8 @@ class NDB_BVL_Instrument_das_schoolage extends NDB_BVL_Instrument
         $this->form->addElement("header", null, "Pattern Construction");
         $this->form->addElement('static', null, "<br />");
 
+        $page = 3;
+
         $pfArray = array("" => NULL, "p" => "Pass", "f" => "Fail", "not_answered" => "Not Answered");
         $na = array("not_answered" => "Not Answered");
         $scoreArray = array("" => NULL, 0 => 0, 1 => 1, 2 => 2, "not_answered" => "Not Answered");
@@ -599,7 +571,7 @@ class NDB_BVL_Instrument_das_schoolage extends NDB_BVL_Instrument
         $this->form->addElement("header", null, "Set A");
 
         $group[] = $this->form->createElement("static", null, $this->indent);
-        $group[] = &$this->form->createElement("static", "static_score_label", "", "Score");
+        $group[] = &$this->form->createElement("static", "static_score_label_{$page}", "", "Score");
         $this->form->addGroup($group, null, "", $this->_GUIDelimiter, false);
         unset($group);
 
@@ -621,26 +593,26 @@ class NDB_BVL_Instrument_das_schoolage extends NDB_BVL_Instrument
                     unset($group);
                 }
             }
-                else {
-                    $group[] = $this->form->createElement("static", null, $this->indent);
-                    if ($i != 2) {
-                        $group[] =& $this->form->createElement("select", "q_{$this->j}_item{$i}", null, $this->answerArray);
-                    }
-                    else {
-                        $group[] =& $this->form->createElement("select", "q_{$this->j}_item{$i}", null, $scoreArray);
-                    }
-
-                    $this->form->addGroup($group, "q_{$this->j}_{$i}_answer", "Item $i", $this->_GUIDelimiter,
-                        false);
-                    unset($group);
+            else {
+                $group[] = $this->form->createElement("static", null, $this->indent);
+                if ($i != 2) {
+                    $group[] =& $this->form->createElement("select", "q_{$this->j}_item{$i}", null, $this->answerArray);
                 }
+                else {
+                    $group[] =& $this->form->createElement("select", "q_{$this->j}_item{$i}", null, $scoreArray);
+                }
+
+                $this->form->addGroup($group, "q_{$this->j}_{$i}_answer", "Item $i", $this->_GUIDelimiter,
+                    false);
+                unset($group);
+            }
         }
 
         $this->form->addElement("header", null, "Set B");
 
         $group[] = $this->form->createElement("static", null, $this->indent);
-        $group[] = &$this->form->createElement("static", "static_time_label", "", "Time");
-        $group[] = &$this->form->createElement("static", "static_P/F_label", "", "P/F");
+        $group[] = &$this->form->createElement("static", "static_time_label_{$page}", "", "Time");
+        $group[] = &$this->form->createElement("static", "static_P/F_label_{$page}", "", "P/F");
         $this->form->addGroup($group, null, "", $this->_GUIDelimiter, false);
         unset($group);
 
@@ -713,8 +685,8 @@ class NDB_BVL_Instrument_das_schoolage extends NDB_BVL_Instrument
         $this->form->addElement("header", null, "Set C");
 
         $group[] = $this->form->createElement("static", null, $this->indent);
-        $group[] = &$this->form->createElement("static", "static_time_label", "", "Time");
-        $group[] = &$this->form->createElement("static", "static_P/F_label", "", "P/F");
+        $group[] = &$this->form->createElement("static", "static_time_label_{$page}_2", "", "Time");
+        $group[] = &$this->form->createElement("static", "static_P/F_label_{$page}_2", "", "P/F");
         $this->form->addGroup($group, null, "", $this->_GUIDelimiter, false);
         unset($group);
 
@@ -757,14 +729,14 @@ class NDB_BVL_Instrument_das_schoolage extends NDB_BVL_Instrument
 
         // Item Set Administered
         $itemSetArray = array_merge(array("" => null), range(1, $numItemsSetC));
-        $group[]=&$this->form->createElement("select", "page_3_item_set_from", null, $itemSetArray);
-        $group[]=&$this->form->createElement("select", "page_3_item_set_to", null, $itemSetArray);
-        $this->form->addGroup($group, "page_3_item_set", "Item Set Administered", $this->_GUIDelimiter, false);
+        $group[]=&$this->form->createElement("select", "page_{$page}_item_set_from", null, $itemSetArray);
+        $group[]=&$this->form->createElement("select", "page_{$page}_item_set_to", null, $itemSetArray);
+        $this->form->addGroup($group, "page_{$page}_item_set", "Item Set Administered", $this->_GUIDelimiter, false);
         unset($group);
 
         $this->form->addElement('static', null, "<br />");
-        $this->form->addElement("textarea", "other_comments3", "Comments:", array('cols'=>25, 'rows'=>4));
-        $this->XINRegisterRule("other_comments3", array("{other_comments3}{@}=={@}NEVER_REQUIRED"));
+        $this->form->addElement("textarea", "other_comments{$page}", "Comments:", array('cols'=>25, 'rows'=>4));
+        $this->XINRegisterRule("other_comments{$page}", array("{other_comments{$page}}{@}=={@}NEVER_REQUIRED"));
         $this->form->addElement('static', null, "<br />");
 
     }
@@ -780,37 +752,37 @@ class NDB_BVL_Instrument_das_schoolage extends NDB_BVL_Instrument
         $this->form->addElement("header", null, "Matrices");
         $this->form->addElement('static', null, "<br />");
 
-               $setAResponseArray = array(""=>NULL, 1=>1, 2=>2, 3=>3, 4=>4, "not_answered"=>"Not
-               Answered");
-               $setBResponseArray = array(""=>NULL, 1=>1, 2=>2, 3=>3, 4=>4, 5=>5, 6=>6, "not_answered"=>"Not Answered");
+        $page = 4;
+        $setAResponseArray = array(""=>NULL, 1=>1, 2=>2, 3=>3, 4=>4, "not_answered"=>"Not Answered");
+        $setBResponseArray = array(""=>NULL, 1=>1, 2=>2, 3=>3, 4=>4, 5=>5, 6=>6, "not_answered"=>"Not Answered");
 
-               // include score? or automatic??
+        // include score? or automatic??
 
-               $numItemsSetA = 19;
-               $numItemsSetB = 56;
+        $numItemsSetA = 19;
+        $numItemsSetB = 56;
 
         $this->form->addElement("header", null, "Set A");
 
-        $group[] = &$this->form->createElement("static", "static_response_label", "", "Response");
-        $group[] = &$this->form->createElement("static", "static_score_label", "", "Score");
+        $group[] = &$this->form->createElement("static", "static_response_label_{$page}", "", "Response");
+        $group[] = &$this->form->createElement("static", "static_score_label_{$page}", "", "Score");
         $this->form->addGroup($group, null, "", $this->_GUIDelimiter, false);
         unset($group);
 
         for ($i = 1; $i <= $numItemsSetA; $i++) {
-                   $group[] =&$this->form->createElement("select", "q_{$this->j}_item{$i}_response", "",
-                       $setAResponseArray);
-                   $group[] =&$this->form->createElement("select", "q_{$this->j}_item{$i}_score", "",
-                       $this->answerArray);
-                   $this->form->addGroup($group, "q_{$this->j}_{$i}_answer", "Item $i", $this->_GUIDelimiter, false);
-                   unset($group);
+            $group[] =&$this->form->createElement("select", "q_{$this->j}_item{$i}_response", "",
+               $setAResponseArray);
+            $group[] =&$this->form->createElement("select", "q_{$this->j}_item{$i}_score", "",
+               $this->answerArray);
+            $this->form->addGroup($group, "q_{$this->j}_{$i}_answer", "Item $i", $this->_GUIDelimiter, false);
+            unset($group);
 
-                   $this->j++;
-               }
+            $this->j++;
+        }
 
         $this->form->addElement("header", null, "Set B");
 
-        $group[] = &$this->form->createElement("static", "static_response_label", "", "Response");
-        $group[] = &$this->form->createElement("static", "static_score_label", "", "Score");
+        $group[] = &$this->form->createElement("static", "static_response_label_{$page}_2", "", "Response");
+        $group[] = &$this->form->createElement("static", "static_score_label_{$page}_2", "", "Score");
         $this->form->addGroup($group, null, "", $this->_GUIDelimiter, false);
         unset($group);
 
@@ -823,20 +795,20 @@ class NDB_BVL_Instrument_das_schoolage extends NDB_BVL_Instrument
             $this->form->addGroup($group, "q_{$this->j}_{$i}_answer", "Item $i", $this->_GUIDelimiter, false);
             unset($group);
 
-                   $this->j++;
-               }
+            $this->j++;
+        }
 
         // Item Set Administered
         $itemSetArray = array_merge(array("" => null), range(1, $numItemsSetB));
-        $group[]=&$this->form->createElement("select", "page_4_item_set_from", null, $itemSetArray);
-        $group[]=&$this->form->createElement("select", "page_4_item_set_to", null, $itemSetArray);
-        $this->form->addGroup($group, "page_4_item_set", "Item Set Administered", $this->_GUIDelimiter, false);
+        $group[]=&$this->form->createElement("select", "page_{$page}_item_set_from", null, $itemSetArray);
+        $group[]=&$this->form->createElement("select", "page_{$page}_item_set_to", null, $itemSetArray);
+        $this->form->addGroup($group, "page_{$page}_item_set", "Item Set Administered", $this->_GUIDelimiter, false);
         unset($group);
 
-               $this->form->addElement('static', null, "<br />");
-               $this->form->addElement("textarea", "other_comments4", "Comments:", array('cols'=>25, 'rows'=>4));
-               $this->XINRegisterRule("other_comments4", array("{other_comments4}{@}=={@}NEVER_REQUIRED"));
-               $this->form->addElement('static', null, "<br />");
+        $this->form->addElement('static', null, "<br />");
+        $this->form->addElement("textarea", "other_comments{$page}", "Comments:", array('cols'=>25, 'rows'=>4));
+        $this->XINRegisterRule("other_comments{$page}", array("{other_comments{$page}}{@}=={@}NEVER_REQUIRED"));
+        $this->form->addElement('static', null, "<br />");
     }
 
     function _page5() {
@@ -849,8 +821,10 @@ class NDB_BVL_Instrument_das_schoolage extends NDB_BVL_Instrument
         $this->form->addElement("header", null, "Verbal Similarities");
         $this->form->addElement('static', null, "<br />");
 
-        $group[] = &$this->form->createElement("static", "static_response_label", "", "Response");
-        $group[] = &$this->form->createElement("static", "static_score_label", "", "Score");
+        $page = 5;
+
+        $group[] = &$this->form->createElement("static", "static_response_label_{$page}", "", "Response");
+        $group[] = &$this->form->createElement("static", "static_score_label_{$page}", "", "Score");
         $this->form->addGroup($group, null, "", $this->_GUIDelimiter, false);
         unset($group);
 
@@ -870,9 +844,9 @@ class NDB_BVL_Instrument_das_schoolage extends NDB_BVL_Instrument
 
         // Item Set Administered
         $itemSetArray = array_merge(array("" => null), range(1, $numItems));
-        $group[]=&$this->form->createElement("select", "page_5_item_set_from", null, $itemSetArray);
-        $group[]=&$this->form->createElement("select", "page_5_item_set_to", null, $itemSetArray);
-        $this->form->addGroup($group, "page_5_item_set", "Item Set Administered", $this->_GUIDelimiter, false);
+        $group[]=&$this->form->createElement("select", "page_{$page}_item_set_from", null, $itemSetArray);
+        $group[]=&$this->form->createElement("select", "page_{$page}_item_set_to", null, $itemSetArray);
+        $this->form->addGroup($group, "page_{$page}_item_set", "Item Set Administered", $this->_GUIDelimiter, false);
         unset($group);
 
         // 2:6-4>5 Item 1-16
@@ -883,8 +857,8 @@ class NDB_BVL_Instrument_das_schoolage extends NDB_BVL_Instrument
         // ASP: 5 consecutive failures, 3+ passes (Stop), <3 passes (SP)
 
         $this->form->addElement('static', null, "<br />");
-        $this->form->addElement("textarea", "other_comments5", "Comments:", array('cols'=>25, 'rows'=>4));
-        $this->XINRegisterRule("other_comments5", array("{other_comments5}{@}=={@}NEVER_REQUIRED"));
+        $this->form->addElement("textarea", "other_comments{$page}", "Comments:", array('cols'=>25, 'rows'=>4));
+        $this->XINRegisterRule("other_comments{$page}", array("{other_comments{$page}}{@}=={@}NEVER_REQUIRED"));
         $this->form->addElement('static', null, "<br />");
 
     }
@@ -900,10 +874,12 @@ class NDB_BVL_Instrument_das_schoolage extends NDB_BVL_Instrument
         $this->form->addElement("header", null, "Sequential and Quantitative Reasoning");
         $this->form->addElement('static', null, "<br />");
 
+        $page = 6;
+
         $this->form->addElement("header", null, "Set A");
 
-        $group[] = &$this->form->createElement("static", "static_P/F_label", "", "Response");
-        $group[] = &$this->form->createElement("static", "static_score_label", "", "Score");
+        $group[] = &$this->form->createElement("static", "static_P/F_label_{$page}", "", "Response");
+        $group[] = &$this->form->createElement("static", "static_score_label_{$page}", "", "Score");
         $this->form->addGroup($group, null, "", $this->_GUIDelimiter, false);
         unset($group);
 
@@ -921,8 +897,8 @@ class NDB_BVL_Instrument_das_schoolage extends NDB_BVL_Instrument
 
         $this->form->addElement("header", null, "Set B");
 
-        $group[] = &$this->form->createElement("static", "static_P/F_label", "", "Response");
-        $group[] = &$this->form->createElement("static", "static_score_label", "", "Score");
+        $group[] = &$this->form->createElement("static", "static_P/F_label_{$page}_2", "", "Response");
+        $group[] = &$this->form->createElement("static", "static_score_label{$page}_2", "", "Score");
         $this->form->addGroup($group, null, "", $this->_GUIDelimiter, false);
         unset($group);
 
@@ -943,14 +919,14 @@ class NDB_BVL_Instrument_das_schoolage extends NDB_BVL_Instrument
 
         // Item Set Administered
         $itemSetArray = array_merge(array("" => null), range(1, $numItemsSetB));
-        $group[]=&$this->form->createElement("select", "page_6_item_set_from", null, $itemSetArray);
-        $group[]=&$this->form->createElement("select", "page_6_item_set_to", null, $itemSetArray);
-        $this->form->addGroup($group, "page_6_item_set", "Item Set Administered", $this->_GUIDelimiter, false);
+        $group[]=&$this->form->createElement("select", "page_{$page}_item_set_from", null, $itemSetArray);
+        $group[]=&$this->form->createElement("select", "page_{$page}_item_set_to", null, $itemSetArray);
+        $this->form->addGroup($group, "page_{$page}_item_set", "Item Set Administered", $this->_GUIDelimiter, false);
         unset($group);
 
         $this->form->addElement('static', null, "<br />");
-        $this->form->addElement("textarea", "other_comments6", "Comments:", array('cols'=>25, 'rows'=>4));
-        $this->XINRegisterRule("other_comments6", array("{other_comments6}{@}=={@}NEVER_REQUIRED"));
+        $this->form->addElement("textarea", "other_comments{$page}", "Comments:", array('cols'=>25, 'rows'=>4));
+        $this->XINRegisterRule("other_comments{$page}", array("{other_comments{$page}}{@}=={@}NEVER_REQUIRED"));
         $this->form->addElement('static', null, "<br />");
 
     }
