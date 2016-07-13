@@ -37,7 +37,7 @@ class NDB_Menu_Filter_survey_accounts extends NDB_Menu_Filter
     }
 
     /**
-     * Setup internal class variables which are required by NDB_Meny_Filter
+     * Setup internal class variables which are required by NDB_Menu_Filter
      * for generating the query which the table data is based on
      *
      * @return none
@@ -107,24 +107,6 @@ class NDB_Menu_Filter_survey_accounts extends NDB_Menu_Filter
         $this->addBasicText('key', 'Key:');
 
         return true;
-    }
-
-    /**
-     * Gathers JS dependecies and merge them with the parent
-     *
-     * @return array of javascript to be inserted
-     */
-    function getJSDependencies()
-    {
-        $factory = NDB_Factory::singleton();
-        $baseURL = $factory->settings()->getBaseURL();
-        $deps    = parent::getJSDependencies();
-        return array_merge(
-            $deps,
-            array(
-                $baseurl . "/survey_accounts/js/survey_accounts_helper.js",
-            )
-        );
     }
 }
 ?>
