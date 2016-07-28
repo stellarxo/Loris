@@ -6,7 +6,7 @@
 
 3	Use "Add Certification" button to add a certification, with and without specifying examiner name, measure
 
-4	Edit/update existing examiner certification
+4	Edit/update/remove existing examiner certification
 
 5	User can View certifications from other sites IFF has permission (13) "certification_multisite"
 
