@@ -8,9 +8,9 @@
 
 if (isset($_GET['data'])) {
     $data = $_GET['data'];
-    if ($data == "candidateInfo") {
+//    if ($data == "candidateInfo") {
         echo json_encode(getUploadFields());
-    }
+//    }
 }
 
 function getUploadFields() {

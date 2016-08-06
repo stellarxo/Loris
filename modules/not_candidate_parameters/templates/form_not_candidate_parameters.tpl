@@ -33,7 +33,6 @@
 
     <div role="tabpanel" class="tab-pane active" id="cand-info">
         Candidate info
-        {var_dump($caveatOptions)}
     </div>
 
     <div role="tabpanel" class="tab-pane" id="proband-info">
@@ -61,6 +60,25 @@
     });
     React.render(candidateInfo, document.getElementById("cand-info"));
 
+    var probandInfo = RProbandInfo({
+        "dataURL": "{$baseurl}/not_candidate_parameters/ajax/getData.php?data=probandInfo&candID=" + {$smarty.get.candID},
+    });
+    React.render(probandInfo, document.getElementById("proband-info"));
+
+    var familyInfo = RFamilyInfo({
+        "dataURL": "{$baseurl}/not_candidate_parameters/ajax/getData.php?data=familyInfo&candID=" + {$smarty.get.candID},
+    });
+    React.render(familyInfo, document.getElementById("family-info"));
+
+    var participantStatus = RParticipantStatus({
+        "dataURL": "{$baseurl}/not_candidate_parameters/ajax/getData.php?data=participantStatus&candID=" + {$smarty.get.candID},
+    });
+    React.render(participantStatus, document.getElementById("participant-status"));
+
+    var consentStatus = RConsentStatus({
+        "dataURL": "{$baseurl}/not_candidate_parameters/ajax/getData.php?data=consentStatus&candID=" + {$smarty.get.candID},
+    });
+    React.render(consentStatus, document.getElementById("consent-status"));
 
     // Adds tab href to url + opens tab based on hash on page load
     // See: http://bit.ly/292MDI8
