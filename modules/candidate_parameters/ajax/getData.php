@@ -5,18 +5,24 @@ if (isset($_GET['data'])) {
     if ($data == "candidateInfo") {
         echo json_encode(getCandInfoFields());
     }
-    else {
-        echo json_encode(getCandInfoFields());
+    else if ($data == "probandInfo") {
+        echo json_encode(getProbandInfoFields());
+    }
+    else if ($data == "familyInfo") {
+        echo json_encode(getFamilyInfoFields());
+    }
+    else if ($data == "participantStatus") {
+        echo json_encode(getParticipantStatusFields());
+    }
+    else if ($data == "consentStatus") {
+        echo json_encode(getConsentStatusFields());
     }
 }
 
 function getCandInfoFields() {
-
     $candID = $_GET['candID'];
 
     $db =& Database::singleton();
-//    $config =& NDB_Config::singleton();
-//    $candidate =& Candidate::singleton($candID);
 
     // get caveat options
     $caveat_options = [];
@@ -41,5 +47,77 @@ function getCandInfoFields() {
 }
 
 function getProbandInfoFields() {
+    $candID = $_GET['candID'];
 
+    $db =& Database::singleton();
+
+    // get pscid
+    $pscid = $db->pselectOne(
+        'SELECT PSCID FROM candidate where CandID = :candid',
+        array('candid' => $candID)
+    );
+
+    $result = [
+        'pscid' => $pscid,
+        'candID' => $candID
+    ];
+
+    return $result;
+}
+
+function getFamilyInfoFields() {
+    $candID = $_GET['candID'];
+
+    $db =& Database::singleton();
+
+    // get pscid
+    $pscid = $db->pselectOne(
+        'SELECT PSCID FROM candidate where CandID = :candid',
+        array('candid' => $candID)
+    );
+
+    $result = [
+        'pscid' => $pscid,
+        'candID' => $candID
+    ];
+
+    return $result;
+}
+
+function getParticipantStatusFields() {
+    $candID = $_GET['candID'];
+
+    $db =& Database::singleton();
+
+    // get pscid
+    $pscid = $db->pselectOne(
+        'SELECT PSCID FROM candidate where CandID = :candid',
+        array('candid' => $candID)
+    );
+
+    $result = [
+        'pscid' => $pscid,
+        'candID' => $candID
+    ];
+
+    return $result;
+}
+
+function getConsentStatusFields() {
+    $candID = $_GET['candID'];
+
+    $db =& Database::singleton();
+
+    // get pscid
+    $pscid = $db->pselectOne(
+        'SELECT PSCID FROM candidate where CandID = :candid',
+        array('candid' => $candID)
+    );
+
+    $result = [
+        'pscid' => $pscid,
+        'candID' => $candID
+    ];
+
+    return $result;
 }

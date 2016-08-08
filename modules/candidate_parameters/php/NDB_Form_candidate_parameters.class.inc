@@ -62,9 +62,9 @@ class NDB_Form_candidate_parameters extends NDB_Form
         // candID
         $this->tpl_data['candID'] = $candidate->getData('CandID');
 
-        $this->addScoreColumn('flagged_caveatemptor', 'Caveat Emptor flag for Candidate');
-        $this->addScoreColumn('flagged_reason', $this->indent . 'Reason for Caveat Emptor flag');
-        $this->addScoreColumn('flagged_other', $this->indent . 'Additional Comments for flag');
+//        $this->addScoreColumn('flagged_caveatemptor', 'Caveat Emptor flag for Candidate');
+//        $this->addScoreColumn('flagged_reason', $this->indent . 'Reason for Caveat Emptor flag');
+//        $this->addScoreColumn('flagged_other', $this->indent . 'Additional Comments for flag');
 
         //Extract the fields from the parameter_type table
         $DB->select("SELECT pt.ParameterTypeID, pt.Name, pt.Type, Description 
@@ -482,7 +482,10 @@ class NDB_Form_candidate_parameters extends NDB_Form
             $deps,
             array(
                 $baseURL . "/candidate_parameters/js/candidateInfo.js",
-//                $baseURL . "/candidate_parameters/js/candidateForm.js",
+                $baseURL . "/candidate_parameters/js/probandInfo.js",
+                $baseURL . "/candidate_parameters/js/familyInfo.js",
+                $baseURL . "/candidate_parameters/js/participantStatus.js",
+                $baseURL . "/candidate_parameters/js/consentStatus.js"
             )
         );
     }

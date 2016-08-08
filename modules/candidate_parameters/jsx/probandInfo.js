@@ -1,13 +1,12 @@
-var CandidateInfo = React.createClass({
+var ProbandInfo = React.createClass({
 
     getInitialState: function () {
-      return {
-          "caveatOptions": {
-              "true": "True",
-              "false": "False"
-          },
-          formData: {}
-      }
+        return {
+            "genderOptions": {
+                "male": "Male",
+                "female": "Female"
+            }
+        }
     },
 
     componentDidMount: function () {
@@ -83,24 +82,17 @@ var CandidateInfo = React.createClass({
                     text={this.state.Data.candID}
                 />
                 <SelectElement
-                    label="Caveat Emptor flag for Candidate"
-                    name="flagged_caveatemptor"
-                    options={this.state.caveatOptions}
-                    onUserInput={this.setFormData}
-                    ref="flagged_caveatemptor"
+                    label="Proband Gender"
+                    name="ProbandGender"
+                    options={this.state.genderOptions}
                 />
-                <SelectElement
-                    label="Reason for Caveat Emptor flag"
-                    name="flagged_reason"
-                    options={this.state.Data.caveatOptions}
-                    onUserInput={this.setFormData}
-                    ref="flagged_reason"
+                <DateElement
+                    label="DoB Proband"
+                    name="ProbandDoB"
                 />
-                <TextareaElement
-                    label="If Other, please specify"
-                    name="flagged_other"
-                    onUserInput={this.setFormData}
-                    ref="flagged_other"
+                <DateElement
+                    label="Confirm DoB Proband"
+                    name="ProbandDoB2"
                 />
                 <ButtonElement
                     label="Update"
@@ -161,6 +153,7 @@ var CandidateInfo = React.createClass({
 
         });
     }
+
 });
 
-RCandidateInfo = React.createFactory(CandidateInfo);
+RProbandInfo = React.createFactory(ProbandInfo);
