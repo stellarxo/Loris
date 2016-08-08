@@ -14,10 +14,10 @@
 require_once 'NDB_Form.class.inc';
 
 /**
- * Main class for media module corresponding to /media/ URL
+ * Main class for candidate_parameters module corresponding to /candidate_parameters/ URL
  * Child or Clinical section of the LorisMenu.
  *
- * Displays a list of media files and control panel to search them and upload
+ * Displays a list of candidate_parameters files and control panel to search them and upload
  * new ones.
  *
  * PHP Version 5
@@ -43,7 +43,7 @@ class NDB_Form_candidate_parameters extends NDB_Form
         //create user object
         $user =& User::singleton();
 
-        // Set global permission to control access to different modules of media page
+        // Set global permission to control access to different modules of candidate_parameters page
         $this->hasWritePermission = $user->hasPermission('candidate_parameter_edit');
 
         return $user->hasPermission('candidate_parameter_view');
@@ -450,6 +450,22 @@ class NDB_Form_candidate_parameters extends NDB_Form
         return $option_array;
     }
 
+    /**
+     * Include additional CSS files:
+     *  1. candidate_parameters.css
+     *
+     * @return array of css to be inserted
+     */
+    function getCSSDependencies()
+    {
+        $factory = NDB_Factory::singleton();
+        $baseURL = $factory->settings()->getBaseURL();
+        $deps    = parent::getCSSDependencies();
+        return array_merge(
+            $deps,
+            [$baseURL . "/candidate_parameters/css/candidate_parameters.css"]
+        );
+    }
 
     /**
      * Include the column formatter required to display the feedback link colours
@@ -466,6 +482,7 @@ class NDB_Form_candidate_parameters extends NDB_Form
             $deps,
             array(
                 $baseURL . "/candidate_parameters/js/candidateInfo.js",
+//                $baseURL . "/candidate_parameters/js/candidateForm.js",
             )
         );
     }

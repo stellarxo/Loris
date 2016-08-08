@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: stellalee
- * Date: 2016-08-03
- * Time: 4:09 PM
- */
 
 if (isset($_GET['data'])) {
     $data = $_GET['data'];
@@ -46,3 +40,6 @@ function getCandInfoFields() {
     return $result;
 }
 
+function getProbandInfoFields() {
+
+}

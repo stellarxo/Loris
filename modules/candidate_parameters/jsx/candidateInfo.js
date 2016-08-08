@@ -5,7 +5,8 @@ var CandidateInfo = React.createClass({
           "caveatOptions": {
               "true": "True",
               "false": "False"
-          }
+          },
+          formData: {}
       }
     },
 
@@ -36,6 +37,20 @@ var CandidateInfo = React.createClass({
         });
     },
 
+    setFormData: function (formElement, value) {
+        var formData = this.state.formData;
+        formData[formElement] = value;
+
+        this.setState({
+            formData : formData
+        });
+    },
+
+    onSubmit: function (e) {
+        e.preventDefault();
+
+    },
+
     render: function () {
 
         if (!this.state.isLoaded) {
@@ -58,7 +73,7 @@ var CandidateInfo = React.createClass({
         }
 
         return (
-            <div>
+            <FormElement onSubmit={this.handleSubmit} ref="form" name="candidateInfo">
                 <HelpTextElement
                     label="PSCID"
                     text={this.state.Data.pscid}
@@ -71,24 +86,85 @@ var CandidateInfo = React.createClass({
                     label="Caveat Emptor flag for Candidate"
                     name="flagged_caveatemptor"
                     options={this.state.caveatOptions}
+                    onUserInput={this.setFormData}
+                    ref="flagged_caveatemptor"
                 />
                 <SelectElement
                     label="Reason for Caveat Emptor flag"
                     name="flagged_reason"
                     options={this.state.Data.caveatOptions}
+                    onUserInput={this.setFormData}
+                    ref="flagged_reason"
                 />
                 <TextareaElement
                     label="If Other, please specify"
                     name="flagged_other"
+                    onUserInput={this.setFormData}
+                    ref="flagged_other"
                 />
 
                 <ButtonElement
                     label="Update"
                 />
 
-            </div>
+            </FormElement>
         );
+    },
+
+    /**
+     * Handles form submission
+     * @param e
+     */
+    handleSubmit: function(e) {
+        e.preventDefault();
+
+        var myFormData = this.state.formData;
+        var formRefs = this.refs;
+
+        // Set form data and upload the media file
+        var self = this;
+        var formData = new FormData();
+        for (var key in myFormData) {
+            if (myFormData[key] != "") {
+                formData.append(key, myFormData[key]);
+            }
+        }
+
+        $.ajax({
+            type: 'POST',
+            url: self.props.action,
+            data: formData,
+            cache: false,
+            contentType:false,
+            processData:false,
+            success: function(data) {
+                self.setState({
+                    uploadResult: "success",
+                    formData: {} // reset form data after successful file upload
+                });
+
+                // Iterates through child components and resets state
+                // to initial state in order to clear the form
+                Object.keys(formRefs).map(function(ref) {
+                    if (formRefs[ref].state && formRefs[ref].state.value) {
+                        formRefs[ref].state.value = "";
+                    }
+                });
+                // rerender components
+                self.forceUpdate();
+            },
+            error: function(err) {
+                var errorMessage = JSON.parse(err.responseText).message;
+                self.setState({
+                    uploadResult: "error",
+                    errorMessage: errorMessage
+                });
+            }
+
+        });
     }
+
+
 
 });
 
@@ -453,10 +529,9 @@ var ConsentStatus = React.createClass({
                     name="ProbandGender"
                     options={this.state.genderOptions}
                 />
-                <SelectElement
+                <DateElement
                     label="Confirmation Date of withdrawal of Consent to Study (optional)"
                     name="ProbandDoB"
-                    options={this.state.genderOptions}
                 />
 
 

@@ -57,6 +57,7 @@
 
     var candidateInfo = RCandidateInfo({
         "dataURL": "{$baseurl}/candidate_parameters/ajax/getData.php?data=candidateInfo&candID=" + {$smarty.get.candID},
+        "action": "{$baseurl}/candidate_parameters/ajax/formHandler.php"
     });
     React.render(candidateInfo, document.getElementById("cand-info"));
 
