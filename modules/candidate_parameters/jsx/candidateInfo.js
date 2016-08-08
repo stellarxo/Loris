@@ -64,7 +64,7 @@ var CandidateInfo = React.createClass({
                     text={this.state.Data.pscid}
                 />
                 <HelpTextElement
-                    label="CandID"
+                    label="DCCID"
                     text={this.state.Data.candID}
                 />
                 <SelectElement
@@ -160,7 +160,7 @@ var ProbandInfo = React.createClass({
                     text={this.state.Data.pscid}
                 />
                 <HelpTextElement
-                    label="CandID"
+                    label="DCCID"
                     text={this.state.Data.candID}
                 />
                 <SelectElement
@@ -254,7 +254,7 @@ var FamilyInfo = React.createClass({
                     text={this.state.Data.pscid}
                 />
                 <HelpTextElement
-                    label="CandID"
+                    label="DCCID"
                     text={this.state.Data.candID}
                 />
                 <SelectElement
@@ -343,20 +343,24 @@ var ParticipantStatus = React.createClass({
                     text={this.state.Data.pscid}
                 />
                 <HelpTextElement
-                    label="CandID"
+                    label="DCCID"
                     text={this.state.Data.candID}
                 />
                 <SelectElement
-                    label="Family Member ID: (Enter DCCID)"
-                    name="ProbandGender"
+                    label="Participant Status"
+                    name="participant_status"
                     options={this.state.genderOptions}
                 />
                 <SelectElement
-                    label="Relation Type:"
-                    name="ProbandDoB"
+                    label="Specify Reason (Required only for status Inactive/Incomplete)"
+                    name="participant_suboptions"
                     options={this.state.genderOptions}
                 />
-
+                <SelectElement
+                    label="Comments"
+                    name="reason_specify"
+                    options={this.state.genderOptions}
+                />
             </div>
         );
     }
@@ -431,19 +435,30 @@ var ConsentStatus = React.createClass({
                     text={this.state.Data.pscid}
                 />
                 <HelpTextElement
-                    label="CandID"
+                    label="DCCID"
                     text={this.state.Data.candID}
                 />
                 <SelectElement
-                    label="Family Member ID: (Enter DCCID)"
+                    label="Consent to Study (required)"
                     name="ProbandGender"
                     options={this.state.genderOptions}
                 />
                 <SelectElement
-                    label="Relation Type:"
+                    label="Date of Consent to Study (required)"
                     name="ProbandDoB"
                     options={this.state.genderOptions}
                 />
+                <SelectElement
+                    label="Date of withdrawal of Consent to Study (optional)"
+                    name="ProbandGender"
+                    options={this.state.genderOptions}
+                />
+                <SelectElement
+                    label="Confirmation Date of withdrawal of Consent to Study (optional)"
+                    name="ProbandDoB"
+                    options={this.state.genderOptions}
+                />
+
 
             </div>
         );

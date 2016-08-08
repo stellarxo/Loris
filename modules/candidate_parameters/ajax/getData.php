@@ -8,12 +8,15 @@
 
 if (isset($_GET['data'])) {
     $data = $_GET['data'];
-//    if ($data == "candidateInfo") {
-        echo json_encode(getUploadFields());
-//    }
+    if ($data == "candidateInfo") {
+        echo json_encode(getCandInfoFields());
+    }
+    else {
+        echo json_encode(getCandInfoFields());
+    }
 }
 
-function getUploadFields() {
+function getCandInfoFields() {
 
     $candID = $_GET['candID'];
 
@@ -42,3 +45,4 @@ function getUploadFields() {
 
     return $result;
 }
+
