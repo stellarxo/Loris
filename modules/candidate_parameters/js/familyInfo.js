@@ -38,6 +38,19 @@ var FamilyInfo = React.createClass({
         });
     },
 
+    setFormData: function (formElement, value) {
+        var formData = this.state.formData;
+        formData[formElement] = value;
+
+        this.setState({
+            formData: formData
+        });
+    },
+
+    onSubmit: function (e) {
+        e.preventDefault();
+    },
+
     render: function () {
 
         if (!this.state.isLoaded) {
@@ -62,8 +75,8 @@ var FamilyInfo = React.createClass({
         }
 
         return React.createElement(
-            "div",
-            null,
+            FormElement,
+            { name: "candidateInfo", onSubmit: this.handleSubmit, ref: "form", "class": "col-md-6" },
             React.createElement(HelpTextElement, {
                 label: "PSCID",
                 text: this.state.Data.pscid
@@ -72,17 +85,76 @@ var FamilyInfo = React.createClass({
                 label: "DCCID",
                 text: this.state.Data.candID
             }),
-            React.createElement(SelectElement, {
-                label: "Family Member ID: (Enter DCCID)",
-                name: "ProbandGender",
-                options: this.state.genderOptions
+            React.createElement(TextboxElement, {
+                label: "Family Member ID (Enter DCCID)",
+                name: "FamilyMemberID",
+                onUserInput: this.setFormData,
+                ref: "SiblingcID"
             }),
             React.createElement(SelectElement, {
-                label: "Relation Type:",
-                name: "ProbandDoB",
-                options: this.state.genderOptions
+                label: "Relation Type",
+                name: "relation_type",
+                options: this.state.Data.relationOptions,
+                onUserInput: this.setFormData,
+                ref: "relation_type"
+            }),
+            React.createElement(ButtonElement, {
+                label: "Update"
             })
         );
+    },
+
+    /**
+     * Handles form submission
+     * @param e
+     */
+    handleSubmit: function (e) {
+        e.preventDefault();
+
+        var myFormData = this.state.formData;
+        var formRefs = this.refs;
+
+        // Set form data and upload the media file
+        var self = this;
+        var formData = new FormData();
+        for (var key in myFormData) {
+            if (myFormData[key] != "") {
+                formData.append(key, myFormData[key]);
+            }
+        }
+
+        $.ajax({
+            type: 'POST',
+            url: self.props.action,
+            data: formData,
+            cache: false,
+            contentType: false,
+            processData: false,
+            success: function (data) {
+                self.setState({
+                    uploadResult: "success",
+                    formData: {} // reset form data after successful file upload
+                });
+
+                // Iterates through child components and resets state
+                // to initial state in order to clear the form
+                Object.keys(formRefs).map(function (ref) {
+                    if (formRefs[ref].state && formRefs[ref].state.value) {
+                        formRefs[ref].state.value = "";
+                    }
+                });
+                // rerender components
+                self.forceUpdate();
+            },
+            error: function (err) {
+                var errorMessage = JSON.parse(err.responseText).message;
+                self.setState({
+                    uploadResult: "error",
+                    errorMessage: errorMessage
+                });
+            }
+
+        });
     }
 
 });

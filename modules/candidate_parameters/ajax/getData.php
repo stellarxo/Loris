@@ -76,9 +76,14 @@ function getFamilyInfoFields() {
         array('candid' => $candID)
     );
 
+    // UPDATE THIS
+    // get relation types
+    $relationOptions = array("" => "This needs to be updated");
+
     $result = [
         'pscid' => $pscid,
-        'candID' => $candID
+        'candID' => $candID,
+        'relationOptions' => $relationOptions
     ];
 
     return $result;
@@ -94,6 +99,8 @@ function getParticipantStatusFields() {
         'SELECT PSCID FROM candidate where CandID = :candid',
         array('candid' => $candID)
     );
+
+    // UPDATE THIS
 
     $result = [
         'pscid' => $pscid,
@@ -113,6 +120,8 @@ function getConsentStatusFields() {
         'SELECT PSCID FROM candidate where CandID = :candid',
         array('candid' => $candID)
     );
+
+    // UPDATE THIS
 
     $result = [
         'pscid' => $pscid,

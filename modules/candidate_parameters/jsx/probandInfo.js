@@ -85,14 +85,20 @@ var ProbandInfo = React.createClass({
                     label="Proband Gender"
                     name="ProbandGender"
                     options={this.state.genderOptions}
+                    onUserInput={this.setFormData}
+                    ref="ProbandGender"
                 />
                 <DateElement
                     label="DoB Proband"
                     name="ProbandDoB"
+                    onUserInput={this.setFormData}
+                    ref="ProbandDoB"
                 />
                 <DateElement
                     label="Confirm DoB Proband"
                     name="ProbandDoB2"
+                    onUserInput={this.setFormData}
+                    ref="ProbandDoB2"
                 />
                 <ButtonElement
                     label="Update"
