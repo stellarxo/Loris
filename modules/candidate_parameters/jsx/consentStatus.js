@@ -1,14 +1,5 @@
 var ConsentStatus = React.createClass({
 
-    getInitialState: function () {
-        return {
-            "genderOptions": {
-                "male": "Male",
-                "female": "Female"
-            }
-        }
-    },
-
     componentDidMount: function () {
         var that = this;
         $.ajax(this.props.dataURL, {

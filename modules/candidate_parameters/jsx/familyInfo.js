@@ -1,14 +1,5 @@
 var FamilyInfo = React.createClass({
-
-    getInitialState: function () {
-        return {
-            "genderOptions": {
-                "male": "Male",
-                "female": "Female"
-            }
-        }
-    },
-
+    
     componentDidMount: function () {
         var that = this;
         $.ajax(this.props.dataURL, {
@@ -83,7 +74,7 @@ var FamilyInfo = React.createClass({
                 />
                 <TextboxElement
                     label="Family Member ID (Enter DCCID)"
-                    name="FamilyMemberID"
+                    name="SiblingcID"
                     onUserInput={this.setFormData}
                     ref="SiblingcID"
                 />
