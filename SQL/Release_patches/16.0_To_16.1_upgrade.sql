@@ -7,23 +7,6 @@ INSERT INTO LorisMenu (Label, Link, Parent, OrderNumber) VALUES ('Media', 'media
 -- Add 'media' table
 CREATE TABLE IF NOT EXISTS `media` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-<<<<<<< HEAD
-  `pscid` varchar(255) NOT NULL DEFAULT '',
-  `visit_label` varchar(255) NOT NULL DEFAULT '',
-  `instrument` varchar(255) DEFAULT NULL,
-  `for_site` int(2) DEFAULT NULL,
-  `date_taken` date DEFAULT NULL,
-  `comments` text,
-  `file_name` varchar(255) DEFAULT NULL,
-  `file_type` varchar(255) DEFAULT NULL,
-  `file_size` bigint(20) unsigned DEFAULT NULL,
-  `data_dir` varchar(255) DEFAULT NULL,
-  `uploaded_by` varchar(255) DEFAULT NULL,
-  `hide_file` tinyint(1) DEFAULT '0',
-  `date_uploaded` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  PRIMARY KEY (`id`)
-);
-=======
   `session_id` int(10) unsigned NOT NULL,
   `instrument` varchar(255) DEFAULT NULL,
   `date_taken` date DEFAULT NULL,
@@ -38,7 +21,6 @@ CREATE TABLE IF NOT EXISTS `media` (
   FOREIGN KEY (`session_id`) REFERENCES `session` (`ID`),
   FOREIGN KEY (`instrument`) REFERENCES `test_names` (`Test_name`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
->>>>>>> ad993d6e5e6b42195252d00e96d8a9f42442d108
 
 
 -- Add user permissions
@@ -75,4 +57,6 @@ INSERT INTO Config (`ConfigID`, `Value`) VALUES (
   (SELECT ID FROM ConfigSettings WHERE Name='mediaPath'), '/data/uploads/'
 );
 
+INSERT INTO parameter_type (Name, Type, SourceFrom) VALUES ('SNR', 'double', 'parameter_file');
+UPDATE Config SET Value="images/neurorgb_web.jpg" WHERE ConfigID=(SELECT ID FROM ConfigSettings WHERE Name="studylogo") AND Value="images/neuro_logo_blue.gif";
 

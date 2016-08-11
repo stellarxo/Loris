@@ -58,4 +58,8 @@ function formatColumn(column, cell, rowData, rowHeaders) {
     null,
     cell
   );
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> ad993d6e5e6b42195252d00e96d8a9f42442d108

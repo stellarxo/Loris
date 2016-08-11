@@ -30,7 +30,10 @@ require_once 'NDB_Menu_Filter.class.inc';
  */
 class NDB_Menu_Filter_Media extends NDB_Menu_Filter
 {
+<<<<<<< HEAD
     public $centerIDMap;
+=======
+>>>>>>> ad993d6e5e6b42195252d00e96d8a9f42442d108
     public $hasWritePermission = false;
 
     /**
@@ -76,9 +79,13 @@ class NDB_Menu_Filter_Media extends NDB_Menu_Filter
             // allow only to view own site data
             $site =& Site::singleton($user->getData('CenterID'));
             if ($site->isStudySite()) {
+<<<<<<< HEAD
                 $siteList = [
                              $user->getData('CenterID') => $user->getData('Site'),
                             ];
+=======
+                $siteList = [$user->getData('CenterID') => $user->getData('Site')];
+>>>>>>> ad993d6e5e6b42195252d00e96d8a9f42442d108
             }
         }
 
@@ -104,13 +111,18 @@ class NDB_Menu_Filter_Media extends NDB_Menu_Filter
     }
 
     /**
+<<<<<<< HEAD
      * Build media list
+=======
+     * Build a list of media to display in Data Table
+>>>>>>> ad993d6e5e6b42195252d00e96d8a9f42442d108
      *
      * @return bool
      * @throws DatabaseException
      */
     function _setupVariables()
     {
+<<<<<<< HEAD
         $db =& Database::singleton();
 
         // create the centerID map
@@ -122,10 +134,16 @@ class NDB_Menu_Filter_Media extends NDB_Menu_Filter
         // the base query
         $query  = " FROM media v"; // left join candidate c using(pscid) ";
         $query .= " WHERE (v.hide_file=false OR v.hide_file IS NULL)";
+=======
+        // the base query
+        $query  = " FROM media m LEFT JOIN session s ON m.session_id = s.ID";
+        $query .= " WHERE m.hide_file = FALSE";
+>>>>>>> ad993d6e5e6b42195252d00e96d8a9f42442d108
 
         // set the class variables
         $this->columns
             = [
+<<<<<<< HEAD
                'v.file_name',
                'v.pscid',
                'v.visit_label',
@@ -141,12 +159,30 @@ class NDB_Menu_Filter_Media extends NDB_Menu_Filter
                "(SELECT ID FROM session WHERE CandID=(SELECT CandID FROM candidate ".
                "WHERE PSCID=v.pscid) AND Visit_label=v.visit_label)",
                'v.id',
+=======
+               'm.file_name',
+               '(SELECT PSCID from candidate WHERE CandID=s.CandID) as pscid',
+               's.Visit_label as visit_label',
+               '(SELECT Full_name FROM test_names WHERE Test_name=m.instrument)',
+               '(SELECT name FROM psc WHERE CenterID=s.CenterID) as site',
+               'm.uploaded_by',
+               'm.date_taken',
+               'substring(m.comments, 1, 50) as comments',
+               'm.date_uploaded',
+               's.CandID as cand_id',
+               's.ID as session_id',
+               'm.id',
+>>>>>>> ad993d6e5e6b42195252d00e96d8a9f42442d108
               ];
 
         $this->query = $query;
 
         $this->group_by = '';
+<<<<<<< HEAD
         $this->order_by = 'v.instrument';
+=======
+        $this->order_by = 'm.instrument';
+>>>>>>> ad993d6e5e6b42195252d00e96d8a9f42442d108
         $this->headers  = [
                            'File Name',
                            'PSCID',
@@ -170,6 +206,7 @@ class NDB_Menu_Filter_Media extends NDB_Menu_Filter
         }
 
         $this->validFilters = [
+<<<<<<< HEAD
                                'v.pscid',
                                'v.instrument',
                                'v.data_dir',
@@ -186,6 +223,24 @@ class NDB_Menu_Filter_Media extends NDB_Menu_Filter
                                'uploaded_by'   => 'v.uploaded_by',
                                'visit_label'   => 'v.visit_label',
                                'date_uploaded' => 'v.date_uploaded',
+=======
+                               'm.pscid',
+                               'm.instrument',
+                               'm.data_dir',
+                               'm.for_site',
+                               'm.visit_label',
+                               'm.uploaded_by',
+                              ];
+        $this->formToFilter = [
+                               'file_name'     => 'm.file_name',
+                               'data_dir'      => 'm.data_dir',
+                               'instrument'    => 'm.instrument',
+                               'pscid'         => 'm.pscid',
+                               'for_site'      => 'm.for_site',
+                               'uploaded_by'   => 'm.uploaded_by',
+                               'visit_label'   => 'm.visit_label',
+                               'date_uploaded' => 'm.date_uploaded',
+>>>>>>> ad993d6e5e6b42195252d00e96d8a9f42442d108
                                'comments'      => 'comments',
                               ];
 

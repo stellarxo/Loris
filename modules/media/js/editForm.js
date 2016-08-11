@@ -148,6 +148,18 @@ var MediaEditForm = React.createClass({
           value: this.state.mediaData.visit_label
         }),
         React.createElement(SelectElement, {
+<<<<<<< HEAD
+=======
+          name: 'for_site',
+          label: 'Site',
+          options: this.state.Data.sites,
+          onUserInput: this.setFormData,
+          ref: 'for_site',
+          disabled: true,
+          value: this.state.mediaData.for_site
+        }),
+        React.createElement(SelectElement, {
+>>>>>>> ad993d6e5e6b42195252d00e96d8a9f42442d108
           name: 'instrument',
           label: 'Instrument',
           options: this.state.Data.instruments,
@@ -156,6 +168,7 @@ var MediaEditForm = React.createClass({
           disabled: true,
           value: this.state.mediaData.instrument
         }),
+<<<<<<< HEAD
         React.createElement(SelectElement, {
           name: 'for_site',
           label: 'For Site',
@@ -164,6 +177,8 @@ var MediaEditForm = React.createClass({
           ref: 'for_site',
           value: this.state.mediaData.for_site
         }),
+=======
+>>>>>>> ad993d6e5e6b42195252d00e96d8a9f42442d108
         React.createElement(DateElement, {
           name: 'date_taken',
           label: 'Date of Administration',
@@ -299,4 +314,8 @@ var MediaEditForm = React.createClass({
 
 });
 
+<<<<<<< HEAD
 RMediaEditForm = React.createFactory(MediaEditForm);
+=======
+RMediaEditForm = React.createFactory(MediaEditForm);
+>>>>>>> ad993d6e5e6b42195252d00e96d8a9f42442d108
