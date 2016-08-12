@@ -91,31 +91,33 @@ var ConsentStatus = React.createClass({
             }),
             React.createElement(DateElement, {
                 label: 'Consent to Study (required)',
-                name: 'ProbandDoB',
+                name: 'study_consent',
                 onUserInput: this.setFormData,
-                ref: 'ProbandDoB'
-                // NEED TO UPDATE NAME
+                ref: 'study_consent'
             }),
             React.createElement(DateElement, {
                 label: 'Date of Consent to Study (required)',
-                name: 'ProbandDoB',
+                name: 'study_consent_date',
                 onUserInput: this.setFormData,
-                ref: 'ProbandDoB'
-                // NEED TO UPDATE NAME
+                ref: 'study_consent_date'
+            }),
+            React.createElement(DateElement, {
+                label: 'Confirmation Date of Consent to Study (required)',
+                name: 'study_consent_date2',
+                onUserInput: this.setFormData,
+                ref: 'study_consent_date2'
             }),
             React.createElement(DateElement, {
                 label: 'Date of withdrawal of Consent to Study (optional)',
-                name: 'ProbandDoB',
+                name: 'study_consent_withdrawal',
                 onUserInput: this.setFormData,
-                ref: 'ProbandDoB'
-                // NEED TO UPDATE NAME
+                ref: 'study_consent_withdrawal'
             }),
             React.createElement(DateElement, {
                 label: 'Confirmation Date of withdrawal of Consent to Study (optional)',
-                name: 'ProbandDoB',
+                name: 'study_consent_withdrawal2',
                 onUserInput: this.setFormData,
-                ref: 'ProbandDoB'
-                // NEED TO UPDATE NAME
+                ref: 'study_consent_withdrawal2'
             }),
             React.createElement(ButtonElement, {
                 label: 'Update'

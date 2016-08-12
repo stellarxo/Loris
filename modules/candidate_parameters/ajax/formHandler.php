@@ -127,4 +127,26 @@ function editConsentStatusFields() {
     }
 
     $candID = $_GET['candID'];
+
+    // Process posted data
+    $consent   = isset($_POST['study_consent']) ? $_POST['study_consent'] : null;
+    $date    = isset($_POST['study_consent_date']) ? $_POST['study_consent_date'] : null;
+    $date2    = isset($_POST['study_consent_date2']) ? $_POST['study_consent_date2'] : null;
+    $withdrawal    = isset($_POST['study_consent_withdrawal']) ? $_POST['study_consent_withdrawal'] : null;
+    $withdrawal2    = isset($_POST['study_consent_withdrawal2']) ? $_POST['study_consent_withdrawal2'] : null;
+
+    if ($date !== $date2) {
+        // throw error
+    }
+    if ($withdrawal !== $withdrawal2) {
+        // throw error
+    }
+
+    $updateValues = [
+        'study_consent' => $consent,
+        'study_consent_date'   => $date,
+        'study_consent_withdrawal'   => $withdrawal,
+    ];
+
+    $db->update('participant_status', $updateValues, ['CandID' => $candID]);
 }
