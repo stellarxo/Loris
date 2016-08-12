@@ -52,6 +52,22 @@ function editProbandInfoFields() {
     }
 
     $candID = $_GET['candID'];
+
+    // Process posted data
+    $gender   = isset($_POST['ProbandGender']) ? $_POST['ProbandGender'] : null;
+    $dob    = isset($_POST['ProbandDoB']) ? $_POST['ProbandDoB'] : null;
+    $dob2    = isset($_POST['ProbandDoB2']) ? $_POST['ProbandDoB2'] : null;
+
+    if ($dob !== $dob2) {
+        // throw error
+    }
+
+    $updateValues = [
+        'ProbandGender' => $gender,
+        'ProbandDoB'   => $dob,
+    ];
+
+    $db->update('candidate', $updateValues, ['CandID' => $candID]);
 }
 
 function editFamilyInfoFields() {
