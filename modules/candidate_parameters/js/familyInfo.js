@@ -1,6 +1,16 @@
 var FamilyInfo = React.createClass({
-    displayName: 'FamilyInfo',
+    displayName: "FamilyInfo",
 
+
+    getInitialState: function () {
+        return {
+            "relationshipOptions": {
+                "full_sibling": "Full Sibling",
+                "half_sibling": "Half Sibling",
+                "1st_cousin": "First Cousin"
+            }
+        };
+    },
 
     componentDidMount: function () {
         var that = this;
@@ -47,10 +57,10 @@ var FamilyInfo = React.createClass({
         if (!this.state.isLoaded) {
             if (this.state.error != undefined) {
                 return React.createElement(
-                    'div',
-                    { className: 'alert alert-danger text-center' },
+                    "div",
+                    { className: "alert alert-danger text-center" },
                     React.createElement(
-                        'strong',
+                        "strong",
                         null,
                         this.state.error
                     )
@@ -58,39 +68,39 @@ var FamilyInfo = React.createClass({
             }
 
             return React.createElement(
-                'button',
-                { className: 'btn-info has-spinner' },
-                'Loading',
-                React.createElement('span', { className: 'glyphicon glyphicon-refresh glyphicon-refresh-animate' })
+                "button",
+                { className: "btn-info has-spinner" },
+                "Loading",
+                React.createElement("span", { className: "glyphicon glyphicon-refresh glyphicon-refresh-animate" })
             );
         }
 
         return React.createElement(
             FormElement,
-            { name: 'candidateInfo', onSubmit: this.handleSubmit, ref: 'form', 'class': 'col-md-6' },
+            { name: "familyInfo", onSubmit: this.handleSubmit, ref: "form", "class": "col-md-6" },
             React.createElement(HelpTextElement, {
-                label: 'PSCID',
+                label: "PSCID",
                 text: this.state.Data.pscid
             }),
             React.createElement(HelpTextElement, {
-                label: 'DCCID',
+                label: "DCCID",
                 text: this.state.Data.candID
             }),
             React.createElement(TextboxElement, {
-                label: 'Family Member ID (Enter DCCID)',
-                name: 'CandID',
+                label: "Family Member ID (Enter DCCID)",
+                name: "CandID",
                 onUserInput: this.setFormData,
-                ref: 'CandID'
+                ref: "CandID"
             }),
             React.createElement(SelectElement, {
-                label: 'Relation Type',
-                name: 'Relationship_type',
-                options: this.state.Data.relationOptions,
+                label: "Relation Type",
+                name: "Relationship_type",
+                options: this.state.relationshipOptions,
                 onUserInput: this.setFormData,
-                ref: 'Relationship_type'
+                ref: "Relationship_type"
             }),
             React.createElement(ButtonElement, {
-                label: 'Update'
+                label: "Update"
             })
         );
     },

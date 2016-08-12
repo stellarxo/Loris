@@ -72,7 +72,7 @@ var ProbandInfo = React.createClass({
         }
 
         return (
-            <FormElement name="candidateInfo" onSubmit={this.handleSubmit} ref="form" class="col-md-6">
+            <FormElement name="probandInfo" onSubmit={this.handleSubmit} ref="form" class="col-md-6">
                 <HelpTextElement
                     label="PSCID"
                     text={this.state.Data.pscid}

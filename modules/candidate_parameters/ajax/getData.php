@@ -76,14 +76,9 @@ function getFamilyInfoFields() {
         array('candid' => $candID)
     );
 
-    // UPDATE THIS
-    // get relation types
-    $relationOptions = array("" => "This needs to be updated");
-
     $result = [
         'pscid' => $pscid,
-        'candID' => $candID,
-        'relationOptions' => $relationOptions
+        'candID' => $candID
     ];
 
     return $result;
@@ -91,6 +86,7 @@ function getFamilyInfoFields() {
 
 function getParticipantStatusFields() {
     $candID = $_GET['candID'];
+//    $pid = $_GET['p_status'];
 
     $db =& Database::singleton();
 
@@ -100,11 +96,17 @@ function getParticipantStatusFields() {
         array('candid' => $candID)
     );
 
-    // UPDATE THIS
+    $statusOptions = getParticipantStatusOptions();
+
+    $parentID = $db->pselectOne('SELECT participant_status FROM participant_status Where CandID = :candid',
+        array('candid' => $candID));
+    $reasonOptions = getParticipantStatusSubOptions($parentID);
 
     $result = [
         'pscid' => $pscid,
-        'candID' => $candID
+        'candID' => $candID,
+        'statusOptions' => $statusOptions,
+        'reasonOptions' => $reasonOptions
     ];
 
     return $result;
@@ -129,4 +131,46 @@ function getConsentStatusFields() {
     ];
 
     return $result;
+}
+
+/**
+ * Gets the participant_status options from participant_status_options
+ * getParticipantStatusOptions()
+ *
+ * @return array Options array suitable for use in QuickForm select
+ *               element
+ */
+function getParticipantStatusOptions()
+{
+    $DB =& Database::singleton();
+    $options = $DB->pselect(
+        "SELECT ID,Description FROM participant_status_options WHERE parentID IS NULL",
+        array()
+    );
+    $option_array = array();
+    foreach ($options as $option) {
+        $option_array[$option['ID']] = $option['Description'];
+    }
+    return $option_array;
+}
+
+/**
+ * Gets the participant_status options suboptions from participant_status_options
+ * getParticipantStatusSubOptions()
+ *
+ * @return array Options array suitable for use in QuickForm select
+ *               element
+ */
+function getParticipantStatusSubOptions($parentID)
+{
+    $DB =& Database::singleton();
+    $options = $DB->pselect(
+        "SELECT ID,Description FROM participant_status_options WHERE parentID=:pid",
+        array('pid'=>$parentID)
+    );
+    $option_array = array();
+    foreach ($options as $option) {
+        $option_array[$option['ID']] = $option['Description'];
+    }
+    return $option_array;
 }

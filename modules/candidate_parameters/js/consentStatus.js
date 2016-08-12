@@ -1,6 +1,15 @@
 var ConsentStatus = React.createClass({
-    displayName: 'ConsentStatus',
+    displayName: "ConsentStatus",
 
+
+    getInitialState: function () {
+        return {
+            "consentOptions": {
+                "yes": "Yes",
+                "no": "No"
+            }
+        };
+    },
 
     componentDidMount: function () {
         var that = this;
@@ -60,10 +69,10 @@ var ConsentStatus = React.createClass({
         if (!this.state.isLoaded) {
             if (this.state.error != undefined) {
                 return React.createElement(
-                    'div',
-                    { className: 'alert alert-danger text-center' },
+                    "div",
+                    { className: "alert alert-danger text-center" },
                     React.createElement(
-                        'strong',
+                        "strong",
                         null,
                         this.state.error
                     )
@@ -71,56 +80,57 @@ var ConsentStatus = React.createClass({
             }
 
             return React.createElement(
-                'button',
-                { className: 'btn-info has-spinner' },
-                'Loading',
-                React.createElement('span', { className: 'glyphicon glyphicon-refresh glyphicon-refresh-animate' })
+                "button",
+                { className: "btn-info has-spinner" },
+                "Loading",
+                React.createElement("span", { className: "glyphicon glyphicon-refresh glyphicon-refresh-animate" })
             );
         }
 
         return React.createElement(
             FormElement,
-            { name: 'candidateInfo', onSubmit: this.handleSubmit, ref: 'form', 'class': 'col-md-6' },
+            { name: "consentStatus", onSubmit: this.handleSubmit, ref: "form", "class": "col-md-6" },
             React.createElement(HelpTextElement, {
-                label: 'PSCID',
+                label: "PSCID",
                 text: this.state.Data.pscid
             }),
             React.createElement(HelpTextElement, {
-                label: 'DCCID',
+                label: "DCCID",
                 text: this.state.Data.candID
             }),
-            React.createElement(DateElement, {
-                label: 'Consent to Study (required)',
-                name: 'study_consent',
+            React.createElement(SelectElement, {
+                label: "Consent to Study (required)",
+                name: "study_consent",
+                options: this.state.consentOptions,
                 onUserInput: this.setFormData,
-                ref: 'study_consent'
+                ref: "study_consent"
             }),
             React.createElement(DateElement, {
-                label: 'Date of Consent to Study (required)',
-                name: 'study_consent_date',
+                label: "Date of Consent to Study (required)",
+                name: "study_consent_date",
                 onUserInput: this.setFormData,
-                ref: 'study_consent_date'
+                ref: "study_consent_date"
             }),
             React.createElement(DateElement, {
-                label: 'Confirmation Date of Consent to Study (required)',
-                name: 'study_consent_date2',
+                label: "Confirmation Date of Consent to Study (required)",
+                name: "study_consent_date2",
                 onUserInput: this.setFormData,
-                ref: 'study_consent_date2'
+                ref: "study_consent_date2"
             }),
             React.createElement(DateElement, {
-                label: 'Date of withdrawal of Consent to Study (optional)',
-                name: 'study_consent_withdrawal',
+                label: "Date of withdrawal of Consent to Study (optional)",
+                name: "study_consent_withdrawal",
                 onUserInput: this.setFormData,
-                ref: 'study_consent_withdrawal'
+                ref: "study_consent_withdrawal"
             }),
             React.createElement(DateElement, {
-                label: 'Confirmation Date of withdrawal of Consent to Study (optional)',
-                name: 'study_consent_withdrawal2',
+                label: "Confirmation Date of withdrawal of Consent to Study (optional)",
+                name: "study_consent_withdrawal2",
                 onUserInput: this.setFormData,
-                ref: 'study_consent_withdrawal2'
+                ref: "study_consent_withdrawal2"
             }),
             React.createElement(ButtonElement, {
-                label: 'Update'
+                label: "Update"
             })
         );
     },

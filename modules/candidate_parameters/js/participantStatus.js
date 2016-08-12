@@ -1,14 +1,9 @@
 var ParticipantStatus = React.createClass({
-    displayName: "ParticipantStatus",
+    displayName: 'ParticipantStatus',
 
 
     getInitialState: function () {
-        return {
-            "genderOptions": {
-                "male": "Male",
-                "female": "Female"
-            }
-        };
+        return {};
     },
 
     componentDidMount: function () {
@@ -56,10 +51,10 @@ var ParticipantStatus = React.createClass({
         if (!this.state.isLoaded) {
             if (this.state.error != undefined) {
                 return React.createElement(
-                    "div",
-                    { className: "alert alert-danger text-center" },
+                    'div',
+                    { className: 'alert alert-danger text-center' },
                     React.createElement(
-                        "strong",
+                        'strong',
                         null,
                         this.state.error
                     )
@@ -67,47 +62,46 @@ var ParticipantStatus = React.createClass({
             }
 
             return React.createElement(
-                "button",
-                { className: "btn-info has-spinner" },
-                "Loading",
-                React.createElement("span", { className: "glyphicon glyphicon-refresh glyphicon-refresh-animate" })
+                'button',
+                { className: 'btn-info has-spinner' },
+                'Loading',
+                React.createElement('span', { className: 'glyphicon glyphicon-refresh glyphicon-refresh-animate' })
             );
         }
 
         return React.createElement(
             FormElement,
-            { name: "candidateInfo", onSubmit: this.handleSubmit, ref: "form", "class": "col-md-6" },
+            { name: 'participantStatus', onSubmit: this.handleSubmit, ref: 'form', 'class': 'col-md-6' },
             React.createElement(HelpTextElement, {
-                label: "PSCID",
+                label: 'PSCID',
                 text: this.state.Data.pscid
             }),
             React.createElement(HelpTextElement, {
-                label: "DCCID",
+                label: 'DCCID',
                 text: this.state.Data.candID
             }),
             React.createElement(SelectElement, {
-                label: "Participant Status",
-                name: "participant_status",
-                options: this.state.genderOptions,
+                label: 'Participant Status',
+                name: 'participant_status',
+                options: this.state.Data.statusOptions,
                 onUserInput: this.setFormData,
-                ref: "participant_status"
+                ref: 'participant_status'
             }),
             React.createElement(SelectElement, {
-                label: "Specify Reason (Required only for status Inactive/Incomplete)",
-                name: "participant_suboptions",
-                options: this.state.genderOptions,
+                label: 'Specify Reason (Required only for status Inactive/Incomplete)',
+                name: 'participant_suboptions',
+                options: this.state.Data.reasonOptions,
                 onUserInput: this.setFormData,
-                ref: "participant_suboptions"
+                ref: 'participant_suboptions'
             }),
-            React.createElement(SelectElement, {
-                label: "Comments",
-                name: "reason_specify",
-                options: this.state.genderOptions,
+            React.createElement(TextareaElement, {
+                label: 'Comments',
+                name: 'reason_specify',
                 onUserInput: this.setFormData,
-                ref: "reason_specify"
+                ref: 'reason_specify'
             }),
             React.createElement(ButtonElement, {
-                label: "Update"
+                label: 'Update'
             })
         );
     },

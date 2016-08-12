@@ -1,5 +1,15 @@
 var FamilyInfo = React.createClass({
 
+    getInitialState: function () {
+        return {
+            "relationshipOptions": {
+                "full_sibling": "Full Sibling",
+                "half_sibling": "Half Sibling",
+                "1st_cousin": "First Cousin"
+            }
+        }
+    },
+
     componentDidMount: function () {
         var that = this;
         $.ajax(this.props.dataURL, {
@@ -63,7 +73,7 @@ var FamilyInfo = React.createClass({
         }
 
         return (
-            <FormElement name="candidateInfo" onSubmit={this.handleSubmit} ref="form" class="col-md-6">
+            <FormElement name="familyInfo" onSubmit={this.handleSubmit} ref="form" class="col-md-6">
                 <HelpTextElement
                     label="PSCID"
                     text={this.state.Data.pscid}
@@ -81,7 +91,7 @@ var FamilyInfo = React.createClass({
                 <SelectElement
                     label="Relation Type"
                     name="Relationship_type"
-                    options={this.state.Data.relationOptions}
+                    options={this.state.relationshipOptions}
                     onUserInput={this.setFormData}
                     ref="Relationship_type"
                 />

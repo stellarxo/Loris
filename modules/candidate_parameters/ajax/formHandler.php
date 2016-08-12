@@ -37,7 +37,7 @@ function editCandInfoFields() {
     $updateValues = [
         'flagged_caveatemptor' => $caveatEmptor,
         'flagged_reason'   => $reason,
-        'flagged_other'  => $other,
+        'flagged_other'  => $other
     ];
 
     $db->update('candidate', $updateValues, ['CandID' => $candID]);
@@ -64,7 +64,7 @@ function editProbandInfoFields() {
 
     $updateValues = [
         'ProbandGender' => $gender,
-        'ProbandDoB'   => $dob,
+        'ProbandDoB'   => $dob
     ];
 
     $db->update('candidate', $updateValues, ['CandID' => $candID]);
@@ -88,7 +88,7 @@ function editFamilyInfoFields() {
 
     $updateValues = [
         'CandID' => $siblingCandID,
-        'Relationship_type'   => $relationship,
+        'Relationship_type'   => $relationship
     ];
 
     $db->update('family', $updateValues, ['CandID' => $candID]);
@@ -112,7 +112,7 @@ function editParticipantStatusFields() {
     $updateValues = [
         'participant_status' => $status,
         'participant_suboptions'   => $suboption,
-        'reason_specify'   => $reason,
+        'reason_specify'   => $reason
     ];
 
     $db->update('participant_status', $updateValues, ['CandID' => $candID]);
@@ -145,7 +145,7 @@ function editConsentStatusFields() {
     $updateValues = [
         'study_consent' => $consent,
         'study_consent_date'   => $date,
-        'study_consent_withdrawal'   => $withdrawal,
+        'study_consent_withdrawal'   => $withdrawal
     ];
 
     $db->update('participant_status', $updateValues, ['CandID' => $candID]);

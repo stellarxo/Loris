@@ -1,5 +1,14 @@
 var ConsentStatus = React.createClass({
 
+    getInitialState: function () {
+        return {
+            "consentOptions": {
+                "yes": "Yes",
+                "no": "No"
+            }
+        }
+    },
+
     componentDidMount: function () {
         var that = this;
         $.ajax(this.props.dataURL, {
@@ -77,7 +86,7 @@ var ConsentStatus = React.createClass({
         }
 
         return (
-            <FormElement name="candidateInfo" onSubmit={this.handleSubmit} ref="form" class="col-md-6">
+            <FormElement name="consentStatus" onSubmit={this.handleSubmit} ref="form" class="col-md-6">
                 <HelpTextElement
                     label="PSCID"
                     text={this.state.Data.pscid}
@@ -86,9 +95,10 @@ var ConsentStatus = React.createClass({
                     label="DCCID"
                     text={this.state.Data.candID}
                 />
-                <DateElement
+                <SelectElement
                     label="Consent to Study (required)"
                     name="study_consent"
+                    options={this.state.consentOptions}
                     onUserInput={this.setFormData}
                     ref="study_consent"
                 />
