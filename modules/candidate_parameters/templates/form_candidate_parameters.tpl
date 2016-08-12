@@ -22,14 +22,13 @@
     </li>
     <li role="presentation">
         <a href="#consent-status" aria-controls="upload" role="tab" data-toggle="tab">
-            Participation Consent Status
+            Consent Status
         </a>
     </li>
 </ul>
 
 <!-- Tab panes -->
 <div class="tab-content">
-
 
     <div role="tabpanel" class="tab-pane active" id="cand-info">
         Candidate info
@@ -48,7 +47,7 @@
     </div>
 
     <div role="tabpanel" class="tab-pane" id="consent-status">
-        Status info
+        Consent Status info
     </div>
 
 </div>

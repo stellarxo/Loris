@@ -85,16 +85,22 @@ var ParticipantStatus = React.createClass({
                     label="Participant Status"
                     name="participant_status"
                     options={this.state.genderOptions}
+                    onUserInput={this.setFormData}
+                    ref="participant_status"
                 />
                 <SelectElement
                     label="Specify Reason (Required only for status Inactive/Incomplete)"
                     name="participant_suboptions"
                     options={this.state.genderOptions}
+                    onUserInput={this.setFormData}
+                    ref="participant_suboptions"
                 />
                 <SelectElement
                     label="Comments"
                     name="reason_specify"
                     options={this.state.genderOptions}
+                    onUserInput={this.setFormData}
+                    ref="reason_specify"
                 />
                 <ButtonElement
                     label="Update"

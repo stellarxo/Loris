@@ -79,6 +79,19 @@ function editFamilyInfoFields() {
     }
 
     $candID = $_GET['candID'];
+
+    // Process posted data
+    $siblingCandID   = isset($_POST['CandID']) ? $_POST['CandID'] : null;
+    $relationship    = isset($_POST['Relationship_type']) ? $_POST['Relationship_type'] : null;
+
+    // find family ID!!!!!!!!!!!
+
+    $updateValues = [
+        'CandID' => $siblingCandID,
+        'Relationship_type'   => $relationship,
+    ];
+
+    $db->update('family', $updateValues, ['CandID' => $candID]);
 }
 
 function editParticipantStatusFields() {
@@ -90,6 +103,19 @@ function editParticipantStatusFields() {
     }
 
     $candID = $_GET['candID'];
+
+    // Process posted data
+    $status   = isset($_POST['participant_status']) ? $_POST['participant_status'] : null;
+    $suboption    = isset($_POST['participant_suboptions']) ? $_POST['participant_suboptions'] : null;
+    $reason    = isset($_POST['reason_specify']) ? $_POST['reason_specify'] : null;
+
+    $updateValues = [
+        'participant_status' => $status,
+        'participant_suboptions'   => $suboption,
+        'reason_specify'   => $reason,
+    ];
+
+    $db->update('participant_status', $updateValues, ['CandID' => $candID]);
 }
 
 function editConsentStatusFields() {

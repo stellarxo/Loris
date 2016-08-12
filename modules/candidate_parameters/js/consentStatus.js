@@ -1,15 +1,6 @@
 var ConsentStatus = React.createClass({
-    displayName: "ConsentStatus",
+    displayName: 'ConsentStatus',
 
-
-    getInitialState: function () {
-        return {
-            "genderOptions": {
-                "male": "Male",
-                "female": "Female"
-            }
-        };
-    },
 
     componentDidMount: function () {
         var that = this;
@@ -69,10 +60,10 @@ var ConsentStatus = React.createClass({
         if (!this.state.isLoaded) {
             if (this.state.error != undefined) {
                 return React.createElement(
-                    "div",
-                    { className: "alert alert-danger text-center" },
+                    'div',
+                    { className: 'alert alert-danger text-center' },
                     React.createElement(
-                        "strong",
+                        'strong',
                         null,
                         this.state.error
                     )
@@ -80,54 +71,54 @@ var ConsentStatus = React.createClass({
             }
 
             return React.createElement(
-                "button",
-                { className: "btn-info has-spinner" },
-                "Loading",
-                React.createElement("span", { className: "glyphicon glyphicon-refresh glyphicon-refresh-animate" })
+                'button',
+                { className: 'btn-info has-spinner' },
+                'Loading',
+                React.createElement('span', { className: 'glyphicon glyphicon-refresh glyphicon-refresh-animate' })
             );
         }
 
         return React.createElement(
             FormElement,
-            { name: "candidateInfo", onSubmit: this.handleSubmit, ref: "form", "class": "col-md-6" },
+            { name: 'candidateInfo', onSubmit: this.handleSubmit, ref: 'form', 'class': 'col-md-6' },
             React.createElement(HelpTextElement, {
-                label: "PSCID",
+                label: 'PSCID',
                 text: this.state.Data.pscid
             }),
             React.createElement(HelpTextElement, {
-                label: "DCCID",
+                label: 'DCCID',
                 text: this.state.Data.candID
             }),
             React.createElement(DateElement, {
-                label: "Consent to Study (required)",
-                name: "ProbandDoB",
+                label: 'Consent to Study (required)',
+                name: 'ProbandDoB',
                 onUserInput: this.setFormData,
-                ref: "ProbandDoB"
+                ref: 'ProbandDoB'
                 // NEED TO UPDATE NAME
             }),
             React.createElement(DateElement, {
-                label: "Date of Consent to Study (required)",
-                name: "ProbandDoB",
+                label: 'Date of Consent to Study (required)',
+                name: 'ProbandDoB',
                 onUserInput: this.setFormData,
-                ref: "ProbandDoB"
+                ref: 'ProbandDoB'
                 // NEED TO UPDATE NAME
             }),
             React.createElement(DateElement, {
-                label: "Date of withdrawal of Consent to Study (optional)",
-                name: "ProbandDoB",
+                label: 'Date of withdrawal of Consent to Study (optional)',
+                name: 'ProbandDoB',
                 onUserInput: this.setFormData,
-                ref: "ProbandDoB"
+                ref: 'ProbandDoB'
                 // NEED TO UPDATE NAME
             }),
             React.createElement(DateElement, {
-                label: "Confirmation Date of withdrawal of Consent to Study (optional)",
-                name: "ProbandDoB",
+                label: 'Confirmation Date of withdrawal of Consent to Study (optional)',
+                name: 'ProbandDoB',
                 onUserInput: this.setFormData,
-                ref: "ProbandDoB"
+                ref: 'ProbandDoB'
                 // NEED TO UPDATE NAME
             }),
             React.createElement(ButtonElement, {
-                label: "Update"
+                label: 'Update'
             })
         );
     },

@@ -1,5 +1,5 @@
 var FamilyInfo = React.createClass({
-    
+
     componentDidMount: function () {
         var that = this;
         $.ajax(this.props.dataURL, {
@@ -74,16 +74,16 @@ var FamilyInfo = React.createClass({
                 />
                 <TextboxElement
                     label="Family Member ID (Enter DCCID)"
-                    name="SiblingcID"
+                    name="CandID"
                     onUserInput={this.setFormData}
-                    ref="SiblingcID"
+                    ref="CandID"
                 />
                 <SelectElement
                     label="Relation Type"
-                    name="relation_type"
+                    name="Relationship_type"
                     options={this.state.Data.relationOptions}
                     onUserInput={this.setFormData}
-                    ref="relation_type"
+                    ref="Relationship_type"
                 />
                 <ButtonElement
                     label="Update"
