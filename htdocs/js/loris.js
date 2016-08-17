@@ -1,4 +1,4 @@
-var LorisHelper = function(configParams, userPerms) {
+var LorisHelper = function(configParams, userPerms, studyParams) {
     "use strict";
     var lorisObj = configParams;
 
@@ -47,6 +47,13 @@ var LorisHelper = function(configParams, userPerms) {
             return true;
         }
         return false;
+    }
+
+    // return config settings from whitelist passed in main.php (study options)
+    // consult alex
+    lorisObj.config = function(param) {
+        "use strict";
+        return studyParams[param];
     }
     return lorisObj;
 };
