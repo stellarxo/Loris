@@ -1,7 +1,8 @@
 <?php
 
-if (isset($_GET['action'])) {
-    $action = $_GET['action'];
+if (isset($_POST['tab'])) {
+    $action = $_POST['tab'];
+    var_dump($action);
     if ($action == "candidateInfo") {
         editCandInfoFields();
     }
@@ -16,10 +17,14 @@ if (isset($_GET['action'])) {
     }
     else if ($action == "consentStatus") {
         editConsentStatusFields();
+    } else {
+        header("HTTP/1.1 404 Not Found");
+        exit;
     }
 }
 
 function editCandInfoFields() {
+    echo 'edit info';
     $db   =& Database::singleton();
     $user =& User::singleton();
     if (!$user->hasPermission('candidate_parameter_edit')) {
@@ -27,7 +32,7 @@ function editCandInfoFields() {
         exit;
     }
 
-    $candID = $_GET['candID'];
+    $candID = $_POST['candID'];
 
     // Process posted data
     $caveatEmptor   = isset($_POST['flagged_caveatemptor']) ? $_POST['flagged_caveatemptor'] : null;

@@ -3,8 +3,8 @@ var CandidateInfo = React.createClass({
     getInitialState: function () {
       return {
           "caveatOptions": {
-              "true": "True",
-              "false": "False"
+              true: "True",
+              false: "False"
           },
           formData: {}
       }
@@ -72,6 +72,31 @@ var CandidateInfo = React.createClass({
             );
         }
 
+        var disabled = true;
+        var updateButton = null;
+        if (loris.userHasPermission('candidate_parameter_edit')) {
+            disabled = false;
+            updateButton = <ButtonElement label="Update" />;
+        }
+        var reasonRequired = false;
+        var otherRequired = false;
+        if (this.state.formData.flagged_caveatemptor === "true") {
+            reasonRequired = true;
+        }
+        var reasonKey;
+        for (var key in this.state.Data.caveatOptions) {
+            if (this.state.Data.caveatOptions.hasOwnProperty(key)) {
+                if (this.state.Data.caveatOptions[key] === "Other") {
+                    reasonKey = key;
+                    break;
+                }
+            }
+        }
+
+        if (this.state.formData.flagged_reason === reasonKey) {
+            otherRequired = true;
+        }
+
         return (
             <FormElement name="candidateInfo" onSubmit={this.handleSubmit} ref="form" class="col-md-6">
                 <StaticElement
@@ -88,23 +113,27 @@ var CandidateInfo = React.createClass({
                     options={this.state.caveatOptions}
                     onUserInput={this.setFormData}
                     ref="flagged_caveatemptor"
+                    disabled={disabled}
+                    required={true}
                 />
                 <SelectElement
                     label="Reason for Caveat Emptor flag"
                     name="flagged_reason"
-                    options={this.state.Data.caveatOptions}
+                    options={this.state.Data.caveatOptions} // rename to caveat reason options
                     onUserInput={this.setFormData}
                     ref="flagged_reason"
+                    disabled={disabled}
+                    required={reasonRequired}
                 />
                 <TextareaElement
                     label="If Other, please specify"
                     name="flagged_other"
                     onUserInput={this.setFormData}
                     ref="flagged_other"
+                    disabled={disabled}
+                    required={otherRequired}
                 />
-                <ButtonElement
-                    label="Update"
-                />
+                {updateButton}
             </FormElement>
         );
     },
@@ -128,6 +157,9 @@ var CandidateInfo = React.createClass({
             }
         }
 
+        formData.append('tab', this.props.tabName);
+        formData.append('candID', this.state.Data.candID);
+
         $.ajax({
             type: 'POST',
             url: self.props.action,
@@ -137,19 +169,8 @@ var CandidateInfo = React.createClass({
             processData:false,
             success: function(data) {
                 self.setState({
-                    uploadResult: "success",
-                    formData: {} // reset form data after successful file upload
+                    uploadResult: "success"
                 });
-
-                // Iterates through child components and resets state
-                // to initial state in order to clear the form
-                Object.keys(formRefs).map(function(ref) {
-                    if (formRefs[ref].state && formRefs[ref].state.value) {
-                        formRefs[ref].state.value = "";
-                    }
-                });
-                // rerender components
-                self.forceUpdate();
             },
             error: function(err) {
                 var errorMessage = JSON.parse(err.responseText).message;
@@ -163,4 +184,4 @@ var CandidateInfo = React.createClass({
     }
 });
 
-RCandidateInfo = React.createFactory(CandidateInfo);
+var RCandidateInfo = React.createFactory(CandidateInfo);
