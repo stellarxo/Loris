@@ -72,11 +72,11 @@ var ParticipantStatus = React.createClass({
         return React.createElement(
             FormElement,
             { name: 'participantStatus', onSubmit: this.handleSubmit, ref: 'form', 'class': 'col-md-6' },
-            React.createElement(HelpTextElement, {
+            React.createElement(StaticElement, {
                 label: 'PSCID',
                 text: this.state.Data.pscid
             }),
-            React.createElement(HelpTextElement, {
+            React.createElement(StaticElement, {
                 label: 'DCCID',
                 text: this.state.Data.candID
             }),
@@ -90,7 +90,7 @@ var ParticipantStatus = React.createClass({
             React.createElement(SelectElement, {
                 label: 'Specify Reason (Required only for status Inactive/Incomplete)',
                 name: 'participant_suboptions',
-                options: this.state.Data.reasonOptions,
+                options: this.state.Data.subOptions,
                 onUserInput: this.setFormData,
                 ref: 'participant_suboptions'
             }),

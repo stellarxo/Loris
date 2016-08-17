@@ -69,11 +69,11 @@ var ParticipantStatus = React.createClass({
 
         return (
             <FormElement name="participantStatus" onSubmit={this.handleSubmit} ref="form" class="col-md-6">
-                <HelpTextElement
+                <StaticElement
                     label="PSCID"
                     text={this.state.Data.pscid}
                 />
-                <HelpTextElement
+                <StaticElement
                     label="DCCID"
                     text={this.state.Data.candID}
                 />
@@ -87,7 +87,7 @@ var ParticipantStatus = React.createClass({
                 <SelectElement
                     label="Specify Reason (Required only for status Inactive/Incomplete)"
                     name="participant_suboptions"
-                    options={this.state.Data.reasonOptions}
+                    options={this.state.Data.subOptions}
                     onUserInput={this.setFormData}
                     ref="participant_suboptions"
                 />

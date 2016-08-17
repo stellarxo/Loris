@@ -77,11 +77,11 @@ var ProbandInfo = React.createClass({
         return React.createElement(
             FormElement,
             { name: "probandInfo", onSubmit: this.handleSubmit, ref: "form", "class": "col-md-6" },
-            React.createElement(HelpTextElement, {
+            React.createElement(StaticElement, {
                 label: "PSCID",
                 text: this.state.Data.pscid
             }),
-            React.createElement(HelpTextElement, {
+            React.createElement(StaticElement, {
                 label: "DCCID",
                 text: this.state.Data.candID
             }),

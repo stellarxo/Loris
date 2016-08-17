@@ -74,11 +74,11 @@ var FamilyInfo = React.createClass({
 
         return (
             <FormElement name="familyInfo" onSubmit={this.handleSubmit} ref="form" class="col-md-6">
-                <HelpTextElement
+                <StaticElement
                     label="PSCID"
                     text={this.state.Data.pscid}
                 />
-                <HelpTextElement
+                <StaticElement
                     label="DCCID"
                     text={this.state.Data.candID}
                 />
