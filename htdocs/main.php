@@ -274,6 +274,10 @@ foreach ($user->getPermissions() as $permName => $hasPerm) {
     }
 }
 $tpl_data['userPerms']  = $realPerms;
+$tpl_data['studyParams']  = array (
+    'useEDC' => $config->getSetting('useEDC') ? true : false,
+    'useProband' => $config->getSetting('useProband') ? true : false
+);
 $tpl_data['jsonParams'] = json_encode(
     array(
      'BaseURL'   => $tpl_data['baseurl'],
