@@ -60,13 +60,14 @@
         "tabName": "candidateInfo"
     });
     React.render(candidateInfo, document.getElementById("cand-info"));
-
-    var probandInfo = RProbandInfo({
-        "dataURL": "{$baseurl}/candidate_parameters/ajax/getData.php?data=probandInfo&candID=" + {$smarty.get.candID},
-        "action": "{$baseurl}/candidate_parameters/ajax/formHandler.php"
-    });
-    React.render(probandInfo, document.getElementById("proband-info"));
-
+   
+    if (loris.config('useProband')) {
+        var probandInfo = RProbandInfo({
+                "dataURL": "{$baseurl}/candidate_parameters/ajax/getData.php?data=probandInfo&candID=" + {$smarty.get.candID},
+                "action": "{$baseurl}/candidate_parameters/ajax/formHandler.php"
+                });
+        React.render(probandInfo, document.getElementById("proband-info"));
+    }
     var familyInfo = RFamilyInfo({
         "dataURL": "{$baseurl}/candidate_parameters/ajax/getData.php?data=familyInfo&candID=" + {$smarty.get.candID},
         "action": "{$baseurl}/candidate_parameters/ajax/formHandler.php"
