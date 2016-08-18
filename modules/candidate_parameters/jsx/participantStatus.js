@@ -89,11 +89,24 @@ var ParticipantStatus = React.createClass({
             suboptionsDisabled = false;
         }
 
-        if (this.state.formData.participant_status !== "1") {
-            reasonSpecifyRequired = true;
+        var alertMessage = "";
+        var alertClass = "alert text-center hide";
+        if (this.state.updateResult) {
+            if (this.state.updateResult == "success") {
+                alertClass = "alert alert-success text-center";
+                alertMessage = "Update Successful!";
+            } else if (this.state.updateResult == "error") {
+                var errorMessage = this.state.errorMessage;
+                alertClass = "alert alert-danger text-center";
+                alertMessage = errorMessage ? errorMessage : "Failed to update!";
+            }
         }
 
         return (
+            <div>
+                <div className={alertClass} role="alert" ref="alert-message">
+                    {alertMessage}
+                </div>
             <FormElement name="participantStatus" onSubmit={this.handleSubmit} ref="form" class="col-md-6">
                 <StaticElement
                     label="PSCID"
@@ -127,10 +140,11 @@ var ParticipantStatus = React.createClass({
                     onUserInput={this.setFormData}
                     ref="reason_specify"
                     disabled={disabled}
-                    required={reasonSpecifyRequired}
+                    required={false}
                 />
                 {updateButton}
             </FormElement>
+                </div>
         );
     },
 
@@ -162,18 +176,35 @@ var ParticipantStatus = React.createClass({
             processData:false,
             success: function(data) {
                 self.setState({
-                    uploadResult: "success",
-                    formData: {} // reset form data after successful file upload
+                    updateResult: "success",
                 });
             },
             error: function(err) {
                 var errorMessage = JSON.parse(err.responseText).message;
                 self.setState({
-                    uploadResult: "error",
+                    updateResult: "error",
                     errorMessage: errorMessage
                 });
             }
 
+        });
+    },
+
+    /**
+     * Display a success/error alert message after form submission
+     */
+    showAlertMessage: function() {
+        var self = this;
+
+        if (this.refs["alert-message"] == null) {
+            return;
+        }
+
+        var alertMsg = this.refs["alert-message"].getDOMNode();
+        $(alertMsg).fadeTo(2000, 500).delay(3000).slideUp(500, function() {
+            self.setState({
+                updateResult: null
+            });
         });
     }
 

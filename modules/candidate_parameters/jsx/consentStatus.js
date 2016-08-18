@@ -102,11 +102,28 @@ var ConsentStatus = React.createClass({
         if (this.state.formData.study_consent === "true") {
             dateRequired = true;
         }
-        if (this.state.formData.study_consent_withdrawal !== '') {
+        if (this.state.formData.study_consent_withdrawal !== null) {
             withdrawalRequired = true;
         }
 
+        var alertMessage = "";
+        var alertClass = "alert text-center hide";
+        if (this.state.updateResult) {
+            if (this.state.updateResult == "success") {
+                alertClass = "alert alert-success text-center";
+                alertMessage = "Update Successful!";
+            } else if (this.state.updateResult == "error") {
+                var errorMessage = this.state.errorMessage;
+                alertClass = "alert alert-danger text-center";
+                alertMessage = errorMessage ? errorMessage : "Failed to update!";
+            }
+        }
+
         return (
+            <div>
+                <div className={alertClass} role="alert" ref="alert-message">
+                    {alertMessage}
+                </div>
             <FormElement name="consentStatus" onSubmit={this.handleSubmit} ref="form" class="col-md-6">
                 <StaticElement
                     label="PSCID"
@@ -159,6 +176,7 @@ var ConsentStatus = React.createClass({
                 />
                 {updateButton}
             </FormElement>
+                </div>
         );
     },
 
@@ -191,7 +209,6 @@ var ConsentStatus = React.createClass({
             success: function(data) {
                 self.setState({
                     uploadResult: "success",
-                    formData: {} // reset form data after successful file upload
                 });
             },
             error: function(err) {
@@ -202,6 +219,24 @@ var ConsentStatus = React.createClass({
                 });
             }
 
+        });
+    },
+
+    /**
+     * Display a success/error alert message after form submission
+     */
+    showAlertMessage: function() {
+        var self = this;
+
+        if (this.refs["alert-message"] == null) {
+            return;
+        }
+
+        var alertMsg = this.refs["alert-message"].getDOMNode();
+        $(alertMsg).fadeTo(2000, 500).delay(3000).slideUp(500, function() {
+            self.setState({
+                updateResult: null
+            });
         });
     }
 

@@ -88,35 +88,58 @@ var FamilyInfo = React.createClass({
             updateButton = React.createElement(ButtonElement, { label: "Update" });
         }
 
+        var alertMessage = "";
+        var alertClass = "alert text-center hide";
+        if (this.state.updateResult) {
+            if (this.state.updateResult == "success") {
+                alertClass = "alert alert-success text-center";
+                alertMessage = "Update Successful!";
+            } else if (this.state.updateResult == "error") {
+                var errorMessage = this.state.errorMessage;
+                alertClass = "alert alert-danger text-center";
+                alertMessage = errorMessage ? errorMessage : "Failed to update!";
+            }
+        }
+
         return React.createElement(
-            FormElement,
-            { name: "familyInfo", onSubmit: this.handleSubmit, ref: "form", "class": "col-md-6" },
-            React.createElement(StaticElement, {
-                label: "PSCID",
-                text: this.state.Data.pscid
-            }),
-            React.createElement(StaticElement, {
-                label: "DCCID",
-                text: this.state.Data.candID
-            }),
-            React.createElement(TextboxElement, {
-                label: "Family Member ID (Enter DCCID)",
-                name: "CandID",
-                onUserInput: this.setFormData,
-                ref: "CandID",
-                disabled: disabled,
-                required: true
-            }),
-            React.createElement(SelectElement, {
-                label: "Relation Type",
-                name: "Relationship_type",
-                options: this.state.relationshipOptions,
-                onUserInput: this.setFormData,
-                ref: "Relationship_type",
-                disabled: disabled,
-                required: true
-            }),
-            updateButton
+            "div",
+            null,
+            React.createElement(
+                "div",
+                { className: alertClass, role: "alert", ref: "alert-message" },
+                alertMessage
+            ),
+            React.createElement(
+                FormElement,
+                { name: "familyInfo", onSubmit: this.handleSubmit, ref: "form", "class": "col-md-6" },
+                React.createElement(StaticElement, {
+                    label: "PSCID",
+                    text: this.state.Data.pscid
+                }),
+                React.createElement(StaticElement, {
+                    label: "DCCID",
+                    text: this.state.Data.candID
+                }),
+                React.createElement(SelectElement, {
+                    label: "Family Member ID (DCCID)",
+                    name: "CandID",
+                    options: this.state.Data.candidates,
+                    onUserInput: this.setFormData,
+                    ref: "CandID",
+                    disabled: disabled,
+                    required: true
+                }),
+                React.createElement(SelectElement, {
+                    label: "Relation Type",
+                    name: "Relationship_type",
+                    options: this.state.relationshipOptions,
+                    onUserInput: this.setFormData,
+                    ref: "Relationship_type",
+                    disabled: disabled,
+                    required: true
+                }),
+                updateButton
+            )
         );
     },
 
@@ -148,18 +171,35 @@ var FamilyInfo = React.createClass({
             processData: false,
             success: function (data) {
                 self.setState({
-                    uploadResult: "success",
-                    formData: {} // reset form data after successful file upload
+                    updateResult: "success"
                 });
             },
             error: function (err) {
                 var errorMessage = JSON.parse(err.responseText).message;
                 self.setState({
-                    uploadResult: "error",
+                    updateResult: "error",
                     errorMessage: errorMessage
                 });
             }
 
+        });
+    },
+
+    /**
+     * Display a success/error alert message after form submission
+     */
+    showAlertMessage: function () {
+        var self = this;
+
+        if (this.refs["alert-message"] == null) {
+            return;
+        }
+
+        var alertMsg = this.refs["alert-message"].getDOMNode();
+        $(alertMsg).fadeTo(2000, 500).delay(3000).slideUp(500, function () {
+            self.setState({
+                updateResult: null
+            });
         });
     }
 

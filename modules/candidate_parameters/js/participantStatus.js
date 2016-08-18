@@ -92,48 +92,66 @@ var ParticipantStatus = React.createClass({
             suboptionsDisabled = false;
         }
 
-        if (this.state.formData.participant_status !== "1") {
-            reasonSpecifyRequired = true;
+        var alertMessage = "";
+        var alertClass = "alert text-center hide";
+        if (this.state.updateResult) {
+            if (this.state.updateResult == "success") {
+                alertClass = "alert alert-success text-center";
+                alertMessage = "Update Successful!";
+            } else if (this.state.updateResult == "error") {
+                var errorMessage = this.state.errorMessage;
+                alertClass = "alert alert-danger text-center";
+                alertMessage = errorMessage ? errorMessage : "Failed to update!";
+            }
         }
 
         return React.createElement(
-            FormElement,
-            { name: 'participantStatus', onSubmit: this.handleSubmit, ref: 'form', 'class': 'col-md-6' },
-            React.createElement(StaticElement, {
-                label: 'PSCID',
-                text: this.state.Data.pscid
-            }),
-            React.createElement(StaticElement, {
-                label: 'DCCID',
-                text: this.state.Data.candID
-            }),
-            React.createElement(SelectElement, {
-                label: 'Participant Status',
-                name: 'participant_status',
-                options: this.state.Data.statusOptions,
-                onUserInput: this.setFormData,
-                ref: 'participant_status',
-                disabled: disabled,
-                required: true
-            }),
-            React.createElement(SelectElement, {
-                label: 'Specify Reason (Required only for status Inactive/Incomplete)',
-                name: 'participant_suboptions',
-                options: this.state.Data.subOptions,
-                onUserInput: this.setFormData,
-                ref: 'participant_suboptions',
-                disabled: suboptionsDisabled,
-                required: reasonRequired
-            }),
-            React.createElement(TextareaElement, {
-                label: 'Comments',
-                name: 'reason_specify',
-                onUserInput: this.setFormData,
-                ref: 'reason_specify',
-                disabled: disabled,
-                required: reasonSpecifyRequired
-            }),
-            updateButton
+            'div',
+            null,
+            React.createElement(
+                'div',
+                { className: alertClass, role: 'alert', ref: 'alert-message' },
+                alertMessage
+            ),
+            React.createElement(
+                FormElement,
+                { name: 'participantStatus', onSubmit: this.handleSubmit, ref: 'form', 'class': 'col-md-6' },
+                React.createElement(StaticElement, {
+                    label: 'PSCID',
+                    text: this.state.Data.pscid
+                }),
+                React.createElement(StaticElement, {
+                    label: 'DCCID',
+                    text: this.state.Data.candID
+                }),
+                React.createElement(SelectElement, {
+                    label: 'Participant Status',
+                    name: 'participant_status',
+                    options: this.state.Data.statusOptions,
+                    onUserInput: this.setFormData,
+                    ref: 'participant_status',
+                    disabled: disabled,
+                    required: true
+                }),
+                React.createElement(SelectElement, {
+                    label: 'Specify Reason (Required only for status Inactive/Incomplete)',
+                    name: 'participant_suboptions',
+                    options: this.state.Data.subOptions,
+                    onUserInput: this.setFormData,
+                    ref: 'participant_suboptions',
+                    disabled: suboptionsDisabled,
+                    required: reasonRequired
+                }),
+                React.createElement(TextareaElement, {
+                    label: 'Comments',
+                    name: 'reason_specify',
+                    onUserInput: this.setFormData,
+                    ref: 'reason_specify',
+                    disabled: disabled,
+                    required: false
+                }),
+                updateButton
+            )
         );
     },
 
@@ -165,18 +183,35 @@ var ParticipantStatus = React.createClass({
             processData: false,
             success: function (data) {
                 self.setState({
-                    uploadResult: "success",
-                    formData: {} // reset form data after successful file upload
+                    updateResult: "success"
                 });
             },
             error: function (err) {
                 var errorMessage = JSON.parse(err.responseText).message;
                 self.setState({
-                    uploadResult: "error",
+                    updateResult: "error",
                     errorMessage: errorMessage
                 });
             }
 
+        });
+    },
+
+    /**
+     * Display a success/error alert message after form submission
+     */
+    showAlertMessage: function () {
+        var self = this;
+
+        if (this.refs["alert-message"] == null) {
+            return;
+        }
+
+        var alertMsg = this.refs["alert-message"].getDOMNode();
+        $(alertMsg).fadeTo(2000, 500).delay(3000).slideUp(500, function () {
+            self.setState({
+                updateResult: null
+            });
         });
     }
 

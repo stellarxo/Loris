@@ -95,7 +95,6 @@ var ProbandInfo = React.createClass({
 
         var alertMessage = "";
         var alertClass = "alert text-center hide";
-
         if (this.state.updateResult) {
             if (this.state.updateResult == "success") {
                 alertClass = "alert alert-success text-center";
@@ -107,14 +106,12 @@ var ProbandInfo = React.createClass({
             }
         }
 
-
-
         return (
             <div>
                 <div className={alertClass} role="alert" ref="alert-message">
                     {alertMessage}
                 </div>
-            <FormElement name="probandInfo" onSubmit={this.handleSubmit} ref="form" class="col-md-6">
+                <FormElement name="probandInfo" onSubmit={this.handleSubmit} ref="form" class="col-md-6">
                 <StaticElement
                     label="PSCID"
                     text={this.state.Data.pscid}
@@ -190,8 +187,7 @@ var ProbandInfo = React.createClass({
             processData:false,
             success: function(data) {
                 self.setState({
-                    updateResult: "success",
-                    formData: {}
+                    updateResult: "success"
                 });
             },
             error: function(err) {
@@ -200,14 +196,6 @@ var ProbandInfo = React.createClass({
                     updateResult: "error",
                     errorMessage: errorMessage
                 });
-                self.showAlertMessage();
-            },
-
-            success: function(data) {
-                self.setState({
-                    updateResult: "success"
-                });
-                self.showAlertMessage();
             }
 
         });
