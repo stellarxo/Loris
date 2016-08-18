@@ -64,9 +64,7 @@ class NDB_Form_candidate_parameters extends NDB_Form
 
         // consent
         $consent = $config->getSetting('ConsentModule');
-        if ($consent['useConsent'] === 'true') {
-            $this->tpl_data['useConsent'] = true;
-        }
+        $this->tpl_data['useConsent'] = $consent['useConsent'];
     }
 
     /**
