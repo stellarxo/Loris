@@ -76,6 +76,7 @@ var CandidateInfo = React.createClass({
         }
 
         var disabled = true;
+        var otherDisabled = true;
         var updateButton = null;
         if (loris.userHasPermission('candidate_parameter_edit')) {
             disabled = false;
@@ -98,6 +99,7 @@ var CandidateInfo = React.createClass({
 
         if (this.state.formData.flagged_reason === reasonKey) {
             otherRequired = true;
+            otherDisabled = false;
         }
 
         return React.createElement(
@@ -112,7 +114,7 @@ var CandidateInfo = React.createClass({
                 text: this.state.Data.candID
             }),
             React.createElement(SelectElement, {
-                label: "Caveat Emptor flag for Candidate",
+                label: "Caveat Emptor Flag for Candidate",
                 name: "flagged_caveatemptor",
                 options: this.state.caveatOptions,
                 onUserInput: this.setFormData,
@@ -121,7 +123,7 @@ var CandidateInfo = React.createClass({
                 required: true
             }),
             React.createElement(SelectElement, {
-                label: "Reason for Caveat Emptor flag",
+                label: "Reason for Caveat Emptor Flag",
                 name: "flagged_reason",
                 options: this.state.Data.caveatOptions // rename to caveat reason options
                 , onUserInput: this.setFormData,
@@ -134,7 +136,7 @@ var CandidateInfo = React.createClass({
                 name: "flagged_other",
                 onUserInput: this.setFormData,
                 ref: "flagged_other",
-                disabled: disabled,
+                disabled: otherDisabled,
                 required: otherRequired
             }),
             updateButton

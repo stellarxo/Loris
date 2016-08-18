@@ -6,7 +6,12 @@ var ProbandInfo = React.createClass({
                 "male": "Male",
                 "female": "Female"
             },
-            formData: {}
+            'Data': [],
+            'formData': {},
+            'updateResult': null,
+            'errorMessage': null,
+            'isLoaded':   false,
+            'loadedData': 0
         }
     },
 
@@ -88,6 +93,22 @@ var ProbandInfo = React.createClass({
             dob2Required = true;
         }
 
+        var alertMessage = "";
+        var alertClass = "alert text-center hide";
+
+        if (this.state.updateResult) {
+            if (this.state.updateResult == "success") {
+                alertClass = "alert alert-success text-center";
+                alertMessage = "Update Successful!";
+            } else if (this.state.updateResult == "error") {
+                var errorMessage = this.state.errorMessage;
+                alertClass = "alert alert-danger text-center";
+                alertMessage = errorMessage ? errorMessage : "Failed to update!";
+            }
+        }
+
+
+
         return (
             <FormElement name="probandInfo" onSubmit={this.handleSubmit} ref="form" class="col-md-6">
                 <StaticElement
@@ -138,6 +159,14 @@ var ProbandInfo = React.createClass({
         var myFormData = this.state.formData;
         var formRefs = this.refs;
 
+        var dob1 = myFormData['ProbandDoB'] ? myFormData['ProbandDoB'] : null;
+        var dob2 = myFormData['ProbandDoB2'] ? myFormData['ProbandDoB2'] : null;
+
+        if (dob1 !== dob2) {
+            alert("DOB do not match!");
+            return;
+        }
+
         // Set form data and upload the media file
         var self = this;
         var formData = new FormData();
@@ -156,16 +185,25 @@ var ProbandInfo = React.createClass({
             processData:false,
             success: function(data) {
                 self.setState({
-                    uploadResult: "success",
+                    updateResult: "success",
                     formData: {} // reset form data after successful file upload
                 });
             },
             error: function(err) {
                 var errorMessage = JSON.parse(err.responseText).message;
                 self.setState({
-                    uploadResult: "error",
+                    updateResult: "error",
                     errorMessage: errorMessage
                 });
+            },
+
+            success: function(data) {
+                $("#file-progress").addClass('hide');
+                self.setState({
+                    uploadResult: "success"
+                });
+
+                self.showAlertMessage();
             }
 
         });
