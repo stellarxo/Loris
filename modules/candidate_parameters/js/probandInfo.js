@@ -74,6 +74,22 @@ var ProbandInfo = React.createClass({
             );
         }
 
+        var disabled = true;
+        var updateButton = null;
+        if (loris.userHasPermission('candidate_parameter_edit')) {
+            disabled = false;
+            updateButton = React.createElement(ButtonElement, { label: "Update" });
+        }
+
+        var dobRequired = false;
+        var dob2Required = false;
+        // if (this.state.formData.ProbandGender !== null) {
+        //     dobRequired = true;
+        // }
+        // if (this.state.formData.ProbandDoB !== null) {
+        //     dob2Required = true;
+        // }
+
         return React.createElement(
             FormElement,
             { name: "probandInfo", onSubmit: this.handleSubmit, ref: "form", "class": "col-md-6" },
@@ -90,23 +106,27 @@ var ProbandInfo = React.createClass({
                 name: "ProbandGender",
                 options: this.state.genderOptions,
                 onUserInput: this.setFormData,
-                ref: "ProbandGender"
+                ref: "ProbandGender",
+                disabled: disabled,
+                required: true
             }),
             React.createElement(DateElement, {
                 label: "DoB Proband",
                 name: "ProbandDoB",
                 onUserInput: this.setFormData,
-                ref: "ProbandDoB"
+                ref: "ProbandDoB",
+                disabled: disabled,
+                required: dobRequired
             }),
             React.createElement(DateElement, {
                 label: "Confirm DoB Proband",
                 name: "ProbandDoB2",
                 onUserInput: this.setFormData,
-                ref: "ProbandDoB2"
+                ref: "ProbandDoB2",
+                disabled: disabled,
+                required: dob2Required
             }),
-            React.createElement(ButtonElement, {
-                label: "Update"
-            })
+            updateButton
         );
     },
 

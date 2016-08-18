@@ -67,6 +67,27 @@ var ParticipantStatus = React.createClass({
             );
         }
 
+        var disabled = true;
+        var suboptionsDisabled = true;
+        var updateButton = null;
+        if (loris.userHasPermission('candidate_parameter_edit')) {
+            disabled = false;
+            updateButton = <ButtonElement label="Update" />;
+        }
+
+        var reasonRequired = false;
+        var reasonSpecifyRequired = false;
+        // Can check if "Required" === 1
+        // if (this.state.formData.participant_status === "5" || this.state.formData.participant_status === "6") {
+        //     reasonRequired = true;
+        //     suboptionsDisabled = false;
+        // }
+        //
+        // if (this.state.formData.participant_status !== "1") {
+        //     reasonSpecifyRequired = true;
+        // }
+
+
         return (
             <FormElement name="participantStatus" onSubmit={this.handleSubmit} ref="form" class="col-md-6">
                 <StaticElement
@@ -83,6 +104,8 @@ var ParticipantStatus = React.createClass({
                     options={this.state.Data.statusOptions}
                     onUserInput={this.setFormData}
                     ref="participant_status"
+                    disabled={disabled}
+                    required={true}
                 />
                 <SelectElement
                     label="Specify Reason (Required only for status Inactive/Incomplete)"
@@ -90,16 +113,18 @@ var ParticipantStatus = React.createClass({
                     options={this.state.Data.subOptions}
                     onUserInput={this.setFormData}
                     ref="participant_suboptions"
+                    disabled={suboptionsDisabled}
+                    required={reasonRequired}
                 />
                 <TextareaElement
                     label="Comments"
                     name="reason_specify"
                     onUserInput={this.setFormData}
                     ref="reason_specify"
+                    disabled={disabled}
+                    required={reasonSpecifyRequired}
                 />
-                <ButtonElement
-                    label="Update"
-                />
+                {updateButton}
             </FormElement>
         );
     },

@@ -69,6 +69,27 @@ var ParticipantStatus = React.createClass({
             );
         }
 
+        var disabled = true;
+        var suboptionsDisabled = true;
+        var updateButton = null;
+        if (loris.userHasPermission('candidate_parameter_edit')) {
+            disabled = false;
+            updateButton = React.createElement(ButtonElement, { label: 'Update' });
+        }
+
+        var reasonRequired = false;
+        var reasonSpecifyRequired = false;
+        // Can check if "Required" === 1
+        // if (this.state.formData.participant_status === "5" || this.state.formData.participant_status === "6") {
+        //     reasonRequired = true;
+        //     suboptionsDisabled = false;
+        // }
+        //
+        // if (this.state.formData.participant_status !== "1") {
+        //     reasonSpecifyRequired = true;
+        // }
+
+
         return React.createElement(
             FormElement,
             { name: 'participantStatus', onSubmit: this.handleSubmit, ref: 'form', 'class': 'col-md-6' },
@@ -85,24 +106,28 @@ var ParticipantStatus = React.createClass({
                 name: 'participant_status',
                 options: this.state.Data.statusOptions,
                 onUserInput: this.setFormData,
-                ref: 'participant_status'
+                ref: 'participant_status',
+                disabled: disabled,
+                required: true
             }),
             React.createElement(SelectElement, {
                 label: 'Specify Reason (Required only for status Inactive/Incomplete)',
                 name: 'participant_suboptions',
                 options: this.state.Data.subOptions,
                 onUserInput: this.setFormData,
-                ref: 'participant_suboptions'
+                ref: 'participant_suboptions',
+                disabled: suboptionsDisabled,
+                required: reasonRequired
             }),
             React.createElement(TextareaElement, {
                 label: 'Comments',
                 name: 'reason_specify',
                 onUserInput: this.setFormData,
-                ref: 'reason_specify'
+                ref: 'reason_specify',
+                disabled: disabled,
+                required: reasonSpecifyRequired
             }),
-            React.createElement(ButtonElement, {
-                label: 'Update'
-            })
+            updateButton
         );
     },
 

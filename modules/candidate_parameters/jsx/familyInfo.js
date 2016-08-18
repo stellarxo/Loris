@@ -72,6 +72,13 @@ var FamilyInfo = React.createClass({
             );
         }
 
+        var disabled = true;
+        var updateButton = null;
+        if (loris.userHasPermission('candidate_parameter_edit')) {
+            disabled = false;
+            updateButton = <ButtonElement label="Update" />;
+        }
+
         return (
             <FormElement name="familyInfo" onSubmit={this.handleSubmit} ref="form" class="col-md-6">
                 <StaticElement
@@ -87,6 +94,8 @@ var FamilyInfo = React.createClass({
                     name="CandID"
                     onUserInput={this.setFormData}
                     ref="CandID"
+                    disabled={disabled}
+                    required={true}
                 />
                 <SelectElement
                     label="Relation Type"
@@ -94,10 +103,10 @@ var FamilyInfo = React.createClass({
                     options={this.state.relationshipOptions}
                     onUserInput={this.setFormData}
                     ref="Relationship_type"
+                    disabled={disabled}
+                    required={true}
                 />
-                <ButtonElement
-                    label="Update"
-                />
+                {updateButton}
             </FormElement>
         );
     },

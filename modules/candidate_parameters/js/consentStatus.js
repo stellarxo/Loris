@@ -87,6 +87,21 @@ var ConsentStatus = React.createClass({
             );
         }
 
+        var disabled = true;
+        var updateButton = null;
+        if (loris.userHasPermission('candidate_parameter_edit')) {
+            disabled = false;
+            updateButton = React.createElement(ButtonElement, { label: "Update" });
+        }
+        var dateRequired = false;
+        var withdrawalRequired = false;
+        // if (this.state.formData.study_consent === "true") {
+        //     dateRequired = true;
+        // }
+        // if (this.state.formData.study_consent_withdrawal !== null) {
+        //     withdrawalRequired = true;
+        // }
+
         return React.createElement(
             FormElement,
             { name: "consentStatus", onSubmit: this.handleSubmit, ref: "form", "class": "col-md-6" },
@@ -103,35 +118,43 @@ var ConsentStatus = React.createClass({
                 name: "study_consent",
                 options: this.state.consentOptions,
                 onUserInput: this.setFormData,
-                ref: "study_consent"
+                ref: "study_consent",
+                disabled: disabled,
+                required: true
             }),
             React.createElement(DateElement, {
                 label: "Date of Consent to Study (required)",
                 name: "study_consent_date",
                 onUserInput: this.setFormData,
-                ref: "study_consent_date"
+                ref: "study_consent_date",
+                disabled: disabled,
+                required: dateRequired
             }),
             React.createElement(DateElement, {
                 label: "Confirmation Date of Consent to Study (required)",
                 name: "study_consent_date2",
                 onUserInput: this.setFormData,
-                ref: "study_consent_date2"
+                ref: "study_consent_date2",
+                disabled: disabled,
+                required: dateRequired
             }),
             React.createElement(DateElement, {
                 label: "Date of withdrawal of Consent to Study (optional)",
                 name: "study_consent_withdrawal",
                 onUserInput: this.setFormData,
-                ref: "study_consent_withdrawal"
+                ref: "study_consent_withdrawal",
+                disabled: disabled,
+                required: false
             }),
             React.createElement(DateElement, {
                 label: "Confirmation Date of withdrawal of Consent to Study (optional)",
                 name: "study_consent_withdrawal2",
                 onUserInput: this.setFormData,
-                ref: "study_consent_withdrawal2"
+                ref: "study_consent_withdrawal2",
+                disabled: disabled,
+                required: withdrawalRequired
             }),
-            React.createElement(ButtonElement, {
-                label: "Update"
-            })
+            updateButton
         );
     },
 

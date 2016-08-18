@@ -85,6 +85,21 @@ var ConsentStatus = React.createClass({
             );
         }
 
+        var disabled = true;
+        var updateButton = null;
+        if (loris.userHasPermission('candidate_parameter_edit')) {
+            disabled = false;
+            updateButton = <ButtonElement label="Update" />;
+        }
+        var dateRequired = false;
+        var withdrawalRequired = false;
+        // if (this.state.formData.study_consent === "true") {
+        //     dateRequired = true;
+        // }
+        // if (this.state.formData.study_consent_withdrawal !== null) {
+        //     withdrawalRequired = true;
+        // }
+
         return (
             <FormElement name="consentStatus" onSubmit={this.handleSubmit} ref="form" class="col-md-6">
                 <StaticElement
@@ -101,34 +116,42 @@ var ConsentStatus = React.createClass({
                     options={this.state.consentOptions}
                     onUserInput={this.setFormData}
                     ref="study_consent"
+                    disabled={disabled}
+                    required={true}
                 />
                 <DateElement
                     label="Date of Consent to Study (required)"
                     name="study_consent_date"
                     onUserInput={this.setFormData}
                     ref="study_consent_date"
+                    disabled={disabled}
+                    required={dateRequired}
                 />
                 <DateElement
                     label="Confirmation Date of Consent to Study (required)"
                     name="study_consent_date2"
                     onUserInput={this.setFormData}
                     ref="study_consent_date2"
+                    disabled={disabled}
+                    required={dateRequired}
                 />
                 <DateElement
                     label="Date of withdrawal of Consent to Study (optional)"
                     name="study_consent_withdrawal"
                     onUserInput={this.setFormData}
                     ref="study_consent_withdrawal"
+                    disabled={disabled}
+                    required={false}
                 />
                 <DateElement
                     label="Confirmation Date of withdrawal of Consent to Study (optional)"
                     name="study_consent_withdrawal2"
                     onUserInput={this.setFormData}
                     ref="study_consent_withdrawal2"
+                    disabled={disabled}
+                    required={withdrawalRequired}
                 />
-                <ButtonElement
-                    label="Update"
-                />
+                {updateButton}
             </FormElement>
         );
     },

@@ -75,6 +75,13 @@ var FamilyInfo = React.createClass({
             );
         }
 
+        var disabled = true;
+        var updateButton = null;
+        if (loris.userHasPermission('candidate_parameter_edit')) {
+            disabled = false;
+            updateButton = React.createElement(ButtonElement, { label: "Update" });
+        }
+
         return React.createElement(
             FormElement,
             { name: "familyInfo", onSubmit: this.handleSubmit, ref: "form", "class": "col-md-6" },
@@ -90,18 +97,20 @@ var FamilyInfo = React.createClass({
                 label: "Family Member ID (Enter DCCID)",
                 name: "CandID",
                 onUserInput: this.setFormData,
-                ref: "CandID"
+                ref: "CandID",
+                disabled: disabled,
+                required: true
             }),
             React.createElement(SelectElement, {
                 label: "Relation Type",
                 name: "Relationship_type",
                 options: this.state.relationshipOptions,
                 onUserInput: this.setFormData,
-                ref: "Relationship_type"
+                ref: "Relationship_type",
+                disabled: disabled,
+                required: true
             }),
-            React.createElement(ButtonElement, {
-                label: "Update"
-            })
+            updateButton
         );
     },
 
