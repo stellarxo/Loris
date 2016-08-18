@@ -6,7 +6,12 @@ var ConsentStatus = React.createClass({
                 "yes": "Yes",
                 "no": "No"
             },
-            formData: {}
+            'Data': [],
+            'formData': {},
+            'updateResult': null,
+            'errorMessage': null,
+            'isLoaded':   false,
+            'loadedData': 0
         }
     },
 

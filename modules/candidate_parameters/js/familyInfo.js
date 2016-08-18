@@ -8,7 +8,13 @@ var FamilyInfo = React.createClass({
                 "full_sibling": "Full Sibling",
                 "half_sibling": "Half Sibling",
                 "1st_cousin": "First Cousin"
-            }
+            },
+            'Data': [],
+            'formData': {},
+            'updateResult': null,
+            'errorMessage': null,
+            'isLoaded': false,
+            'loadedData': 0
         };
     },
 

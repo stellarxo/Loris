@@ -110,6 +110,10 @@ var ProbandInfo = React.createClass({
 
 
         return (
+            <div>
+                <div className={alertClass} role="alert" ref="alert-message">
+                    {alertMessage}
+                </div>
             <FormElement name="probandInfo" onSubmit={this.handleSubmit} ref="form" class="col-md-6">
                 <StaticElement
                     label="PSCID"
@@ -146,6 +150,7 @@ var ProbandInfo = React.createClass({
                 />
                 {updateButton}
             </FormElement>
+                </div>
         );
     },
 
@@ -167,7 +172,7 @@ var ProbandInfo = React.createClass({
             return;
         }
 
-        // Set form data and upload the media file
+        // Set form data
         var self = this;
         var formData = new FormData();
         for (var key in myFormData) {
@@ -186,7 +191,7 @@ var ProbandInfo = React.createClass({
             success: function(data) {
                 self.setState({
                     updateResult: "success",
-                    formData: {} // reset form data after successful file upload
+                    formData: {}
                 });
             },
             error: function(err) {
@@ -195,17 +200,34 @@ var ProbandInfo = React.createClass({
                     updateResult: "error",
                     errorMessage: errorMessage
                 });
+                self.showAlertMessage();
             },
 
             success: function(data) {
-                $("#file-progress").addClass('hide');
                 self.setState({
-                    uploadResult: "success"
+                    updateResult: "success"
                 });
-
                 self.showAlertMessage();
             }
 
+        });
+    },
+
+    /**
+     * Display a success/error alert message after form submission
+     */
+    showAlertMessage: function() {
+        var self = this;
+
+        if (this.refs["alert-message"] == null) {
+            return;
+        }
+
+        var alertMsg = this.refs["alert-message"].getDOMNode();
+        $(alertMsg).fadeTo(2000, 500).delay(3000).slideUp(500, function() {
+            self.setState({
+                updateResult: null
+            });
         });
     }
 

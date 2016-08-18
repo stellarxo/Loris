@@ -111,42 +111,51 @@ var ProbandInfo = React.createClass({
         }
 
         return React.createElement(
-            FormElement,
-            { name: "probandInfo", onSubmit: this.handleSubmit, ref: "form", "class": "col-md-6" },
-            React.createElement(StaticElement, {
-                label: "PSCID",
-                text: this.state.Data.pscid
-            }),
-            React.createElement(StaticElement, {
-                label: "DCCID",
-                text: this.state.Data.candID
-            }),
-            React.createElement(SelectElement, {
-                label: "Proband Gender",
-                name: "ProbandGender",
-                options: this.state.genderOptions,
-                onUserInput: this.setFormData,
-                ref: "ProbandGender",
-                disabled: disabled,
-                required: true
-            }),
-            React.createElement(DateElement, {
-                label: "DoB Proband",
-                name: "ProbandDoB",
-                onUserInput: this.setFormData,
-                ref: "ProbandDoB",
-                disabled: disabled,
-                required: dobRequired
-            }),
-            React.createElement(DateElement, {
-                label: "Confirm DoB Proband",
-                name: "ProbandDoB2",
-                onUserInput: this.setFormData,
-                ref: "ProbandDoB2",
-                disabled: disabled,
-                required: dob2Required
-            }),
-            updateButton
+            "div",
+            null,
+            React.createElement(
+                "div",
+                { className: alertClass, role: "alert", ref: "alert-message" },
+                alertMessage
+            ),
+            React.createElement(
+                FormElement,
+                { name: "probandInfo", onSubmit: this.handleSubmit, ref: "form", "class": "col-md-6" },
+                React.createElement(StaticElement, {
+                    label: "PSCID",
+                    text: this.state.Data.pscid
+                }),
+                React.createElement(StaticElement, {
+                    label: "DCCID",
+                    text: this.state.Data.candID
+                }),
+                React.createElement(SelectElement, {
+                    label: "Proband Gender",
+                    name: "ProbandGender",
+                    options: this.state.genderOptions,
+                    onUserInput: this.setFormData,
+                    ref: "ProbandGender",
+                    disabled: disabled,
+                    required: true
+                }),
+                React.createElement(DateElement, {
+                    label: "DoB Proband",
+                    name: "ProbandDoB",
+                    onUserInput: this.setFormData,
+                    ref: "ProbandDoB",
+                    disabled: disabled,
+                    required: dobRequired
+                }),
+                React.createElement(DateElement, {
+                    label: "Confirm DoB Proband",
+                    name: "ProbandDoB2",
+                    onUserInput: this.setFormData,
+                    ref: "ProbandDoB2",
+                    disabled: disabled,
+                    required: dob2Required
+                }),
+                updateButton
+            )
         );
     },
 
@@ -168,7 +177,7 @@ var ProbandInfo = React.createClass({
             return;
         }
 
-        // Set form data and upload the media file
+        // Set form data
         var self = this;
         var formData = new FormData();
         for (var key in myFormData) {
@@ -187,7 +196,7 @@ var ProbandInfo = React.createClass({
             success: function (data) {
                 self.setState({
                     updateResult: "success",
-                    formData: {} // reset form data after successful file upload
+                    formData: {}
                 });
             },
             error: function (err) {
@@ -196,17 +205,34 @@ var ProbandInfo = React.createClass({
                     updateResult: "error",
                     errorMessage: errorMessage
                 });
+                self.showAlertMessage();
             },
 
             success: function (data) {
-                $("#file-progress").addClass('hide');
                 self.setState({
-                    uploadResult: "success"
+                    updateResult: "success"
                 });
-
                 self.showAlertMessage();
             }
 
+        });
+    },
+
+    /**
+     * Display a success/error alert message after form submission
+     */
+    showAlertMessage: function () {
+        var self = this;
+
+        if (this.refs["alert-message"] == null) {
+            return;
+        }
+
+        var alertMsg = this.refs["alert-message"].getDOMNode();
+        $(alertMsg).fadeTo(2000, 500).delay(3000).slideUp(500, function () {
+            self.setState({
+                updateResult: null
+            });
         });
     }
 

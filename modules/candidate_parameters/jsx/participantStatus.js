@@ -2,7 +2,12 @@ var ParticipantStatus = React.createClass({
 
     getInitialState: function () {
         return {
-            formData: {}
+            'Data': [],
+            'formData': {},
+            'updateResult': null,
+            'errorMessage': null,
+            'isLoaded':   false,
+            'loadedData': 0
         }
     },
 
