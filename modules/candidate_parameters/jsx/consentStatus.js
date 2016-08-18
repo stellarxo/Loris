@@ -5,7 +5,8 @@ var ConsentStatus = React.createClass({
             "consentOptions": {
                 "yes": "Yes",
                 "no": "No"
-            }
+            },
+            formData: {}
         }
     },
 
@@ -93,12 +94,12 @@ var ConsentStatus = React.createClass({
         }
         var dateRequired = false;
         var withdrawalRequired = false;
-        // if (this.state.formData.study_consent === "true") {
-        //     dateRequired = true;
-        // }
-        // if (this.state.formData.study_consent_withdrawal !== null) {
-        //     withdrawalRequired = true;
-        // }
+        if (this.state.formData.study_consent === "true") {
+            dateRequired = true;
+        }
+        if (this.state.formData.study_consent_withdrawal !== null) {
+            withdrawalRequired = true;
+        }
 
         return (
             <FormElement name="consentStatus" onSubmit={this.handleSubmit} ref="form" class="col-md-6">
@@ -187,16 +188,6 @@ var ConsentStatus = React.createClass({
                     uploadResult: "success",
                     formData: {} // reset form data after successful file upload
                 });
-
-                // Iterates through child components and resets state
-                // to initial state in order to clear the form
-                Object.keys(formRefs).map(function(ref) {
-                    if (formRefs[ref].state && formRefs[ref].state.value) {
-                        formRefs[ref].state.value = "";
-                    }
-                });
-                // rerender components
-                self.forceUpdate();
             },
             error: function(err) {
                 var errorMessage = JSON.parse(err.responseText).message;

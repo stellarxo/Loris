@@ -2,6 +2,7 @@ var ParticipantStatus = React.createClass({
 
     getInitialState: function () {
         return {
+            formData: {}
         }
     },
 
@@ -78,15 +79,14 @@ var ParticipantStatus = React.createClass({
         var reasonRequired = false;
         var reasonSpecifyRequired = false;
         // Can check if "Required" === 1
-        // if (this.state.formData.participant_status === "5" || this.state.formData.participant_status === "6") {
-        //     reasonRequired = true;
-        //     suboptionsDisabled = false;
-        // }
-        //
-        // if (this.state.formData.participant_status !== "1") {
-        //     reasonSpecifyRequired = true;
-        // }
+        if (this.state.formData.participant_status === "5" || this.state.formData.participant_status === "6") {
+            reasonRequired = true;
+            suboptionsDisabled = false;
+        }
 
+        if (this.state.formData.participant_status !== "1") {
+            reasonSpecifyRequired = true;
+        }
 
         return (
             <FormElement name="participantStatus" onSubmit={this.handleSubmit} ref="form" class="col-md-6">
@@ -160,16 +160,6 @@ var ParticipantStatus = React.createClass({
                     uploadResult: "success",
                     formData: {} // reset form data after successful file upload
                 });
-
-                // Iterates through child components and resets state
-                // to initial state in order to clear the form
-                Object.keys(formRefs).map(function(ref) {
-                    if (formRefs[ref].state && formRefs[ref].state.value) {
-                        formRefs[ref].state.value = "";
-                    }
-                });
-                // rerender components
-                self.forceUpdate();
             },
             error: function(err) {
                 var errorMessage = JSON.parse(err.responseText).message;

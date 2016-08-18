@@ -5,7 +5,8 @@ var ProbandInfo = React.createClass({
             "genderOptions": {
                 "male": "Male",
                 "female": "Female"
-            }
+            },
+            formData: {}
         }
     },
 
@@ -80,12 +81,12 @@ var ProbandInfo = React.createClass({
 
         var dobRequired = false;
         var dob2Required = false;
-        // if (this.state.formData.ProbandGender !== null) {
-        //     dobRequired = true;
-        // }
-        // if (this.state.formData.ProbandDoB !== null) {
-        //     dob2Required = true;
-        // }
+        if (this.state.formData.ProbandGender !== null) {
+            dobRequired = true;
+        }
+        if (this.state.formData.ProbandDoB !== null) {
+            dob2Required = true;
+        }
 
         return (
             <FormElement name="probandInfo" onSubmit={this.handleSubmit} ref="form" class="col-md-6">
@@ -158,16 +159,6 @@ var ProbandInfo = React.createClass({
                     uploadResult: "success",
                     formData: {} // reset form data after successful file upload
                 });
-
-                // Iterates through child components and resets state
-                // to initial state in order to clear the form
-                Object.keys(formRefs).map(function(ref) {
-                    if (formRefs[ref].state && formRefs[ref].state.value) {
-                        formRefs[ref].state.value = "";
-                    }
-                });
-                // rerender components
-                self.forceUpdate();
             },
             error: function(err) {
                 var errorMessage = JSON.parse(err.responseText).message;
