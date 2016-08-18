@@ -97,7 +97,7 @@ var ConsentStatus = React.createClass({
         if (this.state.formData.study_consent === "true") {
             dateRequired = true;
         }
-        if (this.state.formData.study_consent_withdrawal !== null) {
+        if (this.state.formData.study_consent_withdrawal !== '') {
             withdrawalRequired = true;
         }
 
