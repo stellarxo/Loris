@@ -68,11 +68,14 @@
                 });
         React.render(probandInfo, document.getElementById("proband-info"));
     }
-    var familyInfo = RFamilyInfo({
-        "dataURL": "{$baseurl}/candidate_parameters/ajax/getData.php?data=familyInfo&candID=" + {$smarty.get.candID},
-        "action": "{$baseurl}/candidate_parameters/ajax/formHandler.php"
-    });
-    React.render(familyInfo, document.getElementById("family-info"));
+
+    if (loris.config('useFamilyID')) {
+        var familyInfo = RFamilyInfo({
+            "dataURL": "{$baseurl}/candidate_parameters/ajax/getData.php?data=familyInfo&candID=" + {$smarty.get.candID},
+            "action": "{$baseurl}/candidate_parameters/ajax/formHandler.php"
+        });
+        React.render(familyInfo, document.getElementById("family-info"));
+    }
 
     var participantStatus = RParticipantStatus({
         "dataURL": "{$baseurl}/candidate_parameters/ajax/getData.php?data=participantStatus&candID=" + {$smarty.get.candID},
