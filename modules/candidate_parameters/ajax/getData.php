@@ -17,6 +17,10 @@ if (isset($_GET['data'])) {
     else if ($data == "consentStatus") {
         echo json_encode(getConsentStatusFields());
     }
+    else {
+        header("HTTP/1.1 404 Not Found");
+        exit;
+    }
 }
 
 function getCandInfoFields() {

@@ -1,23 +1,23 @@
 <?php
 
 if (isset($_POST['tab'])) {
-    $action = $_POST['tab'];
-    var_dump($action);
-    if ($action == "candidateInfo") {
+    $tab = $_POST['tab'];
+    if ($tab == "candidateInfo") {
         editCandInfoFields();
     }
-    else if ($action == "probandInfo") {
+    else if ($tab == "probandInfo") {
         editProbandInfoFields();
     }
-    else if ($action == "familyInfo") {
+    else if ($tab == "familyInfo") {
         editFamilyInfoFields();
     }
-    else if ($action == "participantStatus") {
+    else if ($tab == "participantStatus") {
         editParticipantStatusFields();
     }
-    else if ($action == "consentStatus") {
+    else if ($tab == "consentStatus") {
         editConsentStatusFields();
-    } else {
+    }
+    else {
         header("HTTP/1.1 404 Not Found");
         exit;
     }
