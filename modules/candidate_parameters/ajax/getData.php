@@ -80,9 +80,20 @@ function getFamilyInfoFields() {
         array('candid' => $candID)
     );
 
+    $candidates  = $db->pselect(
+        "SELECT CandID FROM candidate ORDER BY CandID",
+        []
+    );
+
+    // remove own candID from list
+    $key = array_search($candID, $candidates);
+    unset($candidates[$key]);
+    unset($candidates[0][0]);
+
     $result = [
         'pscid' => $pscid,
-        'candID' => $candID
+        'candID' => $candID,
+        'candidates' => $candidates
     ];
 
     return $result;
