@@ -1,8 +1,10 @@
+"use strict";
+
 var CandidateInfo = React.createClass({
     displayName: "CandidateInfo",
 
 
-    getInitialState: function () {
+    getInitialState: function getInitialState() {
         return {
             "caveatOptions": {
                 true: "True",
@@ -17,11 +19,11 @@ var CandidateInfo = React.createClass({
         };
     },
 
-    componentDidMount: function () {
+    componentDidMount: function componentDidMount() {
         var that = this;
         $.ajax(this.props.dataURL, {
             dataType: 'json',
-            xhr: function () {
+            xhr: function xhr() {
                 var xhr = new window.XMLHttpRequest();
                 xhr.addEventListener("progress", function (evt) {
                     that.setState({
@@ -30,13 +32,13 @@ var CandidateInfo = React.createClass({
                 });
                 return xhr;
             },
-            success: function (data) {
+            success: function success(data) {
                 that.setState({
                     'Data': data,
                     'isLoaded': true
                 });
             },
-            error: function (data, error_code, error_msg) {
+            error: function error(data, error_code, error_msg) {
                 that.setState({
                     'error': 'An error occurred when loading the form!'
                 });
@@ -44,7 +46,7 @@ var CandidateInfo = React.createClass({
         });
     },
 
-    setFormData: function (formElement, value) {
+    setFormData: function setFormData(formElement, value) {
         var formData = this.state.formData;
         formData[formElement] = value;
 
@@ -53,11 +55,11 @@ var CandidateInfo = React.createClass({
         });
     },
 
-    onSubmit: function (e) {
+    onSubmit: function onSubmit(e) {
         e.preventDefault();
     },
 
-    render: function () {
+    render: function render() {
 
         if (!this.state.isLoaded) {
             if (this.state.error != undefined) {
@@ -174,7 +176,7 @@ var CandidateInfo = React.createClass({
      * Handles form submission
      * @param e
      */
-    handleSubmit: function (e) {
+    handleSubmit: function handleSubmit(e) {
         e.preventDefault();
 
         var myFormData = this.state.formData;
@@ -199,12 +201,12 @@ var CandidateInfo = React.createClass({
             cache: false,
             contentType: false,
             processData: false,
-            success: function (data) {
+            success: function success(data) {
                 self.setState({
                     updateResult: "success"
                 });
             },
-            error: function (err) {
+            error: function error(err) {
                 var errorMessage = JSON.parse(err.responseText).message;
                 self.setState({
                     updateResult: "error",
@@ -218,7 +220,7 @@ var CandidateInfo = React.createClass({
     /**
      * Display a success/error alert message after form submission
      */
-    showAlertMessage: function () {
+    showAlertMessage: function showAlertMessage() {
         var self = this;
 
         if (this.refs["alert-message"] == null) {

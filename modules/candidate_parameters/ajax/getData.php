@@ -30,7 +30,10 @@ function getCandInfoFields() {
 
     // get caveat options
     $caveat_options = [];
-    $options = $db->pselect("SELECT ID, Description FROM caveat_options");
+    $options = $db->pselect(
+        "SELECT ID, Description FROM caveat_options",
+        array()
+    );
     foreach($options as $row) {
         $caveat_options[$row['ID']] = $row['Description'];
     }

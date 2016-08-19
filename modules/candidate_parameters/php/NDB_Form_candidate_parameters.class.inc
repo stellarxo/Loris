@@ -68,6 +68,48 @@ class NDB_Form_candidate_parameters extends NDB_Form
     }
 
     /**
+     * Gets the participant_status options from participant_status_options
+     * getParticipantStatusOptions()
+     *
+     * @return array Options array suitable for use in QuickForm select
+     *               element
+     */
+    function getParticipantStatusOptions()
+    {
+        $DB =& Database::singleton();
+        $options = $DB->pselect(
+            "SELECT ID,Description FROM participant_status_options WHERE parentID IS NULL",
+            array()
+        );
+        $option_array = array();
+        foreach ($options as $option) {
+            $option_array[$option['ID']] = $option['Description'];
+        }
+        return $option_array;
+    }
+
+    /**
+     * Gets the participant_status options suboptions from participant_status_options
+     * getParticipantStatusSubOptions()
+     *
+     * @return array Options array suitable for use in QuickForm select
+     *               element
+     */
+    function getParticipantStatusSubOptions($parentID)
+    {
+        $DB =& Database::singleton();
+        $options = $DB->pselect(
+            "SELECT ID,Description FROM participant_status_options WHERE parentID=:pid",
+            array('pid'=>$parentID)
+        );
+        $option_array = array();
+        foreach ($options as $option) {
+            $option_array[$option['ID']] = $option['Description'];
+        }
+        return $option_array;
+    }
+
+    /**
      * Include additional CSS files:
      *  1. candidate_parameters.css
      *

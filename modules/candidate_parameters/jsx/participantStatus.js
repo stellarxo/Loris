@@ -167,6 +167,9 @@ var ParticipantStatus = React.createClass({
             }
         }
 
+        formData.append('tab', this.props.tabName);
+        formData.append('candID', this.state.Data.candID);
+
         $.ajax({
             type: 'POST',
             url: self.props.action,
@@ -210,4 +213,4 @@ var ParticipantStatus = React.createClass({
 
 });
 
-RParticipantStatus = React.createFactory(ParticipantStatus);
+var RParticipantStatus = React.createFactory(ParticipantStatus);

@@ -155,6 +155,9 @@ var FamilyInfo = React.createClass({
             }
         }
 
+        formData.append('tab', this.props.tabName);
+        formData.append('candID', this.state.Data.candID);
+
         $.ajax({
             type: 'POST',
             url: self.props.action,
@@ -198,4 +201,4 @@ var FamilyInfo = React.createClass({
 
 });
 
-RFamilyInfo = React.createFactory(FamilyInfo);
+var RFamilyInfo = React.createFactory(FamilyInfo);

@@ -199,6 +199,9 @@ var ConsentStatus = React.createClass({
             }
         }
 
+        formData.append('tab', this.props.tabName);
+        formData.append('candID', this.state.Data.candID);
+
         $.ajax({
             type: 'POST',
             url: self.props.action,
@@ -242,5 +245,5 @@ var ConsentStatus = React.createClass({
 
 });
 
-RConsentStatus = React.createFactory(ConsentStatus);
+var RConsentStatus = React.createFactory(ConsentStatus);
 

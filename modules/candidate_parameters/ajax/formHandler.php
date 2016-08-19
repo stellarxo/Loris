@@ -56,16 +56,11 @@ function editProbandInfoFields() {
         exit;
     }
 
-    $candID = $_GET['candID'];
+    $candID = $_POST['candID'];
 
     // Process posted data
     $gender   = isset($_POST['ProbandGender']) ? $_POST['ProbandGender'] : null;
     $dob    = isset($_POST['ProbandDoB']) ? $_POST['ProbandDoB'] : null;
-    $dob2    = isset($_POST['ProbandDoB2']) ? $_POST['ProbandDoB2'] : null;
-
-    if ($dob !== $dob2) {
-        // throw error
-    }
 
     $updateValues = [
         'ProbandGender' => $gender,
@@ -73,6 +68,21 @@ function editProbandInfoFields() {
     ];
 
     $db->update('candidate', $updateValues, ['CandID' => $candID]);
+
+    $ageDifference = "Could not calculate age";
+
+    $candidateDOB = $db->pselectOne(
+        "SELECT DoB FROM candidate WHERE CandID=:CandidateID",
+        array('CandidateID' => $candID));
+    if (!empty($candidateDOB)) {
+        $age = Utility::calculateAge($dob, $candidateDOB);
+
+        if ($age !== null) {
+            $ageDifference = $age['year'] * 12 + $age['mon'] + round($age['day'] / 30, 2);
+        }
+    }
+
+    return $ageDifference;
 }
 
 function editFamilyInfoFields() {

@@ -1,13 +1,16 @@
+"use strict";
+
 var ProbandInfo = React.createClass({
     displayName: "ProbandInfo",
 
 
-    getInitialState: function () {
+    getInitialState: function getInitialState() {
         return {
             "genderOptions": {
                 "male": "Male",
                 "female": "Female"
             },
+            "ageDifference": "Could not calculate age",
             'Data': [],
             'formData': {},
             'updateResult': null,
@@ -17,11 +20,11 @@ var ProbandInfo = React.createClass({
         };
     },
 
-    componentDidMount: function () {
+    componentDidMount: function componentDidMount() {
         var that = this;
         $.ajax(this.props.dataURL, {
             dataType: 'json',
-            xhr: function () {
+            xhr: function xhr() {
                 var xhr = new window.XMLHttpRequest();
                 xhr.addEventListener("progress", function (evt) {
                     that.setState({
@@ -30,13 +33,13 @@ var ProbandInfo = React.createClass({
                 });
                 return xhr;
             },
-            success: function (data) {
+            success: function success(data) {
                 that.setState({
                     'Data': data,
                     'isLoaded': true
                 });
             },
-            error: function (data, error_code, error_msg) {
+            error: function error(data, error_code, error_msg) {
                 that.setState({
                     'error': 'An error occurred when loading the form!'
                 });
@@ -44,7 +47,7 @@ var ProbandInfo = React.createClass({
         });
     },
 
-    setFormData: function (formElement, value) {
+    setFormData: function setFormData(formElement, value) {
         var formData = this.state.formData;
         formData[formElement] = value;
 
@@ -53,11 +56,11 @@ var ProbandInfo = React.createClass({
         });
     },
 
-    onSubmit: function (e) {
+    onSubmit: function onSubmit(e) {
         e.preventDefault();
     },
 
-    render: function () {
+    render: function render() {
 
         if (!this.state.isLoaded) {
             if (this.state.error != undefined) {
@@ -153,6 +156,10 @@ var ProbandInfo = React.createClass({
                     disabled: disabled,
                     required: dob2Required
                 }),
+                React.createElement(StaticElement, {
+                    label: "Age Difference (months)",
+                    text: this.state.ageDifference
+                }),
                 updateButton
             )
         );
@@ -162,7 +169,7 @@ var ProbandInfo = React.createClass({
      * Handles form submission
      * @param e
      */
-    handleSubmit: function (e) {
+    handleSubmit: function handleSubmit(e) {
         e.preventDefault();
 
         var myFormData = this.state.formData;
@@ -185,6 +192,9 @@ var ProbandInfo = React.createClass({
             }
         }
 
+        formData.append('tab', this.props.tabName);
+        formData.append('candID', this.state.Data.candID);
+
         $.ajax({
             type: 'POST',
             url: self.props.action,
@@ -192,12 +202,13 @@ var ProbandInfo = React.createClass({
             cache: false,
             contentType: false,
             processData: false,
-            success: function (data) {
+            success: function success(data) {
                 self.setState({
-                    updateResult: "success"
+                    updateResult: "success",
+                    ageDifference: data.result
                 });
             },
-            error: function (err) {
+            error: function error(err) {
                 var errorMessage = JSON.parse(err.responseText).message;
                 self.setState({
                     updateResult: "error",
@@ -211,7 +222,7 @@ var ProbandInfo = React.createClass({
     /**
      * Display a success/error alert message after form submission
      */
-    showAlertMessage: function () {
+    showAlertMessage: function showAlertMessage() {
         var self = this;
 
         if (this.refs["alert-message"] == null) {
@@ -228,4 +239,4 @@ var ProbandInfo = React.createClass({
 
 });
 
-RProbandInfo = React.createFactory(ProbandInfo);
+var RProbandInfo = React.createFactory(ProbandInfo);

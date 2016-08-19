@@ -64,7 +64,8 @@
     if (loris.config('useProband')) {
         var probandInfo = RProbandInfo({
                 "dataURL": "{$baseurl}/candidate_parameters/ajax/getData.php?data=probandInfo&candID=" + {$smarty.get.candID},
-                "action": "{$baseurl}/candidate_parameters/ajax/formHandler.php"
+                "action": "{$baseurl}/candidate_parameters/ajax/formHandler.php",
+                "tabName": "probandInfo"
                 });
         React.render(probandInfo, document.getElementById("proband-info"));
     }
@@ -72,21 +73,24 @@
     if (loris.config('useFamilyID')) {
         var familyInfo = RFamilyInfo({
             "dataURL": "{$baseurl}/candidate_parameters/ajax/getData.php?data=familyInfo&candID=" + {$smarty.get.candID},
-            "action": "{$baseurl}/candidate_parameters/ajax/formHandler.php"
+            "action": "{$baseurl}/candidate_parameters/ajax/formHandler.php",
+            "tabName": "familyInfo"
         });
         React.render(familyInfo, document.getElementById("family-info"));
     }
 
     var participantStatus = RParticipantStatus({
         "dataURL": "{$baseurl}/candidate_parameters/ajax/getData.php?data=participantStatus&candID=" + {$smarty.get.candID},
-        "action": "{$baseurl}/candidate_parameters/ajax/formHandler.php"
+        "action": "{$baseurl}/candidate_parameters/ajax/formHandler.php",
+        "tabName": "participantStatus"
     });
     React.render(participantStatus, document.getElementById("participant-status"));
 
     //if ({$smarty.get.useConsent}) {
         var consentStatus = RConsentStatus({
             "dataURL": "{$baseurl}/candidate_parameters/ajax/getData.php?data=consentStatus&candID=" + {$smarty.get.candID},
-            "action": "{$baseurl}/candidate_parameters/ajax/formHandler.php"
+            "action": "{$baseurl}/candidate_parameters/ajax/formHandler.php",
+            "tabName": "consentStatus"
         });
         React.render(consentStatus, document.getElementById("consent-status"));
     //}

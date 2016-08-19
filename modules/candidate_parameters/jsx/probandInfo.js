@@ -6,6 +6,7 @@ var ProbandInfo = React.createClass({
                 "male": "Male",
                 "female": "Female"
             },
+            "ageDifference" : "Could not calculate age",
             'Data': [],
             'formData': {},
             'updateResult': null,
@@ -145,6 +146,10 @@ var ProbandInfo = React.createClass({
                     disabled={disabled}
                     required={dob2Required}
                 />
+                <StaticElement
+                    label="Age Difference (months)"
+                    text={this.state.ageDifference}
+                />
                 {updateButton}
             </FormElement>
                 </div>
@@ -178,6 +183,9 @@ var ProbandInfo = React.createClass({
             }
         }
 
+        formData.append('tab', this.props.tabName);
+        formData.append('candID', this.state.Data.candID);
+
         $.ajax({
             type: 'POST',
             url: self.props.action,
@@ -187,7 +195,8 @@ var ProbandInfo = React.createClass({
             processData:false,
             success: function(data) {
                 self.setState({
-                    updateResult: "success"
+                    updateResult: "success",
+                    ageDifference: data.result
                 });
             },
             error: function(err) {
@@ -221,4 +230,4 @@ var ProbandInfo = React.createClass({
 
 });
 
-RProbandInfo = React.createFactory(ProbandInfo);
+var RProbandInfo = React.createFactory(ProbandInfo);

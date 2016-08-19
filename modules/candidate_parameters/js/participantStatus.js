@@ -1,8 +1,10 @@
+'use strict';
+
 var ParticipantStatus = React.createClass({
     displayName: 'ParticipantStatus',
 
 
-    getInitialState: function () {
+    getInitialState: function getInitialState() {
         return {
             'Data': [],
             'formData': {},
@@ -13,11 +15,11 @@ var ParticipantStatus = React.createClass({
         };
     },
 
-    componentDidMount: function () {
+    componentDidMount: function componentDidMount() {
         var that = this;
         $.ajax(this.props.dataURL, {
             dataType: 'json',
-            xhr: function () {
+            xhr: function xhr() {
                 var xhr = new window.XMLHttpRequest();
                 xhr.addEventListener("progress", function (evt) {
                     that.setState({
@@ -26,13 +28,13 @@ var ParticipantStatus = React.createClass({
                 });
                 return xhr;
             },
-            success: function (data) {
+            success: function success(data) {
                 that.setState({
                     'Data': data,
                     'isLoaded': true
                 });
             },
-            error: function (data, error_code, error_msg) {
+            error: function error(data, error_code, error_msg) {
                 that.setState({
                     'error': 'An error occurred when loading the form!'
                 });
@@ -40,7 +42,7 @@ var ParticipantStatus = React.createClass({
         });
     },
 
-    setFormData: function (formElement, value) {
+    setFormData: function setFormData(formElement, value) {
         var formData = this.state.formData;
         formData[formElement] = value;
 
@@ -49,11 +51,11 @@ var ParticipantStatus = React.createClass({
         });
     },
 
-    onSubmit: function (e) {
+    onSubmit: function onSubmit(e) {
         e.preventDefault();
     },
 
-    render: function () {
+    render: function render() {
 
         if (!this.state.isLoaded) {
             if (this.state.error != undefined) {
@@ -159,7 +161,7 @@ var ParticipantStatus = React.createClass({
      * Handles form submission
      * @param e
      */
-    handleSubmit: function (e) {
+    handleSubmit: function handleSubmit(e) {
         e.preventDefault();
 
         var myFormData = this.state.formData;
@@ -174,6 +176,9 @@ var ParticipantStatus = React.createClass({
             }
         }
 
+        formData.append('tab', this.props.tabName);
+        formData.append('candID', this.state.Data.candID);
+
         $.ajax({
             type: 'POST',
             url: self.props.action,
@@ -181,12 +186,12 @@ var ParticipantStatus = React.createClass({
             cache: false,
             contentType: false,
             processData: false,
-            success: function (data) {
+            success: function success(data) {
                 self.setState({
                     updateResult: "success"
                 });
             },
-            error: function (err) {
+            error: function error(err) {
                 var errorMessage = JSON.parse(err.responseText).message;
                 self.setState({
                     updateResult: "error",
@@ -200,7 +205,7 @@ var ParticipantStatus = React.createClass({
     /**
      * Display a success/error alert message after form submission
      */
-    showAlertMessage: function () {
+    showAlertMessage: function showAlertMessage() {
         var self = this;
 
         if (this.refs["alert-message"] == null) {
@@ -217,4 +222,4 @@ var ParticipantStatus = React.createClass({
 
 });
 
-RParticipantStatus = React.createFactory(ParticipantStatus);
+var RParticipantStatus = React.createFactory(ParticipantStatus);
