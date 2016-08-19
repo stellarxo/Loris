@@ -1,6 +1,6 @@
-//var PureRenderMixin = require('react/addons').addons.PureRenderMixin;
+/* exported RPaginationLinks */
 
-PaginationLinks = React.createClass({
+var PaginationLinks = React.createClass({
     mixins: [React.addons.PureRenderMixin],
     propTypes: {
         onChangePage: React.PropTypes.func,
@@ -8,9 +8,9 @@ PaginationLinks = React.createClass({
     },
     getDefaultProps: function() {
         return {
-            'RowsPerPage' : 10,
-            'Active' : 1
-        }
+            RowsPerPage: 10,
+            Active: 1
+        };
     },
     changePage: function(i) {
         var that = this;
@@ -18,7 +18,7 @@ PaginationLinks = React.createClass({
             // Don't jump to the top of the page
             evt.preventDefault();
 
-            if(that.props.onChangePage) {
+            if (that.props.onChangePage) {
                 that.props.onChangePage(i);
             }
         };
@@ -28,44 +28,58 @@ PaginationLinks = React.createClass({
         var pageLinks = [];
         var classList;
         var lastPage = Math.ceil(this.props.Total / rowsPerPage);
-        var startPage = Math.max(1, this.props.Active-3);
-        var lastShownPage = Math.min(this.props.Active+3, lastPage);
+        var startPage = Math.max(1, this.props.Active - 3);
+        var lastShownPage = Math.min(this.props.Active + 3, lastPage);
 
-        if(this.props.Total === 0) {
+        if (this.props.Total === 0) {
             return <div />;
         }
-        if(this.props.Total < this.props.RowsPerPage) {
+        if (this.props.Total < this.props.RowsPerPage) {
             return <div />;
         }
 
-        if((lastShownPage - startPage) <= 7) {
+        if ((lastShownPage - startPage) <= 7) {
             lastShownPage = startPage + 6;
-            if(lastShownPage > lastPage) {
+            if (lastShownPage > lastPage) {
                 lastShownPage = lastPage;
-                startPage = lastPage - 6
+                startPage = lastPage - 6;
             }
-
         }
 
-
-        if(startPage > 1) {
-            pageLinks.push(<li onClick={this.changePage(1)}><a href="#">&laquo;</a></li>);
+        if (startPage > 1) {
+            pageLinks.push(
+                <li onClick={this.changePage(1)}><a href="#">&laquo;</a></li>
+            );
         }
-        if(startPage < 1) {
+        if (startPage < 1) {
             startPage = 1;
         }
-        if(lastShownPage < 1) {
+        if (lastShownPage < 1) {
             lastShownPage = 1;
         }
-        for(var i = startPage; i <= lastShownPage; i += 1) {
+
+        // If there is only 1 page, don't display pagination links
+        if (startPage === lastShownPage) {
+            return <div />;
+        }
+
+        for (var i = startPage; i <= lastShownPage; i += 1) {
             classList = '';
-            if(this.props.Active == i) {
+            if (this.props.Active === i) {
                 classList = "active";
             }
-            pageLinks.push(<li onClick={this.changePage(i)} className={classList}><a href="#">{i}</a></li>);
+            pageLinks.push(
+                <li onClick={this.changePage(i)} className={classList}>
+                    <a href="#">{i}</a>
+                </li>
+            );
         }
-        if(lastShownPage !== lastPage) {
-        pageLinks.push(<li onClick={this.changePage(lastPage)}><a href="#">&raquo;</a></li>);
+        if (lastShownPage !== lastPage) {
+            pageLinks.push(
+                <li onClick={this.changePage(lastPage)}>
+                    <a href="#">&raquo;</a>
+                </li>
+            );
         }
         return (
             <ul className="pagination pagination-table">
@@ -75,4 +89,4 @@ PaginationLinks = React.createClass({
     }
 });
 
-RPaginationLinks = React.createFactory(PaginationLinks);
+var RPaginationLinks = React.createFactory(PaginationLinks);

@@ -1,20 +1,22 @@
-//var PureRenderMixin = require('react/addons').addons.PureRenderMixin;
+"use strict";
 
-PaginationLinks = React.createClass({
-    displayName: 'PaginationLinks',
+/* exported RPaginationLinks */
+
+var PaginationLinks = React.createClass({
+    displayName: "PaginationLinks",
 
     mixins: [React.addons.PureRenderMixin],
     propTypes: {
         onChangePage: React.PropTypes.func,
         Total: React.PropTypes.number.isRequired
     },
-    getDefaultProps: function () {
+    getDefaultProps: function getDefaultProps() {
         return {
-            'RowsPerPage': 10,
-            'Active': 1
+            RowsPerPage: 10,
+            Active: 1
         };
     },
-    changePage: function (i) {
+    changePage: function changePage(i) {
         var that = this;
         return function (evt) {
             // Don't jump to the top of the page
@@ -25,7 +27,7 @@ PaginationLinks = React.createClass({
             }
         };
     },
-    render: function () {
+    render: function render() {
         var rowsPerPage = this.props.RowsPerPage;
         var pageLinks = [];
         var classList;
@@ -34,10 +36,10 @@ PaginationLinks = React.createClass({
         var lastShownPage = Math.min(this.props.Active + 3, lastPage);
 
         if (this.props.Total === 0) {
-            return React.createElement('div', null);
+            return React.createElement("div", null);
         }
         if (this.props.Total < this.props.RowsPerPage) {
-            return React.createElement('div', null);
+            return React.createElement("div", null);
         }
 
         if (lastShownPage - startPage <= 7) {
@@ -50,12 +52,12 @@ PaginationLinks = React.createClass({
 
         if (startPage > 1) {
             pageLinks.push(React.createElement(
-                'li',
+                "li",
                 { onClick: this.changePage(1) },
                 React.createElement(
-                    'a',
-                    { href: '#' },
-                    '«'
+                    "a",
+                    { href: "#" },
+                    "«"
                 )
             ));
         }
@@ -65,38 +67,44 @@ PaginationLinks = React.createClass({
         if (lastShownPage < 1) {
             lastShownPage = 1;
         }
+
+        // If there is only 1 page, don't display pagination links
+        if (startPage === lastShownPage) {
+            return React.createElement("div", null);
+        }
+
         for (var i = startPage; i <= lastShownPage; i += 1) {
             classList = '';
-            if (this.props.Active == i) {
+            if (this.props.Active === i) {
                 classList = "active";
             }
             pageLinks.push(React.createElement(
-                'li',
+                "li",
                 { onClick: this.changePage(i), className: classList },
                 React.createElement(
-                    'a',
-                    { href: '#' },
+                    "a",
+                    { href: "#" },
                     i
                 )
             ));
         }
         if (lastShownPage !== lastPage) {
             pageLinks.push(React.createElement(
-                'li',
+                "li",
                 { onClick: this.changePage(lastPage) },
                 React.createElement(
-                    'a',
-                    { href: '#' },
-                    '»'
+                    "a",
+                    { href: "#" },
+                    "»"
                 )
             ));
         }
         return React.createElement(
-            'ul',
-            { className: 'pagination pagination-table' },
+            "ul",
+            { className: "pagination pagination-table" },
             pageLinks
         );
     }
 });
 
-RPaginationLinks = React.createFactory(PaginationLinks);
+var RPaginationLinks = React.createFactory(PaginationLinks);

@@ -7,6 +7,7 @@ INSERT INTO LorisMenu (Label, Link, Parent, OrderNumber) VALUES ('Media', 'media
 -- Add 'media' table
 CREATE TABLE IF NOT EXISTS `media` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
+<<<<<<< HEAD
   `pscid` varchar(255) NOT NULL DEFAULT '',
   `visit_label` varchar(255) NOT NULL DEFAULT '',
   `instrument` varchar(255) DEFAULT NULL,
@@ -22,6 +23,22 @@ CREATE TABLE IF NOT EXISTS `media` (
   `date_uploaded` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
 );
+=======
+  `session_id` int(10) unsigned NOT NULL,
+  `instrument` varchar(255) DEFAULT NULL,
+  `date_taken` date DEFAULT NULL,
+  `comments` text,
+  `file_name` varchar(255) NOT NULL,
+  `file_type` varchar(255) DEFAULT NULL,
+  `data_dir` varchar(255) NOT NULL,
+  `uploaded_by` varchar(255) DEFAULT NULL,
+  `hide_file` tinyint(1) DEFAULT '0',
+  `date_uploaded` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  FOREIGN KEY (`session_id`) REFERENCES `session` (`ID`),
+  FOREIGN KEY (`instrument`) REFERENCES `test_names` (`Test_name`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+>>>>>>> e557c55559613286506e9db9b75c9ba6a952effb
 
 
 -- Add user permissions

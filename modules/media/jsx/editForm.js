@@ -1,3 +1,5 @@
+/* exported RMediaEditForm */
+
 /**
  * Media Edit Form
  *
@@ -10,278 +12,275 @@
  * */
 var MediaEditForm = React.createClass({
 
-  propTypes: {
-    DataURL: React.PropTypes.string.isRequired,
-    action: React.PropTypes.string.isRequired,
-  },
+    propTypes: {
+        DataURL: React.PropTypes.string.isRequired,
+        action: React.PropTypes.string.isRequired
+    },
 
-  getInitialState: function() {
-    return {
-      'Data':         [],
-      'formData':     {},
-      'uploadResult': null,
-      'isLoaded':     false,
-      'loadedData':   0
-    };
-  },
-
-  componentDidMount: function() {
-    var that = this;
-    $.ajax(this.props.DataURL, {
-      dataType: 'json',
-      xhr: function() {
-        var xhr = new window.XMLHttpRequest();
-        xhr.addEventListener("progress", function(evt) {
-          that.setState({
-            'loadedData': evt.loaded
-          });
-        });
-        return xhr;
-      },
-      success: function(data) {
-
-        var formData = {
-          'idMediaFile': data.mediaData.id,
-          'for_site': data.mediaData.for_site,
-          'date_taken': data.mediaData.date_taken,
-          'comments': data.mediaData.comments,
-          'hide_file': data.mediaData.hide_file,
+    getInitialState: function() {
+        return {
+            Data: {},
+            formData: {},
+            uploadResult: null,
+            isLoaded: false,
+            loadedData: 0
         };
+    },
 
-        that.setState({
-          'Data':      data,
-          'isLoaded':  true,
-          'mediaData': data.mediaData,
-          'formData':  formData
+    componentDidMount: function() {
+        var self = this;
+        $.ajax(this.props.DataURL, {
+            dataType: 'json',
+            success: function(data) {
+                var formData = {
+                    idMediaFile: data.mediaData.id,
+                    forSite: data.mediaData.forSite,
+                    dateTaken: data.mediaData.dateTaken,
+                    comments: data.mediaData.comments,
+                    hideFile: data.mediaData.hideFile
+                };
+
+                self.setState({
+                    Data: data,
+                    isLoaded: true,
+                    mediaData: data.mediaData,
+                    formData: formData
+                });
+            },
+            error: function(error, errorCode, errorMsg) {
+                console.error(error, errorCode, errorMsg);
+                self.setState({
+                    error: 'An error occurred when loading the form!'
+                });
+            }
         });
-      },
-      error: function(data, error_code, error_msg) {
-        that.setState({
-          'error': 'An error occured when loading the form!'
-        });
-      }
-    });
-  },
+    },
 
-  render: function() {
+    render: function() {
+        // Data loading error
+        if (this.state.error !== undefined) {
+            return (
+                <div className="alert alert-danger text-center">
+                    <strong>
+                        {this.state.error}
+                    </strong>
+                </div>
+            );
+        }
 
-    if (!this.state.isLoaded) {
-      if (this.state.error != undefined) {
+        // Waiting for data to load
+        if (!this.state.isLoaded) {
+            return (
+                <button className="btn-info has-spinner">
+                    Loading
+                    <span
+                        className="glyphicon glyphicon-refresh glyphicon-refresh-animate">
+          </span>
+                </button>
+            );
+        }
+
+        var alertMessage = "";
+        var alertClass = "alert text-center hide";
+
+        if (this.state.uploadResult) {
+            if (this.state.uploadResult === "success") {
+                alertClass = "alert alert-success text-center";
+                alertMessage = "Update Successful!";
+            } else if (this.state.uploadResult === "error") {
+                alertClass = "alert alert-danger text-center";
+                alertMessage = "Failed to update the file";
+            }
+        }
+
         return (
-          <div className="alert alert-danger text-center">
-            <strong>
-              {this.state.error}
-            </strong>
-          </div>
+            <div>
+                <div className={alertClass} role="alert" ref="alert-message">
+                    {alertMessage}
+                </div>
+                {
+                    this.state.uploadResult === "success" ?
+                        <a className="btn btn-primary" href="/media/">Back to media</a> :
+                        null
+                }
+                <FormElement
+                    name="mediaEdit"
+                    onSubmit={this.handleSubmit}
+                    ref="form"
+                >
+                    <h3>Edit Media File</h3>
+                    <br />
+                    <SelectElement
+                        name="pscid"
+                        label="PSCID"
+                        options={this.state.Data.candidates}
+                        onUserInput={this.setFormData}
+                        ref="pscid"
+                        required={true}
+                        disabled={true}
+                        value={this.state.mediaData.pscid}
+                    />
+                    <SelectElement
+                        name="visitLabel"
+                        label="Visit Label"
+                        options={this.state.Data.visits}
+                        onUserInput={this.setFormData}
+                        ref="visitLabel"
+                        required={true}
+                        disabled={true}
+                        value={this.state.mediaData.visitLabel}
+                    />
+                    <SelectElement
+                        name="forSite"
+                        label="Site"
+                        options={this.state.Data.sites}
+                        onUserInput={this.setFormData}
+                        ref="forSite"
+                        disabled={true}
+                        value={this.state.mediaData.forSite}
+                    />
+                    <SelectElement
+                        name="instrument"
+                        label="Instrument"
+                        options={this.state.Data.instruments}
+                        onUserInput={this.setFormData}
+                        ref="instrument"
+                        disabled={true}
+                        value={this.state.mediaData.instrument}
+                    />
+                    <DateElement
+                        name="dateTaken"
+                        label="Date of Administration"
+                        minYear="2000"
+                        maxYear="2017"
+                        onUserInput={this.setFormData}
+                        ref="dateTaken"
+                        value={this.state.mediaData.dateTaken}
+                    />
+                    <TextareaElement
+                        name="comments"
+                        label="Comments"
+                        onUserInput={this.setFormData}
+                        ref="comments"
+                        value={this.state.mediaData.comments}
+                    />
+                    <FileElement
+                        name="file"
+                        id="mediaEditEl"
+                        onUserInput={this.setFormData}
+                        required={true}
+                        disabled={true}
+                        ref="file"
+                        label="Uploaded file"
+                        value={this.state.mediaData.fileName}
+                    />
+                    <SelectElement
+                        name="hideFile"
+                        label="Hide File"
+                        emptyOption={false}
+                        options={["No", "Yes"]}
+                        onUserInput={this.setFormData}
+                        ref="hideFile"
+                        value={this.state.mediaData.hideFile}
+                    />
+                    <ButtonElement label="Update File"/>
+                </FormElement>
+            </div>
         );
-      }
+    },
 
-      return (
-        <button className="btn-info has-spinner">
-          Loading
-          <span className="glyphicon glyphicon-refresh glyphicon-refresh-animate"></span>
-        </button>
-      );
-    }
+    /**
+     * Handles form submission
+     * @param {event} e - Form submition event
+     */
+    handleSubmit: function(e) {
+        e.preventDefault();
 
-    var alertMessage = "";
-    var alertClass = "alert text-center hide";
+        var self = this;
+        var myFormData = this.state.formData;
+        var formData = new FormData();
 
-    if (this.state.uploadResult) {
-      if (this.state.uploadResult == "success") {
-        alertClass = "alert alert-success text-center";
-        alertMessage = "Update Successful!";
-      } else if (this.state.uploadResult == "error") {
-        alertClass = "alert alert-danger text-center";
-        alertMessage = "Failed to update the file";
-      }
-    }
+        for (var key in myFormData) {
+            if (myFormData[key] !== "") {
+                formData.append(key, myFormData[key]);
+            }
+        }
 
-    return (
-      <div>
-        <div className={alertClass} role="alert" ref="alert-message">
-          {alertMessage}
-        </div>
-        {this.state.uploadResult == "success" ? <a className="btn btn-primary" href="/media/">Back to media</a> : null}
-        <FormElement
-          name="mediaEdit"
-          onSubmit={this.handleSubmit}
-          ref="form"
-        >
-          <h3>Edit Media File</h3>
-          <br />
-          <SelectElement
-            name="pscid"
-            label="PSCID"
-            options={this.state.Data.candidates}
-            onUserInput={this.setFormData}
-            ref="pscid"
-            required={true}
-            disabled={true}
-            value={this.state.mediaData.pscid}
-          />
-          <SelectElement
-            name="visit_label"
-            label="Visit Label"
-            options={this.state.Data.visits}
-            onUserInput={this.setFormData}
-            ref="visit_label"
-            required={true}
-            disabled={true}
-            value={this.state.mediaData.visit_label}
-          />
-          <SelectElement
-            name="instrument"
-            label="Instrument"
-            options={this.state.Data.instruments}
-            onUserInput={this.setFormData}
-            ref="instrument"
-            disabled={true}
-            value={this.state.mediaData.instrument}
-          />
-          <SelectElement
-            name="for_site"
-            label="For Site"
-            options={this.state.Data.sites}
-            onUserInput={this.setFormData}
-            ref="for_site"
-            value={this.state.mediaData.for_site}
-          />
-          <DateElement
-            name="date_taken"
-            label="Date of Administration"
-            minYear="2000"
-            maxYear="2017"
-            onUserInput={this.setFormData}
-            ref="date_taken"
-            value={this.state.mediaData.date_taken}
-          />
-          <TextareaElement
-            name="comments"
-            label="Comments"
-            onUserInput={this.setFormData}
-            ref="comments"
-            value={this.state.mediaData.comments}
-          />
-          <FileElement
-            id="mediaEditEl"
-            onUserInput={this.setFormData}
-            required={true}
-            disabled={true}
-            ref="file"
-            label="Uploaded file"
-            value={this.state.mediaData.file_name}
-          />
-          <SelectElement
-            name="hide_file"
-            label="Hide File"
-            emptyOption={false}
-            options={["No", "Yes"]}
-            onUserInput={this.setFormData}
-            ref="hide_file"
-            value={this.state.mediaData.hide_file}
-          />
-          <ButtonElement label="Update File"/>
-        </FormElement>
-      </div>
-    )
-  },
+        $('#mediaEditEl').hide();
+        $("#file-progress").removeClass('hide');
 
-  /**
-   * Handles form submission
-   * @param e
-   */
-  handleSubmit: function(e) {
-    e.preventDefault();
+        $.ajax({
+            type: 'POST',
+            url: self.props.action,
+            data: formData,
+            cache: false,
+            contentType: false,
+            processData: false,
+            xhr: function() {
+                var xhr = new window.XMLHttpRequest();
+                xhr.upload.addEventListener("progress", function(evt) {
+                    if (evt.lengthComputable) {
+                        var progressbar = $("#progressbar");
+                        var progresslabel = $("#progresslabel");
+                        var percent = Math.round((evt.loaded / evt.total) * 100);
+                        $(progressbar).width(percent + "%");
+                        $(progresslabel).html(percent + "%");
+                        progressbar.attr('aria-valuenow', percent);
+                    }
+                }, false);
+                return xhr;
+            },
+            success: function(data) {
+                $("#file-progress").addClass('hide');
+                self.setState({
+                    uploadResult: "success"
+                });
+                self.showAlertMessage();
+            },
+            error: function(err) {
+                console.error(err);
+                self.setState({
+                    uploadResult: "error"
+                });
+                self.showAlertMessage();
+            }
 
-    var self = this;
-    var myFormData = this.state.formData;
-    var formRefs = this.refs;
-    var formData = new FormData();
-    var hasErrors = false;
-
-    for (var key in myFormData) {
-      if (myFormData[key] != "") {
-        formData.append(key, myFormData[key]);
-      }
-    }
-
-    $('#mediaEditEl').hide();
-    $("#file-progress").removeClass('hide');
-
-    $.ajax({
-      type:        'POST',
-      url:         self.props.action,
-      data:        formData,
-      cache:       false,
-      contentType: false,
-      processData: false,
-      xhr:         function() {
-        var xhr = new window.XMLHttpRequest();
-        xhr.upload.addEventListener("progress", function(evt) {
-          if (evt.lengthComputable) {
-            var progressbar = $("#progressbar");
-            var progresslabel = $("#progresslabel");
-            var percent = Math.round((evt.loaded / evt.total) * 100);
-            $(progressbar).width(percent + "%");
-            $(progresslabel).html(percent + "%");
-            progressbar.attr('aria-valuenow', percent);
-          }
-        }, false);
-        return xhr;
-      },
-      success:     function(data) {
-        $("#file-progress").addClass('hide');
-        self.setState({
-          uploadResult: "success"
         });
-        self.showAlertMessage();
-      },
-      error:       function(err) {
-        console.error(err);
-        self.setState({
-          uploadResult: "error"
+    },
+
+    /**
+     * Set the form data based on state values of child elements/componenets
+     *
+     * @param {string} formElement - name of the selected element
+     * @param {string} value - selected value for corresponding form element
+     */
+    setFormData: function(formElement, value) {
+        var formData = this.state.formData;
+        formData[formElement] = value;
+
+        this.setState({
+            formData: formData
         });
-        self.showAlertMessage();
-      }
+    },
 
-    });
-  },
+    /**
+     * Display a success/error alert message after form submission
+     */
+    showAlertMessage: function() {
+        var self = this;
 
-  /**
-   * Sets the form data based on state values of child elements/componenets
-   *
-   * @param formElement
-   * @param value
-   */
-  setFormData: function(formElement, value) {
-    var formData = this.state.formData;
-    formData[formElement] = value;
+        if (this.refs["alert-message"] === null) {
+            return;
+        }
 
-    this.setState({
-      formData: formData
-    });
-  },
-
-  /**
-   * Display a success/error alert message after form submission
-   */
-  showAlertMessage: function() {
-    var self = this;
-
-    if (this.refs["alert-message"] == null) {
-      return;
+        var alertMsg = this.refs["alert-message"].getDOMNode();
+        $(alertMsg).fadeTo(2000, 500).delay(3000).slideUp(500, function() {
+            self.setState({
+                uploadResult: null
+            });
+        });
     }
-
-    var alertMsg = this.refs["alert-message"].getDOMNode();
-    $(alertMsg).fadeTo(2000, 500).delay(3000).slideUp(500, function() {
-      self.setState({
-        uploadResult: null
-      });
-    });
-  }
-
 
 });
 
-RMediaEditForm = React.createFactory(MediaEditForm);
+var RMediaEditForm = React.createFactory(MediaEditForm);
