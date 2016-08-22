@@ -83,16 +83,22 @@ var CandidateInfo = React.createClass({
         }
 
         var disabled = true;
-        var otherDisabled = true;
         var updateButton = null;
         if (loris.userHasPermission('candidate_parameter_edit')) {
             disabled = false;
             updateButton = React.createElement(ButtonElement, { label: "Update" });
         }
-        var reasonRequired = false;
-        var otherRequired = false;
+        var reasonSelect = null;
         if (this.state.formData.flagged_caveatemptor === "true") {
-            reasonRequired = true;
+            reasonSelect = React.createElement(SelectElement, {
+                label: "Reason for Caveat Emptor Flag",
+                name: "flagged_reason",
+                options: this.state.Data.caveatOptions // rename to caveat reason options
+                , onUserInput: this.setFormData,
+                ref: "flagged_reason",
+                disabled: false,
+                required: true
+            });
         }
         var reasonKey;
         for (var key in this.state.Data.caveatOptions) {
@@ -104,9 +110,16 @@ var CandidateInfo = React.createClass({
             }
         }
 
+        var otherText = null;
         if (this.state.formData.flagged_reason === reasonKey) {
-            otherRequired = true;
-            otherDisabled = false;
+            otherText = React.createElement(TextareaElement, {
+                label: "If Other, please specify",
+                name: "flagged_other",
+                onUserInput: this.setFormData,
+                ref: "flagged_other",
+                disabled: false,
+                required: true
+            });
         }
 
         var alertMessage = "";
@@ -150,23 +163,8 @@ var CandidateInfo = React.createClass({
                     disabled: disabled,
                     required: true
                 }),
-                React.createElement(SelectElement, {
-                    label: "Reason for Caveat Emptor Flag",
-                    name: "flagged_reason",
-                    options: this.state.Data.caveatOptions // rename to caveat reason options
-                    , onUserInput: this.setFormData,
-                    ref: "flagged_reason",
-                    disabled: disabled,
-                    required: reasonRequired
-                }),
-                React.createElement(TextareaElement, {
-                    label: "If Other, please specify",
-                    name: "flagged_other",
-                    onUserInput: this.setFormData,
-                    ref: "flagged_other",
-                    disabled: otherDisabled,
-                    required: otherRequired
-                }),
+                reasonSelect,
+                otherText,
                 updateButton
             )
         );

@@ -79,22 +79,28 @@ var ParticipantStatus = React.createClass({
         }
 
         var disabled = true;
-        var suboptionsDisabled = true;
         var updateButton = null;
         if (loris.userHasPermission('candidate_parameter_edit')) {
             disabled = false;
             updateButton = React.createElement(ButtonElement, { label: 'Update' });
         }
 
-        var reasonRequired = false;
         var required = this.state.Data.required;
         var subOptions = [];
+        var suboptionsSelect = null;
         for (var key in required) {
             if (required.hasOwnProperty(key)) {
                 if (required[key]["ID"] === this.state.formData.participant_status) {
-                    reasonRequired = true;
-                    suboptionsDisabled = false;
                     subOptions = this.state.Data.parentIDs[this.state.formData.participant_status];
+                    suboptionsSelect = React.createElement(SelectElement, {
+                        label: 'Specify Reason',
+                        name: 'participant_suboptions',
+                        options: subOptions,
+                        onUserInput: this.setFormData,
+                        ref: 'participant_suboptions',
+                        disabled: false,
+                        required: true
+                    });
                     break;
                 }
             }
@@ -141,15 +147,7 @@ var ParticipantStatus = React.createClass({
                     disabled: disabled,
                     required: true
                 }),
-                React.createElement(SelectElement, {
-                    label: 'Specify Reason',
-                    name: 'participant_suboptions',
-                    options: subOptions,
-                    onUserInput: this.setFormData,
-                    ref: 'participant_suboptions',
-                    disabled: suboptionsDisabled,
-                    required: reasonRequired
-                }),
+                suboptionsSelect,
                 React.createElement(TextareaElement, {
                     label: 'Comments',
                     name: 'reason_specify',
