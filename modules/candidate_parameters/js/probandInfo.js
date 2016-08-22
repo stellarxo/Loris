@@ -203,9 +203,10 @@ var ProbandInfo = React.createClass({
             contentType: false,
             processData: false,
             success: function success(data) {
+                data = JSON.parse(data);
                 self.setState({
                     updateResult: "success",
-                    ageDifference: data.result
+                    ageDifference: data.ageDifference
                 });
             },
             error: function error(err) {

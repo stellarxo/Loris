@@ -6,7 +6,7 @@ if (isset($_POST['tab'])) {
         editCandInfoFields();
     }
     else if ($tab == "probandInfo") {
-        editProbandInfoFields();
+        echo json_encode(editProbandInfoFields());
     }
     else if ($tab == "familyInfo") {
         editFamilyInfoFields();
@@ -82,7 +82,11 @@ function editProbandInfoFields() {
         }
     }
 
-    return $ageDifference;
+    $result = [
+        'ageDifference' => $ageDifference
+    ];
+
+    return $result;
 }
 
 function editFamilyInfoFields() {
