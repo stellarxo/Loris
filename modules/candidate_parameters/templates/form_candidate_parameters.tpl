@@ -1,30 +1,32 @@
 <!-- Nav tabs -->
 <ul class="nav nav-tabs nav-tabs-loris" role="tablist">
     <li role="presentation" class="active">
-        <a href="#cand-info" aria-controls="browse" role="tab" data-toggle="tab">
+        <a href="#cand-info" aria-controls="browse" role="tab" data-toggle="tab" id="cand-info-tab">
             Candidate Information
         </a>
     </li>
     <li role="presentation">
-        <a href="#proband-info" aria-controls="upload" role="tab" data-toggle="tab">
+        <a href="#proband-info" aria-controls="upload" role="tab" data-toggle="tab" id="proband-info-tab">
             Proband Information
         </a>
     </li>
     <li role="presentation">
-        <a href="#family-info" aria-controls="upload" role="tab" data-toggle="tab">
+        <a href="#family-info" aria-controls="upload" role="tab" data-toggle="tab" id="family-info-tab">
             Family Information
         </a>
     </li>
     <li role="presentation">
-        <a href="#participant-status" aria-controls="upload" role="tab" data-toggle="tab">
+        <a href="#participant-status" aria-controls="upload" role="tab" data-toggle="tab" id="participant-status-tab">
             Participant Status
         </a>
     </li>
+    {if $useConsent}
     <li role="presentation">
-        <a href="#consent-status" aria-controls="upload" role="tab" data-toggle="tab">
+        <a href="#consent-status" aria-controls="upload" role="tab" data-toggle="tab" id="consent-status-tab">
             Consent Status
         </a>
     </li>
+    {/if}
 </ul>
 
 <!-- Tab panes -->
@@ -45,7 +47,6 @@
     <div role="tabpanel" class="tab-pane" id="participant-status">
         Participant info
     </div>
-
     <div role="tabpanel" class="tab-pane" id="consent-status">
         Consent Status info
     </div>
@@ -69,6 +70,9 @@
                 });
         React.render(probandInfo, document.getElementById("proband-info"));
     }
+    else {
+        $('#proband-info-tab').hide();
+    }
 
     if (loris.config('useFamilyID')) {
         var familyInfo = RFamilyInfo({
@@ -78,22 +82,29 @@
         });
         React.render(familyInfo, document.getElementById("family-info"));
     }
+    else {
+        $('#family-info-tab').hide();
+    }
 
     var participantStatus = RParticipantStatus({
         "dataURL": "{$baseurl}/candidate_parameters/ajax/getData.php?data=participantStatus&candID=" + {$smarty.get.candID},
         "action": "{$baseurl}/candidate_parameters/ajax/formHandler.php",
         "tabName": "participantStatus"
     });
+
     React.render(participantStatus, document.getElementById("participant-status"));
 
-    //if ({$smarty.get.useConsent}) {
+    if ({$useConsent}) {
         var consentStatus = RConsentStatus({
             "dataURL": "{$baseurl}/candidate_parameters/ajax/getData.php?data=consentStatus&candID=" + {$smarty.get.candID},
             "action": "{$baseurl}/candidate_parameters/ajax/formHandler.php",
             "tabName": "consentStatus"
         });
         React.render(consentStatus, document.getElementById("consent-status"));
-    //}
+    }
+    else {
+        $('#consent-status-tab').hide();
+    }
 
     // Adds tab href to url + opens tab based on hash on page load
     // See: http://bit.ly/292MDI8
