@@ -99,10 +99,11 @@ var ConsentStatus = React.createClass({
         }
         var dateRequired = false;
         var withdrawalRequired = false;
-        if (this.state.formData.study_consent === "true") {
+        if (this.state.formData.study_consent === "yes") {
             dateRequired = true;
         }
-        if (this.state.formData.study_consent_withdrawal !== null) {
+        if (this.state.formData.study_consent_withdrawal !== null && this.state.formData.study_consent_withdrawal !== undefined) {
+            console.log(this.state.formData.study_consent_withdrawal);
             withdrawalRequired = true;
         }
 
@@ -143,7 +144,7 @@ var ConsentStatus = React.createClass({
                     required={true}
                 />
                 <DateElement
-                    label="Date of Consent to Study (required)"
+                    label="Date of Consent to Study"
                     name="study_consent_date"
                     onUserInput={this.setFormData}
                     ref="study_consent_date"
@@ -151,7 +152,7 @@ var ConsentStatus = React.createClass({
                     required={dateRequired}
                 />
                 <DateElement
-                    label="Confirmation Date of Consent to Study (required)"
+                    label="Confirmation Date of Consent to Study"
                     name="study_consent_date2"
                     onUserInput={this.setFormData}
                     ref="study_consent_date2"
@@ -159,7 +160,7 @@ var ConsentStatus = React.createClass({
                     required={dateRequired}
                 />
                 <DateElement
-                    label="Date of withdrawal of Consent to Study (optional)"
+                    label="Date of Withdrawal of Consent to Study"
                     name="study_consent_withdrawal"
                     onUserInput={this.setFormData}
                     ref="study_consent_withdrawal"
@@ -167,7 +168,7 @@ var ConsentStatus = React.createClass({
                     required={false}
                 />
                 <DateElement
-                    label="Confirmation Date of withdrawal of Consent to Study (optional)"
+                    label="Confirmation Date of Withdrawal of Consent to Study"
                     name="study_consent_withdrawal2"
                     onUserInput={this.setFormData}
                     ref="study_consent_withdrawal2"
@@ -190,7 +191,23 @@ var ConsentStatus = React.createClass({
         var myFormData = this.state.formData;
         var formRefs = this.refs;
 
-        // Set form data and upload the media file
+        var date1 = myFormData['study_consent_date'] ? myFormData['study_consent_date'] : null;
+        var date2 = myFormData['study_consent_date2'] ? myFormData['study_consent_date2'] : null;
+
+        if (date1 !== date2) {
+            alert("Consent to study dates do not match!");
+            return;
+        }
+
+        var date1 = myFormData['study_consent_withdrawal'] ? myFormData['study_consent_withdrawal'] : null;
+        var date2 = myFormData['study_consent_withdrawal2'] ? myFormData['study_consent_withdrawal2'] : null;
+
+        if (date1 !== date2) {
+            alert("Consent to study withdrawal dates do not match!");
+            return;
+        }
+
+        // Set form dataå
         var self = this;
         var formData = new FormData();
         for (var key in myFormData) {
@@ -211,13 +228,13 @@ var ConsentStatus = React.createClass({
             processData:false,
             success: function(data) {
                 self.setState({
-                    uploadResult: "success",
+                    updateResult: "success",
                 });
             },
             error: function(err) {
                 var errorMessage = JSON.parse(err.responseText).message;
                 self.setState({
-                    uploadResult: "error",
+                    updateResult: "error",
                     errorMessage: errorMessage
                 });
             }
