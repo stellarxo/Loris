@@ -88,7 +88,7 @@ var CandidateInfo = React.createClass({
             reasonSelect = <SelectElement
                 label="Reason for Caveat Emptor Flag"
                 name="flagged_reason"
-                options={this.state.Data.caveatOptions} // rename to caveat reason options
+                options={this.state.Data.caveatReasonOptions} // rename to caveat reason options
                 onUserInput={this.setFormData}
                 ref="flagged_reason"
                 disabled={false}
@@ -96,9 +96,9 @@ var CandidateInfo = React.createClass({
             />;
         }
         var reasonKey;
-        for (var key in this.state.Data.caveatOptions) {
-            if (this.state.Data.caveatOptions.hasOwnProperty(key)) {
-                if (this.state.Data.caveatOptions[key] === "Other") {
+        for (var key in this.state.Data.caveatReasonOptions) {
+            if (this.state.Data.caveatReasonOptions.hasOwnProperty(key)) {
+                if (this.state.Data.caveatReasonOptions[key] === "Other") {
                     reasonKey = key;
                     break;
                 }

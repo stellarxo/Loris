@@ -69,8 +69,8 @@ function editProbandInfoFields() {
 
     $db->update('candidate', $updateValues, ['CandID' => $candID]);
 
+    // Calculate age difference
     $ageDifference = "Could not calculate age";
-
     $candidateDOB = $db->pselectOne(
         "SELECT DoB FROM candidate WHERE CandID=:CandidateID",
         array('CandidateID' => $candID));

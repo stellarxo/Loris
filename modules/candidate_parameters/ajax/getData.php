@@ -47,7 +47,7 @@ function getCandInfoFields() {
     $result = [
         'pscid' => $pscid,
         'candID' => $candID,
-        'caveatOptions' => $caveat_options
+        'caveatReasonOptions' => $caveat_options
     ];
 
     return $result;
