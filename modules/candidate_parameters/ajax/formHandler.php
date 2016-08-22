@@ -93,7 +93,7 @@ function editFamilyInfoFields() {
         exit;
     }
 
-    $candID = $_GET['candID'];
+    $candID = $_POST['candID'];
 
     // Process posted data
     $siblingCandID   = isset($_POST['CandID']) ? $_POST['CandID'] : null;
@@ -117,7 +117,7 @@ function editParticipantStatusFields() {
         exit;
     }
 
-    $candID = $_GET['candID'];
+    $candID = $_POST['candID'];
 
     // Process posted data
     $status   = isset($_POST['participant_status']) ? $_POST['participant_status'] : null;
@@ -141,7 +141,7 @@ function editConsentStatusFields() {
         exit;
     }
 
-    $candID = $_GET['candID'];
+    $candID = $_POST['candID'];
 
     // Process posted data
     $consent   = isset($_POST['study_consent']) ? $_POST['study_consent'] : null;

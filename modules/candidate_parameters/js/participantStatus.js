@@ -87,11 +87,17 @@ var ParticipantStatus = React.createClass({
         }
 
         var reasonRequired = false;
-        var reasonSpecifyRequired = false;
-        // Can check if "Required" === 1
-        if (this.state.formData.participant_status === "5" || this.state.formData.participant_status === "6") {
-            reasonRequired = true;
-            suboptionsDisabled = false;
+        var required = this.state.Data.required;
+        var subOptions = [];
+        for (var key in required) {
+            if (required.hasOwnProperty(key)) {
+                if (required[key]["ID"] === this.state.formData.participant_status) {
+                    reasonRequired = true;
+                    suboptionsDisabled = false;
+                    subOptions = this.state.Data.parentIDs[this.state.formData.participant_status];
+                    break;
+                }
+            }
         }
 
         var alertMessage = "";
@@ -136,9 +142,9 @@ var ParticipantStatus = React.createClass({
                     required: true
                 }),
                 React.createElement(SelectElement, {
-                    label: 'Specify Reason (Required only for status Inactive/Incomplete)',
+                    label: 'Specify Reason',
                     name: 'participant_suboptions',
-                    options: this.state.Data.subOptions,
+                    options: subOptions,
                     onUserInput: this.setFormData,
                     ref: 'participant_suboptions',
                     disabled: suboptionsDisabled,

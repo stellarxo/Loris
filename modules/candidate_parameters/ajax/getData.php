@@ -85,13 +85,17 @@ function getFamilyInfoFields() {
 
     $candidates  = $db->pselect(
         "SELECT CandID FROM candidate ORDER BY CandID",
-        []
+        array()
     );
 
-    // remove own candID from list
-    $key = array_search($candID, $candidates);
-    unset($candidates[$key]);
-    unset($candidates[0][0]);
+    // Remove own ID from list of possible family members
+    foreach ($candidates as $key => $candidate) {
+        foreach ($candidate as $ID) {
+            if ($ID == $candID) {
+                unset($candidates[$key]);
+            }
+        }
+    }
 
     $result = [
         'pscid' => $pscid,
@@ -104,7 +108,6 @@ function getFamilyInfoFields() {
 
 function getParticipantStatusFields() {
     $candID = $_GET['candID'];
-//    $pid = $_GET['p_status'];
 
     $db =& Database::singleton();
 
@@ -115,16 +118,35 @@ function getParticipantStatusFields() {
     );
 
     $statusOptions = getParticipantStatusOptions();
+    $reasonOptions = array();
 
-    $parentID = $db->pselectOne('SELECT participant_status FROM participant_status Where CandID = :candid',
-        array('candid' => $candID));
-    $reasonOptions = getParticipantStatusSubOptions($parentID);
+    $required = $db->pselect('SELECT ID from participant_status_options where Required=1', array());
+    $parentIDs = $db->pselect('SELECT distinct(parentID) from participant_status_options', array());
+    $parentIDMap = array();
+
+    foreach ($parentIDs as $ID) {
+        $reasonOptions = array();
+        foreach ($ID as $parentID) {
+            if ($parentID != null) {
+                $options = $db->pselect(
+                    "SELECT ID, Description FROM participant_status_options WHERE parentID=:pid",
+                    array('pid' => $parentID)
+                );
+                foreach ($options as $option) {
+                    $reasonOptions[$option['ID']] = $option['Description'];
+                }
+                $parentIDMap[$parentID] = $reasonOptions;
+            }
+        }
+    }
 
     $result = [
         'pscid' => $pscid,
         'candID' => $candID,
         'statusOptions' => $statusOptions,
-        'reasonOptions' => $reasonOptions
+        'required' => $required,
+        'reasonOptions' => $reasonOptions,
+        'parentIDs' => $parentIDMap
     ];
 
     return $result;
