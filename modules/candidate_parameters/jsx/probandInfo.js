@@ -166,11 +166,28 @@ var ProbandInfo = React.createClass({
         var myFormData = this.state.formData;
         var formRefs = this.refs;
 
+        var today = new Date();
+        var dd = today.getDate();
+        var mm = today.getMonth()+1; //January is 0!
+        var yyyy = today.getFullYear();
+        if(dd<10) {
+            dd='0'+dd
+        }
+        if(mm<10) {
+            mm='0'+mm
+        }
+        today = yyyy+'-'+mm+'-'+dd;
+
         var dob1 = myFormData['ProbandDoB'] ? myFormData['ProbandDoB'] : null;
         var dob2 = myFormData['ProbandDoB2'] ? myFormData['ProbandDoB2'] : null;
 
         if (dob1 !== dob2) {
             alert("DOB do not match!");
+            return;
+        }
+
+        if (dob1 > today) {
+            alert("Consent to study date cannot be later than today!");
             return;
         }
 

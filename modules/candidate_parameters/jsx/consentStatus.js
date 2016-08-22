@@ -191,11 +191,27 @@ var ConsentStatus = React.createClass({
         var myFormData = this.state.formData;
         var formRefs = this.refs;
 
+        var today = new Date();
+        var dd = today.getDate();
+        var mm = today.getMonth()+1; //January is 0!
+        var yyyy = today.getFullYear();
+        if(dd<10) {
+            dd='0'+dd
+        }
+        if(mm<10) {
+            mm='0'+mm
+        }
+        today = yyyy+'-'+mm+'-'+dd;
+
         var date1 = myFormData['study_consent_date'] ? myFormData['study_consent_date'] : null;
         var date2 = myFormData['study_consent_date2'] ? myFormData['study_consent_date2'] : null;
 
         if (date1 !== date2) {
             alert("Consent to study dates do not match!");
+            return;
+        }
+        if (date1 > today) {
+            alert("Consent to study date cannot be later than today!");
             return;
         }
 
@@ -206,8 +222,12 @@ var ConsentStatus = React.createClass({
             alert("Consent to study withdrawal dates do not match!");
             return;
         }
+        if (date1 > today) {
+            alert("Consent to study date cannot be later than today!");
+            return;
+        }
 
-        // Set form dataå
+        // Set form data
         var self = this;
         var formData = new FormData();
         for (var key in myFormData) {
