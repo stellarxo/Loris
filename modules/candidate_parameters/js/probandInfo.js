@@ -10,7 +10,6 @@ var ProbandInfo = React.createClass({
                 "Male": "Male",
                 "Female": "Female"
             },
-            "ageDifference": "Could not calculate age",
             'Data': [],
             'formData': {},
             'updateResult': null,
@@ -161,7 +160,7 @@ var ProbandInfo = React.createClass({
                 }),
                 React.createElement(StaticElement, {
                     label: "Age Difference (months)",
-                    text: this.state.ageDifference
+                    text: this.state.Data.ageDifference
                 }),
                 updateButton
             )
@@ -223,10 +222,8 @@ var ProbandInfo = React.createClass({
             contentType: false,
             processData: false,
             success: function success(data) {
-                data = JSON.parse(data);
                 self.setState({
-                    updateResult: "success",
-                    ageDifference: data.ageDifference
+                    updateResult: "success"
                 });
             },
             error: function error(err) {

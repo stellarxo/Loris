@@ -94,11 +94,25 @@ function getProbandInfoFields() {
         array('candid' => $candID)
     );
 
+    // Calculate age difference
+    $ageDifference = "Could not calculate age";
+    $candidateDOB = $db->pselectOne(
+        "SELECT DoB FROM candidate WHERE CandID=:CandidateID",
+        array('CandidateID' => $candID));
+    if (!empty($candidateDOB) && !empty($dob)) {
+        $age = Utility::calculateAge($dob, $candidateDOB);
+
+        if ($age !== null) {
+            $ageDifference = $age['year'] * 12 + $age['mon'] + round($age['day'] / 30, 2);
+        }
+    }
+
     $result = [
         'pscid' => $pscid,
         'candID' => $candID,
         'ProbandGender' => $gender,
-        'ProbandDoB' => $dob
+        'ProbandDoB' => $dob,
+        'ageDifference' => $ageDifference
     ];
 
     return $result;

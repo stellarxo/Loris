@@ -6,7 +6,7 @@ if (isset($_POST['tab'])) {
         editCandInfoFields();
     }
     else if ($tab == "probandInfo") {
-        echo json_encode(editProbandInfoFields());
+        editProbandInfoFields();
     }
     else if ($tab == "familyInfo") {
         editFamilyInfoFields();
@@ -67,25 +67,6 @@ function editProbandInfoFields() {
     ];
 
     $db->update('candidate', $updateValues, ['CandID' => $candID]);
-
-    // Calculate age difference
-    $ageDifference = "Could not calculate age";
-    $candidateDOB = $db->pselectOne(
-        "SELECT DoB FROM candidate WHERE CandID=:CandidateID",
-        array('CandidateID' => $candID));
-    if (!empty($candidateDOB)) {
-        $age = Utility::calculateAge($dob, $candidateDOB);
-
-        if ($age !== null) {
-            $ageDifference = $age['year'] * 12 + $age['mon'] + round($age['day'] / 30, 2);
-        }
-    }
-
-    $result = [
-        'ageDifference' => $ageDifference
-    ];
-
-    return $result;
 }
 
 function editFamilyInfoFields() {
@@ -134,7 +115,17 @@ function editParticipantStatusFields() {
         'CandID' => $candID
     ];
 
-    $db->replace('participant_status', $updateValues);
+    $exists = $db->pselectOne(
+        "SELECT * from participant_status WHERE CandID=:candid",
+        array('candid' => $candID)
+    );
+
+    if ($exists === null) {
+        $db->insert('participant_status', $updateValues);
+    }
+    else {
+        $db->update('participant_status', $updateValues, ['CandID' => $candID]);
+    }
 }
 
 function editConsentStatusFields() {
@@ -164,8 +155,19 @@ function editConsentStatusFields() {
     $updateValues = [
         'study_consent' => $consent,
         'study_consent_date'   => $date,
-        'study_consent_withdrawal'   => $withdrawal
+        'study_consent_withdrawal'   => $withdrawal,
+        'CandID' => $candID
     ];
 
-    $db->replace('participant_status', $updateValues, ['CandID' => $candID]);
+    $exists = $db->pselectOne(
+        "SELECT * from participant_status WHERE CandID=:candid",
+        array('candid' => $candID)
+    );
+
+    if ($exists === null) {
+        $db->insert('participant_status', $updateValues);
+    }
+    else {
+        $db->update('participant_status', $updateValues, ['CandID' => $candID]);
+    }
 }
