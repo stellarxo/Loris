@@ -7,8 +7,8 @@ var ProbandInfo = React.createClass({
     getInitialState: function getInitialState() {
         return {
             "genderOptions": {
-                "male": "Male",
-                "female": "Female"
+                "Male": "Male",
+                "Female": "Female"
             },
             "ageDifference": "Could not calculate age",
             'Data': [],
@@ -135,6 +135,7 @@ var ProbandInfo = React.createClass({
                     label: "Proband Gender",
                     name: "ProbandGender",
                     options: this.state.genderOptions,
+                    value: this.state.Data.ProbandGender,
                     onUserInput: this.setFormData,
                     ref: "ProbandGender",
                     disabled: disabled,
@@ -143,6 +144,7 @@ var ProbandInfo = React.createClass({
                 React.createElement(DateElement, {
                     label: "DoB Proband",
                     name: "ProbandDoB",
+                    value: this.state.Data.ProbandDoB,
                     onUserInput: this.setFormData,
                     ref: "ProbandDoB",
                     disabled: disabled,
@@ -151,6 +153,7 @@ var ProbandInfo = React.createClass({
                 React.createElement(DateElement, {
                     label: "Confirm DoB Proband",
                     name: "ProbandDoB2",
+                    value: this.state.Data.ProbandDoB,
                     onUserInput: this.setFormData,
                     ref: "ProbandDoB2",
                     disabled: disabled,

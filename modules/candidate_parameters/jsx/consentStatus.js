@@ -138,6 +138,7 @@ var ConsentStatus = React.createClass({
                     label="Consent to Study (required)"
                     name="study_consent"
                     options={this.state.consentOptions}
+                    value={this.state.Data.study_consent}
                     onUserInput={this.setFormData}
                     ref="study_consent"
                     disabled={disabled}
@@ -146,6 +147,7 @@ var ConsentStatus = React.createClass({
                 <DateElement
                     label="Date of Consent to Study"
                     name="study_consent_date"
+                    value={this.state.Data.study_consent_date}
                     onUserInput={this.setFormData}
                     ref="study_consent_date"
                     disabled={disabled}
@@ -154,6 +156,7 @@ var ConsentStatus = React.createClass({
                 <DateElement
                     label="Confirmation Date of Consent to Study"
                     name="study_consent_date2"
+                    value={this.state.Data.study_consent_date}
                     onUserInput={this.setFormData}
                     ref="study_consent_date2"
                     disabled={disabled}
@@ -162,6 +165,7 @@ var ConsentStatus = React.createClass({
                 <DateElement
                     label="Date of Withdrawal of Consent to Study"
                     name="study_consent_withdrawal"
+                    value={this.state.Data.study_consent_withdrawal}
                     onUserInput={this.setFormData}
                     ref="study_consent_withdrawal"
                     disabled={disabled}
@@ -170,6 +174,7 @@ var ConsentStatus = React.createClass({
                 <DateElement
                     label="Confirmation Date of Withdrawal of Consent to Study"
                     name="study_consent_withdrawal2"
+                    value={this.state.Data.study_consent_withdrawal}
                     onUserInput={this.setFormData}
                     ref="study_consent_withdrawal2"
                     disabled={disabled}

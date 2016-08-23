@@ -84,11 +84,12 @@ var CandidateInfo = React.createClass({
             updateButton = <ButtonElement label="Update" />;
         }
         var reasonSelect = null;
-        if (this.state.formData.flagged_caveatemptor === "true") {
+        if (this.state.formData.flagged_caveatemptor === "true" || this.state.Data.flagged_reason !== null) {
             reasonSelect = <SelectElement
                 label="Reason for Caveat Emptor Flag"
                 name="flagged_reason"
-                options={this.state.Data.caveatReasonOptions} // rename to caveat reason options
+                options={this.state.Data.caveatReasonOptions}
+                value={this.state.Data.flagged_reason}
                 onUserInput={this.setFormData}
                 ref="flagged_reason"
                 disabled={false}
@@ -106,14 +107,19 @@ var CandidateInfo = React.createClass({
         }
 
         var otherText = null;
-        if (this.state.formData.flagged_reason === reasonKey) {
+        var otherRequired = false;
+        if (this.state.formData.flagged_reason === reasonKey || this.state.Data.flagged_other !== null) {
+            if (this.state.formData.flagged_reason === reasonKey) {
+                otherRequired = true;
+            }
             otherText = <TextareaElement
                 label="If Other, please specify"
                 name="flagged_other"
+                value={this.state.Data.flagged_other}
                 onUserInput={this.setFormData}
                 ref="flagged_other"
                 disabled={false}
-                required={true}
+                required={otherRequired}
             />
         }
 
@@ -129,36 +135,37 @@ var CandidateInfo = React.createClass({
                 alertMessage = errorMessage ? errorMessage : "Failed to update!";
             }
         }
-
         return (
             <div>
                 <div className={alertClass} role="alert" ref="alert-message">
                     {alertMessage}
                 </div>
-            <FormElement name="candidateInfo" onSubmit={this.handleSubmit} ref="form" class="col-md-6">
-                <StaticElement
-                    label="PSCID"
-                    text={this.state.Data.pscid}
-                />
-                <StaticElement
-                    label="DCCID"
-                    text={this.state.Data.candID}
-                />
-                <SelectElement
-                    label="Caveat Emptor Flag for Candidate"
-                    name="flagged_caveatemptor"
-                    options={this.state.caveatOptions}
-                    onUserInput={this.setFormData}
-                    ref="flagged_caveatemptor"
-                    disabled={disabled}
-                    required={true}
-                />
-                {reasonSelect}
-                {otherText}
-                {updateButton}
-            </FormElement>
+                <FormElement name="candidateInfo" onSubmit={this.handleSubmit} ref="form" class="col-md-6">
+                    <StaticElement
+                        label="PSCID"
+                        text={this.state.Data.pscid}
+                    />
+                    <StaticElement
+                        label="DCCID"
+                        text={this.state.Data.candID}
+                    />
+                    <SelectElement
+                        label="Caveat Emptor Flag for Candidate"
+                        name="flagged_caveatemptor"
+                        options={this.state.caveatOptions}
+                        value={this.state.Data.flagged_caveatemptor}
+                        onUserInput={this.setFormData}
+                        ref="flagged_caveatemptor"
+                        disabled={disabled}
+                        required={true}
+                    />
+                    {reasonSelect}
+                    {otherText}
+                    {updateButton}
+                </FormElement>
             </div>
         );
+
     },
 
     /**
@@ -175,8 +182,10 @@ var CandidateInfo = React.createClass({
         var self = this;
         var formData = new FormData();
         for (var key in myFormData) {
-            if (myFormData[key] != "") {
-                formData.append(key, myFormData[key]);
+            if (myFormData.hasOwnProperty(key)) {
+                if (myFormData[key] != "") {
+                    formData.append(key, myFormData[key]);
+                }
             }
         }
 

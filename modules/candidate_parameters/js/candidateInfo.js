@@ -89,12 +89,13 @@ var CandidateInfo = React.createClass({
             updateButton = React.createElement(ButtonElement, { label: "Update" });
         }
         var reasonSelect = null;
-        if (this.state.formData.flagged_caveatemptor === "true") {
+        if (this.state.formData.flagged_caveatemptor === "true" || this.state.Data.flagged_reason !== null) {
             reasonSelect = React.createElement(SelectElement, {
                 label: "Reason for Caveat Emptor Flag",
                 name: "flagged_reason",
-                options: this.state.Data.caveatReasonOptions // rename to caveat reason options
-                , onUserInput: this.setFormData,
+                options: this.state.Data.caveatReasonOptions,
+                value: this.state.Data.flagged_reason,
+                onUserInput: this.setFormData,
                 ref: "flagged_reason",
                 disabled: false,
                 required: true
@@ -111,14 +112,19 @@ var CandidateInfo = React.createClass({
         }
 
         var otherText = null;
-        if (this.state.formData.flagged_reason === reasonKey) {
+        var otherRequired = false;
+        if (this.state.formData.flagged_reason === reasonKey || this.state.Data.flagged_other !== null) {
+            if (this.state.formData.flagged_reason === reasonKey) {
+                otherRequired = true;
+            }
             otherText = React.createElement(TextareaElement, {
                 label: "If Other, please specify",
                 name: "flagged_other",
+                value: this.state.Data.flagged_other,
                 onUserInput: this.setFormData,
                 ref: "flagged_other",
                 disabled: false,
-                required: true
+                required: otherRequired
             });
         }
 
@@ -134,7 +140,6 @@ var CandidateInfo = React.createClass({
                 alertMessage = errorMessage ? errorMessage : "Failed to update!";
             }
         }
-
         return React.createElement(
             "div",
             null,
@@ -158,6 +163,7 @@ var CandidateInfo = React.createClass({
                     label: "Caveat Emptor Flag for Candidate",
                     name: "flagged_caveatemptor",
                     options: this.state.caveatOptions,
+                    value: this.state.Data.flagged_caveatemptor,
                     onUserInput: this.setFormData,
                     ref: "flagged_caveatemptor",
                     disabled: disabled,
@@ -184,8 +190,10 @@ var CandidateInfo = React.createClass({
         var self = this;
         var formData = new FormData();
         for (var key in myFormData) {
-            if (myFormData[key] != "") {
-                formData.append(key, myFormData[key]);
+            if (myFormData.hasOwnProperty(key)) {
+                if (myFormData[key] != "") {
+                    formData.append(key, myFormData[key]);
+                }
             }
         }
 

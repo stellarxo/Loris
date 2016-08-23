@@ -83,22 +83,37 @@ var ParticipantStatus = React.createClass({
         var required = this.state.Data.required;
         var subOptions = [];
         var suboptionsSelect = null;
+        var setSuboptionsSelect = false;
+        var suboptionsRequired = false;
+
+        if (this.state.Data.participant_suboptions !== null) {
+            setSuboptionsSelect = true;
+        }
         for (var key in required) {
             if (required.hasOwnProperty(key)) {
-                if (required[key]["ID"] === this.state.formData.participant_status) {
-                    subOptions = this.state.Data.parentIDs[this.state.formData.participant_status];
-                    suboptionsSelect = <SelectElement
-                        label="Specify Reason"
-                        name="participant_suboptions"
-                        options={subOptions}
-                        onUserInput={this.setFormData}
-                        ref="participant_suboptions"
-                        disabled={false}
-                        required={true}
-                    />;
+                var participantStatus = this.state.formData.participant_status;
+                if (participantStatus === null) {
+                    participantStatus = this.state.Data.participant_status;
+                }
+                if (required[key]["ID"] === participantStatus) {
+                    subOptions = this.state.Data.parentIDs[participantStatus];
+                    setSuboptionsSelect = true;
+                    suboptionsRequired = true;
                     break;
                 }
             }
+        }
+        if (setSuboptionsSelect) {
+            suboptionsSelect = <SelectElement
+                label="Specify Reason"
+                name="participant_suboptions"
+                options={subOptions}
+                value={this.state.Data.participant_suboptions}
+                onUserInput={this.setFormData}
+                ref="participant_suboptions"
+                disabled={false}
+                required={suboptionsRequired}
+            />;
         }
 
         var alertMessage = "";
@@ -132,6 +147,7 @@ var ParticipantStatus = React.createClass({
                     label="Participant Status"
                     name="participant_status"
                     options={this.state.Data.statusOptions}
+                    value={this.state.Data.participant_status}
                     onUserInput={this.setFormData}
                     ref="participant_status"
                     disabled={disabled}
@@ -141,6 +157,7 @@ var ParticipantStatus = React.createClass({
                 <TextareaElement
                     label="Comments"
                     name="reason_specify"
+                    value={this.state.Data.reason_specify}
                     onUserInput={this.setFormData}
                     ref="reason_specify"
                     disabled={disabled}

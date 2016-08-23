@@ -40,14 +40,34 @@ function getCandInfoFields() {
 
     // get pscid
     $pscid = $db->pselectOne(
-        'SELECT PSCID FROM candidate where CandID = :candid',
+        'SELECT PSCID FROM candidate WHERE CandID = :candid',
         array('candid' => $candID)
     );
+
+    $flag = $db->pselectOne(
+        'SELECT flagged_caveatemptor FROM candidate WHERE CandID = :candid',
+        array('candid' => $candID)
+    );
+
+    $reason = $db->pselectOne(
+        'SELECT flagged_reason FROM candidate WHERE CandID = :candid',
+        array('candid' => $candID)
+    );
+
+    $other = $db->pselectOne(
+        'SELECT flagged_other FROM candidate WHERE CandID = :candid',
+        array('candid' => $candID)
+    );
+
+
 
     $result = [
         'pscid' => $pscid,
         'candID' => $candID,
-        'caveatReasonOptions' => $caveat_options
+        'caveatReasonOptions' => $caveat_options,
+        'flagged_caveatemptor' => $flag,
+        'flagged_reason' => $reason,
+        'flagged_other' => $other
     ];
 
     return $result;
@@ -64,9 +84,21 @@ function getProbandInfoFields() {
         array('candid' => $candID)
     );
 
+    $gender = $db->pselectOne(
+        'SELECT ProbandGender FROM candidate where CandID = :candid',
+        array('candid' => $candID)
+    );
+
+    $dob = $db->pselectOne(
+        'SELECT ProbandDoB FROM candidate where CandID = :candid',
+        array('candid' => $candID)
+    );
+
     $result = [
         'pscid' => $pscid,
-        'candID' => $candID
+        'candID' => $candID,
+        'ProbandGender' => $gender,
+        'ProbandDoB' => $dob
     ];
 
     return $result;
@@ -97,10 +129,22 @@ function getFamilyInfoFields() {
         }
     }
 
+    $familyCandID = $db->pselectOne(
+        "SELECT CandID FROM family WHERE FamilyID=(SELECT FamilyID FROM family WHERE CandID = :candid) AND CandID <> :candid2",
+        array('candid' => $candID, 'candid2' => $candID)
+    );
+
+    $relationship = $db->pselectOne(
+        "SELECT Relationship_type FROM family WHERE FamilyID=(SELECT FamilyID FROM family WHERE CandID = :candid) AND CandID <> :candid2",
+        array('candid' => $candID, 'candid2' => $candID)
+    );
+
     $result = [
         'pscid' => $pscid,
         'candID' => $candID,
-        'candidates' => $candidates
+        'candidates' => $candidates,
+        'familyCandID' => $familyCandID,
+        'Relationship_type' => $relationship
     ];
 
     return $result;
@@ -140,13 +184,20 @@ function getParticipantStatusFields() {
         }
     }
 
+    $status = $db->pselectOne("SELECT participant_status FROM participant_status WHERE CandID=:candid", array('candid' => $candID));
+    $suboption = $db->pselectOne("SELECT participant_suboptions FROM participant_status WHERE CandID=:candid", array('candid' => $candID));
+    $reason = $db->pselectOne("SELECT reason_specify FROM participant_status WHERE CandID=:candid", array('candid' => $candID));
+
     $result = [
         'pscid' => $pscid,
         'candID' => $candID,
         'statusOptions' => $statusOptions,
         'required' => $required,
         'reasonOptions' => $reasonOptions,
-        'parentIDs' => $parentIDMap
+        'parentIDs' => $parentIDMap,
+        'participant_status' => $status,
+        'participant_suboptions' => $suboption,
+        'reason_specify' => $reason
     ];
 
     return $result;
@@ -163,11 +214,16 @@ function getConsentStatusFields() {
         array('candid' => $candID)
     );
 
-    // UPDATE THIS
+    $consent = $db->pselectOne('SELECT study_consent FROM participant_status WHERE CandID=:candid', array('candid' => $candID));
+    $date = $db->pselectOne('SELECT study_consent_date FROM participant_status WHERE CandID=:candid', array('candid' => $candID));
+    $withdrawal = $db->pselectOne('SELECT study_consent_withdrawal FROM participant_status WHERE CandID=:candid', array('candid' => $candID));
 
     $result = [
         'pscid' => $pscid,
-        'candID' => $candID
+        'candID' => $candID,
+        'study_consent' => $consent,
+        'study_consent_date'   => $date,
+        'study_consent_withdrawal'   => $withdrawal
     ];
 
     return $result;

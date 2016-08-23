@@ -54,7 +54,50 @@ var FamilyInfo = React.createClass({
 
     onSubmit: function (e) {
         e.preventDefault();
+    },
 
+    addChild: function(type) {
+        // Add a child to the group
+        var child,
+            group = this.props.group;
+
+        // Define the child's base data structure depending on specified type
+        child = {
+            type: "group",
+            activeOperator: 0,
+            children: [
+                {
+                        type: "rule"
+                }
+            ]
+        }
+        group.children.push(child);
+
+        if(this.props.index) {
+            // If not base filter group, recursively call update child
+            this.props.updateGroup(this.props.index, group);
+        } else {
+            // Else base filter group, update the filter in the data query component
+            this.props.updateFilter(group)
+        }
+    },
+    deleteChild: function(index) {
+        // Delete a child
+
+        var group = this.props.group;
+        group.children.splice(index, 1);
+
+        // Update the groups sessions by calling the arrayintersect.js functions
+        group.session = getSessions(group);
+
+
+        if(this.props.index) {
+            // If not base filter group, recursively call update child
+            this.props.updateGroup(this.props.index, group);
+        } else {
+            // Else base filter group, update the filter in the data query component
+            this.props.updateFilter(group);
+        }
     },
 
     render: function () {
@@ -84,6 +127,16 @@ var FamilyInfo = React.createClass({
             disabled = false;
             updateButton = <ButtonElement label="Update" />;
         }
+        // var addButton = null;
+        // if (loris.userHasPermission('candidate_parameter_edit')) {
+        //     disabled = false;
+        //     addButton = <ButtonElement label="Add" />;
+        // }
+        var deleteButton = null;
+        if (loris.userHasPermission('candidate_parameter_edit')) {
+            disabled = false;
+            deleteButton = <ButtonElement label="Delete" />;
+        }
 
         var alertMessage = "";
         var alertClass = "alert text-center hide";
@@ -103,6 +156,7 @@ var FamilyInfo = React.createClass({
                 <div className={alertClass} role="alert" ref="alert-message">
                     {alertMessage}
                 </div>
+
             <FormElement name="familyInfo" onSubmit={this.handleSubmit} ref="form" class="col-md-6">
                 <StaticElement
                     label="PSCID"
@@ -116,6 +170,7 @@ var FamilyInfo = React.createClass({
                     label="Family Member ID (DCCID)"
                     name="CandID"
                     options={this.state.Data.candidates}
+                    value={this.state.Data.familyCandID}
                     onUserInput={this.setFormData}
                     ref="CandID"
                     disabled={disabled}
@@ -125,6 +180,7 @@ var FamilyInfo = React.createClass({
                     label="Relation Type"
                     name="Relationship_type"
                     options={this.state.relationshipOptions}
+                    value={this.state.Data.Relationship_type}
                     onUserInput={this.setFormData}
                     ref="Relationship_type"
                     disabled={disabled}

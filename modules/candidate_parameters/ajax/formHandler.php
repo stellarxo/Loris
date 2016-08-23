@@ -24,7 +24,6 @@ if (isset($_POST['tab'])) {
 }
 
 function editCandInfoFields() {
-    echo 'edit info';
     $db   =& Database::singleton();
     $user =& User::singleton();
     if (!$user->hasPermission('candidate_parameter_edit')) {
@@ -131,10 +130,11 @@ function editParticipantStatusFields() {
     $updateValues = [
         'participant_status' => $status,
         'participant_suboptions'   => $suboption,
-        'reason_specify'   => $reason
+        'reason_specify'   => $reason,
+        'CandID' => $candID
     ];
 
-    $db->update('participant_status', $updateValues, ['CandID' => $candID]);
+    $db->replace('participant_status', $updateValues);
 }
 
 function editConsentStatusFields() {
@@ -167,5 +167,5 @@ function editConsentStatusFields() {
         'study_consent_withdrawal'   => $withdrawal
     ];
 
-    $db->update('participant_status', $updateValues, ['CandID' => $candID]);
+    $db->replace('participant_status', $updateValues, ['CandID' => $candID]);
 }
