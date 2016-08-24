@@ -147,13 +147,13 @@ function getFamilyInfoFields() {
         }
     }
 
-    $familyCandID = $db->pselectOne(
-        "SELECT CandID FROM family WHERE FamilyID=(SELECT FamilyID FROM family WHERE CandID = :candid) AND CandID <> :candid2",
+    $familyCandIDs = $db->pselect(
+        "SELECT CandID FROM family WHERE FamilyID=(SELECT FamilyID FROM family WHERE CandID = :candid) AND CandID <> :candid2 ORDER BY CandID",
         array('candid' => $candID, 'candid2' => $candID)
     );
 
-    $relationship = $db->pselectOne(
-        "SELECT Relationship_type FROM family WHERE FamilyID=(SELECT FamilyID FROM family WHERE CandID = :candid) AND CandID <> :candid2",
+    $relationships = $db->pselect(
+        "SELECT Relationship_type FROM family WHERE FamilyID=(SELECT FamilyID FROM family WHERE CandID = :candid) AND CandID <> :candid2 ORDER BY CandID",
         array('candid' => $candID, 'candid2' => $candID)
     );
 
@@ -161,8 +161,8 @@ function getFamilyInfoFields() {
         'pscid' => $pscid,
         'candID' => $candID,
         'candidates' => $candidates,
-        'familyCandID' => $familyCandID,
-        'Relationship_type' => $relationship
+        'familyCandIDs' => $familyCandIDs,
+        'Relationship_types' => $relationships
     ];
 
     return $result;

@@ -130,15 +130,36 @@ var FamilyInfo = React.createClass({
             disabled = false;
             updateButton = React.createElement(ButtonElement, { label: "Update" });
         }
-        // var addButton = null;
-        // if (loris.userHasPermission('candidate_parameter_edit')) {
-        //     disabled = false;
-        //     addButton = <ButtonElement label="Add" />;
-        // }
-        var deleteButton = null;
-        if (loris.userHasPermission('candidate_parameter_edit')) {
-            disabled = false;
-            deleteButton = React.createElement(ButtonElement, { label: "Delete" });
+
+        var familyMembers = [];
+        var familyMemberIDs = this.state.Data.familyCandIDs;
+        var relationships = this.state.Data.Relationship_types;
+        for (var key in familyMemberIDs) {
+            if (familyMemberIDs.hasOwnProperty(key) && relationships.hasOwnProperty(key)) {
+                familyMembers.push(React.createElement(SelectElement, {
+                    label: "Family Member ID (DCCID)",
+                    name: "FamilyCandID",
+                    options: this.state.Data.candidates,
+                    value: familyMemberIDs[key]['CandID'],
+                    onUserInput: this.setFormData,
+                    ref: "FamilyCandID",
+                    disabled: disabled,
+                    required: true
+                }));
+                familyMembers.push(React.createElement(SelectElement, {
+                    label: "Relation Type",
+                    name: "Relationship_type",
+                    options: this.state.relationshipOptions,
+                    value: relationships[key]['Relationship_type'],
+                    onUserInput: this.setFormData,
+                    ref: "Relationship_type",
+                    disabled: disabled,
+                    required: true
+                }));
+                if (loris.userHasPermission('candidate_parameter_edit')) {
+                    familyMembers.push(React.createElement(ButtonElement, { label: "Delete" }));
+                }
+            }
         }
 
         var alertMessage = "";
@@ -173,11 +194,11 @@ var FamilyInfo = React.createClass({
                     label: "DCCID",
                     text: this.state.Data.candID
                 }),
+                familyMembers,
                 React.createElement(SelectElement, {
                     label: "Family Member ID (DCCID)",
                     name: "FamilyCandID",
                     options: this.state.Data.candidates,
-                    value: this.state.Data.familyCandID,
                     onUserInput: this.setFormData,
                     ref: "FamilyCandID",
                     disabled: disabled,
@@ -187,7 +208,6 @@ var FamilyInfo = React.createClass({
                     label: "Relation Type",
                     name: "Relationship_type",
                     options: this.state.relationshipOptions,
-                    value: this.state.Data.Relationship_type,
                     onUserInput: this.setFormData,
                     ref: "Relationship_type",
                     disabled: disabled,
