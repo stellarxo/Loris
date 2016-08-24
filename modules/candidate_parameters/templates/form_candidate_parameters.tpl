@@ -47,6 +47,7 @@
     <div role="tabpanel" class="tab-pane" id="participant-status">
         Participant info
     </div>
+
     <div role="tabpanel" class="tab-pane" id="consent-status">
         Consent Status info
     </div>

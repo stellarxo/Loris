@@ -88,38 +88,67 @@ function editFamilyInfoFields() {
         array('candid' => $candID)
     );
 
-    $updateValues = [
-        'CandID' => $siblingCandID,
-        'Relationship_type'   => $relationship,
-        'FamilyID' => $familyID
-    ];
+    // Add new candidate
+    if ($siblingCandID != null) {
 
-    if ($familyID != null) {
+        $updateValues = [
+            'CandID' => $siblingCandID,
+            'Relationship_type' => $relationship,
+            'FamilyID' => $familyID
+        ];
+
+        if ($familyID != null) {
+
+            $siblingID = $db->pselectOne(
+                "SELECT ID from family WHERE CandID=:candid and FamilyID=:familyid",
+                array('candid' => $siblingCandID, 'familyid' => $familyID)
+            );
+
+            if ($siblingID == null) {
+                $db->insert('family', $updateValues);
+            } else {
+                $db->update('family', $updateValues, ['ID' => $siblingID]);
+            }
+        } else {
+            $familyID = $db->pselectOne(
+                "SELECT max(FamilyID) from family",
+                array()
+            );
+            $newFamilyID = $familyID + 1;
+
+            $updateValues['FamilyID'] = $newFamilyID;
+            $db->insert('family', $updateValues);
+
+            $updateValues['CandID'] = $candID;
+            $db->insert('family', $updateValues);
+        }
+    }
+
+    // Update existing candidates
+    $i = 1;
+    $familyCandID = 'FamilyCandID' . $i;
+    $relationshipType = 'Relationship_type' . $i;
+    $siblingCandID   = isset($_POST[$familyCandID]) ? $_POST[$familyCandID] : null;
+    $relationship    = isset($_POST[$relationshipType]) ? $_POST[$relationshipType] : null;
+
+    while ($siblingCandID != null ) {
 
         $siblingID = $db->pselectOne(
             "SELECT ID from family WHERE CandID=:candid and FamilyID=:familyid",
             array('candid' => $siblingCandID, 'familyid' => $familyID)
         );
 
-        if ($siblingID == null) {
-            $db->insert('family', $updateValues);
-        }
-        else {
-            $db->update('family', $updateValues, ['ID' => $siblingID]);
-        }
-    }
-    else {
-        $familyID = $db->pselectOne(
-            "SELECT max(FamilyID) from family",
-            array()
-        );
-        $newFamilyID = $familyID + 1;
+        $updateValues = [
+            'CandID' => $siblingCandID,
+            'Relationship_type'   => $relationship,
+            'FamilyID' => $familyID
+        ];
 
-        $updateValues['FamilyID'] = $newFamilyID;
-        $db->insert('family', $updateValues);
+        error_log($siblingCandID);
 
-        $updateValues['CandID'] = $candID;
-        $db->insert('family', $updateValues);
+        $db->update('family', $updateValues, ['ID' => $siblingID]);
+
+        $i++;
     }
 }
 

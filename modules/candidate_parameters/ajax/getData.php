@@ -134,11 +134,23 @@ function getFamilyInfoFields() {
         array()
     );
 
+    $siblingsList = $db->pselect(
+        "SELECT CandID FROM family WHERE FamilyID=(SELECT FamilyID FROM family WHERE CandID=:candid)",
+        array('candid' => $candID)
+    );
+
+    $siblings = array();
+    foreach ($siblingsList as $key => $siblingArray) {
+        foreach ($siblingArray as $ID) {
+            array_push($siblings, $ID);
+        }
+    }
+
     $candidates = array();
-    // Remove own ID from list of possible family members
+    // Remove own ID and sibling IDs from list of possible family members
     foreach ($candidatesList as $key => $candidate) {
         foreach ($candidate as $ID) {
-            if ($ID == $candID) {
+            if ($ID == $candID || in_array($ID, $siblings)) {
                 unset($candidatesList[$key]);
             }
             else {

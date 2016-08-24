@@ -56,50 +56,6 @@ var FamilyInfo = React.createClass({
         e.preventDefault();
     },
 
-    addChild: function(type) {
-        // Add a child to the group
-        var child,
-            group = this.props.group;
-
-        // Define the child's base data structure depending on specified type
-        child = {
-            type: "group",
-            activeOperator: 0,
-            children: [
-                {
-                        type: "rule"
-                }
-            ]
-        }
-        group.children.push(child);
-
-        if(this.props.index) {
-            // If not base filter group, recursively call update child
-            this.props.updateGroup(this.props.index, group);
-        } else {
-            // Else base filter group, update the filter in the data query component
-            this.props.updateFilter(group)
-        }
-    },
-    deleteChild: function(index) {
-        // Delete a child
-
-        var group = this.props.group;
-        group.children.splice(index, 1);
-
-        // Update the groups sessions by calling the arrayintersect.js functions
-        group.session = getSessions(group);
-
-
-        if(this.props.index) {
-            // If not base filter group, recursively call update child
-            this.props.updateGroup(this.props.index, group);
-        } else {
-            // Else base filter group, update the filter in the data query component
-            this.props.updateFilter(group);
-        }
-    },
-
     render: function () {
 
         if (!this.state.isLoaded) {
@@ -131,25 +87,24 @@ var FamilyInfo = React.createClass({
         var familyMembers = [];
         var familyMemberIDs = this.state.Data.familyCandIDs;
         var relationships = this.state.Data.Relationship_types;
+        var i = 1;
+        var relationship = null;
         for (var key in familyMemberIDs) {
             if (familyMemberIDs.hasOwnProperty(key) && relationships.hasOwnProperty(key)) {
-                familyMembers.push(<SelectElement
+                relationship = "Relationship_type" + i;
+                i++;
+
+                familyMembers.push(<StaticElement
                     label="Family Member ID (DCCID)"
-                    name="FamilyCandID"
-                    options={this.state.Data.candidates}
-                    value={familyMemberIDs[key]['CandID']}
-                    onUserInput={this.setFormData}
-                    ref="FamilyCandID"
-                    disabled={disabled}
-                    required={true}
+                    text={familyMemberIDs[key]['CandID']}
                 />);
                 familyMembers.push(<SelectElement
                 label="Relation Type"
-                name="Relationship_type"
+                name={relationship}
                 options={this.state.relationshipOptions}
                 value={relationships[key]['Relationship_type']}
                 onUserInput={this.setFormData}
-                ref="Relationship_type"
+                ref={relationship}
                 disabled={disabled}
                 required={true}
                     />);
@@ -157,6 +112,11 @@ var FamilyInfo = React.createClass({
                     familyMembers.push(<ButtonElement label="Delete"/>);
                 }
             }
+        }
+
+        var relationshipRequired = false;
+        if (this.state.formData.FamilyCandID !== null && this.state.formData.FamilyCandID !== undefined) {
+            relationshipRequired = true;
         }
 
         var alertMessage = "";
@@ -195,7 +155,7 @@ var FamilyInfo = React.createClass({
                     onUserInput={this.setFormData}
                     ref="FamilyCandID"
                     disabled={disabled}
-                    required={true}
+                    required={false}
                 />
                 <SelectElement
                 label="Relation Type"
@@ -204,7 +164,7 @@ var FamilyInfo = React.createClass({
                 onUserInput={this.setFormData}
                 ref="Relationship_type"
                 disabled={disabled}
-                required={true}
+                required={relationshipRequired}
             />
                 {updateButton}
             </FormElement>
