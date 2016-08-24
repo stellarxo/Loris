@@ -92,7 +92,6 @@ var ParticipantStatus = React.createClass({
         for (var key in required) {
             if (required.hasOwnProperty(key)) {
                 var participantStatus = this.state.formData.participant_status;
-                console.log("ps", participantStatus);
                 if (participantStatus === null || participantStatus === undefined) {
                     participantStatus = this.state.Data.participant_status;
                 }

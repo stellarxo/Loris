@@ -129,16 +129,20 @@ function getFamilyInfoFields() {
         array('candid' => $candID)
     );
 
-    $candidates  = $db->pselect(
+    $candidatesList  = $db->pselect(
         "SELECT CandID FROM candidate ORDER BY CandID",
         array()
     );
 
+    $candidates = array();
     // Remove own ID from list of possible family members
-    foreach ($candidates as $key => $candidate) {
+    foreach ($candidatesList as $key => $candidate) {
         foreach ($candidate as $ID) {
             if ($ID == $candID) {
-                unset($candidates[$key]);
+                unset($candidatesList[$key]);
+            }
+            else {
+                $candidates[$ID] = $ID;
             }
         }
     }

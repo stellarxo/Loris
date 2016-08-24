@@ -168,11 +168,11 @@ var FamilyInfo = React.createClass({
                 />
                 <SelectElement
                     label="Family Member ID (DCCID)"
-                    name="CandID"
+                    name="FamilyCandID"
                     options={this.state.Data.candidates}
                     value={this.state.Data.familyCandID}
                     onUserInput={this.setFormData}
-                    ref="CandID"
+                    ref="FamilyCandID"
                     disabled={disabled}
                     required={true}
                 />

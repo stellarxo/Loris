@@ -80,17 +80,50 @@ function editFamilyInfoFields() {
     $candID = $_POST['candID'];
 
     // Process posted data
-    $siblingCandID   = isset($_POST['CandID']) ? $_POST['CandID'] : null;
+    $siblingCandID   = isset($_POST['FamilyCandID']) ? $_POST['FamilyCandID'] : null;
     $relationship    = isset($_POST['Relationship_type']) ? $_POST['Relationship_type'] : null;
 
-    // find family ID!!!!!!!!!!!
+    $familyID = $db->pselectOne(
+        "SELECT FamilyID from family WHERE CandID=:candid",
+        array('candid' => $candID)
+    );
 
     $updateValues = [
         'CandID' => $siblingCandID,
-        'Relationship_type'   => $relationship
+        'Relationship_type'   => $relationship,
+        'FamilyID' => $familyID
     ];
 
-    $db->update('family', $updateValues, ['CandID' => $candID]);
+    if ($familyID != null) {
+
+        $siblingID = $db->pselectOne(
+            "SELECT ID from family WHERE CandID=:candid and FamilyID=:familyid",
+            array('candid' => $siblingCandID, 'familyid' => $familyID)
+        );
+
+        if ($siblingID == null) {
+            $db->insert('family', $updateValues);
+        }
+        else {
+            $db->update('family', $updateValues, ['ID' => $siblingID]);
+        }
+        // update if candid/familyid combo already exists
+        // otherwise insert
+    }
+    else {
+        $familyID = $db->pselectOne(
+            "SELECT max(FamilyID) from family",
+            array()
+        );
+        $newFamilyID = $familyID + 1;
+
+        $updateValues['FamilyID'] = $newFamilyID;
+        $db->insert('family', $updateValues);
+
+        $updateValues['CandID'] = $candID;
+        $db->insert('family', $updateValues);
+    }
+
 }
 
 function editParticipantStatusFields() {
