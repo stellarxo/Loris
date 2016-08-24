@@ -107,8 +107,6 @@ function editFamilyInfoFields() {
         else {
             $db->update('family', $updateValues, ['ID' => $siblingID]);
         }
-        // update if candid/familyid combo already exists
-        // otherwise insert
     }
     else {
         $familyID = $db->pselectOne(
@@ -123,7 +121,6 @@ function editFamilyInfoFields() {
         $updateValues['CandID'] = $candID;
         $db->insert('family', $updateValues);
     }
-
 }
 
 function editParticipantStatusFields() {
@@ -174,16 +171,7 @@ function editConsentStatusFields() {
     // Process posted data
     $consent   = isset($_POST['study_consent']) ? $_POST['study_consent'] : null;
     $date    = isset($_POST['study_consent_date']) ? $_POST['study_consent_date'] : null;
-    $date2    = isset($_POST['study_consent_date2']) ? $_POST['study_consent_date2'] : null;
     $withdrawal    = isset($_POST['study_consent_withdrawal']) ? $_POST['study_consent_withdrawal'] : null;
-    $withdrawal2    = isset($_POST['study_consent_withdrawal2']) ? $_POST['study_consent_withdrawal2'] : null;
-
-    if ($date !== $date2) {
-        // throw error
-    }
-    if ($withdrawal !== $withdrawal2) {
-        // throw error
-    }
 
     $updateValues = [
         'study_consent' => $consent,
