@@ -218,6 +218,8 @@ function getParticipantStatusFields() {
     $suboption = $db->pselectOne("SELECT participant_suboptions FROM participant_status WHERE CandID=:candid", array('candid' => $candID));
     $reason = $db->pselectOne("SELECT reason_specify FROM participant_status WHERE CandID=:candid", array('candid' => $candID));
 
+    $history = getParticipantStatusHistory($candID);
+
     $result = [
         'pscid' => $pscid,
         'candID' => $candID,
@@ -227,10 +229,36 @@ function getParticipantStatusFields() {
         'parentIDs' => $parentIDMap,
         'participant_status' => $status,
         'participant_suboptions' => $suboption,
-        'reason_specify' => $reason
+        'reason_specify' => $reason,
+        'history' => $history
     ];
 
     return $result;
+}
+
+function getParticipantStatusHistory($candID) {
+    $db =& Database::singleton();
+    $unformattedComments = $db->pselect(
+        "SELECT (SELECT Description FROM participant_status_options pso WHERE ID=psh.participant_status) AS status, (SELECT Description from participant_status_options pso WHERE ID=psh.participant_subOptions) AS suboption, entry_staff, data_entry_date, reason_specify FROM participant_status_history psh WHERE CandID=:cid",
+        array('cid' => $candID)
+    );
+
+    $commentHistory = '';
+    foreach ($unformattedComments as $comment) {
+        $commentString = '';
+        $commentString .= '[' . $comment['data_entry_date'] . '] ';
+        $commentString .= '<i>Updated by ' . $comment['entry_staff'] . '. </i>';
+        $commentString .= '<b>Status:</b> ' . $comment['status'] . '.';
+        if (isset($comment['suboption'])) {
+            $commentString .= ' <b>Details:</b> ' . $comment['suboption'] . '.';
+        }
+        if (isset($comment['reason_specify'])) {
+            $commentString .= ' <b>Comments:</b> ' . $comment['reason_specify'];
+        }
+        $commentHistory .= $commentString . '<br/>';
+    }
+
+    return $commentHistory;
 }
 
 function getConsentStatusFields() {
@@ -248,15 +276,43 @@ function getConsentStatusFields() {
     $date = $db->pselectOne('SELECT study_consent_date FROM participant_status WHERE CandID=:candid', array('candid' => $candID));
     $withdrawal = $db->pselectOne('SELECT study_consent_withdrawal FROM participant_status WHERE CandID=:candid', array('candid' => $candID));
 
+    $history = getConsentStatusHistory($candID);
+
     $result = [
         'pscid' => $pscid,
         'candID' => $candID,
         'study_consent' => $consent,
         'study_consent_date'   => $date,
-        'study_consent_withdrawal'   => $withdrawal
+        'study_consent_withdrawal'   => $withdrawal,
+        'history' => $history
     ];
 
     return $result;
+}
+
+function getConsentStatusHistory($candID) {
+    $db =& Database::singleton();
+    $unformattedComments = $db->pselect(
+        "SELECT entry_staff, data_entry_date, study_consent, study_consent_date, study_consent_withdrawal FROM consent_info_history WHERE CandID=:cid",
+        array('cid' => $candID)
+    );
+
+    $commentHistory = '';
+    foreach ($unformattedComments as $comment) {
+        $commentString = '';
+        $commentString .= '[' . $comment['data_entry_date'] . '] ';
+        $commentString .= '<i>Updated by ' . $comment['entry_staff'] . '. </i>';
+        $commentString .= '<b>Consent Status:</b> ' . $comment['study_consent'] . '.';
+        if (isset($comment['study_consent_date'])) {
+            $commentString .= ' <b>Date of Consent:</b> ' . $comment['study_consent_date'];
+        }
+        if (isset($comment['study_consent_withdrawal'])) {
+            $commentString .= '<b>Date of Withdrawal:</b> ' . $comment['study_consent_withdrawal'];
+        }
+        $commentHistory .= $commentString . '<br/>';
+    }
+
+    return $commentHistory;
 }
 
 /**

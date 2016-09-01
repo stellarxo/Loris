@@ -1,5 +1,32 @@
 'use strict';
 
+var CollapsibleHistory = React.createClass({
+    displayName: 'CollapsibleHistory',
+
+
+    getInitialState: function getInitialState() {
+        return { 'collapsed': true };
+    },
+    toggleCollapsed: function toggleCollapsed() {
+        this.setState({ 'collapsed': !this.state.collapsed });
+    },
+    render: function render() {
+        return React.createElement(
+            'div',
+            { className: 'row form-group' },
+            React.createElement(
+                'div',
+                { id: 'comment-history' },
+                React.createElement(
+                    'div',
+                    { className: 'col-sm-12' },
+                    React.createElement('div', { dangerouslySetInnerHTML: { __html: this.props.text } })
+                )
+            )
+        );
+    }
+});
+
 var ParticipantStatus = React.createClass({
     displayName: 'ParticipantStatus',
 
@@ -173,7 +200,18 @@ var ParticipantStatus = React.createClass({
                     disabled: disabled,
                     required: false
                 }),
-                updateButton
+                updateButton,
+                React.createElement(
+                    'div',
+                    { 'class': 'col-sm-6' },
+                    React.createElement(
+                        'div',
+                        { 'class': 'row' },
+                        React.createElement(CollapsibleHistory, {
+                            text: this.state.Data.history
+                        })
+                    )
+                )
             )
         );
     },

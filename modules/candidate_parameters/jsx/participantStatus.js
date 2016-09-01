@@ -1,3 +1,28 @@
+var CollapsibleHistory = React.createClass(
+    {
+
+        getInitialState: function() {
+            return {'collapsed': true};
+        },
+        toggleCollapsed: function() {
+            this.setState({'collapsed': !this.state.collapsed});
+        },
+        render: function() {
+            return (
+                <div className="row form-group">
+                    <div id="comment-history">
+                        <div className="col-sm-12">
+                            <div dangerouslySetInnerHTML={{__html: this.props.text}}/>
+                        </div>
+                    </div>
+                </div>
+
+            );
+        }
+    }
+);
+
+
 var ParticipantStatus = React.createClass({
 
     getInitialState: function () {
@@ -164,6 +189,13 @@ var ParticipantStatus = React.createClass({
                     required={false}
                 />
                 {updateButton}
+                <div class="col-sm-6">
+                    <div class="row">
+                        <CollapsibleHistory
+                            text={this.state.Data.history}
+                        />
+                    </div>
+                </div>
             </FormElement>
                 </div>
         );

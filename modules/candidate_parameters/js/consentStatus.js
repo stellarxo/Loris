@@ -1,11 +1,38 @@
-"use strict";
+'use strict';
 
 var _React$createClass;
 
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
+var CollapsibleHistory = React.createClass({
+    displayName: 'CollapsibleHistory',
+
+
+    getInitialState: function getInitialState() {
+        return { 'collapsed': true };
+    },
+    toggleCollapsed: function toggleCollapsed() {
+        this.setState({ 'collapsed': !this.state.collapsed });
+    },
+    render: function render() {
+        return React.createElement(
+            'div',
+            { className: 'row form-group' },
+            React.createElement(
+                'div',
+                { id: 'comment-history' },
+                React.createElement(
+                    'div',
+                    { className: 'col-sm-12' },
+                    React.createElement('div', { dangerouslySetInnerHTML: { __html: this.props.text } })
+                )
+            )
+        );
+    }
+});
+
 var ConsentStatus = React.createClass((_React$createClass = {
-    displayName: "ConsentStatus",
+    displayName: 'ConsentStatus',
 
 
     getInitialState: function getInitialState() {
@@ -63,24 +90,24 @@ var ConsentStatus = React.createClass((_React$createClass = {
         e.preventDefault();
     }
 
-}, _defineProperty(_React$createClass, "setFormData", function setFormData(formElement, value) {
+}, _defineProperty(_React$createClass, 'setFormData', function setFormData(formElement, value) {
     var formData = this.state.formData;
     formData[formElement] = value;
 
     this.setState({
         formData: formData
     });
-}), _defineProperty(_React$createClass, "onSubmit", function onSubmit(e) {
+}), _defineProperty(_React$createClass, 'onSubmit', function onSubmit(e) {
     e.preventDefault();
-}), _defineProperty(_React$createClass, "render", function render() {
+}), _defineProperty(_React$createClass, 'render', function render() {
 
     if (!this.state.isLoaded) {
         if (this.state.error != undefined) {
             return React.createElement(
-                "div",
-                { className: "alert alert-danger text-center" },
+                'div',
+                { className: 'alert alert-danger text-center' },
                 React.createElement(
-                    "strong",
+                    'strong',
                     null,
                     this.state.error
                 )
@@ -88,10 +115,10 @@ var ConsentStatus = React.createClass((_React$createClass = {
         }
 
         return React.createElement(
-            "button",
-            { className: "btn-info has-spinner" },
-            "Loading",
-            React.createElement("span", { className: "glyphicon glyphicon-refresh glyphicon-refresh-animate" })
+            'button',
+            { className: 'btn-info has-spinner' },
+            'Loading',
+            React.createElement('span', { className: 'glyphicon glyphicon-refresh glyphicon-refresh-animate' })
         );
     }
 
@@ -99,7 +126,7 @@ var ConsentStatus = React.createClass((_React$createClass = {
     var updateButton = null;
     if (loris.userHasPermission('candidate_parameter_edit')) {
         disabled = false;
-        updateButton = React.createElement(ButtonElement, { label: "Update" });
+        updateButton = React.createElement(ButtonElement, { label: 'Update' });
     }
     var dateRequired = false;
     var withdrawalRequired = false;
@@ -125,74 +152,85 @@ var ConsentStatus = React.createClass((_React$createClass = {
     }
 
     return React.createElement(
-        "div",
+        'div',
         null,
         React.createElement(
-            "div",
-            { className: alertClass, role: "alert", ref: "alert-message" },
+            'div',
+            { className: alertClass, role: 'alert', ref: 'alert-message' },
             alertMessage
         ),
         React.createElement(
             FormElement,
-            { name: "consentStatus", onSubmit: this.handleSubmit, ref: "form", "class": "col-md-6" },
+            { name: 'consentStatus', onSubmit: this.handleSubmit, ref: 'form', 'class': 'col-md-6' },
             React.createElement(StaticElement, {
-                label: "PSCID",
+                label: 'PSCID',
                 text: this.state.Data.pscid
             }),
             React.createElement(StaticElement, {
-                label: "DCCID",
+                label: 'DCCID',
                 text: this.state.Data.candID
             }),
             React.createElement(SelectElement, {
-                label: "Consent to Study (required)",
-                name: "study_consent",
+                label: 'Consent to Study (required)',
+                name: 'study_consent',
                 options: this.state.consentOptions,
                 value: this.state.Data.study_consent,
                 onUserInput: this.setFormData,
-                ref: "study_consent",
+                ref: 'study_consent',
                 disabled: disabled,
                 required: true
             }),
             React.createElement(DateElement, {
-                label: "Date of Consent to Study",
-                name: "study_consent_date",
+                label: 'Date of Consent to Study',
+                name: 'study_consent_date',
                 value: this.state.Data.study_consent_date,
                 onUserInput: this.setFormData,
-                ref: "study_consent_date",
+                ref: 'study_consent_date',
                 disabled: disabled,
                 required: dateRequired
             }),
             React.createElement(DateElement, {
-                label: "Confirmation Date of Consent to Study",
-                name: "study_consent_date2",
+                label: 'Confirmation Date of Consent to Study',
+                name: 'study_consent_date2',
                 value: this.state.Data.study_consent_date,
                 onUserInput: this.setFormData,
-                ref: "study_consent_date2",
+                ref: 'study_consent_date2',
                 disabled: disabled,
                 required: dateRequired
             }),
             React.createElement(DateElement, {
-                label: "Date of Withdrawal of Consent to Study",
-                name: "study_consent_withdrawal",
+                label: 'Date of Withdrawal of Consent to Study',
+                name: 'study_consent_withdrawal',
                 value: this.state.Data.study_consent_withdrawal,
                 onUserInput: this.setFormData,
-                ref: "study_consent_withdrawal",
+                ref: 'study_consent_withdrawal',
                 disabled: disabled,
                 required: false
             }),
             React.createElement(DateElement, {
-                label: "Confirmation Date of Withdrawal of Consent to Study",
-                name: "study_consent_withdrawal2",
+                label: 'Confirmation Date of Withdrawal of Consent to Study',
+                name: 'study_consent_withdrawal2',
                 value: this.state.Data.study_consent_withdrawal,
                 onUserInput: this.setFormData,
-                ref: "study_consent_withdrawal2",
+                ref: 'study_consent_withdrawal2',
                 disabled: disabled,
                 required: withdrawalRequired
             }),
-            updateButton
+            updateButton,
+            React.createElement(
+                'div',
+                { 'class': 'col-sm-6' },
+                React.createElement(
+                    'div',
+                    { 'class': 'row' },
+                    React.createElement(CollapsibleHistory, {
+                        text: this.state.Data.history
+                    })
+                )
+            )
         )
     );
-}), _defineProperty(_React$createClass, "handleSubmit", function handleSubmit(e) {
+}), _defineProperty(_React$createClass, 'handleSubmit', function handleSubmit(e) {
     e.preventDefault();
 
     var myFormData = this.state.formData;
@@ -267,7 +305,7 @@ var ConsentStatus = React.createClass((_React$createClass = {
         }
 
     });
-}), _defineProperty(_React$createClass, "showAlertMessage", function showAlertMessage() {
+}), _defineProperty(_React$createClass, 'showAlertMessage', function showAlertMessage() {
     var self = this;
 
     if (this.refs["alert-message"] == null) {
