@@ -249,10 +249,10 @@ function getParticipantStatusHistory($candID) {
         $commentString .= '[' . $comment['data_entry_date'] . '] ';
         $commentString .= '<i>Updated by ' . $comment['entry_staff'] . '. </i>';
         $commentString .= '<b>Status:</b> ' . $comment['status'] . '.';
-        if (isset($comment['suboption'])) {
+        if (!empty($comment['suboption'])) {
             $commentString .= ' <b>Details:</b> ' . $comment['suboption'] . '.';
         }
-        if (isset($comment['reason_specify'])) {
+        if (!empty($comment['reason_specify'])) {
             $commentString .= ' <b>Comments:</b> ' . $comment['reason_specify'];
         }
         $commentHistory .= $commentString . '<br/>';
@@ -303,10 +303,10 @@ function getConsentStatusHistory($candID) {
         $commentString .= '[' . $comment['data_entry_date'] . '] ';
         $commentString .= '<i>Updated by ' . $comment['entry_staff'] . '. </i>';
         $commentString .= '<b>Consent Status:</b> ' . $comment['study_consent'] . '.';
-        if (isset($comment['study_consent_date'])) {
+        if (!empty($comment['study_consent_date'])) {
             $commentString .= ' <b>Date of Consent:</b> ' . $comment['study_consent_date'];
         }
-        if (isset($comment['study_consent_withdrawal'])) {
+        if (!empty($comment['study_consent_withdrawal'])) {
             $commentString .= '<b>Date of Withdrawal:</b> ' . $comment['study_consent_withdrawal'];
         }
         $commentHistory .= $commentString . '<br/>';
