@@ -131,6 +131,8 @@ var ConsentStatus = React.createClass({
             withdrawalRequired = true;
         }
 
+        var consent = null;
+
         var alertMessage = "";
         var alertClass = "alert text-center hide";
         if (this.state.updateResult) {

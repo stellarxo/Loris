@@ -115,7 +115,7 @@ var FamilyInfo = React.createClass({
                     required: true
                 }));
                 if (loris.userHasPermission('candidate_parameter_edit')) {
-                    familyMembers.push(React.createElement(ButtonElement, { label: "Delete" }));
+                    //familyMembers.push(<ButtonElement label="Delete" />);
                 }
             }
         }

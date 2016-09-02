@@ -200,6 +200,10 @@ function getFamilyInfoFields() {
 }
 
 function getParticipantStatusFields() {
+    include_once __DIR__
+        . "/../../candidate_parameters/php/"
+        . "NDB_Form_candidate_parameters.class.inc";
+
     $candID = $_GET['candID'];
 
     $db =& Database::singleton();
@@ -210,7 +214,7 @@ function getParticipantStatusFields() {
         array('candid' => $candID)
     );
 
-    $statusOptions = getParticipantStatusOptions();
+    $statusOptions = NDB_Form_candidate_parameters::getParticipantStatusOptions();
     $reasonOptions = array();
 
     $required = $db->pselect('SELECT ID from participant_status_options where Required=1', array());
@@ -332,46 +336,4 @@ function getConsentStatusHistory($candID) {
     }
 
     return $commentHistory;
-}
-
-/**
- * Gets the participant_status options from participant_status_options
- * getParticipantStatusOptions()
- *
- * @return array Options array suitable for use in QuickForm select
- *               element
- */
-function getParticipantStatusOptions()
-{
-    $DB =& Database::singleton();
-    $options = $DB->pselect(
-        "SELECT ID,Description FROM participant_status_options WHERE parentID IS NULL",
-        array()
-    );
-    $option_array = array();
-    foreach ($options as $option) {
-        $option_array[$option['ID']] = $option['Description'];
-    }
-    return $option_array;
-}
-
-/**
- * Gets the participant_status options suboptions from participant_status_options
- * getParticipantStatusSubOptions()
- *
- * @return array Options array suitable for use in QuickForm select
- *               element
- */
-function getParticipantStatusSubOptions($parentID)
-{
-    $DB =& Database::singleton();
-    $options = $DB->pselect(
-        "SELECT ID,Description FROM participant_status_options WHERE parentID=:pid",
-        array('pid'=>$parentID)
-    );
-    $option_array = array();
-    foreach ($options as $option) {
-        $option_array[$option['ID']] = $option['Description'];
-    }
-    return $option_array;
 }
