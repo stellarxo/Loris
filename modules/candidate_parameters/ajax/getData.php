@@ -59,7 +59,24 @@ function getCandInfoFields() {
         array('candid' => $candID)
     );
 
+    $extra_parameters = $db->pselect("SELECT pt.ParameterTypeID, pt.Name, pt.Type, pt.Description 
+                     FROM parameter_type pt
+                     JOIN parameter_type_category_rel ptcr USING (ParameterTypeID) 
+                     JOIN parameter_type_category ptc USING (ParameterTypeCategoryID)
+                     WHERE ptc.Name='Candidate Parameters'
+                     ORDER BY pt.ParameterTypeID, pt.name ASC",
+        array()
+    );
 
+    $fields = $db->pselect(
+        "SELECT ParameterTypeID, Value FROM parameter_candidate WHERE CandID=:cid",
+        array('cid' => $candID)
+    );
+
+    $parameter_values = [];
+    foreach ($fields as $row) {
+        $parameter_values[$row['ParameterTypeID']] = $row['Value'];
+    }
 
     $result = [
         'pscid' => $pscid,
@@ -67,7 +84,9 @@ function getCandInfoFields() {
         'caveatReasonOptions' => $caveat_options,
         'flagged_caveatemptor' => $flag,
         'flagged_reason' => $reason,
-        'flagged_other' => $other
+        'flagged_other' => $other,
+        'extra_parameters' => $extra_parameters,
+        'parameter_values' => $parameter_values
     ];
 
     return $result;

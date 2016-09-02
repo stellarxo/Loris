@@ -45,6 +45,32 @@ function editCandInfoFields() {
     ];
 
     $db->update('candidate', $updateValues, ['CandID' => $candID]);
+
+    foreach (array_keys($_POST) as $field) {
+        if (!empty($_POST[$field])) {
+        if (substr($field, 0, 4) === 'PTID') {
+                $ptid = substr($field, 4);
+
+                $updateValues = [
+                    'ParameterTypeID' => $ptid,
+                    'CandID' => $candID,
+                    'Value' => $_POST[$field],
+                    'InsertTime' => time()
+                ];
+
+                $result = $db->pselectOne(
+                    'SELECT * from parameter_candidate WHERE CandID=:cid AND ParameterTypeID=:ptid',
+                    array('cid' => $candID, 'ptid' => $ptid)
+                );
+
+                if (empty($result)) {
+                    $db->insert('parameter_candidate', $updateValues);
+                } else {
+                    $db->update('parameter_candidate', $updateValues, ['CandID' => $candID, 'ParameterTypeID' => $ptid]);
+                }
+            }
+        }
+    }
 }
 
 function editProbandInfoFields() {
@@ -143,8 +169,6 @@ function editFamilyInfoFields() {
             'Relationship_type'   => $relationship,
             'FamilyID' => $familyID
         ];
-
-        error_log($siblingCandID);
 
         $db->update('family', $updateValues, ['ID' => $siblingID]);
 

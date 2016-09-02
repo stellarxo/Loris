@@ -128,6 +128,62 @@ var CandidateInfo = React.createClass({
             });
         }
 
+        // TODO: SET VALUES
+
+        var extraParameterFields = [];
+        var extraParameters = this.state.Data.extra_parameters;
+
+        console.log(this.state.Data.parameter_values);
+        for (var key2 in extraParameters) {
+            if (extraParameters.hasOwnProperty(key2)) {
+                var name = 'PTID' + extraParameters[key2]['ParameterTypeID'];
+
+                switch (extraParameters[key2]['Type'].substring(0, 3)) {
+                    case "enu":
+                        var types = extraParameters[key2]['Type'].substring(5);
+                        types = types.slice(0, -1);
+                        types = types.replace(/'/g, '');
+                        types = types.split(',');
+                        var selectOptions = [];
+                        for (var key3 in types) {
+                            if (types.hasOwnProperty(key3)) {
+                                selectOptions[types[key3]] = types[key3];
+                            }
+                        }
+
+                        extraParameterFields.push(React.createElement(SelectElement, {
+                            label: extraParameters[key2]['Description'],
+                            name: name,
+                            options: selectOptions,
+                            value: this.state.Data.parameter_values[extraParameters[key2]['ParameterTypeID']],
+                            onUserInput: this.setFormData,
+                            ref: name,
+                            disabled: disabled
+                        }));
+                        break;
+                    case "dat":
+                        extraParameterFields.push(React.createElement(DateElement, {
+                            label: extraParameters[key2]['Description'],
+                            name: name,
+                            value: this.state.Data.parameter_values[extraParameters[key2]['ParameterTypeID']],
+                            onUserInput: this.setFormData,
+                            ref: name,
+                            disabled: disabled
+                        }));
+                        break;
+                    default:
+                        extraParameterFields.push(React.createElement(TextareaElement, {
+                            label: extraParameters[key2]['Description'],
+                            name: name,
+                            value: this.state.Data.parameter_values[extraParameters[key2]['ParameterTypeID']],
+                            onUserInput: this.setFormData,
+                            ref: name,
+                            disabled: disabled
+                        }));
+                }
+            }
+        }
+
         var alertMessage = "";
         var alertClass = "alert text-center hide";
         if (this.state.updateResult) {
@@ -171,6 +227,7 @@ var CandidateInfo = React.createClass({
                 }),
                 reasonSelect,
                 otherText,
+                extraParameterFields,
                 updateButton
             )
         );
