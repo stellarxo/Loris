@@ -93,12 +93,11 @@ var FamilyInfo = React.createClass({
         var familyMembers = [];
         var familyMemberIDs = this.state.Data.familyCandIDs;
         var relationships = this.state.Data.Relationship_types;
-        var i = 1;
+        var i = 0;
         var relationship = null;
         for (var key in familyMemberIDs) {
             if (familyMemberIDs.hasOwnProperty(key) && relationships.hasOwnProperty(key)) {
                 relationship = "Relationship_type" + i;
-                i++;
 
                 familyMembers.push(React.createElement(StaticElement, {
                     label: "Family Member ID (DCCID)",
@@ -115,8 +114,11 @@ var FamilyInfo = React.createClass({
                     required: true
                 }));
                 if (loris.userHasPermission('candidate_parameter_edit')) {
-                    //familyMembers.push(<ButtonElement label="Delete" />);
+                    familyMembers.push(React.createElement(ButtonElement, { label: "Delete", type: "button", onUserInput: this.deleteFamilyMember.bind(null, familyMembers, i) }));
                 }
+                familyMembers.push(React.createElement("hr", null));
+
+                i++;
             }
         }
 
@@ -242,6 +244,11 @@ var FamilyInfo = React.createClass({
                 updateResult: null
             });
         });
+    },
+
+    deleteFamilyMember: function deleteFamilyMember(familyMembers, id, e) {
+        console.log(arguments);
+        console.log(familyMembers, id);
     }
 
 });
