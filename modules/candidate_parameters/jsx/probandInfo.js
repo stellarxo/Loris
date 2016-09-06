@@ -2,16 +2,16 @@ var ProbandInfo = React.createClass({
 
   getInitialState: function() {
     return {
-      "genderOptions": {
+      genderOptions: {
         "Male": "Male",
         "Female": "Female"
       },
-      'Data': [],
-      'formData': {},
-      'updateResult': null,
-      'errorMessage': null,
-      'isLoaded': false,
-      'loadedData': 0
+      Data: [],
+      formData: {},
+      updateResult: null,
+      errorMessage: null,
+      isLoaded: false,
+      loadedData: 0
     };
   },
 
@@ -23,20 +23,20 @@ var ProbandInfo = React.createClass({
         var xhr = new window.XMLHttpRequest();
         xhr.addEventListener("progress", function(evt) {
           that.setState({
-            'loadedData': evt.loaded
+            loadedData: evt.loaded
           });
         });
         return xhr;
       },
       success: function(data) {
         that.setState({
-          'Data': data,
-          'isLoaded': true
+          Data: data,
+          isLoaded: true
         });
       },
       error: function(data, error_code, error_msg) {
         that.setState({
-          'error': 'An error occurred when loading the form!'
+          error: 'An error occurred when loading the form!'
         });
       }
     });
@@ -57,7 +57,7 @@ var ProbandInfo = React.createClass({
 
   render: function() {
     if (!this.state.isLoaded) {
-      if (this.state.error != undefined) {
+      if (this.state.error !== undefined) {
         return (
                     <div className="alert alert-danger text-center">
                         <strong>
@@ -94,10 +94,10 @@ var ProbandInfo = React.createClass({
     var alertMessage = "";
     var alertClass = "alert text-center hide";
     if (this.state.updateResult) {
-      if (this.state.updateResult == "success") {
+      if (this.state.updateResult === "success") {
         alertClass = "alert alert-success text-center";
         alertMessage = "Update Successful!";
-      } else if (this.state.updateResult == "error") {
+      } else if (this.state.updateResult === "error") {
         var errorMessage = this.state.errorMessage;
         alertClass = "alert alert-danger text-center";
         alertMessage = errorMessage ? errorMessage : "Failed to update!";
@@ -109,7 +109,12 @@ var ProbandInfo = React.createClass({
                 <div className={alertClass} role="alert" ref="alert-message">
                     {alertMessage}
                 </div>
-                <FormElement name="probandInfo" onSubmit={this.handleSubmit} ref="form" class="col-md-6">
+                <FormElement
+                    name="probandInfo"
+                    onSubmit={this.handleSubmit}
+                    ref="form"
+                    class="col-md-6"
+                >
                 <StaticElement
                     label="PSCID"
                     text={this.state.Data.pscid}
@@ -178,8 +183,10 @@ var ProbandInfo = React.createClass({
     }
     today = yyyy + '-' + mm + '-' + dd;
 
-    var dob1 = myFormData['ProbandDoB'] ? myFormData['ProbandDoB'] : null;
-    var dob2 = myFormData['ProbandDoB2'] ? myFormData['ProbandDoB2'] : null;
+    var dob1 = myFormData.ProbandDoB ?
+        myFormData.ProbandDoB : null;
+    var dob2 = myFormData.ProbandDoB2 ?
+        myFormData.ProbandDoB2 : null;
 
     if (dob1 !== dob2) {
       alert("DOB do not match!");
@@ -195,7 +202,7 @@ var ProbandInfo = React.createClass({
     var self = this;
     var formData = new FormData();
     for (var key in myFormData) {
-      if (myFormData[key] != "") {
+      if (myFormData[key] !== "") {
         formData.append(key, myFormData[key]);
       }
     }
@@ -232,7 +239,7 @@ var ProbandInfo = React.createClass({
   showAlertMessage: function() {
     var self = this;
 
-    if (this.refs["alert-message"] == null) {
+    if (this.refs["alert-message"] === null) {
       return;
     }
 

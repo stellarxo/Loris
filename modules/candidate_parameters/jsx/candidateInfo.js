@@ -2,16 +2,16 @@ var CandidateInfo = React.createClass({
 
   getInitialState: function() {
     return {
-      "caveatOptions": {
+      caveatOptions: {
         true: "True",
         false: "False"
       },
-      'Data': [],
-      'formData': {},
-      'updateResult': null,
-      'errorMessage': null,
-      'isLoaded': false,
-      'loadedData': 0
+      Data: [],
+      formData: {},
+      updateResult: null,
+      errorMessage: null,
+      isLoaded: false,
+      loadedData: 0
     };
   },
 
@@ -23,20 +23,20 @@ var CandidateInfo = React.createClass({
         var xhr = new window.XMLHttpRequest();
         xhr.addEventListener("progress", function(evt) {
           that.setState({
-            'loadedData': evt.loaded
+            loadedData: evt.loaded
           });
         });
         return xhr;
       },
       success: function(data) {
         that.setState({
-          'Data': data,
-          'isLoaded': true
+          Data: data,
+          isLoaded: true
         });
       },
       error: function(data, error_code, error_msg) {
         that.setState({
-          'error': 'An error occurred when loading the form!'
+          error: 'An error occurred when loading the form!'
         });
       }
     });
@@ -57,7 +57,7 @@ var CandidateInfo = React.createClass({
 
   render: function() {
     if (!this.state.isLoaded) {
-      if (this.state.error != undefined) {
+      if (this.state.error !== undefined) {
         return (
                     <div className="alert alert-danger text-center">
                         <strong>
@@ -70,7 +70,9 @@ var CandidateInfo = React.createClass({
       return (
                 <button className="btn-info has-spinner">
                     Loading
-                    <span className="glyphicon glyphicon-refresh glyphicon-refresh-animate"></span>
+                    <span className="glyphicon glyphicon-refresh
+                    glyphicon-refresh-animate">
+                    </span>
                 </button>
             );
     }
@@ -82,7 +84,8 @@ var CandidateInfo = React.createClass({
       updateButton = <ButtonElement label="Update" />;
     }
     var reasonSelect = null;
-    if (this.state.formData.flagged_caveatemptor === "true" || this.state.Data.flagged_reason !== null) {
+    if (this.state.formData.flagged_caveatemptor === "true" ||
+        this.state.Data.flagged_reason !== null) {
       reasonSelect = <SelectElement
                 label="Reason for Caveat Emptor Flag"
                 name="flagged_reason"
@@ -106,7 +109,8 @@ var CandidateInfo = React.createClass({
 
     var otherText = null;
     var otherRequired = false;
-    if (this.state.formData.flagged_reason === reasonKey || this.state.Data.flagged_other !== null) {
+    if (this.state.formData.flagged_reason === reasonKey ||
+        this.state.Data.flagged_other !== null) {
       if (this.state.formData.flagged_reason === reasonKey) {
         otherRequired = true;
       }
@@ -129,11 +133,11 @@ var CandidateInfo = React.createClass({
     console.log(this.state.Data.parameter_values);
     for (var key2 in extraParameters) {
       if (extraParameters.hasOwnProperty(key2)) {
-        var name = 'PTID' + extraParameters[key2]['ParameterTypeID'];
+        var name = 'PTID' + extraParameters[key2].ParameterTypeID;
 
-        switch (extraParameters[key2]['Type'].substring(0, 3)) {
+        switch (extraParameters[key2].Type.substring(0, 3)) {
           case "enu":
-            var types = extraParameters[key2]['Type'].substring(5);
+            var types = extraParameters[key2].Type.substring(5);
             types = types.slice(0, -1);
             types = types.replace(/'/g, '');
             types = types.split(',');
@@ -145,10 +149,10 @@ var CandidateInfo = React.createClass({
             }
 
             extraParameterFields.push(<SelectElement
-                            label={extraParameters[key2]['Description']}
+                            label={extraParameters[key2].Description}
                             name={name}
                             options={selectOptions}
-                            value={this.state.Data.parameter_values[extraParameters[key2]['ParameterTypeID']]}
+                            value={this.state.Data.parameter_values[extraParameters[key2].ParameterTypeID]}
                             onUserInput={this.setFormData}
                             ref={name}
                             disabled={disabled}
@@ -156,9 +160,9 @@ var CandidateInfo = React.createClass({
             break;
           case "dat":
             extraParameterFields.push(<DateElement
-                            label={extraParameters[key2]['Description']}
+                            label={extraParameters[key2].Description}
                             name={name}
-                            value={this.state.Data.parameter_values[extraParameters[key2]['ParameterTypeID']]}
+                            value={this.state.Data.parameter_values[extraParameters[key2].ParameterTypeID]}
                             onUserInput={this.setFormData}
                             ref={name}
                             disabled={disabled}
@@ -168,7 +172,7 @@ var CandidateInfo = React.createClass({
             extraParameterFields.push(<TextareaElement
                             label={extraParameters[key2]['Description']}
                             name={name}
-                            value={this.state.Data.parameter_values[extraParameters[key2]['ParameterTypeID']]}
+                            value={this.state.Data.parameter_values[extraParameters[key2].ParameterTypeID]}
                             onUserInput={this.setFormData}
                             ref={name}
                             disabled={disabled}
@@ -180,10 +184,10 @@ var CandidateInfo = React.createClass({
     var alertMessage = "";
     var alertClass = "alert text-center hide";
     if (this.state.updateResult) {
-      if (this.state.updateResult == "success") {
+      if (this.state.updateResult === "success") {
         alertClass = "alert alert-success text-center";
         alertMessage = "Update Successful!";
-      } else if (this.state.updateResult == "error") {
+      } else if (this.state.updateResult === "error") {
         var errorMessage = this.state.errorMessage;
         alertClass = "alert alert-danger text-center";
         alertMessage = errorMessage ? errorMessage : "Failed to update!";
@@ -237,7 +241,7 @@ var CandidateInfo = React.createClass({
     var formData = new FormData();
     for (var key in myFormData) {
       if (myFormData.hasOwnProperty(key)) {
-        if (myFormData[key] != "") {
+        if (myFormData[key] !== "") {
           formData.append(key, myFormData[key]);
         }
       }
@@ -275,7 +279,7 @@ var CandidateInfo = React.createClass({
   showAlertMessage: function() {
     var self = this;
 
-    if (this.refs["alert-message"] == null) {
+    if (this.refs["alert-message"] === null) {
       return;
     }
 

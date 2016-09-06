@@ -2,17 +2,17 @@ var FamilyInfo = React.createClass({
 
   getInitialState: function() {
     return {
-      "relationshipOptions": {
+      relationshipOptions: {
         "full_sibling": "Full Sibling",
         "half_sibling": "Half Sibling",
         "1st_cousin": "First Cousin"
       },
-      'Data': [],
-      'formData': {},
-      'updateResult': null,
-      'errorMessage': null,
-      'isLoaded': false,
-      'loadedData': 0
+      Data: [],
+      formData: {},
+      updateResult: null,
+      errorMessage: null,
+      isLoaded: false,
+      loadedData: 0
     };
   },
 
@@ -24,20 +24,20 @@ var FamilyInfo = React.createClass({
         var xhr = new window.XMLHttpRequest();
         xhr.addEventListener("progress", function(evt) {
           that.setState({
-            'loadedData': evt.loaded
+            loadedData: evt.loaded
           });
         });
         return xhr;
       },
       success: function(data) {
         that.setState({
-          'Data': data,
-          'isLoaded': true
+          Data: data,
+          isLoaded: true
         });
       },
       error: function(data, error_code, error_msg) {
         that.setState({
-          'error': 'An error occurred when loading the form!'
+          error: 'An error occurred when loading the form!'
         });
       }
     });
@@ -58,7 +58,7 @@ var FamilyInfo = React.createClass({
 
   render: function() {
     if (!this.state.isLoaded) {
-      if (this.state.error != undefined) {
+      if (this.state.error !== undefined) {
         return (
                     <div className="alert alert-danger text-center">
                         <strong>
@@ -94,13 +94,13 @@ var FamilyInfo = React.createClass({
 
         familyMembers.push(<StaticElement
                     label="Family Member ID (DCCID)"
-                    text={familyMemberIDs[key]['CandID']}
+                    text={familyMemberIDs[key].CandID}
                 />);
         familyMembers.push(<SelectElement
                 label="Relation Type"
                 name={relationship}
                 options={this.state.relationshipOptions}
-                value={relationships[key]['Relationship_type']}
+                value={relationships[key].Relationship_type}
                 onUserInput={this.setFormData}
                 ref={relationship}
                 disabled={disabled}
@@ -123,10 +123,10 @@ var FamilyInfo = React.createClass({
     var alertMessage = "";
     var alertClass = "alert text-center hide";
     if (this.state.updateResult) {
-      if (this.state.updateResult == "success") {
+      if (this.state.updateResult === "success") {
         alertClass = "alert alert-success text-center";
         alertMessage = "Update Successful!";
-      } else if (this.state.updateResult == "error") {
+      } else if (this.state.updateResult === "error") {
         var errorMessage = this.state.errorMessage;
         alertClass = "alert alert-danger text-center";
         alertMessage = errorMessage ? errorMessage : "Failed to update!";
@@ -187,7 +187,7 @@ var FamilyInfo = React.createClass({
     var self = this;
     var formData = new FormData();
     for (var key in myFormData) {
-      if (myFormData[key] != "") {
+      if (myFormData[key] !== "") {
         formData.append(key, myFormData[key]);
       }
     }
@@ -224,7 +224,7 @@ var FamilyInfo = React.createClass({
   showAlertMessage: function() {
     var self = this;
 
-    if (this.refs["alert-message"] == null) {
+    if (this.refs["alert-message"] === null) {
       return;
     }
 

@@ -26,16 +26,16 @@ var ConsentStatus = React.createClass({
 
   getInitialState: function() {
     return {
-      "consentOptions": {
+      consentOptions: {
         "yes": "Yes",
         "no": "No"
       },
-      'Data': [],
-      'formData': {},
-      'updateResult': null,
-      'errorMessage': null,
-      'isLoaded': false,
-      'loadedData': 0
+      Data: [],
+      formData: {},
+      updateResult: null,
+      errorMessage: null,
+      isLoaded: false,
+      loadedData: 0
     };
   },
 
@@ -47,20 +47,20 @@ var ConsentStatus = React.createClass({
         var xhr = new window.XMLHttpRequest();
         xhr.addEventListener("progress", function(evt) {
           that.setState({
-            'loadedData': evt.loaded
+            loadedData: evt.loaded
           });
         });
         return xhr;
       },
       success: function(data) {
         that.setState({
-          'Data': data,
-          'isLoaded': true
+          Data: data,
+          isLoaded: true
         });
       },
       error: function(data, error_code, error_msg) {
         that.setState({
-          'error': 'An error occurred when loading the form!'
+          error: 'An error occurred when loading the form!'
         });
       }
     });
@@ -79,22 +79,9 @@ var ConsentStatus = React.createClass({
     e.preventDefault();
   },
 
-  setFormData: function(formElement, value) {
-    var formData = this.state.formData;
-    formData[formElement] = value;
-
-    this.setState({
-      formData: formData
-    });
-  },
-
-  onSubmit: function(e) {
-    e.preventDefault();
-  },
-
   render: function() {
     if (!this.state.isLoaded) {
-      if (this.state.error != undefined) {
+      if (this.state.error !== undefined) {
         return (
                     <div className="alert alert-danger text-center">
                         <strong>
@@ -133,10 +120,10 @@ var ConsentStatus = React.createClass({
     var alertMessage = "";
     var alertClass = "alert text-center hide";
     if (this.state.updateResult) {
-      if (this.state.updateResult == "success") {
+      if (this.state.updateResult === "success") {
         alertClass = "alert alert-success text-center";
         alertMessage = "Update Successful!";
-      } else if (this.state.updateResult == "error") {
+      } else if (this.state.updateResult === "error") {
         var errorMessage = this.state.errorMessage;
         alertClass = "alert alert-danger text-center";
         alertMessage = errorMessage ? errorMessage : "Failed to update!";
@@ -238,8 +225,10 @@ var ConsentStatus = React.createClass({
     }
     today = yyyy + '-' + mm + '-' + dd;
 
-    var date1 = myFormData['study_consent_date'] ? myFormData['study_consent_date'] : null;
-    var date2 = myFormData['study_consent_date2'] ? myFormData['study_consent_date2'] : null;
+    var date1 = myFormData.study_consent_date ?
+        myFormData.study_consent_date : null;
+    var date2 = myFormData.study_consent_date2 ?
+        myFormData.study_consent_date2 : null;
 
     if (date1 !== date2) {
       alert("Consent to study dates do not match!");
@@ -250,8 +239,10 @@ var ConsentStatus = React.createClass({
       return;
     }
 
-    var date1 = myFormData['study_consent_withdrawal'] ? myFormData['study_consent_withdrawal'] : null;
-    var date2 = myFormData['study_consent_withdrawal2'] ? myFormData['study_consent_withdrawal2'] : null;
+    date1 = myFormData.study_consent_withdrawal ?
+        myFormData.study_consent_withdrawal : null;
+    date2 = myFormData.study_consent_withdrawal2 ?
+        myFormData.study_consent_withdrawal2 : null;
 
     if (date1 !== date2) {
       alert("Consent to study withdrawal dates do not match!");
@@ -266,7 +257,7 @@ var ConsentStatus = React.createClass({
     var self = this;
     var formData = new FormData();
     for (var key in myFormData) {
-      if (myFormData[key] != "") {
+      if (myFormData[key] !== "") {
         formData.append(key, myFormData[key]);
       }
     }
@@ -303,7 +294,7 @@ var ConsentStatus = React.createClass({
   showAlertMessage: function() {
     var self = this;
 
-    if (this.refs["alert-message"] == null) {
+    if (this.refs["alert-message"] === null) {
       return;
     }
 
