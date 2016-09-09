@@ -216,11 +216,18 @@ function editParticipantStatusFields() {
     $suboption    = isset($_POST['participant_suboptions']) ? $_POST['participant_suboptions'] : null;
     $reason    = isset($_POST['reason_specify']) ? $_POST['reason_specify'] : null;
 
+    $id = null;
+    if (!(is_null($_SESSION['State']))) {
+        $currentUser =& User::singleton($_SESSION['State']->getUsername());
+        $id = $currentUser->getData("UserID");
+    }
+
     $updateValues = [
         'participant_status' => $status,
         'participant_suboptions'   => $suboption,
         'reason_specify'   => $reason,
-        'CandID' => $candID
+        'CandID' => $candID,
+        'entry_staff' => $id
     ];
 
     $exists = $db->pselectOne(
@@ -235,9 +242,7 @@ function editParticipantStatusFields() {
         $db->update('participant_status', $updateValues, ['CandID' => $candID]);
     }
 
-    // TODO: add data entry date and staff
-//    $updateValues = array_merge($updateValues, ['data_entry_date' => now(), 'entry_staff' => ]);
-//    $db->insert('participant_status_history', $updateValues);
+    $db->insert('participant_status_history', $updateValues);
 }
 
 function editConsentStatusFields() {
@@ -250,29 +255,55 @@ function editConsentStatusFields() {
 
     $candID = $_POST['candID'];
 
-    // Process posted data
-    $consent   = isset($_POST['study_consent']) ? $_POST['study_consent'] : null;
-    $date    = isset($_POST['study_consent_date']) ? $_POST['study_consent_date'] : null;
-    $withdrawal    = isset($_POST['study_consent_withdrawal']) ? $_POST['study_consent_withdrawal'] : null;
-// TODO: update different consents
-    $updateValues = [
-        'study_consent' => $consent,
-        'study_consent_date'   => $date,
-        'study_consent_withdrawal'   => $withdrawal,
-        'CandID' => $candID
-    ];
-
-    $exists = $db->pselectOne(
-        "SELECT * from participant_status WHERE CandID=:candid",
-        array('candid' => $candID)
-    );
-
-    if ($exists === null) {
-        $db->insert('participant_status', $updateValues);
+    $id = null;
+    if (!(is_null($_SESSION['State']))) {
+        $currentUser =& User::singleton($_SESSION['State']->getUsername());
+        $id = $currentUser->getData("UserID");
     }
-    else {
-        $db->update('participant_status', $updateValues, ['CandID' => $candID]);
+
+    $config  =& NDB_Config::singleton();
+    $consent = $config->getSetting('ConsentModule');
+
+    foreach (Utility::asArray($consent['Consent']) as $consentType) {
+        $toUpdate = false;
+
+        // Process posted data
+        $consent = isset($_POST[$consentType['name']]) ? $_POST[$consentType['name']] : null;
+        $date = isset($_POST[$consentType['name'] . '_date']) ? $_POST[$consentType['name'] . '_date'] : null;
+        $withdrawal = isset($_POST[$consentType['name'] . '_withdrawal']) ? $_POST[$consentType['name'] . '_withdrawal'] : null;
+
+        $updateValues = [
+            'CandID' => $candID,
+            'entry_staff' => $id
+        ];
+
+        if ($consent != null) {
+            $updateValues[$consentType['name']] = $consent;
+            $toUpdate = true;
+        }
+        if ($date != null) {
+            $updateValues[$consentType['name' . '_date']] = $date;
+            $toUpdate = true;
+        }
+        if ($withdrawal != null) {
+            $updateValues[$consentType['name' . '_withdrawal']] = $withdrawal;
+            $toUpdate = true;
+        }
+
+        if ($toUpdate) {
+
+            $exists = $db->pselectOne(
+                "SELECT * from participant_status WHERE CandID=:candid",
+                array('candid' => $candID)
+            );
+
+            if ($exists === null) {
+                $db->insert('participant_status', $updateValues);
+            } else {
+                $db->update('participant_status', $updateValues, array('CandID' => $candID));
+            }
+
+            $db->insert('consent_info_history', $updateValues);
+        }
     }
-    // TODO: add data entry date and staff
-//    $db->insert('participant_status_history', $updateValues);
 }

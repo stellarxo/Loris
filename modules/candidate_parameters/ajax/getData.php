@@ -295,21 +295,20 @@ function getConsentStatusFields() {
         array('candid' => $candID)
     );
 
-
     $config  =& NDB_Config::singleton();
     $consent = $config->getSetting('ConsentModule');
     $consents = [];
     $consentStatus = [];
     $date = [];
     $withdrawal = [];
-    foreach (Utility::asArray($consent['Consent']) as $question) {
-        $consents[$question['name']] = $question['label'];
-        $consentStatus[$question['name']] = $db->pselectOne('SELECT ' . $db->escape($question['name']) . ' FROM participant_status WHERE CandID=:candid', array('candid' => $candID));
-        $date[$question['name']] = $db->pselectOne('SELECT ' . $db->escape($question['name'] . '_date') . ' FROM participant_status WHERE CandID=:candid', array('candid' => $candID));
-        $withdrawal[$question['name']] = $db->pselectOne('SELECT ' . $db->escape($question['name'] . '_withdrawal') . ' FROM participant_status WHERE CandID=:candid', array('candid' => $candID));
+    foreach (Utility::asArray($consent['Consent']) as $consentType) {
+        $consents[$consentType['name']] = $consentType['label'];
+        $consentStatus[$consentType['name']] = $db->pselectOne('SELECT ' . $db->escape($consentType['name']) . ' FROM participant_status WHERE CandID=:candid', array('candid' => $candID));
+        $date[$consentType['name']] = $db->pselectOne('SELECT ' . $db->escape($consentType['name'] . '_date') . ' FROM participant_status WHERE CandID=:candid', array('candid' => $candID));
+        $withdrawal[$consentType['name']] = $db->pselectOne('SELECT ' . $db->escape($consentType['name'] . '_withdrawal') . ' FROM participant_status WHERE CandID=:candid', array('candid' => $candID));
     }
 
-    $history = getConsentStatusHistory($candID);
+    $history = getConsentStatusHistory($candID, $consents);
 
     $result = [
         'pscid' => $pscid,
@@ -324,27 +323,30 @@ function getConsentStatusFields() {
     return $result;
 }
 
-// TODO: update for each kind of consent
-function getConsentStatusHistory($candID) {
+function getConsentStatusHistory($candID, $consents) {
     $db =& Database::singleton();
-    $unformattedComments = $db->pselect(
-        "SELECT entry_staff, data_entry_date, study_consent, study_consent_date, study_consent_withdrawal FROM consent_info_history WHERE CandID=:cid",
-        array('cid' => $candID)
-    );
 
     $commentHistory = '';
-    foreach ($unformattedComments as $comment) {
-        $commentString = '';
-        $commentString .= '[' . $comment['data_entry_date'] . '] ';
-        $commentString .= '<i>Updated by ' . $comment['entry_staff'] . '. </i>';
-        $commentString .= '<b>Consent Status:</b> ' . $comment['study_consent'] . '.';
-        if (!empty($comment['study_consent_date'])) {
-            $commentString .= ' <b>Date of Consent:</b> ' . $comment['study_consent_date'];
+
+    foreach ($consents as $consent => $label) {
+        $unformattedComments = $db->pselect(
+            "SELECT entry_staff, data_entry_date, " . $db->escape($consent) . ", " . $db->escape($consent . '_date') . ", " . $db->escape($consent . '_withdrawal') ." FROM consent_info_history WHERE CandID=:cid",
+            array('cid' => $candID)
+        );
+
+        foreach ($unformattedComments as $comment) {
+            $commentString = '';
+            $commentString .= '[' . $comment['data_entry_date'] . '] ';
+            $commentString .= '<i>Updated by ' . $comment['entry_staff'] . '. </i>';
+            $commentString .= "<b>$label Status:</b> " . $comment[$consent] . '.';
+            if (!empty($comment[$consent . '_date'])) {
+                $commentString .= ' <b>Date of Consent:</b> ' . $comment[$consent . '_date'];
+            }
+            if (!empty($comment[$consent . '_withdrawal'])) {
+                $commentString .= '<b>Date of Withdrawal:</b> ' . $comment[$consent . '_withdrawal'];
+            }
+            $commentHistory .= $commentString . '<br/>';
         }
-        if (!empty($comment['study_consent_withdrawal'])) {
-            $commentString .= '<b>Date of Withdrawal:</b> ' . $comment['study_consent_withdrawal'];
-        }
-        $commentHistory .= $commentString . '<br/>';
     }
 
     return $commentHistory;
