@@ -130,7 +130,6 @@ var CandidateInfo = React.createClass({
     var extraParameterFields = [];
     var extraParameters = this.state.Data.extra_parameters;
 
-    console.log(this.state.Data.parameter_values);
     for (var key2 in extraParameters) {
       if (extraParameters.hasOwnProperty(key2)) {
         var name = 'PTID' + extraParameters[key2].ParameterTypeID;
