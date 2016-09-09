@@ -299,24 +299,24 @@ function getConsentStatusFields() {
     $config  =& NDB_Config::singleton();
     $consent = $config->getSetting('ConsentModule');
     $consents = [];
+    $consentStatus = [];
+    $date = [];
+    $withdrawal = [];
     foreach (Utility::asArray($consent['Consent']) as $question) {
         $consents[$question['name']] = $question['label'];
+        $consentStatus[$question['name']] = $db->pselectOne('SELECT ' . $db->escape($question['name']) . ' FROM participant_status WHERE CandID=:candid', array('candid' => $candID));
+        $date[$question['name']] = $db->pselectOne('SELECT ' . $db->escape($question['name'] . '_date') . ' FROM participant_status WHERE CandID=:candid', array('candid' => $candID));
+        $withdrawal[$question['name']] = $db->pselectOne('SELECT ' . $db->escape($question['name'] . '_withdrawal') . ' FROM participant_status WHERE CandID=:candid', array('candid' => $candID));
     }
-
-    // TODO: get all values for each type of consent
-    $consentStatus = $db->pselectOne('SELECT study_consent FROM participant_status WHERE CandID=:candid', array('candid' => $candID));
-    $date = $db->pselectOne('SELECT study_consent_date FROM participant_status WHERE CandID=:candid', array('candid' => $candID));
-    $withdrawal = $db->pselectOne('SELECT study_consent_withdrawal FROM participant_status WHERE CandID=:candid', array('candid' => $candID));
-
 
     $history = getConsentStatusHistory($candID);
 
     $result = [
         'pscid' => $pscid,
         'candID' => $candID,
-        'study_consent' => $consentStatus,
-        'study_consent_date'   => $date,
-        'study_consent_withdrawal'   => $withdrawal,
+        'consentStatuses' => $consentStatus,
+        'consentDates'   => $date,
+        'withdrawals'   => $withdrawal,
         'consents' => $consents,
         'history' => $history
     ];
@@ -324,6 +324,7 @@ function getConsentStatusFields() {
     return $result;
 }
 
+// TODO: update for each kind of consent
 function getConsentStatusHistory($candID) {
     $db =& Database::singleton();
     $unformattedComments = $db->pselect(

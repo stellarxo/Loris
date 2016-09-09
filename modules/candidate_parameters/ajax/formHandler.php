@@ -254,7 +254,7 @@ function editConsentStatusFields() {
     $consent   = isset($_POST['study_consent']) ? $_POST['study_consent'] : null;
     $date    = isset($_POST['study_consent_date']) ? $_POST['study_consent_date'] : null;
     $withdrawal    = isset($_POST['study_consent_withdrawal']) ? $_POST['study_consent_withdrawal'] : null;
-
+// TODO: update different consents
     $updateValues = [
         'study_consent' => $consent,
         'study_consent_date'   => $date,
