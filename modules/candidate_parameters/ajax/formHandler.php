@@ -234,6 +234,10 @@ function editParticipantStatusFields() {
     else {
         $db->update('participant_status', $updateValues, ['CandID' => $candID]);
     }
+
+    // TODO: add data entry date and staff
+//    $updateValues = array_merge($updateValues, ['data_entry_date' => now(), 'entry_staff' => ]);
+//    $db->insert('participant_status_history', $updateValues);
 }
 
 function editConsentStatusFields() {
@@ -269,4 +273,6 @@ function editConsentStatusFields() {
     else {
         $db->update('participant_status', $updateValues, ['CandID' => $candID]);
     }
+    // TODO: add data entry date and staff
+//    $db->insert('participant_status_history', $updateValues);
 }

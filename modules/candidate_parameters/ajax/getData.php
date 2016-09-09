@@ -295,18 +295,29 @@ function getConsentStatusFields() {
         array('candid' => $candID)
     );
 
-    $consent = $db->pselectOne('SELECT study_consent FROM participant_status WHERE CandID=:candid', array('candid' => $candID));
+
+    $config  =& NDB_Config::singleton();
+    $consent = $config->getSetting('ConsentModule');
+    $consents = [];
+    foreach (Utility::asArray($consent['Consent']) as $question) {
+        $consents[$question['name']] = $question['label'];
+    }
+
+    // TODO: get all values for each type of consent
+    $consentStatus = $db->pselectOne('SELECT study_consent FROM participant_status WHERE CandID=:candid', array('candid' => $candID));
     $date = $db->pselectOne('SELECT study_consent_date FROM participant_status WHERE CandID=:candid', array('candid' => $candID));
     $withdrawal = $db->pselectOne('SELECT study_consent_withdrawal FROM participant_status WHERE CandID=:candid', array('candid' => $candID));
+
 
     $history = getConsentStatusHistory($candID);
 
     $result = [
         'pscid' => $pscid,
         'candID' => $candID,
-        'study_consent' => $consent,
+        'study_consent' => $consentStatus,
         'study_consent_date'   => $date,
         'study_consent_withdrawal'   => $withdrawal,
+        'consents' => $consents,
         'history' => $history
     ];
 

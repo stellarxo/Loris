@@ -120,11 +120,72 @@ var ConsentStatus = React.createClass({
       dateRequired = true;
     }
     if (this.state.formData.study_consent_withdrawal !== null && this.state.formData.study_consent_withdrawal !== undefined) {
-      console.log(this.state.formData.study_consent_withdrawal);
       withdrawalRequired = true;
     }
 
-    var consent = null;
+    var consents = [];
+    for (var consentStatus in this.state.Data.consents) {
+
+      var consent = consentStatus;
+      var label = this.state.Data.consents[consentStatus];
+      var consentDate = consentStatus + "_date";
+      var consentDate2 = consentStatus + "_date2";
+      var consentDateLabel = "Date of " + label;
+      var consentDateConfirmationLabel = "Confirmation Date of " + label;
+      var consentWithdrawal = consentStatus + "_withdrawal";
+      var consentWithdrawal2 = consentStatus + "_withdrawal2";
+      var consentWithdrawalLabel = "Date of Withdrawal of " + label;
+      var consentWithdrawalConfirmationLabel = "Confirmation Date of Withdrawal of " + label;
+
+      // TODO: update current values, update required
+      consents.push(React.createElement(SelectElement, {
+        label: label,
+        name: consent,
+        options: this.state.consentOptions,
+        value: this.state.Data.study_consent,
+        onUserInput: this.setFormData,
+        ref: consent,
+        disabled: disabled,
+        required: true
+      }));
+      consents.push(React.createElement(DateElement, {
+        label: consentDateLabel,
+        name: consentDate,
+        value: this.state.Data.study_consent_date,
+        onUserInput: this.setFormData,
+        ref: consentDate,
+        disabled: disabled,
+        required: dateRequired
+      }));
+      consents.push(React.createElement(DateElement, {
+        label: consentDateConfirmationLabel,
+        name: consentDate2,
+        value: this.state.Data.study_consent_date,
+        onUserInput: this.setFormData,
+        ref: consentDate2,
+        disabled: disabled,
+        required: dateRequired
+      }));
+      consents.push(React.createElement(DateElement, {
+        label: consentWithdrawalLabel,
+        name: consentWithdrawal,
+        value: this.state.Data.study_consent_withdrawal,
+        onUserInput: this.setFormData,
+        ref: consentWithdrawal,
+        disabled: disabled,
+        required: false
+      }));
+      consents.push(React.createElement(DateElement, {
+        label: consentWithdrawalConfirmationLabel,
+        name: consentWithdrawal2,
+        value: this.state.Data.study_consent_withdrawal,
+        onUserInput: this.setFormData,
+        ref: consentWithdrawal2,
+        disabled: disabled,
+        required: withdrawalRequired
+      }));
+      consents.push(React.createElement('hr', null));
+    }
 
     var alertMessage = "";
     var alertClass = "alert text-center hide";
@@ -158,52 +219,7 @@ var ConsentStatus = React.createClass({
           label: 'DCCID',
           text: this.state.Data.candID
         }),
-        React.createElement(SelectElement, {
-          label: 'Consent to Study (required)',
-          name: 'study_consent',
-          options: this.state.consentOptions,
-          value: this.state.Data.study_consent,
-          onUserInput: this.setFormData,
-          ref: 'study_consent',
-          disabled: disabled,
-          required: true
-        }),
-        React.createElement(DateElement, {
-          label: 'Date of Consent to Study',
-          name: 'study_consent_date',
-          value: this.state.Data.study_consent_date,
-          onUserInput: this.setFormData,
-          ref: 'study_consent_date',
-          disabled: disabled,
-          required: dateRequired
-        }),
-        React.createElement(DateElement, {
-          label: 'Confirmation Date of Consent to Study',
-          name: 'study_consent_date2',
-          value: this.state.Data.study_consent_date,
-          onUserInput: this.setFormData,
-          ref: 'study_consent_date2',
-          disabled: disabled,
-          required: dateRequired
-        }),
-        React.createElement(DateElement, {
-          label: 'Date of Withdrawal of Consent to Study',
-          name: 'study_consent_withdrawal',
-          value: this.state.Data.study_consent_withdrawal,
-          onUserInput: this.setFormData,
-          ref: 'study_consent_withdrawal',
-          disabled: disabled,
-          required: false
-        }),
-        React.createElement(DateElement, {
-          label: 'Confirmation Date of Withdrawal of Consent to Study',
-          name: 'study_consent_withdrawal2',
-          value: this.state.Data.study_consent_withdrawal,
-          onUserInput: this.setFormData,
-          ref: 'study_consent_withdrawal2',
-          disabled: disabled,
-          required: withdrawalRequired
-        }),
+        consents,
         updateButton,
         React.createElement(
           'div',
