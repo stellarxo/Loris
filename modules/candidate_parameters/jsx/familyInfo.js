@@ -78,9 +78,11 @@ var FamilyInfo = React.createClass({
 
     var disabled = true;
     var updateButton = null;
+    var addButton = null;
     if (loris.userHasPermission('candidate_parameter_edit')) {
       disabled = false;
       updateButton = <ButtonElement label="Update" />;
+      addButton = <ButtonElement label="Add" />;
     }
 
     var familyMembers = [];
@@ -88,14 +90,20 @@ var FamilyInfo = React.createClass({
     var relationships = this.state.Data.Relationship_types;
     var i = 0;
     var relationship = null;
+    var familyMember = null;
     for (var key in familyMemberIDs) {
       if (familyMemberIDs.hasOwnProperty(key) && relationships.hasOwnProperty(key)) {
-        relationship = "Relationship_type" + i;
+        relationship = i+ "_Relationship_type";
+        familyMember = i + "_Family_member";
 
-        familyMembers.push(<StaticElement
-                    label="Family Member ID (DCCID)"
-                    text={familyMemberIDs[key].CandID}
-                />);
+        familyMembers.push(<TextboxElement
+            label="Family Member DCCID"
+            name={familyMember}
+            value={familyMemberIDs[key].CandID}
+            ref={familyMember}
+            disabled={true}
+            required={true}
+        />);
         familyMembers.push(<SelectElement
                 label="Relation Type"
                 name={relationship}
@@ -103,11 +111,11 @@ var FamilyInfo = React.createClass({
                 value={relationships[key].Relationship_type}
                 onUserInput={this.setFormData}
                 ref={relationship}
-                disabled={disabled}
+                disabled={true}
                 required={true}
                     />);
         if (loris.userHasPermission('candidate_parameter_edit')) {
-          familyMembers.push(<ButtonElement label="Delete" type="button" onUserInput={this.deleteFamilyMember.bind(null, familyMembers, i)} />);
+          familyMembers.push(<ButtonElement label="Delete" type="button" onUserInput={this.deleteFamilyMember.bind(null, familyMemberIDs[key].CandID, familyMembers, i)} />);
         }
         familyMembers.push(<hr />);
 
@@ -167,6 +175,7 @@ var FamilyInfo = React.createClass({
                 disabled={disabled}
                 required={relationshipRequired}
             />
+                {addButton}
                 {updateButton}
             </FormElement>
                 </div>
@@ -236,9 +245,59 @@ var FamilyInfo = React.createClass({
     });
   },
 
-  deleteFamilyMember: function(familyMembers, id, e) {
-    console.log(arguments);
-    console.log(familyMembers, id);
+  deleteFamilyMember: function(familyMemberID, familyMembers, familyID, e) {
+    e.preventDefault();
+
+    var myFormData = this.state.formData;
+    var formRefs = this.refs;
+
+    var self = this;
+    var formData = new FormData();
+    for (var key in myFormData) {
+      if (myFormData[key] !== "") {
+        formData.append(key, myFormData[key]);
+      }
+    }
+
+    formData.append('tab', 'deleteFamilyMember');
+    formData.append('candID', this.state.Data.candID);
+    formData.append('familyDCCID', familyMemberID);
+
+    for (var field in familyMembers) {
+      if (familyMembers.hasOwnProperty(field)) {
+
+        console.log(familyMembers[field]);
+        if (familyMembers[field].ref !== null) {
+          var reference = familyMembers[field].ref.split('_', 1);
+          if (reference == familyID) {
+            // TODO: remove fields immediately after deletion
+            familyMembers[field] = null;
+          }
+        }
+      }
+    }
+
+    $.ajax({
+      type: 'POST',
+      url: self.props.action,
+      data: formData,
+      cache: false,
+      contentType: false,
+      processData: false,
+      success: function(data) {
+        self.setState({
+          updateResult: "success"
+        });
+      },
+      error: function(err) {
+        var errorMessage = JSON.parse(err.responseText).message;
+        self.setState({
+          updateResult: "error",
+          errorMessage: errorMessage
+        });
+      }
+
+    });
   }
 
 });

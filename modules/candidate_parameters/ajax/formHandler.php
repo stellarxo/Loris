@@ -11,6 +11,9 @@ if (isset($_POST['tab'])) {
     else if ($tab == "familyInfo") {
         editFamilyInfoFields();
     }
+    else if ($tab == "deleteFamilyMember") {
+        deleteFamilyMember();
+    }
     else if ($tab == "participantStatus") {
         editParticipantStatusFields();
     }
@@ -174,6 +177,28 @@ function editFamilyInfoFields() {
 
         $i++;
     }
+}
+
+function deleteFamilyMember() {
+    $db   =& Database::singleton();
+    $user =& User::singleton();
+    if (!$user->hasPermission('candidate_parameter_edit')) {
+        header("HTTP/1.1 403 Forbidden");
+        exit;
+    }
+
+    $candID = $_POST['candID'];
+    $familyMemberID = $_POST['familyDCCID'];
+
+    $familyID = $db->pselectOne('SELECT FamilyID FROM family WHERE CandID=:cid', array('cid' => $candID));
+
+    $where = [
+        'FamilyID' => $familyID,
+        'CandID' => $familyMemberID
+    ];
+
+    $db->delete('family', $where);
+
 }
 
 function editParticipantStatusFields() {
