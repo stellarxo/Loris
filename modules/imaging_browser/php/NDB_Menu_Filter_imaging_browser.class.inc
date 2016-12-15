@@ -224,6 +224,7 @@ class NDB_Menu_Filter_Imaging_Browser extends NDB_Menu_Filter
 
         $visits = Utility::getVisitList();
         $visits = array_merge(array('' => 'All'), $visits);
+        $visits = array_merge($visits, array('%phantom%' => 'Phantom'));
 
         $DB = Database::singleton();
         $allAr = array('' => 'All');
