@@ -52,23 +52,44 @@ class NDB_Menu_Filter_Imaging_Browser extends NDB_Menu_Filter
     function _setupVariables()
     {
         $NewDataSubquery = "CASE 
-            COALESCE(nd.QCLastChangeTime, 'new')
+            COALESCE((
+                SELECT MIN(QCLastChangeTime) 
+                FROM files LEFT JOIN files_qcstatus 
+                USING(FileID) 
+                WHERE files.SessionID=s.ID 
+                AND OutputType='native' 
+                AND AcquisitionProtocolID not in (1, 2, 3, 52) 
+                GROUP BY QCLastChangeTime 
+                ORDER BY QCLastChangeTime limit 1
+            ), 'new')
             WHEN 'new' THEN 'new' 
             WHEN '' THEN 'new'
             ELSE ''
             END";
         $T1PassSubquery = "CASE 
-            COALESCE(t1pass.T1QC, '') 
+            COALESCE((
+                SELECT MIN(files_qcstatus.QCStatus+0) 
+                FROM files JOIN files_qcstatus 
+                USING (FileID) 
+                WHERE files.SessionID=s.ID AND files.AcquisitionProtocolID=44 and (files_qcstatus.QCStatus=1 or files_qcstatus.QCStatus=2)
+                GROUP BY files.SessionID), '')
             WHEN '' THEN ''
             WHEN 1 THEN 'Passed'
             WHEN 2 THEN 'Failed'
-            END";
+            END
+            ";
         $T2PassSubquery = "CASE 
-            COALESCE(t2pass.T2QC, '') 
+            COALESCE((
+                SELECT MIN(files_qcstatus.QCStatus+0) 
+                FROM files JOIN files_qcstatus 
+                USING (FileID) 
+                WHERE files.SessionID=s.ID AND files.AcquisitionProtocolID=45 and (files_qcstatus.QCStatus=1 or files_qcstatus.QCStatus=2)
+                GROUP BY files.SessionID), '')
             WHEN '' THEN ''
             WHEN 1 THEN 'Passed'
             WHEN 2 THEN 'Failed'
-            END";
+            END
+            ";
 
         $PendingFailSubquery = "
             CASE s.MRIQCStatus
@@ -86,11 +107,7 @@ class NDB_Menu_Filter_Imaging_Browser extends NDB_Menu_Filter
             JOIN files f ON (f.SessionID=s.ID) 
             LEFT JOIN files_qcstatus fqc ON (fqc.FileID=f.FileID) 
             JOIN mri_acquisition_dates md ON (md.SessionID=s.ID)
-            LEFT JOIN (SELECT files.SessionID, MIN(QCLastChangeTime) as QCLastChangeTime FROM files LEFT JOIN files_qcstatus USING (FileID) WHERE OutputType='native' AND AcquisitionProtocolID NOT IN (1, 2, 3, 52) GROUP BY files.SessionID) nd ON (nd.SessionID=f.SessionID)
-            LEFT JOIN (SELECT files.SessionID, MIN(files_qcstatus.QCStatus+0) as T1QC FROM files JOIN files_qcstatus USING (FileID) WHERE files.AcquisitionProtocolID=44 AND files_qcstatus.QCStatus IN (1, 2) GROUP BY files.SessionID) t1pass ON (t1pass.SessionID=f.SessionID)
-            LEFT JOIN (SELECT files.SessionID, MIN(files_qcstatus.QCStatus+0) as T2QC FROM files JOIN files_qcstatus USING (FileID) WHERE files.AcquisitionProtocolID=45 AND files_qcstatus.QCStatus IN (1, 2) GROUP BY files.SessionID) t2pass ON (t2pass.SessionID=f.SessionID)
             WHERE 
-            s.Active = 'Y' AND
             f.PendingStaging=0 AND 
             f.FileType='mnc' AND 
             f.AcquisitionProtocolID not in (1, 2, 3, 52)";
@@ -205,11 +222,16 @@ class NDB_Menu_Filter_Imaging_Browser extends NDB_Menu_Filter
             }
         }
 
+        $visits = Utility::getVisitList();
+        $visits = array_merge(array('' => 'All'), $visits);
+
         $DB = Database::singleton();
         $allAr = array('' => 'All');
         $this->addBasicText('pscid', 'PSCID', array("size"=>10,"maxlength"=>25));
-        $this->addBasicText(
-            'VL', 'Visit Label', array('size' => "10", "maxlength"=>"25")
+        $this->addSelect(
+            'VL',
+            'Visit Label',
+            $visits
         );
         $this->addBasicText(
             'DCCID', 'DCCID', array('size' => 10, "maxlength" => 25)
